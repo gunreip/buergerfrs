@@ -8,7 +8,7 @@
 | Node.js    | v22.20.0 |
 | npm        | 11.8.0 |
 
-**Stand:** 2026-04-30 09:49:30
+**Stand:** 2026-04-30 09:51:38
 
 ## Wichtige Composer-Packages (direkte Abhängigkeiten)
 

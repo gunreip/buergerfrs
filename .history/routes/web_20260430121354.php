@@ -10,4 +10,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('admin', 'dashboard')->middleware('role:Admin|Super-Admin')->name('admin.dashboard');
 });
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';
