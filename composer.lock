@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "56358aa9d7cf3aaff7920c7028a19b09",
+    "content-hash": "a59bd3964e6b1ec81d263e2fe25a7474",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -4424,6 +4424,152 @@
             "time": "2026-04-29T07:59:45+00:00"
         },
         {
+            "name": "spatie/laravel-settings",
+            "version": "3.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-settings.git",
+                "reference": "09b788ee96d205699420dedb8a6aa8c4c8af84fe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-settings/zipball/09b788ee96d205699420dedb8a6aa8c4c8af84fe",
+                "reference": "09b788ee96d205699420dedb8a6aa8c4c8af84fe",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "illuminate/database": "^11.0|^12.0|^13.0",
+                "php": "^8.2",
+                "phpdocumentor/type-resolver": "^1.5|^2.0",
+                "spatie/temporary-directory": "^1.3|^2.0"
+            },
+            "require-dev": {
+                "ext-redis": "*",
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^9.0|^10.0|^11.0",
+                "pestphp/pest": "^2.0|^3.0|^4.0",
+                "pestphp/pest-plugin-laravel": "^2.0|^3.0|^4.0",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "spatie/laravel-data": "^2.0.0|^4.0.0",
+                "spatie/pest-plugin-snapshots": "^2.0",
+                "spatie/phpunit-snapshot-assertions": "^4.2|^5.0",
+                "spatie/ray": "^1.36"
+            },
+            "suggest": {
+                "spatie/data-transfer-object": "Allows for DTO casting to settings. (deprecated)"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\LaravelSettings\\LaravelSettingsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\LaravelSettings\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ruben Van Assche",
+                    "email": "ruben@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Store your application settings",
+            "homepage": "https://github.com/spatie/laravel-settings",
+            "keywords": [
+                "laravel-settings",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-settings/issues",
+                "source": "https://github.com/spatie/laravel-settings/tree/3.8.0"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-04-28T07:05:06+00:00"
+        },
+        {
+            "name": "spatie/temporary-directory",
+            "version": "2.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/temporary-directory.git",
+                "reference": "662e481d6ec07ef29fd05010433428851a42cd07"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/temporary-directory/zipball/662e481d6ec07ef29fd05010433428851a42cd07",
+                "reference": "662e481d6ec07ef29fd05010433428851a42cd07",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\TemporaryDirectory\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Vanderbist",
+                    "email": "alex@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Easily create, use and destroy temporary directories",
+            "homepage": "https://github.com/spatie/temporary-directory",
+            "keywords": [
+                "php",
+                "spatie",
+                "temporary-directory"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/temporary-directory/issues",
+                "source": "https://github.com/spatie/temporary-directory/tree/2.3.1"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-01-12T07:42:22+00:00"
+        },
+        {
             "name": "spomky-labs/cbor-php",
             "version": "3.2.3",
             "source": {
@@ -8077,6 +8223,153 @@
             "time": "2026-04-20T13:31:29+00:00"
         },
         {
+            "name": "barryvdh/laravel-ide-helper",
+            "version": "v3.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barryvdh/laravel-ide-helper.git",
+                "reference": "ad7e37676f1ff985d55ef1b6b96a0c0a40f2609a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/ad7e37676f1ff985d55ef1b6b96a0c0a40f2609a",
+                "reference": "ad7e37676f1ff985d55ef1b6b96a0c0a40f2609a",
+                "shasum": ""
+            },
+            "require": {
+                "barryvdh/reflection-docblock": "^2.4",
+                "composer/class-map-generator": "^1.0",
+                "ext-json": "*",
+                "illuminate/console": "^11.15 || ^12 || ^13.0",
+                "illuminate/database": "^11.15 || ^12 || ^13.0",
+                "illuminate/filesystem": "^11.15 || ^12 || ^13.0",
+                "illuminate/support": "^11.15 || ^12 || ^13.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "ext-pdo_sqlite": "*",
+                "friendsofphp/php-cs-fixer": "^3",
+                "illuminate/config": "^11.15 || ^12 || ^13.0",
+                "illuminate/view": "^11.15 || ^12 || ^13.0",
+                "larastan/larastan": "^3.1",
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^9.2 || ^10 || ^11.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpunit/phpunit": "^10.5 || ^11.5.3 || ^12.5.12",
+                "spatie/phpunit-snapshot-assertions": "^4 || ^5",
+                "vlucas/phpdotenv": "^5"
+            },
+            "suggest": {
+                "illuminate/events": "Required for automatic helper generation (^6|^7|^8|^9|^10|^11)."
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "3.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Barryvdh\\LaravelIdeHelper\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Barry vd. Heuvel",
+                    "email": "barryvdh@gmail.com"
+                }
+            ],
+            "description": "Laravel IDE Helper, generates correct PHPDocs for all Facade classes, to improve auto-completion.",
+            "keywords": [
+                "autocomplete",
+                "codeintel",
+                "dev",
+                "helper",
+                "ide",
+                "laravel",
+                "netbeans",
+                "phpdoc",
+                "phpstorm",
+                "sublime"
+            ],
+            "support": {
+                "issues": "https://github.com/barryvdh/laravel-ide-helper/issues",
+                "source": "https://github.com/barryvdh/laravel-ide-helper/tree/v3.7.0"
+            },
+            "funding": [
+                {
+                    "url": "https://fruitcake.nl",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/barryvdh",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-03-17T14:12:51+00:00"
+        },
+        {
+            "name": "barryvdh/reflection-docblock",
+            "version": "v2.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barryvdh/ReflectionDocBlock.git",
+                "reference": "4f5ba70c30c81f2ce03a16a9965832cfcc31ed3b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barryvdh/ReflectionDocBlock/zipball/4f5ba70c30c81f2ce03a16a9965832cfcc31ed3b",
+                "reference": "4f5ba70c30c81f2ce03a16a9965832cfcc31ed3b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.5.14|^9"
+            },
+            "suggest": {
+                "dflydev/markdown": "~1.0",
+                "erusev/parsedown": "~1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Barryvdh": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mike van Riel",
+                    "email": "mike.vanriel@naenius.com"
+                }
+            ],
+            "support": {
+                "source": "https://github.com/barryvdh/ReflectionDocBlock/tree/v2.4.1"
+            },
+            "time": "2026-03-05T20:09:01+00:00"
+        },
+        {
             "name": "brianium/paratest",
             "version": "v7.20.0",
             "source": {
@@ -8168,6 +8461,154 @@
                 }
             ],
             "time": "2026-03-29T15:46:14+00:00"
+        },
+        {
+            "name": "composer/class-map-generator",
+            "version": "1.7.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/class-map-generator.git",
+                "reference": "6a9c2f0970022ab00dc58c07d0685dd712f2231b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/class-map-generator/zipball/6a9c2f0970022ab00dc58c07d0685dd712f2231b",
+                "reference": "6a9c2f0970022ab00dc58c07d0685dd712f2231b",
+                "shasum": ""
+            },
+            "require": {
+                "composer/pcre": "^2.1 || ^3.1",
+                "php": "^7.2 || ^8.0",
+                "symfony/finder": "^4.4 || ^5.3 || ^6 || ^7 || ^8"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.12 || ^2",
+                "phpstan/phpstan-deprecation-rules": "^1 || ^2",
+                "phpstan/phpstan-phpunit": "^1 || ^2",
+                "phpstan/phpstan-strict-rules": "^1.1 || ^2",
+                "phpunit/phpunit": "^8",
+                "symfony/filesystem": "^5.4 || ^6 || ^7 || ^8"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\ClassMapGenerator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "https://seld.be"
+                }
+            ],
+            "description": "Utilities to scan PHP code and generate class maps.",
+            "keywords": [
+                "classmap"
+            ],
+            "support": {
+                "issues": "https://github.com/composer/class-map-generator/issues",
+                "source": "https://github.com/composer/class-map-generator/tree/1.7.2"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-03-30T15:36:56+00:00"
+        },
+        {
+            "name": "composer/pcre",
+            "version": "3.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/pcre.git",
+                "reference": "b2bed4734f0cc156ee1fe9c0da2550420d99a21e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/pcre/zipball/b2bed4734f0cc156ee1fe9c0da2550420d99a21e",
+                "reference": "b2bed4734f0cc156ee1fe9c0da2550420d99a21e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0"
+            },
+            "conflict": {
+                "phpstan/phpstan": "<1.11.10"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.12 || ^2",
+                "phpstan/phpstan-strict-rules": "^1 || ^2",
+                "phpunit/phpunit": "^8 || ^9"
+            },
+            "type": "library",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "extension.neon"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\Pcre\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "PCRE wrapping library that offers type-safe preg_* replacements.",
+            "keywords": [
+                "PCRE",
+                "preg",
+                "regex",
+                "regular expression"
+            ],
+            "support": {
+                "issues": "https://github.com/composer/pcre/issues",
+                "source": "https://github.com/composer/pcre/tree/3.3.2"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2024-11-12T16:29:46+00:00"
         },
         {
             "name": "composer/semver",
@@ -12825,67 +13266,6 @@
                 }
             ],
             "time": "2026-03-31T12:44:31+00:00"
-        },
-        {
-            "name": "spatie/temporary-directory",
-            "version": "2.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/temporary-directory.git",
-                "reference": "662e481d6ec07ef29fd05010433428851a42cd07"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/temporary-directory/zipball/662e481d6ec07ef29fd05010433428851a42cd07",
-                "reference": "662e481d6ec07ef29fd05010433428851a42cd07",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\TemporaryDirectory\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Alex Vanderbist",
-                    "email": "alex@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Easily create, use and destroy temporary directories",
-            "homepage": "https://github.com/spatie/temporary-directory",
-            "keywords": [
-                "php",
-                "spatie",
-                "temporary-directory"
-            ],
-            "support": {
-                "issues": "https://github.com/spatie/temporary-directory/issues",
-                "source": "https://github.com/spatie/temporary-directory/tree/2.3.1"
-            },
-            "funding": [
-                {
-                    "url": "https://spatie.be/open-source/support-us",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/spatie",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-01-12T07:42:22+00:00"
         },
         {
             "name": "staabm/side-effects-detector",

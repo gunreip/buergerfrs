@@ -1,0 +1,5 @@
+/* resources/css/table.css */
+
+tr[data-flux-row]>td[data-flux-cell] {
+    @apply bg-white/5 text-lime-500;
+}

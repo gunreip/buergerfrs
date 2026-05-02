@@ -1,0 +1,5 @@
+/* resources/css/table.css */
+
+[data-flux-row]:hover {
+    @apply hover:bg-white/5 hover:text-lime-500;
+}

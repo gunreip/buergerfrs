@@ -51,6 +51,12 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
 
 ---
 
+## Development
+
+- **Livewire/Flux**: Es wird ausschließlich Livewire/Flux verwendet, kein selbstgestrickter Code für Aufgaben die mit Livewire/Flux gelöst werden können.
+
+---
+
 ## Weitere Hinweise
 
 - Für neue Pakete: Nach `composer require` ggf. `php artisan vendor:publish` und `php artisan migrate` ausführen.

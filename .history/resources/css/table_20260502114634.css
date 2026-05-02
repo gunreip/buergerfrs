@@ -1,0 +1,5 @@
+/* resources/css/table.css */
+
+tr[data-flux-row]:hover {
+    @apply bg-sky-900/10;
+}

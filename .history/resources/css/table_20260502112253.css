@@ -1,0 +1,6 @@
+/* resources/css/table.css */
+
+[data-flux-row]:hover {
+    background-color: rgb(125 211 252 / 0.14);
+    color: rgb(255 255 255 / 0.92);
+}
