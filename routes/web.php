@@ -1,5 +1,7 @@
 <?php
 
+// routes/web.php
+
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 
@@ -11,12 +13,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('admin', 'dashboard')->middleware('role:Admin|Super-Admin')->name('admin.dashboard');
 
     // User- und Rollenverwaltung (Livewire)
-    Route::get('admin/users', \App\Livewire\Admin\UserList::class)
-        ->middleware('role:Admin|Super-Admin')
-        ->name('admin.users');
-    Route::get('admin/users/{user}/edit', \App\Livewire\Admin\UserEdit::class)
-        ->middleware('role:Admin|Super-Admin')
-        ->name('admin.users.edit');
+    // Route::get('admin/users', \App\Livewire\Admin\UserList::class)
+    //     ->middleware('role:Admin|Super-Admin')
+    //     ->name('admin.users');
+    // Route::get('admin/users/{user}/edit', \App\Livewire\Admin\UserEdit::class)
+    //     ->middleware('role:Admin|Super-Admin')
+    //     ->name('admin.users.edit');
 });
 
 require __DIR__ . '/settings.php';
+require __DIR__ . '/admin.php';

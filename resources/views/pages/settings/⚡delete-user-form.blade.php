@@ -11,7 +11,12 @@ new class extends Component {}; ?>
     </div>
 
     <flux:modal.trigger name="confirm-user-deletion">
-        <flux:button variant="danger" data-test="delete-user-button">
+        <flux:button
+            data-test="delete-user-button"
+            variant="danger"
+            icon="trash-2"
+            color="red"
+        >
             {{ __('Delete account') }}
         </flux:button>
     </flux:modal.trigger>

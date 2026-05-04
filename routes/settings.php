@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use App\Livewire\Account\Preferences as AccountPreferences;
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
@@ -23,3 +24,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         )
         ->name('security.edit');
 });
+
+Route::middleware(['auth', 'verified'])
+    ->prefix('settings')
+    ->name('account.')
+    ->group(function (): void {
+        Route::get('preferences', AccountPreferences::class)->name('preferences');
+    });

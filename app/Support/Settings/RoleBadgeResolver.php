@@ -3,6 +3,7 @@
 namespace App\Support\Settings;
 
 use App\Settings\AppDisplaySettings;
+use App\Support\Icons\IconRegistry;
 
 class RoleBadgeResolver
 {
@@ -12,44 +13,9 @@ class RoleBadgeResolver
         'icon' => 'tag',
     ];
 
-    private const ALLOWED_COLORS = [
-        'zinc',
-        'red',
-        'orange',
-        'amber',
-        'yellow',
-        'lime',
-        'green',
-        'emerald',
-        'teal',
-        'cyan',
-        'sky',
-        'blue',
-        'indigo',
-        'violet',
-        'purple',
-        'fuchsia',
-        'pink',
-        'rose',
-    ];
-
-    private const ALLOWED_VARIANTS = [
-        'solid',
-        'subtle',
-        'outline',
-        'pill',
-    ];
-
-    private const ALLOWED_ICONS = [
-        'tag',
-        'shield-check',
-        'crown',
-        'user',
-        'refresh-cw-off',
-    ];
-
     public function __construct(
         private readonly AppDisplaySettings $settings,
+        private readonly IconRegistry $iconRegistry,
     ) {
         //
     }
@@ -83,11 +49,13 @@ class RoleBadgeResolver
 
     private function resolveColor(?string $color): string
     {
-        if ($color === null || $color === '') {
+        $color = trim((string) $color);
+
+        if ($color === '') {
             return self::DEFAULT_BADGE['color'];
         }
 
-        if (! in_array($color, self::ALLOWED_COLORS, true)) {
+        if (! $this->iconRegistry->isValidBadgeColor($color, 'role_user_management')) {
             return self::DEFAULT_BADGE['color'];
         }
 
@@ -96,11 +64,13 @@ class RoleBadgeResolver
 
     private function resolveVariant(?string $variant): string
     {
-        if ($variant === null || $variant === '') {
+        $variant = trim((string) $variant);
+
+        if ($variant === '') {
             return self::DEFAULT_BADGE['variant'];
         }
 
-        if (! in_array($variant, self::ALLOWED_VARIANTS, true)) {
+        if (! $this->iconRegistry->isValidBadgeVariant($variant, 'role_user_management')) {
             return self::DEFAULT_BADGE['variant'];
         }
 
@@ -115,10 +85,8 @@ class RoleBadgeResolver
             return self::DEFAULT_BADGE['icon'];
         }
 
-        if (! in_array($icon, self::ALLOWED_ICONS, true)) {
-            return self::DEFAULT_BADGE['icon'];
-        }
+        $resolvedIcon = $this->iconRegistry->resolveRoleUserManagement($icon);
 
-        return $icon;
+        return (string) ($resolvedIcon['name'] ?? self::DEFAULT_BADGE['icon']);
     }
 }

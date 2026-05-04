@@ -1,9 +1,12 @@
 <?php
 
+// app/Livewire/Admin/UserList.php
+
 namespace App\Livewire\Admin;
 
 use App\Models\User;
 use App\Support\Settings\RoleBadgeResolver;
+use Flux\Flux;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithoutUrlPagination;
@@ -11,6 +14,8 @@ use Spatie\Permission\Models\Role;
 
 class UserList extends Component
 {
+    private const PER_PAGE_SETTING_KEY = 'ui.per_page.admin_users';
+
     use WithPagination;
     use WithoutUrlPagination;
 
@@ -29,6 +34,10 @@ class UserList extends Component
 
     public function mount(): void
     {
+        $this->perPage = $this->normalizePerPage(
+            auth()->user()?->setting(self::PER_PAGE_SETTING_KEY, $this->perPage)
+        );
+
         $this->setPage(1);
     }
 
@@ -44,7 +53,29 @@ class UserList extends Component
 
     public function updatedPerPage(): void
     {
+        $this->perPage = $this->normalizePerPage($this->perPage);
+
+        $user = auth()->user();
+
+        if ($user instanceof User) {
+            $user->setSetting(self::PER_PAGE_SETTING_KEY, $this->perPage);
+            $user->save();
+        }
+
         $this->setPage(1);
+    }
+
+    private function normalizePerPage(mixed $value): int
+    {
+        $value = (int) $value;
+
+        $allowedValues = [10, 25, 50, 100];
+
+        if (! in_array($value, $allowedValues, true)) {
+            return 50;
+        }
+
+        return $value;
     }
 
     public function goToFirstPage(): void
@@ -145,7 +176,20 @@ class UserList extends Component
 
         $user->syncRoles([$validRoleName]);
 
+        $savedUserName = (string) $user->name;
+        $savedRoleName = (string) $validRoleName;
+
         $this->resetEditRolesModal();
+
+        Flux::toast(
+            heading: __('User role updated'),
+            text: __('The role for :user has been changed to :role.', [
+                'user' => $savedUserName,
+                'role' => $savedRoleName,
+            ]),
+            variant: 'success',
+            duration: 3000,
+        );
 
         $this->dispatch('$refresh');
     }

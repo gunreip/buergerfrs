@@ -1,0 +1,76 @@
+{{-- resources/views/components/admin/partials/user-list/filter.blade.php --}}
+
+<flux:card class="mt-6">
+    <flux:heading
+        class="mb-4"
+        size="lg"
+    >
+        {{ __('Filtering') }}
+    </flux:heading>
+
+    <div class="flex w-full items-end gap-3">
+        <div class="min-w-0 flex-none basis-1/4">
+            <flux:label for="user-list-search">
+                {{ __('Search') }}
+            </flux:label>
+
+            <flux:input.group class="w-full min-w-0">
+                <flux:input.group.prefix>
+                    <flux:icon.magnifying-glass />
+                </flux:input.group.prefix>
+
+                <flux:input
+                    class="w-full min-w-0"
+                    id="user-list-search"
+                    name="user-list-search"
+                    type="text"
+                    copyable
+                    clearable
+                    wire:model.live.debounce.300ms="search"
+                    placeholder="{{ __('Search by name or email') }}"
+                />
+            </flux:input.group>
+        </div>
+
+        <div class="min-w-0 flex-none basis-1/4">
+            <flux:label for="user-list-role-filter">
+                {{ __('Role') }}
+            </flux:label>
+
+            <flux:input.group>
+                <flux:input.group.prefix>
+                    <flux:icon.tag />
+                </flux:input.group.prefix>
+
+                <flux:select
+                    id="user-list-role-filter"
+                    name="user-list-role-filter"
+                    wire:model.live="roleFilter"
+                >
+                    <flux:select.option value="">
+                        {{ __('All roles') }}
+                    </flux:select.option>
+
+                    <flux:select.option value="__none__">
+                        {{ __('Without role') }}
+                    </flux:select.option>
+
+                    @foreach ($roles as $role)
+                        <flux:select.option value="{{ $role }}">
+                            {{ $role }}
+                        </flux:select.option>
+                    @endforeach
+                </flux:select>
+            </flux:input.group>
+        </div>
+
+        <div class="ml-auto flex-none">
+            <x-ui.table.per-page-selector
+                id="user-list-per-page"
+                name="user-list-per-page"
+                model="perPage"
+                :options="[10, 25, 50, 100]"
+            />
+        </div>
+    </div>
+</flux:card>

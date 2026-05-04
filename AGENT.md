@@ -16,15 +16,28 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
   - `./vendor/bin/pest` – Nur Tests
 - **Linter:**
   - `composer lint` – Code-Style mit Laravel Pint
+- **Icons deployen:**
+  - `php artisan flux:icon <name>` – Flux-Icon in Projekt kopieren (muss vor Nutzung in `config/buergerfrs-icons.php` eingetragen werden)
 
 ---
 
 ## Wichtige Verzeichnisse & Dateien
 
-- `app/` – Hauptapplikation (Controller, Models, Livewire, Actions)
+- `app/` – Hauptapplikation (Controller, Models, Livewire, Actions, Support, Settings)
+- `app/Livewire/Admin/` – Admin-Livewire-Komponenten: `UserList`, `RoleList`, `AppSettings`
+- `UserEdit` ist aktuell geparkt und nicht aktiv geroutet; Rollenänderungen erfolgen über Modals in `UserList`.
+- `app/Support/Icons/IconRegistry.php` – Zentrales Icon-Registry für Flux-Icons (Kategorie-basiert, mit Fallback)
+- `app/Support/Settings/RoleBadgeResolver.php` – Löst Rollen-Badge-Einstellungen (Farbe, Variante, Icon) auf
+- `app/Support/Avatar/AvatarPath.php` – Erzeugt geshardete Avatar-Pfade unter `storage/app/public/avatars/...`
+- `app/Support/Avatar/UserAvatarStorage.php` – Speichert, löscht und resolved User-Avatar-Dateien über den Public-Disk
+- `app/Settings/AppDisplaySettings.php` – Spatie-Settings: `app_display`-Gruppe (z.B. `roleBadges`)
+- `users.settings` – JSONB-Spalte für userbezogene UI-/Profil-Einstellungen; Zugriff über `User::setting()` und `User::setSetting()`
+- `config/buergerfrs-icons.php` – Erlaubte Flux-Icons pro Kategorie (z.B. `role_user_management`), inkl. Fallback-Definition
 - `routes/web.php` – Web-Routen
+- `routes/admin.php` – Admin-Routen (geschützt durch `auth`, `verified`, `role:Admin|Super-Admin`)
 - `routes/settings.php` – Einstellungen
 - `resources/views/` – Blade-Templates
+- `resources/views/components/ui/user-avatar.blade.php` – Zentrale User-Avatar-Anzeige mit Bild-Fallback auf Initials
 - `tests/` – Feature- und Unit-Tests (Pest)
 - `.env.example` – Beispiel-Umgebung
 
@@ -41,6 +54,11 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
 - **Queue:** Horizon
 - **Debugging:** Debugbar, Telescope, Ray
 - **Migrations:** Alle wichtigen Pakete bringen eigene Migrationen mit (bereits veröffentlicht)
+- **Settings:** Spatie Laravel Settings; Einstellungsklassen liegen in `app/Settings/`. Gruppen-Name entspricht dem Klassennamen in snake_case (z.B. `AppDisplaySettings` → `app_display`). Nach neuen Settings-Klassen oder Settings-Migrations: php artisan migrate ausführen, danach php artisan settings:discover und php artisan settings:clear-cache.
+- **User Settings:** User-spezifische, nicht sicherheitskritische UI-/Profil-Einstellungen werden in `users.settings` als JSONB gespeichert. Zugriff erfolgt über `User::setting(string $key, mixed $default = null)` und `User::setSetting(string $key, mixed $value)`. Das Model wird nach `setSetting()` nicht automatisch gespeichert; `save()` muss explizit aufgerufen werden. Dot-Notation verwenden, z.B. `ui.per_page.admin_users`, `profile.nickname`, `profile.avatar_path`.
+- **Icons:** Ausschließlich Flux-Icons verwenden. Erlaubte Icons, Badge-Farben und Badge-Varianten werden zentral in `config/buergerfrs-icons.php` pro Kategorie definiert. Neue Icons sollten vor der Registrierung mit `php artisan flux:icon <name>` deployed werden. Wenn ein registriertes Icon nicht verfügbar ist, rendert `x-ui.safe-flux-icon` sichtbar das rote `file-x`-Fallback. Zugriff immer über `App\Support\Icons\IconRegistry` – kein direkter Zugriff auf die Config.
+- **Admin-Bereich:** Routen in `routes/admin.php`, geschützt durch Middleware `role:Admin|Super-Admin` (Spatie Permission). Livewire-Komponenten in `app/Livewire/Admin/`.
+- **User Avatars:** User-Avatare werden nicht user-id-basiert abgelegt, sondern über geshardete UUID-Pfade unter `storage/app/public/avatars/...`. Der gespeicherte relative Pfad liegt in `users.settings.profile.avatar_path`. Upload/Delete/URL-Resolution läuft über `App\Support\Avatar\UserAvatarStorage`; Pfaderzeugung über `App\Support\Avatar\AvatarPath`. Anzeige immer über `x-ui.user-avatar`, damit Bildanzeige und Fallback auf Initials zentral bleiben.
 
 ---
 
@@ -63,10 +81,11 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
 - Für Umgebungsvariablen: `.env.example` als Vorlage nutzen.
 - **Versions- und Paketübersicht:** Siehe `VERSIONS.md` für eine aktuelle Übersicht aller wichtigen Composer- und npm-Abhängigkeiten inkl. Beschreibung. Die Datei wird regelmäßig gepflegt und enthält auch Hinweise zu verwendeten Systemversionen.
 - Für alle Änderungen im Projekt gilt: **Regelmäßig git commits durchführen!** So bleiben Änderungen nachvollziehbar, können bei Bedarf rückgängig gemacht werden und die Zusammenarbeit im Team wird erleichtert.
+- Aktuell persistierte User-Settings: `ui.per_page.admin_users` für die persönliche Per-Page-Auswahl auf `/admin/users`, `locale.app` als gespeicherte Locale-Präferenz, `profile.nickname` und `profile.avatar_path` für Profilanzeige.
 
 ---
 
-**Letzte Aktualisierung:** 2026-04-30
+**Letzte Aktualisierung:** 2026-05-03
 
 ---
 

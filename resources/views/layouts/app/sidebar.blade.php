@@ -28,6 +28,7 @@
                 class="grid"
                 :heading="__('Platform')"
             >
+                {{-- Platform -> dashboard --}}
                 <flux:sidebar.item
                     icon="home"
                     :href="route('dashboard')"
@@ -42,6 +43,7 @@
                 class="mt-4 grid"
                 :heading="__('Administration')"
             >
+                {{-- Admin -> users --}}
                 <flux:sidebar.item
                     icon="users"
                     :href="route('admin.users')"
@@ -50,12 +52,33 @@
                 >
                     {{ __('Users') }}
                 </flux:sidebar.item>
+
+                {{-- Admin -> roles --}}
+                <flux:sidebar.item
+                    icon="shield-check"
+                    :href="route('admin.roles')"
+                    :current="request()->routeIs('admin.roles')"
+                    wire:navigate
+                >
+                    {{ __('Roles') }}
+                </flux:sidebar.item>
+
+                {{-- Admin -> app settings --}}
+                <flux:sidebar.item
+                    icon="settings"
+                    :href="route('admin.app-settings')"
+                    :current="request()->routeIs('admin.app-settings')"
+                    wire:navigate
+                >
+                    {{ __('App Settings') }}
+                </flux:sidebar.item>
             </flux:sidebar.group>
         </flux:sidebar.nav>
 
         <flux:spacer />
 
         <flux:sidebar.nav>
+            {{-- Repository --}}
             <flux:sidebar.item
                 href="https://github.com/laravel/livewire-starter-kit"
                 icon="folder-git-2"
@@ -64,6 +87,7 @@
                 {{ __('Repository') }}
             </flux:sidebar.item>
 
+            {{-- Documentation --}}
             <flux:sidebar.item
                 href="https://laravel.com/docs/starter-kits#livewire"
                 icon="book-open-text"
@@ -102,10 +126,7 @@
                 <flux:menu.radio.group>
                     <div class="p-0 text-sm font-normal">
                         <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                            <flux:avatar
-                                :name="auth()->user()->name"
-                                :initials="auth()->user()->initials()"
-                            />
+                            <x-ui.user-avatar :user="auth()->user()" />
 
                             <div class="grid flex-1 text-start text-sm leading-tight">
                                 <flux:heading class="truncate">{{ auth()->user()->name }}</flux:heading>
@@ -118,12 +139,23 @@
                 <flux:menu.separator />
 
                 <flux:menu.radio.group>
+                    {{-- Settings --}}
                     <flux:menu.item
                         :href="route('profile.edit')"
                         icon="cog"
                         wire:navigate
                     >
                         {{ __('Settings') }}
+                    </flux:menu.item>
+
+                    {{-- Preferences --}}
+                    <flux:menu.item
+                        icon="sliders-horizontal"
+                        :href="route('account.preferences')"
+                        :current="request()->routeIs('account.preferences')"
+                        wire:navigate
+                    >
+                        {{ __('Preferences') }}
                     </flux:menu.item>
                 </flux:menu.radio.group>
 
@@ -152,7 +184,10 @@
     {{ $slot }}
 
     @persist('toast')
-        <flux:toast.group>
+        <flux:toast.group
+            position="top end"
+            expanded
+        >
             <flux:toast />
         </flux:toast.group>
     @endpersist

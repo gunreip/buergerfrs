@@ -1,11 +1,8 @@
 <?php
 
-use Illuminate\Support\Str;
-use Livewire\Component;
+// resources/views/components/admin/⚡user-list.blade.php
 
-new class extends Component {
-    //
-};
+use Illuminate\Support\Str;
 
 $highlightSearchMatch = static function (?string $value, ?string $search): string {
     $value = (string) $value;
@@ -19,31 +16,29 @@ $highlightSearchMatch = static function (?string $value, ?string $search): strin
     $escapedSearch = e($search);
 
     return Str::of($escapedValue)
-        ->replaceMatches('/' . preg_quote($escapedSearch, '/') . '/iu', '<mark class="rounded bg-yellow-300/30 px-0.5 text-zinc-950">$0</mark>')
+        ->replaceMatches('/' . preg_quote($escapedSearch, '/') . '/iu', '<mark class="highlight">$0</mark>')
         ->toString();
 };
 ?>
 
 <flux:card>
-    <flux:field space="md">
-        <flux:heading
-            class="mb-1"
-            size="xl"
-        >
-            {{ __('User Management') }}
-        </flux:heading>
 
-        <flux:text>
-            {{ __('Manage your system\'s users, assign roles, and manage permissions') }}.
-        </flux:text>
-    </flux:field>
+    {{-- Header part --}}
+    <x-ui.headers.page
+        title="{{ __('User / Role Management') }}"
+        description="{{ __('Manage your system\'s users, assign roles, and manage permissions') }}."
+    />
 
-    @include('components.admin.partials.user-list.meta')
+    {{-- Metablock: Overview --}}
+    @include('components.admin.partials.user-list.⚡meta')
 
-    @include('components.admin.partials.user-list.filter')
+    {{-- Filter part --}}
+    @include('components.admin.partials.user-list.⚡filter')
 
-    @include('components.admin.partials.user-list.table')
+    {{-- Table part --}}
+    @include('components.admin.partials.user-list.⚡table')
 
-    @include('components.admin.partials.user-list.modal')
+    {{-- Modal part --}}
+    @include('components.admin.partials.user-list.⚡modal')
 
 </flux:card>

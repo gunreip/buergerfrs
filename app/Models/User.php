@@ -1,5 +1,7 @@
 <?php
 
+// app/Models/User.php
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -29,7 +31,30 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'settings' => 'array',
         ];
+    }
+
+    /**
+     * Get a user setting value by dot-notated key.
+     */
+    public function setting(string $key, mixed $default = null): mixed
+    {
+        return data_get($this->settings ?? [], $key, $default);
+    }
+
+    /**
+     * Set a user setting value by dot-notated key.
+     *
+     * The model is not saved automatically. Call save() explicitly.
+     */
+    public function setSetting(string $key, mixed $value): void
+    {
+        $settings = $this->settings ?? [];
+
+        data_set($settings, $key, $value);
+
+        $this->settings = $settings;
     }
 
     /**

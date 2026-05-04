@@ -18,20 +18,12 @@
     :color="$color"
     :variant="$variant"
 >
-    @if ($icon === 'refresh-cw-off')
-        <flux:icon.refresh-cw-off variant="micro" />
-        &nbsp;
-    @elseif ($icon === 'shield-check')
-        <flux:icon.shield-check variant="micro" />
-        &nbsp;
-    @elseif ($icon === 'crown')
-        <flux:icon.crown variant="micro" />
-        &nbsp;
-    @elseif ($icon === 'user')
-        <flux:icon.user variant="micro" />
-        &nbsp;
-    @elseif ($icon === 'tag')
-        <flux:icon.tag variant="micro" />
+    @if ($icon !== null && $icon !== '')
+        <x-ui.safe-flux-icon
+            :name="$icon"
+            category="role_user_management"
+            variant="micro"
+        />
         &nbsp;
     @endif
 

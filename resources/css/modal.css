@@ -1,0 +1,5 @@
+/* resources/css/modal.css */
+
+dialog[data-open]::backdrop {
+    @apply bg-zinc-950/70 backdrop-blur-sm;
+}
