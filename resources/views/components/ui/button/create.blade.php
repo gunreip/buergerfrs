@@ -47,27 +47,14 @@
         </flux:button>
     </flux:button.group>
 @else
-    <flux:button.group>
-        <flux:button
-            class="hover:cursor-pointer"
-            type="{{ $type }}"
-            icon="{{ $resolvedIcon }}"
-            {{ $attributes }}
-            variant="primary"
-            color="green"
-            :size="$size"
-        >
-            {{ $label }}
-        </flux:button>
-        <flux:button
-            class="hover:cursor-pointer"
-            type="{{ $type }}"
-            {{ $attributes }}
-            variant="primary"
-            color="green"
-            :size="$size"
-        >
-            {{ $label }}
-        </flux:button>
-    </flux:button.group>
+    <flux:button
+        class="hover:cursor-pointer"
+        type="{{ $type }}"
+        {{ $attributes }}
+        variant="primary"
+        color="green"
+        :size="$size"
+    >
+        {{ $label }}
+    </flux:button>
 @endif

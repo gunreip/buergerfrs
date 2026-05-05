@@ -27,7 +27,7 @@
         :description="__('Review registered permissions, guards, and role assignments.')"
     >
         <x-ui.button.confirm
-            label="Edit Role Managment"
+            label="{{ __('Edit Role Managment') }}"
             wire:click="openRolePermissionsModal"
         />
     </x-ui.headers.page>
