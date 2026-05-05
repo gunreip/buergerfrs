@@ -80,16 +80,12 @@
 
                             <flux:table.cell class="w-48">
                                 <flux:button.group class="justify-center">
-                                    <flux:button
-                                        type="button"
-                                        wire:click="openEditRolesModal({{ $user->id }})"
-                                        variant="primary"
-                                        color="sky"
+                                    <x-ui.button.edit
+                                        icon="pencil-square"
+                                        label="{{ __('Edit Roles') }}"
                                         size="sm"
-                                        iconTrailing="pencil-square"
-                                    >
-                                        {{ __('Edit Roles') }}
-                                    </flux:button>
+                                        wire:click="openEditRolesModal({{ $user->id }})"
+                                    />
                                 </flux:button.group>
                             </flux:table.cell>
                         </flux:table.row>

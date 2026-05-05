@@ -2,8 +2,8 @@
 
 <flux:card>
     <x-ui.headers.page
-        title="{{ __('App Settings') }}"
-        description="{{ __('Review global application settings, role badge configuration, and icon registry health.') }}"
+        :title="__('App Settings')"
+        :description="__('Review global application settings, role badge configuration, and icon registry health.')"
     />
 
     {{-- Overview of application settings related to role badges and icon registry. This is intended as a diagnostic tool to quickly identify potential misconfigurations or issues with role badge display and icon availability. --}}

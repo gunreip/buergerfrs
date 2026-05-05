@@ -59,13 +59,18 @@ new class extends Component {
                 >{{ __('Cancel') }}</flux:button>
             </flux:modal.close>
 
-            <flux:button
+            <x-ui.button.delete
+                data-test="confirm-delete-user-button"
+                label="{{ __('Delete Account') }}"
+                icon="trash"
+            />
+            {{-- <flux:button
                 data-test="confirm-delete-user-button"
                 type="submit"
                 variant="danger"
             >
                 {{ __('Delete account') }}
-            </flux:button>
+            </flux:button> --}}
         </div>
     </form>
 </flux:modal>

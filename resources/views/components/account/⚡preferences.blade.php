@@ -7,8 +7,8 @@
 
 <flux:card>
     <x-ui.headers.page
-        title="{{ __('User Preferences') }}"
-        description="{{ __('Manage your personal application preferences.') }}"
+        :title="__('User Preferences')"
+        :description="__('Manage your personal application preferences.')"
     />
 
     {{-- Current user preferences: --}}

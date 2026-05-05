@@ -88,6 +88,8 @@ option::checkmark {
     color: lime;
 } */
 
+
 @import './table.css';
 @import './modal.css';
+@import './button.css';
 @import './animations.css';

@@ -91,37 +91,50 @@ new #[Title('Security settings')] class extends Component {
 
     <flux:heading class="sr-only">{{ __('Security settings') }}</flux:heading>
 
-    <x-pages::settings.layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">
-        <form method="POST" wire:submit="updatePassword" class="mt-6 space-y-6">
+    <x-pages::settings.layout
+        :heading="__('Update password')"
+        :subheading="__('Ensure your account is using a long, random password to stay secure')"
+    >
+        <form
+            class="mt-6 space-y-6"
+            method="POST"
+            wire:submit="updatePassword"
+        >
             <flux:input
+                type="password"
                 wire:model="current_password"
                 :label="__('Current password')"
-                type="password"
                 required
                 autocomplete="current-password"
                 viewable
             />
             <flux:input
+                type="password"
                 wire:model="password"
                 :label="__('New password')"
-                type="password"
                 required
                 autocomplete="new-password"
                 viewable
             />
             <flux:input
+                type="password"
                 wire:model="password_confirmation"
                 :label="__('Confirm password')"
-                type="password"
                 required
                 autocomplete="new-password"
                 viewable
             />
 
             <div class="flex items-center gap-4">
-                <flux:button variant="primary" type="submit" data-test="update-password-button">
+                <x-ui.button.save
+                    data-test="update-password-button"
+                    label="{{ __('Save') }}"
+                    {{-- icon="save" --}}
+                    {{-- color="green" --}}
+                />
+                {{-- <flux:button variant="primary" type="submit" data-test="update-password-button">
                     {{ __('Save') }}
-                </flux:button>
+                </flux:button> --}}
             </div>
         </form>
 
@@ -130,7 +143,10 @@ new #[Title('Security settings')] class extends Component {
                 <flux:heading>{{ __('Two-factor authentication') }}</flux:heading>
                 <flux:subheading>{{ __('Manage your two-factor authentication settings') }}</flux:subheading>
 
-                <div class="flex flex-col w-full mx-auto space-y-6 text-sm" wire:cloak>
+                <div
+                    class="mx-auto flex w-full flex-col space-y-6 text-sm"
+                    wire:cloak
+                >
                     @if ($twoFactorEnabled)
                         <div class="space-y-4">
                             <flux:text>
@@ -138,12 +154,17 @@ new #[Title('Security settings')] class extends Component {
                             </flux:text>
 
                             <div class="flex justify-start">
-                                <flux:button
+                                <x-ui.button.delete
+                                    label="{{ __('Disable 2FA') }}"
+                                    icon="shield-off"
+                                    wire:click="disable"
+                                />
+                                {{-- <flux:button
                                     variant="danger"
                                     wire:click="disable"
                                 >
                                     {{ __('Disable 2FA') }}
-                                </flux:button>
+                                </flux:button> --}}
                             </div>
 
                             <livewire:pages::settings.two-factor.recovery-codes :$requiresConfirmation />
@@ -155,12 +176,17 @@ new #[Title('Security settings')] class extends Component {
                             </flux:text>
 
                             <flux:modal.trigger name="two-factor-setup-modal">
-                                <flux:button
+                                <x-ui.button.save
+                                    label="{{ __('Enable 2FA') }}"
+                                    icon="shield-check"
+                                    wire:click="$dispatch('start-two-factor-setup')"
+                                />
+                                {{-- <flux:button
                                     variant="primary"
                                     wire:click="$dispatch('start-two-factor-setup')"
                                 >
                                     {{ __('Enable 2FA') }}
-                                </flux:button>
+                                </flux:button> --}}
                             </flux:modal.trigger>
 
                             <livewire:pages::settings.two-factor-setup-modal :requires-confirmation="$requiresConfirmation" />

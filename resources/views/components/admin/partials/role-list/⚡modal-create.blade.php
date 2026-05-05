@@ -120,24 +120,11 @@
         <flux:separator />
 
         <div class="flex justify-end gap-3">
-            <flux:button
-                type="button"
-                variant="primary"
-                color="red"
-                wire:click="closeCreateRoleModal"
-            >
-                {{ __('Cancel') }}
-            </flux:button>
-
-            <flux:button
-                type="button"
-                variant="primary"
-                color="green"
+            <x-ui.button.cancel wire:click="closeCreateRoleModal" />
+            <x-ui.button.create
                 wire:click="createRole"
                 :disabled="trim($creatingRoleName) === ''"
-            >
-                {{ __('Create') }}
-            </flux:button>
+            />
         </div>
     </div>
 </flux:modal>

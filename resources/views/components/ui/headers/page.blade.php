@@ -1,7 +1,5 @@
 {{-- resources/views/components/ui/headers/page.blade.php --}}
 
-@props(['title', 'description' => null, 'headingSize' => 'xl'])
-
 <flux:field
     {{ $attributes->class('space-y-0') }}
     space="md"

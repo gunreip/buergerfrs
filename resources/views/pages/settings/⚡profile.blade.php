@@ -237,7 +237,14 @@ new #[Title('Profile settings')] class extends Component {
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <flux:button
+                        <x-ui.button.save
+                            data-test="update-profile-button"
+                            type="submit"
+                            label="{{ __('Save') }}"
+                            {{-- icon="save" --}}
+                            {{-- color="green" --}}
+                        />
+                        {{-- <flux:button
                             data-test="update-profile-button"
                             type="submit"
                             variant="primary"
@@ -245,7 +252,7 @@ new #[Title('Profile settings')] class extends Component {
                             icon="save"
                         >
                             {{ __('Save') }}
-                        </flux:button>
+                        </flux:button> --}}
                     </div>
                 </div>
 

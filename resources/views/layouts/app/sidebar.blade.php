@@ -63,6 +63,16 @@
                     {{ __('Roles') }}
                 </flux:sidebar.item>
 
+                {{-- Admin -> permissions --}}
+                <flux:sidebar.item
+                    icon="key-round"
+                    :href="route('admin.permissions')"
+                    :current="request()->routeIs('admin.permissions')"
+                    wire:navigate
+                >
+                    {{ __('Permissions') }}
+                </flux:sidebar.item>
+
                 {{-- Admin -> app settings --}}
                 <flux:sidebar.item
                     icon="settings"

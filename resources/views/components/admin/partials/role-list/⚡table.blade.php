@@ -138,16 +138,12 @@
 
                             <flux:table.cell align="center">
                                 <flux:button.group class="justify-center">
-                                    <flux:button
-                                        type="button"
-                                        variant="primary"
-                                        color="sky"
-                                        size="sm"
+                                    <x-ui.button.edit
                                         icon="pencil-square"
+                                        label="{{ __('Edit Role') }}"
+                                        size="sm"
                                         wire:click="openEditRoleModal({{ $role->id }})"
-                                    >
-                                        {{ __('Edit Role') }}
-                                    </flux:button>
+                                    />
                                 </flux:button.group>
                             </flux:table.cell>
                         </flux:table.row>

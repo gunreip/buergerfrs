@@ -2,8 +2,8 @@
 
 <flux:card>
     <x-ui.headers.page
-        title="{{ __('Account Settings') }}"
-        description="{{ __('Manage your personal profile and UI preferences.') }}"
+        :title="__('Account Settings')"
+        :description="__('Manage your personal profile and UI preferences.')"
     />
 
     <flux:card class="mt-6">

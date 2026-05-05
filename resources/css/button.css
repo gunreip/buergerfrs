@@ -1,0 +1,10 @@
+/* resources/css/button.css */
+[data-flux-button] {
+    @apply transition-colors duration-500 ease-in-out disabled:cursor-not-allowed disabled:opacity-50;
+    @apply hover:cursor-pointer;
+}
+
+[data-flux-radio-segmented] {
+    @apply transition-colors duration-500 ease-in-out disabled:cursor-not-allowed disabled:opacity-50;
+    @apply hover:cursor-pointer;
+}

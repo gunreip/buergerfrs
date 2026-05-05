@@ -23,19 +23,15 @@
 
     {{-- Header part --}}
     <x-ui.headers.page
-        title="{{ __('Role Management') }}"
-        description="{{ __('Manage role metadata, assignment visibility, and role badge display settings.') }}"
+        :title="__('Role Management')"
+        :description="__('Manage role metadata, assignment visibility, and role badge display settings.')"
     >
         @role('Super-Admin')
-            <flux:button
-                type="button"
-                variant="primary"
-                color="green"
+            <x-ui.button.save
                 icon="plus"
+                label="{{ __('Create Role') }}"
                 wire:click="openCreateRoleModal"
-            >
-                {{ __('Create Role') }}
-            </flux:button>
+            />
         @endrole
     </x-ui.headers.page>
 

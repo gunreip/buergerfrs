@@ -25,8 +25,8 @@ $highlightSearchMatch = static function (?string $value, ?string $search): strin
 
     {{-- Header part --}}
     <x-ui.headers.page
-        title="{{ __('User / Role Management') }}"
-        description="{{ __('Manage your system\'s users, assign roles, and manage permissions') }}."
+        :title="__('User / Role Management')"
+        :description="__('Manage your system\'s users, assign roles, and manage permissions')"
     />
 
     {{-- Metablock: Overview --}}

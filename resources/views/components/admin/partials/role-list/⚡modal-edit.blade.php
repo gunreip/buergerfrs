@@ -140,23 +140,11 @@
         <flux:separator />
 
         <div class="flex justify-end gap-3">
-            <flux:button
-                type="button"
-                variant="primary"
-                color="red"
-                wire:click="closeEditRoleModal"
-            >
-                {{ __('Cancel') }}
-            </flux:button>
-
-            <flux:button
-                type="button"
-                variant="primary"
-                color="green"
-                wire:click="saveRole"
-            >
-                {{ __('Save Changes') }}
-            </flux:button>
+            <x-ui.button.cancel wire:click="openEditRolePermissionsModal" />
+            <x-ui.button.save
+                label="{{ __('Save Changes') }}"
+                wire:click="openEditRolePermissionsModal"
+            />
         </div>
     </div>
 </flux:modal>
