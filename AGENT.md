@@ -24,7 +24,7 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
 ## Wichtige Verzeichnisse & Dateien
 
 - `app/` – Hauptapplikation (Controller, Models, Livewire, Actions, Support, Settings)
-- `app/Livewire/Admin/` – Admin-Livewire-Komponenten: `UserList`, `RoleList`, `AppSettings`app/Livewire/Admin/
+- `app/Livewire/Admin/` – Admin-Livewire-Komponenten: `UserList`, `RoleList`, `PermissionList`, `AppSettings`
 - `UserEdit` ist aktuell geparkt und nicht aktiv geroutet; Rollenänderungen erfolgen über Modals in `UserList`.
 - `app/Support/Icons/IconRegistry.php` – Zentrales Icon-Registry für Flux-Icons (Kategorie-basiert, mit Fallback)
 - `app/Livewire/Admin/PermissionList.php` – Admin-UI für Permission-Übersicht, Permission-Metadaten und Role↔Permission-Zuweisungen
@@ -33,6 +33,9 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
 - `app/Settings/AppDisplaySettings.php` – Spatie-Settings: `app_display`-Gruppe (z.B. `roleBadges`)
 - `users.settings` – JSONB-Spalte für userbezogene UI-/Profil-Einstellungen; Zugriff über `User::setting()` und `User::setSetting()`
 - `config/buergerfrs-icons.php` – Erlaubte Flux-Icons pro Kategorie (z.B. `role_user_management`), inkl. Fallback-Definition
+- `app/Models/Person.php` – Natürliche Person / Mensch als fachlicher Stammdatensatz; 1:1 mit `User` verknüpfbar
+- `app/Models/Client.php` – Organisation / Mandant / Institution; kein Login-Konto
+- `app/Models/ClientPerson.php` – Pivot-Model für `client_person` mit Beziehungstyp, Status und Verifizierungsdaten
 - `routes/web.php` – Web-Routen
 - `routes/admin.php` – Admin-Routen wie `/admin/users`, `/admin/roles`, `/admin/permissions`, `/admin/app-settings` geschützt durch `auth`, `verified`, `role:Admin|Super-Admin`
 - `routes/settings.php` – Einstellungen
@@ -63,6 +66,11 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
 - **User Avatars:** User-Avatare werden nicht user-id-basiert abgelegt, sondern über geshardete UUID-Pfade unter `storage/app/public/avatars/...`. Der gespeicherte relative Pfad liegt in `users.settings.profile.avatar_path`. Upload/Delete/URL-Resolution läuft über `App\Support\Avatar\UserAvatarStorage`; Pfaderzeugung über `App\Support\Avatar\AvatarPath`. Anzeige immer über `x-ui.user-avatar`, damit Bildanzeige und Fallback auf Initials zentral bleiben.
 - **Buttons:** Standard-Aktionsbuttons werden über `x-ui.button.*` gerendert, nicht direkt als rohe `flux:button`, sofern es sich um wiederkehrende Aktionen wie `save`, `cancel`, `create`, `delete`, `edit`, `reset` oder `remove` handelt. Die Button-Komponenten besitzen ein Standard-Icon; `icon="..."` überschreibt es, `:icon="false"` rendert ohne Icon. Button-Layout, Farbe, Variant und Icon/Text-Trennung werden zentral in `resources/views/components/ui/button/base.blade.php` gepflegt.
 - **Blade Component Props:** Dynamische, übersetzte oder typisierte Werte werden bei Blade-Komponenten bevorzugt als gebundene Props übergeben, z.B. `:title="__('...')"`, `:description="__('...')"`, `:label="__('...')"`, `:icon="false"`. Feste Literalwerte wie `color="green"`, `variant="subtle"` oder `type="button"` können normale Attribute bleiben. Das verhindert doppeltes Escaping wie sichtbares `&#039;`.
+- **Admin Activity Logging:** Admin-relevante Änderungen an Users/Roles/Permissions werden über `App\Support\Audit\AdminActivity` in `activity_log` mit `log_name=admin` dokumentiert. Geloggt werden u.a. User-Rollenänderungen, Role Create/Update, Permission-Metadatenänderungen und Role↔Permission-Zuweisungen. Events verwenden `admin.*`-Namen und enthalten `before`/`after`-Properties sowie Subject/Causer.
+- **User | Person | Client:** `User` ist ausschließlich das Login-/Auth-Konto. `Person` ist die natürliche Person / der Mensch als fachlicher Stammdatensatz. Jede Person soll fachlich ein User-Konto besitzen; technisch ist `users.person_id` aktuell nullable, damit bestehende/Seed-User migriert werden können. `Client` ist eine Organisation / Mandant / Institution und kann sich nicht selbst anmelden. Eine Person handelt privat oder im Kontext eines Clients.
+- **User↔Person:** Die Beziehung ist als 1:1 über `users.person_id` modelliert. `User::person()` ist `belongsTo(Person::class)`, `Person::user()` ist `hasOne(User::class)`.
+- **Client↔Person:** Die Beziehung läuft über `client_person` mit dem Pivot-Model `App\Models\ClientPerson`. Dort liegen `relationship_type`, `status`, `is_primary`, `starts_at`, `ends_at`, `verified_at`, `verified_by_user_id`, `created_by_user_id` und `notes`. `ClientPerson` erweitert `Illuminate\Database\Eloquent\Relations\Pivot`, nicht `Model`, weil die Relation über `belongsToMany()->using(ClientPerson::class)` läuft.
+- **Sidebar:** Die Hauptnavigation nutzt `flux:sidebar` mit `flux:sidebar.group` und `flux:sidebar.item`. Sidebar-Gruppen sollen bei Desktop-Collapse `icon="..."` und `expandable` besitzen, damit sie im collapsed Zustand als Icon sichtbar bleiben und ihre Items als Flyout öffnen. Kein Umbau auf `flux:navlist`, solange `flux:sidebar.group expandable` das gewünschte Verhalten abdeckt.
 
 ---
 
@@ -86,6 +94,7 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
 - **Versions- und Paketübersicht:** Siehe `VERSIONS.md` für eine aktuelle Übersicht aller wichtigen Composer- und npm-Abhängigkeiten inkl. Beschreibung. Die Datei wird regelmäßig gepflegt und enthält auch Hinweise zu verwendeten Systemversionen.
 - Für alle Änderungen im Projekt gilt: **Regelmäßig git commits durchführen!** So bleiben Änderungen nachvollziehbar, können bei Bedarf rückgängig gemacht werden und die Zusammenarbeit im Team wird erleichtert.
 - Aktuell persistierte User-Settings: `ui.per_page.admin_users` für die persönliche Per-Page-Auswahl auf `/admin/users`, `locale.app` als gespeicherte Locale-Präferenz, `profile.nickname` und `profile.avatar_path` für Profilanzeige.
+- Aktueller Fachmodell-Stand: `people`, `clients` und `client_person` sind als Grundmodell vorhanden. `people` wurde per Backfill 1:1 mit bestehenden `users` verknüpft. `client_person` ist technisch per Tinker verifiziert.
 
 ---
 

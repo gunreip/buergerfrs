@@ -2,12 +2,14 @@
 
 // routes/admin.php
 
-use App\Livewire\Admin\AppSettings;
-use App\Livewire\Admin\RoleList;
 // use App\Livewire\Admin\UserEdit;
+use App\Livewire\Admin\AppSettings;
+use App\Livewire\Admin\ClientList;
+use App\Livewire\Admin\PermissionList;
+use App\Livewire\Admin\PersonList;
+use App\Livewire\Admin\RoleList;
 use App\Livewire\Admin\UserList;
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Admin\PermissionList;
 
 Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
     ->prefix('admin')
@@ -16,6 +18,10 @@ Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
         Route::view('/', 'dashboard')->name('dashboard');
 
         Route::get('users', UserList::class)->name('users');
+
+        Route::get('people', PersonList::class)->name('people');
+
+        Route::get('clients', ClientList::class)->name('clients');
 
         // Route::get('users/{user}/edit', UserEdit::class)->name('users.edit');
 

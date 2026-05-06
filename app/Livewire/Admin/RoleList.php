@@ -5,6 +5,7 @@
 namespace App\Livewire\Admin;
 
 use App\Settings\AppDisplaySettings;
+use App\Support\Audit\AdminActivity;
 use App\Support\Icons\IconRegistry;
 use App\Support\Settings\RoleBadgeResolver;
 use Flux\Flux;
@@ -74,7 +75,7 @@ class RoleList extends Component
         $this->resetCreateRoleModal();
     }
 
-    public function createRole(AppDisplaySettings $settings, IconRegistry $iconRegistry): void
+    public function createRole(AppDisplaySettings $settings, IconRegistry $iconRegistry, AdminActivity $adminActivity): void
     {
         if (! auth()->user()?->hasRole('Super-Admin')) {
             Flux::toast(
@@ -138,6 +139,18 @@ class RoleList extends Component
 
         $settings->roleBadges = $roleBadges;
         $settings->save();
+
+        $adminActivity->roleCreated(
+            role: $role,
+            metadata: [
+                'category' => $role->category,
+                'sort_order' => $role->sort_order,
+                'description' => $role->description,
+                'is_system' => $role->is_system,
+                'is_assignable' => $role->is_assignable,
+            ],
+            badge: $roleBadges[$role->name] ?? [],
+        );
 
         $this->resetCreateRoleModal();
 
@@ -203,7 +216,7 @@ class RoleList extends Component
         $this->resetEditRoleModal();
     }
 
-    public function saveRole(AppDisplaySettings $settings, IconRegistry $iconRegistry): void
+    public function saveRole(AppDisplaySettings $settings, IconRegistry $iconRegistry, AdminActivity $adminActivity): void
     {
         if ($this->editingRoleId === null) {
             return;
@@ -233,6 +246,23 @@ class RoleList extends Component
 
         $role = Role::query()->findOrFail($this->editingRoleId);
 
+        $beforeBadge = $settings->roleBadges[$role->name] ?? [];
+
+        $before = [
+            'metadata' => [
+                'category' => $role->category,
+                'sort_order' => $role->sort_order,
+                'description' => $role->description,
+                'is_system' => $role->is_system,
+                'is_assignable' => $role->is_assignable,
+            ],
+            'badge' => [
+                'color' => $beforeBadge['color'] ?? null,
+                'variant' => $beforeBadge['variant'] ?? null,
+                'icon' => $beforeBadge['icon'] ?? null,
+            ],
+        ];
+
         $role->forceFill([
             'category' => trim($this->editingCategory) !== '' ? trim($this->editingCategory) : null,
             'sort_order' => $this->editingSortOrder,
@@ -249,6 +279,29 @@ class RoleList extends Component
 
         $settings->roleBadges = $roleBadges;
         $settings->save();
+
+        $role->refresh();
+
+        $after = [
+            'metadata' => [
+                'category' => $role->category,
+                'sort_order' => $role->sort_order,
+                'description' => $role->description,
+                'is_system' => $role->is_system,
+                'is_assignable' => $role->is_assignable,
+            ],
+            'badge' => [
+                'color' => $roleBadges[$role->name]['color'] ?? null,
+                'variant' => $roleBadges[$role->name]['variant'] ?? null,
+                'icon' => $roleBadges[$role->name]['icon'] ?? null,
+            ],
+        ];
+
+        $adminActivity->roleUpdated(
+            role: $role,
+            before: $before,
+            after: $after,
+        );
 
         $savedRoleName = (string) $role->name;
 

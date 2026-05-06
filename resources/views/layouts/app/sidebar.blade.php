@@ -12,7 +12,7 @@
     <flux:sidebar
         class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900"
         sticky
-        collapsible="mobile"
+        collapsible
     >
         <flux:sidebar.header>
             <x-app-logo
@@ -20,13 +20,18 @@
                 :sidebar="true"
                 wire:navigate
             />
-            <flux:sidebar.collapse class="lg:hidden" />
+            <flux:sidebar.collapse
+                class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2"
+            />
+            {{-- <flux:sidebar.collapse class="lg:hidden" /> --}}
         </flux:sidebar.header>
 
         <flux:sidebar.nav>
             <flux:sidebar.group
                 class="grid"
                 :heading="__('Platform')"
+                icon="layout-dashboard"
+                expandable
             >
                 {{-- Platform -> dashboard --}}
                 <flux:sidebar.item
@@ -42,6 +47,8 @@
             <flux:sidebar.group
                 class="mt-4 grid"
                 :heading="__('Administration')"
+                icon="settings-2"
+                expandable
             >
                 {{-- Admin -> users --}}
                 <flux:sidebar.item
@@ -51,6 +58,26 @@
                     wire:navigate
                 >
                     {{ __('Users') }}
+                </flux:sidebar.item>
+
+                {{-- Admin -> people --}}
+                <flux:sidebar.item
+                    icon="id-card"
+                    :href="route('admin.people')"
+                    :current="request()->routeIs('admin.people')"
+                    wire:navigate
+                >
+                    {{ __('Persons') }}
+                </flux:sidebar.item>
+
+                {{-- Admin -> clients --}}
+                <flux:sidebar.item
+                    icon="building-2"
+                    :href="route('admin.clients')"
+                    :current="request()->routeIs('admin.clients')"
+                    wire:navigate
+                >
+                    {{ __('Clients') }}
                 </flux:sidebar.item>
 
                 {{-- Admin -> roles --}}

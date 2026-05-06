@@ -4,6 +4,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Support\Audit\AdminActivity;
 use App\Models\User;
 use App\Support\Settings\RoleBadgeResolver;
 use Flux\Flux;
@@ -149,7 +150,7 @@ class UserList extends Component
         $this->resetEditRolesModal();
     }
 
-    public function saveEditRoles(): void
+    public function saveEditRoles(AdminActivity $adminActivity): void
     {
         if ($this->editingUserId === null) {
             return;
@@ -172,9 +173,33 @@ class UserList extends Component
             return;
         }
 
-        $user = User::query()->findOrFail($this->editingUserId);
+        $user = User::query()
+            ->with('roles')
+            ->findOrFail($this->editingUserId);
+
+        $beforeRoles = $user
+            ->roles
+            ->pluck('name')
+            ->map(fn($role): string => (string) $role)
+            ->values()
+            ->all();
 
         $user->syncRoles([$validRoleName]);
+
+        $user->load('roles');
+
+        $afterRoles = $user
+            ->roles
+            ->pluck('name')
+            ->map(fn($role): string => (string) $role)
+            ->values()
+            ->all();
+
+        $adminActivity->userRoleChanged(
+            targetUser: $user,
+            beforeRoles: $beforeRoles,
+            afterRoles: $afterRoles,
+        );
 
         $savedUserName = (string) $user->name;
         $savedRoleName = (string) $validRoleName;

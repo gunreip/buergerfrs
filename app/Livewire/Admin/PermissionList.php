@@ -4,11 +4,12 @@
 
 namespace App\Livewire\Admin;
 
+use App\Support\Audit\AdminActivity;
+use Flux\Flux;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Flux\Flux;
-use Illuminate\Validation\Rule;
 use Spatie\Permission\PermissionRegistrar;
 
 class PermissionList extends Component
@@ -203,7 +204,7 @@ class PermissionList extends Component
         $this->originalPermissionNames = $this->selectedPermissionNames;
     }
 
-    public function saveRolePermissions(): void
+    public function saveRolePermissions(AdminActivity $adminActivity): void
     {
         $this->validate([
             'selectedRoleName' => ['required', 'string', 'exists:roles,name'],
@@ -214,6 +215,9 @@ class PermissionList extends Component
         $role = Role::query()
             ->where('name', $this->selectedRoleName)
             ->firstOrFail();
+
+        $beforePermissions = $this->normalizedPermissionNames($this->originalPermissionNames);
+        $afterPermissions = $this->normalizedPermissionNames($this->selectedPermissionNames);
 
         if (! $this->hasRolePermissionChanges()) {
             Flux::toast(
@@ -228,9 +232,15 @@ class PermissionList extends Component
             return;
         }
 
-        $role->syncPermissions($this->selectedPermissionNames);
+        $role->syncPermissions($afterPermissions);
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+        $adminActivity->rolePermissionsUpdated(
+            role: $role,
+            beforePermissions: $beforePermissions,
+            afterPermissions: $afterPermissions,
+        );
 
         $this->dispatch('$refresh');
 
@@ -246,7 +256,7 @@ class PermissionList extends Component
         );
     }
 
-    public function savePermissionMetadata(): void
+    public function savePermissionMetadata(AdminActivity $adminActivity): void
     {
         $this->validate([
             'editingPermissionId' => ['required', 'integer', 'exists:permissions,id'],
@@ -259,6 +269,13 @@ class PermissionList extends Component
         $permission = Permission::query()
             ->findOrFail($this->editingPermissionId);
 
+        $before = [
+            'category' => $permission->category,
+            'sort_order' => $permission->sort_order,
+            'description' => $permission->description,
+            'is_system' => $permission->is_system,
+        ];
+
         $permission->category = trim($this->editingCategory) !== ''
             ? trim($this->editingCategory)
             : null;
@@ -270,6 +287,21 @@ class PermissionList extends Component
 
         $permission->is_system = $this->editingIsSystem;
         $permission->save();
+
+        $permission->refresh();
+
+        $after = [
+            'category' => $permission->category,
+            'sort_order' => $permission->sort_order,
+            'description' => $permission->description,
+            'is_system' => $permission->is_system,
+        ];
+
+        $adminActivity->permissionMetadataUpdated(
+            permission: $permission,
+            before: $before,
+            after: $after,
+        );
 
         $this->closeEditPermissionModal();
 
