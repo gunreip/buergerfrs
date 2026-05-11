@@ -8,9 +8,14 @@
 
             {{-- Health insurance provider --}}
             <flux:field>
-                <flux:label for="create-person-health-insurance-provider">
-                    {{ __('Health insurance provider') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Health insurance provider') }}"
+                    text="{{ __('Please select the health insurance provider for the person. This is important for correctly identifying the person\'s health insurance and for any health insurance-specific validations.') }}"
+                >
+                    <flux:label for="create-person-health-insurance-provider">
+                        {{ __('Health insurance provider') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -35,9 +40,14 @@
 
             {{-- Health insurance number --}}
             <flux:field>
-                <flux:label for="create-person-health-insurance-number">
-                    {{ __('Health insurance number') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Health insurance number') }}"
+                    text="{{ __('Please enter the health insurance number for the person. This is important for correctly identifying the person\'s health insurance and for any health insurance-specific validations.') }}"
+                >
+                    <flux:label for="create-person-health-insurance-number">
+                        {{ __('Health insurance number') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>

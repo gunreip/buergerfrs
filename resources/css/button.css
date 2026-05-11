@@ -8,3 +8,17 @@
     @apply transition-colors duration-500 ease-in-out disabled:cursor-not-allowed disabled:opacity-50;
     @apply hover:cursor-pointer;
 }
+
+[data-flux-input-group-prefix] {
+    @apply dark:bg-zinc-800/40;
+}
+
+[data-flux-radio-segmented] {
+    @apply dark:hover:bg-zinc-400/50;
+}
+
+.dark #create-person-form [data-flux-input-group] [data-flux-input-file] [x-ref="name"] {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}

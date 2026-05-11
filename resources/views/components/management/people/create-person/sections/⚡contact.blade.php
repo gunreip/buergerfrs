@@ -7,9 +7,14 @@
 
             {{-- Phone --}}
             <flux:field>
-                <flux:label for="create-person-phone">
-                    {{ __('Phone') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Phone') }}"
+                    text="{{ __('The phone number should include the country code, e.g. +49 for Germany.') }}"
+                >
+                    <flux:label for="create-person-phone">
+                        {{ __('Phone') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -31,9 +36,14 @@
 
             {{-- Mobile --}}
             <flux:field>
-                <flux:label for="create-person-mobile">
-                    {{ __('Mobile') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Mobile') }}"
+                    text="__('The mobile number should include the country code, e.g. +49 for Germany.')"
+                >
+                    <flux:label for="create-person-mobile">
+                        {{ __('Mobile') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -58,9 +68,14 @@
 
             {{-- Private email --}}
             <flux:field>
-                <flux:label for="create-person-email-private">
-                    {{ __('Private email') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Private email') }}"
+                    text="{{ __('The private email should be a valid email address.') }}"
+                >
+                    <flux:label for="create-person-email-private">
+                        {{ __('Private email') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -82,9 +97,14 @@
 
             {{-- Work email --}}
             <flux:field>
-                <flux:label for="create-person-email-work">
-                    {{ __('Work email') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Work email') }}"
+                    text="__('The work email should be a valid email address.')"
+                >
+                    <flux:label for="create-person-email-work">
+                        {{ __('Work email') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>

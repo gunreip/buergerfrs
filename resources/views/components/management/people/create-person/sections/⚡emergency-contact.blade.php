@@ -7,9 +7,14 @@
 
             {{-- Emergency contact name --}}
             <flux:field>
-                <flux:label for="create-person-emergency-contact-name">
-                    {{ __('Name') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Name') }}"
+                    text="{{ __('Please enter the name of the emergency contact. This is important for correctly identifying the person\'s emergency contact and for any name-specific validations.') }}"
+                >
+                    <flux:label for="create-person-emergency-contact-name">
+                        {{ __('Name') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -31,9 +36,14 @@
 
             {{-- Emergency contact relationship --}}
             <flux:field>
-                <flux:label for="create-person-emergency-contact-relationship">
-                    {{ __('Relationship') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Relationship') }}"
+                    text="{{ __('Please select the relationship of the emergency contact to the person. This is important for correctly identifying the person\'s emergency contact and for any relationship-specific validations.') }}"
+                >
+                    <flux:label for="create-person-emergency-contact-relationship">
+                        {{ __('Relationship') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -61,9 +71,14 @@
 
             {{-- Emergency contact phone --}}
             <flux:field>
-                <flux:label for="create-person-emergency-contact-phone">
-                    {{ __('Phone') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Phone') }}"
+                    text="{{ __('Please enter the phone number of the emergency contact. This is important for correctly identifying the person\'s emergency contact and for any phone-specific validations.') }}"
+                >
+                    <flux:label for="create-person-emergency-contact-phone">
+                        {{ __('Phone') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -85,9 +100,14 @@
 
             {{-- Emergency contact email --}}
             <flux:field>
-                <flux:label for="create-person-emergency-contact-email">
-                    {{ __('Email') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Email') }}"
+                    text="{{ __('Please enter the email address of the emergency contact. This is important for correctly identifying the person\'s emergency contact and for any email-specific validations.') }}"
+                >
+                    <flux:label for="create-person-emergency-contact-email">
+                        {{ __('Email') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>

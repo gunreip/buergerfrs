@@ -7,9 +7,14 @@
 
             {{-- Document type --}}
             <flux:field>
-                <flux:label for="create-person-document-type">
-                    {{ __('Document type') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Document type') }}"
+                    text="{{ __('Please select the type of document for the person. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                >
+                    <flux:label for="create-person-document-type">
+                        {{ __('Document type') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -34,9 +39,14 @@
 
             {{-- Document title --}}
             <flux:field>
-                <flux:label for="create-person-document-title">
-                    {{ __('Document title') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Document title') }}"
+                    text="{{ __('Please enter the title of the document for the person. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                >
+                    <flux:label for="create-person-document-title">
+                        {{ __('Document title') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -61,9 +71,14 @@
 
             {{-- Document number --}}
             <flux:field>
-                <flux:label for="create-person-document-number">
-                    {{ __('Document number') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Document number') }}"
+                    text="{{ __('Please enter the document number for the person. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                >
+                    <flux:label for="create-person-document-number">
+                        {{ __('Document number') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -85,9 +100,14 @@
 
             {{-- Document issuing authority --}}
             <flux:field>
-                <flux:label for="create-person-document-issuing-authority">
-                    {{ __('Issuing authority') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Issuing authority') }}"
+                    text="{{ __('Please enter the issuing authority for the document. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                >
+                    <flux:label for="create-person-document-issuing-authority">
+                        {{ __('Issuing authority') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -112,9 +132,14 @@
 
             {{-- Document issued at --}}
             <flux:field>
-                <flux:label for="create-person-document-issued-at">
-                    {{ __('Issued at') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Issued at') }}"
+                    text="{{ __('Please enter the date when the document was issued. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                >
+                    <flux:label for="create-person-document-issued-at">
+                        {{ __('Issued at') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -135,9 +160,14 @@
 
             {{-- Document expires at --}}
             <flux:field>
-                <flux:label for="create-person-document-expires-at">
-                    {{ __('Expires at') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Expires at') }}"
+                    text="{{ __('Please enter the date when the document expires. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                >
+                    <flux:label for="create-person-document-expires-at">
+                        {{ __('Expires at') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -157,9 +187,14 @@
             </flux:field>
 
             <flux:field class="col-span-2">
-                <flux:label for="create-person-document-upload">
-                    {{ __('Document file') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Document file') }}"
+                    text="{{ __('Please upload a file for the document. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                >
+                    <flux:label for="create-person-document-upload">
+                        {{ __('Document file') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>

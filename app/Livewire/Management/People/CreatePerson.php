@@ -488,6 +488,25 @@ class CreatePerson extends Component
         $this->generatedPassword = $plainPassword;
         $this->createdPersonNumber = (string) $person->person_number;
 
+        $this->resetFormState();
+
+        Flux::toast(
+            heading: __('Person created'),
+            text: __('The person and login account have been created.'),
+            variant: 'success',
+            duration: 4000,
+        );
+    }
+
+    public function resetForm(): void
+    {
+        $this->resetFormState();
+        $this->resetCreatedState();
+        $this->resetValidation();
+    }
+
+    private function resetFormState(): void
+    {
         $this->salutation = '';
         $this->nameTitle = '';
         $this->gender = '';
@@ -521,10 +540,6 @@ class CreatePerson extends Component
         $this->healthInsuranceNumber = '';
         $this->healthInsuranceProviderId = null;
         $this->residencePermitNumber = '';
-        $this->emergencyContactName = '';
-        $this->emergencyContactRelationship = '';
-        $this->emergencyContactPhone = '';
-        $this->emergencyContactEmail = '';
         $this->documentType = '';
         $this->documentTitle = '';
         $this->documentNumber = '';
@@ -532,14 +547,11 @@ class CreatePerson extends Component
         $this->documentIssuedAt = null;
         $this->documentExpiresAt = null;
         $this->documentUpload = null;
+        $this->emergencyContactName = '';
+        $this->emergencyContactRelationship = '';
+        $this->emergencyContactPhone = '';
+        $this->emergencyContactEmail = '';
         $this->email = '';
-
-        Flux::toast(
-            heading: __('Person created'),
-            text: __('The person and login account have been created.'),
-            variant: 'success',
-            duration: 4000,
-        );
     }
 
     public function clearGeneratedPassword(): void

@@ -7,9 +7,16 @@
 
             {{-- National ID number --}}
             <flux:field>
-                <flux:label for="create-person-national-id-number">
-                    {{ __('National ID number') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('National ID number') }}"
+                    text="{{ __('Please enter the national ID number for the person. This is important for correctly identifying the person and for any national ID-specific validations.') }}"
+                    required
+                >
+                    <flux:label for="create-person-national-id-number">
+                        {{ __('National ID number') }}
+                        <x-ui.tooltip.badge-required />
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -31,9 +38,15 @@
 
             {{-- Issuing authority --}}
             <flux:field>
-                <flux:label for="create-person-national-id-issuing-authority">
-                    {{ __('Issuing authority') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Issuing authority') }}"
+                    text="{{ __('Please enter the issuing authority for the national ID. This is important for correctly identifying the person and for any national ID-specific validations.') }}"
+                >
+                    <flux:label for="create-person-national-id-issuing-authority">
+                        {{ __('Issuing authority') }}
+                        <x-ui.tooltip.badge-required />
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -55,9 +68,14 @@
 
             {{-- Tax ID --}}
             <flux:field>
-                <flux:label for="create-person-tax-id">
-                    {{ __('Tax ID') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Tax ID') }}"
+                    text="{{ __('Please enter the tax ID for the person. This is important for correctly identifying the person and for any tax-specific validations.') }}"
+                >
+                    <flux:label for="create-person-tax-id">
+                        {{ __('Tax ID') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -82,9 +100,14 @@
 
             {{-- Social security number --}}
             <flux:field>
-                <flux:label for="create-person-social-security-number">
-                    {{ __('Social security number') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Social security number') }}"
+                    text="{{ __('Please enter the social security number for the person. This is important for correctly identifying the person and for any social security-specific validations.') }}"
+                >
+                    <flux:label for="create-person-social-security-number">
+                        {{ __('Social security number') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -108,9 +131,14 @@
 
             {{-- Pension insurance number --}}
             <flux:field>
-                <flux:label for="create-person-pension-insurance-number">
-                    {{ __('Pension insurance number') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Pension insurance number') }}"
+                    text="{{ __('Please enter the pension insurance number for the person. This is important for correctly identifying the person and for any pension insurance-specific validations.') }}"
+                >
+                    <flux:label for="create-person-pension-insurance-number">
+                        {{ __('Pension insurance number') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -133,9 +161,14 @@
             {{-- <div class="grid gap-4 md:grid-cols-2"> --}}
             {{-- Residence permit number --}}
             <flux:field>
-                <flux:label for="create-person-residence-permit-number">
-                    {{ __('Residence permit number') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Residence permit number') }}"
+                    text="{{ __('Please enter the residence permit number for the person. This is important for correctly identifying the person and for any residence permit-specific validations.') }}"
+                >
+                    <flux:label for="create-person-residence-permit-number">
+                        {{ __('Residence permit number') }}
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>

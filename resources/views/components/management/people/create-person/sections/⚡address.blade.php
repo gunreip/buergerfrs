@@ -7,9 +7,16 @@
 
             {{-- Address country --}}
             <flux:field class="col-span-2">
-                <flux:label for="create-person-address-country">
-                    {{ __('Country') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Country') }}"
+                    text="{{ __('Please select the country for the address. This is important for correctly formatting the address and for any country-specific validations.') }}"
+                    required
+                >
+                    <flux:label for="create-person-address-country">
+                        {{ __('Country') }}
+                        <x-ui.tooltip.badge-required />
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -34,9 +41,16 @@
 
             {{-- Postal code --}}
             <flux:field class="col-span-1">
-                <flux:label for="create-person-address-postal-code">
-                    {{ __('Postal code') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Postal code') }}"
+                    text="{{ __('Please enter the postal code for the address. This is important for correctly formatting the address and for any postal code-specific validations.') }}"
+                    required
+                >
+                    <flux:label for="create-person-address-postal-code">
+                        {{ __('Postal code') }}
+                        <x-ui.tooltip.badge-required />
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -58,9 +72,16 @@
 
             {{-- City --}}
             <flux:field class="col-span-2">
-                <flux:label for="create-person-address-city">
-                    {{ __('City') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('City') }}"
+                    text="{{ __('Please enter the city for the address. This is important for correctly formatting the address and for any city-specific validations.') }}"
+                    required
+                >
+                    <flux:label for="create-person-address-city">
+                        {{ __('City') }}
+                        <x-ui.tooltip.badge-required />
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -85,9 +106,16 @@
 
             {{-- Street --}}
             <flux:field class="col-span-2">
-                <flux:label for="create-person-address-street">
-                    {{ __('Street') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Street') }}"
+                    text="{{ __('Please enter the street for the address. This is important for correctly formatting the address and for any street-specific validations.') }}"
+                    required
+                >
+                    <flux:label for="create-person-address-street">
+                        {{ __('Street') }}
+                        <x-ui.tooltip.badge-required />
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -106,13 +134,19 @@
 
                 <flux:error name="addressStreet" />
             </flux:field>
-            {{-- </div> --}}
 
             {{-- House number --}}
             <flux:field>
-                <flux:label for="create-person-address-house-number">
-                    {{ __('House number') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('House number') }}"
+                    text="{{ __('Please enter the house number for the address. This is important for correctly formatting the address and for any house number-specific validations.') }}"
+                    required
+                >
+                    <flux:label for="create-person-address-house-number">
+                        {{ __('House number') }}
+                        <x-ui.tooltip.badge-required />
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -134,9 +168,15 @@
 
             {{-- Address line 2 --}}
             <flux:field class="col-span-2">
-                <flux:label for="create-person-address-line-2">
-                    {{ __('Address line 2') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Address line 2') }}"
+                    text="{{ __('Please enter additional address information, such as apartment number, floor, etc. This is optional but can be helpful for correctly delivering mail and for any address-specific validations.') }}"
+                >
+                    <flux:label for="create-person-address-line-2">
+                        {{ __('Address line 2') }}
+                        <x-ui.tooltip.badge-required />
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>

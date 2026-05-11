@@ -54,6 +54,35 @@
         </flux:toast.group>
     @endpersist
 
+    {{-- Global Tooltip --}}
+    <template id="global-tooltip-template">
+        <div
+            class="my-tooltip pointer-events-auto z-50 max-w-[24rem] rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-zinc-100 opacity-0 shadow-xl transition-opacity duration-200"
+            role="tooltip"
+        >
+            <div class="flex gap-3">
+                <flux:icon.information-circle class="mt-0.5 size-5 shrink-0 text-zinc-300" />
+
+                <div class="min-w-0 space-y-1">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <div class="tooltip-title text-sm font-semibold leading-5"></div>
+
+                        <flux:badge
+                            class="tooltip-required-badge text-xs"
+                            color="red"
+                            inset="top bottom"
+                            hidden
+                        >
+                            {{ __('Required') }}
+                        </flux:badge>
+                    </div>
+
+                    <div class="tooltip-content text-sm leading-relaxed text-zinc-200"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
     @fluxScripts
 </body>
 

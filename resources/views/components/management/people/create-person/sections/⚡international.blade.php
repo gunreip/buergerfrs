@@ -8,9 +8,16 @@
 
             {{-- Primary nationality --}}
             <flux:field>
-                <flux:label for="create-person-primary-nationality">
-                    {{ __('Primary nationality') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Primary nationality') }}"
+                    text="{{ __('Please select the primary nationality for the person. This is important for correctly identifying the person\'s nationality and for any nationality-specific validations.') }}"
+                    required
+                >
+                    <flux:label for="create-person-primary-nationality">
+                        {{ __('Primary nationality') }}
+                        <x-ui.tooltip.badge-required />
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>
@@ -35,9 +42,16 @@
 
             {{-- Primary language --}}
             <flux:field>
-                <flux:label for="create-person-primary-language">
-                    {{ __('Primary language') }}
-                </flux:label>
+                <x-ui.tooltip.trigger
+                    title="{{ __('Primary language') }}"
+                    text="{{ __('Please select the primary language for the person. This is important for correctly identifying the person\'s primary language and for any language-specific validations.') }}"
+                    required="false"
+                >
+                    <flux:label for="create-person-primary-language">
+                        {{ __('Primary language') }}
+                        <x-ui.tooltip.badge-required />
+                    </flux:label>
+                </x-ui.tooltip.trigger>
 
                 <flux:input.group>
                     <flux:input.group.prefix>

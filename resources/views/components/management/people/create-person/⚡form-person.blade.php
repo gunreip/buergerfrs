@@ -132,7 +132,7 @@
 
                 <flux:card class="space-y-4">
                     <x-ui.headers.card
-                        :title="__('Avatar / passphoto')"
+                        :title="__('Avatar / Passphoto')"
                         :description="__('Upload a passphoto or profile image for this person.')"
                     >
                         <flux:icon.camera
