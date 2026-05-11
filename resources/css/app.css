@@ -92,4 +92,5 @@ option::checkmark {
 @import './table.css';
 @import './modal.css';
 @import './button.css';
+@import './errors.css';
 @import './animations.css';

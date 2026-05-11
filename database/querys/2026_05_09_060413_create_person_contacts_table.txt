@@ -1,0 +1,121 @@
+database/querys/2026_05_09_060413_create_person_contacts_table.txt
+
+gunreip@DESKTOP-I7C75P2:~/code/buergerfrs$ php artisan tinker
+Psy Shell v0.12.22 (PHP 8.4.20 — cli) by Justin Hileman
+New PHP manual is available (latest: 3.0.0). Update with `doc --update-manual`
+
+> \Schema::getColumnListing('person_contacts');
+
+= [
+    "id",
+    "person_id",
+    "related_person_id",
+    "type",
+    "relationship",
+    "name",
+    "phone",
+    "email",
+    "is_primary",
+    "is_emergency_contact",
+    "is_authorized_representative",
+    "verified_at",
+    "verified_by_user_id",
+    "notes",
+    "created_at",
+    "updated_at",
+  ]
+
+> \DB::select("select tc.constraint_name, tc.constraint_type, kcu.column_name, ccu.table_name as foreign_table_name, ccu.column_name as foreign_column_name from information_schema.table_constraints tc join information_schema.key_column_usage kcu on tc.constraint_name = kcu.constraint_name and tc.table_schema = kcu.table_schema left join information_schema.constraint_column_usage ccu on ccu.constraint_name = tc.constraint_name and ccu.table_schema = tc.table_schema where tc.table_schema = 'public' and tc.table_name = 'person_contacts' order by tc.constraint_type, tc.constraint_name, kcu.ordinal_position");
+
+= [
+    {#8348
+      +"constraint_name": "person_contacts_person_id_foreign",
+      +"constraint_type": "FOREIGN KEY",
+      +"column_name": "person_id",
+      +"foreign_table_name": "people",
+      +"foreign_column_name": "id",
+    },
+    {#8349
+      +"constraint_name": "person_contacts_related_person_id_foreign",
+      +"constraint_type": "FOREIGN KEY",
+      +"column_name": "related_person_id",
+      +"foreign_table_name": "people",
+      +"foreign_column_name": "id",
+    },
+    {#8350
+      +"constraint_name": "person_contacts_verified_by_user_id_foreign",
+      +"constraint_type": "FOREIGN KEY",
+      +"column_name": "verified_by_user_id",
+      +"foreign_table_name": "users",
+      +"foreign_column_name": "id",
+    },
+    {#8345
+      +"constraint_name": "person_contacts_pkey",
+      +"constraint_type": "PRIMARY KEY",
+      +"column_name": "id",
+      +"foreign_table_name": "person_contacts",
+      +"foreign_column_name": "id",
+    },
+  ]
+
+> \DB::select("select indexname from pg_indexes where schemaname = 'public' and tablename = 'person_contacts' order by indexname");
+
+= [
+    {#8339
+      +"indexname": "person_contacts_is_authorized_representative_index",
+    },
+    {#8351
+      +"indexname": "person_contacts_is_emergency_contact_index",
+    },
+    {#843
+      +"indexname": "person_contacts_is_primary_index",
+    },
+    {#8359
+      +"indexname": "person_contacts_person_id_index",
+    },
+    {#8317
+      +"indexname": "person_contacts_pkey",
+    },
+    {#8360
+      +"indexname": "person_contacts_related_person_id_index",
+    },
+    {#8323
+      +"indexname": "person_contacts_relationship_index",
+    },
+    {#8324
+      +"indexname": "person_contacts_type_index",
+    },
+    {#8325
+      +"indexname": "person_contacts_verified_at_index",
+    },
+  ]
+
+> $personId = \DB::table('people')->latest('id')->value('id'); \App\Models\PersonContact::query()->create(['person_id' => $personId, 'type' => \App\Models\PersonContact::TYPE_EMERGENCY, 'relationship' => \App\Models\PersonContact::RELATIONSHIP_PARTNER, 'name' => 'Max Muster', 'phone' => '+49 221 123456', 'email' => 'max@example.test', 'is_primary' => true, 'is_emergency_contact' => true]);
+
+= App\Models\PersonContact {#9029
+    person_id: 234,
+    type: "emergency",
+    relationship: "partner",
+    name: "Max Muster",
+    phone: "+49 221 123456",
+    email: "max@example.test",
+    is_primary: true,
+    is_emergency_contact: true,
+    updated_at: "2026-05-09 06:30:08",
+    created_at: "2026-05-09 06:30:08",
+    id: 1,
+  }
+
+> \DB::table('person_contacts')->join('people', 'people.id', '=', 'person_contacts.person_id')->select('person_contacts.id', 'people.person_number', 'person_contacts.type', 'person_contacts.relationship', 'person_contacts.name', 'person_contacts.phone', 'person_contacts.email', 'person_contacts.is_primary', 'person_contacts.is_emergency_contact')->latest('person_contacts.id')->first();
+
+= {#8565
+    +"id": 1,
+    +"person_number": "P-ICO1-416R-M5Z9-8GTO-WN-8",
+    +"type": "emergency",
+    +"relationship": "partner",
+    +"name": "Max Muster",
+    +"phone": "+49 221 123456",
+    +"email": "max@example.test",
+    +"is_primary": true,
+    +"is_emergency_contact": true,
+  }

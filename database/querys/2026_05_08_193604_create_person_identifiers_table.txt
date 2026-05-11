@@ -1,0 +1,187 @@
+database/querys/2026_05_08_193604_create_person_identifiers_table.txt
+
+gunreip@DESKTOP-I7C75P2:~/code/buergerfrs$ php artisan tinker
+Psy Shell v0.12.22 (PHP 8.4.20 — cli) by Justin Hileman
+New PHP manual is available (latest: 3.0.0). Update with `doc --update-manual`
+
+> \Schema::getColumnListing('person_identifiers');
+
+= [
+    "id",
+    "person_id",
+    "issuing_country_id",
+    "type",
+    "value",
+    "value_hash",
+    "issuing_authority",
+    "issued_at",
+    "expires_at",
+    "is_primary",
+    "verified_at",
+    "verified_by_user_id",
+    "notes",
+    "created_at",
+    "updated_at",
+  ]
+
+> \DB::select("select tc.constraint_name, tc.constraint_type, kcu.column_name, ccu.table_name as foreign_table_name, ccu.column_name as foreign_column_name from information_schema.table_constraints tc join information_schema.key_column_usage kcu on tc.constraint_name = kcu.constraint_name and tc.table_schema = kcu.table_schema left join information_schema.constraint_column_usage ccu on ccu.constraint_name = tc.constraint_name and ccu.table_schema = tc.table_schema where tc.table_schema = 'public' and tc.table_name = 'person_identifiers' order by tc.constraint_type, tc.constraint_name, kcu.ordinal_position");
+
+= [
+    {#8348
+      +"constraint_name": "person_identifiers_issuing_country_id_foreign",
+      +"constraint_type": "FOREIGN KEY",
+      +"column_name": "issuing_country_id",
+      +"foreign_table_name": "countries",
+      +"foreign_column_name": "id",
+    },
+    {#8349
+      +"constraint_name": "person_identifiers_person_id_foreign",
+      +"constraint_type": "FOREIGN KEY",
+      +"column_name": "person_id",
+      +"foreign_table_name": "people",
+      +"foreign_column_name": "id",
+    },
+    {#8350
+      +"constraint_name": "person_identifiers_verified_by_user_id_foreign",
+      +"constraint_type": "FOREIGN KEY",
+      +"column_name": "verified_by_user_id",
+      +"foreign_table_name": "users",
+      +"foreign_column_name": "id",
+    },
+    {#8345
+      +"constraint_name": "person_identifiers_pkey",
+      +"constraint_type": "PRIMARY KEY",
+      +"column_name": "id",
+      +"foreign_table_name": "person_identifiers",
+      +"foreign_column_name": "id",
+    },
+    {#8321
+      +"constraint_name": "person_identifiers_person_id_type_value_hash_unique",
+      +"constraint_type": "UNIQUE",
+      +"column_name": "person_id",
+      +"foreign_table_name": "person_identifiers",
+      +"foreign_column_name": "value_hash",
+    },
+    {#8344
+      +"constraint_name": "person_identifiers_person_id_type_value_hash_unique",
+      +"constraint_type": "UNIQUE",
+      +"column_name": "person_id",
+      +"foreign_table_name": "person_identifiers",
+      +"foreign_column_name": "person_id",
+    },
+    {#8343
+      +"constraint_name": "person_identifiers_person_id_type_value_hash_unique",
+      +"constraint_type": "UNIQUE",
+      +"column_name": "person_id",
+      +"foreign_table_name": "person_identifiers",
+      +"foreign_column_name": "type",
+    },
+    {#8342
+      +"constraint_name": "person_identifiers_person_id_type_value_hash_unique",
+      +"constraint_type": "UNIQUE",
+      +"column_name": "type",
+      +"foreign_table_name": "person_identifiers",
+      +"foreign_column_name": "value_hash",
+    },
+    {#8341
+      +"constraint_name": "person_identifiers_person_id_type_value_hash_unique",
+      +"constraint_type": "UNIQUE",
+      +"column_name": "type",
+      +"foreign_table_name": "person_identifiers",
+      +"foreign_column_name": "type",
+    },
+    {#8377
+      +"constraint_name": "person_identifiers_person_id_type_value_hash_unique",
+      +"constraint_type": "UNIQUE",
+      +"column_name": "type",
+      +"foreign_table_name": "person_identifiers",
+      +"foreign_column_name": "person_id",
+    },
+    {#8376
+      +"constraint_name": "person_identifiers_person_id_type_value_hash_unique",
+      +"constraint_type": "UNIQUE",
+      +"column_name": "value_hash",
+      +"foreign_table_name": "person_identifiers",
+      +"foreign_column_name": "value_hash",
+    },
+    {#8375
+      +"constraint_name": "person_identifiers_person_id_type_value_hash_unique",
+      +"constraint_type": "UNIQUE",
+      +"column_name": "value_hash",
+      +"foreign_table_name": "person_identifiers",
+      +"foreign_column_name": "person_id",
+    },
+    {#8374
+      +"constraint_name": "person_identifiers_person_id_type_value_hash_unique",
+      +"constraint_type": "UNIQUE",
+      +"column_name": "value_hash",
+      +"foreign_table_name": "person_identifiers",
+      +"foreign_column_name": "type",
+    },
+  ]
+
+> \DB::select("select indexname from pg_indexes where schemaname = 'public' and tablename = 'person_identifiers' order by indexname");
+
+= [
+    {#8351
+      +"indexname": "person_identifiers_expires_at_index",
+    },
+    {#843
+      +"indexname": "person_identifiers_is_primary_index",
+    },
+    {#8353
+      +"indexname": "person_identifiers_issued_at_index",
+    },
+    {#8358
+      +"indexname": "person_identifiers_issuing_country_id_index",
+    },
+    {#8317
+      +"indexname": "person_identifiers_person_id_index",
+    },
+    {#8359
+      +"indexname": "person_identifiers_person_id_type_value_hash_unique",
+    },
+    {#8323
+      +"indexname": "person_identifiers_pkey",
+    },
+    {#8324
+      +"indexname": "person_identifiers_type_index",
+    },
+    {#8325
+      +"indexname": "person_identifiers_value_hash_index",
+    },
+    {#8379
+      +"indexname": "person_identifiers_verified_at_index",
+    },
+  ]
+
+> \DB::table('person_identifiers')->join('people', 'people.id', '=', 'person_identifiers.person_id')->leftJoin('countries', 'countries.id', '=', 'person_identifiers.issuing_country_id')->select('person_identifiers.id', 'people.person_number', 'person_identifiers.type', 'person_identifiers.value', 'person_identifiers.issuing_authority', 'countries.iso2 as issuing_country_iso2', 'person_identifiers.is_primary')->latest('person_identifiers.id')->first();
+
+= null
+
+> $personId = \DB::table('people')->latest('id')->value('id'); $countryId = \DB::table('countries')->where('iso2', 'DE')->value('id'); \App\Models\PersonIdentifier::query()->create(['person_id' => $personId, 'issuing_country_id' => $countryId, 'type' => \App\Models\PersonIdentifier::TYPE_NATIONAL_ID, 'value' => 'L01X00T47', 'value_hash' => hash('sha256', 'L01X00T47'), 'issuing_authority' => 'Stadt Köln', 'is_primary' => true]);
+
+= App\Models\PersonIdentifier {#9123
+    person_id: 228,
+    issuing_country_id: 1,
+    type: "national_id",
+    value: "L01X00T47",
+    value_hash: "27436a21077b9c5b74a841b1699c55a310ff0913f20320b21dbaff5d7434acd1",
+    issuing_authority: "Stadt Köln",
+    is_primary: true,
+    updated_at: "2026-05-08 19:45:33",
+    created_at: "2026-05-08 19:45:33",
+    id: 1,
+  }
+
+> \DB::table('person_identifiers')->join('people', 'people.id', '=', 'person_identifiers.person_id')->leftJoin('countries', 'countries.id', '=', 'person_identifiers.issuing_country_id')->select('person_identifiers.id', 'people.person_number', 'person_identifiers.type', 'person_identifiers.value', 'person_identifiers.issuing_authority', 'countries.iso2 as issuing_country_iso2', 'person_identifiers.is_primary')->latest('person_identifiers.id')->first();
+
+= {#8715
+    +"id": 1,
+    +"person_number": "P-3VN0-832W-AUIA-FP8L-W0-F",
+    +"type": "national_id",
+    +"value": "L01X00T47",
+    +"issuing_authority": "Stadt Köln",
+    +"issuing_country_iso2": "DE",
+    +"is_primary": true,
+  }

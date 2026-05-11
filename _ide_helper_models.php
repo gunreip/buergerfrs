@@ -86,31 +86,271 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider query()
+ */
+	class InsuranceProvider extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * @property int $id
- * @property string|null $person_number
- * @property string $first_name
- * @property string $last_name
- * @property \Carbon\CarbonImmutable|null $date_of_birth
+ * @property int $person_id
+ * @property int $address_id
+ * @property string $type
+ * @property bool $is_primary
+ * @property \Carbon\CarbonImmutable|null $starts_at
+ * @property \Carbon\CarbonImmutable|null $ends_at
+ * @property \Carbon\CarbonImmutable|null $verified_at
+ * @property int|null $verified_by_user_id
+ * @property string|null $notes
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ClientPerson> $clientPeople
- * @property-read int|null $client_people_count
- * @property-read \App\Models\ClientPerson|null $pivot
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Client> $clients
- * @property-read int|null $clients_count
- * @property-read \App\Models\User|null $user
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Person newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Person newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Person query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Person whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Person whereDateOfBirth($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Person whereFirstName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Person whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Person whereLastName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Person wherePersonNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Person whereUpdatedAt($value)
+ * @property-read \App\Models\Address $address
+ * @property-read \App\Models\Person $person
+ * @property-read \App\Models\User|null $verifiedByUser
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress whereAddressId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress whereEndsAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress whereIsPrimary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress wherePersonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress whereStartsAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress whereVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress whereVerifiedByUserId($value)
  */
-	class Person extends \Eloquent {}
+	class PersonAddress extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $person_id
+ * @property int|null $related_person_id
+ * @property string $type
+ * @property string|null $relationship
+ * @property string|null $name
+ * @property string|null $phone
+ * @property string|null $email
+ * @property bool $is_primary
+ * @property bool $is_emergency_contact
+ * @property bool $is_authorized_representative
+ * @property \Carbon\CarbonImmutable|null $verified_at
+ * @property int|null $verified_by_user_id
+ * @property string|null $notes
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\Person $person
+ * @property-read \App\Models\Person|null $relatedPerson
+ * @property-read \App\Models\User|null $verifiedByUser
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereIsAuthorizedRepresentative($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereIsEmergencyContact($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereIsPrimary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact wherePersonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereRelatedPersonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereRelationship($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact whereVerifiedByUserId($value)
+ */
+	class PersonContact extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $person_id
+ * @property int|null $person_identifier_id
+ * @property int|null $issuing_country_id
+ * @property string $type
+ * @property string|null $title
+ * @property string|null $document_number
+ * @property string|null $issuing_authority
+ * @property \Carbon\CarbonImmutable|null $issued_at
+ * @property \Carbon\CarbonImmutable|null $expires_at
+ * @property string|null $file_disk
+ * @property string|null $file_path
+ * @property string|null $original_filename
+ * @property string|null $mime_type
+ * @property int|null $file_size
+ * @property \Carbon\CarbonImmutable|null $verified_at
+ * @property int|null $verified_by_user_id
+ * @property string|null $notes
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\Country|null $issuingCountry
+ * @property-read \App\Models\Person $person
+ * @property-read \App\Models\PersonIdentifier|null $personIdentifier
+ * @property-read \App\Models\User|null $verifiedByUser
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereDocumentNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereFileDisk($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereFilePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereFileSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereIssuedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereIssuingAuthority($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereIssuingCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereMimeType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereOriginalFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument wherePersonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument wherePersonIdentifierId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument whereVerifiedByUserId($value)
+ */
+	class PersonDocument extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance query()
+ */
+	class PersonHealthInsurance extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $person_id
+ * @property int|null $issuing_country_id
+ * @property string $type
+ * @property string $value
+ * @property string|null $value_hash
+ * @property string|null $issuing_authority
+ * @property \Carbon\CarbonImmutable|null $issued_at
+ * @property \Carbon\CarbonImmutable|null $expires_at
+ * @property bool $is_primary
+ * @property \Carbon\CarbonImmutable|null $verified_at
+ * @property int|null $verified_by_user_id
+ * @property string|null $notes
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonDocument> $documentRows
+ * @property-read int|null $document_rows_count
+ * @property-read \App\Models\Country|null $issuingCountry
+ * @property-read \App\Models\Person $person
+ * @property-read \App\Models\User|null $verifiedByUser
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereIsPrimary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereIssuedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereIssuingAuthority($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereIssuingCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier wherePersonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereValueHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier whereVerifiedByUserId($value)
+ */
+	class PersonIdentifier extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $person_id
+ * @property int $language_id
+ * @property string $proficiency
+ * @property bool $is_native
+ * @property bool $is_primary
+ * @property bool $preferred_for_communication
+ * @property \Carbon\CarbonImmutable|null $starts_at
+ * @property \Carbon\CarbonImmutable|null $ends_at
+ * @property \Carbon\CarbonImmutable|null $verified_at
+ * @property int|null $verified_by_user_id
+ * @property string|null $notes
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\Language $language
+ * @property-read \App\Models\Person $person
+ * @property-read \App\Models\User|null $verifiedByUser
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage whereEndsAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage whereIsNative($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage whereIsPrimary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage whereLanguageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage wherePersonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage wherePreferredForCommunication($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage whereProficiency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage whereStartsAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage whereVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage whereVerifiedByUserId($value)
+ */
+	class PersonLanguage extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $person_id
+ * @property int $country_id
+ * @property bool $is_primary
+ * @property \Carbon\CarbonImmutable|null $starts_at
+ * @property \Carbon\CarbonImmutable|null $ends_at
+ * @property \Carbon\CarbonImmutable|null $verified_at
+ * @property int|null $verified_by_user_id
+ * @property string|null $notes
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\Country $country
+ * @property-read \App\Models\Person $person
+ * @property-read \App\Models\User|null $verifiedByUser
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality whereEndsAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality whereIsPrimary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality wherePersonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality whereStartsAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality whereVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality whereVerifiedByUserId($value)
+ */
+	class PersonNationality extends \Eloquent {}
 }
 
 namespace App\Models{

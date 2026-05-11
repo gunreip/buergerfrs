@@ -30,6 +30,9 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Normal User', 'password' => bcrypt('password12345')]
         );
 
+        $this->call(CountrySeeder::class);
+        $this->call(LanguageSeeder::class);
+
         // Rollen zuweisen
         $this->call(RolesAndPermissionsSeeder::class);
         $this->call(SuperAdminSeeder::class);

@@ -1,0 +1,92 @@
+database/querys/2026_05_09_074601_create_person_documents_table.txt
+
+gunreip@DESKTOP-I7C75P2:~/code/buergerfrs$ php artisan tinker
+Psy Shell v0.12.22 (PHP 8.4.20 — cli) by Justin Hileman
+New PHP manual is available (latest: 3.0.0). Update with `doc --update-manual`
+
+> \Schema::getColumnListing('person_documents');
+
+= [
+    "id",
+    "person_id",
+    "person_identifier_id",
+    "issuing_country_id",
+    "type",
+    "title",
+    "document_number",
+    "issuing_authority",
+    "issued_at",
+    "expires_at",
+    "file_disk",
+    "file_path",
+    "original_filename",
+    "mime_type",
+    "file_size",
+    "verified_at",
+    "verified_by_user_id",
+    "notes",
+    "created_at",
+    "updated_at",
+  ]
+
+> \DB::select("select indexname from pg_indexes where schemaname = 'public' and tablename = 'person_documents' order by indexname");
+
+= [
+    {#8348
+      +"indexname": "person_documents_document_number_index",
+    },
+    {#8349
+      +"indexname": "person_documents_expires_at_index",
+    },
+    {#8350
+      +"indexname": "person_documents_file_disk_index",
+    },
+    {#8345
+      +"indexname": "person_documents_issued_at_index",
+    },
+    {#8321
+      +"indexname": "person_documents_issuing_country_id_index",
+    },
+    {#8344
+      +"indexname": "person_documents_person_id_index",
+    },
+    {#8343
+      +"indexname": "person_documents_person_identifier_id_index",
+    },
+    {#8342
+      +"indexname": "person_documents_pkey",
+    },
+    {#8341
+      +"indexname": "person_documents_type_index",
+    },
+    {#8357
+      +"indexname": "person_documents_verified_at_index",
+    },
+  ]
+
+> $personId = \DB::table('people')->latest('id')->value('id'); $identifierId = \DB::table('person_identifiers')->where('person_id', $personId)->where('type', \App\Models\PersonIdentifier::TYPE_NATIONAL_ID)->latest('id')->value('id'); \App\Models\PersonDocument::query()->create(['person_id' => $personId, 'person_identifier_id' => $identifierId, 'type' => \App\Models\PersonDocument::TYPE_ID_CARD_COPY, 'title' => 'ID card copy', 'document_number' => 'TEST-DOC-001', 'issuing_authority' => 'Stadt Köln']);
+
+= App\Models\PersonDocument {#9099
+    person_id: 236,
+    person_identifier_id: 23,
+    type: "id_card_copy",
+    title: "ID card copy",
+    document_number: "TEST-DOC-001",
+    issuing_authority: "Stadt Köln",
+    updated_at: "2026-05-09 09:05:23",
+    created_at: "2026-05-09 09:05:23",
+    id: 1,
+  }
+
+> \DB::table('person_documents')->join('people', 'people.id', '=', 'person_documents.person_id')->leftJoin('person_identifiers', 'person_identifiers.id', '=', 'person_documents.person_identifier_id')->select('person_documents.id', 'people.person_number', 'person_documents.type', 'person_documents.title', 'person_documents.document_number', 'person_documents.issuing_authority', 'person_identifiers.type as identifier_type', 'person_identifiers.value as identifier_value')->latest('person_documents.id')->first();
+
+= {#8628
+    +"id": 1,
+    +"person_number": "P-PEHF-ONFC-ZOKZ-B62G-1G-8",
+    +"type": "id_card_copy",
+    +"title": "ID card copy",
+    +"document_number": "TEST-DOC-001",
+    +"issuing_authority": "Stadt Köln",
+    +"identifier_type": "national_id",
+    +"identifier_value": "gfhndxfhdrt d",
+  }

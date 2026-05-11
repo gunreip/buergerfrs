@@ -1,0 +1,13 @@
+/* resources/css/errors.css */
+
+/*
+    flux:errors gezielt ausblenden, damit sie nicht in der UI auftauchen,
+    wenn sie nicht gebraucht werden.
+*/
+@layer components {
+
+    /* resources/views/components/management/people/⚡create-person.blade.php    */
+    #create-person-form [data-flux-error] {
+        @apply hidden;
+    }
+}

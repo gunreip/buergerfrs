@@ -1,0 +1,136 @@
+database/querys/2026_05_10_023138_create_insurance_providers_table.txt
+
+gunreip@DESKTOP-I7C75P2:~/code/buergerfrs$ php artisan tinker
+Psy Shell v0.12.22 (PHP 8.4.20 — cli) by Justin Hileman
+New PHP manual is available (latest: 3.0.0). Update with `doc --update-manual`
+
+> \Schema::getColumnListing('insurance_providers');
+
+= [
+"id",
+"country_id",
+"type",
+"name",
+"short_name",
+"code",
+"website",
+"phone",
+"email",
+"is_active",
+"sort_order",
+"created_at",
+"updated_at",
+]
+
+> \Schema::getColumnListing('person_health_insurances');
+
+= [
+"id",
+"person_id",
+"insurance_provider_id",
+"insurance_number",
+"starts_at",
+"ends_at",
+"is_primary",
+"verified_at",
+"verified_by_user_id",
+"notes",
+"created_at",
+"updated_at",
+]
+
+> \DB::select("select tablename, indexname from pg_indexes where schemaname = 'public' and tablename in ('insurance_providers', 'person_health_insurances') order by tablename, indexname");
+
+= [
+{#8353
+      +"tablename": "insurance_providers",
+      +"indexname": "insurance_providers_code_index",
+    },
+    {#8375
+      +"tablename": "insurance_providers",
+      +"indexname": "insurance_providers_country_id_index",
+    },
+    {#8374
+      +"tablename": "insurance_providers",
+      +"indexname": "insurance_providers_country_id_type_name_unique",
+    },
+    {#8339
+      +"tablename": "insurance_providers",
+      +"indexname": "insurance_providers_is_active_index",
+    },
+    {#8317
+      +"tablename": "insurance_providers",
+      +"indexname": "insurance_providers_name_index",
+    },
+    {#8357
+      +"tablename": "insurance_providers",
+      +"indexname": "insurance_providers_pkey",
+    },
+    {#8323
+      +"tablename": "insurance_providers",
+      +"indexname": "insurance_providers_short_name_index",
+    },
+    {#8324
+      +"tablename": "insurance_providers",
+      +"indexname": "insurance_providers_sort_order_index",
+    },
+    {#8325
+      +"tablename": "insurance_providers",
+      +"indexname": "insurance_providers_type_index",
+    },
+    {#8350
+      +"tablename": "person_health_insurances",
+      +"indexname": "person_health_insurances_ends_at_index",
+    },
+    {#8349
+      +"tablename": "person_health_insurances",
+      +"indexname": "person_health_insurances_insurance_number_index",
+    },
+    {#8347
+      +"tablename": "person_health_insurances",
+      +"indexname": "person_health_insurances_insurance_provider_id_index",
+    },
+    {#8348
+      +"tablename": "person_health_insurances",
+      +"indexname": "person_health_insurances_is_primary_index",
+    },
+    {#8382
+      +"tablename": "person_health_insurances",
+      +"indexname": "person_health_insurances_person_id_index",
+    },
+    {#8381
+      +"tablename": "person_health_insurances",
+      +"indexname": "person_health_insurances_pkey",
+    },
+    {#8380
+      +"tablename": "person_health_insurances",
+      +"indexname": "person_health_insurances_starts_at_index",
+    },
+    {#8379
+      +"tablename": "person_health_insurances",
+      +"indexname": "person_health_insurances_verified_at_index",
+    },
+  ]
+
+> $countryId = \DB::table('countries')->where('iso2', 'DE')->value('id'); $provider = \App\Models\InsuranceProvider::query()->create(['country_id' => $countryId, 'type' => \App\Models\InsuranceProvider::TYPE_HEALTH, 'name' => 'Techniker Krankenkasse', 'short_name' => 'TK', 'code' => 'TK', 'sort_order' => 10]); $personId = \DB::table('people')->latest('id')->value('id'); \App\Models\PersonHealthInsurance::query()->create(['person_id' => $personId, 'insurance_provider_id' => $provider->id, 'insurance_number' => 'TEST-KV-001', 'is_primary' => true]);
+
+= App\Models\PersonHealthInsurance {#9867
+    person_id: 241,
+    insurance_provider_id: 1,
+    insurance_number: "TEST-KV-001",
+    is_primary: true,
+    updated_at: "2026-05-10 02:49:08",
+    created_at: "2026-05-10 02:49:08",
+    id: 1,
+  }
+
+> \DB::table('person_health_insurances')->join('people', 'people.id', '=', 'person_health_insurances.person_id')->leftJoin('insurance_providers', 'insurance_providers.id', '=', 'person_health_insurances.insurance_provider_id')->select('person_health_insurances.id', 'people.person_number', 'insurance_providers.name as provider_name', 'insurance_providers.short_name as provider_short_name', 'person_health_insurances.insurance_number', 'person_health_insurances.is_primary')->latest('person_health_insurances.id')->first();
+
+= {#8712
+    +"id": 1,
+    +"person_number": "P-5QB0-UIZ0-TC2W-COGF-G2-W",
+    +"provider_name": "Techniker Krankenkasse",
+    +"provider_short_name": "TK",
+    +"insurance_number": "TEST-KV-001",
+    +"is_primary": true,
+  }
