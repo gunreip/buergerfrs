@@ -2,13 +2,16 @@
 
 @props([
     'label' => __('Required'),
+    'required' => true,
 ])
 
-<flux:badge
-    {{ $attributes->class(['ml-2 text-xs'])->merge([
-        'color' => 'red',
-        'inset' => 'top bottom',
-    ]) }}
->
-    {{ $label }}
-</flux:badge>
+@if (filter_var($required, FILTER_VALIDATE_BOOLEAN))
+    <flux:badge
+        {{ $attributes->class(['ml-2 text-xs'])->merge([
+            'color' => 'red',
+            'inset' => 'top bottom',
+        ]) }}
+    >
+        {{ $label }}
+    </flux:badge>
+@endif

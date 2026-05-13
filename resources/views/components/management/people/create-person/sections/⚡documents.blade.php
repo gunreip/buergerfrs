@@ -9,10 +9,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Document type') }}"
+                    field="documentType"
                     text="{{ __('Please select the type of document for the person. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                    :required="$this->isRequiredField('documentType')"
                 >
                     <flux:label for="create-person-document-type">
                         {{ __('Document type') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('documentType')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -41,10 +44,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Document title') }}"
+                    field="documentTitle"
                     text="{{ __('Please enter the title of the document for the person. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                    :required="$this->isRequiredField('documentTitle')"
                 >
                     <flux:label for="create-person-document-title">
                         {{ __('Document title') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('documentTitle')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -73,10 +79,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Document number') }}"
+                    field="documentNumber"
                     text="{{ __('Please enter the document number for the person. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                    :required="$this->isRequiredField('documentNumber')"
                 >
                     <flux:label for="create-person-document-number">
                         {{ __('Document number') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('documentNumber')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -102,10 +111,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Issuing authority') }}"
+                    field="documentIssuingAuthority"
                     text="{{ __('Please enter the issuing authority for the document. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                    :required="$this->isRequiredField('documentIssuingAuthority')"
                 >
                     <flux:label for="create-person-document-issuing-authority">
                         {{ __('Issuing authority') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('documentIssuingAuthority')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -134,10 +146,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Issued at') }}"
+                    field="documentIssuedAt"
                     text="{{ __('Please enter the date when the document was issued. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                    :required="$this->isRequiredField('documentIssuedAt')"
                 >
                     <flux:label for="create-person-document-issued-at">
                         {{ __('Issued at') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('documentIssuedAt')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -162,10 +177,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Expires at') }}"
+                    field="documentExpiresAt"
                     text="{{ __('Please enter the date when the document expires. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                    :required="$this->isRequiredField('documentExpiresAt')"
                 >
                     <flux:label for="create-person-document-expires-at">
                         {{ __('Expires at') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('documentExpiresAt')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -189,10 +207,13 @@
             <flux:field class="col-span-2">
                 <x-ui.tooltip.trigger
                     title="{{ __('Document file') }}"
+                    field="documentUpload"
                     text="{{ __('Please upload a file for the document. This is important for correctly identifying the person\'s document and for any document-specific validations.') }}"
+                    :required="$this->isRequiredField('documentUpload')"
                 >
                     <flux:label for="create-person-document-upload">
                         {{ __('Document file') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('documentUpload')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 

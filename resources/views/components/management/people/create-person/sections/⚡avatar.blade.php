@@ -23,10 +23,13 @@
                 <flux:field>
                     <x-ui.tooltip.trigger
                         title="{{ __('Avatar') }}"
+                        field="avatarUpload"
                         text="{{ __('Please upload an avatar for the person. This will be displayed in the person\'s profile and can help with quickly identifying the person.') }}"
+                        :required="$this->isRequiredField('avatarUpload')"
                     >
                         <flux:label for="create-person-avatar-upload">
                             {{ __('Avatar') }}
+                            <x-ui.tooltip.badge-required :required="$this->isRequiredField('avatarUpload')" />
                         </flux:label>
                     </x-ui.tooltip.trigger>
 

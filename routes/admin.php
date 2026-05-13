@@ -5,6 +5,7 @@
 // use App\Livewire\Admin\UserEdit;
 use App\Livewire\Admin\AppSettings;
 use App\Livewire\Admin\ClientList;
+use App\Livewire\Admin\FallbackReportList;
 use App\Livewire\Admin\PermissionList;
 use App\Livewire\Admin\PersonList;
 use App\Livewire\Admin\RoleList;
@@ -30,4 +31,6 @@ Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
         Route::get('permissions', PermissionList::class)->name('permissions');
 
         Route::get('app-settings', AppSettings::class)->name('app-settings');
+
+        Route::get('fallback-reports', FallbackReportList::class)->name('fallback-reports');
     });

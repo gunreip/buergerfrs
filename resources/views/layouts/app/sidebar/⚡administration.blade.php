@@ -65,4 +65,14 @@
     >
         {{ __('App Settings') }}
     </flux:sidebar.item>
+
+    {{-- Admin -> fallback reports --}}
+    <flux:sidebar.item
+        icon="triangle-alert"
+        :href="route('admin.fallback-reports')"
+        :current="request()->routeIs('admin.fallback-reports')"
+        wire:navigate
+    >
+        {{ __('Fallback Reports') }}
+    </flux:sidebar.item>
 </flux:sidebar.group>

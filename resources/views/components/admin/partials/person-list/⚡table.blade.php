@@ -61,7 +61,7 @@
                 @forelse ($people as $index => $person)
                     <flux:table.row>
                         <flux:table.cell
-                            class="w-16 tabular-nums text-zinc-400"
+                            class="w-32 tabular-nums text-zinc-400"
                             align="end"
                         >
                             {{ $people->firstItem() + $index }}

@@ -103,6 +103,51 @@ return [
                     'label' => 'Headset',
                     'view' => 'flux.icon.headset',
                 ],
+
+                'circle-user-round' => [
+                    'label' => 'User Icon Round',
+                    'view' => 'flux.icon.circle-user-round',
+                ],
+
+                'contact-round' => [
+                    'label' => 'Contact Icon Round',
+                    'view' => 'flux.icon.contact-round',
+                ],
+
+                'map-pin-house' => [
+                    'label' => 'Map Pin House',
+                    'view' => 'flux.icon.map-pin-house',
+                ],
+
+                'globe' => [
+                    'label' => 'Globe Hemisphere West',
+                    'view' => 'flux.icon.globe',
+                ],
+
+                'id-card' => [
+                    'label' => 'ID Card',
+                    'view' => 'flux.icon.id-card',
+                ],
+
+                'heart-pulse' => [
+                    'label' => 'Heart Pulse',
+                    'view' => 'flux.icon.heart-pulse',
+                ],
+
+                'scroll-text' => [
+                    'label' => 'Scroll Text',
+                    'view' => 'flux.icon.scroll-text',
+                ],
+
+                'siren' => [
+                    'label' => 'Siren',
+                    'view' => 'flux.icon.siren',
+                ],
+
+                'file-x' => [
+                    'label' => 'File X',
+                    'view' => 'flux.icon.file-x',
+                ],
             ],
         ],
     ],

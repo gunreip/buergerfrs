@@ -86,9 +86,49 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport query()
+ */
+	class FallbackReport extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int|null $country_id
+ * @property string $type
+ * @property string $name
+ * @property string|null $short_name
+ * @property string|null $code
+ * @property string|null $website
+ * @property string|null $phone
+ * @property string|null $email
+ * @property bool $is_active
+ * @property int $sort_order
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\Country|null $country
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonHealthInsurance> $personHealthInsurances
+ * @property-read int|null $person_health_insurances_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider active()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider ordered()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider whereShortName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider whereWebsite($value)
  */
 	class InsuranceProvider extends \Eloquent {}
 }
@@ -228,9 +268,36 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property int $person_id
+ * @property int|null $insurance_provider_id
+ * @property string|null $insurance_number
+ * @property \Carbon\CarbonImmutable|null $starts_at
+ * @property \Carbon\CarbonImmutable|null $ends_at
+ * @property bool $is_primary
+ * @property \Carbon\CarbonImmutable|null $verified_at
+ * @property int|null $verified_by_user_id
+ * @property string|null $notes
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\InsuranceProvider|null $insuranceProvider
+ * @property-read \App\Models\Person $person
+ * @property-read \App\Models\User|null $verifiedByUser
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance whereEndsAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance whereInsuranceNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance whereInsuranceProviderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance whereIsPrimary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance wherePersonId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance whereStartsAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance whereVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance whereVerifiedByUserId($value)
  */
 	class PersonHealthInsurance extends \Eloquent {}
 }

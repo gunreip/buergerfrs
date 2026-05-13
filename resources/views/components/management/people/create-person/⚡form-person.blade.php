@@ -17,7 +17,14 @@
                 x-bind:class="activeSection === 'person' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
                 x-on:click="activeSection = 'person'"
             >
-                {{ __('Person') }}
+                <span class="inline-flex items-center gap-2">
+                    {{ __('Person') }}
+                    <x-ui.form.tab-status-dot
+                        :meta="$this->formTabStatus('person')"
+                        :label="__('Person')"
+                        icon="circle-user-round"
+                    />
+                </span>
             </flux:button>
 
             <flux:button
@@ -29,7 +36,14 @@
                 x-bind:class="activeSection === 'contact' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
                 x-on:click="activeSection = 'contact'"
             >
-                {{ __('Contact') }}
+                <span class="inline-flex items-center gap-2">
+                    {{ __('Contact') }}
+                    <x-ui.form.tab-status-dot
+                        :meta="$this->formTabStatus('contact')"
+                        :label="__('Contact')"
+                        icon="contact-round"
+                    />
+                </span>
             </flux:button>
 
             <flux:button
@@ -41,7 +55,14 @@
                 x-bind:class="activeSection === 'address' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
                 x-on:click="activeSection = 'address'"
             >
-                {{ __('Address') }}
+                <span class="inline-flex items-center gap-2">
+                    {{ __('Address') }}
+                    <x-ui.form.tab-status-dot
+                        :meta="$this->formTabStatus('address')"
+                        :label="__('Address')"
+                        icon="map-pin-house"
+                    />
+                </span>
             </flux:button>
 
             <flux:button
@@ -53,7 +74,14 @@
                 x-bind:class="activeSection === 'international' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
                 x-on:click="activeSection = 'international'"
             >
-                {{ __('International') }}
+                <span class="inline-flex items-center gap-2">
+                    {{ __('International') }}
+                    <x-ui.form.tab-status-dot
+                        :meta="$this->formTabStatus('international')"
+                        :label="__('International')"
+                        icon="globe"
+                    />
+                </span>
             </flux:button>
 
             <flux:button
@@ -65,7 +93,14 @@
                 x-bind:class="activeSection === 'identification' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
                 x-on:click="activeSection = 'identification'"
             >
-                {{ __('Identification') }}
+                <span class="inline-flex items-center gap-2">
+                    {{ __('Identification') }}
+                    <x-ui.form.tab-status-dot
+                        :meta="$this->formTabStatus('identification')"
+                        :label="__('Identification')"
+                        icon="id-card"
+                    />
+                </span>
             </flux:button>
 
             <flux:button
@@ -78,7 +113,14 @@
                     ''"
                 x-on:click="activeSection = 'health-insurance'"
             >
-                {{ __('Health insurance') }}
+                <span class="inline-flex items-center gap-2">
+                    {{ __('Health insurance') }}
+                    <x-ui.form.tab-status-dot
+                        :meta="$this->formTabStatus('health-insurance')"
+                        :label="__('Health insurance')"
+                        icon="heart-pulse"
+                    />
+                </span>
             </flux:button>
 
             <flux:button
@@ -90,7 +132,14 @@
                 x-bind:class="activeSection === 'documents' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
                 x-on:click="activeSection = 'documents'"
             >
-                {{ __('Documents') }}
+                <span class="inline-flex items-center gap-2">
+                    {{ __('Documents') }}
+                    <x-ui.form.tab-status-dot
+                        :meta="$this->formTabStatus('documents')"
+                        :label="__('Documents')"
+                        icon="scroll-text"
+                    />
+                </span>
             </flux:button>
 
             <flux:button
@@ -102,7 +151,14 @@
                 x-bind:class="activeSection === 'emergency' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
                 x-on:click="activeSection = 'emergency'"
             >
-                {{ __('Emergency') }}
+                <span class="inline-flex items-center gap-2">
+                    {{ __('Emergency') }}
+                    <x-ui.form.tab-status-dot
+                        :meta="$this->formTabStatus('emergency')"
+                        :label="__('Emergency')"
+                        icon="siren"
+                    />
+                </span>
             </flux:button>
         </div>
     </div>

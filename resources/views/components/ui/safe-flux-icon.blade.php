@@ -20,6 +20,20 @@
         $iconView = 'flux.icon.file-x';
         $isFallback = true;
     }
+
+    if ($isFallback && trim((string) $name) !== '') {
+        app(\App\Support\Fallbacks\FallbackReporter::class)->report(
+            type: 'missing_flux_icon',
+            key: trim((string) $name),
+            fallback: (string) ($fallback['name'] ?? 'file-x'),
+            context: [
+                'component' => 'x-ui.safe-flux-icon',
+                'category' => (string) $category,
+                'variant' => (string) $variant,
+                'resolved_view' => $iconView,
+            ],
+        );
+    }
 @endphp
 
 @include($iconView, [

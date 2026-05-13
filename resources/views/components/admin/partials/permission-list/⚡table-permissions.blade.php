@@ -84,7 +84,7 @@
                 @forelse ($permissions as $index => $permission)
                     <flux:table.row>
                         <flux:table.cell
-                            class="w-16 tabular-nums text-zinc-400"
+                            class="w-32 tabular-nums text-zinc-400"
                             align="end"
                         >
                             {{ $index + 1 }}

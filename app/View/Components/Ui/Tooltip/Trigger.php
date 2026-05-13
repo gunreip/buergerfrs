@@ -18,6 +18,7 @@ class Trigger extends Component
     public function __construct(
         public ?string $title = null,
         public ?string $text = null,
+        public ?string $field = null,
         bool|string|int|null $required = false,
         public ?int $delay = null,
     ) {
@@ -53,6 +54,13 @@ class Trigger extends Component
     public function tooltipDelay(): ?int
     {
         return $this->delay;
+    }
+
+    public function tooltipField(): ?string
+    {
+        $field = trim((string) $this->field);
+
+        return $field !== '' ? $field : null;
     }
 
     /**

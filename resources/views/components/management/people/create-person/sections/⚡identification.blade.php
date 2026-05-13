@@ -9,12 +9,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('National ID number') }}"
+                    field="nationalIdNumber"
                     text="{{ __('Please enter the national ID number for the person. This is important for correctly identifying the person and for any national ID-specific validations.') }}"
-                    required
+                    :required="$this->isRequiredField('nationalIdNumber')"
                 >
                     <flux:label for="create-person-national-id-number">
                         {{ __('National ID number') }}
-                        <x-ui.tooltip.badge-required />
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('nationalIdNumber')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -40,11 +41,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Issuing authority') }}"
+                    field="nationalIdIssuingAuthority"
                     text="{{ __('Please enter the issuing authority for the national ID. This is important for correctly identifying the person and for any national ID-specific validations.') }}"
+                    :required="$this->isRequiredField('nationalIdIssuingAuthority')"
                 >
                     <flux:label for="create-person-national-id-issuing-authority">
                         {{ __('Issuing authority') }}
-                        <x-ui.tooltip.badge-required />
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('nationalIdIssuingAuthority')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -70,10 +73,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Tax ID') }}"
+                    field="taxId"
                     text="{{ __('Please enter the tax ID for the person. This is important for correctly identifying the person and for any tax-specific validations.') }}"
+                    :required="$this->isRequiredField('taxId')"
                 >
                     <flux:label for="create-person-tax-id">
                         {{ __('Tax ID') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('taxId')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -102,10 +108,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Social security number') }}"
+                    field="socialSecurityNumber"
                     text="{{ __('Please enter the social security number for the person. This is important for correctly identifying the person and for any social security-specific validations.') }}"
+                    :required="$this->isRequiredField('socialSecurityNumber')"
                 >
                     <flux:label for="create-person-social-security-number">
                         {{ __('Social security number') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('socialSecurityNumber')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -133,10 +142,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Pension insurance number') }}"
+                    field="pensionInsuranceNumber"
                     text="{{ __('Please enter the pension insurance number for the person. This is important for correctly identifying the person and for any pension insurance-specific validations.') }}"
+                    :required="$this->isRequiredField('pensionInsuranceNumber')"
                 >
                     <flux:label for="create-person-pension-insurance-number">
                         {{ __('Pension insurance number') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('pensionInsuranceNumber')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -158,15 +170,17 @@
                 <flux:error name="pensionInsuranceNumber" />
             </flux:field>
 
-            {{-- <div class="grid gap-4 md:grid-cols-2"> --}}
             {{-- Residence permit number --}}
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Residence permit number') }}"
+                    field="residencePermitNumber"
                     text="{{ __('Please enter the residence permit number for the person. This is important for correctly identifying the person and for any residence permit-specific validations.') }}"
+                    :required="$this->isRequiredField('residencePermitNumber')"
                 >
                     <flux:label for="create-person-residence-permit-number">
                         {{ __('Residence permit number') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('residencePermitNumber')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 

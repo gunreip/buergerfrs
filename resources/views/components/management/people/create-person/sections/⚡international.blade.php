@@ -10,12 +10,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Primary nationality') }}"
+                    field="primaryNationalityCountryId"
                     text="{{ __('Please select the primary nationality for the person. This is important for correctly identifying the person\'s nationality and for any nationality-specific validations.') }}"
-                    required
+                    :required="$this->isRequiredField('primaryNationalityCountryId')"
                 >
                     <flux:label for="create-person-primary-nationality">
                         {{ __('Primary nationality') }}
-                        <x-ui.tooltip.badge-required />
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('primaryNationalityCountryId')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -44,12 +45,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Primary language') }}"
+                    field="primaryLanguageId"
                     text="{{ __('Please select the primary language for the person. This is important for correctly identifying the person\'s primary language and for any language-specific validations.') }}"
-                    required="false"
+                    :required="$this->isRequiredField('primaryLanguageId')"
                 >
                     <flux:label for="create-person-primary-language">
                         {{ __('Primary language') }}
-                        <x-ui.tooltip.badge-required />
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('primaryLanguageId')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 

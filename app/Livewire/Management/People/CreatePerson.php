@@ -20,6 +20,7 @@ use App\Models\User;
 use App\Support\Audit\ManagementActivity;
 use App\Support\Auth\GeneratedPasswordLogger;
 use App\Support\Avatar\AvatarPath;
+use App\Support\Forms\FormFieldRegistry;
 use Flux\Flux;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -34,6 +35,8 @@ use Spatie\Permission\Models\Role;
 class CreatePerson extends Component
 {
     use WithFileUploads;
+
+    private const FORM_KEY = 'people.create';
 
     private const PERSON_NUMBER_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -147,54 +150,6 @@ class CreatePerson extends Component
         PersonDocument::TYPE_HEALTH_INSURANCE_PROOF => 'Health insurance proof',
         PersonDocument::TYPE_TAX_DOCUMENT => 'Tax document',
         PersonDocument::TYPE_OTHER => 'Other',
-    ];
-
-    public array $requiredFields = [
-        'salutation' => false,
-        'nameTitle' => false,
-        'gender' => false,
-        'maritalStatus' => false,
-        'firstName' => true,
-        'middleName' => false,
-        'preferredName' => false,
-        'lastName' => true,
-        'birthName' => false,
-        'dateOfBirth' => true,
-        'avatarUpload' => false,
-        'birthCountryId' => false,
-        'birthPlaceText' => false,
-        'phone' => false,
-        'mobile' => false,
-        'emailPrivate' => false,
-        'emailWork' => false,
-        'addressCountryId' => false,
-        'addressPostalCode' => false,
-        'addressCity' => false,
-        'addressStreet' => false,
-        'addressHouseNumber' => false,
-        'addressLine2' => false,
-        'primaryNationalityCountryId' => false,
-        'primaryLanguageId' => false,
-        'nationalIdNumber' => false,
-        'nationalIdIssuingAuthority' => false,
-        'taxId' => false,
-        'socialSecurityNumber' => false,
-        'pensionInsuranceNumber' => false,
-        'healthInsuranceNumber' => false,
-        'healthInsuranceProviderId' => false,
-        'residencePermitNumber' => false,
-        'emergencyContactName' => false,
-        'emergencyContactRelationship' => false,
-        'emergencyContactPhone' => false,
-        'emergencyContactEmail' => false,
-        'email' => true,
-        'documentType' => false,
-        'documentTitle' => false,
-        'documentNumber' => false,
-        'documentIssuingAuthority' => false,
-        'documentIssuedAt' => false,
-        'documentExpiresAt' => false,
-        'documentUpload' => false,
     ];
 
     private function validationFieldMeta(): array
@@ -557,6 +512,104 @@ class CreatePerson extends Component
     public function clearGeneratedPassword(): void
     {
         $this->generatedPassword = '';
+    }
+
+    public function isRequiredField(string $field): bool
+    {
+        return app(FormFieldRegistry::class)->isRequired(self::FORM_KEY, $field);
+    }
+
+    public function formTabStatus(string $tab): array
+    {
+        $registry = app(FormFieldRegistry::class);
+        $fields = $registry->statusRelevantFieldsForTab(self::FORM_KEY, $tab);
+
+        $total = count($fields);
+        $filled = 0;
+        $requiredTotal = 0;
+        $requiredFilled = 0;
+        $hasErrors = false;
+
+        foreach ($fields as $field => $meta) {
+            $isRequired = (bool) ($meta['required'] ?? false);
+            $isFilled = $this->isFormFieldFilled($field);
+
+            if ($isFilled) {
+                $filled++;
+            }
+
+            if ($isRequired) {
+                $requiredTotal++;
+
+                if ($isFilled) {
+                    $requiredFilled++;
+                }
+            }
+
+            if ($this->getErrorBag()->has($field)) {
+                $hasErrors = true;
+            }
+        }
+
+        return [
+            'total' => $total,
+            'filled' => $filled,
+            'required_total' => $requiredTotal,
+            'required_filled' => $requiredFilled,
+            'has_errors' => $hasErrors,
+            'status' => $this->resolveFormTabStatus(
+                total: $total,
+                filled: $filled,
+                requiredTotal: $requiredTotal,
+                requiredFilled: $requiredFilled,
+                hasErrors: $hasErrors,
+            ),
+        ];
+    }
+
+    private function resolveFormTabStatus(
+        int $total,
+        int $filled,
+        int $requiredTotal,
+        int $requiredFilled,
+        bool $hasErrors,
+    ): string {
+        if ($hasErrors) {
+            return 'error';
+        }
+
+        if ($requiredFilled < $requiredTotal) {
+            return 'missing-required';
+        }
+
+        if ($total > 0 && $filled >= $total) {
+            return 'complete';
+        }
+
+        if ($filled > 0) {
+            return 'partial';
+        }
+
+        return 'empty';
+    }
+
+    private function isFormFieldFilled(string $field): bool
+    {
+        if (! property_exists($this, $field)) {
+            return false;
+        }
+
+        $value = $this->{$field};
+
+        if (is_string($value)) {
+            return trim($value) !== '';
+        }
+
+        if (is_array($value)) {
+            return $value !== [];
+        }
+
+        return $value !== null;
     }
 
     public function focusValidationField(string $field): void
@@ -1050,7 +1103,7 @@ class CreatePerson extends Component
 
     private function requiredRule(string $field): string
     {
-        return ($this->requiredFields[$field] ?? false) ? 'required' : 'nullable';
+        return $this->isRequiredField($field) ? 'required' : 'nullable';
     }
 
     private function buildUserName(string $firstName, string $lastName): string

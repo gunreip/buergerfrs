@@ -9,10 +9,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Phone') }}"
+                    field="phone"
                     text="{{ __('The phone number should include the country code, e.g. +49 for Germany.') }}"
+                    :required="$this->isRequiredField('phone')"
                 >
                     <flux:label for="create-person-phone">
                         {{ __('Phone') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('phone')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -38,10 +41,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Mobile') }}"
-                    text="__('The mobile number should include the country code, e.g. +49 for Germany.')"
+                    field="mobile"
+                    text="{{ __('The mobile number should include the country code, e.g. +49 for Germany.') }}"
+                    :required="$this->isRequiredField('mobile')"
                 >
                     <flux:label for="create-person-mobile">
                         {{ __('Mobile') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('mobile')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -70,10 +76,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Private email') }}"
+                    field="emailPrivate"
                     text="{{ __('The private email should be a valid email address.') }}"
+                    :required="$this->isRequiredField('emailPrivate')"
                 >
                     <flux:label for="create-person-email-private">
                         {{ __('Private email') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('emailPrivate')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -99,10 +108,13 @@
             <flux:field>
                 <x-ui.tooltip.trigger
                     title="{{ __('Work email') }}"
-                    text="__('The work email should be a valid email address.')"
+                    field="emailWork"
+                    text="{{ __('The work email should be a valid email address.') }}"
+                    :required="$this->isRequiredField('emailWork')"
                 >
                     <flux:label for="create-person-email-work">
                         {{ __('Work email') }}
+                        <x-ui.tooltip.badge-required :required="$this->isRequiredField('emailWork')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>
 

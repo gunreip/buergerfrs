@@ -5,6 +5,7 @@
         'data-tooltip-title' => $tooltipTitle(),
         'data-tooltip' => $tooltipText(),
     ]) }}
+    @if ($tooltipField() !== null) data-form-field="{{ $tooltipField() }}" @endif
     @if ($tooltipRequired()) data-tooltip-required="true" @endif
     @if ($tooltipDelay() !== null) data-tooltip-delay="{{ $tooltipDelay() }}" @endif
 >
