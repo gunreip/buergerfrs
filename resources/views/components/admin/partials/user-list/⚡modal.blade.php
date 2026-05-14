@@ -5,16 +5,26 @@
     wire:model.self="showEditRolesModal"
 >
     <div class="space-y-6">
-        <div>
-            <flux:heading size="xl">
+        <div class="-mb-1 flex items-start justify-between gap-4">
+            <flux:field>
+                <x-ui.headers.card
+                    :title="__('Edit Roles')"
+                    :description="__('Change assigned roles for the selected user.')"
+                />
+            </flux:field>
+
+            {{-- <flux:heading size="xl">
                 {{ __('Edit Roles') }}
-            </flux:heading>
+            </flux:heading> --}}
+        </div>
 
-            <flux:separator class="mb-6 mt-3" />
+        <flux:separator class="mb-6" />
 
-            <flux:text class="mt-2">
+        <div class="-mb-1 grid gap-4">
+
+            <flux:text class="text-sm">
                 {{ __('Change assigned roles for') }}:
-                <p class="my-2 ml-6">
+                <p class="ml-6">
                     <span class="font-semibold text-zinc-100">
                         {{ $editingUserName }}
                     </span>
@@ -24,9 +34,9 @@
                 </p>
             </flux:text>
 
-            <flux:text class="mt-1 text-sm">
+            <flux:text class="text-sm">
                 {{ __('Current role') }}:
-                <p class="my-2 ml-6">
+                <p class="ml-6">
                     <span class="font-semibold text-zinc-100">
                         {{ $editingCurrentRoleName !== '' ? $editingCurrentRoleName : __('Without role') }}
                     </span>

@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class InsuranceProvider extends Model
 {
     public const TYPE_HEALTH = 'health';
+
     public const TYPE_OTHER = 'other';
 
     public const TYPES = [

@@ -2,15 +2,13 @@
 
 {{-- Filter part --}}
 <flux:card class="mt-6">
-    <flux:heading
-        class="mb-4"
-        size="lg"
-    >
-        {{ __('Filtering') }}
-    </flux:heading>
+    <x-ui.headers.card
+        :title="__('Filtering')"
+        :description="__('Refine the list of permissions by name, guard, category, role assignment, and system status.')"
+    />
 
     <div class="flex w-full items-end gap-3">
-        <div class="min-w-0 flex-none basis-1/5">
+        <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="permission-list-search">
                 {{ __('Search') }}
             </flux:label>
@@ -33,7 +31,7 @@
             </flux:input.group>
         </div>
 
-        <div class="basis-1/7 min-w-0 flex-none">
+        <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="permission-list-guard-filter">
                 {{ __('Guard') }}
             </flux:label>
@@ -61,7 +59,7 @@
             </flux:input.group>
         </div>
 
-        <div class="basis-1/7 min-w-0 flex-none">
+        <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="permission-list-category-filter">
                 {{ __('Category') }}
             </flux:label>
@@ -89,7 +87,7 @@
             </flux:input.group>
         </div>
 
-        <div class="basis-1/7 min-w-0 flex-none">
+        <div class="min-w-0 flex-none basis-1/5">
             <flux:label for="permission-list-role-filter">
                 {{ __('Role') }}
             </flux:label>
@@ -117,14 +115,25 @@
             </flux:input.group>
         </div>
 
-        <div class="basis-1/7 min-w-0 flex-none">
+        <div class="ml-auto min-w-0 flex-none basis-64">
+            <x-ui.table.per-page-selector
+                id="permission-list-per-page"
+                name="permission-list-per-page"
+                model="perPage"
+                :options="[10, 25, 50, 100]"
+            />
+        </div>
+    </div>
+
+    <div class="mt-3 flex w-full items-end gap-3">
+        <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="permission-list-assignment-filter">
                 {{ __('Assignment') }}
             </flux:label>
 
             <flux:input.group>
                 <flux:input.group.prefix>
-                    <flux:icon.link />
+                    <flux:icon.link stroke-width="1" />
                 </flux:input.group.prefix>
 
                 <flux:select
@@ -147,7 +156,7 @@
             </flux:input.group>
         </div>
 
-        <div class="basis-1/8 min-w-0 flex-none">
+        <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="permission-list-system-filter">
                 {{ __('System') }}
             </flux:label>

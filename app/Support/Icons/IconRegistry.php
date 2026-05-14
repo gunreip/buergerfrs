@@ -77,9 +77,9 @@ class IconRegistry
     /**
      * Resolve an icon definition or return the configured fallback.
      *
-     * Fallback diagnostics are reported at the rendering boundary
-     * in x-ui.safe-flux-icon, where the requested category/component
-     * context is still available.
+     * This registry is used for configurable application icon metadata,
+     * such as role badges and app settings. General safe Flux icon rendering
+     * is handled by x-ui.flux-icon.
      */
     public function resolve(string $name, string $category): array
     {

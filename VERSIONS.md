@@ -2,13 +2,13 @@
 
 | Komponente | Version |
 |------------|---------|
-| OS         | Linux DESKTOP-I7C75P2 6.6.87.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025 x86_64 |
-| PHP        | 8.4.20 |
+| OS         | Linux DESKTOP-I7C75P2 6.6.114.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Mon Dec  1 20:46:23 UTC 2025 x86_64 |
+| PHP        | 8.4.21 |
 | Composer   | Composer version 2.7.1 2024-02-09 15:26:28 |
 | Node.js    | v22.20.0 |
 | npm        | 11.8.0 |
 
-**Stand:** 2026-04-30 09:51:38
+**Stand:** 2026-05-13 05:20:52
 
 ## Wichtige Composer-Packages (direkte Abhängigkeiten)
 

@@ -48,10 +48,10 @@
 
                         <flux:table.cell>
                             <div class="flex items-center gap-2">
-                                <x-ui.safe-flux-icon
+                                <x-ui.flux-icon
                                     :name="$icon['name']"
-                                    category="role_user_management"
                                     variant="micro"
+                                    stroke-width="1"
                                 />
 
                                 <span class="font-medium text-zinc-100">

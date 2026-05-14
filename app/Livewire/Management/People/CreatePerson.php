@@ -9,10 +9,10 @@ use App\Models\Country;
 use App\Models\InsuranceProvider;
 use App\Models\Language;
 use App\Models\Person;
-use App\Models\PersonHealthInsurance;
 use App\Models\PersonAddress;
 use App\Models\PersonContact;
 use App\Models\PersonDocument;
+use App\Models\PersonHealthInsurance;
 use App\Models\PersonIdentifier;
 use App\Models\PersonLanguage;
 use App\Models\PersonNationality;
@@ -41,45 +41,65 @@ class CreatePerson extends Component
     private const PERSON_NUMBER_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     public string $salutation = '';
+
     public string $nameTitle = '';
+
     public string $gender = '';
 
     public string $maritalStatus = '';
 
     public string $firstName = '';
+
     public string $middleName = '';
+
     public string $preferredName = '';
+
     public string $lastName = '';
+
     public string $birthName = '';
+
     public ?string $dateOfBirth = null;
 
     public $avatarUpload = null;
 
     public ?int $birthCountryId = null;
+
     public string $birthPlaceText = '';
 
     public string $phone = '';
+
     public string $mobile = '';
 
     public string $emailPrivate = '';
+
     public string $emailWork = '';
 
     public ?int $addressCountryId = null;
+
     public string $addressPostalCode = '';
+
     public string $addressCity = '';
+
     public string $addressStreet = '';
+
     public string $addressHouseNumber = '';
+
     public string $addressLine2 = '';
 
     public ?int $primaryNationalityCountryId = null;
+
     public ?int $primaryLanguageId = null;
 
     public string $nationalIdNumber = '';
+
     public string $nationalIdIssuingAuthority = '';
+
     public string $taxId = '';
+
     public string $socialSecurityNumber = '';
 
     public string $pensionInsuranceNumber = '';
+
     public string $healthInsuranceNumber = '';
 
     public ?int $healthInsuranceProviderId = null;
@@ -87,25 +107,37 @@ class CreatePerson extends Component
     public string $residencePermitNumber = '';
 
     public string $documentType = '';
+
     public string $documentTitle = '';
+
     public string $documentNumber = '';
+
     public string $documentIssuingAuthority = '';
+
     public ?string $documentIssuedAt = null;
+
     public ?string $documentExpiresAt = null;
 
     public $documentUpload = null;
 
     public string $emergencyContactName = '';
+
     public string $emergencyContactRelationship = '';
+
     public string $emergencyContactPhone = '';
+
     public string $emergencyContactEmail = '';
 
     public string $email = '';
 
     public ?int $createdPersonId = null;
+
     public ?int $createdUserId = null;
+
     public ?int $createdDocumentId = null;
+
     public string $generatedPassword = '';
+
     public string $createdPersonNumber = '';
 
     public array $salutationOptions = [
@@ -828,7 +860,7 @@ class CreatePerson extends Component
     }
 
     /**
-     * @param array<string, mixed> $validated
+     * @param  array<string, mixed>  $validated
      */
     private function hasAddressInput(array $validated): bool
     {
@@ -841,7 +873,7 @@ class CreatePerson extends Component
     }
 
     /**
-     * @param array<string, mixed> $validated
+     * @param  array<string, mixed>  $validated
      */
     private function createInitialAddress(Person $person, array $validated): void
     {
@@ -863,7 +895,7 @@ class CreatePerson extends Component
     }
 
     /**
-     * @param array<string, mixed> $validated
+     * @param  array<string, mixed>  $validated
      */
     private function createInitialNationality(Person $person, array $validated): void
     {
@@ -875,7 +907,7 @@ class CreatePerson extends Component
     }
 
     /**
-     * @param array<string, mixed> $validated
+     * @param  array<string, mixed>  $validated
      */
     private function createInitialLanguage(Person $person, array $validated): void
     {
@@ -890,7 +922,7 @@ class CreatePerson extends Component
     }
 
     /**
-     * @param array<string, mixed> $validated
+     * @param  array<string, mixed>  $validated
      */
     private function createInitialIdentifiers(Person $person, array $validated): void
     {
@@ -934,7 +966,7 @@ class CreatePerson extends Component
     }
 
     /**
-     * @param array<string, mixed> $validated
+     * @param  array<string, mixed>  $validated
      */
     private function createInitialHealthInsurance(Person $person, array $validated): void
     {
@@ -951,7 +983,7 @@ class CreatePerson extends Component
     }
 
     /**
-     * @param array<string, mixed> $validated
+     * @param  array<string, mixed>  $validated
      */
     private function hasHealthInsuranceInput(array $validated): bool
     {
@@ -960,7 +992,7 @@ class CreatePerson extends Component
     }
 
     /**
-     * @param array<string, mixed> $validated
+     * @param  array<string, mixed>  $validated
      */
     private function createInitialEmergencyContact(Person $person, array $validated): void
     {
@@ -982,7 +1014,7 @@ class CreatePerson extends Component
     }
 
     /**
-     * @param array<string, mixed> $validated
+     * @param  array<string, mixed>  $validated
      */
     private function createInitialDocument(Person $person, array $validated): void
     {
@@ -1030,7 +1062,7 @@ class CreatePerson extends Component
         $mimeType = $upload->getMimeType();
         $fileSize = $upload->getSize();
 
-        $storedFilename = (string) Str::uuid() . ($extension !== '' ? ".{$extension}" : '');
+        $storedFilename = (string) Str::uuid().($extension !== '' ? ".{$extension}" : '');
         $directory = "person-documents/{$person->id}";
 
         $path = $upload->storeAs($directory, $storedFilename, 'local');
@@ -1045,7 +1077,7 @@ class CreatePerson extends Component
     }
 
     /**
-     * @param array<string, mixed> $validated
+     * @param  array<string, mixed>  $validated
      */
     private function hasDocumentMetadataInput(array $validated): bool
     {
@@ -1059,7 +1091,7 @@ class CreatePerson extends Component
     }
 
     /**
-     * @param array<string, mixed> $validated
+     * @param  array<string, mixed>  $validated
      */
     private function hasEmergencyContactInput(array $validated): bool
     {
@@ -1108,7 +1140,7 @@ class CreatePerson extends Component
 
     private function buildUserName(string $firstName, string $lastName): string
     {
-        return trim($firstName . ' ' . $lastName);
+        return trim($firstName.' '.$lastName);
     }
 
     private function buildUniquePersonNumber(): string

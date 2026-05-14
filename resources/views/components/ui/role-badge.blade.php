@@ -19,9 +19,8 @@
     :variant="$variant"
 >
     @if ($icon !== null && $icon !== '')
-        <x-ui.safe-flux-icon
+        <x-ui.flux-icon
             :name="$icon"
-            category="role_user_management"
             variant="micro"
         />
         &nbsp;

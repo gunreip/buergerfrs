@@ -13,6 +13,15 @@
 
 namespace App\Models{
 /**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat query()
+ */
+	class AddressFormat extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * @property int $id
  * @property string|null $client_number
  * @property string $name
@@ -86,9 +95,113 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property int $country_id
+ * @property string $locale
+ * @property string $name
+ * @property string|null $official_name
+ * @property string|null $common_name
+ * @property string|null $source
+ * @property bool $is_default
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\Country $country
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName whereCommonName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName whereIsDefault($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName whereLocale($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName whereOfficialName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName whereSource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName whereUpdatedAt($value)
+ */
+	class CountryName extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $country_id
+ * @property int|null $parent_id
+ * @property string $code
+ * @property string|null $iso_code
+ * @property string|null $type
+ * @property string $name
+ * @property string|null $local_name
+ * @property string|null $postal_code_pattern
+ * @property bool $is_active
+ * @property int $sort_order
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, CountrySubdivision> $children
+ * @property-read int|null $children_count
+ * @property-read \App\Models\Country $country
+ * @property-read CountrySubdivision|null $parent
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision ordered()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision whereIsoCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision whereLocalName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision wherePostalCodePattern($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision whereUpdatedAt($value)
+ */
+	class CountrySubdivision extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property string $type
+ * @property string $key
+ * @property string|null $fallback
+ * @property string $fingerprint
+ * @property array<array-key, mixed>|null $context
+ * @property int $count
+ * @property \Carbon\CarbonImmutable|null $first_seen_at
+ * @property \Carbon\CarbonImmutable|null $last_seen_at
+ * @property bool $reviewed
+ * @property \Carbon\CarbonImmutable|null $reviewed_at
+ * @property int|null $reviewed_by_user_id
+ * @property string|null $review_note
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport ofType(string $type)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport open()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport reviewed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereContext($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereFallback($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereFingerprint($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereFirstSeenAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereLastSeenAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereReviewNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereReviewed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereReviewedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereReviewedByUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FallbackReport whereUpdatedAt($value)
  */
 	class FallbackReport extends \Eloquent {}
 }
@@ -131,6 +244,75 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InsuranceProvider whereWebsite($value)
  */
 	class InsuranceProvider extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $language_id
+ * @property string $locale
+ * @property string $name
+ * @property string|null $native_name
+ * @property string|null $source
+ * @property bool $is_default
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\Language $language
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName whereIsDefault($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName whereLanguageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName whereLocale($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName whereNativeName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName whereSource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName whereUpdatedAt($value)
+ */
+	class LanguageName extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property string $code
+ * @property string $normalized_code
+ * @property int|null $language_id
+ * @property int|null $country_id
+ * @property string|null $script_code
+ * @property string|null $variant
+ * @property string|null $display_name
+ * @property string|null $native_display_name
+ * @property bool $is_active
+ * @property bool $is_default
+ * @property int $sort_order
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\Country|null $country
+ * @property-read \App\Models\Language|null $language
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale ordered()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereDisplayName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereIsDefault($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereLanguageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereNativeDisplayName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereNormalizedCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereScriptCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Locale whereVariant($value)
+ */
+	class Locale extends \Eloquent {}
 }
 
 namespace App\Models{

@@ -9,12 +9,12 @@
     />
 
     {{-- Overview --}}
-    @include('components.admin.partials.fallback-report-list.meta')
+    @include('components.admin.partials.fallback-report-list.⚡meta')
 
     {{-- Filter --}}
-    @include('components.admin.partials.fallback-report-list.filter')
+    @include('components.admin.partials.fallback-report-list.⚡filter')
 
     {{-- Table --}}
-    @include('components.admin.partials.fallback-report-list.table')
+    @include('components.admin.partials.fallback-report-list.⚡table')
 
 </flux:card>

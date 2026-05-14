@@ -2,12 +2,17 @@
 
 {{-- Filter part --}}
 <flux:card class="mt-6">
-    <flux:heading
+    <x-ui.headers.card
+        :title="__('Filtering')"
+        :description="__('Refine the role list by name, category, assignability, and system status.')"
+    />
+
+    {{-- <flux:heading
         class="mb-4"
         size="lg"
     >
         {{ __('Filtering') }}
-    </flux:heading>
+    </flux:heading> --}}
 
     <div class="flex w-full items-end gap-3">
         <div class="min-w-0 flex-none basis-1/4">
@@ -17,7 +22,7 @@
 
             <flux:input.group class="w-full min-w-0">
                 <flux:input.group.prefix>
-                    <flux:icon.magnifying-glass />
+                    <flux:icon.magnifying-glass stroke-width="1" />
                 </flux:input.group.prefix>
 
                 <flux:input
@@ -33,14 +38,14 @@
             </flux:input.group>
         </div>
 
-        <div class="min-w-0 flex-none basis-1/5">
+        <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="role-list-category-filter">
                 {{ __('Category') }}
             </flux:label>
 
             <flux:input.group>
                 <flux:input.group.prefix>
-                    <flux:icon.tag />
+                    <flux:icon.tag stroke-width="1" />
                 </flux:input.group.prefix>
 
                 <flux:select
@@ -61,14 +66,14 @@
             </flux:input.group>
         </div>
 
-        <div class="min-w-0 flex-none basis-1/5">
+        <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="role-list-assignable-filter">
                 {{ __('Assignable') }}
             </flux:label>
 
             <flux:input.group>
                 <flux:input.group.prefix>
-                    <flux:icon.handshake />
+                    <flux:icon.handshake stroke-width="1" />
                 </flux:input.group.prefix>
 
                 <flux:select
@@ -91,14 +96,14 @@
             </flux:input.group>
         </div>
 
-        <div class="min-w-0 flex-none basis-1/5">
+        <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="role-list-system-filter">
                 {{ __('System') }}
             </flux:label>
 
             <flux:input.group>
                 <flux:input.group.prefix>
-                    <flux:icon.heart-pulse />
+                    <flux:icon.heart-pulse stroke-width="1" />
                 </flux:input.group.prefix>
 
                 <flux:select
@@ -119,6 +124,15 @@
                     </flux:select.option>
                 </flux:select>
             </flux:input.group>
+        </div>
+
+        <div class="ml-auto min-w-0 flex-none basis-32">
+            <x-ui.table.per-page-selector
+                id="role-list-per-page"
+                name="role-list-per-page"
+                model="perPage"
+                :options="[10, 25, 50, 100]"
+            />
         </div>
 
         <div class="ml-auto flex-none">

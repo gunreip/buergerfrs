@@ -6,18 +6,16 @@
 >
     <div class="space-y-6">
         <div class="flex items-start justify-between gap-4">
-            <div>
-                <flux:heading size="xl">
-                    {{ __('Edit Permission') }}
-                </flux:heading>
+            <flux:field>
+                <x-ui.headers.card
+                    :title="__('Edit Permission')"
+                    :description="__('Edit metadata for this permission. Name and guard are not changed here.')"
+                />
 
-                <flux:text class="mt-2">
-                    {{ __('Edit metadata for this permission. Name and guard are not changed here.') }}
-                </flux:text>
-            </div>
+            </flux:field>
         </div>
 
-        <flux:separator />
+        <flux:separator text="{{ __('Permission Metadata') }}" />
 
         <div class="grid grid-cols-2 gap-4">
             <div>
@@ -61,7 +59,10 @@
             </div>
         </div>
 
-        <flux:separator />
+        <flux:separator
+            class="mt-4"
+            text="{{ __('Edit Permission Details') }}"
+        />
 
         <div class="grid grid-cols-2 gap-4">
             <flux:input
@@ -101,6 +102,8 @@
                 icon="check"
                 label="{{ __('Save') }}"
                 wire:click="savePermissionMetadata"
+                wire:loading.attr="disabled"
+                :disabled="$editingPermissionId === null || !$this->hasPermissionMetadataChanges()"
             />
         </div>
     </div>

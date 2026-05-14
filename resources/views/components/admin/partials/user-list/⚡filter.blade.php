@@ -1,12 +1,10 @@
-{{-- resources/views/components/admin/partials/user-list/filter.blade.php --}}
+{{-- resources/views/components/admin/partials/user-list/⚡filter.blade.php --}}
 
 <flux:card class="mt-6">
-    <flux:heading
-        class="mb-4"
-        size="lg"
-    >
-        {{ __('Filtering') }}
-    </flux:heading>
+    <x-ui.headers.card
+        :title="__('Filtering')"
+        :description="__('Filter the list of users by name, email or assigned roles.')"
+    />
 
     <div class="flex w-full items-end gap-3">
         <div class="min-w-0 flex-none basis-1/4">
@@ -16,7 +14,7 @@
 
             <flux:input.group class="w-full min-w-0">
                 <flux:input.group.prefix>
-                    <flux:icon.magnifying-glass />
+                    <flux:icon.magnifying-glass stroke-width="1" />
                 </flux:input.group.prefix>
 
                 <flux:input
@@ -39,7 +37,7 @@
 
             <flux:input.group>
                 <flux:input.group.prefix>
-                    <flux:icon.tag />
+                    <flux:icon.tag stroke-width="1" />
                 </flux:input.group.prefix>
 
                 <flux:select

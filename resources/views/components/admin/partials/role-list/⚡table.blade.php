@@ -1,4 +1,4 @@
-{{-- resources/views/components/admin/partials/role-list/table.blade.php --}}
+{{-- resources/views/components/admin/partials/role-list/⚡table.blade.php --}}
 
 {{-- Table part --}}
 <flux:card class="mt-6">
@@ -13,6 +13,14 @@
         <div class="overflow-hidden rounded-t-lg">
             <flux:table>
                 <flux:table.columns class="bg-zinc-800 text-zinc-400">
+                    <flux:table.column
+                        sortable
+                        wire:click="sortBy('id')"
+                        align="center"
+                    >
+                        {{ __('ID') }}
+                    </flux:table.column>
+
                     <flux:table.column align="center">
                         {{ __('Badge') }}
                     </flux:table.column>
@@ -62,7 +70,14 @@
 
                 <flux:table.rows>
                     @foreach ($roles as $role)
-                        <flux:table.row>
+                        <flux:table.row wire:key="role-list-row-{{ $role->id }}">
+                            <flux:table.cell
+                                class="w-32 tabular-nums"
+                                align="end"
+                            >
+                                {{ $role->id }}
+                            </flux:table.cell>
+
                             <flux:table.cell>
                                 <x-ui.role-badge
                                     :label="$role->name"
@@ -71,9 +86,10 @@
                             </flux:table.cell>
 
                             <flux:table.cell>
-                                <span class="font-medium text-zinc-100">
-                                    {!! $highlightSearchMatch($role->name, $search) !!}
-                                </span>
+                                <x-ui.text.highlight
+                                    :value="$role->name"
+                                    :search="$search"
+                                />
 
                                 <div class="text-xs text-zinc-500">
                                     {{ $role->guard_name }}
@@ -81,10 +97,10 @@
                             </flux:table.cell>
 
                             <flux:table.cell>
-                                {!! $highlightSearchMatch(
-                                    $role->category !== null && $role->category !== '' ? Str::headline($role->category) : __('Other'),
-                                    $search,
-                                ) !!}
+                                <x-ui.text.highlight
+                                    :value="$role->category !== null && $role->category !== '' ? Str::headline($role->category) : __('Other')"
+                                    :search="$search"
+                                />
                             </flux:table.cell>
 
                             <flux:table.cell
@@ -95,9 +111,10 @@
                             </flux:table.cell>
 
                             <flux:table.cell>
-                                <span class="text-sm text-zinc-300">
-                                    {!! $highlightSearchMatch($role->description ?: __('No description available.'), $search) !!}
-                                </span>
+                                <x-ui.text.highlight
+                                    :value="$role->description ?: '—'"
+                                    :search="$search"
+                                />
                             </flux:table.cell>
 
                             <flux:table.cell align="center">
@@ -151,5 +168,17 @@
                 </flux:table.rows>
             </flux:table>
         </div>
+
+        @if ($roles->hasPages())
+            <flux:separator
+                class="mt-4"
+                text="{{ __('Pagination') }}"
+            />
+
+            <div class="mt-4">
+                <x-ui.table.pagination :paginator="$roles" />
+            </div>
+        @endif
+
     </div>
 </flux:card>

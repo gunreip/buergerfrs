@@ -26,13 +26,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class PersonIdentifier extends Model
 {
     public const TYPE_NATIONAL_ID = 'national_id';
+
     public const TYPE_PASSPORT = 'passport';
+
     public const TYPE_TAX_ID = 'tax_id';
+
     public const TYPE_TAX_NUMBER = 'tax_number';
+
     public const TYPE_SOCIAL_SECURITY_NUMBER = 'social_security_number';
+
     public const TYPE_PENSION_INSURANCE_NUMBER = 'pension_insurance_number';
+
     public const TYPE_HEALTH_INSURANCE_NUMBER = 'health_insurance_number';
+
     public const TYPE_RESIDENCE_PERMIT_NUMBER = 'residence_permit_number';
+
     public const TYPE_OTHER = 'other';
 
     public const TYPES = [

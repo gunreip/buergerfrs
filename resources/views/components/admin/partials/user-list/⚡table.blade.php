@@ -1,17 +1,23 @@
-{{-- resources/views/components/admin/partials/user-list/table.blade.php --}}
+{{-- resources/views/components/admin/partials/user-list/⚡table.blade.php --}}
 
+{{-- Table --}}
 <flux:card class="mt-6">
-    <flux:heading
-        class="mb-4"
-        size="lg"
-    >
-        {{ __('User List') }}
-    </flux:heading>
+
+    {{-- Card Header --}}
+    <x-ui.headers.card
+        :title="__('User List')"
+        :description="__('Overview of all users in the system, their email addresses and assigned roles.')"
+    />
 
     <div class="mx-auto max-w-full">
         <div class="overflow-hidden rounded-t-lg">
+            {{-- Table --}}
             <flux:table class="mb-6">
+
+                {{-- Table Head --}}
                 <flux:table.columns class="bg-zinc-800 text-zinc-400">
+
+                    {{-- Column ID --}}
                     <flux:table.column
                         sortable
                         wire:click="sortBy('id')"
@@ -20,6 +26,7 @@
                         {{ __('ID') }}
                     </flux:table.column>
 
+                    {{-- Column Name --}}
                     <flux:table.column
                         sortable
                         wire:click="sortBy('name')"
@@ -27,6 +34,7 @@
                         {{ __('Name') }}
                     </flux:table.column>
 
+                    {{-- Column E-Mail --}}
                     <flux:table.column
                         sortable
                         wire:click="sortBy('email')"
@@ -34,6 +42,7 @@
                         {{ __('E-Mail') }}
                     </flux:table.column>
 
+                    {{-- Column Roles --}}
                     <flux:table.column
                         sortable
                         wire:click="sortBy('roles.name')"
@@ -41,14 +50,19 @@
                         {{ __('Roles') }}
                     </flux:table.column>
 
+                    {{-- Column Actions --}}
                     <flux:table.column align="center">
                         {{ __('Actions') }}
                     </flux:table.column>
                 </flux:table.columns>
 
+                {{-- Table Body  --}}
                 <flux:table.rows>
                     @foreach ($users as $user)
-                        <flux:table.row>
+                        {{-- Table Row --}}
+                        <flux:table.row wire:key="user-list-row-{{ $user->id }}">
+
+                            {{-- Column ID --}}
                             <flux:table.cell
                                 class="w-32 tabular-nums"
                                 align="end"
@@ -56,14 +70,23 @@
                                 {{ $user->id }}
                             </flux:table.cell>
 
+                            {{-- Colunn Name --}}
                             <flux:table.cell class="w-lg">
-                                {!! $highlightSearchMatch($user->name, $search) !!}
+                                <x-ui.text.highlight
+                                    :value="$user->name"
+                                    :search="$search"
+                                />
                             </flux:table.cell>
 
+                            {{-- Column E-Mail --}}
                             <flux:table.cell>
-                                {!! $highlightSearchMatch($user->email, $search) !!}
+                                <x-ui.text.highlight
+                                    :value="$user->email"
+                                    :search="$search"
+                                />
                             </flux:table.cell>
 
+                            {{-- Column Roles --}}
                             <flux:table.cell class="w-54">
                                 @forelse ($user->roles as $role)
                                     <x-ui.role-badge
@@ -78,6 +101,7 @@
                                 @endforelse
                             </flux:table.cell>
 
+                            {{-- Column Actions --}}
                             <flux:table.cell class="w-48">
                                 <flux:button.group class="justify-center">
                                     <x-ui.button.edit
@@ -94,8 +118,17 @@
             </flux:table>
         </div>
 
-        <flux:separator text="{{ __('Pagination') }}" />
+        {{-- Pagination --}}
+        @if ($users->hasPages())
+            <flux:separator
+                class="mt-4"
+                text="{{ __('Pagination') }}"
+            />
 
-        <x-ui.table.pagination :paginator="$users" />
+            <div class="mt-4">
+                <x-ui.table.pagination :paginator="$users" />
+            </div>
+        @endif
+
     </div>
 </flux:card>

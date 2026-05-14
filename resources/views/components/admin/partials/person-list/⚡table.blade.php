@@ -2,146 +2,166 @@
 
 {{-- Table --}}
 <flux:card class="mt-6">
-    <flux:heading
-        class="mb-4"
-        size="lg"
-    >
-        {{ __('People List') }}
-    </flux:heading>
 
-    <div class="overflow-hidden rounded-t-lg">
-        <flux:table>
-            <flux:table.columns class="bg-zinc-800 text-zinc-400">
-                <flux:table.column align="center">
-                    {{ __('#') }}
-                </flux:table.column>
+    <x-ui.headers.card
+        :title="__('People List')"
+        :description="__('Detailed list of all people in the system, their linked user accounts and client assignments.')"
+    />
 
-                <flux:table.column
-                    sortable
-                    wire:click="sortBy('last_name')"
-                >
-                    {{ __('Person') }}
-                </flux:table.column>
+    <div class="mx-auto max-w-full">
 
-                <flux:table.column
-                    sortable
-                    wire:click="sortBy('person_number')"
-                >
-                    {{ __('Person number') }}
-                </flux:table.column>
+        <div class="overflow-hidden rounded-t-lg">
+            <flux:table>
+                <flux:table.columns class="bg-zinc-800 text-zinc-400">
+                    <flux:table.column align="center">
+                        {{ __('#') }}
+                    </flux:table.column>
 
-                <flux:table.column
-                    sortable
-                    wire:click="sortBy('date_of_birth')"
-                >
-                    {{ __('Date of birth') }}
-                </flux:table.column>
+                    <flux:table.column
+                        sortable
+                        wire:click="sortBy('last_name')"
+                    >
+                        {{ __('Person') }}
+                    </flux:table.column>
 
-                <flux:table.column>
-                    {{ __('User') }}
-                </flux:table.column>
+                    <flux:table.column
+                        sortable
+                        wire:click="sortBy('person_number')"
+                    >
+                        {{ __('Person number') }}
+                    </flux:table.column>
 
-                <flux:table.column
-                    align="center"
-                    sortable
-                    wire:click="sortBy('clients_count')"
-                >
-                    {{ __('Clients') }}
-                </flux:table.column>
+                    <flux:table.column
+                        sortable
+                        wire:click="sortBy('date_of_birth')"
+                    >
+                        {{ __('Date of birth') }}
+                    </flux:table.column>
 
-                <flux:table.column
-                    sortable
-                    wire:click="sortBy('created_at')"
-                >
-                    {{ __('Created') }}
-                </flux:table.column>
-            </flux:table.columns>
+                    <flux:table.column>
+                        {{ __('User') }}
+                    </flux:table.column>
 
-            <flux:table.rows>
-                @forelse ($people as $index => $person)
-                    <flux:table.row>
-                        <flux:table.cell
-                            class="w-32 tabular-nums text-zinc-400"
-                            align="end"
-                        >
-                            {{ $people->firstItem() + $index }}
-                        </flux:table.cell>
+                    <flux:table.column
+                        align="center"
+                        sortable
+                        wire:click="sortBy('clients_count')"
+                    >
+                        {{ __('Clients') }}
+                    </flux:table.column>
 
-                        <flux:table.cell>
-                            <div class="font-medium text-zinc-100">
-                                {!! $highlightSearchMatch($person->displayName(), $search) !!}
-                            </div>
+                    <flux:table.column
+                        sortable
+                        wire:click="sortBy('created_at')"
+                    >
+                        {{ __('Created') }}
+                    </flux:table.column>
+                </flux:table.columns>
 
-                            <div class="text-xs text-zinc-500">
-                                ID: {{ $person->id }}
-                            </div>
-                        </flux:table.cell>
+                <flux:table.rows>
+                    @forelse ($people as $index => $person)
+                        <flux:table.row wire:key="person-list-row-{{ $person->id }}">
+                            <flux:table.cell
+                                class="w-32 tabular-nums text-zinc-400"
+                                align="end"
+                            >
+                                {{ $people->firstItem() + $index }}
+                            </flux:table.cell>
 
-                        <flux:table.cell>
-                            @if ($person->person_number)
-                                <span class="font-mono text-sm">
-                                    {!! $highlightSearchMatch($person->person_number, $search) !!}
-                                </span>
-                            @else
-                                <flux:badge
-                                    color="zinc"
-                                    variant="subtle"
-                                >
-                                    {{ __('Missing') }}
-                                </flux:badge>
-                            @endif
-                        </flux:table.cell>
-
-                        <flux:table.cell>
-                            {{ $person->date_of_birth?->format('Y-m-d') ?? '—' }}
-                        </flux:table.cell>
-
-                        <flux:table.cell>
-                            @if ($person->user)
+                            <flux:table.cell>
                                 <div class="font-medium text-zinc-100">
-                                    {!! $highlightSearchMatch($person->user->name, $search) !!}
+                                    <x-ui.text.highlight
+                                        :value="$person->displayName()"
+                                        :search="$search"
+                                    />
                                 </div>
 
-                                <div class="text-xs text-zinc-400">
-                                    {!! $highlightSearchMatch($person->user->email, $search) !!}
+                                <div class="text-xs text-zinc-500">
+                                    ID: {{ $person->id }}
                                 </div>
-                            @else
-                                <flux:badge
-                                    color="orange"
-                                    variant="subtle"
-                                >
-                                    {{ __('Without user') }}
-                                </flux:badge>
-                            @endif
-                        </flux:table.cell>
+                            </flux:table.cell>
 
-                        <flux:table.cell
-                            class="tabular-nums"
-                            align="end"
-                        >
-                            {{ $person->clients_count }}
-                        </flux:table.cell>
+                            <flux:table.cell>
+                                @if ($person->person_number)
+                                    <span class="font-mono text-sm">
+                                        <x-ui.text.highlight
+                                            :value="$person->person_number"
+                                            :search="$search"
+                                        />
+                                    </span>
+                                @else
+                                    <flux:badge
+                                        color="zinc"
+                                        variant="subtle"
+                                    >
+                                        {{ __('Missing') }}
+                                    </flux:badge>
+                                @endif
+                            </flux:table.cell>
 
-                        <flux:table.cell>
-                            {{ $person->created_at?->format('Y-m-d H:i') }}
-                        </flux:table.cell>
-                    </flux:table.row>
-                @empty
-                    <flux:table.row>
-                        <flux:table.cell colspan="7">
-                            <flux:text>
-                                {{ __('No people found.') }}
-                            </flux:text>
-                        </flux:table.cell>
-                    </flux:table.row>
-                @endforelse
-            </flux:table.rows>
-        </flux:table>
-    </div>
+                            <flux:table.cell>
+                                {{ $person->date_of_birth?->format('Y-m-d') ?? '—' }}
+                            </flux:table.cell>
 
-    @if ($people->hasPages())
-        <div class="mt-4">
-            {{ $people->links() }}
+                            <flux:table.cell>
+                                @if ($person->user)
+                                    <div class="font-medium text-zinc-100">
+                                        <x-ui.text.highlight
+                                            :value="$person->user->name"
+                                            :search="$search"
+                                        />
+                                    </div>
+
+                                    <div class="text-xs text-zinc-400">
+                                        <x-ui.text.highlight
+                                            :value="$person->user->email"
+                                            :search="$search"
+                                        />
+                                    </div>
+                                @else
+                                    <flux:badge
+                                        color="orange"
+                                        variant="subtle"
+                                    >
+                                        {{ __('Without user') }}
+                                    </flux:badge>
+                                @endif
+                            </flux:table.cell>
+
+                            <flux:table.cell
+                                class="tabular-nums"
+                                align="end"
+                            >
+                                {{ $person->clients_count }}
+                            </flux:table.cell>
+
+                            <flux:table.cell>
+                                {{ $person->created_at?->format('Y-m-d H:i') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                    @empty
+                        <flux:table.row>
+                            <flux:table.cell colspan="7">
+                                <flux:text>
+                                    {{ __('No people found.') }}
+                                </flux:text>
+                            </flux:table.cell>
+                        </flux:table.row>
+                    @endforelse
+                </flux:table.rows>
+            </flux:table>
         </div>
-    @endif
+
+        @if ($people->hasPages())
+            <flux:separator
+                class="mt-4"
+                text="{{ __('Pagination') }}"
+            />
+
+            <div class="mt-4">
+                <x-ui.table.pagination :paginator="$people" />
+            </div>
+        @endif
+
+    </div>
 </flux:card>

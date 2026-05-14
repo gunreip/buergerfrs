@@ -20,8 +20,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Client extends Model
 {
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_ACTIVE = 'active';
+
     public const STATUS_INACTIVE = 'inactive';
+
     public const STATUS_SUSPENDED = 'suspended';
 
     /**

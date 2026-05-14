@@ -12,6 +12,7 @@ use Livewire\Component;
 class Preferences extends Component
 {
     public string $locale = 'de';
+
     public int $adminUsersPerPage = 50;
 
     public function mount(): void

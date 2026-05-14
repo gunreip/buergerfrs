@@ -5,6 +5,7 @@
     :heading="__('Management')"
     icon="briefcase-business"
     expandable
+    :expanded="request()->routeIs('management.*')"
 >
     {{-- Management -> person --}}
     <flux:sidebar.group
@@ -12,6 +13,7 @@
         :heading="__('Person')"
         icon="id-card"
         expandable
+        :expanded="request()->routeIs('management.people.*')"
     >
         {{-- Management -> person -> create --}}
         <flux:sidebar.item
@@ -30,6 +32,7 @@
         :heading="__('Client')"
         icon="building-2"
         expandable
+        :expanded="false"
     >
         {{-- Management -> client -> create later --}}
     </flux:sidebar.group>

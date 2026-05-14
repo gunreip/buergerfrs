@@ -2,14 +2,16 @@
 
 namespace App\Livewire\Admin;
 
-use Livewire\Component;
 use App\Models\User;
+use Livewire\Component;
 use Spatie\Permission\Models\Role;
 
 class UserEdit extends Component
 {
     public $user;
+
     public $roles;
+
     public $selectedRoles = [];
 
     public function mount(User $user)

@@ -6,20 +6,24 @@ namespace App\Livewire\Admin;
 
 use App\Models\Person;
 use Livewire\Component;
-use Livewire\WithPagination;
 use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 
 class PersonList extends Component
 {
-    use WithPagination;
     use WithoutUrlPagination;
+    use WithPagination;
 
     public string $search = '';
+
     public string $userFilter = '';
+
     public string $clientFilter = '';
+
     public int $perPage = 50;
 
     public string $sortField = 'last_name';
+
     public string $sortDirection = 'asc';
 
     public function updatedSearch(): void
@@ -72,11 +76,15 @@ class PersonList extends Component
         if ($this->sortField === $field) {
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
 
+            $this->setPage(1);
+
             return;
         }
 
         $this->sortField = $field;
         $this->sortDirection = 'asc';
+
+        $this->setPage(1);
     }
 
     public function render()

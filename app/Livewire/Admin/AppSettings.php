@@ -63,11 +63,11 @@ class AppSettings extends Component
             ->all();
 
         $rolesWithoutBadge = $roles
-            ->reject(fn(Role $role): bool => array_key_exists($role->name, $roleBadges))
+            ->reject(fn (Role $role): bool => array_key_exists($role->name, $roleBadges))
             ->values();
 
         $badgeConfigsWithoutRole = collect($roleBadgeRows)
-            ->filter(fn(array $row): bool => ! $row['roleExists'] && ! $row['isPseudoRoleBadgeKey'])
+            ->filter(fn (array $row): bool => ! $row['roleExists'] && ! $row['isPseudoRoleBadgeKey'])
             ->values()
             ->all();
 

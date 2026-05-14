@@ -1,4 +1,4 @@
-{{-- resources/views/components/admin/partials/role-list/modal-edit.blade.php --}}
+{{-- resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php --}}
 
 {{-- Modal Edit role --}}
 <flux:modal

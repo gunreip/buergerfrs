@@ -41,7 +41,7 @@ class BackfillUserPersons extends Command
         $linked = 0;
         $skipped = 0;
 
-        $this->info(($dryRun ? '[DRY RUN] ' : '') . "Found {$users->count()} user(s) without person_id.");
+        $this->info(($dryRun ? '[DRY RUN] ' : '')."Found {$users->count()} user(s) without person_id.");
 
         foreach ($users as $user) {
             $nameParts = $this->splitUserName((string) $user->name);

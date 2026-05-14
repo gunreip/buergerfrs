@@ -1,6 +1,8 @@
 {{-- resources/views/components/ui/form/tab-status-dot.blade.php --}}
 
-{{-- TODO: toggleable tooltips for form tab status dots are currently fragile due to click event conflicts with the tab button. If toggleable behavior is needed later, implement it explicitly for form tab status dots, similar to resources/js/components/ui/global-tooltip.js, but with support for structured HTML/legend content. --}}
+{{--
+TODO: toggleable tooltips for form tab status dots are currently fragile due to click event conflicts with the tab button. If toggleable behavior is needed later, implement it explicitly for form tab status dots, similar to resources/js/components/ui/global-tooltip.js, but with support for structured HTML/legend content.
+--}}
 
 {{--
     Keep this tooltip hover/focus based for now.
@@ -33,9 +35,10 @@
             <div class="min-w-0 space-y-1">
                 <div class="flex items-center gap-2 text-sm font-semibold text-white">
                     @if ($icon)
-                        <x-ui.safe-flux-icon
+                        <x-ui.flux-icon
                             class="size-4 shrink-0 text-zinc-300"
                             :name="$icon"
+                            stroke-widt="1"
                         />
                     @endif
 

@@ -1,8 +1,8 @@
 <?php
 
+use App\Livewire\Account\Preferences as AccountPreferences;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
-use App\Livewire\Account\Preferences as AccountPreferences;
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');

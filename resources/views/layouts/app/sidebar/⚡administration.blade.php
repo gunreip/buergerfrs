@@ -5,6 +5,7 @@
     :heading="__('Administration')"
     icon="settings-2"
     expandable
+    :expanded="request()->routeIs('admin.*')"
 >
     {{-- Admin -> users --}}
     <flux:sidebar.item
@@ -65,6 +66,25 @@
     >
         {{ __('App Settings') }}
     </flux:sidebar.item>
+
+    {{-- Admin -> reference --}}
+    <flux:sidebar.group
+        class="grid"
+        :heading="__('Reference')"
+        icon="globe"
+        expandable
+        :expanded="request()->routeIs('admin.country-references')"
+    >
+        {{-- Admin -> reference -> countries --}}
+        <flux:sidebar.item
+            icon="globe"
+            :href="route('admin.country-references')"
+            :current="request()->routeIs('admin.country-references')"
+            wire:navigate
+        >
+            {{ __('Countries') }}
+        </flux:sidebar.item>
+    </flux:sidebar.group>
 
     {{-- Admin -> fallback reports --}}
     <flux:sidebar.item

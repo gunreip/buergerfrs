@@ -2,12 +2,10 @@
 
 {{-- Overview part --}}
 <flux:card class="mt-6">
-    <flux:heading
-        class="mb-4"
-        size="lg"
-    >
-        {{ __('Overview') }}
-    </flux:heading>
+    <x-ui.headers.card
+        :title="__('Overview')"
+        :description="__('Summary of permissions, guards, and role assignments.')"
+    />
 
     <div class="grid grid-cols-4 gap-3">
         <flux:callout

@@ -24,23 +24,35 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class ClientPerson extends Pivot
 {
     protected $table = 'client_person';
+
     public $incrementing = true;
 
     protected $primaryKey = 'id';
 
     public const RELATIONSHIP_MEMBER = 'member';
+
     public const RELATIONSHIP_EMPLOYEE = 'employee';
+
     public const RELATIONSHIP_OWNER = 'owner';
+
     public const RELATIONSHIP_MANAGER = 'manager';
+
     public const RELATIONSHIP_CONTACT_PERSON = 'contact_person';
+
     public const RELATIONSHIP_REPRESENTATIVE = 'representative';
+
     public const RELATIONSHIP_BENEFICIARY = 'beneficiary';
+
     public const RELATIONSHIP_EXTERNAL_PARTNER = 'external_partner';
 
     public const STATUS_PENDING = 'pending';
+
     public const STATUS_ACTIVE = 'active';
+
     public const STATUS_INACTIVE = 'inactive';
+
     public const STATUS_REJECTED = 'rejected';
+
     public const STATUS_ENDED = 'ended';
 
     /**

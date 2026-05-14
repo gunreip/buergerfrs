@@ -1,5 +1,9 @@
 {{-- resources/views/components/admin/⚡app-settings.blade.php --}}
 
+{{--
+TODO: app-settings weiter ausarbeiten, evtl. in separate Komponenten aufteilen, z.B. ⚡app-settings-role-badges.blade.php und ⚡app-settings-icon-registry.blade.php für die jeweiligen Tabellen, damit die Hauptkomponente übersichtlicher bleibt und die Teile ggf. auch einzeln wiederverwendet werden können.
+ --}}
+
 <flux:card>
     <x-ui.headers.page
         :title="__('App Settings')"

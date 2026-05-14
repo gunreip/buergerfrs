@@ -1,4 +1,4 @@
-{{-- resources/views/components/admin/partials/fallback-report-list/filter.blade.php --}}
+{{-- resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php --}}
 
 {{-- Filter --}}
 <flux:card class="mt-6">
@@ -62,5 +62,19 @@
                 </flux:select>
             </flux:input.group>
         </div>
+
+        <div class="ml-auto min-w-0 flex-none basis-64">
+            <x-ui.table.per-page-selector
+                id="fallback-report-list-per-page"
+                name="fallback-report-list-per-page"
+                model="perPage"
+                :options="[10, 25, 50, 100]"
+            />
+        </div>
+
+        <div class="flex-none">
+            <x-ui.button.reset wire:click="clearFilters" />
+        </div>
+
     </div>
 </flux:card>

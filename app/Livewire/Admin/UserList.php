@@ -4,33 +4,42 @@
 
 namespace App\Livewire\Admin;
 
-use App\Support\Audit\AdminActivity;
 use App\Models\User;
+use App\Support\Audit\AdminActivity;
 use App\Support\Settings\RoleBadgeResolver;
 use Flux\Flux;
 use Livewire\Component;
-use Livewire\WithPagination;
 use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
 
 class UserList extends Component
 {
     private const PER_PAGE_SETTING_KEY = 'ui.per_page.admin_users';
 
-    use WithPagination;
     use WithoutUrlPagination;
+    use WithPagination;
 
     public $search = '';
+
     public $roleFilter = '';
+
     public $perPage = 50;
+
     public $sortField = 'id';
+
     public $sortDirection = 'asc';
 
     public bool $showEditRolesModal = false;
+
     public ?int $editingUserId = null;
+
     public string $editingUserName = '';
+
     public string $editingUserEmail = '';
+
     public string $editingCurrentRoleName = '';
+
     public string $editingRoleName = '';
 
     public function mount(): void
@@ -106,6 +115,15 @@ class UserList extends Component
 
     public function sortBy($field): void
     {
+        if (! in_array($field, [
+            'id',
+            'name',
+            'email',
+            'roles.name',
+        ], true)) {
+            return;
+        }
+
         if ($this->sortField === $field) {
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
 
@@ -235,8 +253,8 @@ class UserList extends Component
     {
         $query = User::query()
             ->where(function ($q) {
-                $q->where('users.name', 'like', "%{$this->search}%")
-                    ->orWhere('users.email', 'like', "%{$this->search}%");
+                $q->where('users.name', 'ilike', "%{$this->search}%")
+                    ->orWhere('users.email', 'ilike', "%{$this->search}%");
             });
 
         if ($this->roleFilter === '__none__') {
@@ -275,7 +293,9 @@ class UserList extends Component
             $query = $query->orderBy('users.' . $this->sortField, $this->sortDirection);
         }
 
-        $users = $query->paginate((int) $this->perPage);
+        $this->perPage = $this->normalizePerPage($this->perPage);
+
+        $users = $query->paginate($this->perPage);
 
         $assignableRoleCountsByCategory = Role::query()
             ->where('is_assignable', true)

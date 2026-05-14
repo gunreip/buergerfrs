@@ -24,9 +24,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PersonLanguage extends Model
 {
     public const PROFICIENCY_NATIVE = 'native';
+
     public const PROFICIENCY_FLUENT = 'fluent';
+
     public const PROFICIENCY_INTERMEDIATE = 'intermediate';
+
     public const PROFICIENCY_BASIC = 'basic';
+
     public const PROFICIENCY_UNKNOWN = 'unknown';
 
     public const PROFICIENCIES = [

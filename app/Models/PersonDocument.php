@@ -30,10 +30,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PersonDocument extends Model
 {
     public const TYPE_ID_CARD_COPY = 'id_card_copy';
+
     public const TYPE_PASSPORT_COPY = 'passport_copy';
+
     public const TYPE_RESIDENCE_PERMIT_COPY = 'residence_permit_copy';
+
     public const TYPE_HEALTH_INSURANCE_PROOF = 'health_insurance_proof';
+
     public const TYPE_TAX_DOCUMENT = 'tax_document';
+
     public const TYPE_OTHER = 'other';
 
     public const TYPES = [

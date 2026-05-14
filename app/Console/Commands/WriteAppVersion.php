@@ -17,7 +17,7 @@ class WriteAppVersion extends Command
     {
         // Ermittle die Version aus Git (Tag, Commits seit Tag, Hash)
         $version = trim(shell_exec('git describe --tags --always --dirty')); // Fallback: Hash, falls keine Tags
-        if (!$version) {
+        if (! $version) {
             $version = 'dev-unknown';
         }
         $file = public_path('version.txt');

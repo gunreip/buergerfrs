@@ -1,7 +1,9 @@
 {{-- resources/views/components/management/people/create-person/⚡actions.blade.php --}}
 
 <div class="mt-6 flex justify-end gap-3">
-    {{-- TODO: x-ui.button.cancel noch implementieren --}}
+    {{--
+    TODO: x-ui.button.cancel noch implementieren
+    --}}
     <x-ui.button.reset
         type="button"
         :label="__('Reset')"

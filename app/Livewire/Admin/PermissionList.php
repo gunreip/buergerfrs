@@ -6,43 +6,83 @@ namespace App\Livewire\Admin;
 
 use App\Support\Audit\AdminActivity;
 use Flux\Flux;
-use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 class PermissionList extends Component
 {
+    use WithPagination;
+
     public string $search = '';
+
     public string $guardFilter = '';
+
     public string $roleFilter = '';
+
     public string $assignmentFilter = '';
+
     public string $categoryFilter = '';
+
     public string $systemFilter = '';
 
+    public int $perPage = 25;
+
     public string $sortField = 'sort_order';
+
     public string $sortDirection = 'asc';
 
     public bool $showEditPermissionModal = false;
 
     public ?int $editingPermissionId = null;
+
     public string $editingPermissionName = '';
+
     public string $editingPermissionGuard = '';
+
     public string $editingCategory = '';
+
     public int $editingSortOrder = 100;
+
     public string $editingDescription = '';
+
     public bool $editingIsSystem = false;
+
     public int $editingRolesCount = 0;
+
+    public array $originalPermissionMetadata = [];
 
     public bool $showRolePermissionsModal = false;
 
     public string $selectedRoleName = '';
+
     public array $selectedPermissionNames = [];
+
     public array $originalPermissionNames = [];
 
     public string $selectedRoleCategory = '';
+
     public int $selectedRoleCurrentPermissionCount = 0;
+
+    /**
+     * Reset pagination when a filter changes.
+     */
+    public function updating(string $property): void
+    {
+        if (in_array($property, [
+            'search',
+            'guardFilter',
+            'roleFilter',
+            'assignmentFilter',
+            'categoryFilter',
+            'systemFilter',
+            'perPage',
+        ], true)) {
+            $this->resetPage();
+        }
+    }
 
     public function clearFilters(): void
     {
@@ -52,6 +92,9 @@ class PermissionList extends Component
         $this->assignmentFilter = '';
         $this->categoryFilter = '';
         $this->systemFilter = '';
+        $this->perPage = 10;
+
+        $this->resetPage();
     }
 
     public function sortBy(string $field): void
@@ -71,11 +114,15 @@ class PermissionList extends Component
         if ($this->sortField === $field) {
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
 
+            $this->resetPage();
+
             return;
         }
 
         $this->sortField = $field;
         $this->sortDirection = 'asc';
+
+        $this->resetPage();
     }
 
     public function hasRolePermissionChanges(): bool
@@ -84,6 +131,34 @@ class PermissionList extends Component
         $original = $this->normalizedPermissionNames($this->originalPermissionNames);
 
         return $selected !== $original;
+    }
+
+    public function hasPermissionMetadataChanges(): bool
+    {
+        if ($this->editingPermissionId === null) {
+            return false;
+        }
+
+        return $this->normalizedEditingPermissionMetadata() !== $this->originalPermissionMetadata;
+    }
+
+    /**
+     * Normalize editable permission metadata for dirty checks and persistence.
+     *
+     * @return array{category: string|null, sort_order: int, description: string|null, is_system: bool}
+     */
+    private function normalizedEditingPermissionMetadata(): array
+    {
+        return [
+            'category' => trim($this->editingCategory) !== ''
+                ? trim($this->editingCategory)
+                : null,
+            'sort_order' => (int) $this->editingSortOrder,
+            'description' => trim($this->editingDescription) !== ''
+                ? trim($this->editingDescription)
+                : null,
+            'is_system' => (bool) $this->editingIsSystem,
+        ];
     }
 
     private function normalizedPermissionNames(array $permissionNames): array
@@ -109,6 +184,7 @@ class PermissionList extends Component
         $this->editingDescription = (string) ($permission->description ?? '');
         $this->editingIsSystem = (bool) $permission->is_system;
         $this->editingRolesCount = (int) $permission->roles_count;
+        $this->originalPermissionMetadata = $this->normalizedEditingPermissionMetadata();
 
         $this->resetValidation();
 
@@ -127,6 +203,7 @@ class PermissionList extends Component
         $this->editingDescription = '';
         $this->editingIsSystem = false;
         $this->editingRolesCount = 0;
+        $this->originalPermissionMetadata = [];
 
         $this->resetValidation();
     }
@@ -271,30 +348,39 @@ class PermissionList extends Component
 
         $before = [
             'category' => $permission->category,
-            'sort_order' => $permission->sort_order,
+            'sort_order' => (int) $permission->sort_order,
             'description' => $permission->description,
-            'is_system' => $permission->is_system,
+            'is_system' => (bool) $permission->is_system,
         ];
 
-        $permission->category = trim($this->editingCategory) !== ''
-            ? trim($this->editingCategory)
-            : null;
+        $after = $this->normalizedEditingPermissionMetadata();
 
-        $permission->sort_order = $this->editingSortOrder;
-        $permission->description = trim($this->editingDescription) !== ''
-            ? trim($this->editingDescription)
-            : null;
+        if ($before === $after) {
+            Flux::toast(
+                heading: __('No changes'),
+                text: __('Permission metadata for :permission has not changed.', [
+                    'permission' => $permission->name,
+                ]),
+                variant: 'warning',
+                duration: 3000,
+            );
 
-        $permission->is_system = $this->editingIsSystem;
+            return;
+        }
+
+        $permission->category = $after['category'];
+        $permission->sort_order = $after['sort_order'];
+        $permission->description = $after['description'];
+        $permission->is_system = $after['is_system'];
         $permission->save();
 
         $permission->refresh();
 
         $after = [
             'category' => $permission->category,
-            'sort_order' => $permission->sort_order,
+            'sort_order' => (int) $permission->sort_order,
             'description' => $permission->description,
-            'is_system' => $permission->is_system,
+            'is_system' => (bool) $permission->is_system,
         ];
 
         $adminActivity->permissionMetadataUpdated(
@@ -313,6 +399,16 @@ class PermissionList extends Component
             variant: 'success',
             duration: 3000,
         );
+    }
+
+    /**
+     * Normalize selectable pagination size.
+     */
+    private function normalizedPerPage(): int
+    {
+        return in_array($this->perPage, [10, 25, 50, 100], true)
+            ? $this->perPage
+            : 10;
     }
 
     public function render()
@@ -356,25 +452,27 @@ class PermissionList extends Component
                 $query->doesntHave('roles');
             });
 
+        $filteredPermissionsQuery = clone $permissionsQuery;
+
         $permissions = $permissionsQuery
             ->orderBy($this->sortField, $this->sortDirection)
             ->orderBy('category')
             ->orderBy('sort_order')
             ->orderBy('guard_name')
             ->orderBy('name')
-            ->get();
+            ->paginate($this->normalizedPerPage());
 
         $summary = [
-            'totalPermissions' => $permissions->count(),
-            'guardCount' => $permissions
-                ->pluck('guard_name')
-                ->unique()
+            'totalPermissions' => (clone $filteredPermissionsQuery)->count(),
+            'guardCount' => (clone $filteredPermissionsQuery)
+                ->select('guard_name')
+                ->distinct()
+                ->count('guard_name'),
+            'assignedPermissions' => (clone $filteredPermissionsQuery)
+                ->has('roles')
                 ->count(),
-            'assignedPermissions' => $permissions
-                ->where('roles_count', '>', 0)
-                ->count(),
-            'unassignedPermissions' => $permissions
-                ->where('roles_count', 0)
+            'unassignedPermissions' => (clone $filteredPermissionsQuery)
+                ->doesntHave('roles')
                 ->count(),
         ];
 

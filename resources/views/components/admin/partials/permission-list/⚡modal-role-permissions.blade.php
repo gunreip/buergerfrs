@@ -1,19 +1,20 @@
+{{-- resources/views/components/admin/partials/permission-list/⚡modal-role-permissions.blade.php --}}
+
 <flux:modal
     class="w-[calc(100vw-4rem)] max-w-[82rem]"
     wire:model.self="showRolePermissionsModal"
 >
     <div class="space-y-6">
-        <div>
-            <flux:heading size="xl">
-                {{ __('Manage Role Permissions') }}
-            </flux:heading>
-
-            <flux:text class="mt-2">
-                {{ __('Assign permissions to a selected role.') }}
-            </flux:text>
+        <div class="flex items-start justify-between gap-4">
+            <flux:field>
+                <x-ui.headers.card
+                    :title="__('Manage Role Permissions')"
+                    :description="__('Assign permissions to a selected role.')"
+                />
+            </flux:field>
         </div>
 
-        <flux:separator />
+        <flux:separator text="{{ __('Edit Role Permissions') }}" />
 
         <div class="flex items-end justify-between gap-4">
             <div class="w-full max-w-md">
@@ -54,6 +55,8 @@
         </div>
 
         @if ($selectedRoleName !== '')
+            <flux:separator text="{{ __('Role Permission Overview for') }} {{ $selectedRoleName }}" />
+
             <div class="grid grid-cols-2 gap-3 xl:grid-cols-10">
                 <flux:callout
                     class="col-span-2"
@@ -128,6 +131,8 @@
         @endif
 
         @if ($selectedRoleName !== '')
+            <flux:separator text="Set Role Permissions" />
+
             <div class="grid grid-cols-1 gap-4 xl:grid-cols-3">
                 @foreach ($permissionsByCategory as $category => $categoryPermissions)
                     <flux:card class="space-y-2 place-self-stretch">
@@ -141,7 +146,7 @@
                         <div class="space-y-1">
                             @foreach ($categoryPermissions as $permission)
                                 <label
-                                    class="flex min-h-28 items-start gap-3 rounded-lg border border-zinc-700/40 bg-zinc-800/20 px-4 py-3 transition hover:cursor-pointer hover:bg-zinc-800/40"
+                                    class="flex h-full min-h-24 items-start gap-3 rounded-lg border border-zinc-700/40 bg-zinc-800/20 px-4 py-3 transition hover:cursor-pointer hover:bg-zinc-800/40"
                                 >
                                     <flux:checkbox
                                         class="mt-1 shrink-0"

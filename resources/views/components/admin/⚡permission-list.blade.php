@@ -1,25 +1,9 @@
 {{-- resources/views/components/admin/⚡permission-list.blade.php --}}
 
-@php
-    $highlightSearchMatch = static function (?string $value, ?string $search): string {
-        $value = (string) $value;
-        $search = trim((string) $search);
-
-        if ($search === '') {
-            return e($value);
-        }
-
-        $escapedValue = e($value);
-        $escapedSearch = e($search);
-
-        return Str::of($escapedValue)
-            ->replaceMatches(
-                '/' . preg_quote($escapedSearch, '/') . '/iu',
-                '<mark class="rounded bg-amber-400/20 px-0.5 text-amber-100">$0</mark>',
-            )
-            ->toString();
-    };
-@endphp
+{{-- @php
+    $caseSensitive = true; // Set to false if you want case-insensitive search
+    TODO: switch per toggle
+@endphp --}}
 
 <flux:card>
     <x-ui.headers.page

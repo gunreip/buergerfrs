@@ -1,23 +1,9 @@
 {{-- resources/views/components/admin/⚡role-list.blade.php --}}
 
-@php
-    // highlight search term in table results
-    $highlightSearchMatch = static function (?string $value, ?string $search): string {
-        $value = (string) $value;
-        $search = trim((string) $search);
-
-        if ($search === '') {
-            return e($value);
-        }
-
-        $escapedValue = e($value);
-        $escapedSearch = e($search);
-
-        return Str::of($escapedValue)
-            ->replaceMatches('/' . preg_quote($escapedSearch, '/') . '/iu', '<mark class="highlight">$0</mark>')
-            ->toString();
-    };
-@endphp
+{{-- @php
+    $caseSensitive = true; // Set to false if you want case-insensitive search
+    TODO: switch per toggle
+@endphp --}}
 
 <flux:card>
 

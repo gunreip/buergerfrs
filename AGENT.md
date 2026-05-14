@@ -65,6 +65,8 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
 - **Permission Metadata:** Die Tabelle `permissions` ist um `category`, `sort_order`, `description`, `is_system` erweitert. Diese Felder dienen nur der Admin-UI-Strukturierung und ändern nicht die technische Permission-Identität.
 - **User Settings:** User-spezifische, nicht sicherheitskritische UI-/Profil-Einstellungen werden in `users.settings` als JSONB gespeichert. Zugriff erfolgt über `User::setting(string $key, mixed $default = null)` und `User::setSetting(string $key, mixed $value)`. Das Model wird nach `setSetting()` nicht automatisch gespeichert; `save()` muss explizit aufgerufen werden. Dot-Notation verwenden, z.B. `ui.per_page.admin_users`, `profile.nickname`, `profile.avatar_path`.
 - **Icons:** Ausschließlich Flux-Icons verwenden. Erlaubte Icons, Badge-Farben und Badge-Varianten werden zentral in `config/buergerfrs-icons.php` pro Kategorie definiert. Neue Icons sollten vor der Registrierung mit `php artisan flux:icon <name>` deployed werden. Wenn ein registriertes Icon nicht verfügbar ist, rendert `x-ui.safe-flux-icon` sichtbar das rote `file-x`-Fallback. Zugriff immer über `App\Support\Icons\IconRegistry` – kein direkter Zugriff auf die Config.
+- **Flux Icons:** Für allgemeines sicheres Flux-Icon-Rendering wird `x-ui.flux-icon` verwendet. Die Komponente prüft technisch, ob `flux.icon.{name}` existiert; fehlt es, wird `file-x` gerendert und ein `FallbackReport` geschrieben. `x-ui.safe-flux-icon` ist veraltet und soll nicht mehr verwendet werden.
+- **IconRegistry:** `App\Support\Icons\IconRegistry` bleibt für fachlich konfigurierbare Icon-Metadaten wie Role-Badges/App-Settings zuständig. Sie ist nicht die allgemeine Voraussetzung für normale UI-Icons.
 - **Admin-Bereich:** Routen in `routes/admin.php`, geschützt durch Middleware `role:Admin|Super-Admin` (Spatie Permission). Livewire-Komponenten in `app/Livewire/Admin/`.
 - **Permissions:** Permission-Verwaltung läuft über `/admin/permissions` und `App\Livewire\Admin\PermissionList`. Permission-Identität (`name`, `guard_name`) wird nicht über die UI geändert. Editierbar sind nur Metadaten wie `category`, `sort_order`, `description`, `is_system`. Role↔Permission-Zuweisungen erfolgen rollen-zentriert über das Modal „Manage Role Permissions“ mit Dirty-State; gespeichert wird über Spatie `syncPermissions()`.
 - **User Avatars:** User-Avatare werden nicht user-id-basiert abgelegt, sondern über geshardete UUID-Pfade unter `storage/app/public/avatars/...`. Der gespeicherte relative Pfad liegt in `users.settings.profile.avatar_path`. Upload/Delete/URL-Resolution läuft über `App\Support\Avatar\UserAvatarStorage`; Pfaderzeugung über `App\Support\Avatar\AvatarPath`. Anzeige immer über `x-ui.user-avatar`, damit Bildanzeige und Fallback auf Initials zentral bleiben.
@@ -73,7 +75,6 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
 - **Tooltips:** Für fachliche Hilfetexte an Labels wird `x-ui.tooltip.trigger` verwendet, nicht `flux:tooltip`. Die Komponente rendert einen globalen Tooltip über `resources/js/components/ui/global-tooltip.js` und das globale Template in der Sidebar. Tooltip-Titel und Tooltip-Text werden als Props übergeben, bevorzugt gebunden, z.B. `:title="__('Salutation')"` und `:text="__('The salutation is used to address the person in a formal way.')"`; dadurch werden Escaping-Probleme bei Apostrophen, Quotes und Entities vermieden. Fehlende oder leere Werte werden absichtlich sichtbar als `No tooltip-title` bzw. `No tooltip-text` ausgegeben, damit unvollständige Implementierungen direkt auffallen. `required` am Trigger steuert ausschließlich den Required-Badge im Tooltip-Header; ohne `required` darf kein Required-Badge im Tooltip erscheinen. Die Tooltip-Position startet horizontal an der Cursor-Position, nicht an der Mitte des Trigger-Elements; vertikal wird weiterhin ober-/unterhalb des Trigger-Elements platziert und an den Viewport begrenzt.
 - **Required Badge für Tooltips/Labels:** Für sichtbare Required-Badges in Labels wird `x-ui.tooltip.badge-required` verwendet, nicht ein roher `flux:badge`-Block. Beispiel: `<flux:label>{{ __('Birth place') }} <x-ui.tooltip.badge-required /></flux:label>`. Der Badge im Label und der Badge im Tooltip-Header sind getrennte Darstellungen: `x-ui.tooltip.badge-required` markiert das Label sichtbar, während `required` auf `x-ui.tooltip.trigger` den Tooltip-Header markiert.
           Beispiel:
-  ```blade
   <x-ui.tooltip.trigger
       :title="__('Birth place')"
       :text="__('The birth place is required for identification and official records.')"
@@ -84,7 +85,6 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
           <x-ui.tooltip.badge-required />
       </flux:label>
   </x-ui.tooltip.trigger>
-  ```
 - **Validation UX / Notices:** Browser-native HTML5-Constraint-Validation soll in komplexeren Livewire-/Flux-Formularen nicht die primäre UX sein. Feldfehler laufen serverseitig über Livewire/Laravel. Feldnahe `flux:error`-Texte können formularbezogen per CSS ausgeblendet werden, z.B. über einen Formular-Scope wie `#create-person-form [data-flux-error]`, damit das Layout stabil bleibt. Invalid-Markierung am Input bleibt erhalten. Für `/people/create` werden Validation-Fehler über das Browser-Event `buergerfrs:validation-errors` an `resources/js/notices/validation-notices.js` übergeben und dort als eigene Notices gerendert. Bei wenigen Fehlern erscheint eine Notice pro Feld, bei vielen Fehlern eine Sammelnotice. Notice-Actions nutzen `buergerfrs:focus-field`, um zum betroffenen Input zu scrollen/fokussieren.
 - **Admin Activity Logging:** Admin-relevante Änderungen an Users/Roles/Permissions werden über `App\Support\Audit\AdminActivity` in `activity_log` mit `log_name=admin` dokumentiert. Geloggt werden u.a. User-Rollenänderungen, Role Create/Update, Permission-Metadatenänderungen und Role↔Permission-Zuweisungen. Events verwenden `admin.*`-Namen und enthalten `before`/`after`-Properties sowie Subject/Causer.
 - **Management Activity Logging:** Fachliche Management-Aktionen werden über `App\Support\Audit\ManagementActivity` in `activity_log` mit `log_name=management` dokumentiert. Für `/people/create` wird `management.person.created` geschrieben, Subject ist `App\Models\Person`, Properties enthalten Person-/User-Daten sowie `generated_password_logged`.
@@ -127,9 +127,8 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
 
 > Diese Datei hilft AI Coding Agents, Build-/Test-Kommandos, Konventionen und Besonderheiten dieses Projekts sofort zu verstehen. Bei Änderungen an der Projektstruktur bitte diese Datei anpassen.
 
-```sh
   Beispiel:
-  ```blade
+```blade
   <x-ui.tooltip.trigger
       :title="__('Birth place')"
       :text="__('The birth place is required for identification and official records.')"

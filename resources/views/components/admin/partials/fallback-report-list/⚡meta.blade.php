@@ -1,13 +1,13 @@
-{{-- resources/views/components/admin/partials/fallback-report-list/meta.blade.php --}}
+{{-- resources/views/components/admin/partials/fallback-report-list/⚡meta.blade.php --}}
 
 {{-- Overview --}}
 <flux:card class="mt-6">
-    <flux:heading
-        class="mb-4"
-        size="lg"
-    >
-        {{ __('Overview') }}
-    </flux:heading>
+    <x-ui.headers.card
+        :title="__('Overview')"
+        :description="__(
+            'Summary of technical fallback events such as missing icons, missing config values or other recoverable UI fallbacks.',
+        )"
+    />
 
     <div class="grid grid-cols-3 gap-3">
         <flux:callout

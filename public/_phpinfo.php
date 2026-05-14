@@ -1,0 +1,1 @@
+<?php echo PHP_VERSION, PHP_SAPI, PHP_EOL; phpinfo();

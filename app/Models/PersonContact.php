@@ -26,10 +26,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PersonContact extends Model
 {
     public const TYPE_EMERGENCY = 'emergency';
+
     public const TYPE_FAMILY = 'family';
+
     public const TYPE_CAREGIVER = 'caregiver';
+
     public const TYPE_GUARDIAN = 'guardian';
+
     public const TYPE_AUTHORIZED_REPRESENTATIVE = 'authorized_representative';
+
     public const TYPE_OTHER = 'other';
 
     public const TYPES = [
@@ -42,13 +47,21 @@ class PersonContact extends Model
     ];
 
     public const RELATIONSHIP_PARENT = 'parent';
+
     public const RELATIONSHIP_CHILD = 'child';
+
     public const RELATIONSHIP_SPOUSE = 'spouse';
+
     public const RELATIONSHIP_PARTNER = 'partner';
+
     public const RELATIONSHIP_SIBLING = 'sibling';
+
     public const RELATIONSHIP_GUARDIAN = 'guardian';
+
     public const RELATIONSHIP_CAREGIVER = 'caregiver';
+
     public const RELATIONSHIP_FRIEND = 'friend';
+
     public const RELATIONSHIP_OTHER = 'other';
 
     public const RELATIONSHIPS = [

@@ -11,46 +11,88 @@ use App\Support\Settings\RoleBadgeResolver;
 use Flux\Flux;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
 
 class RoleList extends Component
 {
+    use WithPagination;
+
     public bool $showEditRoleModal = false;
+
     public ?int $editingRoleId = null;
 
     public string $editingRoleName = '';
+
     public string $editingGuardName = '';
+
     public string $editingCategory = '';
+
     public int $editingSortOrder = 100;
+
     public string $editingDescription = '';
+
     public bool $editingIsSystem = false;
+
     public bool $editingIsAssignable = true;
+
     public int $editingUsersCount = 0;
 
     public string $editingBadgeColor = 'zinc';
+
     public string $editingBadgeVariant = 'subtle';
+
     public string $editingBadgeIcon = 'tag';
 
     public bool $showCreateRoleModal = false;
 
     public string $creatingRoleName = '';
+
     public string $creatingGuardName = 'web';
+
     public string $creatingCategory = 'user';
+
     public int $creatingSortOrder = 100;
+
     public string $creatingDescription = '';
+
     public bool $creatingIsAssignable = true;
 
     public string $creatingBadgeColor = 'zinc';
+
     public string $creatingBadgeVariant = 'subtle';
+
     public string $creatingBadgeIcon = 'tag';
 
     public string $sortField = 'sort_order';
+
     public string $sortDirection = 'asc';
 
     public string $search = '';
+
     public string $categoryFilter = '';
+
     public string $assignableFilter = '';
+
     public string $systemFilter = '';
+
+    public int $perPage = 25;
+
+    /**
+     * Reset pagination when a filter changes.
+     */
+    public function updating(string $property): void
+    {
+        if (in_array($property, [
+            'search',
+            'categoryFilter',
+            'assignableFilter',
+            'systemFilter',
+            'perPage',
+        ], true)) {
+            $this->resetPage();
+        }
+    }
 
     public function openCreateRoleModal(): void
     {
@@ -355,12 +397,15 @@ class RoleList extends Component
 
         if ($this->sortField === $field) {
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+            $this->resetPage();
 
             return;
         }
 
         $this->sortField = $field;
         $this->sortDirection = 'asc';
+
+        $this->resetPage();
     }
 
     public function clearFilters(): void
@@ -369,6 +414,19 @@ class RoleList extends Component
         $this->categoryFilter = '';
         $this->assignableFilter = '';
         $this->systemFilter = '';
+        $this->perPage = 10;
+
+        $this->resetPage();
+    }
+
+    /**
+     * Normalize selectable pagination size.
+     */
+    private function normalizedPerPage(): int
+    {
+        return in_array($this->perPage, [10, 25, 50, 100], true)
+            ? $this->perPage
+            : 10;
     }
 
     public function render(RoleBadgeResolver $roleBadgeResolver, IconRegistry $iconRegistry)
@@ -410,9 +468,10 @@ class RoleList extends Component
                 ->orderBy('name');
         }
 
-        $roles = $rolesQuery->get();
+        $roles = $rolesQuery->paginate($this->normalizedPerPage());
 
         $roleBadges = $roles
+            ->getCollection()
             ->mapWithKeys(fn(Role $role): array => [
                 $role->name => $roleBadgeResolver->forRole($role->name),
             ])

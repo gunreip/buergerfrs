@@ -8,6 +8,7 @@ class WriteVersions extends Command
 {
     // Artisan-Aufruf: php artisan system:versions
     protected $signature = 'system:versions';
+
     protected $description = 'Schreibt OS-, PHP- und Package-Versionen in VERSIONS.md';
 
     public function handle()
@@ -26,14 +27,14 @@ class WriteVersions extends Command
         $content .= "| Composer   | $composer |\n";
         $content .= "| Node.js    | $node |\n";
         $content .= "| npm        | $npm |\n";
-        $content .= "\n**Stand:** " . date('Y-m-d H:i:s') . "\n";
+        $content .= "\n**Stand:** ".date('Y-m-d H:i:s')."\n";
 
         // Composer-Pakete (nur direkte Abhängigkeiten)
         $composerPackagesPath = base_path('composer_packages.json');
         if (file_exists($composerPackagesPath)) {
             $json = json_decode(file_get_contents($composerPackagesPath), true);
             $locked = $json['locked'] ?? [];
-            $direct = array_filter($locked, fn($pkg) => ($pkg['direct-dependency'] ?? false) === true);
+            $direct = array_filter($locked, fn ($pkg) => ($pkg['direct-dependency'] ?? false) === true);
             if (count($direct) > 0) {
                 $content .= "\n## Wichtige Composer-Packages (direkte Abhängigkeiten)\n\n";
                 $content .= "| Package | Version | Beschreibung |\n";
@@ -73,7 +74,7 @@ class WriteVersions extends Command
                 'vite' => 'Fast frontend build tool and development server.',
                 '@rollup/rollup-linux-x64-gnu' => 'Native bindings for Rollup, the JavaScript module bundler, for Linux x64 (glibc).',
                 '@tailwindcss/oxide-linux-x64-gnu' => 'Native binary for Tailwind CSS\'s Oxide engine on Linux x64.',
-                'lightningcss-linux-x64-gnu' => 'CSS parser, transformer, and minifier written in Rust, for Linux x64.'
+                'lightningcss-linux-x64-gnu' => 'CSS parser, transformer, and minifier written in Rust, for Linux x64.',
             ];
             if (count($deps) > 0) {
                 $content .= "\n## Wichtige npm-Packages (direkte Abhängigkeiten)\n\n";

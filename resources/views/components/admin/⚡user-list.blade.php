@@ -1,25 +1,9 @@
-<?php
+{{-- resources/views/components/admin/⚡user-list.blade.php --}}
 
-// resources/views/components/admin/⚡user-list.blade.php
-
-use Illuminate\Support\Str;
-
-$highlightSearchMatch = static function (?string $value, ?string $search): string {
-    $value = (string) $value;
-    $search = trim((string) $search);
-
-    if ($search === '') {
-        return e($value);
-    }
-
-    $escapedValue = e($value);
-    $escapedSearch = e($search);
-
-    return Str::of($escapedValue)
-        ->replaceMatches('/' . preg_quote($escapedSearch, '/') . '/iu', '<mark class="highlight">$0</mark>')
-        ->toString();
-};
-?>
+{{-- @php
+    $caseSensitive = true; // Set to false if you want case-insensitive search
+    TODO: switch per toggle
+@endphp --}}
 
 <flux:card>
 

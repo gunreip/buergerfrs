@@ -92,10 +92,10 @@
 
                         <flux:table.cell>
                             <div class="flex items-center gap-2">
-                                <x-ui.safe-flux-icon
+                                <x-ui.flux-icon
                                     :name="$row['icon']"
-                                    category="role_user_management"
                                     variant="micro"
+                                    stroke-width="1"
                                 />
 
                                 <span>

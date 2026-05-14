@@ -1,4 +1,4 @@
-{{-- resources/views/components/admin/partials/user-list/meta.blade.php --}}
+{{-- resources/views/components/admin/partials/user-list/⚡meta.blade.php --}}
 
 <flux:card class="mt-6">
     <flux:heading

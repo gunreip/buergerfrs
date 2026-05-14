@@ -22,10 +22,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PersonAddress extends Model
 {
     public const TYPE_HOME = 'home';
+
     public const TYPE_PRIMARY = 'primary';
+
     public const TYPE_SECONDARY = 'secondary';
+
     public const TYPE_MAILING = 'mailing';
+
     public const TYPE_WORK = 'work';
+
     public const TYPE_OTHER = 'other';
 
     public const TYPES = [

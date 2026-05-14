@@ -12,8 +12,11 @@ use Livewire\Component;
 class Settings extends Component
 {
     public string $nickname = '';
+
     public string $locale = 'de';
+
     public string $appearance = 'system';
+
     public int $adminUsersPerPage = 50;
 
     public function mount(): void

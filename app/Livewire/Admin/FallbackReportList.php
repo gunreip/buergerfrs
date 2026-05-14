@@ -31,7 +31,7 @@ class FallbackReportList extends Component
 
     public string $sortDirection = 'desc';
 
-    public int $perPage = 15;
+    public int $perPage = 25;
 
     public function updatedSearch(): void
     {
@@ -40,6 +40,13 @@ class FallbackReportList extends Component
 
     public function updatedStatusFilter(): void
     {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage(): void
+    {
+        $this->perPage = $this->normalizedPerPage();
+
         $this->resetPage();
     }
 
@@ -52,11 +59,24 @@ class FallbackReportList extends Component
         if ($this->sortField === $field) {
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
 
+            $this->resetPage();
+
             return;
         }
 
         $this->sortField = $field;
         $this->sortDirection = 'asc';
+
+        $this->resetPage();
+    }
+
+    public function clearFilters(): void
+    {
+        $this->search = '';
+        $this->statusFilter = 'open';
+        $this->perPage = 10;
+
+        $this->resetPage();
     }
 
     public function markReviewed(int $reportId): void
@@ -76,6 +96,13 @@ class FallbackReportList extends Component
         $report->markUnreviewed();
     }
 
+    private function normalizedPerPage(): int
+    {
+        return in_array($this->perPage, [10, 25, 50, 100], true)
+            ? $this->perPage
+            : 10;
+    }
+
     public function render()
     {
         $query = FallbackReport::query()
@@ -88,7 +115,7 @@ class FallbackReportList extends Component
         $reports = $query
             ->orderBy($sortColumn, $this->sortDirection)
             ->orderByDesc('id')
-            ->paginate($this->perPage);
+            ->paginate($this->normalizedPerPage());
 
         return view('components.admin.⚡fallback-report-list', [
             'reports' => $reports,

@@ -52,7 +52,7 @@ class FormFieldRegistry
     {
         return array_keys(array_filter(
             $this->fields($form),
-            fn(array $field): bool => (bool) ($field['required'] ?? false),
+            fn (array $field): bool => (bool) ($field['required'] ?? false),
         ));
     }
 
@@ -60,7 +60,7 @@ class FormFieldRegistry
     {
         return array_filter(
             $this->fields($form),
-            fn(array $field): bool => ($field['tab'] ?? null) === $tab,
+            fn (array $field): bool => ($field['tab'] ?? null) === $tab,
         );
     }
 
@@ -68,7 +68,7 @@ class FormFieldRegistry
     {
         return array_filter(
             $this->fieldsForTab($form, $tab),
-            fn(array $field): bool => (bool) ($field['status_relevant'] ?? true),
+            fn (array $field): bool => (bool) ($field['status_relevant'] ?? true),
         );
     }
 
@@ -76,7 +76,7 @@ class FormFieldRegistry
     {
         return array_keys(array_filter(
             $this->fieldsForTab($form, $tab),
-            fn(array $field): bool => (bool) ($field['required'] ?? false),
+            fn (array $field): bool => (bool) ($field['required'] ?? false),
         ));
     }
 

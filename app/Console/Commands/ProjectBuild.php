@@ -64,14 +64,14 @@ class ProjectBuild extends Command
 
     private function runArtisanStep(string $description, string $command): void
     {
-        $this->info('➤ ' . $description);
+        $this->info('➤ '.$description);
 
         $this->call($command);
     }
 
     private function runProcess(array $command, string $description): void
     {
-        $this->info('➤ ' . $description);
+        $this->info('➤ '.$description);
 
         $process = new Process($command, base_path());
         $process->setTimeout(null);
@@ -81,7 +81,7 @@ class ProjectBuild extends Command
         });
 
         if (! $process->isSuccessful()) {
-            $this->error('❌ Fehler bei: ' . implode(' ', $command));
+            $this->error('❌ Fehler bei: '.implode(' ', $command));
 
             throw new RuntimeException($process->getErrorOutput() ?: $process->getOutput());
         }

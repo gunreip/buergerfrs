@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
-use Illuminate\Support\Str;
+use Illuminate\Database\Seeder;
 
 class TestUsersSeeder extends Seeder
 {
@@ -14,6 +13,6 @@ class TestUsersSeeder extends Seeder
     public function run(): void
     {
         // 60 Test-User anlegen
-        \App\Models\User::factory()->count(60)->create();
+        User::factory()->count(60)->create();
     }
 }

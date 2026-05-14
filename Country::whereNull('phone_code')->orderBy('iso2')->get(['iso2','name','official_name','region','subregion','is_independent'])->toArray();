@@ -1,0 +1,34 @@
+[90m= [39m[
+    [
+      [34m"[39m[34miso2[39m[34m"[39m => [32m"[39m[32mAQ[39m[32m"[39m,
+      [34m"[39m[34mname[39m[34m"[39m => [32m"[39m[32mAntarctica[39m[32m"[39m,
+      [34m"[39m[34mofficial_name[39m[34m"[39m => [32m"[39m[32mAntarctica[39m[32m"[39m,
+      [34m"[39m[34mregion[39m[34m"[39m => [32m"[39m[32mAntarctic[39m[32m"[39m,
+      [34m"[39m[34msubregion[39m[34m"[39m => [36mnull[39m,
+      [34m"[39m[34mis_independent[39m[34m"[39m => [36mfalse[39m,
+    ],
+    [
+      [34m"[39m[34miso2[39m[34m"[39m => [32m"[39m[32mBV[39m[32m"[39m,
+      [34m"[39m[34mname[39m[34m"[39m => [32m"[39m[32mBouvet Island[39m[32m"[39m,
+      [34m"[39m[34mofficial_name[39m[34m"[39m => [32m"[39m[32mBouvet Island[39m[32m"[39m,
+      [34m"[39m[34mregion[39m[34m"[39m => [32m"[39m[32mAntarctic[39m[32m"[39m,
+      [34m"[39m[34msubregion[39m[34m"[39m => [36mnull[39m,
+      [34m"[39m[34mis_independent[39m[34m"[39m => [36mfalse[39m,
+    ],
+    [
+      [34m"[39m[34miso2[39m[34m"[39m => [32m"[39m[32mHM[39m[32m"[39m,
+      [34m"[39m[34mname[39m[34m"[39m => [32m"[39m[32mHeard Island and McDonald Islands[39m[32m"[39m,
+      [34m"[39m[34mofficial_name[39m[34m"[39m => [32m"[39m[32mHeard Island and McDonald Islands[39m[32m"[39m,
+      [34m"[39m[34mregion[39m[34m"[39m => [32m"[39m[32mAntarctic[39m[32m"[39m,
+      [34m"[39m[34msubregion[39m[34m"[39m => [36mnull[39m,
+      [34m"[39m[34mis_independent[39m[34m"[39m => [36mfalse[39m,
+    ],
+    [
+      [34m"[39m[34miso2[39m[34m"[39m => [32m"[39m[32mMO[39m[32m"[39m,
+      [34m"[39m[34mname[39m[34m"[39m => [32m"[39m[32mMacau[39m[32m"[39m,
+      [34m"[39m[34mofficial_name[39m[34m"[39m => [32m"[39m[32mMacao Special Administrative Region of the People's Republic of China[39m[32m"[39m,
+      [34m"[39m[34mregion[39m[34m"[39m => [32m"[39m[32mAsia[39m[32m"[39m,
+      [34m"[39m[34msubregion[39m[34m"[39m => [32m"[39m[32mEastern Asia[39m[32m"[39m,
+      [34m"[39m[34mis_independent[39m[34m"[39m => [36mfalse[39m,
+    ],
+  ]
