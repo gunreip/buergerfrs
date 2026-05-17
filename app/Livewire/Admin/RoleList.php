@@ -121,8 +121,10 @@ class RoleList extends Component
     {
         if (! auth()->user()?->hasRole('Super-Admin')) {
             Flux::toast(
-                heading: __('Not allowed'),
-                text: __('Only Super-Admins may create roles.'),
+                // i18n-native: __('Not allowed')
+                heading: __('admin.roles.messages.not_allowed.heading'),
+                // i18n-native: __('Only Super-Admins may create roles.')
+                text: __('admin.roles.messages.not_allowed.only_super_admins_may_create_roles'),
                 variant: 'danger',
                 duration: 4000,
             );
@@ -197,8 +199,10 @@ class RoleList extends Component
         $this->resetCreateRoleModal();
 
         Flux::toast(
-            heading: __('Role created'),
-            text: __('Role :role has been created.', [
+            // i18n-native: __('Role created')
+            heading: __('admin.roles.messages.role_created.heading'),
+            // i18n-native: __('Role :role has been created.')
+            text: __('admin.roles.messages.role_created.text', [
                 'role' => $role->name,
             ]),
             variant: 'success',
@@ -350,8 +354,10 @@ class RoleList extends Component
         $this->resetEditRoleModal();
 
         Flux::toast(
-            heading: __('Role saved'),
-            text: __('Role metadata and badge settings for :role have been updated.', [
+            // i18n-native: __('Role saved')
+            heading: __('admin.roles.messages.role_saved.heading'),
+            // i18n-native: __('Role metadata and badge settings for :role have been updated.')
+            text: __('admin.roles.messages.role_saved.text', [
                 'role' => $savedRoleName,
             ]),
             variant: 'success',

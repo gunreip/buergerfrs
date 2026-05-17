@@ -2,12 +2,11 @@
 
 {{-- Table part --}}
 <flux:card class="mt-6">
-    <flux:heading
-        class="mb-4"
-        size="lg"
-    >
-        {{ __('Role List') }}
-    </flux:heading>
+
+    <x-ui.headers.card
+        :title="__('Role List')"
+        :description="__('Review and manage user roles, their permissions, and assigned users.')"
+    />
 
     <div class="mx-auto max-w-full">
         <div class="overflow-hidden rounded-t-lg">

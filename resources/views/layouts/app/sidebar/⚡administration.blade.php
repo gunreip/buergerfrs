@@ -57,6 +57,16 @@
         {{ __('Permissions') }}
     </flux:sidebar.item>
 
+    {{-- Admin -> translations --}}
+    <flux:sidebar.item
+        icon="languages"
+        :href="route('admin.translations')"
+        :current="request()->routeIs('admin.translations')"
+        wire:navigate
+    >
+        {{ __('Translations') }}
+    </flux:sidebar.item>
+
     {{-- Admin -> app settings --}}
     <flux:sidebar.item
         icon="settings"
@@ -73,8 +83,9 @@
         :heading="__('Reference')"
         icon="globe"
         expandable
-        :expanded="request()->routeIs('admin.country-references')"
+        :expanded="request()->routeIs('admin.country-references') || request()->routeIs('admin.html-view-audit')"
     >
+
         {{-- Admin -> reference -> countries --}}
         <flux:sidebar.item
             icon="globe"
@@ -84,6 +95,17 @@
         >
             {{ __('Countries') }}
         </flux:sidebar.item>
+
+        {{-- Admin -> reference -> HTML tags check --}}
+        <flux:sidebar.item
+            icon="code-xml"
+            :href="route('admin.html-view-audit')"
+            :current="request()->routeIs('admin.html-view-audit')"
+            wire:navigate
+        >
+            {{ __('HTML-Tags-Check') }}
+        </flux:sidebar.item>
+
     </flux:sidebar.group>
 
     {{-- Admin -> fallback reports --}}

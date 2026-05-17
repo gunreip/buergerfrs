@@ -70,5 +70,12 @@
                 :options="[10, 25, 50, 100]"
             />
         </div>
+
+        <div class="flex-none">
+            {{--
+            TODO: Reset-Filter-Button implementieren
+            --}}
+            {{-- <x-ui.button.reset wire:click="clearFilters" /> --}}
+        </div>
     </div>
 </flux:card>

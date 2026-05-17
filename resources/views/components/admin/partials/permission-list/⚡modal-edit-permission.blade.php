@@ -8,19 +8,19 @@
         <div class="flex items-start justify-between gap-4">
             <flux:field>
                 <x-ui.headers.card
-                    :title="__('Edit Permission')"
-                    :description="__('Edit metadata for this permission. Name and guard are not changed here.')"
+                    :title="__('admin.permissions.modals.edit.title')"
+                    :description="__('admin.permissions.modals.edit.description')"
                 />
 
             </flux:field>
         </div>
 
-        <flux:separator text="{{ __('Permission Metadata') }}" />
+        <flux:separator text="{{ __('admin.permissions.modals.edit.metadata_section') }}" />
 
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <flux:text class="text-zinc-400">
-                    {{ __('Name') }}
+                    {{ __('ui.labels.name') }}
                 </flux:text>
 
                 <flux:heading size="md">
@@ -30,7 +30,7 @@
 
             <div>
                 <flux:text class="text-zinc-400">
-                    {{ __('Guard') }}
+                    {{ __('ui.labels.guard') }}
                 </flux:text>
 
                 <flux:heading size="md">
@@ -40,7 +40,7 @@
 
             <div>
                 <flux:text class="text-zinc-400">
-                    {{ __('Assigned roles') }}
+                    {{ __('admin.permissions.labels.assigned_roles') }}
                 </flux:text>
 
                 <flux:heading size="md">
@@ -50,31 +50,32 @@
 
             <div>
                 <flux:text class="text-zinc-400">
-                    {{ __('Editable scope') }}
+                    {{ __('admin.permissions.modals.edit.editable_scope') }}
+
                 </flux:text>
 
                 <flux:heading size="md">
-                    {{ __('Metadata only') }}
+                    {{ __('admin.permissions.modals.edit.metadata_only') }}
                 </flux:heading>
             </div>
         </div>
 
         <flux:separator
             class="mt-4"
-            text="{{ __('Edit Permission Details') }}"
+            text="{{ __('admin.permissions.modals.edit.details_section') }}"
         />
 
         <div class="grid grid-cols-2 gap-4">
             <flux:input
                 type="text"
-                label="{{ __('Category') }}"
+                label="{{ __('ui.labels.category') }}"
                 wire:model.live="editingCategory"
-                placeholder="{{ __('e.g. users, settings, system') }}"
+                placeholder="{{ __('admin.permissions.modals.edit.category_placeholder') }}"
             />
 
             <flux:input
                 type="number"
-                label="{{ __('Sort order') }}"
+                label="{{ __('admin.permissions.labels.sort_order') }}"
                 wire:model.live="editingSortOrder"
                 min="0"
                 step="1"
@@ -82,15 +83,15 @@
         </div>
 
         <flux:textarea
-            label="{{ __('Description') }}"
+            label="{{ __('ui.labels.description') }}"
             wire:model.live="editingDescription"
             rows="4"
-            placeholder="{{ __('Describe what this permission allows.') }}"
+            placeholder="{{ __('admin.permissions.modals.edit.description_placeholder') }}"
         />
 
         <flux:checkbox
             wire:model.live="editingIsSystem"
-            label="{{ __('System permission') }}"
+            label="{{ __('admin.permissions.labels.system_permission') }}"
         />
 
         <flux:separator />
@@ -100,7 +101,7 @@
 
             <x-ui.button.save
                 icon="check"
-                label="{{ __('Save') }}"
+                label="{{ __('ui.actions.save') }}"
                 wire:click="savePermissionMetadata"
                 wire:loading.attr="disabled"
                 :disabled="$editingPermissionId === null || !$this->hasPermissionMetadataChanges()"

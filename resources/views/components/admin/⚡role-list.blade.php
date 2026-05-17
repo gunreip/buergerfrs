@@ -9,13 +9,16 @@
 
     {{-- Header part --}}
     <x-ui.headers.page
-        :title="__('Role Management')"
-        :description="__('Manage role metadata, assignment visibility, and role badge display settings.')"
+        {{-- i18n-native: __('Role Management') --}}
+        :title="__('admin.roles.title')"
+        {{-- i18n-native: __('Manage role metadata, assignment visibility, and role badge display settings.') --}}
+        :description="__('admin.roles.description')"
     >
         @role('Super-Admin')
             <x-ui.button.save
                 icon="plus"
-                label="{{ __('Create Role') }}"
+                {{-- i18n-native: __('Create Role') --}}
+                label="{{ __('admin.roles.actions.create') }}"
                 wire:click="openCreateRoleModal"
             />
         @endrole

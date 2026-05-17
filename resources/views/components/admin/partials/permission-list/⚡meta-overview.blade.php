@@ -3,8 +3,8 @@
 {{-- Overview part --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Overview')"
-        :description="__('Summary of permissions, guards, and role assignments.')"
+        :title="__('admin.permissions.overview.title')"
+        :description="__('admin.permissions.overview.description')"
     />
 
     <div class="grid grid-cols-4 gap-3">
@@ -14,11 +14,11 @@
             icon="key-round"
         >
             <flux:callout.heading>
-                {{ __('Total permissions') }}
+                {{ __('admin.permissions.overview.total.heading') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('The total number of registered permissions.') }}
+                {{ __('admin.permissions.overview.total.text') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -32,11 +32,11 @@
             icon="shield-check"
         >
             <flux:callout.heading>
-                {{ __('Guards') }}
+                {{ __('admin.permissions.overview.guards.heading') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Distinct guards used by registered permissions.') }}
+                {{ __('admin.permissions.overview.guards.text') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -50,11 +50,11 @@
             icon="badge-check"
         >
             <flux:callout.heading>
-                {{ __('Assigned permissions') }}
+                {{ __('admin.permissions.overview.assigned.heading') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Permissions assigned to at least one role.') }}
+                {{ __('admin.permissions.overview.assigned.text') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -68,11 +68,11 @@
             icon="badge-x"
         >
             <flux:callout.heading>
-                {{ __('Unassigned permissions') }}
+                {{ __('admin.permissions.overview.unassigned.heading') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Permissions not currently assigned to any role.') }}
+                {{ __('admin.permissions.overview.unassigned.text') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">

@@ -3,14 +3,14 @@
 {{-- Filter part --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Filtering')"
-        :description="__('Refine the list of permissions by name, guard, category, role assignment, and system status.')"
+        :title="__('admin.permissions.filters.title')"
+        :description="__('admin.permissions.filters.description')"
     />
 
     <div class="flex w-full items-end gap-3">
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="permission-list-search">
-                {{ __('Search') }}
+                {{ __('ui.actions.search') }}
             </flux:label>
 
             <flux:input.group class="w-full min-w-0">
@@ -26,14 +26,14 @@
                     copyable
                     clearable
                     wire:model.live.debounce.300ms="search"
-                    placeholder="{{ __('Search by permission name') }}"
+                    placeholder="{{ __('admin.permissions.filters.search.placeholder') }}"
                 />
             </flux:input.group>
         </div>
 
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="permission-list-guard-filter">
-                {{ __('Guard') }}
+                {{ __('ui.labels.guard') }}
             </flux:label>
 
             <flux:input.group>
@@ -47,7 +47,7 @@
                     wire:model.live="guardFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All guards') }}
+                        {{ __('admin.permissions.filters.guards.all') }}
                     </flux:select.option>
 
                     @foreach ($guardOptions as $guard)
@@ -61,7 +61,7 @@
 
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="permission-list-category-filter">
-                {{ __('Category') }}
+                {{ __('ui.labels.category') }}
             </flux:label>
 
             <flux:input.group>
@@ -75,7 +75,7 @@
                     wire:model.live="categoryFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All categories') }}
+                        {{ __('admin.permissions.filters.categories.all') }}
                     </flux:select.option>
 
                     @foreach ($categoryOptions as $category)
@@ -89,7 +89,7 @@
 
         <div class="min-w-0 flex-none basis-1/5">
             <flux:label for="permission-list-role-filter">
-                {{ __('Role') }}
+                {{ __('ui.labels.role') }}
             </flux:label>
 
             <flux:input.group>
@@ -103,7 +103,7 @@
                     wire:model.live="roleFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All roles') }}
+                        {{ __('admin.permissions.filters.roles.all') }}
                     </flux:select.option>
 
                     @foreach ($roleOptions as $role)
@@ -128,7 +128,7 @@
     <div class="mt-3 flex w-full items-end gap-3">
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="permission-list-assignment-filter">
-                {{ __('Assignment') }}
+                {{ __('admin.permissions.filters.assignment.label') }}
             </flux:label>
 
             <flux:input.group>
@@ -142,15 +142,15 @@
                     wire:model.live="assignmentFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All') }}
+                        {{ __('ui.states.all') }}
                     </flux:select.option>
 
                     <flux:select.option value="assigned">
-                        {{ __('Assigned') }}
+                        {{ __('ui.states.assigned') }}
                     </flux:select.option>
 
                     <flux:select.option value="unassigned">
-                        {{ __('Unassigned') }}
+                        {{ __('ui.states.unassigned') }}
                     </flux:select.option>
                 </flux:select>
             </flux:input.group>
@@ -158,7 +158,7 @@
 
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="permission-list-system-filter">
-                {{ __('System') }}
+                {{ __('admin.permissions.filters.system.label') }}
             </flux:label>
 
             <flux:input.group>
@@ -172,15 +172,15 @@
                     wire:model.live="systemFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All') }}
+                        {{ __('ui.states.all') }}
                     </flux:select.option>
 
                     <flux:select.option value="yes">
-                        {{ __('System') }}
+                        {{ __('ui.states.system') }}
                     </flux:select.option>
 
                     <flux:select.option value="no">
-                        {{ __('Non-system') }}
+                        {{ __('ui.states.non_system') }}
                     </flux:select.option>
                 </flux:select>
             </flux:input.group>

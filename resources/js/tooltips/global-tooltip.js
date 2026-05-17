@@ -6,6 +6,7 @@ const DEFAULT_HIDE_DELAY = 120;
 const FADE_DURATION = 200;
 const TOOLTIP_OFFSET = 8;
 const VIEWPORT_PADDING = 12;
+const TOOLTIP_MAX_WIDTH = 448;
 
 let tooltipShowTimeout = null;
 let tooltipHideTimeout = null;
@@ -161,30 +162,48 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
 
 function positionTooltip(tooltip, anchorEl, pointer = null) {
     const rect = anchorEl.getBoundingClientRect();
-    const tooltipRect = tooltip.getBoundingClientRect();
-
     const scrollY = window.scrollY;
     const scrollX = window.scrollX;
 
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const maxTooltipWidth = Math.min(TOOLTIP_MAX_WIDTH, viewportWidth - VIEWPORT_PADDING * 2);
+
+    tooltip.style.width = 'max-content';
+    tooltip.style.maxWidth = `${maxTooltipWidth}px`;
+    tooltip.style.transform = 'none';
+
+    const tooltipRect = tooltip.getBoundingClientRect();
+
+    const preferredCenterX = pointer
+        ? pointer.clientX
+        : rect.left + rect.width / 2;
+
+    const preferredLeft = preferredCenterX - tooltipRect.width / 2;
+    const minLeft = VIEWPORT_PADDING;
+    const maxLeft = viewportWidth - VIEWPORT_PADDING - tooltipRect.width;
+    const left = clamp(preferredLeft, minLeft, Math.max(minLeft, maxLeft));
+
     const spaceAbove = rect.top;
-    const shouldPlaceAbove = spaceAbove > tooltipRect.height + TOOLTIP_OFFSET;
+    const spaceBelow = viewportHeight - rect.bottom;
+    const shouldPlaceAbove = spaceAbove >= tooltipRect.height + TOOLTIP_OFFSET
+        || spaceAbove > spaceBelow;
 
-    const top = shouldPlaceAbove
-        ? scrollY + rect.top - tooltipRect.height - TOOLTIP_OFFSET
-        : scrollY + rect.bottom + TOOLTIP_OFFSET;
+    const preferredTop = shouldPlaceAbove
+        ? rect.top - tooltipRect.height - TOOLTIP_OFFSET
+        : rect.bottom + TOOLTIP_OFFSET;
 
-    const preferredLeft = pointer
-        ? scrollX + pointer.clientX
-        : scrollX + rect.left + rect.width / 2;
+    const minTop = VIEWPORT_PADDING;
+    const maxTop = viewportHeight - VIEWPORT_PADDING - tooltipRect.height;
+    const top = clamp(preferredTop, minTop, Math.max(minTop, maxTop));
 
-    const minLeft = scrollX + VIEWPORT_PADDING + tooltipRect.width / 2;
-    const maxLeft = scrollX + window.innerWidth - VIEWPORT_PADDING - tooltipRect.width / 2;
-    const left = Math.min(Math.max(preferredLeft, minLeft), maxLeft);
-
-    tooltip.style.left = `${left}px`;
-    tooltip.style.top = `${top}px`;
-    tooltip.style.transform = 'translateX(-50%)';
+    tooltip.style.left = `${scrollX + left}px`;
+    tooltip.style.top = `${scrollY + top}px`;
     tooltip.scrollTop = 0;
+}
+
+function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
 }
 
 function getTooltipPointer(event) {

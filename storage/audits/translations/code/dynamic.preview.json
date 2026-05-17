@@ -1,0 +1,97 @@
+{
+    "preview": true,
+    "preview_limit": 20,
+    "total": 9,
+    "items": [
+        {
+            "classification": "dynamic",
+            "function": "__",
+            "value": "$label",
+            "raw": "__($label) }}",
+            "reason": "non_literal_first_argument",
+            "suggested_key": null,
+            "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+            "line": 100
+        },
+        {
+            "classification": "dynamic",
+            "function": "__",
+            "value": "$label",
+            "raw": "__($label) }}",
+            "reason": "non_literal_first_argument",
+            "suggested_key": null,
+            "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+            "line": 110
+        },
+        {
+            "classification": "dynamic",
+            "function": "__",
+            "value": "$label",
+            "raw": "__($label) }}",
+            "reason": "non_literal_first_argument",
+            "suggested_key": null,
+            "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+            "line": 122
+        },
+        {
+            "classification": "dynamic",
+            "function": "__",
+            "value": "Str::headline($category",
+            "raw": "__(Str::headline($category)) }}",
+            "reason": "non_literal_first_argument",
+            "suggested_key": null,
+            "file": "resources/views/components/admin/partials/user-list/⚡modal.blade.php",
+            "line": 60
+        },
+        {
+            "classification": "dynamic",
+            "function": "__",
+            "value": "$label",
+            "raw": "__($label) }}",
+            "reason": "non_literal_first_argument",
+            "suggested_key": null,
+            "file": "resources/views/components/management/people/create-person/sections/⚡documents.blade.php",
+            "line": 34
+        },
+        {
+            "classification": "dynamic",
+            "function": "__",
+            "value": "$label",
+            "raw": "__($label) }}",
+            "reason": "non_literal_first_argument",
+            "suggested_key": null,
+            "file": "resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php",
+            "line": 66
+        },
+        {
+            "classification": "dynamic",
+            "function": "__",
+            "value": "$label",
+            "raw": "__($label)\"",
+            "reason": "non_literal_first_argument",
+            "suggested_key": null,
+            "file": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "line": 31
+        },
+        {
+            "classification": "dynamic",
+            "function": "__",
+            "value": "$label",
+            "raw": "__($label)\"",
+            "reason": "non_literal_first_argument",
+            "suggested_key": null,
+            "file": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "line": 95
+        },
+        {
+            "classification": "dynamic",
+            "function": "__",
+            "value": "$label",
+            "raw": "__($label) }}",
+            "reason": "non_literal_first_argument",
+            "suggested_key": null,
+            "file": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "line": 263
+        }
+    ]
+}

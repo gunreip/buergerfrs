@@ -8,18 +8,18 @@
         <div class="flex items-start justify-between gap-4">
             <flux:field>
                 <x-ui.headers.card
-                    :title="__('Manage Role Permissions')"
-                    :description="__('Assign permissions to a selected role.')"
+                    :title="__('admin.permissions.modals.roles.title')"
+                    :description="__('admin.permissions.modals.roles.description')"
                 />
             </flux:field>
         </div>
 
-        <flux:separator text="{{ __('Edit Role Permissions') }}" />
+        <flux:separator text="{{ __('admin.permissions.modals.roles.edit_section') }}" />
 
         <div class="flex items-end justify-between gap-4">
             <div class="w-full max-w-md">
                 <flux:label for="role-permissions-role">
-                    {{ __('Role') }}
+                    {{ __('ui.labels.role') }}
                 </flux:label>
 
                 <flux:input.group>
@@ -32,7 +32,7 @@
                         wire:model.live="selectedRoleName"
                     >
                         <flux:select.option value="">
-                            {{ __('Select role') }}
+                            {{ __('admin.permissions.modals.roles.select_role') }}
                         </flux:select.option>
 
                         @foreach ($roles as $role)
@@ -55,7 +55,7 @@
         </div>
 
         @if ($selectedRoleName !== '')
-            <flux:separator text="{{ __('Role Permission Overview for') }} {{ $selectedRoleName }}" />
+            <flux:separator text="{{ __('admin.permissions.modals.roles.overview_for') }} {{ $selectedRoleName }}" />
 
             <div class="grid grid-cols-2 gap-3 xl:grid-cols-10">
                 <flux:callout
@@ -64,7 +64,7 @@
                     icon="shield-check"
                 >
                     <flux:callout.heading>
-                        {{ __('Role') }}
+                        {{ __('ui.labels.role') }}
                     </flux:callout.heading>
 
                     <flux:callout.text class="font-semibold">
@@ -78,11 +78,11 @@
                     icon="tag"
                 >
                     <flux:callout.heading>
-                        {{ __('Category') }}
+                        {{ __('ui.labels.category') }}
                     </flux:callout.heading>
 
                     <flux:callout.text class="font-semibold">
-                        {{ $selectedRoleCategory !== '' ? Str::headline($selectedRoleCategory) : __('Other') }}
+                        {{ $selectedRoleCategory !== '' ? Str::headline($selectedRoleCategory) : __('ui.states.other') }}
                     </flux:callout.text>
                 </flux:callout>
 
@@ -92,7 +92,7 @@
                     icon="badge-check"
                 >
                     <flux:callout.heading>
-                        {{ __('Current permissions') }}
+                        {{ __('admin.permissions.modals.roles.current_permissions') }}
                     </flux:callout.heading>
 
                     <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -106,7 +106,7 @@
                     icon="list-checks"
                 >
                     <flux:callout.heading>
-                        {{ __('Selected permissions') }}
+                        {{ __('admin.permissions.modals.roles.selected_permissions') }}
                     </flux:callout.heading>
 
                     <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -120,18 +120,18 @@
                     :icon="$this->hasRolePermissionChanges() ? 'triangle-alert' : 'check'"
                 >
                     <flux:callout.heading>
-                        {{ __('Changes') }}
+                        {{ __('admin.permissions.modals.roles.changes') }}
                     </flux:callout.heading>
 
                     <flux:callout.text class="font-semibold">
-                        {{ $this->hasRolePermissionChanges() ? __('Unsaved changes') : __('No changes') }}
+                        {{ $this->hasRolePermissionChanges() ? __('ui.states.unsaved_changes') : __('ui.states.no_changes') }}
                     </flux:callout.text>
                 </flux:callout>
             </div>
         @endif
 
         @if ($selectedRoleName !== '')
-            <flux:separator text="Set Role Permissions" />
+            <flux:separator text="{{ __('admin.permissions.modals.roles.set_permissions_section') }}" />
 
             <div class="grid grid-cols-1 gap-4 xl:grid-cols-3">
                 @foreach ($permissionsByCategory as $category => $categoryPermissions)
@@ -165,7 +165,7 @@
                                             </span>
                                         @else
                                             <span class="block text-sm leading-5 text-zinc-500">
-                                                {{ __('No description available.') }}
+                                                {{ __('ui.messages.no_description_available') }}
                                             </span>
                                         @endif
                                     </span>

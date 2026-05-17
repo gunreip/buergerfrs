@@ -13,9 +13,42 @@
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property string $key
+ * @property int|null $country_id
+ * @property string $country_code
+ * @property string $format
+ * @property string|null $local_format
+ * @property array<array-key, mixed>|null $required_fields
+ * @property array<array-key, mixed>|null $uppercase_fields
+ * @property string|null $postal_code_pattern
+ * @property string|null $administrative_area_type
+ * @property string|null $locality_type
+ * @property string|null $dependent_locality_type
+ * @property string|null $postal_code_type
+ * @property string $source
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\Country|null $country
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereAdministrativeAreaType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereCountryCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereDependentLocalityType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereFormat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereLocalFormat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereLocalityType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat wherePostalCodePattern($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat wherePostalCodeType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereRequiredFields($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereSource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AddressFormat whereUppercaseFields($value)
  */
 	class AddressFormat extends \Eloquent {}
 }
@@ -600,6 +633,33 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality whereVerifiedByUserId($value)
  */
 	class PersonNationality extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey query()
+ */
+	class TranslationKey extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage query()
+ */
+	class TranslationUsage extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue query()
+ */
+	class TranslationValue extends \Eloquent {}
 }
 
 namespace App\Models{

@@ -1,0 +1,62 @@
+{
+    "generated_at": "2026-05-16T19:28:16+00:00",
+    "source": {
+        "name": "WHATWG HTML Living Standard",
+        "url": "https://html.spec.whatwg.org/multipage/indices.html",
+        "section": "Index / Elements"
+    },
+    "tags": {
+        "normal": [
+            "a",
+            "abbr",
+            "address",
+            "article",
+            "aside",
+            "audio",
+            "b",
+            "bdi",
+            "bdo",
+            "blockquote",
+            "body",
+            "button",
+            "canvas",
+            "caption",
+            "cite",
+            "code",
+            "colgroup",
+            "data",
+            "datalist",
+            "dd",
+            "del",
+            "details",
+            "dfn",
+            "dialog",
+            "div",
+            "dl",
+            "dt",
+            "em",
+            "fieldset",
+            "figcaption"
+        ],
+        "void": [
+            "area",
+            "base",
+            "br",
+            "col",
+            "embed",
+            "hr",
+            "img",
+            "input",
+            "link",
+            "meta",
+            "source",
+            "track",
+            "wbr"
+        ]
+    },
+    "counts": {
+        "normal": 100,
+        "void": 13,
+        "total": 113
+    }
+}

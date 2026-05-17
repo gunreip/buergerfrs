@@ -2,12 +2,12 @@
 
 {{-- Table --}}
 <flux:card class="mt-6">
-    <flux:heading
-        class="mb-4"
-        size="lg"
-    >
-        {{ __('Client List') }}
-    </flux:heading>
+    <x-ui.headers.card
+        :title="__('Client List')"
+        :description="__(
+            'Browse and manage clients with ease: view client details, sort by name, number, type, status, people count, and creation date.',
+        )"
+    />
 
     <div class="mx-auto max-w-full">
         <div class="overflow-hidden rounded-t-lg">

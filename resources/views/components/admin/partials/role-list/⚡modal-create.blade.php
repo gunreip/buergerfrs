@@ -8,13 +8,15 @@
     <div class="space-y-6">
         <div>
             <flux:heading size="xl">
-                {{ __('Create Role') }}
+                {{-- i18n-native: __('Create Role') --}}
+                {{ __('admin.roles.modals.create.title') }}
             </flux:heading>
 
             <flux:separator class="mb-6 mt-3" />
 
             <flux:text>
-                {{ __('Create a new assignable role for user and role management.') }}
+                {{-- i18n-native: __('Create a new assignable role for user and role management.') --}}
+                {{ __('admin.roles.modals.create.description') }}
             </flux:text>
         </div>
 
@@ -23,21 +25,25 @@
         <div class="grid grid-cols-2 gap-4">
             <flux:input
                 type="text"
-                label="{{ __('Name') }}"
+                {{-- i18n-native: __('Name') --}}
+                label="{{ __('ui.labels.name') }}"
                 wire:model.live="creatingRoleName"
-                placeholder="{{ __('Support Manager') }}"
+                {{-- i18n-native: __('Support Manager') --}}
+                placeholder="{{ __('admin.roles.modals.create.name_placeholder') }}"
             />
 
             <flux:input
                 type="text"
-                label="{{ __('Guard') }}"
+                {{-- i18n-native: __('Guard') --}}
+                label="{{ __('ui.labels.guard') }}"
                 wire:model.live="creatingGuardName"
                 readonly
             />
 
             <flux:input
                 type="text"
-                label="{{ __('Category') }}"
+                {{-- i18n-native: __('Category') --}}
+                label="{{ __('ui.labels.category') }}"
                 wire:model.live="creatingCategory"
             />
 
@@ -45,13 +51,15 @@
                 type="number"
                 min="0"
                 max="65535"
-                label="{{ __('Sort order') }}"
+                {{-- i18n-native: __('Sort order') --}}
+                label="{{ __('admin.roles.labels.sort_order') }}"
                 wire:model.live="creatingSortOrder"
             />
 
             <div class="col-span-2">
                 <flux:textarea
-                    label="{{ __('Description') }}"
+                    {{-- i18n-native: __('Description') --}}
+                    label="{{ __('ui.labels.description') }}"
                     wire:model.live="creatingDescription"
                     rows="3"
                 />
@@ -59,13 +67,15 @@
 
             <div class="col-span-2">
                 <flux:checkbox
-                    label="{{ __('Assignable through UI') }}"
+                    {{-- i18n-native: __('Assignable through UI') --}}
+                    label="{{ __('admin.roles.labels.assignable_through_ui') }}"
                     wire:model.live="creatingIsAssignable"
                 />
             </div>
         </div>
 
-        <flux:separator text="{{ __('Badge') }}" />
+        {{-- i18n-native: __('Badge') --}}
+        <flux:separator text="{{ __('admin.roles.badge.title') }}" />
 
         <div class="grid grid-cols-3 gap-4">
             <flux:select
@@ -74,13 +84,15 @@
             >
                 @foreach ($roleBadgeColorOptions as $color => $label)
                     <flux:select.option value="{{ $color }}">
-                        {{ __($label) }}
+                        {{-- i18n-native: __('Color') --}}
+                        label="{{ __('admin.roles.badge.color') }}"
                     </flux:select.option>
                 @endforeach
             </flux:select>
 
             <flux:select
-                label="{{ __('Variant') }}"
+                {{-- i18n-native: __('Variant') --}}
+                label="{{ __('admin.roles.badge.variant') }}"
                 wire:model.live="creatingBadgeVariant"
             >
                 @foreach ($roleBadgeVariantOptions as $variant => $label)
@@ -91,7 +103,8 @@
             </flux:select>
 
             <flux:select
-                label="{{ __('Icon') }}"
+                {{-- i18n-native: __('Icon') --}}
+                label="{{ __('admin.roles.badge.icon') }}"
                 wire:model.live="creatingBadgeIcon"
             >
                 @foreach ($roleBadgeIconOptions as $icon => $option)
@@ -104,11 +117,13 @@
 
         <div>
             <flux:text class="mb-2 text-sm text-zinc-400">
-                {{ __('Preview') }}
+                {{-- i18n-native: __('Preview') --}}
+                {{ __('ui.labels.preview') }}
             </flux:text>
 
             <x-ui.role-badge
-                :label="$creatingRoleName !== '' ? $creatingRoleName : __('New role')"
+                {{-- i18n-native: __('New role') --}}
+                :label="$creatingRoleName !== '' ? $creatingRoleName : __('admin.roles.preview.new_role')"
                 :badge="[
                     'color' => $creatingBadgeColor,
                     'variant' => $creatingBadgeVariant,

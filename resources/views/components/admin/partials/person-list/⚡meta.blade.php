@@ -7,13 +7,6 @@
         :description="__('Summary of people in the system, their linked user accounts and client assignments.')"
     />
 
-    {{-- <flux:heading
-        class="mb-4"
-        size="lg"
-    >
-        {{ __('Overview') }}
-    </flux:heading> --}}
-
     <div class="grid grid-cols-5 gap-3">
         <flux:callout
             class="col-span-5 md:col-span-1"

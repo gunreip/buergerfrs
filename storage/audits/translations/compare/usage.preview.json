@@ -1,0 +1,259 @@
+{
+    "preview": true,
+    "preview_limit": 20,
+    "total": 99,
+    "items": [
+        {
+            "full_key": "admin.permissions.actions.edit_role_permissions",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/⚡permission-list.blade.php",
+                    "line": 14,
+                    "function": "__",
+                    "raw": "__('admin.permissions.actions.edit_role_permissions'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.description",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/⚡permission-list.blade.php",
+                    "line": 11,
+                    "function": "__",
+                    "raw": "__('admin.permissions.description'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.filters.assignment.label",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+                    "line": 131,
+                    "function": "__",
+                    "raw": "__('admin.permissions.filters.assignment.label'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.filters.categories.all",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+                    "line": 78,
+                    "function": "__",
+                    "raw": "__('admin.permissions.filters.categories.all'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.filters.description",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+                    "line": 7,
+                    "function": "__",
+                    "raw": "__('admin.permissions.filters.description'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.filters.guards.all",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+                    "line": 50,
+                    "function": "__",
+                    "raw": "__('admin.permissions.filters.guards.all'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.filters.roles.all",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+                    "line": 106,
+                    "function": "__",
+                    "raw": "__('admin.permissions.filters.roles.all'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.filters.search.placeholder",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+                    "line": 29,
+                    "function": "__",
+                    "raw": "__('admin.permissions.filters.search.placeholder'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.filters.system.label",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+                    "line": 161,
+                    "function": "__",
+                    "raw": "__('admin.permissions.filters.system.label'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.filters.title",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+                    "line": 6,
+                    "function": "__",
+                    "raw": "__('admin.permissions.filters.title'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.labels.assigned_roles",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
+                    "line": 43,
+                    "function": "__",
+                    "raw": "__('admin.permissions.labels.assigned_roles'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.labels.sort_order",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
+                    "line": 78,
+                    "function": "__",
+                    "raw": "__('admin.permissions.labels.sort_order'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.labels.system_permission",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
+                    "line": 94,
+                    "function": "__",
+                    "raw": "__('admin.permissions.labels.system_permission'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.messages.no_changes.heading",
+            "usage_count": 2,
+            "usages": [
+                {
+                    "file": "app/Livewire/Admin/PermissionList.php",
+                    "line": 301,
+                    "function": "__",
+                    "raw": "__('admin.permissions.messages.no_changes.heading'"
+                },
+                {
+                    "file": "app/Livewire/Admin/PermissionList.php",
+                    "line": 360,
+                    "function": "__",
+                    "raw": "__('admin.permissions.messages.no_changes.heading'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.messages.no_changes.role_permissions_unchanged",
+            "usage_count": 2,
+            "usages": [
+                {
+                    "file": "app/Livewire/Admin/PermissionList.php",
+                    "line": 302,
+                    "function": "__",
+                    "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged'"
+                },
+                {
+                    "file": "app/Livewire/Admin/PermissionList.php",
+                    "line": 361,
+                    "function": "__",
+                    "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.messages.permission_saved.heading",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "app/Livewire/Admin/PermissionList.php",
+                    "line": 395,
+                    "function": "__",
+                    "raw": "__('admin.permissions.messages.permission_saved.heading'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.messages.permission_saved.text",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "app/Livewire/Admin/PermissionList.php",
+                    "line": 396,
+                    "function": "__",
+                    "raw": "__('admin.permissions.messages.permission_saved.text'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.messages.role_permissions_saved.heading",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "app/Livewire/Admin/PermissionList.php",
+                    "line": 327,
+                    "function": "__",
+                    "raw": "__('admin.permissions.messages.role_permissions_saved.heading'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.messages.role_permissions_saved.text",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "app/Livewire/Admin/PermissionList.php",
+                    "line": 328,
+                    "function": "__",
+                    "raw": "__('admin.permissions.messages.role_permissions_saved.text'"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.permissions.modals.edit.category_placeholder",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
+                    "line": 73,
+                    "function": "__",
+                    "raw": "__('admin.permissions.modals.edit.category_placeholder'"
+                }
+            ]
+        }
+    ]
+}

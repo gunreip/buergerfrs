@@ -1,4 +1,4 @@
-{{-- resources/views/components/admin/partials/role-list/filter.blade.php --}}
+{{-- resources/views/components/admin/partials/role-list/⚡filter.blade.php --}}
 
 {{-- Filter part --}}
 <flux:card class="mt-6">
@@ -6,13 +6,6 @@
         :title="__('Filtering')"
         :description="__('Refine the role list by name, category, assignability, and system status.')"
     />
-
-    {{-- <flux:heading
-        class="mb-4"
-        size="lg"
-    >
-        {{ __('Filtering') }}
-    </flux:heading> --}}
 
     <div class="flex w-full items-end gap-3">
         <div class="min-w-0 flex-none basis-1/4">
@@ -126,7 +119,7 @@
             </flux:input.group>
         </div>
 
-        <div class="ml-auto min-w-0 flex-none basis-32">
+        <div class="ml-auto flex-none">
             <x-ui.table.per-page-selector
                 id="role-list-per-page"
                 name="role-list-per-page"
@@ -135,15 +128,8 @@
             />
         </div>
 
-        <div class="ml-auto flex-none">
-            <flux:button
-                type="button"
-                variant="filled"
-                icon="refresh-ccw"
-                wire:click="clearFilters"
-            >
-                {{ __('Reset') }}
-            </flux:button>
+        <div class="flex-none">
+            <x-ui.button.reset wire:click="clearFilters" />
         </div>
     </div>
 </flux:card>

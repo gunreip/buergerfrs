@@ -3,8 +3,8 @@
 {{-- Table part --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Permission List')"
-        :description="__('Review registered permissions, guards, categories, and role assignments.')"
+        :title="__('admin.permissions.table.title')"
+        :description="__('admin.permissions.table.description')"
     />
 
     <div class="mx-auto max-w-full">
@@ -14,7 +14,7 @@
                 <flux:table.columns class="bg-zinc-800 text-zinc-400">
                     {{-- Number # --}}
                     <flux:table.column align="center">
-                        {{ __('#') }}
+                        {{ __('ui.labels.number_short') }}
                     </flux:table.column>
 
                     {{-- Name --}}
@@ -22,7 +22,7 @@
                         sortable
                         wire:click="sortBy('name')"
                     >
-                        {{ __('Name') }}
+                        {{ __('ui.labels.name') }}
                     </flux:table.column>
 
                     {{-- Category --}}
@@ -30,7 +30,7 @@
                         sortable
                         wire:click="sortBy('category')"
                     >
-                        {{ __('Category') }}
+                        {{ __('ui.labels.category') }}
                     </flux:table.column>
 
                     {{-- Sort order --}}
@@ -39,7 +39,7 @@
                         sortable
                         wire:click="sortBy('sort_order')"
                     >
-                        {{ __('Sort') }}
+                        {{ __('admin.permissions.table.columns.sort') }}
                     </flux:table.column>
 
                     {{-- Guard --}}
@@ -47,17 +47,17 @@
                         sortable
                         wire:click="sortBy('guard_name')"
                     >
-                        {{ __('Guard') }}
+                        {{ __('ui.labels.guard') }}
                     </flux:table.column>
 
                     {{-- Description --}}
                     <flux:table.column>
-                        {{ __('Description') }}
+                        {{ __('ui.labels.description') }}
                     </flux:table.column>
 
                     {{-- Flags --}}
                     <flux:table.column align="center">
-                        {{ __('Flags') }}
+                        {{ __('admin.permissions.table.columns.flags') }}
                     </flux:table.column>
 
                     {{-- Roles --}}
@@ -66,17 +66,17 @@
                         align="center"
                         wire:click="sortBy('roles_count')"
                     >
-                        {{ __('Roles') }}
+                        {{ __('ui.labels.roles') }}
                     </flux:table.column>
 
                     {{-- Assigned roles --}}
                     <flux:table.column>
-                        {{ __('Assigned roles') }}
+                        {{ __('admin.permissions.table.columns.assigned_roles') }}
                     </flux:table.column>
 
                     {{-- Actions --}}
                     <flux:table.column align="center">
-                        {{ __('Actions') }}
+                        {{ __('ui.labels.actions') }}
                     </flux:table.column>
                 </flux:table.columns>
 
@@ -99,7 +99,7 @@
 
                             <flux:table.cell>
                                 <x-ui.text.highlight
-                                    :value="$permission->category !== null && $permission->category !== '' ? Str::headline($permission->category) : __('Other')"
+                                    :value="$permission->category !== null && $permission->category !== '' ? Str::headline($permission->category) : __('ui.states.other')"
                                     :search="$search"
                                 />
                             </flux:table.cell>
@@ -123,7 +123,8 @@
                             <flux:table.cell>
                                 <span class="text-sm text-zinc-300">
                                     <x-ui.text.highlight
-                                        :value="$permission->description ?: __('No description available.')"
+                                        :value="$permission->description ?:
+                                            __('ui.messages.no_description_available')"
                                         :search="$search"
                                     />
                                 </span>
@@ -135,14 +136,14 @@
                                         color="purple"
                                         variant="subtle"
                                     >
-                                        {{ __('System') }}
+                                        {{ __('ui.states.system') }}
                                     </flux:badge>
                                 @else
                                     <flux:badge
                                         color="zinc"
                                         variant="subtle"
                                     >
-                                        {{ __('Custom') }}
+                                        {{ __('ui.states.custom') }}
                                     </flux:badge>
                                 @endif
                             </flux:table.cell>
@@ -167,7 +168,7 @@
                                             color="orange"
                                             variant="subtle"
                                         >
-                                            {{ __('Unassigned') }}
+                                            {{ __('ui.states.unassigned') }}
                                         </flux:badge>
                                     @endforelse
                                 </div>
@@ -184,7 +185,7 @@
                         <flux:table.row>
                             <flux:table.cell colspan="10">
                                 <flux:text>
-                                    {{ __('No permissions registered yet.') }}
+                                    {{ __('admin.permissions.table.empty') }}
                                 </flux:text>
                             </flux:table.cell>
                         </flux:table.row>

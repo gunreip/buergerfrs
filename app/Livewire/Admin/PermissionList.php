@@ -298,8 +298,8 @@ class PermissionList extends Component
 
         if (! $this->hasRolePermissionChanges()) {
             Flux::toast(
-                heading: __('No changes'),
-                text: __('The permissions for :role have not changed.', [
+                heading: __('admin.permissions.messages.no_changes.heading'),
+                text: __('admin.permissions.messages.no_changes.role_permissions_unchanged', [
                     'role' => $role->name,
                 ]),
                 variant: 'warning',
@@ -324,8 +324,8 @@ class PermissionList extends Component
         $this->closeRolePermissionsModal();
 
         Flux::toast(
-            heading: __('Role permissions saved'),
-            text: __('Permissions for :role have been updated.', [
+            heading: __('admin.permissions.messages.role_permissions_saved.heading'),
+            text: __('admin.permissions.messages.role_permissions_saved.text', [
                 'role' => $role->name,
             ]),
             variant: 'success',
@@ -357,8 +357,8 @@ class PermissionList extends Component
 
         if ($before === $after) {
             Flux::toast(
-                heading: __('No changes'),
-                text: __('Permission metadata for :permission has not changed.', [
+                heading: __('admin.permissions.messages.no_changes.heading'),
+                text: __('admin.permissions.messages.no_changes.role_permissions_unchanged', [
                     'permission' => $permission->name,
                 ]),
                 variant: 'warning',
@@ -392,8 +392,8 @@ class PermissionList extends Component
         $this->closeEditPermissionModal();
 
         Flux::toast(
-            heading: __('Permission saved'),
-            text: __('Permission metadata for :permission has been updated.', [
+            heading: __('admin.permissions.messages.permission_saved.heading'),
+            text: __('admin.permissions.messages.permission_saved.text', [
                 'permission' => $permission->name,
             ]),
             variant: 'success',

@@ -49,6 +49,16 @@ class ProjectBuild extends Command
             $this->runArtisanStep($step['desc'], $step['cmd']);
         }
 
+        $this->runArtisanStep('Translation-Code-Audit schreiben', 'translations:audit-code');
+        $this->runArtisanStep('Translation-Lang-Audit schreiben', 'translations:audit-lang');
+        $this->runArtisanStep('Translation-Compare-Audit schreiben', 'translations:audit-compare');
+        $this->runArtisanStep('Translation-Audits in Datenbank synchronisieren', 'translations:sync-audits');
+
+        $this->runArtisanStep('HTML-/Blade-View-Struktur-Audit schreiben', 'html:check');
+        $this->warn('⚠️ Hinweis: Native HTML reference gelegentlich mit php artisan html:sync-native-tags aktualisieren.');
+
+        $this->runOptionalProcess(['./audit.cp.bat'], 'Translation-Audit-Previews nach /tmp kopieren');
+
         if (! $this->option('no-assets')) {
             $this->runProcess(['npm', 'run', 'build'], 'Frontend-Assets bauen');
         }
@@ -64,14 +74,14 @@ class ProjectBuild extends Command
 
     private function runArtisanStep(string $description, string $command): void
     {
-        $this->info('➤ '.$description);
+        $this->info('➤ ' . $description);
 
         $this->call($command);
     }
 
     private function runProcess(array $command, string $description): void
     {
-        $this->info('➤ '.$description);
+        $this->info('➤ ' . $description);
 
         $process = new Process($command, base_path());
         $process->setTimeout(null);
@@ -81,9 +91,40 @@ class ProjectBuild extends Command
         });
 
         if (! $process->isSuccessful()) {
-            $this->error('❌ Fehler bei: '.implode(' ', $command));
+            $this->error('❌ Fehler bei: ' . implode(' ', $command));
 
             throw new RuntimeException($process->getErrorOutput() ?: $process->getOutput());
+        }
+    }
+
+    private function runOptionalProcess(array $command, string $description): void
+    {
+        $this->info('➤ ' . $description);
+
+        $scriptPath = base_path($command[0]);
+
+        if (! is_file($scriptPath)) {
+            $this->warn('⚠️ Übersprungen, Datei nicht gefunden: ' . $command[0]);
+
+            return;
+        }
+
+        if (! is_executable($scriptPath)) {
+            $this->warn('⚠️ Übersprungen, Datei nicht ausführbar: ' . $command[0]);
+
+            return;
+        }
+
+        $process = new Process($command, base_path());
+        $process->setTimeout(null);
+
+        $process->run(function (string $type, string $buffer): void {
+            $this->output->write($buffer);
+        });
+
+        if (! $process->isSuccessful()) {
+            $this->warn('⚠️ Fehler bei optionalem Schritt: ' . implode(' ', $command));
+            $this->warn(trim($process->getErrorOutput() ?: $process->getOutput()));
         }
     }
 }

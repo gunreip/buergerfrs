@@ -8,7 +8,8 @@
     <div class="space-y-6">
         <div>
             <flux:heading size="xl">
-                {{ __('Edit Role') }}
+                {{-- i18n-native: __('Edit Role') --}}
+                {{ __('admin.roles.modals.edit.title') }}
             </flux:heading>
 
             <flux:separator class="mb-6 mt-3" />
@@ -16,7 +17,8 @@
             <div class="grid grid-cols-2 gap-4 text-sm">
                 <div>
                     <flux:text class="text-zinc-400">
-                        {{ __('Name') }}
+                        {{-- i18n-native: __('Name') --}}
+                        {{ __('ui.labels.name') }}
                     </flux:text>
                     <div class="mt-1 font-semibold text-zinc-100">
                         {{ $editingRoleName }}
@@ -25,7 +27,8 @@
 
                 <div>
                     <flux:text class="text-zinc-400">
-                        {{ __('Guard') }}
+                        {{-- i18n-native: __('Guard') --}}
+                        {{ __('ui.labels.guard') }}
                     </flux:text>
                     <div class="mt-1 font-semibold text-zinc-100">
                         {{ $editingGuardName }}
@@ -34,16 +37,20 @@
 
                 <div>
                     <flux:text class="text-zinc-400">
-                        {{ __('System role') }}
+                        {{-- i18n-native: __('System role') --}}
+                        {{ __('admin.roles.labels.system_role') }}
                     </flux:text>
                     <div class="mt-1 font-semibold text-zinc-100">
-                        {{ $editingIsSystem ? __('Yes') : __('No') }}
+                        {{-- i18n-native: __('Yes') --}}
+                        {{-- i18n-native: __('No') --}}
+                        {{ $editingIsSystem ? __('ui.states.yes') : __('ui.states.no') }}
                     </div>
                 </div>
 
                 <div>
                     <flux:text class="text-zinc-400">
-                        {{ __('Assigned users') }}
+                        {{-- i18n-native: __('Assigned users') --}}
+                        {{ __('admin.roles.labels.assigned_users') }}
                     </flux:text>
                     <div class="mt-1 font-semibold tabular-nums text-zinc-100">
                         {{ $editingUsersCount }}
@@ -57,7 +64,8 @@
         <div class="grid grid-cols-2 gap-4">
             <flux:input
                 type="text"
-                label="{{ __('Category') }}"
+                {{-- i18n-native: __('Category') --}}
+                label="{{ __('ui.labels.category') }}"
                 wire:model.live="editingCategory"
             />
 
@@ -65,13 +73,15 @@
                 type="number"
                 min="0"
                 max="65535"
-                label="{{ __('Sort order') }}"
+                {{-- i18n-native: __('Sort order') --}}
+                label="{{ __('admin.roles.labels.sort_order') }}"
                 wire:model.live="editingSortOrder"
             />
 
             <div class="col-span-2">
                 <flux:textarea
-                    label="{{ __('Description') }}"
+                    {{-- i18n-native: __('Description') --}}
+                    label="{{ __('ui.labels.description') }}"
                     wire:model.live="editingDescription"
                     rows="3"
                 />
@@ -79,17 +89,20 @@
 
             <div class="col-span-2">
                 <flux:checkbox
-                    label="{{ __('Assignable through UI') }}"
+                    {{-- i18n-native: __('Assignable through UI') --}}
+                    label="{{ __('admin.roles.labels.assignable_through_ui') }}"
                     wire:model.live="editingIsAssignable"
                 />
             </div>
         </div>
 
-        <flux:separator text="{{ __('Badge') }}" />
+        {{-- i18n-native: __('Badge') --}}
+        <flux:separator text="{{ __('admin.roles.badge.title') }}" />
 
         <div class="grid grid-cols-3 gap-4">
             <flux:select
-                label="{{ __('Color') }}"
+                {{-- i18n-native: __('Color') --}}
+                label="{{ __('admin.roles.badge.color') }}"
                 wire:model.live="editingBadgeColor"
             >
                 @foreach ($roleBadgeColorOptions as $color => $label)
@@ -100,7 +113,8 @@
             </flux:select>
 
             <flux:select
-                label="{{ __('Variant') }}"
+                {{-- i18n-native: __('Variant') --}}
+                label="{{ __('admin.roles.badge.variant') }}"
                 wire:model.live="editingBadgeVariant"
             >
                 @foreach ($roleBadgeVariantOptions as $variant => $label)
@@ -111,7 +125,8 @@
             </flux:select>
 
             <flux:select
-                label="{{ __('Icon') }}"
+                {{-- i18n-native: __('Icon') --}}
+                label="{{ __('admin.roles.badge.icon') }}"
                 wire:model.live="editingBadgeIcon"
             >
                 @foreach ($roleBadgeIconOptions as $icon => $option)
@@ -124,7 +139,8 @@
 
         <div>
             <flux:text class="mb-2 text-sm text-zinc-400">
-                {{ __('Preview') }}
+                {{-- i18n-native: __('Preview') --}}
+                {{ __('ui.labels.preview') }}
             </flux:text>
 
             <x-ui.role-badge
@@ -143,7 +159,8 @@
             <x-ui.button.cancel wire:click="closeEditRoleModal" />
 
             <x-ui.button.save
-                :label="__('Save Changes')"
+                {{-- i18n-native: __('Save Changes') --}}
+                :label="__('ui.actions.save_changes')"
                 wire:click="saveRole"
             />
         </div>

@@ -1,0 +1,40 @@
+{
+    "generated_at": "2026-05-17T05:20:45+00:00",
+    "files_scanned": 212,
+    "problem_count": 1,
+    "note": "This is a static Blade structure audit. Complex conditional Blade markup may produce false positives and should be reviewed manually.",
+    "references": {
+        "native_html": {
+            "source": "storage/audits/html/native-html-tags.json",
+            "source_name": "WHATWG HTML Living Standard",
+            "source_url": "https://html.spec.whatwg.org/multipage/indices.html",
+            "generated_at": "2026-05-16T19:28:16+00:00",
+            "normal_count": 100,
+            "void_count": 13,
+            "fallback": false,
+            "fallback_reason": null,
+            "fallback_hint": null
+        }
+    },
+    "sections": {
+        "native_html": {
+            "problem_count": 1,
+            "problems": [
+                {
+                    "section": "native_html",
+                    "type": "unclosed",
+                    "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+                    "tag": "div",
+                    "opened_line": 9,
+                    "closing_line": null,
+                    "expected_closing": "</div>",
+                    "actual_closing": null
+                }
+            ]
+        },
+        "custom_components": {
+            "problem_count": 0,
+            "problems": []
+        }
+    }
+}

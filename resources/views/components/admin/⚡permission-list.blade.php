@@ -7,11 +7,11 @@
 
 <flux:card>
     <x-ui.headers.page
-        :title="__('Permission Management')"
-        :description="__('Review registered permissions, guards, and role assignments.')"
+        :title="__('admin.permissions.title')"
+        :description="__('admin.permissions.description')"
     >
         <x-ui.button.confirm
-            label="{{ __('Edit Role Managment') }}"
+            label="{{ __('admin.permissions.actions.edit_role_permissions') }}"
             wire:click="openRolePermissionsModal"
         />
     </x-ui.headers.page>

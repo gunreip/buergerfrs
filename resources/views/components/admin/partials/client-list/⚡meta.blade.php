@@ -2,12 +2,12 @@
 
 {{-- Overview --}}
 <flux:card class="mt-6">
-    <flux:heading
-        class="mb-4"
-        size="lg"
-    >
-        {{ __('Overview') }}
-    </flux:heading>
+    <x-ui.headers.card
+        :title="__('Overview')"
+        :description="__(
+            'Get a quick snapshot of client statistics, including total clients, pending activations, active clients, and assignment status.',
+        )"
+    />
 
     <div class="grid grid-cols-5 gap-3">
         <flux:callout

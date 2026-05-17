@@ -1,14 +1,12 @@
 {{-- resources/views/components/admin/partials/user-list/⚡meta.blade.php --}}
 
 <flux:card class="mt-6">
-    <flux:heading
-        class="mb-4"
-        size="lg"
-    >
-        {{ __('Overview') }}
-    </flux:heading>
+    <x-ui.headers.card
+        :title="__('Overview')"
+        :description="__('Summary of users in the system, their assigned roles and role categories.')"
+    />
 
-    <div class="grid grid-cols-4 gap-3">
+    <div class="grid gap-3 md:grid-cols-4">
         <flux:callout
             class="col-span-4 md:col-span-1"
             color="red"

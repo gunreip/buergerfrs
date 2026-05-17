@@ -2,12 +2,12 @@
 
 {{-- Filter --}}
 <flux:card class="mt-6">
-    <flux:heading
-        class="mb-4"
-        size="lg"
-    >
-        {{ __('Filtering') }}
-    </flux:heading>
+    <x-ui.headers.card
+        :title="__('Filtering')"
+        :description="__(
+            'Refine the client list with powerful filters: search by name, legal name, client number or description; filter by type, status, and people associations.',
+        )"
+    />
 
     <div class="flex w-full items-end gap-3">
         <div class="min-w-0 flex-none basis-1/4">

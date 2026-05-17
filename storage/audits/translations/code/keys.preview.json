@@ -1,0 +1,207 @@
+{
+    "preview": true,
+    "preview_limit": 20,
+    "total": 130,
+    "items": [
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.permissions.messages.no_changes.heading",
+            "raw": "__('admin.permissions.messages.no_changes.heading'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/PermissionList.php",
+            "line": 301
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.permissions.messages.no_changes.role_permissions_unchanged",
+            "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/PermissionList.php",
+            "line": 302
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.permissions.messages.role_permissions_saved.heading",
+            "raw": "__('admin.permissions.messages.role_permissions_saved.heading'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/PermissionList.php",
+            "line": 327
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.permissions.messages.role_permissions_saved.text",
+            "raw": "__('admin.permissions.messages.role_permissions_saved.text'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/PermissionList.php",
+            "line": 328
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.permissions.messages.no_changes.heading",
+            "raw": "__('admin.permissions.messages.no_changes.heading'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/PermissionList.php",
+            "line": 360
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.permissions.messages.no_changes.role_permissions_unchanged",
+            "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/PermissionList.php",
+            "line": 361
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.permissions.messages.permission_saved.heading",
+            "raw": "__('admin.permissions.messages.permission_saved.heading'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/PermissionList.php",
+            "line": 395
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.permissions.messages.permission_saved.text",
+            "raw": "__('admin.permissions.messages.permission_saved.text'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/PermissionList.php",
+            "line": 396
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.roles.messages.not_allowed.heading",
+            "raw": "__('admin.roles.messages.not_allowed.heading'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/RoleList.php",
+            "line": 125
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.roles.messages.not_allowed.only_super_admins_may_create_roles",
+            "raw": "__('admin.roles.messages.not_allowed.only_super_admins_may_create_roles'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/RoleList.php",
+            "line": 127
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.roles.messages.role_created.heading",
+            "raw": "__('admin.roles.messages.role_created.heading'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/RoleList.php",
+            "line": 203
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.roles.messages.role_created.text",
+            "raw": "__('admin.roles.messages.role_created.text'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/RoleList.php",
+            "line": 205
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.roles.messages.role_saved.heading",
+            "raw": "__('admin.roles.messages.role_saved.heading'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/RoleList.php",
+            "line": 358
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.roles.messages.role_saved.text",
+            "raw": "__('admin.roles.messages.role_saved.text'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "app/Livewire/Admin/RoleList.php",
+            "line": 360
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.permissions.filters.title",
+            "raw": "__('admin.permissions.filters.title'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+            "line": 6
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.permissions.filters.description",
+            "raw": "__('admin.permissions.filters.description'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+            "line": 7
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "ui.actions.search",
+            "raw": "__('ui.actions.search'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+            "line": 13
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.permissions.filters.search.placeholder",
+            "raw": "__('admin.permissions.filters.search.placeholder'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+            "line": 29
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "ui.labels.guard",
+            "raw": "__('ui.labels.guard'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+            "line": 36
+        },
+        {
+            "classification": "key",
+            "function": "__",
+            "value": "admin.permissions.filters.guards.all",
+            "raw": "__('admin.permissions.filters.guards.all'",
+            "reason": null,
+            "suggested_key": null,
+            "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+            "line": 50
+        }
+    ]
+}
