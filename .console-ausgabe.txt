@@ -1,86 +1,119 @@
-gunreip@DESKTOP-I7C75P2:~/code/buergerfrs$ composer require mledoze/countries
-Deprecation Notice: Constant E_STRICT is deprecated in /usr/share/php/Composer/Util/Silencer.php:36
-Deprecation Notice: Constant E_STRICT is deprecated in /usr/share/php/Composer/Util/Silencer.php:36
-Deprecation Notice: Composer\Pcre\Preg::replace(): Implicitly marking parameter $count as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/Pcre/Preg.php:150
-Deprecation Notice: Composer\Pcre\Preg::replaceCallback(): Implicitly marking parameter $count as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/Pcre/Preg.php:177
-Deprecation Notice: Composer\Pcre\Preg::replaceCallbackStrictGroups(): Implicitly marking parameter $count as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/Pcre/Preg.php:206
-Deprecation Notice: Composer\Pcre\Preg::replaceCallbackArray(): Implicitly marking parameter $count as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/Pcre/Preg.php:221
-Deprecation Notice: JsonSchema\Constraints\BaseConstraint::__construct(): Implicitly marking parameter $factory as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/BaseConstraint.php:41
-Deprecation Notice: JsonSchema\Constraints\BaseConstraint::addError(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/BaseConstraint.php:46
-Deprecation Notice: JsonSchema\Constraints\BaseConstraint::addError(): Implicitly marking parameter $more as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/BaseConstraint.php:46
-Deprecation Notice: JsonSchema\Constraints\Factory::__construct(): Implicitly marking parameter $schemaStorage as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Factory.php:76
-Deprecation Notice: JsonSchema\Constraints\Factory::__construct(): Implicitly marking parameter $uriRetriever as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Factory.php:76
-Deprecation Notice: JsonSchema\Constraints\Constraint::incrementPath(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:42
-Deprecation Notice: JsonSchema\Constraints\Constraint::checkArray(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:68
-Deprecation Notice: JsonSchema\Constraints\Constraint::checkObject(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:86
-Deprecation Notice: JsonSchema\Constraints\Constraint::checkType(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:103
-Deprecation Notice: JsonSchema\Constraints\Constraint::checkUndefined(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:119
-Deprecation Notice: JsonSchema\Constraints\Constraint::checkString(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:136
-Deprecation Notice: JsonSchema\Constraints\Constraint::checkNumber(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:152
-Deprecation Notice: JsonSchema\Constraints\Constraint::checkEnum(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:168
-Deprecation Notice: JsonSchema\Constraints\Constraint::checkFormat(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:184
-Deprecation Notice: JsonSchema\Constraints\ConstraintInterface::addError(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ConstraintInterface.php:43
-Deprecation Notice: JsonSchema\Constraints\ConstraintInterface::addError(): Implicitly marking parameter $more as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ConstraintInterface.php:43
-Deprecation Notice: JsonSchema\Constraints\ConstraintInterface::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ConstraintInterface.php:64
-Deprecation Notice: JsonSchema\SchemaStorage::__construct(): Implicitly marking parameter $uriRetriever as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/SchemaStorage.php:19
-Deprecation Notice: JsonSchema\SchemaStorage::__construct(): Implicitly marking parameter $uriResolver as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/SchemaStorage.php:19
-Deprecation Notice: JsonSchema\Constraints\SchemaConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/SchemaConstraint.php:31
-Deprecation Notice: JsonSchema\Constraints\UndefinedConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/UndefinedConstraint.php:34
-Deprecation Notice: JsonSchema\Constraints\TypeConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/TypeConstraint.php:42
-Deprecation Notice: JsonSchema\Constraints\ObjectConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ObjectConstraint.php:30
-Deprecation Notice: JsonSchema\Constraints\ObjectConstraint::validatePatternProperties(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ObjectConstraint.php:54
-Deprecation Notice: JsonSchema\Constraints\ObjectConstraint::validateElement(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ObjectConstraint.php:93
-Deprecation Notice: JsonSchema\Constraints\ObjectConstraint::validateProperties(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ObjectConstraint.php:135
-Deprecation Notice: JsonSchema\Constraints\ObjectConstraint::validateMinMaxConstraint(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ObjectConstraint.php:177
-Deprecation Notice: JsonSchema\Constraints\StringConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/StringConstraint.php:25
-Deprecation Notice: JsonSchema\Constraints\FormatConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/FormatConstraint.php:27
-Deprecation Notice: JsonSchema\Constraints\CollectionConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/CollectionConstraint.php:25
-Deprecation Notice: JsonSchema\Constraints\CollectionConstraint::validateItems(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/CollectionConstraint.php:64
-Deprecation Notice: JsonSchema\Constraints\EnumConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/EnumConstraint.php:25
-Deprecation Notice: Constant E_STRICT is deprecated in /usr/share/php/Composer/Util/Silencer.php:36
-Deprecation Notice: Composer\CaBundle\CaBundle::getSystemCaRootBundlePath(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:67
-Deprecation Notice: Composer\CaBundle\CaBundle::validateCaFile(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:163
-Deprecation Notice: Composer\CaBundle\CaBundle::caFileUsable(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:343
-Deprecation Notice: Composer\CaBundle\CaBundle::caDirUsable(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:356
-Deprecation Notice: Composer\CaBundle\CaBundle::isFile(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:369
-Deprecation Notice: Composer\CaBundle\CaBundle::isDir(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:384
-Deprecation Notice: Composer\CaBundle\CaBundle::isReadable(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:399
-Deprecation Notice: Composer\CaBundle\CaBundle::glob(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:414
-Deprecation Notice: Composer\Util\Git::fetchRefOrSyncMirror(): Implicitly marking parameter $prettyVersion as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/Util/Git.php:301
-Deprecation Notice: Constant E_STRICT is deprecated in /usr/share/php/Composer/Util/Silencer.php:36
-Deprecation Notice: Composer\ClassMapGenerator\ClassMapGenerator::avoidDuplicateScans(): Implicitly marking parameter $scannedFiles as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/ClassMapGenerator/ClassMapGenerator.php:64
-Deprecation Notice: Composer\ClassMapGenerator\ClassMapGenerator::scanPaths(): Implicitly marking parameter $excluded as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/ClassMapGenerator/ClassMapGenerator.php:103
-Deprecation Notice: React\Promise\Promise::__construct(): Implicitly marking parameter $canceller as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Promise.php:32
-Deprecation Notice: React\Promise\Promise::then(): Implicitly marking parameter $onFulfilled as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Promise.php:44
-Deprecation Notice: React\Promise\Promise::then(): Implicitly marking parameter $onRejected as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Promise.php:44
-Deprecation Notice: React\Promise\Promise::resolver(): Implicitly marking parameter $onFulfilled as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Promise.php:169
-Deprecation Notice: React\Promise\Promise::resolver(): Implicitly marking parameter $onRejected as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Promise.php:169
-Deprecation Notice: React\Promise\Internal\FulfilledPromise::then(): Implicitly marking parameter $onFulfilled as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Internal/FulfilledPromise.php:37
-Deprecation Notice: React\Promise\Internal\FulfilledPromise::then(): Implicitly marking parameter $onRejected as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Internal/FulfilledPromise.php:37
-./composer.json has been updated
-Deprecation Notice: Constant E_STRICT is deprecated in /usr/share/php/Composer/Util/Silencer.php:36
-Deprecation Notice: Constant E_STRICT is deprecated in /usr/share/php/Composer/Util/Silencer.php:36
-Running composer update mledoze/countries
-Loading composer repositories with package information
-Updating dependencies
-Your requirements could not be resolved to an installable set of packages.
+gunreip@DESKTOP-I7C75P2:~/code/buergerfrs$ php artisan html:check
+php artisan html:sync-view-audit
+php artisan tinker --execute="dump(\App\Models\HtmlViewAuditFinding::query()->selectRaw('status, count(*) as total')->groupBy('status')->orderBy('status')->get()->toArray());"
+HTML / Blade structure check
+Files scanned: 212
+Problems: 1
+Native HTML reference: storage/audits/html/native-html-tags.json
+Native normal tags: 100
+Native void tags ignored: 13
+Note: This is a static Blade structure audit. Complex conditional Blade markup may produce false positives and should be reviewed manually.
 
-  Problem 1
-    - mledoze/countries[1.6.1, ..., 1.6.2] require symfony/yaml 2.6.1 -> found symfony/yaml[v2.6.1] but the package is fixed to v8.0.10 (lock file version) by a partial update and that version does not match. Make sure you list it as an argument for the update command.
-    - mledoze/countries[1.7.0, ..., 1.7.2] require symfony/console 2.6.4 -> found symfony/console[v2.6.4] but the package is fixed to v8.0.9 (lock file version) by a partial update and that version does not match. Make sure you list it as an argument for the update command.
-    - mledoze/countries 1.7.3 requires symfony/console 2.6.6 -> found symfony/console[v2.6.6] but the package is fixed to v8.0.9 (lock file version) by a partial update and that version does not match. Make sure you list it as an argument for the update command.
-    - mledoze/countries 1.7.4 requires symfony/console ~2.7 -> found symfony/console[v2.7.0, ..., v2.8.52] but the package is fixed to v8.0.9 (lock file version) by a partial update and that version does not match. Make sure you list it as an argument for the update command.
-    - mledoze/countries[1.7.5, ..., 1.8.0] require symfony/console ^2.7|^3.0 -> found symfony/console[v2.7.0, ..., v2.8.52, v3.0.0, ..., v3.4.47] but the package is fixed to v8.0.9 (lock file version) by a partial update and that version does not match. Make sure you list it as an argument for the update command.
-    - mledoze/countries 2.0.0 requires roave/security-advisories dev-master -> found roave/security-advisories[dev-master] but it does not match your minimum-stability.
-    - mledoze/countries 2.1.0 requires symfony/console ^2.8|^3.4|~4.0 -> found symfony/console[v2.8.0, ..., v2.8.52, v3.4.0, ..., v3.4.47, v4.0.0, ..., v4.4.49] but the package is fixed to v8.0.9 (lock file version) by a partial update and that version does not match. Make sure you list it as an argument for the update command.
-    - mledoze/countries[3.0.0, 4.0.0] require symfony/console ^2.8|^3.4|~4.0|^5.0 -> found symfony/console[v2.8.0, ..., v2.8.52, v3.4.0, ..., v3.4.47, v4.0.0, ..., v4.4.49, v5.0.0, ..., v5.4.47] but the package is fixed to v8.0.9 (lock file version) by a partial update and that version does not match. Make sure you list it as an argument for the update command.
-    - mledoze/countries 4.1.0 requires symfony/console 4.4.x|~5.3 -> found symfony/console[v4.4.0, ..., v4.4.49, v5.3.0, ..., v5.4.47] but the package is fixed to v8.0.9 (lock file version) by a partial update and that version does not match. Make sure you list it as an argument for the update command.
-    - mledoze/countries 4.1.1 requires symfony/console 4.4.x|~5.3|^6.0 -> found symfony/console[v4.4.0, ..., v4.4.49, v5.3.0, ..., v5.4.47, v6.0.0, ..., v6.4.37] but the package is fixed to v8.0.9 (lock file version) by a partial update and that version does not match. Make sure you list it as an argument for the update command.
-    - mledoze/countries 5.0.0 requires symfony/console ~5.4|~6.3 -> found symfony/console[v5.4.0, ..., v5.4.47, v6.3.0, ..., v6.4.37] but the package is fixed to v8.0.9 (lock file version) by a partial update and that version does not match. Make sure you list it as an argument for the update command.
-    - mledoze/countries 5.1.0 requires symfony/console ~5.4|~6.4|~7.0 -> found symfony/console[v5.4.0, ..., v5.4.47, v6.4.0, ..., v6.4.37, v7.0.0, ..., v7.4.9] but the package is fixed to v8.0.9 (lock file version) by a partial update and that version does not match. Make sure you list it as an argument for the update command.
-    - Root composer.json requires mledoze/countries * -> satisfiable by mledoze/countries[1.6.1, ..., 1.8.0, 2.0.0, 2.1.0, 3.0.0, 4.0.0, 4.1.0, 4.1.1, 5.0.0, 5.1.0].
+Native HTML Tags
+----------------
+[unclosed] resources/views/components/admin/partials/html-view-audit/⚡table.blade.php:9
+Opened <div>, expected </div>
 
-Use the option --with-all-dependencies (-W) to allow upgrades, downgrades and removals for packages currently locked to specific versions.
-You can also try re-running composer require with an explicit version constraint, e.g. "composer require mledoze/countries:*" to figure out if any version is installable, or "composer require mledoze/countries:^2.1" if you know which you need.
+Custom Components
+-----------------
+OK
 
-Installation failed, reverting ./composer.json and ./composer.lock to their original content.
+
+Audit written: storage/audits/html/view-html-check.json
+Preview written: storage/audits/html/view-html-check-preview.json
+HTML view audit findings synced.
+Current problems: 1
+Created: 0
+Updated: 1
+Changed / moved: 0
+Reopened: 0
+Resolved: 0
+Ignored but still seen: 0
+array:1 [
+  0 => array:2 [
+    "status" => "open"
+    "total" => 1
+  ]
+] // vendor/psy/psysh/src/ExecutionClosure.php(41) : eval()'d code:1
+gunreip@DESKTOP-I7C75P2:~/code/buergerfrs$ php artisan html:check
+php artisan html:sync-view-audit
+php artisan tinker --execute="dump(\App\Models\HtmlViewAuditFinding::query()->selectRaw('status, count(*) as total')->groupBy('status')->orderBy('status')->get()->toArray());"
+HTML / Blade structure check
+Files scanned: 212
+Problems: 1
+Native HTML reference: storage/audits/html/native-html-tags.json
+Native normal tags: 100
+Native void tags ignored: 13
+Note: This is a static Blade structure audit. Complex conditional Blade markup may produce false positives and should be reviewed manually.
+
+Native HTML Tags
+----------------
+[unclosed] resources/views/components/admin/partials/html-view-audit/⚡table.blade.php:10
+Opened <div>, expected </div>
+
+Custom Components
+-----------------
+OK
+
+
+Audit written: storage/audits/html/view-html-check.json
+Preview written: storage/audits/html/view-html-check-preview.json
+HTML view audit findings synced.
+Current problems: 1
+Created: 1
+Updated: 0
+Changed / moved: 2
+Reopened: 0
+Resolved: 0
+Ignored but still seen: 0
+array:2 [
+  0 => array:2 [
+    "status" => "changed"
+    "total" => 1
+  ]
+  1 => array:2 [
+    "status" => "open"
+    "total" => 1
+  ]
+] // vendor/psy/psysh/src/ExecutionClosure.php(41) : eval()'d code:1
+gunreip@DESKTOP-I7C75P2:~/code/buergerfrs$ php artisan html:check
+php artisan html:sync-view-audit
+php artisan tinker --execute="dump(\App\Models\HtmlViewAuditFinding::query()->selectRaw('status, count(*) as total')->groupBy('status')->orderBy('status')->get()->toArray());"
+HTML / Blade structure check
+Files scanned: 212
+Problems: 1
+Native HTML reference: storage/audits/html/native-html-tags.json
+Native normal tags: 100
+Native void tags ignored: 13
+Note: This is a static Blade structure audit. Complex conditional Blade markup may produce false positives and should be reviewed manually.
+
+Native HTML Tags
+----------------
+[unclosed] resources/views/components/admin/partials/html-view-audit/⚡table.blade.php:9
+Opened <div>, expected </div>
+
+Custom Components
+-----------------
+OK
+
+
+Audit written: storage/audits/html/view-html-check.json
+Preview written: storage/audits/html/view-html-check-preview.json
+HTML view audit findings synced.
+Current problems: 1
+Created: 0
+Updated: 1
+Changed / moved: 1
+Reopened: 0
+Resolved: 0
+Ignored but still seen: 0
+array:2 [
+  0 => array:2 [
+    "status" => "changed"
+    "total" => 1
+  ]
+  1 => array:2 [
+    "status" => "open"
+    "total" => 1
+  ]
+] // vendor/psy/psysh/src/ExecutionClosure.php(41) : eval()'d code:1

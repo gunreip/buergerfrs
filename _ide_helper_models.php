@@ -241,6 +241,15 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding query()
+ */
+	class HtmlViewAuditFinding extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * @property int $id
  * @property int|null $country_id
  * @property string $type
@@ -637,27 +646,106 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property string $fingerprint
+ * @property string|null $key
+ * @property string|null $namespace
+ * @property string|null $group
+ * @property string $status
+ * @property string $classification
+ * @property string $source
+ * @property string|null $suggested_key
+ * @property string|null $native_text
+ * @property \Carbon\CarbonImmutable|null $first_seen_at
+ * @property \Carbon\CarbonImmutable|null $last_seen_at
+ * @property \Carbon\CarbonImmutable|null $obsolete_at
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TranslationUsage> $usages
+ * @property-read int|null $usages_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TranslationValue> $values
+ * @property-read int|null $values_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereClassification($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereFingerprint($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereFirstSeenAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereGroup($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereLastSeenAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereNamespace($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereNativeText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereObsoleteAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereSource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereSuggestedKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereUpdatedAt($value)
  */
 	class TranslationKey extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property int $translation_key_id
+ * @property string $fingerprint
+ * @property string $file
+ * @property int|null $line
+ * @property string|null $function
+ * @property string $classification
+ * @property string|null $reason
+ * @property string|null $raw
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\TranslationKey $translationKey
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereClassification($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereFile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereFingerprint($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereFunction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereLine($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereRaw($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereTranslationKeyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereUpdatedAt($value)
  */
 	class TranslationUsage extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property int $translation_key_id
+ * @property string $locale
+ * @property string|null $value
+ * @property string $status
+ * @property string $source
+ * @property \Carbon\CarbonImmutable|null $reviewed_at
+ * @property int|null $reviewed_by_user_id
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\User|null $reviewedBy
+ * @property-read \App\Models\TranslationKey $translationKey
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereLocale($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereReviewedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereReviewedByUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereSource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereTranslationKeyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereValue($value)
  */
 	class TranslationValue extends \Eloquent {}
 }

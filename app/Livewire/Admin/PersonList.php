@@ -20,7 +20,7 @@ class PersonList extends Component
 
     public string $clientFilter = '';
 
-    public int $perPage = 50;
+    public int $perPage = 25;
 
     public string $sortField = 'last_name';
 

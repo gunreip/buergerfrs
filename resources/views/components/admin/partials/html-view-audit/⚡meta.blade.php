@@ -8,6 +8,13 @@
     $referenceDisplay = is_array($nativeReferenceFile) ? $nativeReferenceFile : $nativeReference;
     $referenceHasFallback = (bool) ($nativeReference['fallback'] ?? false);
     $referenceIsMissing = is_array($nativeReferenceFile) && !($nativeReferenceFile['exists'] ?? false);
+    $historyCounts = $historyCounts ?? [
+        'open' => 0,
+        'changed' => 0,
+        'resolved' => 0,
+        'ignored' => 0,
+        'total' => 0,
+    ];
 @endphp
 
 <flux:card class="mt-6">
@@ -16,7 +23,7 @@
         :description="$audit['note'] ?? __('Current HTML / Blade view structure audit result.')"
     />
 
-    <div class="grid gap-3 md:grid-cols-6">
+    <div class="grid gap-3 md:grid-cols-8">
         <flux:callout
             color="sky"
             icon="code-xml"
@@ -36,11 +43,11 @@
             icon="bug"
         >
             <flux:callout.heading>
-                {{ __('Problems') }}
+                {{ __('Open findings') }}
             </flux:callout.heading>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
-                {{ $audit['problem_count'] ?? 0 }}
+                {{ $historyCounts['open'] ?? 0 }}
             </flux:callout.text>
         </flux:callout>
 
@@ -67,6 +74,52 @@
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                 {{ $customSection['problem_count'] ?? 0 }}
+            </flux:callout.text>
+        </flux:callout>
+
+        <flux:callout
+            class="col-span-2 min-h-32"
+            color="zinc"
+            icon="list-filter"
+        >
+            <flux:callout.heading>
+                {{ __('Finding history') }}
+            </flux:callout.heading>
+
+            <flux:callout.text>
+                <div class="flex flex-wrap items-center gap-2">
+                    <flux:badge
+                        color="red"
+                        variant="subtle"
+                    >
+                        {{ __('Open') }}: {{ $historyCounts['open'] ?? 0 }}
+                    </flux:badge>
+
+                    <flux:badge
+                        color="amber"
+                        variant="subtle"
+                    >
+                        {{ __('Changed') }}: {{ $historyCounts['changed'] ?? 0 }}
+                    </flux:badge>
+
+                    <flux:badge
+                        color="green"
+                        variant="subtle"
+                    >
+                        {{ __('Resolved') }}: {{ $historyCounts['resolved'] ?? 0 }}
+                    </flux:badge>
+
+                    <flux:badge
+                        color="zinc"
+                        variant="subtle"
+                    >
+                        {{ __('Ignored') }}: {{ $historyCounts['ignored'] ?? 0 }}
+                    </flux:badge>
+
+                    <flux:badge variant="subtle">
+                        {{ __('Total') }}: {{ $historyCounts['total'] ?? 0 }}
+                    </flux:badge>
+                </div>
             </flux:callout.text>
         </flux:callout>
 
@@ -120,7 +173,7 @@
 
         @if (is_array($referenceDisplay))
             <flux:callout
-                class="col-span-2 min-h-32"
+                class="col-span-3 min-h-32"
                 icon="code-xml"
                 :color="($referenceIsMissing || $referenceHasFallback) ? 'amber' : 'green'"
             >
@@ -154,7 +207,7 @@
             </flux:callout>
 
             <flux:callout
-                class="col-span-2 min-h-32"
+                class="col-span-3 min-h-32"
                 icon="cable"
                 :color="($referenceIsMissing || $referenceHasFallback) ? 'amber' : 'green'"
             >
@@ -217,12 +270,6 @@
                             </div>
                         @endif
 
-                        {{-- @if (!empty($referenceDisplay['hint']) || !empty($nativeReference['fallback_hint']))
-                            <div class="text-sm text-zinc-600 dark:text-zinc-300">
-                                {{ __('Hint') }}:
-                                {{ $referenceDisplay['hint'] ?? $nativeReference['fallback_hint'] }}
-                            </div>
-                        @endif --}}
                     </div>
                 </flux:callout.text>
             </flux:callout>

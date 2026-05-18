@@ -27,7 +27,14 @@
                         align="center"
                         wire:click="sortBy('id')"
                     >
-                        {{ __('#') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('ID')"
+                            :text="__(
+                                'Unique identifier of the fallback report, useful for tracking and reference.',
+                            )"
+                        >
+                            {{ __('#') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Status --}}
@@ -38,7 +45,12 @@
                         :direction="$sortDirection"
                         wire:click="sortBy('status')"
                     >
-                        {{ __('Status') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Status')"
+                            :text="__('Status of the fallback report, useful for tracking and reference.')"
+                        >
+                            {{ __('Status') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Type --}}
@@ -48,7 +60,12 @@
                         :direction="$sortDirection"
                         wire:click="sortBy('type')"
                     >
-                        {{ __('Type') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Type')"
+                            :text="__('Type of the fallback report, useful for tracking and reference.')"
+                        >
+                            {{ __('Type') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Key --}}
@@ -58,7 +75,12 @@
                         :direction="$sortDirection"
                         wire:click="sortBy('key')"
                     >
-                        {{ __('Key') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Key')"
+                            :text="__('Key of the fallback report, useful for tracking and reference.')"
+                        >
+                            {{ __('Key') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Fallback --}}
@@ -68,7 +90,12 @@
                         :direction="$sortDirection"
                         wire:click="sortBy('fallback')"
                     >
-                        {{ __('Fallback') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Fallback')"
+                            :text="__('Fallback of the fallback report, useful for tracking and reference.')"
+                        >
+                            {{ __('Fallback') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Count --}}
@@ -79,7 +106,12 @@
                         :direction="$sortDirection"
                         wire:click="sortBy('count')"
                     >
-                        {{ __('Count') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Count')"
+                            :text="__('Count of the fallback report, useful for tracking and reference.')"
+                        >
+                            {{ __('Count') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Last Reported --}}
@@ -89,17 +121,36 @@
                         :direction="$sortDirection"
                         wire:click="sortBy('last_seen_at')"
                     >
-                        {{ __('Last reported') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Last reported')"
+                            :text="__(
+                                'Last reported date of the fallback report, useful for tracking and reference.',
+                            )"
+                        >
+                            {{ __('Last reported') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Context --}}
                     <flux:table.column>
-                        {{ __('Context') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Context')"
+                            :text="__('Context of the fallback report, useful for tracking and reference.')"
+                        >
+                            {{ __('Context') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Actions --}}
                     <flux:table.column align="center">
-                        {{ __('Actions') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Actions')"
+                            :text="__(
+                                'Actions available for the fallback report, useful for tracking and reference.',
+                            )"
+                        >
+                            {{ __('Actions') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
 

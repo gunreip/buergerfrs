@@ -2492,12 +2492,32 @@
     {
         "classification": "native",
         "function": "__",
-        "value": "Filter the audit results by search term, section, or problem type.",
-        "raw": "__('Filter the audit results by search term, section, or problem type.'",
+        "value": "Filter the audit history by status, search term, section, or problem type.",
+        "raw": "__('Filter the audit history by status, search term, section, or problem type.'",
         "reason": null,
-        "suggested_key": "admin.partials.html_view_audit.filter.filter_the_audit_results_by_search_term_section_or_problem_type",
+        "suggested_key": "admin.partials.html_view_audit.filter.filter_the_audit_history_by_status_search_term_section_or_problem_type",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
         "line": 6
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Search the audit history",
+        "raw": "__('Search the audit history'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.search_the_audit_history",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 14
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Enter a search term to filter the audit history by file name, tag name, or other relevant information. The search is case-sensitive.",
+        "raw": "__(\n                        'Enter a search term to filter the audit history by file name, tag name, or other relevant information. The search is case-sensitive.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.enter_a_search_term_to_filter_the_audit_history_by_file_name_tag_name_or_other_r",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 15
     },
     {
         "classification": "native",
@@ -2507,7 +2527,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.search",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 12
+        "line": 19
     },
     {
         "classification": "native",
@@ -2517,7 +2537,107 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.file_tag_closing_tag",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 28
+        "line": 36
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by status",
+        "raw": "__('Filter by status'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.filter_by_status",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 44
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a status to filter the audit history.",
+        "raw": "__('Select a status to filter the audit history.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.select_a_status_to_filter_the_audit_history",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 45
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Status",
+        "raw": "__('Status'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.status",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 47
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Open",
+        "raw": "__('Open'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.open",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 61
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Changed / moved",
+        "raw": "__('Changed / moved'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.changed_moved",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 62
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Resolved",
+        "raw": "__('Resolved'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.resolved",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 63
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Ignored",
+        "raw": "__('Ignored'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.ignored",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 64
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "All statuses",
+        "raw": "__('All statuses'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.all_statuses",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 65
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by section",
+        "raw": "__('Filter by section'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.filter_by_section",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 73
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a section to filter the audit history.",
+        "raw": "__('Select a section to filter the audit history.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.select_a_section_to_filter_the_audit_history",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 74
     },
     {
         "classification": "native",
@@ -2527,7 +2647,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.section",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 35
+        "line": 76
     },
     {
         "classification": "native",
@@ -2537,7 +2657,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.all_sections",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 48
+        "line": 90
     },
     {
         "classification": "native",
@@ -2547,7 +2667,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.native_html",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 49
+        "line": 91
     },
     {
         "classification": "native",
@@ -2557,7 +2677,27 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.custom_components",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 50
+        "line": 92
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by problem type",
+        "raw": "__('Filter by problem type'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.filter_by_problem_type",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 100
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a problem type to filter the audit history.",
+        "raw": "__('Select a problem type to filter the audit history.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.filter.select_a_problem_type_to_filter_the_audit_history",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+        "line": 101
     },
     {
         "classification": "native",
@@ -2567,7 +2707,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.problem_type",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 57
+        "line": 103
     },
     {
         "classification": "native",
@@ -2577,7 +2717,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.all_types",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 69
+        "line": 116
     },
     {
         "classification": "native",
@@ -2587,7 +2727,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.unclosed",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 70
+        "line": 117
     },
     {
         "classification": "native",
@@ -2597,7 +2737,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.mismatched",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 71
+        "line": 118
     },
     {
         "classification": "native",
@@ -2607,7 +2747,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.unexpected_closing",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 72
+        "line": 119
     },
     {
         "classification": "native",
@@ -2617,7 +2757,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.overview",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 15
+        "line": 22
     },
     {
         "classification": "native",
@@ -2627,7 +2767,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.current_html_blade_view_structure_audit_result",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 16
+        "line": 23
     },
     {
         "classification": "native",
@@ -2637,17 +2777,17 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.files_scanned",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 26
+        "line": 33
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Problems",
-        "raw": "__('Problems'",
+        "value": "Open findings",
+        "raw": "__('Open findings'",
         "reason": null,
-        "suggested_key": "admin.partials.html_view_audit.meta.problems",
+        "suggested_key": "admin.partials.html_view_audit.meta.open_findings",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 39
+        "line": 46
     },
     {
         "classification": "native",
@@ -2657,7 +2797,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.native_html",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 52
+        "line": 59
     },
     {
         "classification": "native",
@@ -2667,7 +2807,67 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.custom_components",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 65
+        "line": 72
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Finding history",
+        "raw": "__('Finding history'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.meta.finding_history",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+        "line": 86
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Open",
+        "raw": "__('Open'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.meta.open",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+        "line": 95
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Changed",
+        "raw": "__('Changed'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.meta.changed",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+        "line": 102
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Resolved",
+        "raw": "__('Resolved'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.meta.resolved",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+        "line": 109
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Ignored",
+        "raw": "__('Ignored'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.meta.ignored",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+        "line": 116
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Total",
+        "raw": "__('Total'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.meta.total",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+        "line": 120
     },
     {
         "classification": "native",
@@ -2677,7 +2877,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.audit_file",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 79
+        "line": 132
     },
     {
         "classification": "native",
@@ -2687,7 +2887,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.source",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 86
+        "line": 139
     },
     {
         "classification": "native",
@@ -2697,7 +2897,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.generated",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 93
+        "line": 146
     },
     {
         "classification": "native",
@@ -2707,7 +2907,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.filtered",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 100
+        "line": 153
     },
     {
         "classification": "native",
@@ -2717,7 +2917,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.run_php_artisan_html_check",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 114
+        "line": 167
     },
     {
         "classification": "native",
@@ -2727,7 +2927,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.native_html_reference_source",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 128
+        "line": 181
     },
     {
         "classification": "native",
@@ -2737,7 +2937,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.source",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 133
+        "line": 186
     },
     {
         "classification": "native",
@@ -2747,7 +2947,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.generated",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 139
+        "line": 192
     },
     {
         "classification": "native",
@@ -2757,7 +2957,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.hint",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 145
+        "line": 198
     },
     {
         "classification": "native",
@@ -2767,7 +2967,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.native_html_reference_target",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 162
+        "line": 215
     },
     {
         "classification": "native",
@@ -2777,7 +2977,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.target",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 167
+        "line": 220
     },
     {
         "classification": "native",
@@ -2787,7 +2987,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.file_written",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 173
+        "line": 226
     },
     {
         "classification": "native",
@@ -2797,7 +2997,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.native_html_reference_status",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 186
+        "line": 239
     },
     {
         "classification": "native",
@@ -2807,7 +3007,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.normal_tags",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 193
+        "line": 246
     },
     {
         "classification": "native",
@@ -2817,7 +3017,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.void_tags_ignored",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 197
+        "line": 250
     },
     {
         "classification": "native",
@@ -2827,7 +3027,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.total_tags",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 202
+        "line": 255
     },
     {
         "classification": "native",
@@ -2837,7 +3037,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.fallback",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 210
+        "line": 263
     },
     {
         "classification": "native",
@@ -2847,7 +3047,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.yes",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 210
+        "line": 263
     },
     {
         "classification": "native",
@@ -2857,7 +3057,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.no",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 210
+        "line": 263
     },
     {
         "classification": "native",
@@ -2867,17 +3067,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.meta.reason",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 216
-    },
-    {
-        "classification": "native",
-        "function": "__",
-        "value": "Hint",
-        "raw": "__('Hint'",
-        "reason": null,
-        "suggested_key": "admin.partials.html_view_audit.meta.hint",
-        "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-        "line": 222
+        "line": 269
     },
     {
         "classification": "native",
@@ -2887,17 +3077,57 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.html_audit",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 5
+        "line": 8
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Description",
-        "raw": "__('Description'",
+        "value": "Review the list of identified HTML structure problems, their status, and details about each finding.",
+        "raw": "__(\n            'Review the list of identified HTML structure problems, their status, and details about each finding.'",
         "reason": null,
-        "suggested_key": "admin.partials.html_view_audit.table.description",
+        "suggested_key": "admin.partials.html_view_audit.table.review_the_list_of_identified_html_structure_problems_their_status_and_details_a",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 6
+        "line": 9
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "ID",
+        "raw": "__('ID'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.id",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 30
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Status",
+        "raw": "__('Status'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.status",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 40
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "History status of the finding: open, changed, resolved, or ignored.",
+        "raw": "__('History status of the finding: open, changed, resolved, or ignored.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.history_status_of_the_finding_open_changed_resolved_or_ignored",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 42
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Status",
+        "raw": "__('Status'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.status",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 44
     },
     {
         "classification": "native",
@@ -2907,17 +3137,17 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.section",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 27
+        "line": 55
     },
     {
         "classification": "native",
         "function": "__",
         "value": "The section of the audit where the problem was found, e.g. native HTML or custom components.",
-        "raw": "__(\n                                'The section of the audit where the problem was found, e.g. native HTML or custom components.'",
+        "raw": "__(\n                                    'The section of the audit where the problem was found, e.g. native HTML or custom components.'",
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.the_section_of_the_audit_where_the_problem_was_found_e_g_native_html_or_custom_c",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 28
+        "line": 57
     },
     {
         "classification": "native",
@@ -2927,7 +3157,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.section",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 32
+        "line": 61
     },
     {
         "classification": "native",
@@ -2937,7 +3167,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.problem_type",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 38
+        "line": 72
     },
     {
         "classification": "native",
@@ -2947,7 +3177,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.type_of_the_problem_e_g_unclosed_tag_unexpected_closing_tag_etc",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 39
+        "line": 74
     },
     {
         "classification": "native",
@@ -2957,7 +3187,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.type",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 41
+        "line": 76
     },
     {
         "classification": "native",
@@ -2967,7 +3197,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.file",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 47
+        "line": 86
     },
     {
         "classification": "native",
@@ -2977,7 +3207,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.the_file_where_the_problem_was_found",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 48
+        "line": 87
     },
     {
         "classification": "native",
@@ -2987,7 +3217,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.file",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 50
+        "line": 89
     },
     {
         "classification": "native",
@@ -2997,7 +3227,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.tag",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 56
+        "line": 98
     },
     {
         "classification": "native",
@@ -3007,7 +3237,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.the_html_tag_where_the_problem_was_found",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 57
+        "line": 99
     },
     {
         "classification": "native",
@@ -3017,67 +3247,37 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.tag",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 59
+        "line": 101
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Opened",
-        "raw": "__('Opened'",
+        "value": "Line",
+        "raw": "__('Line'",
         "reason": null,
-        "suggested_key": "admin.partials.html_view_audit.table.opened",
+        "suggested_key": "admin.partials.html_view_audit.table.line",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 65
+        "line": 111
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Line number where the tag is opened.",
-        "raw": "__('Line number where the tag is opened.'",
+        "value": "Line numbers where the tag is opened and, if available, closed.",
+        "raw": "__('Line numbers where the tag is opened and, if available, closed.'",
         "reason": null,
-        "suggested_key": "admin.partials.html_view_audit.table.line_number_where_the_tag_is_opened",
+        "suggested_key": "admin.partials.html_view_audit.table.line_numbers_where_the_tag_is_opened_and_if_available_closed",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 66
+        "line": 112
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Opened",
-        "raw": "__('Opened'",
+        "value": "Line",
+        "raw": "__('Line'",
         "reason": null,
-        "suggested_key": "admin.partials.html_view_audit.table.opened",
+        "suggested_key": "admin.partials.html_view_audit.table.line",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 68
-    },
-    {
-        "classification": "native",
-        "function": "__",
-        "value": "Closing",
-        "raw": "__('Closing'",
-        "reason": null,
-        "suggested_key": "admin.partials.html_view_audit.table.closing",
-        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 74
-    },
-    {
-        "classification": "native",
-        "function": "__",
-        "value": "Line number where the tag is closed.",
-        "raw": "__('Line number where the tag is closed.'",
-        "reason": null,
-        "suggested_key": "admin.partials.html_view_audit.table.line_number_where_the_tag_is_closed",
-        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 75
-    },
-    {
-        "classification": "native",
-        "function": "__",
-        "value": "Closing",
-        "raw": "__('Closing'",
-        "reason": null,
-        "suggested_key": "admin.partials.html_view_audit.table.closing",
-        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 77
+        "line": 114
     },
     {
         "classification": "native",
@@ -3087,7 +3287,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.expected",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 83
+        "line": 123
     },
     {
         "classification": "native",
@@ -3097,7 +3297,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.the_expected_closing_tag",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 84
+        "line": 124
     },
     {
         "classification": "native",
@@ -3107,7 +3307,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.expected",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 86
+        "line": 126
     },
     {
         "classification": "native",
@@ -3117,7 +3317,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.actual",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 92
+        "line": 135
     },
     {
         "classification": "native",
@@ -3127,7 +3327,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.the_actual_closing_tag",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 93
+        "line": 136
     },
     {
         "classification": "native",
@@ -3137,17 +3337,57 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.actual",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 95
+        "line": 138
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "sequential number!?",
-        "raw": "__('sequential number!?'",
+        "value": "moved from",
+        "raw": "__('moved from'",
         "reason": null,
-        "suggested_key": "admin.partials.html_view_audit.table.sequential_number",
+        "suggested_key": "admin.partials.html_view_audit.table.moved_from",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 104
+        "line": 169
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "line",
+        "raw": "__('line'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.line",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 174
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "old variant",
+        "raw": "__('old variant'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.old_variant",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 182
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "opened",
+        "raw": "__('opened'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.opened",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 233
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "closing",
+        "raw": "__('closing'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.closing",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 240
     },
     {
         "classification": "native",
@@ -3157,7 +3397,17 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.no_audit_problems_found_for_the_current_filter",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 161
+        "line": 260
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Pagination",
+        "raw": "__('Pagination'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.pagination",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 272
     },
     {
         "classification": "native",
@@ -5027,7 +5277,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.id",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 26
+        "line": 28
     },
     {
         "classification": "native",
@@ -5037,7 +5287,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.name",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 34
+        "line": 36
     },
     {
         "classification": "native",
@@ -5047,7 +5297,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.e_mail",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 42
+        "line": 44
     },
     {
         "classification": "native",
@@ -5057,7 +5307,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.roles",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 50
+        "line": 52
     },
     {
         "classification": "native",
@@ -5067,7 +5317,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.actions",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 55
+        "line": 57
     },
     {
         "classification": "native",
@@ -5077,7 +5327,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.without_role",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 98
+        "line": 100
     },
     {
         "classification": "native",
@@ -5087,7 +5337,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.edit_roles",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 109
+        "line": 111
     },
     {
         "classification": "native",
@@ -5097,7 +5347,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.pagination",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 125
+        "line": 127
     },
     {
         "classification": "native",
@@ -9257,7 +9507,7 @@
         "reason": null,
         "suggested_key": "pages.settings.two_factor_setup_modal.two_factor_authentication_enabled",
         "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-        "line": 133
+        "line": 127
     },
     {
         "classification": "native",
@@ -9267,7 +9517,7 @@
         "reason": null,
         "suggested_key": "pages.settings.two_factor_setup_modal.two_factor_authentication_is_now_enabled_scan_the_qr_code_or_enter_the_setup_key",
         "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-        "line": 134
+        "line": 128
     },
     {
         "classification": "native",
@@ -9277,7 +9527,7 @@
         "reason": null,
         "suggested_key": "pages.settings.two_factor_setup_modal.close",
         "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-        "line": 135
+        "line": 129
     },
     {
         "classification": "native",
@@ -9287,7 +9537,7 @@
         "reason": null,
         "suggested_key": "pages.settings.two_factor_setup_modal.verify_authentication_code",
         "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-        "line": 141
+        "line": 135
     },
     {
         "classification": "native",
@@ -9297,7 +9547,7 @@
         "reason": null,
         "suggested_key": "pages.settings.two_factor_setup_modal.enter_the_6_digit_code_from_your_authenticator_app",
         "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-        "line": 142
+        "line": 136
     },
     {
         "classification": "native",
@@ -9307,7 +9557,7 @@
         "reason": null,
         "suggested_key": "pages.settings.two_factor_setup_modal.continue",
         "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-        "line": 143
+        "line": 137
     },
     {
         "classification": "native",
@@ -9317,7 +9567,7 @@
         "reason": null,
         "suggested_key": "pages.settings.two_factor_setup_modal.enable_two_factor_authentication",
         "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-        "line": 148
+        "line": 142
     },
     {
         "classification": "native",
@@ -9327,7 +9577,7 @@
         "reason": null,
         "suggested_key": "pages.settings.two_factor_setup_modal.to_finish_enabling_two_factor_authentication_scan_the_qr_code_or_enter_the_setup",
         "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-        "line": 149
+        "line": 143
     },
     {
         "classification": "native",
@@ -9337,7 +9587,7 @@
         "reason": null,
         "suggested_key": "pages.settings.two_factor_setup_modal.continue",
         "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-        "line": 150
+        "line": 144
     },
     {
         "classification": "native",
@@ -9347,7 +9597,7 @@
         "reason": null,
         "suggested_key": "pages.settings.two_factor_setup_modal.back",
         "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-        "line": 205
+        "line": 203
     },
     {
         "classification": "native",
@@ -9357,7 +9607,7 @@
         "reason": null,
         "suggested_key": "pages.settings.two_factor_setup_modal.confirm",
         "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-        "line": 214
+        "line": 212
     },
     {
         "classification": "native",
@@ -9367,7 +9617,7 @@
         "reason": null,
         "suggested_key": "pages.settings.two_factor_setup_modal.or_enter_the_code_manually",
         "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-        "line": 257
+        "line": 265
     },
     {
         "classification": "native",

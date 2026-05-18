@@ -10,7 +10,12 @@
     <div class="flex w-full items-end gap-3">
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="role-list-search">
-                {{ __('Search') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by search')"
+                    :text="__('Enter a search term to filter the list of roles.')"
+                >
+                    {{ __('Search') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group class="w-full min-w-0">
@@ -33,7 +38,12 @@
 
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="role-list-category-filter">
-                {{ __('Category') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by category')"
+                    :text="__('Select a category to filter the list of roles.')"
+                >
+                    {{ __('Category') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group>
@@ -61,7 +71,12 @@
 
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="role-list-assignable-filter">
-                {{ __('Assignable') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by assignable')"
+                    :text="__('Select an assignable status to filter the list of roles.')"
+                >
+                    {{ __('Assignable') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group>
@@ -91,7 +106,12 @@
 
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="role-list-system-filter">
-                {{ __('System') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by system')"
+                    :text="__('Select a system status to filter the list of roles.')"
+                >
+                    {{ __('System') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group>

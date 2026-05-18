@@ -10,7 +10,9 @@
     />
 
     <div class="mx-auto max-w-full">
+
         <div class="overflow-hidden rounded-t-lg">
+
             {{-- Table --}}
             <flux:table class="mb-6">
 
@@ -23,7 +25,12 @@
                         wire:click="sortBy('id')"
                         align="center"
                     >
-                        {{ __('ID') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('ID')"
+                            :text="__('Unique identifier of the user, useful for tracking and reference.')"
+                        >
+                            {{ __('ID') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Name --}}
@@ -31,7 +38,12 @@
                         sortable
                         wire:click="sortBy('name')"
                     >
-                        {{ __('Name') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Name')"
+                            :text="__('Full name of the user, useful for identification.')"
+                        >
+                            {{ __('Name') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column E-Mail --}}
@@ -39,7 +51,12 @@
                         sortable
                         wire:click="sortBy('email')"
                     >
-                        {{ __('E-Mail') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('E-Mail')"
+                            :text="__('Email address of the user, used for communication and login.')"
+                        >
+                            {{ __('E-Mail') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Roles --}}
@@ -47,12 +64,24 @@
                         sortable
                         wire:click="sortBy('roles.name')"
                     >
-                        {{ __('Roles') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Roles')"
+                            :text="__(
+                                'Roles assigned to the user, determining their permissions and access levels.',
+                            )"
+                        >
+                            {{ __('Roles') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Actions --}}
                     <flux:table.column align="center">
-                        {{ __('Actions') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Actions')"
+                            :text="__('Available actions for the user, such as editing roles.')"
+                        >
+                            {{ __('Actions') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
 

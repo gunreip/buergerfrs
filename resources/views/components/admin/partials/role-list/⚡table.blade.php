@@ -17,25 +17,45 @@
                         wire:click="sortBy('id')"
                         align="center"
                     >
-                        {{ __('ID') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('ID')"
+                            :text="__('Unique identifier of the role, useful for tracking and reference.')"
+                        >
+                            {{ __('ID') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column align="center">
-                        {{ __('Badge') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Badge')"
+                            :text="__('Visual representation of the role, useful for quick identification.')"
+                        >
+                            {{ __('Badge') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('name')"
                     >
-                        {{ __('Name') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Name')"
+                            :text="__('Name of the role, useful for identification and reference.')"
+                        >
+                            {{ __('Name') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('category')"
                     >
-                        {{ __('Category') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Category')"
+                            :text="__('Category of the role, useful for identification and reference.')"
+                        >
+                            {{ __('Category') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
@@ -43,15 +63,30 @@
                         sortable
                         wire:click="sortBy('sort_order')"
                     >
-                        {{ __('Sort') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Sort')"
+                            :text="__('Sort order of the role, useful for identification and reference.')"
+                        >
+                            {{ __('Sort') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column>
-                        {{ __('Description') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Description')"
+                            :text="__('Description of the role, useful for identification and reference.')"
+                        >
+                            {{ __('Description') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column align="center">
-                        {{ __('Flags') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Flags')"
+                            :text="__('Flags associated with the role, useful for identification and reference.')"
+                        >
+                            {{ __('Flags') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
@@ -59,11 +94,25 @@
                         sortable
                         wire:click="sortBy('users_count')"
                     >
-                        {{ __('Users') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Users')"
+                            :text="__(
+                                'Number of users associated with the role, useful for identification and reference.',
+                            )"
+                        >
+                            {{ __('Users') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column align="center">
-                        {{ __('Actions') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Actions')"
+                            :text="__(
+                                'Actions that can be performed on the role, useful for management and administration.',
+                            )"
+                        >
+                            {{ __('Actions') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
 

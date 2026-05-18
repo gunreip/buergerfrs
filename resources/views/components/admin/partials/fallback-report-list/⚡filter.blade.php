@@ -12,7 +12,14 @@
     <div class="flex w-full items-end gap-3">
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="fallback-report-list-search">
-                {{ __('Search') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Search')"
+                    :text="__(
+                        'Enter a search term to filter fallback reports by ID, type, key, fallback or context. The search is case-sensitive.',
+                    )"
+                >
+                    {{ __('Search') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group class="w-full min-w-0">
@@ -35,7 +42,12 @@
 
         <div class="min-w-0 flex-none basis-1/5">
             <flux:label for="fallback-report-list-status-filter">
-                {{ __('Status') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by status')"
+                    :text="__('Select a status to filter the list of fallback reports.')"
+                >
+                    {{ __('Status') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group>

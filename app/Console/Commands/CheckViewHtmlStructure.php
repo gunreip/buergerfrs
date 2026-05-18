@@ -34,7 +34,10 @@ class CheckViewHtmlStructure extends Command
             ->values();
 
         $nativeReference = $this->nativeTagReference();
+        $componentReference = $this->componentTagReference();
+
         $nativeTags = $nativeReference['tags']['normal'];
+        $componentTags = $componentReference['tags'];
 
         $nativeProblems = [];
         $customProblems = [];
@@ -58,7 +61,7 @@ class CheckViewHtmlStructure extends Command
                 ...$this->checkSection(
                     content: $content,
                     file: $relativePath,
-                    tagsToCheck: $this->customTags(),
+                    tagsToCheck: $componentTags,
                     section: 'custom_components',
                 ),
             ];
@@ -73,6 +76,7 @@ class CheckViewHtmlStructure extends Command
             'note' => 'This is a static Blade structure audit. Complex conditional Blade markup may produce false positives and should be reviewed manually.',
             'references' => [
                 'native_html' => $nativeReference['meta'],
+                'custom_components' => $componentReference['meta'],
             ],
             'sections' => [
                 'native_html' => [
@@ -119,10 +123,19 @@ class CheckViewHtmlStructure extends Command
         $this->line('Native normal tags: ' . $nativeReference['meta']['normal_count']);
         $this->line('Native void tags ignored: ' . $nativeReference['meta']['void_count']);
 
+        $this->line('Component reference: ' . $componentReference['meta']['source']);
+        $this->line('Component tags: ' . $componentReference['meta']['tag_count']);
+
         if ($nativeReference['meta']['fallback'] === true) {
             $this->warn('Native HTML reference fallback is active.');
             $this->warn('Reason: ' . $nativeReference['meta']['fallback_reason']);
             $this->warn('Hint: ' . $nativeReference['meta']['fallback_hint']);
+        }
+
+        if ($componentReference['meta']['fallback'] === true) {
+            $this->warn('Component reference fallback is active.');
+            $this->warn('Reason: ' . $componentReference['meta']['fallback_reason']);
+            $this->warn('Hint: ' . $componentReference['meta']['fallback_hint']);
         }
 
         $this->warn('Note: This is a static Blade structure audit. Complex conditional Blade markup may produce false positives and should be reviewed manually.');
@@ -206,17 +219,21 @@ class CheckViewHtmlStructure extends Command
 
     /**
      * @param  array<int, string>  $tagsToCheck
-     * @return array<int, array{type: string, tag: string, line: int}>
+     * @return array<int, array{type: string, tag: string, line: int, offset: int}>
      */
     private function extractTagTokens(string $content, array $tagsToCheck): array
     {
+        if ($tagsToCheck === []) {
+            return [];
+        }
+
         $tagsPattern = implode('|', array_map(
             fn(string $tag): string => preg_quote($tag, '/'),
             $tagsToCheck,
         ));
 
         preg_match_all(
-            '/<\s*(\/?)\s*(' . $tagsPattern . ')(?=[\s>\/])[^>]*(\/?)\s*>/iu',
+            '/<\s*(\/?)\s*(' . $tagsPattern . ')(?=[\s>\/])(?:[^"\'<>]|"[^"]*"|\'[^\']*\')*(\/?)\s*>/iu',
             $content,
             $matches,
             PREG_OFFSET_CAPTURE,
@@ -239,10 +256,11 @@ class CheckViewHtmlStructure extends Command
                 'type' => $isClosing ? 'close' : 'open',
                 'tag' => $tag,
                 'line' => substr_count(substr($content, 0, $offset), "\n") + 1,
+                'offset' => $offset,
             ];
         }
 
-        usort($tokens, fn(array $a, array $b): int => $a['line'] <=> $b['line']);
+        usort($tokens, fn(array $a, array $b): int => $a['offset'] <=> $b['offset']);
 
         return $tokens;
     }
@@ -351,6 +369,95 @@ class CheckViewHtmlStructure extends Command
     }
 
     /**
+     * @return array{
+     *     tags: array<int, string>,
+     *     meta: array<string, int|string|bool|null>
+     * }
+     */
+    private function componentTagReference(): array
+    {
+        $path = storage_path('audits/html/view-component-tags.json');
+
+        if (! File::exists($path)) {
+            return $this->fallbackComponentTagReference(
+                reason: 'Component reference file is missing: storage/audits/html/view-component-tags.json.',
+            );
+        }
+
+        $payload = json_decode(File::get($path), true);
+
+        if (! is_array($payload)) {
+            return $this->fallbackComponentTagReference(
+                reason: 'Component reference file is not valid JSON: storage/audits/html/view-component-tags.json.',
+            );
+        }
+
+        $componentTags = $payload['all'] ?? null;
+
+        if (! is_array($componentTags)) {
+            return $this->fallbackComponentTagReference(
+                reason: 'Component reference does not contain all as an array.',
+            );
+        }
+
+        $componentTags = $this->normalizeComponentTagList($componentTags);
+
+        if ($componentTags === []) {
+            return $this->fallbackComponentTagReference(
+                reason: 'Component reference contains no component tags.',
+            );
+        }
+
+        return [
+            'tags' => $componentTags,
+            'meta' => [
+                'source' => 'storage/audits/html/view-component-tags.json',
+                'generated_at' => $payload['generated_at'] ?? null,
+                'files_scanned' => $payload['files_scanned'] ?? null,
+                'tag_count' => count($componentTags),
+                'flux_count' => $payload['counts']['flux'] ?? null,
+                'custom_count' => $payload['counts']['custom'] ?? null,
+                'livewire_count' => $payload['counts']['livewire'] ?? null,
+                'fallback' => false,
+                'fallback_reason' => null,
+                'fallback_hint' => null,
+            ],
+        ];
+    }
+
+    /**
+     * @return array{
+     *     tags: array<int, string>,
+     *     meta: array<string, int|string|bool|null>
+     * }
+     */
+    private function fallbackComponentTagReference(string $reason): array
+    {
+        $fallbackTags = $this->fallbackComponentTags();
+        $hint = 'Run php artisan views:sync-component-tags to refresh the Blade component tag reference.';
+
+        $this->warn('Component reference fallback is active.');
+        $this->warn('Reason: ' . $reason);
+        $this->warn('Hint: ' . $hint);
+
+        return [
+            'tags' => $fallbackTags,
+            'meta' => [
+                'source' => 'built-in fallback',
+                'generated_at' => null,
+                'files_scanned' => null,
+                'tag_count' => count($fallbackTags),
+                'flux_count' => null,
+                'custom_count' => null,
+                'livewire_count' => null,
+                'fallback' => true,
+                'fallback_reason' => $reason,
+                'fallback_hint' => $hint,
+            ],
+        ];
+    }
+
+    /**
      * @param  array<int, mixed>  $tags
      * @return array<int, string>
      */
@@ -359,6 +466,22 @@ class CheckViewHtmlStructure extends Command
         return collect($tags)
             ->filter(fn(mixed $tag): bool => is_string($tag) && $tag !== '')
             ->map(fn(string $tag): string => strtolower(trim($tag)))
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  array<int, mixed>  $tags
+     * @return array<int, string>
+     */
+    private function normalizeComponentTagList(array $tags): array
+    {
+        return collect($tags)
+            ->filter(fn(mixed $tag): bool => is_string($tag) && $tag !== '')
+            ->map(fn(string $tag): string => strtolower(trim($tag)))
+            ->reject(fn(string $tag): bool => $tag === 'x-slot' || Str::startsWith($tag, 'x-slot:'))
             ->unique()
             ->sort()
             ->values()
@@ -400,7 +523,7 @@ class CheckViewHtmlStructure extends Command
     /**
      * @return array<int, string>
      */
-    private function customTags(): array
+    private function fallbackComponentTags(): array
     {
         return [
             'flux:badge',

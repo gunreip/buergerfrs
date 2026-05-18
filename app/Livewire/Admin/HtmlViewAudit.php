@@ -4,37 +4,104 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\HtmlViewAuditFinding;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Livewire\Component;
+use Livewire\WithPagination;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class HtmlViewAudit extends Component
 {
+    use WithPagination;
+
+    public string $statusFilter = 'open';
+
     public string $sectionFilter = 'all';
 
     public string $typeFilter = 'all';
 
     public string $search = '';
 
+    public int $perPage = 25;
+
+    public string $sortField = 'last_seen_at';
+
+    public string $sortDirection = 'desc';
+
+    /**
+     * Reset pagination when a filter changes.
+     */
+    public function updating(string $property): void
+    {
+        if (in_array($property, [
+            'statusFilter',
+            'sectionFilter',
+            'typeFilter',
+            'search',
+            'perPage',
+        ], true)) {
+            $this->resetPage();
+        }
+    }
+
     public function clearFilters(): void
     {
+        $this->statusFilter = 'open';
         $this->sectionFilter = 'all';
         $this->typeFilter = 'all';
         $this->search = '';
+        $this->perPage = 25;
+
+        $this->resetPage();
+    }
+
+    public function sortBy(string $field): void
+    {
+        $allowedFields = [
+            'id',
+            'status',
+            'section',
+            'type',
+            'file',
+            'tag',
+            'opened_line',
+            'closing_line',
+            'expected_closing',
+            'actual_closing',
+            'last_seen_at',
+        ];
+
+        if (! in_array($field, $allowedFields, true)) {
+            return;
+        }
+
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+
+            return;
+        }
+
+        $this->sortField = $field;
+        $this->sortDirection = $field === 'id' ? 'asc' : 'desc';
     }
 
     public function render(): View
     {
         $audit = $this->audit();
-        $problems = $this->filteredProblems($audit);
+        $problems = $this->filteredFindings();
 
         return view('components.admin.⚡html-view-audit', [
             'audit' => $audit,
             'nativeReferenceFile' => $this->nativeReferenceFile(),
+            'historyCounts' => $this->historyCounts(),
             'problems' => $problems,
-            'filteredProblemCount' => count($problems),
+            'filteredProblemCount' => $problems->total(),
             'hasActiveFilters' => $this->hasActiveFilters(),
+            'tableLegend' => $this->tableLegend(),
+            'legendTexts' => $this->legendTexts(),
         ]);
     }
 
@@ -155,65 +222,137 @@ class HtmlViewAudit extends Component
     }
 
     /**
-     * @param  array<string, mixed>  $audit
      * @return array<int, array<string, mixed>>
      */
-    private function problems(array $audit): array
+    private function filteredFindings(): LengthAwarePaginator
     {
-        $sections = is_array($audit['sections'] ?? null) ? $audit['sections'] : [];
-        $problems = [];
+        $findings = $this->findingsQuery()
+            ->with('previousFinding:id,opened_line,closing_line')
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->orderByDesc('id')
+            ->paginate($this->normalizedPerPage());
 
-        foreach ($sections as $sectionKey => $section) {
-            if (! is_array($section)) {
-                continue;
-            }
+        $findings->getCollection()->transform(fn(HtmlViewAuditFinding $finding): array => [
+            'id' => $finding->id,
+            'status' => $finding->status,
+            'section' => $finding->section,
+            'type' => $finding->type,
+            'file' => $finding->file,
+            'tag' => $finding->tag,
+            'closing_tag' => $finding->closing_tag,
+            'opened_line' => $finding->opened_line,
+            'closing_line' => $finding->closing_line,
+            'expected_closing' => $finding->expected_closing,
+            'actual_closing' => $finding->actual_closing,
+            'first_seen_at' => $finding->first_seen_at?->toDateTimeString(),
+            'last_seen_at' => $finding->last_seen_at?->toDateTimeString(),
+            'resolved_at' => $finding->resolved_at?->toDateTimeString(),
+            'resolved_source' => $finding->resolved_source,
+            'previous_finding_id' => $finding->previous_finding_id,
+            'previous_opened_line' => $finding->previousFinding?->opened_line,
+            'previous_closing_line' => $finding->previousFinding?->closing_line,
+        ]);
 
-            foreach (($section['problems'] ?? []) as $problem) {
-                if (! is_array($problem)) {
-                    continue;
-                }
-
-                $problem['section'] = $problem['section'] ?? $sectionKey;
-                $problems[] = $problem;
-            }
-        }
-
-        return $problems;
+        return $findings;
     }
 
-    /**
-     * @param  array<string, mixed>  $audit
-     * @return array<int, array<string, mixed>>
-     */
-    private function filteredProblems(array $audit): array
+    private function findingsQuery(): Builder
     {
         $search = Str::lower(trim($this->search));
 
-        return collect($this->problems($audit))
-            ->filter(function (array $problem) use ($search): bool {
-                if ($this->sectionFilter !== 'all' && ($problem['section'] ?? null) !== $this->sectionFilter) {
-                    return false;
-                }
-
-                if ($this->typeFilter !== 'all' && ($problem['type'] ?? null) !== $this->typeFilter) {
-                    return false;
-                }
-
-                if ($search === '') {
-                    return true;
-                }
-
-                return Str::contains(Str::lower((string) ($problem['file'] ?? '')), $search)
-                    || Str::contains(Str::lower((string) ($problem['tag'] ?? '')), $search)
-                    || Str::contains(Str::lower((string) ($problem['closing_tag'] ?? '')), $search);
+        return HtmlViewAuditFinding::query()
+            ->when($this->statusFilter !== 'all', function (Builder $query): void {
+                $query->where('status', $this->statusFilter);
             })
-            ->values()
+            ->when($this->sectionFilter !== 'all', function (Builder $query): void {
+                $query->where('section', $this->sectionFilter);
+            })
+            ->when($this->typeFilter !== 'all', function (Builder $query): void {
+                $query->where('type', $this->typeFilter);
+            })
+            ->when($search !== '', function (Builder $query) use ($search): void {
+                $query->where(function (Builder $query) use ($search): void {
+                    $query
+                        ->whereRaw('lower(file) like ?', ['%' . $search . '%'])
+                        ->orWhereRaw('lower(coalesce(tag, \'\')) like ?', ['%' . $search . '%'])
+                        ->orWhereRaw('lower(coalesce(closing_tag, \'\')) like ?', ['%' . $search . '%'])
+                        ->orWhereRaw('lower(coalesce(expected_closing, \'\')) like ?', ['%' . $search . '%'])
+                        ->orWhereRaw('lower(coalesce(actual_closing, \'\')) like ?', ['%' . $search . '%']);
+                });
+            });
+    }
+
+    /**
+     * Normalize selectable pagination size.
+     */
+    private function normalizedPerPage(): int
+    {
+        return in_array($this->perPage, [10, 25, 50, 100], true)
+            ? $this->perPage
+            : 25;
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    private function historyCounts(): array
+    {
+        $counts = HtmlViewAuditFinding::query()
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->all();
+
+        return [
+            'open' => (int) ($counts['open'] ?? 0),
+            'changed' => (int) ($counts['changed'] ?? 0),
+            'resolved' => (int) ($counts['resolved'] ?? 0),
+            'ignored' => (int) ($counts['ignored'] ?? 0),
+            'total' => array_sum(array_map('intval', $counts)),
+        ];
+    }
+
+    /**
+     * @return array<string, array<string, array<string, string>>>
+     */
+    private function tableLegend(): array
+    {
+        $legend = config('html-audit.table_legend', []);
+
+        return is_array($legend) ? $legend : [];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function legendTexts(): array
+    {
+        return collect($this->tableLegend())
+            ->mapWithKeys(fn(array $items, string $group): array => [
+                $group => collect($items)
+                    ->map(function (array $item, string $key): string {
+                        $label = (string) ($item['label'] ?? $key);
+                        $description = (string) ($item['description'] ?? '');
+
+                        $symbol = (string) ($item['symbol'] ?? '');
+                        $color = (string) ($item['color'] ?? 'zinc');
+
+                        return implode('|', [
+                            $symbol,
+                            $color,
+                            $label,
+                            $description,
+                        ]);
+                    })
+                    ->implode(PHP_EOL),
+            ])
             ->all();
     }
 
     private function hasActiveFilters(): bool
     {
-        return $this->sectionFilter !== 'all'
+        return $this->statusFilter !== 'open'
+            || $this->sectionFilter !== 'all'
             || $this->typeFilter !== 'all'
             || trim($this->search) !== '';
     }

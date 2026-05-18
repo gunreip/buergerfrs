@@ -12,7 +12,14 @@
     <div class="flex w-full items-end gap-3">
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="client-list-search">
-                {{ __('Search') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Search clients')"
+                    :text="__(
+                        'Enter a search term to filter clients by name, legal name, client number or description. The search is case-sensitive.',
+                    )"
+                >
+                    {{ __('Search') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group class="w-full min-w-0">
@@ -35,7 +42,12 @@
 
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="client-list-type-filter">
-                {{ __('Type') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by type')"
+                    :text="__('Select a type to filter the client list.')"
+                >
+                    {{ __('Type') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group>
@@ -63,7 +75,12 @@
 
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="client-list-status-filter">
-                {{ __('Status') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by status')"
+                    :text="__('Select a status to filter the client list.')"
+                >
+                    {{ __('Status') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group>
@@ -91,7 +108,12 @@
 
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="client-list-people-filter">
-                {{ __('People') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by people')"
+                    :text="__('Select a people filter to filter the client list.')"
+                >
+                    {{ __('People') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group>

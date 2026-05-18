@@ -1,7 +1,7 @@
 {
-    "generated_at": "2026-05-17T05:20:45+00:00",
-    "files_scanned": 212,
-    "problem_count": 1,
+    "generated_at": "2026-05-18T01:51:42+00:00",
+    "files_scanned": 214,
+    "problem_count": 0,
     "note": "This is a static Blade structure audit. Complex conditional Blade markup may produce false positives and should be reviewed manually.",
     "references": {
         "native_html": {
@@ -14,23 +14,24 @@
             "fallback": false,
             "fallback_reason": null,
             "fallback_hint": null
+        },
+        "custom_components": {
+            "source": "storage/audits/html/view-component-tags.json",
+            "generated_at": "2026-05-18T01:51:42+00:00",
+            "files_scanned": 214,
+            "tag_count": 159,
+            "flux_count": 125,
+            "custom_count": 30,
+            "livewire_count": 4,
+            "fallback": false,
+            "fallback_reason": null,
+            "fallback_hint": null
         }
     },
     "sections": {
         "native_html": {
-            "problem_count": 1,
-            "problems": [
-                {
-                    "section": "native_html",
-                    "type": "unclosed",
-                    "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-                    "tag": "div",
-                    "opened_line": 9,
-                    "closing_line": null,
-                    "expected_closing": "</div>",
-                    "actual_closing": null
-                }
-            ]
+            "problem_count": 0,
+            "problems": []
         },
         "custom_components": {
             "problem_count": 0,

@@ -12,23 +12,56 @@
             <flux:table>
                 <flux:table.columns class="bg-zinc-800 text-zinc-400">
                     <flux:table.column align="center">
-                        {{ __('Status') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Status')"
+                            :text="__(
+                                'Current status of the translation key, useful for identification and reference.',
+                            )"
+                        >
+                            {{ __('Status') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column>
-                        {{ __('Key / Suggested Key') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Key / Suggested Key')"
+                            :text="__('Translation key or suggested key, useful for identification and reference.')"
+                        >
+                            {{ __('Key / Suggested Key') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column>
-                        {{ __('Native Text') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Native Text')"
+                            :text="__(
+                                'Original text in the source language, useful for identification and reference.',
+                            )"
+                        >
+                            {{ __('Native Text') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column>
-                        {{ __('Values') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Values')"
+                            :text="__(
+                                'Translated values for the key across different languages, useful for identification and reference.',
+                            )"
+                        >
+                            {{ __('Values') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column>
-                        {{ __('Usage') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Usage')"
+                            :text="__(
+                                'Usage information of the translation key, useful for identification and reference.',
+                            )"
+                        >
+                            {{ __('Usage') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
 

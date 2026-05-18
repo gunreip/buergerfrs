@@ -13,6 +13,7 @@
 
     @include('components.admin.partials.html-view-audit.⚡meta', [
         'audit' => $audit,
+        'historyCounts' => $historyCounts,
         'filteredProblemCount' => $filteredProblemCount,
         'hasActiveFilters' => $hasActiveFilters,
     ])

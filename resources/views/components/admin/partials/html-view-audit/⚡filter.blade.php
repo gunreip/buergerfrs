@@ -3,13 +3,20 @@
 <flux:card class="mt-6">
     <x-ui.headers.card
         :title="__('Filters')"
-        :description="__('Filter the audit results by search term, section, or problem type.')"
+        :description="__('Filter the audit history by status, search term, section, or problem type.')"
     />
 
     <div class="flex flex-wrap items-end gap-3">
-        <div class="min-w-64 flex-1">
-            <flux:label>
-                {{ __('Search') }}
+        <div class="min-w-84 flex-1">
+            <flux:label for="html-view-audit-filter-search">
+                <x-ui.tooltip.trigger
+                    :title="__('Search the audit history')"
+                    :text="__(
+                        'Enter a search term to filter the audit history by file name, tag name, or other relevant information. The search is case-sensitive.',
+                    )"
+                >
+                    {{ __('Search') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group class="w-full">
@@ -30,31 +37,70 @@
             </flux:input.group>
         </div>
 
-        <div class="w-106">
-            < <flux:label>
-                {{ __('Section') }}
-                </flux:label>
+        <div class="w-74">
+            <flux:label for="html-view-audit-filter-status">
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by status')"
+                    :text="__('Select a status to filter the audit history.')"
+                >
+                    {{ __('Status') }}
+                </x-ui.tooltip.trigger>
+            </flux:label>
 
-                <flux:input.group>
-                    <flux:input.group.prefix>
-                        <flux:icon.code-xml stroke-width="1" />
-                    </flux:input.group.prefix>
+            <flux:input.group>
+                <flux:input.group.prefix>
+                    <flux:icon.list-filter stroke-width="1" />
+                </flux:input.group.prefix>
 
-                    <flux:select
-                        id="html-view-audit-filter-section"
-                        name="html-view-audit-filter-section"
-                        wire:model.live="sectionFilter"
-                    >
-                        <flux:select.option value="all">{{ __('All sections') }}</flux:select.option>
-                        <flux:select.option value="native_html">{{ __('Native HTML') }}</flux:select.option>
-                        <flux:select.option value="custom_components">{{ __('Custom components') }}</flux:select.option>
-                    </flux:select>
-                </flux:input.group>
+                <flux:select
+                    id="html-view-audit-filter-status"
+                    name="html-view-audit-filter-status"
+                    wire:model.live="statusFilter"
+                >
+                    <flux:select.option value="open">{{ __('Open') }}</flux:select.option>
+                    <flux:select.option value="changed">{{ __('Changed / moved') }}</flux:select.option>
+                    <flux:select.option value="resolved">{{ __('Resolved') }}</flux:select.option>
+                    <flux:select.option value="ignored">{{ __('Ignored') }}</flux:select.option>
+                    <flux:select.option value="all">{{ __('All statuses') }}</flux:select.option>
+                </flux:select>
+            </flux:input.group>
         </div>
 
-        <div class="w-106">
-            <flux:label>
-                {{ __('Problem type') }}
+        <div class="w-74">
+            <flux:label for="html-view-audit-filter-section">
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by section')"
+                    :text="__('Select a section to filter the audit history.')"
+                >
+                    {{ __('Section') }}
+                </x-ui.tooltip.trigger>
+            </flux:label>
+
+            <flux:input.group>
+                <flux:input.group.prefix>
+                    <flux:icon.code-xml stroke-width="1" />
+                </flux:input.group.prefix>
+
+                <flux:select
+                    id="html-view-audit-filter-section"
+                    name="html-view-audit-filter-section"
+                    wire:model.live="sectionFilter"
+                >
+                    <flux:select.option value="all">{{ __('All sections') }}</flux:select.option>
+                    <flux:select.option value="native_html">{{ __('Native HTML') }}</flux:select.option>
+                    <flux:select.option value="custom_components">{{ __('Custom components') }}</flux:select.option>
+                </flux:select>
+            </flux:input.group>
+        </div>
+
+        <div class="w-74">
+            <flux:label for="html-view-audit-filter-type">
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by problem type')"
+                    :text="__('Select a problem type to filter the audit history.')"
+                >
+                    {{ __('Problem type') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group>
@@ -72,6 +118,15 @@
                     <flux:select.option value="unexpected_closing">{{ __('Unexpected closing') }}</flux:select.option>
                 </flux:select>
             </flux:input.group>
+        </div>
+
+        <div class="ml-auto flex-none">
+            <x-ui.table.per-page-selector
+                id="html-view-audit-per-page"
+                name="html-view-audit-per-page"
+                model="perPage"
+                :options="[10, 25, 50, 100]"
+            />
         </div>
 
         <div class="flex-none">

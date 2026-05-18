@@ -14,35 +14,60 @@
             <flux:table>
                 <flux:table.columns class="bg-zinc-800 text-zinc-400">
                     <flux:table.column align="center">
-                        {{ __('#') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('ID')"
+                            :text="__('Unique identifier of the client, useful for tracking and reference.')"
+                        >
+                            {{ __('#') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('name')"
                     >
-                        {{ __('Client') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Client')"
+                            :text="__('Name of the client, useful for identification.')"
+                        >
+                            {{ __('Client') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('client_number')"
                     >
-                        {{ __('Client number') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Client number')"
+                            :text="__('Unique number assigned to the client, useful for tracking and reference.')"
+                        >
+                            {{ __('Client number') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('type')"
                     >
-                        {{ __('Type') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Type')"
+                            :text="__('Type of the client, useful for categorization and filtering.')"
+                        >
+                            {{ __('Type') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('status')"
                     >
-                        {{ __('Status') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Status')"
+                            :text="__('Current status of the client, indicating their activity and engagement.')"
+                        >
+                            {{ __('Status') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
@@ -50,14 +75,26 @@
                         sortable
                         wire:click="sortBy('people_count')"
                     >
-                        {{ __('People') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('People')"
+                            :text="__(
+                                'Number of people associated with the client, useful for understanding client size and engagement.',
+                            )"
+                        >
+                            {{ __('People') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('created_at')"
                     >
-                        {{ __('Created') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Created')"
+                            :text="__('Date when the client was created, useful for tracking client history.')"
+                        >
+                            {{ __('Created') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
 

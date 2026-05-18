@@ -124,7 +124,7 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
     }
 
     if (contentEl) {
-        contentEl.textContent = content;
+        renderTooltipContent(contentEl, content);
     }
 
     if (requiredBadge) {
@@ -200,6 +200,89 @@ function positionTooltip(tooltip, anchorEl, pointer = null) {
     tooltip.style.left = `${scrollX + left}px`;
     tooltip.style.top = `${scrollY + top}px`;
     tooltip.scrollTop = 0;
+}
+
+function renderTooltipContent(contentEl, content) {
+    contentEl.replaceChildren();
+    contentEl.classList.remove('whitespace-pre-line');
+
+    if (isLegendContent(content)) {
+        renderLegendContent(contentEl, content);
+
+        return;
+    }
+
+    contentEl.textContent = content;
+    contentEl.classList.add('whitespace-pre-line');
+}
+
+function isLegendContent(content) {
+    const lines = content
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line !== '');
+
+    return lines.length > 0
+        && lines.every((line) => line.split('|').length >= 4);
+}
+
+function renderLegendContent(contentEl, content) {
+    contentEl.classList.add('space-y-1.5');
+
+    content
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line !== '')
+        .forEach((line) => {
+            const [symbol, color, label, ...descriptionParts] = line.split('|');
+            const description = descriptionParts.join('|');
+
+            const row = document.createElement('div');
+            row.className = 'flex items-start gap-2';
+
+            const symbolEl = document.createElement('span');
+            symbolEl.className = [
+                'inline-flex',
+                'w-6',
+                'shrink-0',
+                'justify-center',
+                'pt-0.5',
+                'font-mono',
+                'text-sm',
+                tooltipLegendColorClass(color),
+            ].join(' ');
+            symbolEl.textContent = symbol;
+
+            const textEl = document.createElement('span');
+            textEl.className = 'min-w-0 leading-6';
+
+            const labelEl = document.createElement('strong');
+            labelEl.className = 'font-semibold';
+            labelEl.textContent = label;
+
+            const separatorEl = document.createElement('span');
+            separatorEl.textContent = description !== '' ? ': ' : '';
+
+            const descriptionEl = document.createElement('span');
+            descriptionEl.textContent = description;
+
+            textEl.append(labelEl, separatorEl, descriptionEl);
+            row.append(symbolEl, textEl);
+            contentEl.append(row);
+        });
+}
+
+function tooltipLegendColorClass(color) {
+    return {
+        red: 'text-red-400',
+        amber: 'text-amber-300',
+        green: 'text-green-400',
+        zinc: 'text-zinc-300',
+        sky: 'text-sky-300',
+        blue: 'text-blue-300',
+        violet: 'text-violet-300',
+        purple: 'text-purple-300',
+    }[color] || 'text-zinc-300';
 }
 
 function clamp(value, min, max) {

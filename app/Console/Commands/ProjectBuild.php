@@ -54,7 +54,9 @@ class ProjectBuild extends Command
         $this->runArtisanStep('Translation-Compare-Audit schreiben', 'translations:audit-compare');
         $this->runArtisanStep('Translation-Audits in Datenbank synchronisieren', 'translations:sync-audits');
 
+        $this->runArtisanStep('Blade-Component-Tag-Reference schreiben', 'views:sync-component-tags');
         $this->runArtisanStep('HTML-/Blade-View-Struktur-Audit schreiben', 'html:check');
+        $this->runArtisanStep('HTML-/Blade-View-Struktur-Audit in Datenbank synchronisieren', 'html:sync-view-audit');
         $this->warn('⚠️ Hinweis: Native HTML reference gelegentlich mit php artisan html:sync-native-tags aktualisieren.');
 
         $this->runOptionalProcess(['./audit.cp.bat'], 'Translation-Audit-Previews nach /tmp kopieren');

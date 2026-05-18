@@ -14,7 +14,14 @@
                 <flux:table.columns class="bg-zinc-800 text-zinc-400">
                     {{-- Number # --}}
                     <flux:table.column align="center">
-                        {{ __('ui.labels.number_short') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('ui.labels.number')"
+                            :text="__(
+                                'Sequential number of the permission in the current list, useful for reference.',
+                            )"
+                        >
+                            {{ __('ui.labels.number_short') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Name --}}
@@ -22,7 +29,12 @@
                         sortable
                         wire:click="sortBy('name')"
                     >
-                        {{ __('ui.labels.name') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('ui.labels.name')"
+                            :text="__('Name of the permission, useful for identification and reference.')"
+                        >
+                            {{ __('ui.labels.name') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Category --}}
@@ -30,7 +42,12 @@
                         sortable
                         wire:click="sortBy('category')"
                     >
-                        {{ __('ui.labels.category') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('ui.labels.category')"
+                            :text="__('Category of the permission, useful for identification and reference.')"
+                        >
+                            {{ __('ui.labels.category') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Sort order --}}
@@ -39,7 +56,12 @@
                         sortable
                         wire:click="sortBy('sort_order')"
                     >
-                        {{ __('admin.permissions.table.columns.sort') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('admin.permissions.table.columns.sort')"
+                            :text="__('Sort order of the permission, useful for identification and reference.')"
+                        >
+                            {{ __('admin.permissions.table.columns.sort') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Guard --}}
@@ -47,17 +69,34 @@
                         sortable
                         wire:click="sortBy('guard_name')"
                     >
-                        {{ __('ui.labels.guard') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('ui.labels.guard')"
+                            :text="__('Guard of the permission, useful for identification and reference.')"
+                        >
+                            {{ __('ui.labels.guard') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Description --}}
                     <flux:table.column>
-                        {{ __('ui.labels.description') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('ui.labels.description')"
+                            :text="__('Description of the permission, useful for identification and reference.')"
+                        >
+                            {{ __('ui.labels.description') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Flags --}}
                     <flux:table.column align="center">
-                        {{ __('admin.permissions.table.columns.flags') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('admin.permissions.table.columns.flags')"
+                            :text="__(
+                                'Flags indicating special attributes of the permission, such as system or custom, useful for identification and reference.',
+                            )"
+                        >
+                            {{ __('admin.permissions.table.columns.flags') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Roles --}}
@@ -66,17 +105,36 @@
                         align="center"
                         wire:click="sortBy('roles_count')"
                     >
-                        {{ __('ui.labels.roles') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('ui.labels.roles')"
+                            :text="__(
+                                'Number of roles associated with the permission, useful for identification and reference.',
+                            )"
+                        >
+                            {{ __('ui.labels.roles') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Assigned roles --}}
                     <flux:table.column>
-                        {{ __('admin.permissions.table.columns.assigned_roles') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('admin.permissions.table.columns.assigned_roles')"
+                            :text="__('Roles assigned to the permission, useful for identification and reference.')"
+                        >
+                            {{ __('admin.permissions.table.columns.assigned_roles') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Actions --}}
                     <flux:table.column align="center">
-                        {{ __('ui.labels.actions') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('ui.labels.actions')"
+                            :text="__(
+                                'Actions available for the permission, useful for identification and reference.',
+                            )"
+                        >
+                            {{ __('ui.labels.actions') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
 

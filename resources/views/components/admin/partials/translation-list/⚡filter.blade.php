@@ -32,7 +32,14 @@
     <div class="flex w-full flex-wrap items-end gap-3">
         <div class="min-w-0 flex-1 basis-72">
             <flux:label for="translation-list-search">
-                {{ __('Search') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by search')"
+                    :text="__(
+                        'Enter a search term to filter the list of translations by key or value. The search is case-sensitive.',
+                    )"
+                >
+                    {{ __('Search') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group class="w-full min-w-0">
@@ -55,7 +62,12 @@
 
         <div class="min-w-0 flex-1 basis-64">
             <flux:label for="translation-list-language-filter">
-                {{ __('Language') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by language')"
+                    :text="__('Select a language to filter the list of translations.')"
+                >
+                    {{ __('Language') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group>
@@ -84,7 +96,12 @@
 
         <div class="min-w-0 flex-1 basis-64">
             <flux:label for="translation-list-file-filter">
-                {{ __('Translation file') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by translation file')"
+                    :text="__('Select a translation file to filter the list of translations.')"
+                >
+                    {{ __('Translation file') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group>

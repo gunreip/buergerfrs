@@ -1,0 +1,849 @@
+{
+    "generated_at": "2026-05-18T01:51:42+00:00",
+    "paths": [
+        "resources/views"
+    ],
+    "files_scanned": 214,
+    "counts": {
+        "total": 159,
+        "flux": 125,
+        "custom": 30,
+        "livewire": 4
+    },
+    "tags": {
+        "flux": [
+            "flux:avatar",
+            "flux:badge",
+            "flux:brand",
+            "flux:button",
+            "flux:button.group",
+            "flux:callout",
+            "flux:callout.heading",
+            "flux:callout.text",
+            "flux:card",
+            "flux:checkbox",
+            "flux:dropdown",
+            "flux:error",
+            "flux:field",
+            "flux:fieldset",
+            "flux:header",
+            "flux:heading",
+            "flux:icon.arrow-up-tray",
+            "flux:icon.badge",
+            "flux:icon.badge-check",
+            "flux:icon.briefcase-business"
+        ],
+        "custom": [
+            "x-app-logo",
+            "x-app-logo-icon",
+            "x-auth-header",
+            "x-auth-session-status",
+            "x-desktop-user-menu",
+            "x-layouts::app",
+            "x-layouts::app.sidebar",
+            "x-layouts::auth",
+            "x-layouts::auth.simple",
+            "x-pages::settings.layout",
+            "x-placeholder-pattern",
+            "x-ui.button.cancel",
+            "x-ui.button.confirm",
+            "x-ui.button.create",
+            "x-ui.button.delete",
+            "x-ui.button.edit",
+            "x-ui.button.reset",
+            "x-ui.button.save",
+            "x-ui.flux-icon",
+            "x-ui.form.tab-status-dot"
+        ],
+        "livewire": [
+            "livewire:pages::settings.delete-user-form",
+            "livewire:pages::settings.delete-user-modal",
+            "livewire:pages::settings.two-factor-setup-modal",
+            "livewire:pages::settings.two-factor.recovery-codes"
+        ]
+    },
+    "all": [
+        "flux:avatar",
+        "flux:badge",
+        "flux:brand",
+        "flux:button",
+        "flux:button.group",
+        "flux:callout",
+        "flux:callout.heading",
+        "flux:callout.text",
+        "flux:card",
+        "flux:checkbox",
+        "flux:dropdown",
+        "flux:error",
+        "flux:field",
+        "flux:fieldset",
+        "flux:header",
+        "flux:heading",
+        "flux:icon.arrow-up-tray",
+        "flux:icon.badge",
+        "flux:icon.badge-check",
+        "flux:icon.briefcase-business"
+    ],
+    "usage": {
+        "flux:avatar": [
+            {
+                "file": "resources/views/components/ui/user-avatar.blade.php",
+                "line": 29
+            },
+            {
+                "file": "resources/views/pages/settings/⚡profile.blade.php",
+                "line": 285
+            }
+        ],
+        "flux:badge": [
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡table-icon-registry.blade.php",
+                "line": 75
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡table-role-badges.blade.php",
+                "line": 114
+            },
+            {
+                "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+                "line": 116
+            },
+            {
+                "file": "resources/views/components/admin/partials/country-reference-list/⚡meta.blade.php",
+                "line": 11
+            },
+            {
+                "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+                "line": 184
+            },
+            {
+                "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+                "line": 123
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+                "line": 91
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+                "line": 156
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                "line": 115
+            },
+            {
+                "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+                "line": 93
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+                "line": 122
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+                "line": 73
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                "line": 43
+            },
+            {
+                "file": "resources/views/components/ui/role-badge.blade.php",
+                "line": 16
+            },
+            {
+                "file": "resources/views/components/ui/tooltip/badge-required.blade.php",
+                "line": 9
+            },
+            {
+                "file": "resources/views/layouts/app/sidebar.blade.php",
+                "line": 70
+            },
+            {
+                "file": "resources/views/pages/settings/⚡profile.blade.php",
+                "line": 337
+            }
+        ],
+        "flux:brand": [
+            {
+                "file": "resources/views/components/app-logo.blade.php",
+                "line": 12
+            }
+        ],
+        "flux:button": [
+            {
+                "file": "resources/views/components/account/partials/preferences/⚡current-user.blade.php",
+                "line": 33
+            },
+            {
+                "file": "resources/views/components/account/⚡preferences.blade.php",
+                "line": 24
+            },
+            {
+                "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+                "line": 185
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                "line": 16
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+                "line": 11
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/⚡generated-password.blade.php",
+                "line": 23
+            },
+            {
+                "file": "resources/views/components/ui/button/cancel.blade.php",
+                "line": 29
+            },
+            {
+                "file": "resources/views/components/ui/button/confirm.blade.php",
+                "line": 29
+            },
+            {
+                "file": "resources/views/components/ui/button/create.blade.php",
+                "line": 29
+            },
+            {
+                "file": "resources/views/components/ui/button/delete.blade.php",
+                "line": 29
+            },
+            {
+                "file": "resources/views/components/ui/button/edit.blade.php",
+                "line": 29
+            },
+            {
+                "file": "resources/views/components/ui/button/remove.blade.php",
+                "line": 29
+            },
+            {
+                "file": "resources/views/components/ui/button/reset.blade.php",
+                "line": 29
+            },
+            {
+                "file": "resources/views/components/ui/button/save.blade.php",
+                "line": 29
+            },
+            {
+                "file": "resources/views/components/ui/table/pagination.blade.php",
+                "line": 38
+            },
+            {
+                "file": "resources/views/pages/auth/confirm-password.blade.php",
+                "line": 23
+            },
+            {
+                "file": "resources/views/pages/auth/forgot-password.blade.php",
+                "line": 31
+            },
+            {
+                "file": "resources/views/pages/auth/login.blade.php",
+                "line": 46
+            },
+            {
+                "file": "resources/views/pages/auth/register.blade.php",
+                "line": 56
+            },
+            {
+                "file": "resources/views/pages/auth/reset-password.blade.php",
+                "line": 46
+            }
+        ],
+        "flux:button.group": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+                "line": 156
+            },
+            {
+                "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
+                "line": 108
+            },
+            {
+                "file": "resources/views/components/ui/button/cancel.blade.php",
+                "line": 28
+            },
+            {
+                "file": "resources/views/components/ui/button/confirm.blade.php",
+                "line": 28
+            },
+            {
+                "file": "resources/views/components/ui/button/create.blade.php",
+                "line": 28
+            },
+            {
+                "file": "resources/views/components/ui/button/delete.blade.php",
+                "line": 28
+            },
+            {
+                "file": "resources/views/components/ui/button/edit.blade.php",
+                "line": 28
+            },
+            {
+                "file": "resources/views/components/ui/button/remove.blade.php",
+                "line": 28
+            },
+            {
+                "file": "resources/views/components/ui/button/reset.blade.php",
+                "line": 28
+            },
+            {
+                "file": "resources/views/components/ui/button/save.blade.php",
+                "line": 28
+            },
+            {
+                "file": "resources/views/components/ui/table/pagination.blade.php",
+                "line": 37
+            }
+        ],
+        "flux:callout": [
+            {
+                "file": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
+                "line": 38
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡meta-health.blade.php",
+                "line": 14
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php",
+                "line": 14
+            },
+            {
+                "file": "resources/views/components/admin/partials/client-list/⚡meta.blade.php",
+                "line": 13
+            },
+            {
+                "file": "resources/views/components/admin/partials/country-reference-list/⚡meta.blade.php",
+                "line": 35
+            },
+            {
+                "file": "resources/views/components/admin/partials/fallback-report-list/⚡meta.blade.php",
+                "line": 13
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+                "line": 27
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡meta-overview.blade.php",
+                "line": 11
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡modal-role-permissions.blade.php",
+                "line": 61
+            },
+            {
+                "file": "resources/views/components/admin/partials/person-list/⚡meta.blade.php",
+                "line": 11
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡meta.blade.php",
+                "line": 13
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+                "line": 11
+            },
+            {
+                "file": "resources/views/components/admin/partials/user-list/⚡meta.blade.php",
+                "line": 10
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/⚡form-login.blade.php",
+                "line": 35
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/⚡generated-password.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/pages/settings/two-factor/⚡recovery-codes.blade.php",
+                "line": 110
+            },
+            {
+                "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
+                "line": 218
+            }
+        ],
+        "flux:callout.heading": [
+            {
+                "file": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
+                "line": 43
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡meta-health.blade.php",
+                "line": 19
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php",
+                "line": 19
+            },
+            {
+                "file": "resources/views/components/admin/partials/client-list/⚡meta.blade.php",
+                "line": 18
+            },
+            {
+                "file": "resources/views/components/admin/partials/country-reference-list/⚡meta.blade.php",
+                "line": 39
+            },
+            {
+                "file": "resources/views/components/admin/partials/fallback-report-list/⚡meta.blade.php",
+                "line": 18
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+                "line": 32
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡meta-overview.blade.php",
+                "line": 16
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡modal-role-permissions.blade.php",
+                "line": 66
+            },
+            {
+                "file": "resources/views/components/admin/partials/person-list/⚡meta.blade.php",
+                "line": 16
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡meta.blade.php",
+                "line": 17
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+                "line": 15
+            },
+            {
+                "file": "resources/views/components/admin/partials/user-list/⚡meta.blade.php",
+                "line": 15
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/⚡form-login.blade.php",
+                "line": 39
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/⚡generated-password.blade.php",
+                "line": 9
+            }
+        ],
+        "flux:callout.text": [
+            {
+                "file": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
+                "line": 47
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡meta-health.blade.php",
+                "line": 23
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php",
+                "line": 23
+            },
+            {
+                "file": "resources/views/components/admin/partials/client-list/⚡meta.blade.php",
+                "line": 22
+            },
+            {
+                "file": "resources/views/components/admin/partials/country-reference-list/⚡meta.blade.php",
+                "line": 43
+            },
+            {
+                "file": "resources/views/components/admin/partials/fallback-report-list/⚡meta.blade.php",
+                "line": 22
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+                "line": 36
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡meta-overview.blade.php",
+                "line": 20
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡modal-role-permissions.blade.php",
+                "line": 70
+            },
+            {
+                "file": "resources/views/components/admin/partials/person-list/⚡meta.blade.php",
+                "line": 20
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡meta.blade.php",
+                "line": 21
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+                "line": 19
+            },
+            {
+                "file": "resources/views/components/admin/partials/user-list/⚡meta.blade.php",
+                "line": 19
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/⚡form-login.blade.php",
+                "line": 43
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/⚡generated-password.blade.php",
+                "line": 13
+            }
+        ],
+        "flux:card": [
+            {
+                "file": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/account/partials/preferences/⚡current-user.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/account/partials/preferences/⚡stored-settings.blade.php",
+                "line": 5
+            },
+            {
+                "file": "resources/views/components/account/⚡preferences.blade.php",
+                "line": 8
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡meta-health.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡table-icon-registry.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡table-role-badges.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/admin/partials/client-list/⚡meta.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/admin/partials/country-reference-list/⚡meta.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/admin/partials/fallback-report-list/⚡meta.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
+                "line": 3
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+                "line": 20
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+                "line": 4
+            }
+        ],
+        "flux:checkbox": [
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
+                "line": 92
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡modal-role-permissions.blade.php",
+                "line": 151
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "line": 69
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 91
+            },
+            {
+                "file": "resources/views/pages/auth/login.blade.php",
+                "line": 43
+            }
+        ],
+        "flux:dropdown": [
+            {
+                "file": "resources/views/components/desktop-user-menu.blade.php",
+                "line": 3
+            },
+            {
+                "file": "resources/views/layouts/app/sidebar/⚡mobile-user-menu.blade.php",
+                "line": 13
+            }
+        ],
+        "flux:error": [
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡address.blade.php",
+                "line": 40
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡avatar.blade.php",
+                "line": 53
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡contact.blade.php",
+                "line": 37
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡documents.blade.php",
+                "line": 40
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php",
+                "line": 37
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡health-insurance.blade.php",
+                "line": 41
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡identification.blade.php",
+                "line": 37
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡international.blade.php",
+                "line": 41
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+                "line": 36
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/⚡form-login.blade.php",
+                "line": 32
+            }
+        ],
+        "flux:field": [
+            {
+                "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+                "line": 108
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+                "line": 138
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
+                "line": 9
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡modal-role-permissions.blade.php",
+                "line": 9
+            },
+            {
+                "file": "resources/views/components/admin/partials/user-list/⚡modal.blade.php",
+                "line": 9
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡address.blade.php",
+                "line": 9
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡avatar.blade.php",
+                "line": 5
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡contact.blade.php",
+                "line": 9
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡documents.blade.php",
+                "line": 9
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php",
+                "line": 9
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡health-insurance.blade.php",
+                "line": 10
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡identification.blade.php",
+                "line": 9
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡international.blade.php",
+                "line": 10
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+                "line": 9
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/⚡form-login.blade.php",
+                "line": 12
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+                "line": 343
+            },
+            {
+                "file": "resources/views/components/ui/headers/page.blade.php",
+                "line": 3
+            }
+        ],
+        "flux:fieldset": [
+            {
+                "file": "resources/views/components/admin/partials/user-list/⚡modal.blade.php",
+                "line": 50
+            }
+        ],
+        "flux:header": [
+            {
+                "file": "resources/views/layouts/app/header.blade.php",
+                "line": 7
+            },
+            {
+                "file": "resources/views/layouts/app/sidebar/⚡mobile-user-menu.blade.php",
+                "line": 4
+            }
+        ],
+        "flux:heading": [
+            {
+                "file": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
+                "line": 5
+            },
+            {
+                "file": "resources/views/components/account/partials/preferences/⚡current-user.blade.php",
+                "line": 14
+            },
+            {
+                "file": "resources/views/components/account/partials/preferences/⚡stored-settings.blade.php",
+                "line": 6
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡meta-health.blade.php",
+                "line": 5
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php",
+                "line": 5
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡table-icon-registry.blade.php",
+                "line": 5
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡table-role-badges.blade.php",
+                "line": 5
+            },
+            {
+                "file": "resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php",
+                "line": 5
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
+                "line": 26
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡modal-role-permissions.blade.php",
+                "line": 139
+            },
+            {
+                "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
+                "line": 5
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "line": 10
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 10
+            },
+            {
+                "file": "resources/views/components/auth-header.blade.php",
+                "line": 7
+            },
+            {
+                "file": "resources/views/components/desktop-user-menu.blade.php",
+                "line": 41
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡form-person.blade.php",
+                "line": 4
+            },
+            {
+                "file": "resources/views/components/ui/headers/card.blade.php",
+                "line": 7
+            },
+            {
+                "file": "resources/views/components/ui/headers/page.blade.php",
+                "line": 9
+            },
+            {
+                "file": "resources/views/layouts/app/sidebar/⚡mobile-user-menu.blade.php",
+                "line": 29
+            },
+            {
+                "file": "resources/views/layouts/auth/split.blade.php",
+                "line": 23
+            }
+        ],
+        "flux:icon.arrow-up-tray": [
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡avatar.blade.php",
+                "line": 38
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡documents.blade.php",
+                "line": 222
+            }
+        ],
+        "flux:icon.badge": [
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+                "line": 55
+            }
+        ],
+        "flux:icon.badge-check": [
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+                "line": 97
+            }
+        ],
+        "flux:icon.briefcase-business": [
+            {
+                "file": "resources/views/components/management/people/create-person/sections/⚡contact.blade.php",
+                "line": 123
+            }
+        ]
+    }
+}

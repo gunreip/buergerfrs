@@ -16,53 +16,95 @@
                         wire:click="sortBy('id')"
                         align="center"
                     >
-                        {{ __('ID') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('ID')"
+                            :text="__('Unique identifier of the country, useful for tracking and reference.')"
+                        >
+                            {{ __('ID') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('iso2')"
                     >
-                        {{ __('ISO') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('ISO')"
+                            :text="__('ISO 2-letter code of the country, useful for identification and reference.')"
+                        >
+                            {{ __('ISO') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('name')"
                     >
-                        {{ __('Name') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Name')"
+                            :text="__('Name of the country, useful for identification and reference.')"
+                        >
+                            {{ __('Name') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('official_name')"
                     >
-                        {{ __('Official name') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Official name')"
+                            :text="__('Official name of the country, useful for identification and reference.')"
+                        >
+                            {{ __('Official name') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('phone_code')"
                     >
-                        {{ __('Phone') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Phone')"
+                            :text="__('Phone code of the country, useful for identification and reference.')"
+                        >
+                            {{ __('Phone') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('region')"
                     >
-                        {{ __('Region') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Region')"
+                            :text="__('Region of the country, useful for identification and reference.')"
+                        >
+                            {{ __('Region') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('capital')"
                     >
-                        {{ __('Capital') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Capital')"
+                            :text="__('Capital of the country, useful for identification and reference.')"
+                        >
+                            {{ __('Capital') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column align="center">
-                        {{ __('Address') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Address')"
+                            :text="__(
+                                'Address format availability of the country, useful for identification and reference.',
+                            )"
+                        >
+                            {{ __('Address') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
@@ -70,7 +112,14 @@
                         sortable
                         wire:click="sortBy('subdivisions_count')"
                     >
-                        {{ __('Subdivisions') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Subdivisions')"
+                            :text="__(
+                                'Number of subdivisions of the country, useful for identification and reference.',
+                            )"
+                        >
+                            {{ __('Subdivisions') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
@@ -78,7 +127,12 @@
                         sortable
                         wire:click="sortBy('is_active')"
                     >
-                        {{ __('Status') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Status')"
+                            :text="__('Active status of the country, useful for identification and reference.')"
+                        >
+                            {{ __('Status') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
 

@@ -9,7 +9,14 @@
     <div class="flex w-full items-end gap-3">
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="user-list-search">
-                {{ __('Search') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by search')"
+                    :text="__(
+                        'Enter a search term to filter the list of users by name or email. The search is case-sensitive.',
+                    )"
+                >
+                    {{ __('Search') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group class="w-full min-w-0">
@@ -32,7 +39,12 @@
 
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="user-list-role-filter">
-                {{ __('Role') }}
+                <x-ui.tooltip.trigger
+                    :title="__('Filter by role')"
+                    :text="__('Select a role to filter the list of users.')"
+                >
+                    {{ __('Role') }}
+                </x-ui.tooltip.trigger>
             </flux:label>
 
             <flux:input.group>

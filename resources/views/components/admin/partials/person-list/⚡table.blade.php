@@ -14,28 +14,50 @@
             <flux:table>
                 <flux:table.columns class="bg-zinc-800 text-zinc-400">
                     <flux:table.column align="center">
-                        {{ __('#') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('#')"
+                            :text="__('Unique identifier of the person, useful for tracking and reference.')"
+                        >
+                            {{ __('#') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('last_name')"
                     >
-                        {{ __('Person') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Person')"
+                            :text="__('Full name of the person, useful for identification and reference.')"
+                        >
+                            {{ __('Person') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('person_number')"
                     >
-                        {{ __('Person number') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Person number')"
+                            :text="__(
+                                'Unique number assigned to the person, useful for identification and reference.',
+                            )"
+                        >
+                            {{ __('Person number') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('date_of_birth')"
                     >
-                        {{ __('Date of birth') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Date of birth')"
+                            :text="__('Date of birth of the person, useful for identification and reference.')"
+                        >
+                            {{ __('Date of birth') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column>
@@ -47,14 +69,26 @@
                         sortable
                         wire:click="sortBy('clients_count')"
                     >
-                        {{ __('Clients') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Clients')"
+                            :text="__(
+                                'Number of clients associated with the person, useful for identification and reference.',
+                            )"
+                        >
+                            {{ __('Clients') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column
                         sortable
                         wire:click="sortBy('created_at')"
                     >
-                        {{ __('Created') }}
+                        <x-ui.tooltip.trigger
+                            :title="__('Created')"
+                            :text="__('Date when the person was created, useful for identification and reference.')"
+                        >
+                            {{ __('Created') }}
+                        </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
 
