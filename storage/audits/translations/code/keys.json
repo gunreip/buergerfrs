@@ -167,7 +167,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 13
+        "line": 21
     },
     {
         "classification": "key",
@@ -177,7 +177,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 29
+        "line": 37
     },
     {
         "classification": "key",
@@ -187,7 +187,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 36
+        "line": 48
     },
     {
         "classification": "key",
@@ -197,7 +197,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 50
+        "line": 63
     },
     {
         "classification": "key",
@@ -207,7 +207,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 64
+        "line": 81
     },
     {
         "classification": "key",
@@ -217,7 +217,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 78
+        "line": 96
     },
     {
         "classification": "key",
@@ -227,7 +227,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 92
+        "line": 114
     },
     {
         "classification": "key",
@@ -237,7 +237,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 106
+        "line": 129
     },
     {
         "classification": "key",
@@ -247,7 +247,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 131
+        "line": 158
     },
     {
         "classification": "key",
@@ -257,7 +257,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 145
+        "line": 173
     },
     {
         "classification": "key",
@@ -267,7 +267,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 149
+        "line": 177
     },
     {
         "classification": "key",
@@ -277,7 +277,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 153
+        "line": 181
     },
     {
         "classification": "key",
@@ -287,7 +287,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 161
+        "line": 193
     },
     {
         "classification": "key",
@@ -297,7 +297,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 175
+        "line": 208
     },
     {
         "classification": "key",
@@ -307,7 +307,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 179
+        "line": 212
     },
     {
         "classification": "key",
@@ -317,7 +317,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-        "line": 183
+        "line": 216
     },
     {
         "classification": "key",
@@ -762,12 +762,22 @@
     {
         "classification": "key",
         "function": "__",
+        "value": "ui.labels.number",
+        "raw": "__('ui.labels.number'",
+        "reason": null,
+        "suggested_key": null,
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 18
+    },
+    {
+        "classification": "key",
+        "function": "__",
         "value": "ui.labels.number_short",
         "raw": "__('ui.labels.number_short'",
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 17
+        "line": 23
     },
     {
         "classification": "key",
@@ -777,7 +787,17 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 25
+        "line": 33
+    },
+    {
+        "classification": "key",
+        "function": "__",
+        "value": "ui.labels.name",
+        "raw": "__('ui.labels.name'",
+        "reason": null,
+        "suggested_key": null,
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 36
     },
     {
         "classification": "key",
@@ -787,7 +807,17 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 33
+        "line": 46
+    },
+    {
+        "classification": "key",
+        "function": "__",
+        "value": "ui.labels.category",
+        "raw": "__('ui.labels.category'",
+        "reason": null,
+        "suggested_key": null,
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 49
     },
     {
         "classification": "key",
@@ -797,7 +827,17 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 42
+        "line": 60
+    },
+    {
+        "classification": "key",
+        "function": "__",
+        "value": "admin.permissions.table.columns.sort",
+        "raw": "__('admin.permissions.table.columns.sort'",
+        "reason": null,
+        "suggested_key": null,
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 63
     },
     {
         "classification": "key",
@@ -807,7 +847,17 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 50
+        "line": 73
+    },
+    {
+        "classification": "key",
+        "function": "__",
+        "value": "ui.labels.guard",
+        "raw": "__('ui.labels.guard'",
+        "reason": null,
+        "suggested_key": null,
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 76
     },
     {
         "classification": "key",
@@ -817,7 +867,17 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 55
+        "line": 83
+    },
+    {
+        "classification": "key",
+        "function": "__",
+        "value": "ui.labels.description",
+        "raw": "__('ui.labels.description'",
+        "reason": null,
+        "suggested_key": null,
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 86
     },
     {
         "classification": "key",
@@ -827,7 +887,17 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 60
+        "line": 93
+    },
+    {
+        "classification": "key",
+        "function": "__",
+        "value": "admin.permissions.table.columns.flags",
+        "raw": "__('admin.permissions.table.columns.flags'",
+        "reason": null,
+        "suggested_key": null,
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 98
     },
     {
         "classification": "key",
@@ -837,7 +907,17 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 69
+        "line": 109
+    },
+    {
+        "classification": "key",
+        "function": "__",
+        "value": "ui.labels.roles",
+        "raw": "__('ui.labels.roles'",
+        "reason": null,
+        "suggested_key": null,
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 114
     },
     {
         "classification": "key",
@@ -847,7 +927,17 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 74
+        "line": 121
+    },
+    {
+        "classification": "key",
+        "function": "__",
+        "value": "admin.permissions.table.columns.assigned_roles",
+        "raw": "__('admin.permissions.table.columns.assigned_roles'",
+        "reason": null,
+        "suggested_key": null,
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 124
     },
     {
         "classification": "key",
@@ -857,7 +947,17 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 79
+        "line": 131
+    },
+    {
+        "classification": "key",
+        "function": "__",
+        "value": "ui.labels.actions",
+        "raw": "__('ui.labels.actions'",
+        "reason": null,
+        "suggested_key": null,
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 136
     },
     {
         "classification": "key",
@@ -867,7 +967,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 102
+        "line": 160
     },
     {
         "classification": "key",
@@ -877,7 +977,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 127
+        "line": 185
     },
     {
         "classification": "key",
@@ -887,7 +987,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 139
+        "line": 197
     },
     {
         "classification": "key",
@@ -897,7 +997,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 146
+        "line": 204
     },
     {
         "classification": "key",
@@ -907,7 +1007,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 171
+        "line": 229
     },
     {
         "classification": "key",
@@ -917,7 +1017,7 @@
         "reason": null,
         "suggested_key": null,
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 188
+        "line": 246
     },
     {
         "classification": "key",

@@ -12,13 +12,15 @@ use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
 
 #[Signature('html:sync-native-tags
     {--raw : Write the fetched WHATWG response body to storage/audits/html/native-html-tags-raw.html}
     {--raw-limit=20000 : Number of response body characters written to the raw preview file}
 ')]
 #[Description('Sync the WHATWG HTML Living Standard native element reference into storage.')]
-
 class SyncNativeHtmlTags extends Command
 {
     /**
@@ -53,20 +55,29 @@ class SyncNativeHtmlTags extends Command
             );
         }
 
-        $allTags = $this->extractElementTags($response->body());
+        $elements = $this->extractElements($response->body());
 
-        if ($allTags === []) {
+        if ($elements === []) {
             $this->error('No native HTML tags could be extracted from the WHATWG HTML index.');
             $this->line('Run with --raw to inspect the fetched source: php artisan html:sync-native-tags --raw');
 
             return self::FAILURE;
         }
 
-        $voidTags = array_values(array_intersect($allTags, $this->voidTags()));
-        $normalTags = array_values(array_diff($allTags, $voidTags));
+        $voidTags = array_values(array_filter(
+            array_keys($elements),
+            fn(string $tag): bool => ($elements[$tag]['kind'] ?? null) === 'void',
+        ));
+
+        $normalTags = array_values(array_filter(
+            array_keys($elements),
+            fn(string $tag): bool => ($elements[$tag]['kind'] ?? null) === 'normal',
+        ));
 
         sort($normalTags);
         sort($voidTags);
+
+        $categories = $this->categoriesFromElements($elements);
 
         $payload = [
             'generated_at' => now()->toIso8601String(),
@@ -79,10 +90,13 @@ class SyncNativeHtmlTags extends Command
                 'normal' => $normalTags,
                 'void' => $voidTags,
             ],
+            'elements' => $elements,
+            'categories' => $categories,
             'counts' => [
                 'normal' => count($normalTags),
                 'void' => count($voidTags),
                 'total' => count($normalTags) + count($voidTags),
+                'categories' => count($categories),
             ],
         ];
 
@@ -92,6 +106,12 @@ class SyncNativeHtmlTags extends Command
                 'normal' => array_slice($normalTags, 0, 30),
                 'void' => $voidTags,
             ],
+            'elements' => collect($elements)
+                ->take(30)
+                ->all(),
+            'categories' => collect($categories)
+                ->map(fn(array $tags): array => array_slice($tags, 0, 30))
+                ->all(),
         ];
 
         File::ensureDirectoryExists(storage_path('audits/html'));
@@ -110,6 +130,7 @@ class SyncNativeHtmlTags extends Command
         $this->line('Normal tags: ' . count($normalTags));
         $this->line('Void tags: ' . count($voidTags));
         $this->line('Total tags: ' . (count($normalTags) + count($voidTags)));
+        $this->line('Categories: ' . count($categories));
         $this->newLine();
         $this->line('Reference written: storage/audits/html/native-html-tags.json');
         $this->line('Preview written: storage/audits/html/native-html-tags-preview.json');
@@ -149,23 +170,95 @@ class SyncNativeHtmlTags extends Command
     }
 
     /**
+     * @return array<string, array{kind: string, categories: array<int, string>}>
+     */
+    private function extractElements(string $html): array
+    {
+        $document = new DOMDocument();
+
+        libxml_use_internal_errors(true);
+        $loaded = $document->loadHTML($html, LIBXML_NOWARNING | LIBXML_NOERROR);
+        libxml_clear_errors();
+
+        if (! $loaded) {
+            return [];
+        }
+
+        $xpath = new DOMXPath($document);
+        $tables = $xpath->query('//table[caption[normalize-space() = "List of elements"]]');
+
+        if ($tables === false || $tables->length < 1) {
+            return [];
+        }
+
+        $table = $tables->item(0);
+
+        if (! $table instanceof DOMElement) {
+            return [];
+        }
+
+        $rows = $xpath->query('.//tr', $table);
+
+        if ($rows === false) {
+            return [];
+        }
+
+        $elements = [];
+
+        foreach ($rows as $row) {
+            if (! $row instanceof DOMElement) {
+                continue;
+            }
+
+            $cells = $xpath->query('./th|./td', $row);
+
+            if ($cells === false || $cells->length < 3) {
+                continue;
+            }
+
+            $elementCell = $cells->item(0);
+            $categoriesCell = $cells->item(2);
+
+            if (! $elementCell instanceof DOMElement || ! $categoriesCell instanceof DOMElement) {
+                continue;
+            }
+
+            $tags = $this->extractTagsFromElementDomCell($xpath, $elementCell);
+
+            if ($tags === []) {
+                continue;
+            }
+
+            $categories = $this->extractCategoriesFromText($categoriesCell->textContent);
+
+            foreach ($tags as $tag) {
+                $elements[$tag] = [
+                    'kind' => in_array($tag, $this->voidTags(), true) ? 'void' : 'normal',
+                    'categories' => $categories,
+                ];
+            }
+        }
+
+        ksort($elements, SORT_NATURAL);
+
+        return $elements;
+    }
+
+    /**
      * @return array<int, string>
      */
-    private function extractElementTags(string $html): array
+    private function extractTagsFromElementDomCell(DOMXPath $xpath, DOMElement $cell): array
     {
-        $section = $this->extractElementsTable($html);
+        $codeNodes = $xpath->query('.//code', $cell);
 
-        preg_match_all(
-            '/<code\b[^>]*\bid=(?:"|\')?[^"\'\s>]*:the-[^"\'\s>]*-element[^"\'\s>]*(?:"|\')?[^>]*>\s*<a\b[^>]*>(?P<label>.*?)<\/a>\s*<\/code>/isu',
-            $section,
-            $matches,
-            PREG_SET_ORDER,
-        );
+        if ($codeNodes === false) {
+            return [];
+        }
 
         $tags = [];
 
-        foreach ($matches as $match) {
-            $label = html_entity_decode(strip_tags($match['label']), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        foreach ($codeNodes as $codeNode) {
+            $label = trim($codeNode->textContent);
 
             foreach ($this->extractTagNamesFromLabel($label) as $tag) {
                 $tags[] = $tag;
@@ -179,27 +272,54 @@ class SyncNativeHtmlTags extends Command
             ->all();
     }
 
-    private function extractElementsTable(string $html): string
+    /**
+     * @return array<int, string>
+     */
+    private function extractCategoriesFromText(string $text): array
     {
-        if (preg_match('/<caption>\s*List of elements\s*<\/caption>/isu', $html, $captionMatch, PREG_OFFSET_CAPTURE) !== 1) {
-            return $html;
+        $text = preg_replace('/\s+/u', ' ', trim($text)) ?? '';
+
+        if ($text === '') {
+            return [];
         }
 
-        $captionOffset = $captionMatch[0][1];
+        $text = strtolower($text);
 
-        $tableStart = strripos(substr($html, 0, $captionOffset), '<table');
+        $categories = preg_split('/\s*;\s*|\s*,\s*/u', $text) ?: [];
 
-        if ($tableStart === false) {
-            return $html;
+        return collect($categories)
+            ->map(fn(string $category): string => trim($category))
+            ->filter(fn(string $category): bool => $category !== '')
+            ->map(fn(string $category): string => preg_replace('/\s+/u', ' ', $category) ?? $category)
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  array<string, array{kind: string, categories: array<int, string>}>  $elements
+     * @return array<string, array<int, string>>
+     */
+    private function categoriesFromElements(array $elements): array
+    {
+        $categories = [];
+
+        foreach ($elements as $tag => $element) {
+            foreach ($element['categories'] as $category) {
+                $categories[$category][] = $tag;
+            }
         }
 
-        $tableEnd = stripos($html, '</table>', $captionOffset);
-
-        if ($tableEnd === false) {
-            return substr($html, $tableStart);
+        foreach ($categories as $category => $tags) {
+            $tags = array_values(array_unique($tags));
+            sort($tags, SORT_NATURAL);
+            $categories[$category] = $tags;
         }
 
-        return substr($html, $tableStart, ($tableEnd + strlen('</table>')) - $tableStart);
+        ksort($categories, SORT_NATURAL);
+
+        return $categories;
     }
 
     /**
@@ -209,8 +329,12 @@ class SyncNativeHtmlTags extends Command
     {
         $tags = [];
 
-        foreach (preg_split('/\s*,\s*/', strtolower(trim($label))) ?: [] as $tag) {
+        $label = html_entity_decode($label, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $label = strip_tags($label);
+
+        foreach (preg_split('/\s*,\s*/u', strtolower(trim($label))) ?: [] as $tag) {
             $tag = trim($tag);
+            $tag = trim($tag, '<>');
 
             if ($this->isNativeHtmlTagName($tag)) {
                 $tags[] = $tag;

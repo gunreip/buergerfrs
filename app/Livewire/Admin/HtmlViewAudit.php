@@ -5,6 +5,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\HtmlViewAuditFinding;
+use Carbon\CarbonImmutable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\File;
@@ -30,6 +31,10 @@ class HtmlViewAudit extends Component
     public string $sortField = 'last_seen_at';
 
     public string $sortDirection = 'desc';
+
+    public bool $showFindingDetailsModal = false;
+
+    public ?int $selectedFindingId = null;
 
     /**
      * Reset pagination when a filter changes.
@@ -80,12 +85,26 @@ class HtmlViewAudit extends Component
 
         if ($this->sortField === $field) {
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+            $this->resetPage();
 
             return;
         }
 
         $this->sortField = $field;
         $this->sortDirection = $field === 'id' ? 'asc' : 'desc';
+        $this->resetPage();
+    }
+
+    public function showFindingDetails(int $findingId): void
+    {
+        $this->selectedFindingId = $findingId;
+        $this->showFindingDetailsModal = true;
+    }
+
+    public function closeFindingDetailsModal(): void
+    {
+        $this->showFindingDetailsModal = false;
+        $this->selectedFindingId = null;
     }
 
     public function render(): View
@@ -96,12 +115,15 @@ class HtmlViewAudit extends Component
         return view('components.admin.⚡html-view-audit', [
             'audit' => $audit,
             'nativeReferenceFile' => $this->nativeReferenceFile(),
+            'usageAudit' => $this->usageAudit(),
             'historyCounts' => $this->historyCounts(),
+            'statistics' => $this->statistics(),
             'problems' => $problems,
             'filteredProblemCount' => $problems->total(),
             'hasActiveFilters' => $this->hasActiveFilters(),
             'tableLegend' => $this->tableLegend(),
             'legendTexts' => $this->legendTexts(),
+            'selectedFinding' => $this->selectedFinding(),
         ]);
     }
 
@@ -222,6 +244,177 @@ class HtmlViewAudit extends Component
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    private function usageAudit(): array
+    {
+        $path = storage_path('audits/html/view-html-used.json');
+        $relativePath = 'storage/audits/html/view-html-used.json';
+
+        if (! File::exists($path)) {
+            return [
+                'exists' => false,
+                'path' => $relativePath,
+                'generated_at' => null,
+                'generated_at_formatted' => null,
+                'scan' => [
+                    'files_scanned' => 0,
+                    'excluded_files' => [],
+                ],
+                'components' => [
+                    'source_paths' => [],
+                    'skipped_paths' => [],
+                ],
+                'native' => [
+                    'counts' => [
+                        'available' => 0,
+                        'used' => 0,
+                        'unused' => 0,
+                        'unknown' => 0,
+                    ],
+                    'top_used' => [],
+                    'unused' => [],
+                    'unknown' => [],
+                ],
+                'flux' => [
+                    'counts' => [
+                        'available' => 0,
+                        'used' => 0,
+                        'unused' => 0,
+                        'used_unknown' => 0,
+                    ],
+                    'top_used' => [],
+                    'unused' => [],
+                    'used_unknown' => [],
+                ],
+                'custom' => [
+                    'counts' => [
+                        'available' => 0,
+                        'used' => 0,
+                        'unused' => 0,
+                        'used_unknown' => 0,
+                    ],
+                    'top_used' => [],
+                    'unused' => [],
+                    'used_unknown' => [],
+                ],
+                'includes' => [
+                    'counts' => [
+                        'used' => 0,
+                    ],
+                    'used' => [],
+                ],
+                'livewire' => [
+                    'counts' => [
+                        'used' => 0,
+                    ],
+                    'used' => [],
+                ],
+                'note' => 'Usage audit file missing. Run php artisan html:check-view-html-used.',
+            ];
+        }
+
+        $payload = json_decode(File::get($path), true);
+
+        if (! is_array($payload)) {
+            return [
+                'exists' => false,
+                'path' => $relativePath,
+                'generated_at' => null,
+                'scan' => [
+                    'files_scanned' => 0,
+                    'excluded_files' => [],
+                ],
+                'components' => [
+                    'source_paths' => [],
+                    'skipped_paths' => [],
+                ],
+                'native' => [
+                    'counts' => [
+                        'available' => 0,
+                        'used' => 0,
+                        'unused' => 0,
+                        'unknown' => 0,
+                    ],
+                    'top_used' => [],
+                    'unused' => [],
+                    'unknown' => [],
+                ],
+                'flux' => [
+                    'counts' => [
+                        'available' => 0,
+                        'used' => 0,
+                        'unused' => 0,
+                        'used_unknown' => 0,
+                    ],
+                    'top_used' => [],
+                    'unused' => [],
+                    'used_unknown' => [],
+                ],
+                'custom' => [
+                    'counts' => [
+                        'available' => 0,
+                        'used' => 0,
+                        'unused' => 0,
+                        'used_unknown' => 0,
+                    ],
+                    'top_used' => [],
+                    'unused' => [],
+                    'used_unknown' => [],
+                ],
+                'includes' => [
+                    'counts' => [
+                        'used' => 0,
+                    ],
+                    'used' => [],
+                ],
+                'livewire' => [
+                    'counts' => [
+                        'used' => 0,
+                    ],
+                    'used' => [],
+                ],
+                'note' => 'Usage audit file is not valid JSON. Run php artisan html:check-view-html-used again.',
+            ];
+        }
+
+        $generatedAt = is_string($payload['generated_at'] ?? null)
+            ? $payload['generated_at']
+            : null;
+
+        return [
+            'exists' => true,
+            'path' => $relativePath,
+            'generated_at' => $generatedAt,
+            'generated_at_formatted' => $this->formatAuditDateTime($generatedAt),
+            'scan' => is_array($payload['scan'] ?? null) ? $payload['scan'] : [],
+            'components' => is_array($payload['components'] ?? null) ? $payload['components'] : [],
+            'native' => is_array($payload['native'] ?? null) ? $payload['native'] : [],
+            'flux' => is_array($payload['flux'] ?? null) ? $payload['flux'] : [],
+            'custom' => is_array($payload['custom'] ?? null) ? $payload['custom'] : [],
+            'includes' => is_array($payload['includes'] ?? null) ? $payload['includes'] : [],
+            'livewire' => is_array($payload['livewire'] ?? null) ? $payload['livewire'] : [],
+            'note' => null,
+        ];
+    }
+
+    private function formatAuditDateTime(?string $value): ?string
+    {
+        if ($value === null || trim($value) === '') {
+            return null;
+        }
+
+        try {
+            return CarbonImmutable::parse($value)
+                ->timezone(config('app.timezone'))
+                ->locale(app()->getLocale())
+                ->translatedFormat('d. F Y, H:i:s');
+        } catch (\Throwable) {
+            return $value;
+        }
+    }
+
+    /**
      * @return array<int, array<string, mixed>>
      */
     private function filteredFindings(): LengthAwarePaginator
@@ -282,6 +475,17 @@ class HtmlViewAudit extends Component
             });
     }
 
+    private function selectedFinding(): ?HtmlViewAuditFinding
+    {
+        if ($this->selectedFindingId === null) {
+            return null;
+        }
+
+        return HtmlViewAuditFinding::query()
+            ->with('previousFinding:id,status,section,type,file,tag,opened_line,closing_line')
+            ->find($this->selectedFindingId);
+    }
+
     /**
      * Normalize selectable pagination size.
      */
@@ -309,6 +513,87 @@ class HtmlViewAudit extends Component
             'resolved' => (int) ($counts['resolved'] ?? 0),
             'ignored' => (int) ($counts['ignored'] ?? 0),
             'total' => array_sum(array_map('intval', $counts)),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function statistics(): array
+    {
+        $baseQuery = $this->findingsQuery();
+
+        $statusCounts = (clone $baseQuery)
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->all();
+
+        $sectionCounts = (clone $baseQuery)
+            ->selectRaw('section, count(*) as total')
+            ->groupBy('section')
+            ->pluck('total', 'section')
+            ->all();
+
+        $typeCounts = (clone $baseQuery)
+            ->selectRaw('type, count(*) as total')
+            ->groupBy('type')
+            ->pluck('total', 'type')
+            ->all();
+
+        $topTags = (clone $baseQuery)
+            ->whereNotNull('tag')
+            ->where('tag', '!=', '')
+            ->selectRaw('tag, count(*) as total')
+            ->groupBy('tag')
+            ->orderByDesc('total')
+            ->orderBy('tag')
+            ->limit(8)
+            ->get()
+            ->map(fn(HtmlViewAuditFinding $finding): array => [
+                'tag' => (string) $finding->tag,
+                'total' => (int) $finding->total,
+            ])
+            ->all();
+
+        $topFiles = (clone $baseQuery)
+            ->whereNotNull('file')
+            ->where('file', '!=', '')
+            ->selectRaw('file, count(*) as total')
+            ->groupBy('file')
+            ->orderByDesc('total')
+            ->orderBy('file')
+            ->limit(8)
+            ->get()
+            ->map(fn(HtmlViewAuditFinding $finding): array => [
+                'file' => (string) $finding->file,
+                'total' => (int) $finding->total,
+            ])
+            ->all();
+
+        return [
+            'total' => (clone $baseQuery)->count(),
+
+            'by_status' => [
+                'open' => (int) ($statusCounts['open'] ?? 0),
+                'changed' => (int) ($statusCounts['changed'] ?? 0),
+                'resolved' => (int) ($statusCounts['resolved'] ?? 0),
+                'ignored' => (int) ($statusCounts['ignored'] ?? 0),
+            ],
+
+            'by_section' => [
+                'native_html' => (int) ($sectionCounts['native_html'] ?? 0),
+                'custom_components' => (int) ($sectionCounts['custom_components'] ?? 0),
+            ],
+
+            'by_type' => [
+                'unclosed' => (int) ($typeCounts['unclosed'] ?? 0),
+                'mismatched' => (int) ($typeCounts['mismatched'] ?? 0),
+                'unexpected_closing' => (int) ($typeCounts['unexpected_closing'] ?? 0),
+            ],
+
+            'top_tags' => $topTags,
+            'top_files' => $topFiles,
         ];
     }
 

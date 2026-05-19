@@ -1,13 +1,13 @@
 {
-    "generated_at": "2026-05-18T01:51:42+00:00",
+    "generated_at": "2026-05-19T07:52:45+00:00",
     "paths": [
         "resources/views"
     ],
-    "files_scanned": 214,
+    "files_scanned": 224,
     "counts": {
-        "total": 159,
+        "total": 163,
         "flux": 125,
-        "custom": 30,
+        "custom": 34,
         "livewire": 4
     },
     "tags": {
@@ -52,8 +52,8 @@
             "x-ui.button.edit",
             "x-ui.button.reset",
             "x-ui.button.save",
-            "x-ui.flux-icon",
-            "x-ui.form.tab-status-dot"
+            "x-ui.button.show-hide",
+            "x-ui.flux-icon"
         ],
         "livewire": [
             "livewire:pages::settings.delete-user-form",
@@ -106,7 +106,7 @@
             },
             {
                 "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
-                "line": 116
+                "line": 153
             },
             {
                 "file": "resources/views/components/admin/partials/country-reference-list/⚡meta.blade.php",
@@ -114,31 +114,43 @@
             },
             {
                 "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-                "line": 184
+                "line": 238
             },
             {
                 "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-                "line": 123
+                "line": 174
             },
             {
                 "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
                 "line": 91
             },
             {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+                "line": 43
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+                "line": 71
+            },
+            {
                 "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-                "line": 156
+                "line": 210
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+                "line": 143
             },
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 115
+                "line": 173
             },
             {
                 "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
-                "line": 93
+                "line": 127
             },
             {
                 "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-                "line": 122
+                "line": 171
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
@@ -146,23 +158,23 @@
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-                "line": 43
+                "line": 76
             },
             {
                 "file": "resources/views/components/ui/role-badge.blade.php",
                 "line": 16
             },
             {
+                "file": "resources/views/components/ui/text/stat-value-code.blade.php",
+                "line": 23
+            },
+            {
+                "file": "resources/views/components/ui/text/stat-value-num.blade.php",
+                "line": 25
+            },
+            {
                 "file": "resources/views/components/ui/tooltip/badge-required.blade.php",
                 "line": 9
-            },
-            {
-                "file": "resources/views/layouts/app/sidebar.blade.php",
-                "line": 70
-            },
-            {
-                "file": "resources/views/pages/settings/⚡profile.blade.php",
-                "line": 337
             }
         ],
         "flux:brand": [
@@ -182,7 +194,7 @@
             },
             {
                 "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-                "line": 185
+                "line": 236
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
@@ -229,6 +241,10 @@
                 "line": 29
             },
             {
+                "file": "resources/views/components/ui/button/show-hide.blade.php",
+                "line": 3
+            },
+            {
                 "file": "resources/views/components/ui/table/pagination.blade.php",
                 "line": 38
             },
@@ -247,20 +263,16 @@
             {
                 "file": "resources/views/pages/auth/register.blade.php",
                 "line": 56
-            },
-            {
-                "file": "resources/views/pages/auth/reset-password.blade.php",
-                "line": 46
             }
         ],
         "flux:button.group": [
             {
                 "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-                "line": 156
+                "line": 205
             },
             {
                 "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-                "line": 108
+                "line": 135
             },
             {
                 "file": "resources/views/components/ui/button/cancel.blade.php",
@@ -327,6 +339,14 @@
             {
                 "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
                 "line": 27
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+                "line": 46
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+                "line": 106
             },
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡meta-overview.blade.php",
@@ -399,6 +419,14 @@
                 "line": 32
             },
             {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+                "line": 51
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+                "line": 111
+            },
+            {
                 "file": "resources/views/components/admin/partials/permission-list/⚡meta-overview.blade.php",
                 "line": 16
             },
@@ -459,6 +487,14 @@
             {
                 "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
                 "line": 36
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+                "line": 55
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+                "line": 115
             },
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡meta-overview.blade.php",
@@ -571,8 +607,8 @@
                 "line": 20
             },
             {
-                "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-                "line": 4
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+                "line": 26
             }
         ],
         "flux:checkbox": [
@@ -652,11 +688,15 @@
         "flux:field": [
             {
                 "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-                "line": 108
+                "line": 162
             },
             {
                 "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
                 "line": 138
+            },
+            {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+                "line": 9
             },
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
@@ -769,6 +809,10 @@
                 "line": 5
             },
             {
+                "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+                "line": 32
+            },
+            {
                 "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
                 "line": 26
             },
@@ -811,10 +855,6 @@
             {
                 "file": "resources/views/layouts/app/sidebar/⚡mobile-user-menu.blade.php",
                 "line": 29
-            },
-            {
-                "file": "resources/views/layouts/auth/split.blade.php",
-                "line": 23
             }
         ],
         "flux:icon.arrow-up-tray": [
@@ -836,7 +876,7 @@
         "flux:icon.badge-check": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 97
+                "line": 120
             }
         ],
         "flux:icon.briefcase-business": [

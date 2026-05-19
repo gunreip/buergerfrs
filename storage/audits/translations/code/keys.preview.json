@@ -1,7 +1,7 @@
 {
     "preview": true,
     "preview_limit": 20,
-    "total": 130,
+    "total": 140,
     "items": [
         {
             "classification": "key",
@@ -171,7 +171,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-            "line": 13
+            "line": 21
         },
         {
             "classification": "key",
@@ -181,7 +181,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-            "line": 29
+            "line": 37
         },
         {
             "classification": "key",
@@ -191,7 +191,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-            "line": 36
+            "line": 48
         },
         {
             "classification": "key",
@@ -201,7 +201,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-            "line": 50
+            "line": 63
         }
     ]
 }

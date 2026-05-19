@@ -57,7 +57,7 @@
             "usages": [
                 {
                     "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 131,
+                    "line": 158,
                     "function": "__",
                     "raw": "__('admin.permissions.filters.assignment.label'"
                 }
@@ -77,7 +77,7 @@
             "usages": [
                 {
                     "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 78,
+                    "line": 96,
                     "function": "__",
                     "raw": "__('admin.permissions.filters.categories.all'"
                 }
@@ -117,7 +117,7 @@
             "usages": [
                 {
                     "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 50,
+                    "line": 63,
                     "function": "__",
                     "raw": "__('admin.permissions.filters.guards.all'"
                 }
@@ -137,7 +137,7 @@
             "usages": [
                 {
                     "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 106,
+                    "line": 129,
                     "function": "__",
                     "raw": "__('admin.permissions.filters.roles.all'"
                 }
@@ -157,7 +157,7 @@
             "usages": [
                 {
                     "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 29,
+                    "line": 37,
                     "function": "__",
                     "raw": "__('admin.permissions.filters.search.placeholder'"
                 }
@@ -177,7 +177,7 @@
             "usages": [
                 {
                     "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 161,
+                    "line": 193,
                     "function": "__",
                     "raw": "__('admin.permissions.filters.system.label'"
                 }

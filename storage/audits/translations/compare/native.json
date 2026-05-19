@@ -1292,12 +1292,32 @@
     {
         "classification": "native",
         "function": "__",
+        "value": "Search clients",
+        "raw": "__('Search clients'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.filter.search_clients",
+        "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
+        "line": 16
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Enter a search term to filter clients by name, legal name, client number or description. The search is case-sensitive.",
+        "raw": "__(\n                        'Enter a search term to filter clients by name, legal name, client number or description. The search is case-sensitive.'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.filter.enter_a_search_term_to_filter_clients_by_name_legal_name_client_number_or_descri",
+        "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
+        "line": 17
+    },
+    {
+        "classification": "native",
+        "function": "__",
         "value": "Search",
         "raw": "__('Search'",
         "reason": null,
         "suggested_key": "admin.partials.client_list.filter.search",
         "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
-        "line": 15
+        "line": 21
     },
     {
         "classification": "native",
@@ -1307,7 +1327,27 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.filter.search_by_name_legal_name_client_number_or_description",
         "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
-        "line": 31
+        "line": 38
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by type",
+        "raw": "__('Filter by type'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.filter.filter_by_type",
+        "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
+        "line": 46
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a type to filter the client list.",
+        "raw": "__('Select a type to filter the client list.'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.filter.select_a_type_to_filter_the_client_list",
+        "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
+        "line": 47
     },
     {
         "classification": "native",
@@ -1317,7 +1357,7 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.filter.type",
         "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
-        "line": 38
+        "line": 49
     },
     {
         "classification": "native",
@@ -1327,7 +1367,27 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.filter.all_types",
         "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
-        "line": 52
+        "line": 64
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by status",
+        "raw": "__('Filter by status'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.filter.filter_by_status",
+        "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
+        "line": 79
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a status to filter the client list.",
+        "raw": "__('Select a status to filter the client list.'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.filter.select_a_status_to_filter_the_client_list",
+        "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
+        "line": 80
     },
     {
         "classification": "native",
@@ -1337,7 +1397,7 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.filter.status",
         "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
-        "line": 66
+        "line": 82
     },
     {
         "classification": "native",
@@ -1347,7 +1407,27 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.filter.all_statuses",
         "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
-        "line": 80
+        "line": 97
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by people",
+        "raw": "__('Filter by people'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.filter.filter_by_people",
+        "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
+        "line": 112
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a people filter to filter the client list.",
+        "raw": "__('Select a people filter to filter the client list.'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.filter.select_a_people_filter_to_filter_the_client_list",
+        "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
+        "line": 113
     },
     {
         "classification": "native",
@@ -1357,7 +1437,7 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.filter.people",
         "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
-        "line": 94
+        "line": 115
     },
     {
         "classification": "native",
@@ -1367,7 +1447,7 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.filter.all",
         "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
-        "line": 108
+        "line": 130
     },
     {
         "classification": "native",
@@ -1377,7 +1457,7 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.filter.with_people",
         "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
-        "line": 112
+        "line": 134
     },
     {
         "classification": "native",
@@ -1387,7 +1467,7 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.filter.without_people",
         "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
-        "line": 116
+        "line": 138
     },
     {
         "classification": "native",
@@ -1532,12 +1612,32 @@
     {
         "classification": "native",
         "function": "__",
+        "value": "ID",
+        "raw": "__('ID'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.id",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 18
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unique identifier of the client, useful for tracking and reference.",
+        "raw": "__('Unique identifier of the client, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.unique_identifier_of_the_client_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 19
+    },
+    {
+        "classification": "native",
+        "function": "__",
         "value": "#",
         "raw": "__('#'",
         "reason": null,
         "suggested_key": "admin.partials.client_list.table.text",
         "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
-        "line": 17
+        "line": 21
     },
     {
         "classification": "native",
@@ -1547,7 +1647,27 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.table.client",
         "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
-        "line": 24
+        "line": 30
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Name of the client, useful for identification.",
+        "raw": "__('Name of the client, useful for identification.'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.name_of_the_client_useful_for_identification",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 31
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Client",
+        "raw": "__('Client'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.client",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 33
     },
     {
         "classification": "native",
@@ -1557,7 +1677,27 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.table.client_number",
         "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
-        "line": 31
+        "line": 42
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unique number assigned to the client, useful for tracking and reference.",
+        "raw": "__('Unique number assigned to the client, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.unique_number_assigned_to_the_client_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 43
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Client number",
+        "raw": "__('Client number'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.client_number",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 45
     },
     {
         "classification": "native",
@@ -1567,7 +1707,27 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.table.type",
         "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
-        "line": 38
+        "line": 54
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Type of the client, useful for categorization and filtering.",
+        "raw": "__('Type of the client, useful for categorization and filtering.'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.type_of_the_client_useful_for_categorization_and_filtering",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 55
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Type",
+        "raw": "__('Type'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.type",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 57
     },
     {
         "classification": "native",
@@ -1577,7 +1737,27 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.table.status",
         "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
-        "line": 45
+        "line": 66
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Current status of the client, indicating their activity and engagement.",
+        "raw": "__('Current status of the client, indicating their activity and engagement.'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.current_status_of_the_client_indicating_their_activity_and_engagement",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 67
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Status",
+        "raw": "__('Status'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.status",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 69
     },
     {
         "classification": "native",
@@ -1587,7 +1767,27 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.table.people",
         "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
-        "line": 53
+        "line": 79
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Number of people associated with the client, useful for understanding client size and engagement.",
+        "raw": "__(\n                                'Number of people associated with the client, useful for understanding client size and engagement.'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.number_of_people_associated_with_the_client_useful_for_understanding_client_size",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 80
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "People",
+        "raw": "__('People'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.people",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 84
     },
     {
         "classification": "native",
@@ -1597,7 +1797,27 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.table.created",
         "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
-        "line": 60
+        "line": 93
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Date when the client was created, useful for tracking client history.",
+        "raw": "__('Date when the client was created, useful for tracking client history.'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.date_when_the_client_was_created_useful_for_tracking_client_history",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 94
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Created",
+        "raw": "__('Created'",
+        "reason": null,
+        "suggested_key": "admin.partials.client_list.table.created",
+        "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+        "line": 96
     },
     {
         "classification": "native",
@@ -1607,7 +1827,7 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.table.missing",
         "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
-        "line": 120
+        "line": 157
     },
     {
         "classification": "native",
@@ -1617,7 +1837,7 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.table.no_clients_found",
         "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
-        "line": 162
+        "line": 199
     },
     {
         "classification": "native",
@@ -1627,7 +1847,7 @@
         "reason": null,
         "suggested_key": "admin.partials.client_list.table.pagination",
         "file": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
-        "line": 174
+        "line": 211
     },
     {
         "classification": "native",
@@ -1657,7 +1877,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.search",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 15
+        "line": 16
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Enter a search term to filter countries by ISO code, name, phone code, capital city or region. The search is case-sensitive.",
+        "raw": "__(\n                        'Enter a search term to filter countries by ISO code, name, phone code, capital city or region. The search is case-sensitive.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.filter.enter_a_search_term_to_filter_countries_by_iso_code_name_phone_code_capital_city",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
+        "line": 17
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Search",
+        "raw": "__('Search'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.filter.search",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
+        "line": 21
     },
     {
         "classification": "native",
@@ -1667,7 +1907,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.iso_name_phone_capital_region",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 30
+        "line": 37
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by region",
+        "raw": "__('Filter by region'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.filter.filter_by_region",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
+        "line": 45
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a region to filter the list of reference countries.",
+        "raw": "__('Select a region to filter the list of reference countries.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.filter.select_a_region_to_filter_the_list_of_reference_countries",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
+        "line": 46
     },
     {
         "classification": "native",
@@ -1677,7 +1937,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.region",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 37
+        "line": 48
     },
     {
         "classification": "native",
@@ -1687,7 +1947,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.all",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 46
+        "line": 58
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by status",
+        "raw": "__('Filter by status'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.filter.filter_by_status",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
+        "line": 72
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a status to filter the list of reference countries.",
+        "raw": "__('Select a status to filter the list of reference countries.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.filter.select_a_status_to_filter_the_list_of_reference_countries",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
+        "line": 73
     },
     {
         "classification": "native",
@@ -1697,7 +1977,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.status",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 59
+        "line": 75
     },
     {
         "classification": "native",
@@ -1707,7 +1987,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.all",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 68
+        "line": 85
     },
     {
         "classification": "native",
@@ -1717,7 +1997,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.active",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 72
+        "line": 89
     },
     {
         "classification": "native",
@@ -1727,7 +2007,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.inactive",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 76
+        "line": 93
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by membership",
+        "raw": "__('Filter by membership'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.filter.filter_by_membership",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
+        "line": 101
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a membership to filter the list of reference countries.",
+        "raw": "__('Select a membership to filter the list of reference countries.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.filter.select_a_membership_to_filter_the_list_of_reference_countries",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
+        "line": 102
     },
     {
         "classification": "native",
@@ -1737,7 +2037,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.membership",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 83
+        "line": 104
     },
     {
         "classification": "native",
@@ -1747,7 +2047,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.all",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 92
+        "line": 114
     },
     {
         "classification": "native",
@@ -1757,7 +2057,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.eu",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 96
+        "line": 118
     },
     {
         "classification": "native",
@@ -1767,7 +2067,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.eea",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 100
+        "line": 122
     },
     {
         "classification": "native",
@@ -1777,7 +2077,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.schengen",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 104
+        "line": 126
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by data quality",
+        "raw": "__('Filter by data quality'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.filter.filter_by_data_quality",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
+        "line": 134
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a data quality filter to filter the list of reference countries.",
+        "raw": "__('Select a data quality filter to filter the list of reference countries.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.filter.select_a_data_quality_filter_to_filter_the_list_of_reference_countries",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
+        "line": 135
     },
     {
         "classification": "native",
@@ -1787,7 +2107,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.data_quality",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 111
+        "line": 137
     },
     {
         "classification": "native",
@@ -1797,7 +2117,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.all",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 120
+        "line": 147
     },
     {
         "classification": "native",
@@ -1807,7 +2127,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.missing_capital",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 124
+        "line": 151
     },
     {
         "classification": "native",
@@ -1817,7 +2137,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.missing_phone_code",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 128
+        "line": 155
     },
     {
         "classification": "native",
@@ -1827,7 +2147,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.missing_address_format",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 132
+        "line": 159
     },
     {
         "classification": "native",
@@ -1837,7 +2157,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.with_subdivisions",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 136
+        "line": 163
     },
     {
         "classification": "native",
@@ -1847,7 +2167,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.filter.without_subdivisions",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php",
-        "line": 140
+        "line": 167
     },
     {
         "classification": "native",
@@ -1987,7 +2307,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.id",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 19
+        "line": 20
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unique identifier of the country, useful for tracking and reference.",
+        "raw": "__('Unique identifier of the country, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.unique_identifier_of_the_country_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 21
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "ID",
+        "raw": "__('ID'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.id",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 23
     },
     {
         "classification": "native",
@@ -1997,7 +2337,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.iso",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 26
+        "line": 32
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "ISO 2-letter code of the country, useful for identification and reference.",
+        "raw": "__('ISO 2-letter code of the country, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.iso_2_letter_code_of_the_country_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 33
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "ISO",
+        "raw": "__('ISO'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.iso",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 35
     },
     {
         "classification": "native",
@@ -2007,7 +2367,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.name",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 33
+        "line": 44
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Name of the country, useful for identification and reference.",
+        "raw": "__('Name of the country, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.name_of_the_country_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 45
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Name",
+        "raw": "__('Name'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.name",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 47
     },
     {
         "classification": "native",
@@ -2017,7 +2397,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.official_name",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 40
+        "line": 56
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Official name of the country, useful for identification and reference.",
+        "raw": "__('Official name of the country, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.official_name_of_the_country_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 57
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Official name",
+        "raw": "__('Official name'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.official_name",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 59
     },
     {
         "classification": "native",
@@ -2027,7 +2427,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.phone",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 47
+        "line": 68
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Phone code of the country, useful for identification and reference.",
+        "raw": "__('Phone code of the country, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.phone_code_of_the_country_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 69
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Phone",
+        "raw": "__('Phone'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.phone",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 71
     },
     {
         "classification": "native",
@@ -2037,7 +2457,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.region",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 54
+        "line": 80
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Region of the country, useful for identification and reference.",
+        "raw": "__('Region of the country, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.region_of_the_country_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 81
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Region",
+        "raw": "__('Region'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.region",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 83
     },
     {
         "classification": "native",
@@ -2047,7 +2487,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.capital",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 61
+        "line": 92
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Capital of the country, useful for identification and reference.",
+        "raw": "__('Capital of the country, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.capital_of_the_country_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 93
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Capital",
+        "raw": "__('Capital'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.capital",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 95
     },
     {
         "classification": "native",
@@ -2057,7 +2517,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.address",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 65
+        "line": 101
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Address format availability of the country, useful for identification and reference.",
+        "raw": "__(\n                                'Address format availability of the country, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.address_format_availability_of_the_country_useful_for_identification_and_referen",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 102
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Address",
+        "raw": "__('Address'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.address",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 106
     },
     {
         "classification": "native",
@@ -2067,7 +2547,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.subdivisions",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 73
+        "line": 116
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Number of subdivisions of the country, useful for identification and reference.",
+        "raw": "__(\n                                'Number of subdivisions of the country, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.number_of_subdivisions_of_the_country_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 117
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Subdivisions",
+        "raw": "__('Subdivisions'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.subdivisions",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 121
     },
     {
         "classification": "native",
@@ -2077,7 +2577,27 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.status",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 81
+        "line": 131
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Active status of the country, useful for identification and reference.",
+        "raw": "__('Active status of the country, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.active_status_of_the_country_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 132
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Status",
+        "raw": "__('Status'",
+        "reason": null,
+        "suggested_key": "admin.partials.country_reference_list.table.status",
+        "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+        "line": 134
     },
     {
         "classification": "native",
@@ -2087,7 +2607,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.address_format_available",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 183
+        "line": 237
     },
     {
         "classification": "native",
@@ -2097,7 +2617,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.address_format_missing",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 195
+        "line": 249
     },
     {
         "classification": "native",
@@ -2107,7 +2627,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.active",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 217
+        "line": 271
     },
     {
         "classification": "native",
@@ -2117,7 +2637,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.active",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 222
+        "line": 276
     },
     {
         "classification": "native",
@@ -2127,7 +2647,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.inactive",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 230
+        "line": 284
     },
     {
         "classification": "native",
@@ -2137,7 +2657,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.inactive",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 235
+        "line": 289
     },
     {
         "classification": "native",
@@ -2147,7 +2667,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.no_countries_found",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 249
+        "line": 303
     },
     {
         "classification": "native",
@@ -2157,7 +2677,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.pagination",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 258
+        "line": 312
     },
     {
         "classification": "native",
@@ -2177,7 +2697,27 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.filter.search",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php",
-        "line": 15
+        "line": 16
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Enter a search term to filter fallback reports by ID, type, key, fallback or context. The search is case-sensitive.",
+        "raw": "__(\n                        'Enter a search term to filter fallback reports by ID, type, key, fallback or context. The search is case-sensitive.'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.filter.enter_a_search_term_to_filter_fallback_reports_by_id_type_key_fallback_or_contex",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php",
+        "line": 17
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Search",
+        "raw": "__('Search'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.filter.search",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php",
+        "line": 21
     },
     {
         "classification": "native",
@@ -2187,7 +2727,27 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.filter.search_by_id_type_key_fallback_or_context",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php",
-        "line": 31
+        "line": 38
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by status",
+        "raw": "__('Filter by status'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.filter.filter_by_status",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php",
+        "line": 46
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a status to filter the list of fallback reports.",
+        "raw": "__('Select a status to filter the list of fallback reports.'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.filter.select_a_status_to_filter_the_list_of_fallback_reports",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php",
+        "line": 47
     },
     {
         "classification": "native",
@@ -2197,7 +2757,7 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.filter.status",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php",
-        "line": 38
+        "line": 49
     },
     {
         "classification": "native",
@@ -2207,7 +2767,7 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.filter.all",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php",
-        "line": 52
+        "line": 64
     },
     {
         "classification": "native",
@@ -2217,7 +2777,7 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.filter.open",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php",
-        "line": 56
+        "line": 68
     },
     {
         "classification": "native",
@@ -2227,7 +2787,7 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.filter.reviewed",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php",
-        "line": 60
+        "line": 72
     },
     {
         "classification": "native",
@@ -2332,12 +2892,32 @@
     {
         "classification": "native",
         "function": "__",
+        "value": "ID",
+        "raw": "__('ID'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.id",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 31
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unique identifier of the fallback report, useful for tracking and reference.",
+        "raw": "__(\n                                'Unique identifier of the fallback report, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.unique_identifier_of_the_fallback_report_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 32
+    },
+    {
+        "classification": "native",
+        "function": "__",
         "value": "#",
         "raw": "__('#'",
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.text",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 30
+        "line": 36
     },
     {
         "classification": "native",
@@ -2347,7 +2927,27 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.status",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 41
+        "line": 49
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Status of the fallback report, useful for tracking and reference.",
+        "raw": "__('Status of the fallback report, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.status_of_the_fallback_report_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 50
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Status",
+        "raw": "__('Status'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.status",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 52
     },
     {
         "classification": "native",
@@ -2357,7 +2957,27 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.type",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 51
+        "line": 64
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Type of the fallback report, useful for tracking and reference.",
+        "raw": "__('Type of the fallback report, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.type_of_the_fallback_report_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 65
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Type",
+        "raw": "__('Type'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.type",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 67
     },
     {
         "classification": "native",
@@ -2367,7 +2987,27 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.key",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 61
+        "line": 79
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Key of the fallback report, useful for tracking and reference.",
+        "raw": "__('Key of the fallback report, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.key_of_the_fallback_report_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 80
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Key",
+        "raw": "__('Key'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.key",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 82
     },
     {
         "classification": "native",
@@ -2377,7 +3017,27 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.fallback",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 71
+        "line": 94
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Fallback of the fallback report, useful for tracking and reference.",
+        "raw": "__('Fallback of the fallback report, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.fallback_of_the_fallback_report_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 95
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Fallback",
+        "raw": "__('Fallback'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.fallback",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 97
     },
     {
         "classification": "native",
@@ -2387,7 +3047,27 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.count",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 82
+        "line": 110
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Count of the fallback report, useful for tracking and reference.",
+        "raw": "__('Count of the fallback report, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.count_of_the_fallback_report_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 111
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Count",
+        "raw": "__('Count'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.count",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 113
     },
     {
         "classification": "native",
@@ -2397,7 +3077,27 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.last_reported",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 92
+        "line": 125
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Last reported date of the fallback report, useful for tracking and reference.",
+        "raw": "__(\n                                'Last reported date of the fallback report, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.last_reported_date_of_the_fallback_report_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 126
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Last reported",
+        "raw": "__('Last reported'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.last_reported",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 130
     },
     {
         "classification": "native",
@@ -2407,7 +3107,27 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.context",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 97
+        "line": 137
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Context of the fallback report, useful for tracking and reference.",
+        "raw": "__('Context of the fallback report, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.context_of_the_fallback_report_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 138
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Context",
+        "raw": "__('Context'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.context",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 140
     },
     {
         "classification": "native",
@@ -2417,7 +3137,27 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.actions",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 102
+        "line": 147
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Actions available for the fallback report, useful for tracking and reference.",
+        "raw": "__(\n                                'Actions available for the fallback report, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.actions_available_for_the_fallback_report_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 148
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Actions",
+        "raw": "__('Actions'",
+        "reason": null,
+        "suggested_key": "admin.partials.fallback_report_list.table.actions",
+        "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+        "line": 152
     },
     {
         "classification": "native",
@@ -2427,7 +3167,7 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.reviewed",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 127
+        "line": 178
     },
     {
         "classification": "native",
@@ -2437,7 +3177,7 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.open",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 134
+        "line": 185
     },
     {
         "classification": "native",
@@ -2447,7 +3187,7 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.reopen",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 191
+        "line": 242
     },
     {
         "classification": "native",
@@ -2457,7 +3197,7 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.mark_reviewed",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 201
+        "line": 252
     },
     {
         "classification": "native",
@@ -2467,7 +3207,7 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.no_fallback_reports_found",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 212
+        "line": 263
     },
     {
         "classification": "native",
@@ -2477,7 +3217,7 @@
         "reason": null,
         "suggested_key": "admin.partials.fallback_report_list.table.pagination",
         "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-        "line": 225
+        "line": 276
     },
     {
         "classification": "native",
@@ -2507,7 +3247,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.search_the_audit_history",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 14
+        "line": 13
     },
     {
         "classification": "native",
@@ -2517,7 +3257,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.enter_a_search_term_to_filter_the_audit_history_by_file_name_tag_name_or_other_r",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 15
+        "line": 14
     },
     {
         "classification": "native",
@@ -2527,7 +3267,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.search",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 19
+        "line": 18
     },
     {
         "classification": "native",
@@ -2537,7 +3277,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.file_tag_closing_tag",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 36
+        "line": 35
     },
     {
         "classification": "native",
@@ -2547,7 +3287,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.filter_by_status",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 44
+        "line": 43
     },
     {
         "classification": "native",
@@ -2557,7 +3297,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.select_a_status_to_filter_the_audit_history",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 45
+        "line": 44
     },
     {
         "classification": "native",
@@ -2567,7 +3307,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.status",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 47
+        "line": 46
     },
     {
         "classification": "native",
@@ -2577,7 +3317,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.open",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 61
+        "line": 60
     },
     {
         "classification": "native",
@@ -2587,7 +3327,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.changed_moved",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 62
+        "line": 61
     },
     {
         "classification": "native",
@@ -2597,7 +3337,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.resolved",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 63
+        "line": 62
     },
     {
         "classification": "native",
@@ -2607,7 +3347,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.ignored",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 64
+        "line": 63
     },
     {
         "classification": "native",
@@ -2617,7 +3357,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.all_statuses",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 65
+        "line": 64
     },
     {
         "classification": "native",
@@ -2627,7 +3367,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.filter_by_section",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 73
+        "line": 72
     },
     {
         "classification": "native",
@@ -2637,7 +3377,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.select_a_section_to_filter_the_audit_history",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 74
+        "line": 73
     },
     {
         "classification": "native",
@@ -2647,7 +3387,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.section",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 76
+        "line": 75
     },
     {
         "classification": "native",
@@ -2657,7 +3397,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.all_sections",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 90
+        "line": 89
     },
     {
         "classification": "native",
@@ -2667,7 +3407,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.native_html",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 91
+        "line": 90
     },
     {
         "classification": "native",
@@ -2677,7 +3417,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.custom_components",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 92
+        "line": 91
     },
     {
         "classification": "native",
@@ -2687,7 +3427,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.filter_by_problem_type",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 100
+        "line": 99
     },
     {
         "classification": "native",
@@ -2697,7 +3437,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.select_a_problem_type_to_filter_the_audit_history",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 101
+        "line": 100
     },
     {
         "classification": "native",
@@ -2707,7 +3447,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.problem_type",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 103
+        "line": 102
     },
     {
         "classification": "native",
@@ -2717,7 +3457,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.all_types",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 116
+        "line": 115
     },
     {
         "classification": "native",
@@ -2727,7 +3467,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.unclosed",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 117
+        "line": 116
     },
     {
         "classification": "native",
@@ -2737,7 +3477,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.mismatched",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 118
+        "line": 117
     },
     {
         "classification": "native",
@@ -2747,7 +3487,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.filter.unexpected_closing",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php",
-        "line": 119
+        "line": 118
     },
     {
         "classification": "native",
@@ -3072,6 +3812,576 @@
     {
         "classification": "native",
         "function": "__",
+        "value": "Finding details",
+        "raw": "__('Finding details'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.finding_details",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 11
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Detailed information about the selected HTML/Blade structure audit finding.",
+        "raw": "__('Detailed information about the selected HTML/Blade structure audit finding.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.detailed_information_about_the_selected_html_blade_structure_audit_finding",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 12
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Overview",
+        "raw": "__('Overview'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.overview",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 24
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "ID",
+        "raw": "__('ID'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.id",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 29
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Status",
+        "raw": "__('Status'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.status",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 39
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Section",
+        "raw": "__('Section'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.section",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 61
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Type",
+        "raw": "__('Type'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.type",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 83
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Location",
+        "raw": "__('Location'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.location",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 104
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "File",
+        "raw": "__('File'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.file",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 109
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Tag",
+        "raw": "__('Tag'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.tag",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 120
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Closing tag",
+        "raw": "__('Closing tag'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.closing_tag",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 130
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Opening line",
+        "raw": "__('Opening line'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.opening_line",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 140
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Closing line",
+        "raw": "__('Closing line'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.closing_line",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 150
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Expected / Actual",
+        "raw": "__('Expected / Actual'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.expected_actual",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 160
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Expected closing",
+        "raw": "__('Expected closing'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.expected_closing",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 165
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Actual closing",
+        "raw": "__('Actual closing'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.actual_closing",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 175
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "History",
+        "raw": "__('History'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.history",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 184
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "First seen",
+        "raw": "__('First seen'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.first_seen",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 189
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Last seen",
+        "raw": "__('Last seen'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.last_seen",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 199
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Resolved at",
+        "raw": "__('Resolved at'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.resolved_at",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 209
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Previous finding",
+        "raw": "__('Previous finding'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.previous_finding",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 219
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "ID",
+        "raw": "__('ID'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.id",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 224
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Status",
+        "raw": "__('Status'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.status",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 234
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Opening line",
+        "raw": "__('Opening line'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.opening_line",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 244
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Closing line",
+        "raw": "__('Closing line'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.closing_line",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 254
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Technical details",
+        "raw": "__('Technical details'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.technical_details",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 264
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Fingerprint",
+        "raw": "__('Fingerprint'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.fingerprint",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 269
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Source fingerprint",
+        "raw": "__('Source fingerprint'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.source_fingerprint",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 279
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Resolved source",
+        "raw": "__('Resolved source'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.resolved_source",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 289
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Snapshot payload",
+        "raw": "__('Snapshot payload'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.snapshot_payload",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 303
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "show",
+        "raw": "__('show'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.show",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 307
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "hide",
+        "raw": "__('hide'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.hide",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 311
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No finding selected.",
+        "raw": "__('No finding selected.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.no_finding_selected",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 321
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Close",
+        "raw": "__('Close'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.modal.close",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+        "line": 329
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Statistics",
+        "raw": "__('Statistics'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.statistics",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 29
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Statistics for the current filtered audit selection.",
+        "raw": "__('Statistics for the current filtered audit selection.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.statistics_for_the_current_filtered_audit_selection",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 30
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "ui.Show",
+        "raw": "__('ui.Show'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.ui_show",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 35
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "ui.Hide",
+        "raw": "__('ui.Hide'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.ui_hide",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 36
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Current selection",
+        "raw": "__('Current selection'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.current_selection",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 52
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "By status",
+        "raw": "__('By status'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.by_status",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 66
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Open",
+        "raw": "__('Open'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.open",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 75
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Changed",
+        "raw": "__('Changed'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.changed",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 82
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Resolved",
+        "raw": "__('Resolved'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.resolved",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 89
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Ignored",
+        "raw": "__('Ignored'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.ignored",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 96
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "By section",
+        "raw": "__('By section'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.by_section",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 108
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Native HTML",
+        "raw": "__('Native HTML'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.native_html",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 117
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Custom components",
+        "raw": "__('Custom components'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.custom_components",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 124
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "By type",
+        "raw": "__('By type'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.by_type",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 136
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unclosed",
+        "raw": "__('Unclosed'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.unclosed",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 145
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Mismatched",
+        "raw": "__('Mismatched'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.mismatched",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 152
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unexpected closing",
+        "raw": "__('Unexpected closing'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.unexpected_closing",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 159
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Top tags",
+        "raw": "__('Top tags'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.top_tags",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 171
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Top Tags in the current selection. Shows the most common HTML tags found in the audit results, along with their respective counts. This provides insight into which tags are most frequently associated with issues in the audited HTML content.",
+        "raw": "__('Top Tags in the current selection. Shows the most common HTML tags found in the audit results, along with their respective counts. This provides insight into which tags are most frequently associated with issues in the audited HTML content.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.top_tags_in_the_current_selection_shows_the_most_common_html_tags_found_in_the_a",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 175
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No tag statistics available.",
+        "raw": "__('No tag statistics available.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.no_tag_statistics_available",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 192
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Top files",
+        "raw": "__('Top files'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.top_files",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 204
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Top files in the current selection. Shows the files with the most issues found in the audit results, along with their respective counts. This helps identify which files may require the most attention for fixing HTML-related problems.",
+        "raw": "__('Top files in the current selection. Shows the files with the most issues found in the audit results, along with their respective counts. This helps identify which files may require the most attention for fixing HTML-related problems.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.top_files_in_the_current_selection_shows_the_files_with_the_most_issues_found_in",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 208
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No file statistics available.",
+        "raw": "__('No file statistics available.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.statistic.no_file_statistics_available",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+        "line": 231
+    },
+    {
+        "classification": "native",
+        "function": "__",
         "value": "HTML-Audit",
         "raw": "__('HTML-Audit'",
         "reason": null,
@@ -3097,27 +4407,37 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.id",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 30
+        "line": 27
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Status",
-        "raw": "__('Status'",
+        "value": "ID",
+        "raw": "__('ID'",
         "reason": null,
-        "suggested_key": "admin.partials.html_view_audit.table.status",
+        "suggested_key": "admin.partials.html_view_audit.table.id",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 40
+        "line": 34
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "History status of the finding: open, changed, resolved, or ignored.",
-        "raw": "__('History status of the finding: open, changed, resolved, or ignored.'",
+        "value": "Unique identifier of the finding, useful for tracking and reference.",
+        "raw": "__('Unique identifier of the finding, useful for tracking and reference.'",
         "reason": null,
-        "suggested_key": "admin.partials.html_view_audit.table.history_status_of_the_finding_open_changed_resolved_or_ignored",
+        "suggested_key": "admin.partials.html_view_audit.table.unique_identifier_of_the_finding_useful_for_tracking_and_reference",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 42
+        "line": 35
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "ID",
+        "raw": "__('ID'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.id",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 37
     },
     {
         "classification": "native",
@@ -3132,12 +4452,52 @@
     {
         "classification": "native",
         "function": "__",
+        "value": "Status",
+        "raw": "__('Status'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.status",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 51
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "History status of the finding: open, changed, resolved, or ignored.",
+        "raw": "__('History status of the finding: open, changed, resolved, or ignored.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.history_status_of_the_finding_open_changed_resolved_or_ignored",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 53
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Status",
+        "raw": "__('Status'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.status",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 55
+    },
+    {
+        "classification": "native",
+        "function": "__",
         "value": "Section",
         "raw": "__('Section'",
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.section",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 55
+        "line": 62
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Section",
+        "raw": "__('Section'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.section",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 69
     },
     {
         "classification": "native",
@@ -3147,7 +4507,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.the_section_of_the_audit_where_the_problem_was_found_e_g_native_html_or_custom_c",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 57
+        "line": 71
     },
     {
         "classification": "native",
@@ -3157,7 +4517,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.section",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 61
+        "line": 75
     },
     {
         "classification": "native",
@@ -3167,7 +4527,17 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.problem_type",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 72
+        "line": 82
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Problem type",
+        "raw": "__('Problem type'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.problem_type",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 89
     },
     {
         "classification": "native",
@@ -3177,7 +4547,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.type_of_the_problem_e_g_unclosed_tag_unexpected_closing_tag_etc",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 74
+        "line": 91
     },
     {
         "classification": "native",
@@ -3187,7 +4557,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.type",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 76
+        "line": 93
     },
     {
         "classification": "native",
@@ -3197,7 +4567,17 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.file",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 86
+        "line": 100
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "File",
+        "raw": "__('File'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.file",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 106
     },
     {
         "classification": "native",
@@ -3207,7 +4587,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.the_file_where_the_problem_was_found",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 87
+        "line": 107
     },
     {
         "classification": "native",
@@ -3217,7 +4597,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.file",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 89
+        "line": 109
     },
     {
         "classification": "native",
@@ -3227,7 +4607,17 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.tag",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 98
+        "line": 115
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Tag",
+        "raw": "__('Tag'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.tag",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 121
     },
     {
         "classification": "native",
@@ -3237,7 +4627,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.the_html_tag_where_the_problem_was_found",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 99
+        "line": 122
     },
     {
         "classification": "native",
@@ -3247,7 +4637,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.tag",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 101
+        "line": 124
     },
     {
         "classification": "native",
@@ -3257,7 +4647,17 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.line",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 111
+        "line": 131
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Line",
+        "raw": "__('Line'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.line",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 137
     },
     {
         "classification": "native",
@@ -3267,7 +4667,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.line_numbers_where_the_tag_is_opened_and_if_available_closed",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 112
+        "line": 138
     },
     {
         "classification": "native",
@@ -3277,7 +4677,17 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.line",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 114
+        "line": 140
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Expected closing tag",
+        "raw": "__('Expected closing tag'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.expected_closing_tag",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 146
     },
     {
         "classification": "native",
@@ -3287,7 +4697,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.expected",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 123
+        "line": 152
     },
     {
         "classification": "native",
@@ -3297,7 +4707,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.the_expected_closing_tag",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 124
+        "line": 153
     },
     {
         "classification": "native",
@@ -3307,7 +4717,17 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.expected",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 126
+        "line": 155
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Actual closing tag",
+        "raw": "__('Actual closing tag'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.actual_closing_tag",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 161
     },
     {
         "classification": "native",
@@ -3317,7 +4737,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.actual",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 135
+        "line": 167
     },
     {
         "classification": "native",
@@ -3327,7 +4747,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.the_actual_closing_tag",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 136
+        "line": 168
     },
     {
         "classification": "native",
@@ -3337,7 +4757,27 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.actual",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 138
+        "line": 170
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Show finding details",
+        "raw": "__('Show finding details'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.show_finding_details",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 205
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Click to view more information about this finding, including its history and any related findings.",
+        "raw": "__(\n                                            'Click to view more information about this finding, including its history and any related findings.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.click_to_view_more_information_about_this_finding_including_its_history_and_any_",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 206
     },
     {
         "classification": "native",
@@ -3347,7 +4787,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.moved_from",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 169
+        "line": 224
     },
     {
         "classification": "native",
@@ -3357,7 +4797,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.line",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 174
+        "line": 229
     },
     {
         "classification": "native",
@@ -3367,7 +4807,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.old_variant",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 182
+        "line": 237
     },
     {
         "classification": "native",
@@ -3377,7 +4817,17 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.opened",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 233
+        "line": 293
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "opened",
+        "raw": "__('opened'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.opened",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 294
     },
     {
         "classification": "native",
@@ -3387,7 +4837,17 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.closing",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 240
+        "line": 303
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "closing",
+        "raw": "__('closing'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.table.closing",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+        "line": 304
     },
     {
         "classification": "native",
@@ -3397,7 +4857,7 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.no_audit_problems_found_for_the_current_filter",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 260
+        "line": 336
     },
     {
         "classification": "native",
@@ -3407,7 +4867,647 @@
         "reason": null,
         "suggested_key": "admin.partials.html_view_audit.table.pagination",
         "file": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-        "line": 272
+        "line": 349
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "View usage audit",
+        "raw": "__('View usage audit'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.view_usage_audit",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 112
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Audit file",
+        "raw": "__('Audit file'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.audit_file",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 119
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Generated",
+        "raw": "__('Generated'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.generated",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 130
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Run php artisan html:check-view-html-used.",
+        "raw": "__('Run php artisan html:check-view-html-used.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.run_php_artisan_html_check_view_html_used",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 136
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Files",
+        "raw": "__('Files'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.files",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 147
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Native used",
+        "raw": "__('Native used'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.native_used",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 154
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Flux used",
+        "raw": "__('Flux used'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.flux_used",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 161
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Custom used",
+        "raw": "__('Custom used'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.custom_used",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 168
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unknown",
+        "raw": "__('Unknown'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.unknown",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 175
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Native HTML",
+        "raw": "__('Native HTML'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.native_html",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 184
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Available",
+        "raw": "__('Available'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.available",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 189
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unused",
+        "raw": "__('Unused'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.unused",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 193
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unknown",
+        "raw": "__('Unknown'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.unknown",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 197
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Flux components",
+        "raw": "__('Flux components'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.flux_components",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 205
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Available",
+        "raw": "__('Available'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.available",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 210
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unused",
+        "raw": "__('Unused'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.unused",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 214
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unknown",
+        "raw": "__('Unknown'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.unknown",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 218
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Custom components",
+        "raw": "__('Custom components'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.custom_components",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 226
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Custom components",
+        "raw": "__('Custom components'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.custom_components",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 230
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Available",
+        "raw": "__('Available'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.available",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 234
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unused",
+        "raw": "__('Unused'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.unused",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 238
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unknown",
+        "raw": "__('Unknown'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.unknown",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 242
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No unknown native tags, Flux components or custom components were found.",
+        "raw": "__('No unknown native tags, Flux components or custom components were found.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.no_unknown_native_tags_flux_components_or_custom_components_were_found",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 252
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Includes",
+        "raw": "__('Includes'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.includes",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 262
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Livewire",
+        "raw": "__('Livewire'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.livewire",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 269
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Excluded files",
+        "raw": "__('Excluded files'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.excluded_files",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 276
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Source paths",
+        "raw": "__('Source paths'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.source_paths",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 283
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Skipped paths",
+        "raw": "__('Skipped paths'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.skipped_paths",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 291
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Show usage details",
+        "raw": "__('Show usage details'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.show_usage_details",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 299
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Hide usage details",
+        "raw": "__('Hide usage details'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.hide_usage_details",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 300
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unused custom components",
+        "raw": "__('Unused custom components'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.unused_custom_components",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 308
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Top native HTML tags",
+        "raw": "__('Top native HTML tags'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.top_native_html_tags",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 333
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No usage data available.",
+        "raw": "__('No usage data available.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.no_usage_data_available",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 345
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Top Flux components",
+        "raw": "__('Top Flux components'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.top_flux_components",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 353
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No usage data available.",
+        "raw": "__('No usage data available.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.no_usage_data_available",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 365
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Top custom components",
+        "raw": "__('Top custom components'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.top_custom_components",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 373
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No usage data available.",
+        "raw": "__('No usage data available.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.no_usage_data_available",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 385
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Component source paths",
+        "raw": "__('Component source paths'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.component_source_paths",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 397
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No source paths available.",
+        "raw": "__('No source paths available.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.no_source_paths_available",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 409
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Skipped component paths",
+        "raw": "__('Skipped component paths'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.skipped_component_paths",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 417
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No skipped paths available.",
+        "raw": "__('No skipped paths available.'",
+        "reason": null,
+        "suggested_key": "admin.partials.html_view_audit.usage_audit.no_skipped_paths_available",
+        "file": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+        "line": 429
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Search",
+        "raw": "__('Search'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.filter.search",
+        "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+        "line": 14
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Enter a search term to filter permissions by name, guard, category, or description. The search is case-sensitive.",
+        "raw": "__(\n                        'Enter a search term to filter permissions by name, guard, category, or description. The search is case-sensitive.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.filter.enter_a_search_term_to_filter_permissions_by_name_guard_category_or_description_",
+        "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+        "line": 15
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Search",
+        "raw": "__('Search'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.filter.search",
+        "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+        "line": 19
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by guard",
+        "raw": "__('Filter by guard'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.filter.filter_by_guard",
+        "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+        "line": 45
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a guard to filter the list of permissions.",
+        "raw": "__('Select a guard to filter the list of permissions.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.filter.select_a_guard_to_filter_the_list_of_permissions",
+        "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+        "line": 46
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by category",
+        "raw": "__('Filter by category'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.filter.filter_by_category",
+        "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+        "line": 78
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a category to filter the list of permissions.",
+        "raw": "__('Select a category to filter the list of permissions.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.filter.select_a_category_to_filter_the_list_of_permissions",
+        "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+        "line": 79
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by role",
+        "raw": "__('Filter by role'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.filter.filter_by_role",
+        "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+        "line": 111
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a role to filter the list of permissions.",
+        "raw": "__('Select a role to filter the list of permissions.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.filter.select_a_role_to_filter_the_list_of_permissions",
+        "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+        "line": 112
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by assignment",
+        "raw": "__('Filter by assignment'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.filter.filter_by_assignment",
+        "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+        "line": 155
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select an assignment status to filter the list of permissions.",
+        "raw": "__('Select an assignment status to filter the list of permissions.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.filter.select_an_assignment_status_to_filter_the_list_of_permissions",
+        "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+        "line": 156
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by system",
+        "raw": "__('Filter by system'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.filter.filter_by_system",
+        "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+        "line": 190
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a system status to filter the list of permissions.",
+        "raw": "__('Select a system status to filter the list of permissions.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.filter.select_a_system_status_to_filter_the_list_of_permissions",
+        "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
+        "line": 191
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Sequential number of the permission in the current list, useful for reference.",
+        "raw": "__(\n                                'Sequential number of the permission in the current list, useful for reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.table_permissions.sequential_number_of_the_permission_in_the_current_list_useful_for_reference",
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 19
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Name of the permission, useful for identification and reference.",
+        "raw": "__('Name of the permission, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.table_permissions.name_of_the_permission_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 34
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Category of the permission, useful for identification and reference.",
+        "raw": "__('Category of the permission, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.table_permissions.category_of_the_permission_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 47
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Sort order of the permission, useful for identification and reference.",
+        "raw": "__('Sort order of the permission, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.table_permissions.sort_order_of_the_permission_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 61
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Guard of the permission, useful for identification and reference.",
+        "raw": "__('Guard of the permission, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.table_permissions.guard_of_the_permission_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 74
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Description of the permission, useful for identification and reference.",
+        "raw": "__('Description of the permission, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.table_permissions.description_of_the_permission_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 84
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Flags indicating special attributes of the permission, such as system or custom, useful for identification and reference.",
+        "raw": "__(\n                                'Flags indicating special attributes of the permission, such as system or custom, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.table_permissions.flags_indicating_special_attributes_of_the_permission_such_as_system_or_custom_u",
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 94
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Number of roles associated with the permission, useful for identification and reference.",
+        "raw": "__(\n                                'Number of roles associated with the permission, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.table_permissions.number_of_roles_associated_with_the_permission_useful_for_identification_and_ref",
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 110
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Roles assigned to the permission, useful for identification and reference.",
+        "raw": "__('Roles assigned to the permission, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.table_permissions.roles_assigned_to_the_permission_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 122
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Actions available for the permission, useful for identification and reference.",
+        "raw": "__(\n                                'Actions available for the permission, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.permission_list.table_permissions.actions_available_for_the_permission_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+        "line": 132
     },
     {
         "classification": "native",
@@ -3417,7 +5517,7 @@
         "reason": null,
         "suggested_key": "admin.partials.permission_list.table_permissions.pagination",
         "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-        "line": 198
+        "line": 256
     },
     {
         "classification": "native",
@@ -3432,12 +5532,32 @@
     {
         "classification": "native",
         "function": "__",
+        "value": "Filter by search",
+        "raw": "__('Filter by search'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.filter.filter_by_search",
+        "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
+        "line": 16
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Enter a search term to filter the list of persons.",
+        "raw": "__('Enter a search term to filter the list of persons.'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.filter.enter_a_search_term_to_filter_the_list_of_persons",
+        "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
+        "line": 17
+    },
+    {
+        "classification": "native",
+        "function": "__",
         "value": "Search",
         "raw": "__('Search'",
         "reason": null,
         "suggested_key": "admin.partials.person_list.filter.search",
         "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
-        "line": 15
+        "line": 19
     },
     {
         "classification": "native",
@@ -3447,7 +5567,27 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.filter.search_by_name_person_number_user_name_or_email",
         "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
-        "line": 31
+        "line": 36
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by user",
+        "raw": "__('Filter by user'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.filter.filter_by_user",
+        "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
+        "line": 44
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a user to filter the list of persons.",
+        "raw": "__('Select a user to filter the list of persons.'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.filter.select_a_user_to_filter_the_list_of_persons",
+        "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
+        "line": 45
     },
     {
         "classification": "native",
@@ -3457,7 +5597,7 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.filter.user",
         "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
-        "line": 38
+        "line": 47
     },
     {
         "classification": "native",
@@ -3467,7 +5607,7 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.filter.all",
         "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
-        "line": 52
+        "line": 62
     },
     {
         "classification": "native",
@@ -3477,7 +5617,7 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.filter.with_user",
         "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
-        "line": 56
+        "line": 66
     },
     {
         "classification": "native",
@@ -3487,7 +5627,27 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.filter.without_user",
         "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
-        "line": 60
+        "line": 70
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by client",
+        "raw": "__('Filter by client'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.filter.filter_by_client",
+        "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
+        "line": 79
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a client to filter the list of persons.",
+        "raw": "__('Select a client to filter the list of persons.'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.filter.select_a_client_to_filter_the_list_of_persons",
+        "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
+        "line": 80
     },
     {
         "classification": "native",
@@ -3497,7 +5657,7 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.filter.client",
         "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
-        "line": 68
+        "line": 82
     },
     {
         "classification": "native",
@@ -3507,7 +5667,7 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.filter.all",
         "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
-        "line": 82
+        "line": 97
     },
     {
         "classification": "native",
@@ -3517,7 +5677,7 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.filter.with_client",
         "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
-        "line": 86
+        "line": 101
     },
     {
         "classification": "native",
@@ -3527,7 +5687,7 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.filter.without_client",
         "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
-        "line": 90
+        "line": 105
     },
     {
         "classification": "native",
@@ -3677,7 +5837,27 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.table.text",
         "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
-        "line": 17
+        "line": 18
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unique identifier of the person, useful for tracking and reference.",
+        "raw": "__('Unique identifier of the person, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.table.unique_identifier_of_the_person_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+        "line": 19
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "#",
+        "raw": "__('#'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.table.text",
+        "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+        "line": 21
     },
     {
         "classification": "native",
@@ -3687,7 +5867,27 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.table.person",
         "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
-        "line": 24
+        "line": 30
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Full name of the person, useful for identification and reference.",
+        "raw": "__('Full name of the person, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.table.full_name_of_the_person_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+        "line": 31
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Person",
+        "raw": "__('Person'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.table.person",
+        "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+        "line": 33
     },
     {
         "classification": "native",
@@ -3697,7 +5897,27 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.table.person_number",
         "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
-        "line": 31
+        "line": 42
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unique number assigned to the person, useful for identification and reference.",
+        "raw": "__(\n                                'Unique number assigned to the person, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.table.unique_number_assigned_to_the_person_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+        "line": 43
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Person number",
+        "raw": "__('Person number'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.table.person_number",
+        "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+        "line": 47
     },
     {
         "classification": "native",
@@ -3707,7 +5927,27 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.table.date_of_birth",
         "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
-        "line": 38
+        "line": 56
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Date of birth of the person, useful for identification and reference.",
+        "raw": "__('Date of birth of the person, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.table.date_of_birth_of_the_person_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+        "line": 57
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Date of birth",
+        "raw": "__('Date of birth'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.table.date_of_birth",
+        "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+        "line": 59
     },
     {
         "classification": "native",
@@ -3717,7 +5957,7 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.table.user",
         "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
-        "line": 42
+        "line": 64
     },
     {
         "classification": "native",
@@ -3727,7 +5967,27 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.table.clients",
         "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
-        "line": 50
+        "line": 73
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Number of clients associated with the person, useful for identification and reference.",
+        "raw": "__(\n                                'Number of clients associated with the person, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.table.number_of_clients_associated_with_the_person_useful_for_identification_and_refer",
+        "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+        "line": 74
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Clients",
+        "raw": "__('Clients'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.table.clients",
+        "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+        "line": 78
     },
     {
         "classification": "native",
@@ -3737,7 +5997,27 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.table.created",
         "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
-        "line": 57
+        "line": 87
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Date when the person was created, useful for identification and reference.",
+        "raw": "__('Date when the person was created, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.table.date_when_the_person_was_created_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+        "line": 88
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Created",
+        "raw": "__('Created'",
+        "reason": null,
+        "suggested_key": "admin.partials.person_list.table.created",
+        "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+        "line": 90
     },
     {
         "classification": "native",
@@ -3747,7 +6027,7 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.table.missing",
         "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
-        "line": 97
+        "line": 131
     },
     {
         "classification": "native",
@@ -3757,7 +6037,7 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.table.without_user",
         "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
-        "line": 126
+        "line": 160
     },
     {
         "classification": "native",
@@ -3767,7 +6047,7 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.table.no_people_found",
         "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
-        "line": 146
+        "line": 180
     },
     {
         "classification": "native",
@@ -3777,7 +6057,7 @@
         "reason": null,
         "suggested_key": "admin.partials.person_list.table.pagination",
         "file": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
-        "line": 158
+        "line": 192
     },
     {
         "classification": "native",
@@ -3802,12 +6082,32 @@
     {
         "classification": "native",
         "function": "__",
+        "value": "Filter by search",
+        "raw": "__('Filter by search'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.filter.filter_by_search",
+        "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
+        "line": 14
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Enter a search term to filter the list of roles.",
+        "raw": "__('Enter a search term to filter the list of roles.'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.filter.enter_a_search_term_to_filter_the_list_of_roles",
+        "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
+        "line": 15
+    },
+    {
+        "classification": "native",
+        "function": "__",
         "value": "Search",
         "raw": "__('Search'",
         "reason": null,
         "suggested_key": "admin.partials.role_list.filter.search",
         "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
-        "line": 13
+        "line": 17
     },
     {
         "classification": "native",
@@ -3817,7 +6117,27 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.filter.search_by_name_category_or_description",
         "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
-        "line": 29
+        "line": 34
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by category",
+        "raw": "__('Filter by category'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.filter.filter_by_category",
+        "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
+        "line": 42
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a category to filter the list of roles.",
+        "raw": "__('Select a category to filter the list of roles.'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.filter.select_a_category_to_filter_the_list_of_roles",
+        "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
+        "line": 43
     },
     {
         "classification": "native",
@@ -3827,7 +6147,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.filter.category",
         "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
-        "line": 36
+        "line": 45
     },
     {
         "classification": "native",
@@ -3837,7 +6157,27 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.filter.all_categories",
         "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
-        "line": 50
+        "line": 60
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by assignable",
+        "raw": "__('Filter by assignable'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.filter.filter_by_assignable",
+        "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
+        "line": 75
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select an assignable status to filter the list of roles.",
+        "raw": "__('Select an assignable status to filter the list of roles.'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.filter.select_an_assignable_status_to_filter_the_list_of_roles",
+        "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
+        "line": 76
     },
     {
         "classification": "native",
@@ -3847,7 +6187,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.filter.assignable",
         "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
-        "line": 64
+        "line": 78
     },
     {
         "classification": "native",
@@ -3857,7 +6197,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.filter.all",
         "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
-        "line": 78
+        "line": 93
     },
     {
         "classification": "native",
@@ -3867,7 +6207,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.filter.assignable",
         "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
-        "line": 82
+        "line": 97
     },
     {
         "classification": "native",
@@ -3877,7 +6217,27 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.filter.not_assignable",
         "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
-        "line": 86
+        "line": 101
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by system",
+        "raw": "__('Filter by system'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.filter.filter_by_system",
+        "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
+        "line": 110
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a system status to filter the list of roles.",
+        "raw": "__('Select a system status to filter the list of roles.'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.filter.select_a_system_status_to_filter_the_list_of_roles",
+        "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
+        "line": 111
     },
     {
         "classification": "native",
@@ -3887,7 +6247,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.filter.system",
         "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
-        "line": 94
+        "line": 113
     },
     {
         "classification": "native",
@@ -3897,7 +6257,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.filter.all",
         "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
-        "line": 108
+        "line": 128
     },
     {
         "classification": "native",
@@ -3907,7 +6267,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.filter.system_roles",
         "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
-        "line": 112
+        "line": 132
     },
     {
         "classification": "native",
@@ -3917,7 +6277,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.filter.non_system_roles",
         "file": "resources/views/components/admin/partials/role-list/⚡filter.blade.php",
-        "line": 116
+        "line": 136
     },
     {
         "classification": "native",
@@ -4377,7 +6737,27 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.id",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 20
+        "line": 21
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unique identifier of the role, useful for tracking and reference.",
+        "raw": "__('Unique identifier of the role, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.unique_identifier_of_the_role_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 22
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "ID",
+        "raw": "__('ID'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.id",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 24
     },
     {
         "classification": "native",
@@ -4387,7 +6767,27 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.badge",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 24
+        "line": 30
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Visual representation of the role, useful for quick identification.",
+        "raw": "__('Visual representation of the role, useful for quick identification.'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.visual_representation_of_the_role_useful_for_quick_identification",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 31
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Badge",
+        "raw": "__('Badge'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.badge",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 33
     },
     {
         "classification": "native",
@@ -4397,7 +6797,27 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.name",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 31
+        "line": 42
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Name of the role, useful for identification and reference.",
+        "raw": "__('Name of the role, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.name_of_the_role_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 43
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Name",
+        "raw": "__('Name'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.name",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 45
     },
     {
         "classification": "native",
@@ -4407,7 +6827,27 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.category",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 38
+        "line": 54
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Category of the role, useful for identification and reference.",
+        "raw": "__('Category of the role, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.category_of_the_role_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 55
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Category",
+        "raw": "__('Category'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.category",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 57
     },
     {
         "classification": "native",
@@ -4417,7 +6857,27 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.sort",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 46
+        "line": 67
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Sort order of the role, useful for identification and reference.",
+        "raw": "__('Sort order of the role, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.sort_order_of_the_role_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 68
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Sort",
+        "raw": "__('Sort'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.sort",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 70
     },
     {
         "classification": "native",
@@ -4427,7 +6887,27 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.description",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 50
+        "line": 76
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Description of the role, useful for identification and reference.",
+        "raw": "__('Description of the role, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.description_of_the_role_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 77
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Description",
+        "raw": "__('Description'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.description",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 79
     },
     {
         "classification": "native",
@@ -4437,7 +6917,27 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.flags",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 54
+        "line": 85
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Flags associated with the role, useful for identification and reference.",
+        "raw": "__('Flags associated with the role, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.flags_associated_with_the_role_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 86
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Flags",
+        "raw": "__('Flags'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.flags",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 88
     },
     {
         "classification": "native",
@@ -4447,7 +6947,27 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.users",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 62
+        "line": 98
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Number of users associated with the role, useful for identification and reference.",
+        "raw": "__(\n                                'Number of users associated with the role, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.number_of_users_associated_with_the_role_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 99
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Users",
+        "raw": "__('Users'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.users",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 103
     },
     {
         "classification": "native",
@@ -4457,7 +6977,27 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.actions",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 66
+        "line": 109
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Actions that can be performed on the role, useful for management and administration.",
+        "raw": "__(\n                                'Actions that can be performed on the role, useful for management and administration.'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.actions_that_can_be_performed_on_the_role_useful_for_management_and_administrati",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 110
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Actions",
+        "raw": "__('Actions'",
+        "reason": null,
+        "suggested_key": "admin.partials.role_list.table.actions",
+        "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+        "line": 114
     },
     {
         "classification": "native",
@@ -4467,7 +7007,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.other",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 100
+        "line": 149
     },
     {
         "classification": "native",
@@ -4477,7 +7017,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.system",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 126
+        "line": 175
     },
     {
         "classification": "native",
@@ -4487,7 +7027,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.assignable",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 135
+        "line": 184
     },
     {
         "classification": "native",
@@ -4497,7 +7037,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.not_assignable",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 142
+        "line": 191
     },
     {
         "classification": "native",
@@ -4507,7 +7047,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.edit_role",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 159
+        "line": 208
     },
     {
         "classification": "native",
@@ -4517,7 +7057,7 @@
         "reason": null,
         "suggested_key": "admin.partials.role_list.table.pagination",
         "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-        "line": 174
+        "line": 223
     },
     {
         "classification": "native",
@@ -4542,12 +7082,32 @@
     {
         "classification": "native",
         "function": "__",
+        "value": "Filter by search",
+        "raw": "__('Filter by search'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.filter.filter_by_search",
+        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+        "line": 36
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Enter a search term to filter the list of translations by key or value. The search is case-sensitive.",
+        "raw": "__(\n                        'Enter a search term to filter the list of translations by key or value. The search is case-sensitive.'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.filter.enter_a_search_term_to_filter_the_list_of_translations_by_key_or_value_the_searc",
+        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+        "line": 37
+    },
+    {
+        "classification": "native",
+        "function": "__",
         "value": "Search",
         "raw": "__('Search'",
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.search",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 35
+        "line": 41
     },
     {
         "classification": "native",
@@ -4557,7 +7117,27 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.search_by_key_or_value",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 51
+        "line": 58
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by language",
+        "raw": "__('Filter by language'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.filter.filter_by_language",
+        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+        "line": 66
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a language to filter the list of translations.",
+        "raw": "__('Select a language to filter the list of translations.'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.filter.select_a_language_to_filter_the_list_of_translations",
+        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+        "line": 67
     },
     {
         "classification": "native",
@@ -4567,7 +7147,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.language",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 58
+        "line": 69
     },
     {
         "classification": "native",
@@ -4577,7 +7157,27 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.all_languages",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 72
+        "line": 84
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by translation file",
+        "raw": "__('Filter by translation file'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.filter.filter_by_translation_file",
+        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+        "line": 100
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a translation file to filter the list of translations.",
+        "raw": "__('Select a translation file to filter the list of translations.'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.filter.select_a_translation_file_to_filter_the_list_of_translations",
+        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+        "line": 101
     },
     {
         "classification": "native",
@@ -4587,7 +7187,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.translation_file",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 87
+        "line": 103
     },
     {
         "classification": "native",
@@ -4597,7 +7197,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.all_files",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 101
+        "line": 118
     },
     {
         "classification": "native",
@@ -4807,7 +7407,27 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.status",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 15
+        "line": 16
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Current status of the translation key, useful for identification and reference.",
+        "raw": "__(\n                                'Current status of the translation key, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.current_status_of_the_translation_key_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 17
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Status",
+        "raw": "__('Status'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.status",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 21
     },
     {
         "classification": "native",
@@ -4817,7 +7437,27 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.key_suggested_key",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 19
+        "line": 27
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Translation key or suggested key, useful for identification and reference.",
+        "raw": "__('Translation key or suggested key, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.translation_key_or_suggested_key_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 28
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Key / Suggested Key",
+        "raw": "__('Key / Suggested Key'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.key_suggested_key",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 30
     },
     {
         "classification": "native",
@@ -4827,7 +7467,27 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.native_text",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 23
+        "line": 36
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Original text in the source language, useful for identification and reference.",
+        "raw": "__(\n                                'Original text in the source language, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.original_text_in_the_source_language_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 37
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Native Text",
+        "raw": "__('Native Text'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.native_text",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 41
     },
     {
         "classification": "native",
@@ -4837,7 +7497,27 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.values",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 27
+        "line": 47
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Translated values for the key across different languages, useful for identification and reference.",
+        "raw": "__(\n                                'Translated values for the key across different languages, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.translated_values_for_the_key_across_different_languages_useful_for_identificati",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 48
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Values",
+        "raw": "__('Values'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.values",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 52
     },
     {
         "classification": "native",
@@ -4847,7 +7527,27 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.usage",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 31
+        "line": 58
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Usage information of the translation key, useful for identification and reference.",
+        "raw": "__(\n                                'Usage information of the translation key, useful for identification and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.usage_information_of_the_translation_key_useful_for_identification_and_reference",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 59
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Usage",
+        "raw": "__('Usage'",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.usage",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 63
     },
     {
         "classification": "native",
@@ -4857,7 +7557,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.suggested",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 70
+        "line": 103
     },
     {
         "classification": "native",
@@ -4867,7 +7567,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.usage_s",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 125
+        "line": 158
     },
     {
         "classification": "native",
@@ -4877,7 +7577,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.last_seen",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 130
+        "line": 163
     },
     {
         "classification": "native",
@@ -4887,7 +7587,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.no_translation_records_found",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 141
+        "line": 174
     },
     {
         "classification": "native",
@@ -4897,7 +7597,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.pagination",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 153
+        "line": 186
     },
     {
         "classification": "native",
@@ -4922,12 +7622,32 @@
     {
         "classification": "native",
         "function": "__",
+        "value": "Filter by search",
+        "raw": "__('Filter by search'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.filter.filter_by_search",
+        "file": "resources/views/components/admin/partials/user-list/⚡filter.blade.php",
+        "line": 13
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Enter a search term to filter the list of users by name or email. The search is case-sensitive.",
+        "raw": "__(\n                        'Enter a search term to filter the list of users by name or email. The search is case-sensitive.'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.filter.enter_a_search_term_to_filter_the_list_of_users_by_name_or_email_the_search_is_c",
+        "file": "resources/views/components/admin/partials/user-list/⚡filter.blade.php",
+        "line": 14
+    },
+    {
+        "classification": "native",
+        "function": "__",
         "value": "Search",
         "raw": "__('Search'",
         "reason": null,
         "suggested_key": "admin.partials.user_list.filter.search",
         "file": "resources/views/components/admin/partials/user-list/⚡filter.blade.php",
-        "line": 12
+        "line": 18
     },
     {
         "classification": "native",
@@ -4937,7 +7657,27 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.filter.search_by_name_or_email",
         "file": "resources/views/components/admin/partials/user-list/⚡filter.blade.php",
-        "line": 28
+        "line": 35
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Filter by role",
+        "raw": "__('Filter by role'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.filter.filter_by_role",
+        "file": "resources/views/components/admin/partials/user-list/⚡filter.blade.php",
+        "line": 43
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select a role to filter the list of users.",
+        "raw": "__('Select a role to filter the list of users.'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.filter.select_a_role_to_filter_the_list_of_users",
+        "file": "resources/views/components/admin/partials/user-list/⚡filter.blade.php",
+        "line": 44
     },
     {
         "classification": "native",
@@ -4947,7 +7687,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.filter.role",
         "file": "resources/views/components/admin/partials/user-list/⚡filter.blade.php",
-        "line": 35
+        "line": 46
     },
     {
         "classification": "native",
@@ -4957,7 +7697,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.filter.all_roles",
         "file": "resources/views/components/admin/partials/user-list/⚡filter.blade.php",
-        "line": 49
+        "line": 61
     },
     {
         "classification": "native",
@@ -4967,7 +7707,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.filter.without_role",
         "file": "resources/views/components/admin/partials/user-list/⚡filter.blade.php",
-        "line": 53
+        "line": 65
     },
     {
         "classification": "native",
@@ -5277,7 +8017,27 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.id",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 28
+        "line": 29
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Unique identifier of the user, useful for tracking and reference.",
+        "raw": "__('Unique identifier of the user, useful for tracking and reference.'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.table.unique_identifier_of_the_user_useful_for_tracking_and_reference",
+        "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
+        "line": 30
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "ID",
+        "raw": "__('ID'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.table.id",
+        "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
+        "line": 32
     },
     {
         "classification": "native",
@@ -5287,7 +8047,27 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.name",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 36
+        "line": 42
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Full name of the user, useful for identification.",
+        "raw": "__('Full name of the user, useful for identification.'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.table.full_name_of_the_user_useful_for_identification",
+        "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
+        "line": 43
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Name",
+        "raw": "__('Name'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.table.name",
+        "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
+        "line": 45
     },
     {
         "classification": "native",
@@ -5297,7 +8077,27 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.e_mail",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 44
+        "line": 55
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Email address of the user, used for communication and login.",
+        "raw": "__('Email address of the user, used for communication and login.'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.table.email_address_of_the_user_used_for_communication_and_login",
+        "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
+        "line": 56
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "E-Mail",
+        "raw": "__('E-Mail'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.table.e_mail",
+        "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
+        "line": 58
     },
     {
         "classification": "native",
@@ -5307,7 +8107,27 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.roles",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 52
+        "line": 68
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Roles assigned to the user, determining their permissions and access levels.",
+        "raw": "__(\n                                'Roles assigned to the user, determining their permissions and access levels.'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.table.roles_assigned_to_the_user_determining_their_permissions_and_access_levels",
+        "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
+        "line": 69
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Roles",
+        "raw": "__('Roles'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.table.roles",
+        "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
+        "line": 73
     },
     {
         "classification": "native",
@@ -5317,7 +8137,27 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.actions",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 57
+        "line": 80
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Available actions for the user, such as editing roles.",
+        "raw": "__('Available actions for the user, such as editing roles.'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.table.available_actions_for_the_user_such_as_editing_roles",
+        "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
+        "line": 81
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Actions",
+        "raw": "__('Actions'",
+        "reason": null,
+        "suggested_key": "admin.partials.user_list.table.actions",
+        "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
+        "line": 83
     },
     {
         "classification": "native",
@@ -5327,7 +8167,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.without_role",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 100
+        "line": 127
     },
     {
         "classification": "native",
@@ -5337,7 +8177,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.edit_roles",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 111
+        "line": 138
     },
     {
         "classification": "native",
@@ -5347,7 +8187,7 @@
         "reason": null,
         "suggested_key": "admin.partials.user_list.table.pagination",
         "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
-        "line": 127
+        "line": 154
     },
     {
         "classification": "native",
@@ -5437,7 +8277,7 @@
         "reason": null,
         "suggested_key": "admin.html_view_audit.html_tags_check",
         "file": "resources/views/components/admin/⚡html-view-audit.blade.php",
-        "line": 10
+        "line": 7
     },
     {
         "classification": "native",
@@ -5447,7 +8287,7 @@
         "reason": null,
         "suggested_key": "admin.html_view_audit.static_audit_for_native_html_tags_and_selected_flux_custom_blade_components",
         "file": "resources/views/components/admin/⚡html-view-audit.blade.php",
-        "line": 11
+        "line": 8
     },
     {
         "classification": "native",
@@ -8017,7 +10857,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.administration",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 5
+        "line": 14
     },
     {
         "classification": "native",
@@ -8027,7 +10867,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.users",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 17
+        "line": 26
     },
     {
         "classification": "native",
@@ -8037,7 +10877,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.persons",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 27
+        "line": 36
     },
     {
         "classification": "native",
@@ -8047,7 +10887,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.clients",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 37
+        "line": 46
     },
     {
         "classification": "native",
@@ -8057,7 +10897,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.roles",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 47
+        "line": 56
     },
     {
         "classification": "native",
@@ -8067,7 +10907,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.permissions",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 57
+        "line": 66
     },
     {
         "classification": "native",
@@ -8077,7 +10917,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.translations",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 67
+        "line": 76
     },
     {
         "classification": "native",
@@ -8087,7 +10927,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.app_settings",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 77
+        "line": 86
     },
     {
         "classification": "native",
@@ -8097,7 +10937,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.reference",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 83
+        "line": 92
     },
     {
         "classification": "native",
@@ -8107,7 +10947,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.countries",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 96
+        "line": 105
     },
     {
         "classification": "native",
@@ -8117,7 +10957,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.html_tags_check",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 106
+        "line": 117
     },
     {
         "classification": "native",
@@ -8127,7 +10967,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.fallback_reports",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 118
+        "line": 135
     },
     {
         "classification": "native",

@@ -312,6 +312,18 @@
         ]
     },
     {
+        "full_key": "ui.labels.number",
+        "usage_count": 1,
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                "line": 18,
+                "function": "__",
+                "raw": "__('ui.labels.number'"
+            }
+        ]
+    },
+    {
         "full_key": "ui.labels.preview",
         "usage_count": 2,
         "usages": [

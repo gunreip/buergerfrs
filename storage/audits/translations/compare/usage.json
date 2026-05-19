@@ -29,7 +29,7 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 131,
+                "line": 158,
                 "function": "__",
                 "raw": "__('admin.permissions.filters.assignment.label'"
             }
@@ -41,7 +41,7 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 78,
+                "line": 96,
                 "function": "__",
                 "raw": "__('admin.permissions.filters.categories.all'"
             }
@@ -65,7 +65,7 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 50,
+                "line": 63,
                 "function": "__",
                 "raw": "__('admin.permissions.filters.guards.all'"
             }
@@ -77,7 +77,7 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 106,
+                "line": 129,
                 "function": "__",
                 "raw": "__('admin.permissions.filters.roles.all'"
             }
@@ -89,7 +89,7 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 29,
+                "line": 37,
                 "function": "__",
                 "raw": "__('admin.permissions.filters.search.placeholder'"
             }
@@ -101,7 +101,7 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 161,
+                "line": 193,
                 "function": "__",
                 "raw": "__('admin.permissions.filters.system.label'"
             }
@@ -565,11 +565,17 @@
     },
     {
         "full_key": "admin.permissions.table.columns.assigned_roles",
-        "usage_count": 1,
+        "usage_count": 2,
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 74,
+                "line": 121,
+                "function": "__",
+                "raw": "__('admin.permissions.table.columns.assigned_roles'"
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                "line": 124,
                 "function": "__",
                 "raw": "__('admin.permissions.table.columns.assigned_roles'"
             }
@@ -577,11 +583,17 @@
     },
     {
         "full_key": "admin.permissions.table.columns.flags",
-        "usage_count": 1,
+        "usage_count": 2,
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 60,
+                "line": 93,
+                "function": "__",
+                "raw": "__('admin.permissions.table.columns.flags'"
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                "line": 98,
                 "function": "__",
                 "raw": "__('admin.permissions.table.columns.flags'"
             }
@@ -589,11 +601,17 @@
     },
     {
         "full_key": "admin.permissions.table.columns.sort",
-        "usage_count": 1,
+        "usage_count": 2,
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 42,
+                "line": 60,
+                "function": "__",
+                "raw": "__('admin.permissions.table.columns.sort'"
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                "line": 63,
                 "function": "__",
                 "raw": "__('admin.permissions.table.columns.sort'"
             }
@@ -617,7 +635,7 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 188,
+                "line": 246,
                 "function": "__",
                 "raw": "__('admin.permissions.table.empty'"
             }
@@ -977,7 +995,7 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 13,
+                "line": 21,
                 "function": "__",
                 "raw": "__('ui.actions.search'"
             }
@@ -985,11 +1003,17 @@
     },
     {
         "full_key": "ui.labels.actions",
-        "usage_count": 1,
+        "usage_count": 2,
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 79,
+                "line": 131,
+                "function": "__",
+                "raw": "__('ui.labels.actions'"
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                "line": 136,
                 "function": "__",
                 "raw": "__('ui.labels.actions'"
             }
@@ -997,11 +1021,11 @@
     },
     {
         "full_key": "ui.labels.category",
-        "usage_count": 6,
+        "usage_count": 7,
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 64,
+                "line": 81,
                 "function": "__",
                 "raw": "__('ui.labels.category'"
             },
@@ -1019,7 +1043,13 @@
             },
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 33,
+                "line": 46,
+                "function": "__",
+                "raw": "__('ui.labels.category'"
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                "line": 49,
                 "function": "__",
                 "raw": "__('ui.labels.category'"
             },
@@ -1039,7 +1069,7 @@
     },
     {
         "full_key": "ui.labels.description",
-        "usage_count": 4,
+        "usage_count": 5,
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
@@ -1049,7 +1079,13 @@
             },
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 55,
+                "line": 83,
+                "function": "__",
+                "raw": "__('ui.labels.description'"
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                "line": 86,
                 "function": "__",
                 "raw": "__('ui.labels.description'"
             },
@@ -1069,11 +1105,11 @@
     },
     {
         "full_key": "ui.labels.guard",
-        "usage_count": 5,
+        "usage_count": 6,
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 36,
+                "line": 48,
                 "function": "__",
                 "raw": "__('ui.labels.guard'"
             },
@@ -1085,7 +1121,13 @@
             },
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 50,
+                "line": 73,
+                "function": "__",
+                "raw": "__('ui.labels.guard'"
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                "line": 76,
                 "function": "__",
                 "raw": "__('ui.labels.guard'"
             },
@@ -1105,7 +1147,7 @@
     },
     {
         "full_key": "ui.labels.name",
-        "usage_count": 4,
+        "usage_count": 5,
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
@@ -1115,7 +1157,13 @@
             },
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 25,
+                "line": 33,
+                "function": "__",
+                "raw": "__('ui.labels.name'"
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                "line": 36,
                 "function": "__",
                 "raw": "__('ui.labels.name'"
             },
@@ -1134,12 +1182,24 @@
         ]
     },
     {
+        "full_key": "ui.labels.number",
+        "usage_count": 1,
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                "line": 18,
+                "function": "__",
+                "raw": "__('ui.labels.number'"
+            }
+        ]
+    },
+    {
         "full_key": "ui.labels.number_short",
         "usage_count": 1,
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 17,
+                "line": 23,
                 "function": "__",
                 "raw": "__('ui.labels.number_short'"
             }
@@ -1169,7 +1229,7 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 92,
+                "line": 114,
                 "function": "__",
                 "raw": "__('ui.labels.role'"
             },
@@ -1189,11 +1249,17 @@
     },
     {
         "full_key": "ui.labels.roles",
-        "usage_count": 1,
+        "usage_count": 2,
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 69,
+                "line": 109,
+                "function": "__",
+                "raw": "__('ui.labels.roles'"
+            },
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                "line": 114,
                 "function": "__",
                 "raw": "__('ui.labels.roles'"
             }
@@ -1211,7 +1277,7 @@
             },
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 127,
+                "line": 185,
                 "function": "__",
                 "raw": "__('ui.messages.no_description_available'"
             }
@@ -1223,13 +1289,13 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 145,
+                "line": 173,
                 "function": "__",
                 "raw": "__('ui.states.all'"
             },
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 175,
+                "line": 208,
                 "function": "__",
                 "raw": "__('ui.states.all'"
             }
@@ -1241,7 +1307,7 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 149,
+                "line": 177,
                 "function": "__",
                 "raw": "__('ui.states.assigned'"
             }
@@ -1253,7 +1319,7 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 146,
+                "line": 204,
                 "function": "__",
                 "raw": "__('ui.states.custom'"
             }
@@ -1289,7 +1355,7 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 183,
+                "line": 216,
                 "function": "__",
                 "raw": "__('ui.states.non_system'"
             }
@@ -1307,7 +1373,7 @@
             },
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 102,
+                "line": 160,
                 "function": "__",
                 "raw": "__('ui.states.other'"
             }
@@ -1319,13 +1385,13 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 179,
+                "line": 212,
                 "function": "__",
                 "raw": "__('ui.states.system'"
             },
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 139,
+                "line": 197,
                 "function": "__",
                 "raw": "__('ui.states.system'"
             }
@@ -1337,13 +1403,13 @@
         "usages": [
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                "line": 153,
+                "line": 181,
                 "function": "__",
                 "raw": "__('ui.states.unassigned'"
             },
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                "line": 171,
+                "line": 229,
                 "function": "__",
                 "raw": "__('ui.states.unassigned'"
             }

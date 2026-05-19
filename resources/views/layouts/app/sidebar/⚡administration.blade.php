@@ -1,7 +1,16 @@
 {{-- resources/views/layouts/app/sidebar/⚡administration.blade.php --}}
 
+@php
+    $administrationNeedsAttention = \App\Support\Navigation\AdminAttention::administration();
+    $referenceNeedsAttention = \App\Support\Navigation\AdminAttention::reference();
+    $htmlViewAuditNeedsAttention = \App\Support\Navigation\AdminAttention::htmlViewAudit();
+
+    $attentionDotClass =
+        "relative after:pointer-events-none after:absolute after:right-3 after:top-3 after:size-2 after:rounded-full after:bg-red-500 after:content-['']";
+@endphp
+
 <flux:sidebar.group
-    class="mt-4 grid"
+    class="{{ $administrationNeedsAttention ? $attentionDotClass : '' }} mt-4 grid"
     :heading="__('Administration')"
     icon="settings-2"
     expandable
@@ -79,7 +88,7 @@
 
     {{-- Admin -> reference --}}
     <flux:sidebar.group
-        class="grid"
+        class="{{ $referenceNeedsAttention ? $attentionDotClass : '' }} grid"
         :heading="__('Reference')"
         icon="globe"
         expandable
@@ -103,7 +112,15 @@
             :current="request()->routeIs('admin.html-view-audit')"
             wire:navigate
         >
-            {{ __('HTML-Tags-Check') }}
+            <span class="inline-flex w-full items-center gap-2">
+                <span>
+                    {{ __('HTML-Tags-Check') }}
+                </span>
+
+                @if ($htmlViewAuditNeedsAttention)
+                    <span class="ml-auto size-2 rounded-full bg-red-500"></span>
+                @endif
+            </span>
         </flux:sidebar.item>
 
     </flux:sidebar.group>

@@ -1,6 +1,6 @@
 {
-    "generated_at": "2026-05-18T01:51:42+00:00",
-    "files_scanned": 214,
+    "generated_at": "2026-05-19T07:52:45+00:00",
+    "files_scanned": 224,
     "problem_count": 0,
     "note": "This is a static Blade structure audit. Complex conditional Blade markup may produce false positives and should be reviewed manually.",
     "references": {
@@ -8,7 +8,7 @@
             "source": "storage/audits/html/native-html-tags.json",
             "source_name": "WHATWG HTML Living Standard",
             "source_url": "https://html.spec.whatwg.org/multipage/indices.html",
-            "generated_at": "2026-05-16T19:28:16+00:00",
+            "generated_at": "2026-05-18T19:25:50+00:00",
             "normal_count": 100,
             "void_count": 13,
             "fallback": false,
@@ -17,11 +17,11 @@
         },
         "custom_components": {
             "source": "storage/audits/html/view-component-tags.json",
-            "generated_at": "2026-05-18T01:51:42+00:00",
-            "files_scanned": 214,
-            "tag_count": 159,
+            "generated_at": "2026-05-19T07:52:45+00:00",
+            "files_scanned": 224,
+            "tag_count": 163,
             "flux_count": 125,
-            "custom_count": 30,
+            "custom_count": 34,
             "livewire_count": 4,
             "fallback": false,
             "fallback_reason": null,

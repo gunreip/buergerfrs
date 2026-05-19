@@ -1,7 +1,7 @@
 {
     "preview": true,
     "preview_limit": 20,
-    "total": 9,
+    "total": 11,
     "items": [
         {
             "classification": "dynamic",
@@ -92,6 +92,26 @@
             "suggested_key": null,
             "file": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
             "line": 263
+        },
+        {
+            "classification": "dynamic",
+            "function": "__",
+            "value": "$hideLabel",
+            "raw": "__($hideLabel)) : @js(__($showLabel))\"",
+            "reason": "non_literal_first_argument",
+            "suggested_key": null,
+            "file": "resources/views/components/ui/button/show-hide.blade.php",
+            "line": 19
+        },
+        {
+            "classification": "dynamic",
+            "function": "__",
+            "value": "$showLabel",
+            "raw": "__($showLabel))\"",
+            "reason": "non_literal_first_argument",
+            "suggested_key": null,
+            "file": "resources/views/components/ui/button/show-hide.blade.php",
+            "line": 19
         }
     ]
 }
