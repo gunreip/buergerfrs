@@ -9,7 +9,7 @@
         {{ __('Overview') }}
     </flux:heading>
 
-    <div class="grid grid-cols-4 gap-3">
+    <div class="grid grid-cols-6 gap-3">
         {{-- Settings group --}}
         <flux:callout
             class="col-span-4 md:col-span-1"
@@ -26,6 +26,25 @@
 
             <flux:callout.text class="text-2xl! font-semibold">
                 {{ $summary['settingsGroup'] }}
+            </flux:callout.text>
+        </flux:callout>
+
+        {{-- Application language --}}
+        <flux:callout
+            class="col-span-6 md:col-span-1"
+            color="sky"
+            icon="languages"
+        >
+            <flux:callout.heading>
+                {{ __('App language') }}
+            </flux:callout.heading>
+
+            <flux:callout.text class="font-extralight">
+                {{ __('Global locale currently used by the application.') }}
+            </flux:callout.text>
+
+            <flux:callout.text class="text-2xl! font-semibold">
+                {{ $summary['locale'] ?? app()->getLocale() }}
             </flux:callout.text>
         </flux:callout>
 

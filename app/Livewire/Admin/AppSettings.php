@@ -5,6 +5,7 @@
 namespace App\Livewire\Admin;
 
 use App\Settings\AppDisplaySettings;
+use App\Settings\AppGeneralSettings;
 use App\Support\Icons\IconRegistry;
 use Illuminate\Support\Facades\View;
 use Livewire\Component;
@@ -15,6 +16,40 @@ class AppSettings extends Component
     private const KNOWN_PSEUDO_ROLE_BADGE_KEYS = [
         '__without_role__',
     ];
+
+    public string $locale = 'de';
+
+    /**
+     * @var array<int, string>
+     */
+    public array $availableLocales = [];
+
+    public function mount(AppGeneralSettings $appGeneralSettings): void
+    {
+        $this->locale = $appGeneralSettings->locale;
+        $this->availableLocales = $this->normaliseAvailableLocales($appGeneralSettings->availableLocales);
+    }
+
+    public function setLocale(string $locale, AppGeneralSettings $appGeneralSettings): void
+    {
+        $availableLocales = $this->normaliseAvailableLocales($appGeneralSettings->availableLocales);
+
+        if (! in_array($locale, $availableLocales, true)) {
+            $this->dispatch('toast', type: 'error', message: __('Invalid application language.'));
+
+            return;
+        }
+
+        $appGeneralSettings->locale = $locale;
+        $appGeneralSettings->save();
+
+        app()->setLocale($locale);
+
+        $this->locale = $locale;
+        $this->availableLocales = $availableLocales;
+
+        $this->dispatch('toast', type: 'success', message: __('Application language updated.'));
+    }
 
     public function render(AppDisplaySettings $appDisplaySettings, IconRegistry $iconRegistry)
     {
@@ -63,11 +98,11 @@ class AppSettings extends Component
             ->all();
 
         $rolesWithoutBadge = $roles
-            ->reject(fn (Role $role): bool => array_key_exists($role->name, $roleBadges))
+            ->reject(fn(Role $role): bool => array_key_exists($role->name, $roleBadges))
             ->values();
 
         $badgeConfigsWithoutRole = collect($roleBadgeRows)
-            ->filter(fn (array $row): bool => ! $row['roleExists'] && ! $row['isPseudoRoleBadgeKey'])
+            ->filter(fn(array $row): bool => ! $row['roleExists'] && ! $row['isPseudoRoleBadgeKey'])
             ->values()
             ->all();
 
@@ -87,6 +122,10 @@ class AppSettings extends Component
 
         $summary = [
             'settingsGroup' => 'app_display',
+            'generalSettingsGroup' => 'app_general',
+            'locale' => $this->locale,
+            'availableLocales' => $this->availableLocales,
+            'availableLocaleCount' => count($this->availableLocales),
             'roleBadgeEntries' => count($roleBadges),
             'registeredIconCategories' => count((array) config('buergerfrs-icons.categories', [])),
             'registeredRoleUserIcons' => count($registeredIconOptions),
@@ -105,6 +144,23 @@ class AppSettings extends Component
             'badgeConfigsWithoutRole' => $badgeConfigsWithoutRole,
             'iconRegistryRows' => $iconRegistryRows,
             'fallbackIcon' => $iconRegistry->fallback(),
+            'locale' => $this->locale,
+            'availableLocales' => $this->availableLocales,
         ]);
+    }
+
+    /**
+     * @param  array<int, mixed>  $availableLocales
+     *
+     * @return array<int, string>
+     */
+    private function normaliseAvailableLocales(array $availableLocales): array
+    {
+        $locales = array_values(array_filter(
+            $availableLocales,
+            static fn(mixed $locale): bool => is_string($locale) && $locale !== ''
+        ));
+
+        return $locales !== [] ? $locales : ['de', 'en'];
     }
 }

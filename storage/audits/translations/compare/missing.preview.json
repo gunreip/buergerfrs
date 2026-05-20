@@ -11,7 +11,7 @@
                     "file": "resources/views/components/admin/⚡role-list.blade.php",
                     "line": 21,
                     "function": "__",
-                    "raw": "__('admin.roles.actions.create'"
+                    "raw": "__('admin.roles.actions.create')"
                 }
             ]
         },
@@ -23,13 +23,13 @@
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
                     "line": 88,
                     "function": "__",
-                    "raw": "__('admin.roles.badge.color'"
+                    "raw": "__('admin.roles.badge.color')"
                 },
                 {
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
                     "line": 105,
                     "function": "__",
-                    "raw": "__('admin.roles.badge.color'"
+                    "raw": "__('admin.roles.badge.color')"
                 }
             ]
         },
@@ -41,13 +41,13 @@
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
                     "line": 107,
                     "function": "__",
-                    "raw": "__('admin.roles.badge.icon'"
+                    "raw": "__('admin.roles.badge.icon')"
                 },
                 {
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
                     "line": 129,
                     "function": "__",
-                    "raw": "__('admin.roles.badge.icon'"
+                    "raw": "__('admin.roles.badge.icon')"
                 }
             ]
         },
@@ -59,13 +59,13 @@
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
                     "line": 78,
                     "function": "__",
-                    "raw": "__('admin.roles.badge.title'"
+                    "raw": "__('admin.roles.badge.title')"
                 },
                 {
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
                     "line": 100,
                     "function": "__",
-                    "raw": "__('admin.roles.badge.title'"
+                    "raw": "__('admin.roles.badge.title')"
                 }
             ]
         },
@@ -77,13 +77,13 @@
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
                     "line": 95,
                     "function": "__",
-                    "raw": "__('admin.roles.badge.variant'"
+                    "raw": "__('admin.roles.badge.variant')"
                 },
                 {
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
                     "line": 117,
                     "function": "__",
-                    "raw": "__('admin.roles.badge.variant'"
+                    "raw": "__('admin.roles.badge.variant')"
                 }
             ]
         },
@@ -95,7 +95,7 @@
                     "file": "resources/views/components/admin/⚡role-list.blade.php",
                     "line": 15,
                     "function": "__",
-                    "raw": "__('admin.roles.description'"
+                    "raw": "__('admin.roles.description')"
                 }
             ]
         },
@@ -107,13 +107,13 @@
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
                     "line": 71,
                     "function": "__",
-                    "raw": "__('admin.roles.labels.assignable_through_ui'"
+                    "raw": "__('admin.roles.labels.assignable_through_ui')"
                 },
                 {
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
                     "line": 93,
                     "function": "__",
-                    "raw": "__('admin.roles.labels.assignable_through_ui'"
+                    "raw": "__('admin.roles.labels.assignable_through_ui')"
                 }
             ]
         },
@@ -125,7 +125,7 @@
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
                     "line": 53,
                     "function": "__",
-                    "raw": "__('admin.roles.labels.assigned_users'"
+                    "raw": "__('admin.roles.labels.assigned_users')"
                 }
             ]
         },
@@ -137,13 +137,13 @@
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
                     "line": 55,
                     "function": "__",
-                    "raw": "__('admin.roles.labels.sort_order'"
+                    "raw": "__('admin.roles.labels.sort_order')"
                 },
                 {
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
                     "line": 77,
                     "function": "__",
-                    "raw": "__('admin.roles.labels.sort_order'"
+                    "raw": "__('admin.roles.labels.sort_order')"
                 }
             ]
         },
@@ -155,7 +155,7 @@
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
                     "line": 41,
                     "function": "__",
-                    "raw": "__('admin.roles.labels.system_role'"
+                    "raw": "__('admin.roles.labels.system_role')"
                 }
             ]
         },
@@ -167,7 +167,7 @@
                     "file": "app/Livewire/Admin/RoleList.php",
                     "line": 125,
                     "function": "__",
-                    "raw": "__('admin.roles.messages.not_allowed.heading'"
+                    "raw": "__('admin.roles.messages.not_allowed.heading')"
                 }
             ]
         },
@@ -179,7 +179,7 @@
                     "file": "app/Livewire/Admin/RoleList.php",
                     "line": 127,
                     "function": "__",
-                    "raw": "__('admin.roles.messages.not_allowed.only_super_admins_may_create_roles'"
+                    "raw": "__('admin.roles.messages.not_allowed.only_super_admins_may_create_roles')"
                 }
             ]
         },
@@ -191,7 +191,7 @@
                     "file": "app/Livewire/Admin/RoleList.php",
                     "line": 203,
                     "function": "__",
-                    "raw": "__('admin.roles.messages.role_created.heading'"
+                    "raw": "__('admin.roles.messages.role_created.heading')"
                 }
             ]
         },
@@ -203,7 +203,7 @@
                     "file": "app/Livewire/Admin/RoleList.php",
                     "line": 205,
                     "function": "__",
-                    "raw": "__('admin.roles.messages.role_created.text'"
+                    "raw": "__('admin.roles.messages.role_created.text', [\n                'role' => $role->name,\n            ])"
                 }
             ]
         },
@@ -215,7 +215,7 @@
                     "file": "app/Livewire/Admin/RoleList.php",
                     "line": 358,
                     "function": "__",
-                    "raw": "__('admin.roles.messages.role_saved.heading'"
+                    "raw": "__('admin.roles.messages.role_saved.heading')"
                 }
             ]
         },
@@ -227,7 +227,7 @@
                     "file": "app/Livewire/Admin/RoleList.php",
                     "line": 360,
                     "function": "__",
-                    "raw": "__('admin.roles.messages.role_saved.text'"
+                    "raw": "__('admin.roles.messages.role_saved.text', [\n                'role' => $savedRoleName,\n            ])"
                 }
             ]
         },
@@ -239,7 +239,7 @@
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
                     "line": 19,
                     "function": "__",
-                    "raw": "__('admin.roles.modals.create.description'"
+                    "raw": "__('admin.roles.modals.create.description')"
                 }
             ]
         },
@@ -251,7 +251,7 @@
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
                     "line": 32,
                     "function": "__",
-                    "raw": "__('admin.roles.modals.create.name_placeholder'"
+                    "raw": "__('admin.roles.modals.create.name_placeholder')"
                 }
             ]
         },
@@ -263,7 +263,7 @@
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
                     "line": 12,
                     "function": "__",
-                    "raw": "__('admin.roles.modals.create.title'"
+                    "raw": "__('admin.roles.modals.create.title')"
                 }
             ]
         },
@@ -275,7 +275,7 @@
                     "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
                     "line": 12,
                     "function": "__",
-                    "raw": "__('admin.roles.modals.edit.title'"
+                    "raw": "__('admin.roles.modals.edit.title')"
                 }
             ]
         }

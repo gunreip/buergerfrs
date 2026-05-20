@@ -1,13 +1,13 @@
 {
-    "generated_at": "2026-05-19T07:52:45+00:00",
+    "generated_at": "2026-05-20T17:33:29+00:00",
     "paths": [
         "resources/views"
     ],
-    "files_scanned": 224,
+    "files_scanned": 236,
     "counts": {
-        "total": 163,
-        "flux": 125,
-        "custom": 34,
+        "total": 170,
+        "flux": 128,
+        "custom": 38,
         "livewire": 4
     },
     "tags": {
@@ -39,21 +39,21 @@
             "x-auth-header",
             "x-auth-session-status",
             "x-desktop-user-menu",
+            "x-dynamic-component",
             "x-layouts::app",
             "x-layouts::app.sidebar",
             "x-layouts::auth",
             "x-layouts::auth.simple",
             "x-pages::settings.layout",
             "x-placeholder-pattern",
+            "x-ui.badge.context",
             "x-ui.button.cancel",
             "x-ui.button.confirm",
             "x-ui.button.create",
             "x-ui.button.delete",
             "x-ui.button.edit",
             "x-ui.button.reset",
-            "x-ui.button.save",
-            "x-ui.button.show-hide",
-            "x-ui.flux-icon"
+            "x-ui.button.save"
         ],
         "livewire": [
             "livewire:pages::settings.delete-user-form",
@@ -96,6 +96,10 @@
             }
         ],
         "flux:badge": [
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                "line": 12
+            },
             {
                 "file": "resources/views/components/admin/partials/app-settings/⚡table-icon-registry.blade.php",
                 "line": 75
@@ -154,27 +158,23 @@
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-                "line": 73
+                "line": 167
             },
             {
-                "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-                "line": 76
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                "line": 18
+            },
+            {
+                "file": "resources/views/components/ui/badge/context.blade.php",
+                "line": 22
             },
             {
                 "file": "resources/views/components/ui/role-badge.blade.php",
                 "line": 16
             },
             {
-                "file": "resources/views/components/ui/text/stat-value-code.blade.php",
-                "line": 23
-            },
-            {
-                "file": "resources/views/components/ui/text/stat-value-num.blade.php",
-                "line": 25
-            },
-            {
-                "file": "resources/views/components/ui/tooltip/badge-required.blade.php",
-                "line": 9
+                "file": "resources/views/components/ui/text/copyable-field.blade.php",
+                "line": 83
             }
         ],
         "flux:brand": [
@@ -193,12 +193,20 @@
                 "line": 24
             },
             {
+                "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                "line": 22
+            },
+            {
                 "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
                 "line": 236
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                 "line": 16
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                "line": 258
             },
             {
                 "file": "resources/views/components/management/people/create-person/⚡form-person.blade.php",
@@ -249,20 +257,12 @@
                 "line": 38
             },
             {
+                "file": "resources/views/components/ui/text/copyable-field.blade.php",
+                "line": 95
+            },
+            {
                 "file": "resources/views/pages/auth/confirm-password.blade.php",
                 "line": 23
-            },
-            {
-                "file": "resources/views/pages/auth/forgot-password.blade.php",
-                "line": 31
-            },
-            {
-                "file": "resources/views/pages/auth/login.blade.php",
-                "line": 46
-            },
-            {
-                "file": "resources/views/pages/auth/register.blade.php",
-                "line": 56
             }
         ],
         "flux:button.group": [
@@ -369,6 +369,10 @@
                 "line": 11
             },
             {
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                "line": 30
+            },
+            {
                 "file": "resources/views/components/admin/partials/user-list/⚡meta.blade.php",
                 "line": 10
             },
@@ -444,7 +448,11 @@
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-                "line": 15
+                "line": 16
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                "line": 35
             },
             {
                 "file": "resources/views/components/admin/partials/user-list/⚡meta.blade.php",
@@ -514,7 +522,11 @@
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-                "line": 19
+                "line": 20
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                "line": 39
             },
             {
                 "file": "resources/views/components/admin/partials/user-list/⚡meta.blade.php",
@@ -545,6 +557,10 @@
             {
                 "file": "resources/views/components/account/⚡preferences.blade.php",
                 "line": 8
+            },
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                "line": 3
             },
             {
                 "file": "resources/views/components/admin/partials/app-settings/⚡meta-health.blade.php",
@@ -605,10 +621,6 @@
             {
                 "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
                 "line": 20
-            },
-            {
-                "file": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
-                "line": 26
             }
         ],
         "flux:checkbox": [
@@ -705,6 +717,10 @@
             {
                 "file": "resources/views/components/admin/partials/permission-list/⚡modal-role-permissions.blade.php",
                 "line": 9
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                "line": 29
             },
             {
                 "file": "resources/views/components/admin/partials/user-list/⚡modal.blade.php",

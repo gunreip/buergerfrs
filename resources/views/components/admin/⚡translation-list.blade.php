@@ -22,4 +22,9 @@
     {{-- Table part --}}
     @include('components.admin.partials.translation-list.⚡table')
 
+    {{-- Translation key review modal --}}
+    @include('components.admin.partials.translation-list.⚡modal', [
+        'selectedTranslationKey' => $selectedTranslationKey,
+    ])
+
 </flux:card>

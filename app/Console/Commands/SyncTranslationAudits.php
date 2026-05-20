@@ -50,7 +50,7 @@ class SyncTranslationAudits extends Command
                 key: $entry['full_key'],
                 status: 'ok',
                 classification: 'key',
-                suggestedKey: null,
+                suggestedKey: $this->suggestKeyForExistingKey($entry['full_key'] ?? null),
                 nativeText: null,
                 now: $now,
             );
@@ -81,7 +81,7 @@ class SyncTranslationAudits extends Command
                 key: $entry['full_key'],
                 status: 'missing',
                 classification: 'key',
-                suggestedKey: null,
+                suggestedKey: $this->suggestKeyForExistingKey($entry['full_key'] ?? null),
                 nativeText: null,
                 now: $now,
             );
@@ -112,7 +112,7 @@ class SyncTranslationAudits extends Command
                 key: $entry['full_key'],
                 status: 'obsolete',
                 classification: 'key',
-                suggestedKey: null,
+                suggestedKey: $this->suggestKeyForExistingKey($entry['full_key'] ?? null),
                 nativeText: null,
                 now: $now,
             );
@@ -199,7 +199,7 @@ class SyncTranslationAudits extends Command
                 key: $entry['full_key'] ?? null,
                 status: 'invalid',
                 classification: 'invalid',
-                suggestedKey: null,
+                suggestedKey: $this->suggestKeyForExistingKey($entry['full_key'] ?? null),
                 nativeText: $entry['value'] ?? null,
                 now: $now,
             );
@@ -452,6 +452,30 @@ class SyncTranslationAudits extends Command
         sort($locales);
 
         return $locales === [] ? self::DEFAULT_LOCALES : $locales;
+    }
+
+    private function suggestKeyForExistingKey(?string $key): ?string
+    {
+        if ($key === null) {
+            return null;
+        }
+
+        $suggestedKey = str($key)
+            ->trim()
+            ->replace('\\', '.')
+            ->replace('/', '.')
+            ->replace('-', '_')
+            ->replaceMatches('/(?<!^)[A-Z]/', '_$0')
+            ->lower()
+            ->replaceMatches('/[^a-z0-9_.]+/', '_')
+            ->replaceMatches('/_+/', '_')
+            ->replaceMatches('/\.+/', '.')
+            ->replaceMatches('/(^|\\.)_+/', '$1')
+            ->replaceMatches('/_+(\\.|$)/', '$1')
+            ->trim('._')
+            ->toString();
+
+        return $suggestedKey !== '' ? $suggestedKey : null;
     }
 
     private function namespaceFromKey(?string $key): ?string

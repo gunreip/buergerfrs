@@ -1,14 +1,15 @@
 {
-    "generated_at": "2026-05-19T07:52:45+00:00",
+    "generated_at": "2026-05-20T17:33:29+00:00",
     "scan": {
         "paths": [
             "resources/views"
         ],
-        "files_scanned": 224,
+        "files_scanned": 236,
         "skipped_paths": [],
         "excluded_files": [
             "resources/views/components/account/⚡settings.xxx.blade.php",
             "resources/views/components/admin/⚡user-edit.yyy.blade.php",
+            "resources/views/components/ui/text/xxx-copyable-textarea.blade.php",
             "resources/views/components/ui/xxx-safe-flux-icon.blade.php"
         ]
     },
@@ -344,7 +345,7 @@
                 ]
             },
             "code": {
-                "count": 12,
+                "count": 18,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
@@ -361,10 +362,25 @@
                         ]
                     },
                     {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            205,
+                            243,
+                            245
+                        ]
+                    },
+                    {
                         "path": "resources/views/components/management/people/create-person/⚡generated-password.blade.php",
                         "lines": [
                             56,
                             58
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/text/copyable-field.blade.php",
+                        "lines": [
+                            97,
+                            101
                         ]
                     },
                     {
@@ -397,7 +413,7 @@
                 ]
             },
             "div": {
-                "count": 1070,
+                "count": 1160,
                 "files": [
                     {
                         "path": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
@@ -425,6 +441,17 @@
                         ]
                     },
                     {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                        "lines": [
+                            4,
+                            10,
+                            12,
+                            22,
+                            24,
+                            26
+                        ]
+                    },
+                    {
                         "path": "resources/views/components/admin/partials/app-settings/⚡meta-health.blade.php",
                         "lines": [
                             9,
@@ -435,7 +462,7 @@
                         "path": "resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php",
                         "lines": [
                             9,
-                            71
+                            86
                         ]
                     },
                     {
@@ -821,51 +848,51 @@
                             170,
                             175,
                             179,
-                            187,
-                            191,
+                            184,
+                            188,
+                            190,
                             193,
                             196,
                             199,
-                            202,
-                            203,
-                            225,
+                            200,
+                            222,
+                            224,
+                            226,
                             227,
-                            229,
                             230,
+                            231,
                             233,
-                            234,
-                            236,
-                            242,
+                            239,
+                            240,
                             243,
-                            246,
-                            252,
-                            256,
-                            260,
-                            262,
-                            264,
-                            269,
-                            273,
-                            275,
-                            277,
-                            282,
-                            286,
-                            288,
-                            290,
+                            249,
+                            253,
+                            257,
+                            259,
+                            261,
+                            266,
+                            270,
+                            272,
+                            274,
+                            279,
+                            283,
+                            285,
+                            287,
+                            289,
                             292,
-                            295,
-                            299,
-                            303,
-                            305,
-                            307,
-                            312,
-                            316,
-                            318,
+                            296,
+                            300,
+                            302,
+                            304,
+                            309,
+                            313,
+                            315,
+                            317,
+                            319,
                             320,
+                            321,
                             322,
-                            323,
-                            324,
-                            325,
-                            328
+                            325
                         ]
                     },
                     {
@@ -1105,28 +1132,97 @@
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
                             7,
-                            20,
-                            24,
-                            25,
-                            39,
-                            41,
-                            66,
-                            68,
-                            92,
-                            94,
-                            96,
-                            98,
-                            100,
-                            101
+                            33,
+                            37,
+                            38,
+                            52,
+                            54,
+                            79,
+                            81,
+                            105,
+                            107,
+                            109,
+                            111,
+                            113,
+                            114
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                         "lines": [
                             7,
+                            128,
+                            170,
+                            173
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            5,
+                            6,
+                            15,
+                            17,
+                            48,
+                            51,
+                            53,
                             56,
-                            92,
-                            95
+                            85,
+                            122,
+                            123,
+                            124,
+                            125,
+                            127,
+                            129,
+                            131,
+                            132,
+                            135,
+                            136,
+                            138,
+                            141,
+                            147,
+                            149,
+                            155,
+                            156,
+                            158,
+                            161,
+                            166,
+                            167,
+                            169,
+                            172,
+                            175,
+                            177,
+                            183,
+                            186,
+                            189,
+                            209,
+                            213,
+                            215,
+                            217,
+                            218,
+                            220,
+                            223,
+                            226,
+                            228,
+                            234,
+                            236,
+                            238,
+                            239,
+                            241,
+                            246,
+                            248,
+                            254,
+                            255,
+                            263,
+                            265,
+                            267,
+                            269,
+                            270,
+                            272,
+                            274,
+                            275,
+                            277,
+                            279
                         ]
                     },
                     {
@@ -1134,44 +1230,52 @@
                         "lines": [
                             7,
                             8,
-                            46,
-                            51,
-                            53,
-                            54,
-                            58,
-                            60,
-                            63,
-                            65,
-                            68,
+                            69,
                             70,
-                            72,
-                            74,
+                            75,
                             76,
-                            79,
-                            84,
-                            85,
-                            89,
-                            91,
-                            95,
-                            97,
-                            98,
-                            106,
+                            100,
+                            101,
+                            102,
+                            105,
                             108,
-                            110,
                             111,
+                            113,
+                            115,
                             117,
-                            121,
-                            122,
-                            124,
-                            127,
-                            130,
-                            132,
-                            138,
-                            140,
-                            146,
-                            151,
-                            153,
-                            156
+                            119,
+                            120,
+                            123,
+                            126,
+                            129,
+                            131,
+                            133,
+                            135,
+                            139,
+                            144,
+                            145,
+                            150,
+                            152,
+                            157,
+                            159,
+                            160,
+                            172,
+                            174,
+                            176,
+                            177,
+                            183,
+                            188,
+                            189,
+                            191,
+                            194,
+                            197,
+                            199,
+                            215,
+                            217,
+                            223,
+                            229,
+                            231,
+                            234
                         ]
                     },
                     {
@@ -1523,6 +1627,23 @@
                             85,
                             86,
                             87
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/text/copyable-field.blade.php",
+                        "lines": [
+                            25,
+                            57,
+                            58,
+                            66,
+                            68,
+                            70,
+                            72,
+                            84,
+                            93,
+                            95,
+                            102,
+                            103
                         ]
                     },
                     {
@@ -2366,7 +2487,7 @@
                 ]
             },
             "span": {
-                "count": 188,
+                "count": 202,
                 "files": [
                     {
                         "path": "resources/views/components/account/partials/preferences/⚡current-user.blade.php",
@@ -2475,16 +2596,28 @@
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
                             15,
-                            17
+                            17,
+                            26,
+                            28
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            49,
+                            54,
+                            197,
+                            206,
+                            242
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            99,
-                            101,
-                            113,
-                            115
+                            161,
+                            167,
+                            179,
+                            181
                         ]
                     },
                     {
@@ -2570,6 +2703,15 @@
                             42,
                             67,
                             70
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/locale/flag.blade.php",
+                        "lines": [
+                            41,
+                            47,
+                            49,
+                            55
                         ]
                     },
                     {
@@ -2849,9 +2991,9 @@
     },
     "flux": {
         "counts": {
-            "available": 535,
-            "used": 125,
-            "unused": 410,
+            "available": 542,
+            "used": 128,
+            "unused": 414,
             "used_unknown": 0
         },
         "available": {
@@ -3233,6 +3375,9 @@
             "flux:icon.bookmark-square": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/bookmark-square.blade.php"
             },
+            "flux:icon.braces": {
+                "path": "resources/views/flux/icon/braces.blade.php"
+            },
             "flux:icon.briefcase": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/briefcase.blade.php"
             },
@@ -3374,6 +3519,9 @@
             "flux:icon.circle-user-round": {
                 "path": "resources/views/flux/icon/circle-user-round.blade.php"
             },
+            "flux:icon.circle-x": {
+                "path": "resources/views/flux/icon/circle-x.blade.php"
+            },
             "flux:icon.clipboard": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/clipboard.blade.php"
             },
@@ -3433,6 +3581,12 @@
             },
             "flux:icon.contact-round": {
                 "path": "resources/views/flux/icon/contact-round.blade.php"
+            },
+            "flux:icon.copy-check": {
+                "path": "resources/views/flux/icon/copy-check.blade.php"
+            },
+            "flux:icon.copy-plus": {
+                "path": "resources/views/flux/icon/copy-plus.blade.php"
             },
             "flux:icon.cpu-chip": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/cpu-chip.blade.php"
@@ -3935,6 +4089,9 @@
             "flux:icon.rotate-ccw": {
                 "path": "resources/views/flux/icon/rotate-ccw.blade.php"
             },
+            "flux:icon.route": {
+                "path": "resources/views/flux/icon/route.blade.php"
+            },
             "flux:icon.route-off": {
                 "path": "resources/views/flux/icon/route-off.blade.php"
             },
@@ -3946,6 +4103,9 @@
             },
             "flux:icon.scale": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/scale.blade.php"
+            },
+            "flux:icon.scan-search": {
+                "path": "resources/views/flux/icon/scan-search.blade.php"
             },
             "flux:icon.scissors": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/scissors.blade.php"
@@ -4024,6 +4184,9 @@
             },
             "flux:icon.square-3-stack-3d": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/square-3-stack-3d.blade.php"
+            },
+            "flux:icon.square-dashed-text": {
+                "path": "resources/views/flux/icon/square-dashed-text.blade.php"
             },
             "flux:icon.square-pen": {
                 "path": "resources/views/flux/icon/square-pen.blade.php"
@@ -4480,8 +4643,15 @@
                 ]
             },
             "flux:badge": {
-                "count": 162,
+                "count": 174,
                 "files": [
+                    {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                        "lines": [
+                            12,
+                            17
+                        ]
+                    },
                     {
                         "path": "resources/views/components/admin/partials/app-settings/⚡table-icon-registry.blade.php",
                         "lines": [
@@ -4637,18 +4807,18 @@
                             169,
                             171,
                             177,
-                            258,
-                            263,
-                            265,
-                            270,
-                            272,
-                            277,
-                            279,
-                            285,
-                            287,
-                            293,
-                            312,
-                            317
+                            255,
+                            260,
+                            262,
+                            267,
+                            269,
+                            274,
+                            276,
+                            282,
+                            284,
+                            290,
+                            309,
+                            314
                         ]
                     },
                     {
@@ -4689,27 +4859,40 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                         "lines": [
-                            73,
-                            78,
-                            82,
-                            87,
-                            91,
-                            96,
-                            100,
-                            105,
-                            109,
-                            114,
-                            118,
-                            123
+                            167,
+                            172,
+                            176,
+                            181,
+                            185,
+                            190,
+                            194,
+                            199,
+                            203,
+                            208,
+                            212,
+                            217,
+                            221,
+                            226
                         ]
                     },
                     {
-                        "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
                         "lines": [
-                            76,
-                            81,
-                            135,
-                            140
+                            18,
+                            24,
+                            216,
+                            221,
+                            272,
+                            277,
+                            294,
+                            300
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/badge/context.blade.php",
+                        "lines": [
+                            22,
+                            28
                         ]
                     },
                     {
@@ -4717,6 +4900,13 @@
                         "lines": [
                             16,
                             30
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/text/copyable-field.blade.php",
+                        "lines": [
+                            83,
+                            89
                         ]
                     },
                     {
@@ -4769,7 +4959,7 @@
                 ]
             },
             "flux:button": {
-                "count": 126,
+                "count": 132,
                 "files": [
                     {
                         "path": "resources/views/components/account/partials/preferences/⚡current-user.blade.php",
@@ -4786,6 +4976,13 @@
                         ]
                     },
                     {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                        "lines": [
+                            22,
+                            33
+                        ]
+                    },
+                    {
                         "path": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
                         "lines": [
                             236,
@@ -4799,6 +4996,13 @@
                         "lines": [
                             16,
                             26
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "lines": [
+                            258,
+                            266
                         ]
                     },
                     {
@@ -4943,6 +5147,13 @@
                             106,
                             109,
                             117
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/text/copyable-field.blade.php",
+                        "lines": [
+                            95,
+                            116
                         ]
                     },
                     {
@@ -5117,7 +5328,7 @@
                 ]
             },
             "flux:callout": {
-                "count": 154,
+                "count": 174,
                 "files": [
                     {
                         "path": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
@@ -5145,7 +5356,9 @@
                             52,
                             68,
                             71,
-                            87
+                            87,
+                            90,
+                            106
                         ]
                     },
                     {
@@ -5240,18 +5453,18 @@
                             204,
                             222,
                             225,
-                            246,
-                            332,
+                            243,
+                            329,
+                            346,
                             349,
-                            352,
+                            366,
                             369,
-                            372,
-                            389,
-                            396,
+                            386,
+                            393,
+                            410,
                             413,
-                            416,
-                            433,
-                            439
+                            430,
+                            436
                         ]
                     },
                     {
@@ -5314,13 +5527,36 @@
                         "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                         "lines": [
                             11,
-                            26,
-                            28,
-                            43,
+                            27,
+                            29,
                             45,
-                            60,
-                            62,
-                            127
+                            47,
+                            63,
+                            65,
+                            81,
+                            83,
+                            99,
+                            101,
+                            117,
+                            119,
+                            135,
+                            137,
+                            153,
+                            155,
+                            230
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            30,
+                            55,
+                            58,
+                            78,
+                            81,
+                            94,
+                            97,
+                            110
                         ]
                     },
                     {
@@ -5371,7 +5607,7 @@
                 ]
             },
             "flux:callout.heading": {
-                "count": 136,
+                "count": 156,
                 "files": [
                     {
                         "path": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
@@ -5399,7 +5635,9 @@
                             57,
                             59,
                             76,
-                            78
+                            78,
+                            95,
+                            97
                         ]
                     },
                     {
@@ -5551,14 +5789,37 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                         "lines": [
-                            15,
-                            17,
-                            32,
+                            16,
+                            18,
                             34,
-                            49,
-                            51,
-                            66,
-                            68
+                            36,
+                            52,
+                            54,
+                            70,
+                            72,
+                            88,
+                            90,
+                            106,
+                            108,
+                            124,
+                            126,
+                            142,
+                            144,
+                            160,
+                            162
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            35,
+                            37,
+                            63,
+                            65,
+                            86,
+                            88,
+                            102,
+                            104
                         ]
                     },
                     {
@@ -5597,7 +5858,7 @@
                 ]
             },
             "flux:callout.text": {
-                "count": 204,
+                "count": 236,
                 "files": [
                     {
                         "path": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
@@ -5637,7 +5898,11 @@
                             80,
                             82,
                             84,
-                            86
+                            86,
+                            99,
+                            101,
+                            103,
+                            105
                         ]
                     },
                     {
@@ -5747,7 +6012,7 @@
                         "path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
                         "lines": [
                             115,
-                            438
+                            435
                         ]
                     },
                     {
@@ -5835,20 +6100,53 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                         "lines": [
-                            19,
-                            21,
-                            23,
-                            25,
-                            36,
+                            20,
+                            22,
+                            24,
+                            26,
                             38,
                             40,
                             42,
-                            53,
-                            55,
-                            57,
-                            59,
-                            70,
-                            126
+                            44,
+                            56,
+                            58,
+                            60,
+                            62,
+                            74,
+                            76,
+                            78,
+                            80,
+                            92,
+                            94,
+                            96,
+                            98,
+                            110,
+                            112,
+                            114,
+                            116,
+                            128,
+                            130,
+                            132,
+                            134,
+                            146,
+                            148,
+                            150,
+                            152,
+                            164,
+                            229
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            39,
+                            54,
+                            67,
+                            77,
+                            91,
+                            93,
+                            107,
+                            109
                         ]
                     },
                     {
@@ -5891,7 +6189,7 @@
                 ]
             },
             "flux:card": {
-                "count": 142,
+                "count": 144,
                 "files": [
                     {
                         "path": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
@@ -5922,6 +6220,13 @@
                         ]
                     },
                     {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                        "lines": [
+                            3,
+                            40
+                        ]
+                    },
+                    {
                         "path": "resources/views/components/admin/partials/app-settings/⚡meta-health.blade.php",
                         "lines": [
                             4,
@@ -5932,7 +6237,7 @@
                         "path": "resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php",
                         "lines": [
                             4,
-                            89
+                            108
                         ]
                     },
                     {
@@ -6114,21 +6419,21 @@
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
                             4,
-                            143
+                            165
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                         "lines": [
                             4,
-                            129
+                            232
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
                             4,
-                            195
+                            297
                         ]
                     },
                     {
@@ -6155,8 +6460,8 @@
                     {
                         "path": "resources/views/components/admin/⚡app-settings.blade.php",
                         "lines": [
-                            5,
-                            23
+                            3,
+                            24
                         ]
                     },
                     {
@@ -6212,7 +6517,7 @@
                         "path": "resources/views/components/admin/⚡translation-list.blade.php",
                         "lines": [
                             5,
-                            22
+                            27
                         ]
                     },
                     {
@@ -6497,7 +6802,7 @@
                 ]
             },
             "flux:field": {
-                "count": 112,
+                "count": 114,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
@@ -6536,6 +6841,13 @@
                         "lines": [
                             9,
                             14
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "lines": [
+                            29,
+                            48
                         ]
                     },
                     {
@@ -7185,6 +7497,28 @@
                     }
                 ]
             },
+            "flux:icon.copy-check": {
+                "count": 1,
+                "files": [
+                    {
+                        "path": "resources/views/components/ui/text/copyable-field.blade.php",
+                        "lines": [
+                            110
+                        ]
+                    }
+                ]
+            },
+            "flux:icon.copy-plus": {
+                "count": 1,
+                "files": [
+                    {
+                        "path": "resources/views/components/ui/text/copyable-field.blade.php",
+                        "lines": [
+                            104
+                        ]
+                    }
+                ]
+            },
             "flux:icon.device-phone-mobile": {
                 "count": 1,
                 "files": [
@@ -7214,7 +7548,7 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            109
+                            131
                         ]
                     },
                     {
@@ -7429,7 +7763,7 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            75
+                            97
                         ]
                     },
                     {
@@ -7539,7 +7873,7 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            47
+                            69
                         ]
                     },
                     {
@@ -7929,7 +8263,7 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            50
+                            72
                         ]
                     },
                     {
@@ -8187,12 +8521,12 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            45,
-                            60,
-                            73,
-                            94,
-                            107,
-                            127
+                            67,
+                            82,
+                            95,
+                            116,
+                            129,
+                            149
                         ]
                     },
                     {
@@ -8456,12 +8790,12 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            46,
-                            48,
-                            74,
-                            76,
-                            108,
-                            110
+                            68,
+                            70,
+                            96,
+                            98,
+                            130,
+                            132
                         ]
                     },
                     {
@@ -8630,7 +8964,7 @@
                 ]
             },
             "flux:label": {
-                "count": 166,
+                "count": 168,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
@@ -8733,12 +9067,14 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            34,
-                            43,
-                            64,
-                            71,
-                            98,
-                            105
+                            37,
+                            46,
+                            56,
+                            65,
+                            86,
+                            93,
+                            120,
+                            127
                         ]
                     },
                     {
@@ -9054,7 +9390,7 @@
                 ]
             },
             "flux:modal": {
-                "count": 16,
+                "count": 18,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
@@ -9089,6 +9425,13 @@
                         "lines": [
                             4,
                             168
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            3,
+                            336
                         ]
                     },
                     {
@@ -9416,10 +9759,10 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            78,
-                            93,
-                            112,
-                            126
+                            100,
+                            115,
+                            134,
+                            148
                         ]
                     },
                     {
@@ -9674,14 +10017,14 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            83,
-                            85,
-                            88,
-                            90,
-                            117,
-                            119,
-                            122,
-                            124
+                            105,
+                            107,
+                            110,
+                            112,
+                            139,
+                            141,
+                            144,
+                            146
                         ]
                     },
                     {
@@ -9837,7 +10180,7 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            184
+                            285
                         ]
                     },
                     {
@@ -10155,6 +10498,17 @@
                     }
                 ]
             },
+            "flux:switch": {
+                "count": 1,
+                "files": [
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "lines": [
+                            33
+                        ]
+                    }
+                ]
+            },
             "flux:table": {
                 "count": 22,
                 "files": [
@@ -10224,8 +10578,8 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            12,
-                            180
+                            15,
+                            281
                         ]
                     },
                     {
@@ -10238,7 +10592,7 @@
                 ]
             },
             "flux:table.cell": {
-                "count": 180,
+                "count": 182,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/app-settings/⚡table-icon-registry.blade.php",
@@ -10446,18 +10800,20 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            71,
-                            87,
-                            89,
-                            118,
-                            120,
-                            124,
-                            126,
-                            153,
-                            155,
-                            168,
-                            172,
-                            176
+                            105,
+                            119,
+                            122,
+                            193,
+                            196,
+                            200,
+                            203,
+                            235,
+                            238,
+                            251,
+                            254,
+                            267,
+                            273,
+                            277
                         ]
                     },
                     {
@@ -10478,7 +10834,7 @@
                 ]
             },
             "flux:table.column": {
-                "count": 166,
+                "count": 168,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/app-settings/⚡table-icon-registry.blade.php",
@@ -10674,16 +11030,18 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            14,
-                            23,
-                            25,
-                            32,
+                            21,
                             34,
-                            43,
-                            45,
-                            54,
+                            37,
+                            44,
+                            47,
                             56,
-                            65
+                            59,
+                            68,
+                            71,
+                            80,
+                            83,
+                            94
                         ]
                     },
                     {
@@ -10772,8 +11130,8 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            13,
-                            66
+                            18,
+                            95
                         ]
                     },
                     {
@@ -10866,10 +11224,10 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            70,
-                            169,
-                            171,
-                            177
+                            102,
+                            268,
+                            270,
+                            278
                         ]
                     },
                     {
@@ -10950,8 +11308,8 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            68,
-                            179
+                            98,
+                            280
                         ]
                     },
                     {
@@ -11692,6 +12050,9 @@
             "flux:icon.bookmark-square": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/bookmark-square.blade.php"
             },
+            "flux:icon.braces": {
+                "path": "resources/views/flux/icon/braces.blade.php"
+            },
             "flux:icon.briefcase": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/briefcase.blade.php"
             },
@@ -11793,6 +12154,9 @@
             },
             "flux:icon.circle-stack": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/circle-stack.blade.php"
+            },
+            "flux:icon.circle-x": {
+                "path": "resources/views/flux/icon/circle-x.blade.php"
             },
             "flux:icon.clipboard": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/clipboard.blade.php"
@@ -12253,6 +12617,9 @@
             "flux:icon.rotate-ccw": {
                 "path": "resources/views/flux/icon/rotate-ccw.blade.php"
             },
+            "flux:icon.route": {
+                "path": "resources/views/flux/icon/route.blade.php"
+            },
             "flux:icon.route-off": {
                 "path": "resources/views/flux/icon/route-off.blade.php"
             },
@@ -12264,6 +12631,9 @@
             },
             "flux:icon.scale": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/scale.blade.php"
+            },
+            "flux:icon.scan-search": {
+                "path": "resources/views/flux/icon/scan-search.blade.php"
             },
             "flux:icon.scissors": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/scissors.blade.php"
@@ -12327,6 +12697,9 @@
             },
             "flux:icon.square-3-stack-3d": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/icon/square-3-stack-3d.blade.php"
+            },
+            "flux:icon.square-dashed-text": {
+                "path": "resources/views/flux/icon/square-dashed-text.blade.php"
             },
             "flux:icon.square-pen": {
                 "path": "resources/views/flux/icon/square-pen.blade.php"
@@ -12580,9 +12953,6 @@
             "flux:skeleton.line": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/skeleton/line.blade.php"
             },
-            "flux:switch": {
-                "path": "vendor/livewire/flux/stubs/resources/views/flux/switch.blade.php"
-            },
             "flux:table.sortable": {
                 "path": "vendor/livewire/flux/stubs/resources/views/flux/table/sortable.blade.php"
             },
@@ -12606,12 +12976,15 @@
     },
     "custom": {
         "counts": {
-            "available": 24,
-            "used": 23,
+            "available": 27,
+            "used": 26,
             "unused": 1,
             "used_unknown": 0
         },
         "available": {
+            "x-ui.badge.context": {
+                "path": "resources/views/components/ui/badge/context.blade.php"
+            },
             "x-ui.button.cancel": {
                 "path": "resources/views/components/ui/button/cancel.blade.php"
             },
@@ -12651,6 +13024,9 @@
             "x-ui.headers.page": {
                 "path": "resources/views/components/ui/headers/page.blade.php"
             },
+            "x-ui.locale.flag": {
+                "path": "resources/views/components/ui/locale/flag.blade.php"
+            },
             "x-ui.role-badge": {
                 "path": "resources/views/components/ui/role-badge.blade.php"
             },
@@ -12659,6 +13035,9 @@
             },
             "x-ui.table.per-page-selector": {
                 "path": "resources/views/components/ui/table/per-page-selector.blade.php"
+            },
+            "x-ui.text.copyable-field": {
+                "path": "resources/views/components/ui/text/copyable-field.blade.php"
             },
             "x-ui.text.highlight": {
                 "path": "resources/views/components/ui/text/highlight.blade.php"
@@ -12686,8 +13065,35 @@
             }
         },
         "used": {
+            "x-ui.badge.context": {
+                "count": 7,
+                "files": [
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            42,
+                            49,
+                            160
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "lines": [
+                            111,
+                            179,
+                            218
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/text/copyable-field.blade.php",
+                        "lines": [
+                            77
+                        ]
+                    }
+                ]
+            },
             "x-ui.button.cancel": {
-                "count": 6,
+                "count": 7,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
@@ -12717,6 +13123,12 @@
                         "path": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
                         "lines": [
                             159
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            324
                         ]
                     },
                     {
@@ -12843,7 +13255,7 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            140
+                            162
                         ]
                     },
                     {
@@ -12920,7 +13332,7 @@
                     {
                         "path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
                         "lines": [
-                            297
+                            294
                         ]
                     }
                 ]
@@ -12989,8 +13401,14 @@
                 ]
             },
             "x-ui.headers.card": {
-                "count": 56,
+                "count": 58,
                 "files": [
+                    {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                        "lines": [
+                            5
+                        ]
+                    },
                     {
                         "path": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
                         "lines": [
@@ -13134,13 +13552,19 @@
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
                             5,
-                            30
+                            52
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                         "lines": [
                             5
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            12
                         ]
                     },
                     {
@@ -13221,7 +13645,7 @@
                     {
                         "path": "resources/views/components/admin/⚡app-settings.blade.php",
                         "lines": [
-                            6
+                            4
                         ]
                     },
                     {
@@ -13286,6 +13710,23 @@
                         "lines": [
                             4,
                             22
+                        ]
+                    }
+                ]
+            },
+            "x-ui.locale.flag": {
+                "count": 2,
+                "files": [
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            240
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "lines": [
+                            209
                         ]
                     }
                 ]
@@ -13374,7 +13815,7 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            190
+                            292
                         ]
                     },
                     {
@@ -13433,13 +13874,29 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            131
+                            153
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/user-list/⚡filter.blade.php",
                         "lines": [
                             78
+                        ]
+                    }
+                ]
+            },
+            "x-ui.text.copyable-field": {
+                "count": 6,
+                "files": [
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            174,
+                            184,
+                            198,
+                            231,
+                            249,
+                            306
                         ]
                     }
                 ]
@@ -13524,9 +13981,9 @@
                             209,
                             213,
                             217,
-                            233,
-                            237,
-                            241
+                            230,
+                            234,
+                            238
                         ]
                     }
                 ]
@@ -13537,8 +13994,8 @@
                     {
                         "path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
                         "lines": [
-                            402,
-                            422
+                            399,
+                            419
                         ]
                     }
                 ]
@@ -13549,9 +14006,9 @@
                     {
                         "path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
                         "lines": [
-                            338,
-                            358,
-                            378
+                            335,
+                            355,
+                            375
                         ]
                     }
                 ]
@@ -13651,7 +14108,7 @@
                 ]
             },
             "x-ui.tooltip.trigger": {
-                "count": 296,
+                "count": 298,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
@@ -13904,27 +14361,29 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            35,
-                            42,
-                            65,
-                            70,
-                            99,
-                            104
+                            57,
+                            64,
+                            87,
+                            92,
+                            121,
+                            126
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            15,
-                            22,
-                            26,
-                            31,
-                            35,
-                            42,
-                            46,
-                            53,
-                            57,
-                            64
+                            25,
+                            33,
+                            38,
+                            43,
+                            48,
+                            55,
+                            60,
+                            67,
+                            72,
+                            79,
+                            87,
+                            93
                         ]
                     },
                     {
@@ -14120,7 +14579,7 @@
     },
     "includes": {
         "counts": {
-            "used": 64
+            "used": 66
         },
         "used": {
             "components.account.partials.preferences.⚡application-preferences": {
@@ -14156,13 +14615,24 @@
                     }
                 ]
             },
+            "components.admin.partials.app-settings.⚡locale": {
+                "count": 1,
+                "files": [
+                    {
+                        "path": "resources/views/components/admin/⚡app-settings.blade.php",
+                        "lines": [
+                            13
+                        ]
+                    }
+                ]
+            },
             "components.admin.partials.app-settings.⚡meta-health": {
                 "count": 1,
                 "files": [
                     {
                         "path": "resources/views/components/admin/⚡app-settings.blade.php",
                         "lines": [
-                            15
+                            16
                         ]
                     }
                 ]
@@ -14173,7 +14643,7 @@
                     {
                         "path": "resources/views/components/admin/⚡app-settings.blade.php",
                         "lines": [
-                            12
+                            10
                         ]
                     }
                 ]
@@ -14184,7 +14654,7 @@
                     {
                         "path": "resources/views/components/admin/⚡app-settings.blade.php",
                         "lines": [
-                            21
+                            22
                         ]
                     }
                 ]
@@ -14195,7 +14665,7 @@
                     {
                         "path": "resources/views/components/admin/⚡app-settings.blade.php",
                         "lines": [
-                            18
+                            19
                         ]
                     }
                 ]
@@ -14526,6 +14996,17 @@
                         "path": "resources/views/components/admin/⚡translation-list.blade.php",
                         "lines": [
                             14
+                        ]
+                    }
+                ]
+            },
+            "components.admin.partials.translation-list.⚡modal": {
+                "count": 1,
+                "files": [
+                    {
+                        "path": "resources/views/components/admin/⚡translation-list.blade.php",
+                        "lines": [
+                            23
                         ]
                     }
                 ]

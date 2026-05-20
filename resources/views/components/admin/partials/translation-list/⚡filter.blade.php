@@ -25,6 +25,28 @@
                     </span>
                 </flux:button>
             @endforeach
+
+            <flux:field
+                class="ml-3 w-64 align-middle"
+                variant="inline"
+            >
+                <flux:switch
+                    class="switch-colored mr-1 mt-1.5 hover:cursor-pointer"
+                    wire:click="toggleOnlyProblems"
+                />
+                <flux:label
+                    class="text-sm opacity-70 hover:cursor-pointer"
+                    wire:click="toggleOnlyProblems"
+                >
+                    {{ __('Only problems') }}
+
+                    <span class="ml-1 opacity-70">
+                        {{ $problemCount }}
+                    </span>
+                </flux:label>
+
+            </flux:field>
+
         </div>
 
     </x-ui.headers.card>

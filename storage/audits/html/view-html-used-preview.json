@@ -1,14 +1,15 @@
 {
-    "generated_at": "2026-05-19T07:52:45+00:00",
+    "generated_at": "2026-05-20T17:33:29+00:00",
     "scan": {
         "paths": [
             "resources/views"
         ],
-        "files_scanned": 224,
+        "files_scanned": 236,
         "skipped_paths": [],
         "excluded_files": [
             "resources/views/components/account/⚡settings.xxx.blade.php",
             "resources/views/components/admin/⚡user-edit.yyy.blade.php",
+            "resources/views/components/ui/text/xxx-copyable-textarea.blade.php",
             "resources/views/components/ui/xxx-safe-flux-icon.blade.php"
         ]
     },
@@ -69,7 +70,7 @@
         },
         "top_used": {
             "div": {
-                "count": 1070,
+                "count": 1160,
                 "files": [
                     {
                         "path": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
@@ -97,6 +98,17 @@
                         ]
                     },
                     {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                        "lines": [
+                            4,
+                            10,
+                            12,
+                            22,
+                            24,
+                            26
+                        ]
+                    },
+                    {
                         "path": "resources/views/components/admin/partials/app-settings/⚡meta-health.blade.php",
                         "lines": [
                             9,
@@ -107,7 +119,7 @@
                         "path": "resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php",
                         "lines": [
                             9,
-                            71
+                            86
                         ]
                     },
                     {
@@ -493,51 +505,51 @@
                             170,
                             175,
                             179,
-                            187,
-                            191,
+                            184,
+                            188,
+                            190,
                             193,
                             196,
                             199,
-                            202,
-                            203,
-                            225,
+                            200,
+                            222,
+                            224,
+                            226,
                             227,
-                            229,
                             230,
+                            231,
                             233,
-                            234,
-                            236,
-                            242,
+                            239,
+                            240,
                             243,
-                            246,
-                            252,
-                            256,
-                            260,
-                            262,
-                            264,
-                            269,
-                            273,
-                            275,
-                            277,
-                            282,
-                            286,
-                            288,
-                            290,
+                            249,
+                            253,
+                            257,
+                            259,
+                            261,
+                            266,
+                            270,
+                            272,
+                            274,
+                            279,
+                            283,
+                            285,
+                            287,
+                            289,
                             292,
-                            295,
-                            299,
-                            303,
-                            305,
-                            307,
-                            312,
-                            316,
-                            318,
+                            296,
+                            300,
+                            302,
+                            304,
+                            309,
+                            313,
+                            315,
+                            317,
+                            319,
                             320,
+                            321,
                             322,
-                            323,
-                            324,
-                            325,
-                            328
+                            325
                         ]
                     },
                     {
@@ -777,28 +789,97 @@
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
                             7,
-                            20,
-                            24,
-                            25,
-                            39,
-                            41,
-                            66,
-                            68,
-                            92,
-                            94,
-                            96,
-                            98,
-                            100,
-                            101
+                            33,
+                            37,
+                            38,
+                            52,
+                            54,
+                            79,
+                            81,
+                            105,
+                            107,
+                            109,
+                            111,
+                            113,
+                            114
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                         "lines": [
                             7,
+                            128,
+                            170,
+                            173
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            5,
+                            6,
+                            15,
+                            17,
+                            48,
+                            51,
+                            53,
                             56,
-                            92,
-                            95
+                            85,
+                            122,
+                            123,
+                            124,
+                            125,
+                            127,
+                            129,
+                            131,
+                            132,
+                            135,
+                            136,
+                            138,
+                            141,
+                            147,
+                            149,
+                            155,
+                            156,
+                            158,
+                            161,
+                            166,
+                            167,
+                            169,
+                            172,
+                            175,
+                            177,
+                            183,
+                            186,
+                            189,
+                            209,
+                            213,
+                            215,
+                            217,
+                            218,
+                            220,
+                            223,
+                            226,
+                            228,
+                            234,
+                            236,
+                            238,
+                            239,
+                            241,
+                            246,
+                            248,
+                            254,
+                            255,
+                            263,
+                            265,
+                            267,
+                            269,
+                            270,
+                            272,
+                            274,
+                            275,
+                            277,
+                            279
                         ]
                     },
                     {
@@ -806,44 +887,52 @@
                         "lines": [
                             7,
                             8,
-                            46,
-                            51,
-                            53,
-                            54,
-                            58,
-                            60,
-                            63,
-                            65,
-                            68,
+                            69,
                             70,
-                            72,
-                            74,
+                            75,
                             76,
-                            79,
-                            84,
-                            85,
-                            89,
-                            91,
-                            95,
-                            97,
-                            98,
-                            106,
+                            100,
+                            101,
+                            102,
+                            105,
                             108,
-                            110,
                             111,
+                            113,
+                            115,
                             117,
-                            121,
-                            122,
-                            124,
-                            127,
-                            130,
-                            132,
-                            138,
-                            140,
-                            146,
-                            151,
-                            153,
-                            156
+                            119,
+                            120,
+                            123,
+                            126,
+                            129,
+                            131,
+                            133,
+                            135,
+                            139,
+                            144,
+                            145,
+                            150,
+                            152,
+                            157,
+                            159,
+                            160,
+                            172,
+                            174,
+                            176,
+                            177,
+                            183,
+                            188,
+                            189,
+                            191,
+                            194,
+                            197,
+                            199,
+                            215,
+                            217,
+                            223,
+                            229,
+                            231,
+                            234
                         ]
                     },
                     {
@@ -1195,6 +1284,23 @@
                             85,
                             86,
                             87
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/text/copyable-field.blade.php",
+                        "lines": [
+                            25,
+                            57,
+                            58,
+                            66,
+                            68,
+                            70,
+                            72,
+                            84,
+                            93,
+                            95,
+                            102,
+                            103
                         ]
                     },
                     {
@@ -1573,7 +1679,7 @@
                 ]
             },
             "span": {
-                "count": 188,
+                "count": 202,
                 "files": [
                     {
                         "path": "resources/views/components/account/partials/preferences/⚡current-user.blade.php",
@@ -1682,16 +1788,28 @@
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
                             15,
-                            17
+                            17,
+                            26,
+                            28
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            49,
+                            54,
+                            197,
+                            206,
+                            242
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            99,
-                            101,
-                            113,
-                            115
+                            161,
+                            167,
+                            179,
+                            181
                         ]
                     },
                     {
@@ -1777,6 +1895,15 @@
                             42,
                             67,
                             70
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/locale/flag.blade.php",
+                        "lines": [
+                            41,
+                            47,
+                            49,
+                            55
                         ]
                     },
                     {
@@ -2054,6 +2181,62 @@
                     }
                 ]
             },
+            "code": {
+                "count": 18,
+                "files": [
+                    {
+                        "path": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+                        "lines": [
+                            155,
+                            157
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+                        "lines": [
+                            119,
+                            121
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            205,
+                            243,
+                            245
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/management/people/create-person/⚡generated-password.blade.php",
+                        "lines": [
+                            56,
+                            58
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/text/copyable-field.blade.php",
+                        "lines": [
+                            97,
+                            101
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/text/stat-value-code.blade.php",
+                        "lines": [
+                            19,
+                            21,
+                            24
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/text/stat-value-num.blade.php",
+                        "lines": [
+                            21,
+                            23
+                        ]
+                    }
+                ]
+            },
             "body": {
                 "count": 12,
                 "files": [
@@ -2097,47 +2280,6 @@
                         "lines": [
                             18,
                             105
-                        ]
-                    }
-                ]
-            },
-            "code": {
-                "count": 12,
-                "files": [
-                    {
-                        "path": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
-                        "lines": [
-                            155,
-                            157
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
-                        "lines": [
-                            119,
-                            121
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/management/people/create-person/⚡generated-password.blade.php",
-                        "lines": [
-                            56,
-                            58
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/ui/text/stat-value-code.blade.php",
-                        "lines": [
-                            19,
-                            21,
-                            24
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/ui/text/stat-value-num.blade.php",
-                        "lines": [
-                            21,
-                            23
                         ]
                     }
                 ]
@@ -2537,14 +2679,14 @@
     },
     "flux": {
         "counts": {
-            "available": 535,
-            "used": 125,
-            "unused": 410,
+            "available": 542,
+            "used": 128,
+            "unused": 414,
             "used_unknown": 0
         },
         "top_used": {
             "flux:callout.text": {
-                "count": 204,
+                "count": 236,
                 "files": [
                     {
                         "path": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
@@ -2584,7 +2726,11 @@
                             80,
                             82,
                             84,
-                            86
+                            86,
+                            99,
+                            101,
+                            103,
+                            105
                         ]
                     },
                     {
@@ -2694,7 +2840,7 @@
                         "path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
                         "lines": [
                             115,
-                            438
+                            435
                         ]
                     },
                     {
@@ -2782,20 +2928,53 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                         "lines": [
-                            19,
-                            21,
-                            23,
-                            25,
-                            36,
+                            20,
+                            22,
+                            24,
+                            26,
                             38,
                             40,
                             42,
-                            53,
-                            55,
-                            57,
-                            59,
-                            70,
-                            126
+                            44,
+                            56,
+                            58,
+                            60,
+                            62,
+                            74,
+                            76,
+                            78,
+                            80,
+                            92,
+                            94,
+                            96,
+                            98,
+                            110,
+                            112,
+                            114,
+                            116,
+                            128,
+                            130,
+                            132,
+                            134,
+                            146,
+                            148,
+                            150,
+                            152,
+                            164,
+                            229
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            39,
+                            54,
+                            67,
+                            77,
+                            91,
+                            93,
+                            107,
+                            109
                         ]
                     },
                     {
@@ -2838,7 +3017,7 @@
                 ]
             },
             "flux:table.cell": {
-                "count": 180,
+                "count": 182,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/app-settings/⚡table-icon-registry.blade.php",
@@ -3046,18 +3225,20 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            71,
-                            87,
-                            89,
-                            118,
-                            120,
-                            124,
-                            126,
-                            153,
-                            155,
-                            168,
-                            172,
-                            176
+                            105,
+                            119,
+                            122,
+                            193,
+                            196,
+                            200,
+                            203,
+                            235,
+                            238,
+                            251,
+                            254,
+                            267,
+                            273,
+                            277
                         ]
                     },
                     {
@@ -3274,14 +3455,14 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            83,
-                            85,
-                            88,
-                            90,
-                            117,
-                            119,
-                            122,
-                            124
+                            105,
+                            107,
+                            110,
+                            112,
+                            139,
+                            141,
+                            144,
+                            146
                         ]
                     },
                     {
@@ -3343,8 +3524,591 @@
                     }
                 ]
             },
+            "flux:badge": {
+                "count": 174,
+                "files": [
+                    {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                        "lines": [
+                            12,
+                            17
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡table-icon-registry.blade.php",
+                        "lines": [
+                            75,
+                            80,
+                            82,
+                            87
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡table-role-badges.blade.php",
+                        "lines": [
+                            114,
+                            119,
+                            121,
+                            126,
+                            128,
+                            133,
+                            137,
+                            142,
+                            144,
+                            149
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
+                        "lines": [
+                            153,
+                            158,
+                            164,
+                            169,
+                            176,
+                            181
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/country-reference-list/⚡meta.blade.php",
+                        "lines": [
+                            11,
+                            16,
+                            18,
+                            23,
+                            25,
+                            30
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
+                        "lines": [
+                            238,
+                            246,
+                            250,
+                            258,
+                            272,
+                            281,
+                            285,
+                            294
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
+                        "lines": [
+                            174,
+                            179,
+                            181,
+                            186
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+                        "lines": [
+                            91,
+                            96,
+                            98,
+                            103,
+                            105,
+                            110,
+                            112,
+                            117,
+                            119,
+                            121,
+                            154,
+                            160,
+                            245,
+                            247,
+                            249,
+                            251,
+                            254,
+                            256,
+                            259,
+                            264
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
+                        "lines": [
+                            43,
+                            51,
+                            65,
+                            73,
+                            87,
+                            95
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+                        "lines": [
+                            71,
+                            76,
+                            78,
+                            83,
+                            85,
+                            90,
+                            92,
+                            97,
+                            113,
+                            118,
+                            120,
+                            125,
+                            141,
+                            146,
+                            148,
+                            153,
+                            155,
+                            160,
+                            182,
+                            187,
+                            220,
+                            225
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
+                        "lines": [
+                            210,
+                            218,
+                            249,
+                            257,
+                            267,
+                            275
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+                        "lines": [
+                            143,
+                            148,
+                            150,
+                            155,
+                            157,
+                            162,
+                            164,
+                            169,
+                            171,
+                            177,
+                            255,
+                            260,
+                            262,
+                            267,
+                            269,
+                            274,
+                            276,
+                            282,
+                            284,
+                            290,
+                            309,
+                            314
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                        "lines": [
+                            173,
+                            178,
+                            193,
+                            198,
+                            200,
+                            205,
+                            218,
+                            223,
+                            225,
+                            230
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
+                        "lines": [
+                            127,
+                            132,
+                            156,
+                            161
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
+                        "lines": [
+                            171,
+                            176,
+                            180,
+                            185,
+                            187,
+                            192
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+                        "lines": [
+                            167,
+                            172,
+                            176,
+                            181,
+                            185,
+                            190,
+                            194,
+                            199,
+                            203,
+                            208,
+                            212,
+                            217,
+                            221,
+                            226
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            18,
+                            24,
+                            216,
+                            221,
+                            272,
+                            277,
+                            294,
+                            300
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/badge/context.blade.php",
+                        "lines": [
+                            22,
+                            28
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/role-badge.blade.php",
+                        "lines": [
+                            16,
+                            30
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/text/copyable-field.blade.php",
+                        "lines": [
+                            83,
+                            89
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/text/stat-value-code.blade.php",
+                        "lines": [
+                            23,
+                            29
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/text/stat-value-num.blade.php",
+                        "lines": [
+                            25,
+                            31
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/tooltip/badge-required.blade.php",
+                        "lines": [
+                            9,
+                            16
+                        ]
+                    },
+                    {
+                        "path": "resources/views/layouts/app/sidebar.blade.php",
+                        "lines": [
+                            70,
+                            77
+                        ]
+                    },
+                    {
+                        "path": "resources/views/pages/settings/⚡profile.blade.php",
+                        "lines": [
+                            329,
+                            334
+                        ]
+                    }
+                ]
+            },
+            "flux:callout": {
+                "count": 174,
+                "files": [
+                    {
+                        "path": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
+                        "lines": [
+                            38,
+                            50
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡meta-health.blade.php",
+                        "lines": [
+                            14,
+                            30,
+                            33,
+                            49
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php",
+                        "lines": [
+                            14,
+                            30,
+                            33,
+                            49,
+                            52,
+                            68,
+                            71,
+                            87,
+                            90,
+                            106
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/client-list/⚡meta.blade.php",
+                        "lines": [
+                            13,
+                            29,
+                            31,
+                            47,
+                            49,
+                            65,
+                            67,
+                            83,
+                            85,
+                            101
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/country-reference-list/⚡meta.blade.php",
+                        "lines": [
+                            35,
+                            46,
+                            48,
+                            59,
+                            61,
+                            72,
+                            74,
+                            85,
+                            87,
+                            98,
+                            100,
+                            111
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/fallback-report-list/⚡meta.blade.php",
+                        "lines": [
+                            13,
+                            29,
+                            31,
+                            47,
+                            49,
+                            65
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+                        "lines": [
+                            27,
+                            39,
+                            41,
+                            52,
+                            54,
+                            65,
+                            67,
+                            78,
+                            80,
+                            124,
+                            126,
+                            172,
+                            175,
+                            207,
+                            209,
+                            231,
+                            233,
+                            275
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+                        "lines": [
+                            46,
+                            58,
+                            60,
+                            100,
+                            102,
+                            128,
+                            130,
+                            163,
+                            165,
+                            196,
+                            198,
+                            235
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+                        "lines": [
+                            106,
+                            183,
+                            201,
+                            204,
+                            222,
+                            225,
+                            243,
+                            329,
+                            346,
+                            349,
+                            366,
+                            369,
+                            386,
+                            393,
+                            410,
+                            413,
+                            430,
+                            436
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/permission-list/⚡meta-overview.blade.php",
+                        "lines": [
+                            11,
+                            27,
+                            29,
+                            45,
+                            47,
+                            63,
+                            65,
+                            81
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/permission-list/⚡modal-role-permissions.blade.php",
+                        "lines": [
+                            61,
+                            73,
+                            75,
+                            87,
+                            89,
+                            101,
+                            103,
+                            115,
+                            117,
+                            129
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/person-list/⚡meta.blade.php",
+                        "lines": [
+                            11,
+                            27,
+                            29,
+                            45,
+                            47,
+                            63,
+                            65,
+                            81,
+                            83,
+                            99
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/role-list/⚡meta.blade.php",
+                        "lines": [
+                            13,
+                            28,
+                            30,
+                            45,
+                            47,
+                            62,
+                            64,
+                            79
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+                        "lines": [
+                            11,
+                            27,
+                            29,
+                            45,
+                            47,
+                            63,
+                            65,
+                            81,
+                            83,
+                            99,
+                            101,
+                            117,
+                            119,
+                            135,
+                            137,
+                            153,
+                            155,
+                            230
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            30,
+                            55,
+                            58,
+                            78,
+                            81,
+                            94,
+                            97,
+                            110
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/user-list/⚡meta.blade.php",
+                        "lines": [
+                            10,
+                            26,
+                            28,
+                            44,
+                            46,
+                            78,
+                            80,
+                            112,
+                            116,
+                            145,
+                            147,
+                            176
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/management/people/create-person/⚡form-login.blade.php",
+                        "lines": [
+                            35,
+                            46
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/management/people/create-person/⚡generated-password.blade.php",
+                        "lines": [
+                            4,
+                            48,
+                            52,
+                            76
+                        ]
+                    },
+                    {
+                        "path": "resources/views/pages/settings/two-factor/⚡recovery-codes.blade.php",
+                        "lines": [
+                            110
+                        ]
+                    },
+                    {
+                        "path": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
+                        "lines": [
+                            218
+                        ]
+                    }
+                ]
+            },
             "flux:label": {
-                "count": 166,
+                "count": 168,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
@@ -3447,12 +4211,14 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            34,
-                            43,
-                            64,
-                            71,
-                            98,
-                            105
+                            37,
+                            46,
+                            56,
+                            65,
+                            86,
+                            93,
+                            120,
+                            127
                         ]
                     },
                     {
@@ -3625,7 +4391,7 @@
                 ]
             },
             "flux:table.column": {
-                "count": 166,
+                "count": 168,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/app-settings/⚡table-icon-registry.blade.php",
@@ -3821,16 +4587,18 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            14,
-                            23,
-                            25,
-                            32,
+                            21,
                             34,
-                            43,
-                            45,
-                            54,
+                            37,
+                            44,
+                            47,
                             56,
-                            65
+                            59,
+                            68,
+                            71,
+                            80,
+                            83,
+                            94
                         ]
                     },
                     {
@@ -3850,362 +4618,58 @@
                     }
                 ]
             },
-            "flux:badge": {
-                "count": 162,
-                "files": [
-                    {
-                        "path": "resources/views/components/admin/partials/app-settings/⚡table-icon-registry.blade.php",
-                        "lines": [
-                            75,
-                            80,
-                            82,
-                            87
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/app-settings/⚡table-role-badges.blade.php",
-                        "lines": [
-                            114,
-                            119,
-                            121,
-                            126,
-                            128,
-                            133,
-                            137,
-                            142,
-                            144,
-                            149
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/client-list/⚡table.blade.php",
-                        "lines": [
-                            153,
-                            158,
-                            164,
-                            169,
-                            176,
-                            181
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/country-reference-list/⚡meta.blade.php",
-                        "lines": [
-                            11,
-                            16,
-                            18,
-                            23,
-                            25,
-                            30
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-                        "lines": [
-                            238,
-                            246,
-                            250,
-                            258,
-                            272,
-                            281,
-                            285,
-                            294
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
-                        "lines": [
-                            174,
-                            179,
-                            181,
-                            186
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-                        "lines": [
-                            91,
-                            96,
-                            98,
-                            103,
-                            105,
-                            110,
-                            112,
-                            117,
-                            119,
-                            121,
-                            154,
-                            160,
-                            245,
-                            247,
-                            249,
-                            251,
-                            254,
-                            256,
-                            259,
-                            264
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
-                        "lines": [
-                            43,
-                            51,
-                            65,
-                            73,
-                            87,
-                            95
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
-                        "lines": [
-                            71,
-                            76,
-                            78,
-                            83,
-                            85,
-                            90,
-                            92,
-                            97,
-                            113,
-                            118,
-                            120,
-                            125,
-                            141,
-                            146,
-                            148,
-                            153,
-                            155,
-                            160,
-                            182,
-                            187,
-                            220,
-                            225
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php",
-                        "lines": [
-                            210,
-                            218,
-                            249,
-                            257,
-                            267,
-                            275
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
-                        "lines": [
-                            143,
-                            148,
-                            150,
-                            155,
-                            157,
-                            162,
-                            164,
-                            169,
-                            171,
-                            177,
-                            258,
-                            263,
-                            265,
-                            270,
-                            272,
-                            277,
-                            279,
-                            285,
-                            287,
-                            293,
-                            312,
-                            317
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
-                        "lines": [
-                            173,
-                            178,
-                            193,
-                            198,
-                            200,
-                            205,
-                            218,
-                            223,
-                            225,
-                            230
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/person-list/⚡table.blade.php",
-                        "lines": [
-                            127,
-                            132,
-                            156,
-                            161
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
-                        "lines": [
-                            171,
-                            176,
-                            180,
-                            185,
-                            187,
-                            192
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-                        "lines": [
-                            73,
-                            78,
-                            82,
-                            87,
-                            91,
-                            96,
-                            100,
-                            105,
-                            109,
-                            114,
-                            118,
-                            123
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-                        "lines": [
-                            76,
-                            81,
-                            135,
-                            140
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/ui/role-badge.blade.php",
-                        "lines": [
-                            16,
-                            30
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/ui/text/stat-value-code.blade.php",
-                        "lines": [
-                            23,
-                            29
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/ui/text/stat-value-num.blade.php",
-                        "lines": [
-                            25,
-                            31
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/ui/tooltip/badge-required.blade.php",
-                        "lines": [
-                            9,
-                            16
-                        ]
-                    },
-                    {
-                        "path": "resources/views/layouts/app/sidebar.blade.php",
-                        "lines": [
-                            70,
-                            77
-                        ]
-                    },
-                    {
-                        "path": "resources/views/pages/settings/⚡profile.blade.php",
-                        "lines": [
-                            329,
-                            334
-                        ]
-                    }
-                ]
-            },
-            "flux:callout": {
-                "count": 154,
+            "flux:callout.heading": {
+                "count": 156,
                 "files": [
                     {
                         "path": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
                         "lines": [
-                            38,
-                            50
+                            43,
+                            45
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/app-settings/⚡meta-health.blade.php",
                         "lines": [
-                            14,
-                            30,
-                            33,
-                            49
+                            19,
+                            21,
+                            38,
+                            40
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php",
                         "lines": [
-                            14,
-                            30,
-                            33,
-                            49,
-                            52,
-                            68,
-                            71,
-                            87
+                            19,
+                            21,
+                            38,
+                            40,
+                            57,
+                            59,
+                            76,
+                            78,
+                            95,
+                            97
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/client-list/⚡meta.blade.php",
                         "lines": [
-                            13,
-                            29,
-                            31,
-                            47,
-                            49,
-                            65,
-                            67,
-                            83,
-                            85,
-                            101
+                            18,
+                            20,
+                            36,
+                            38,
+                            54,
+                            56,
+                            72,
+                            74,
+                            90,
+                            92
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/country-reference-list/⚡meta.blade.php",
                         "lines": [
-                            35,
-                            46,
-                            48,
-                            59,
-                            61,
-                            72,
-                            74,
-                            85,
-                            87,
-                            98,
-                            100,
-                            111
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/fallback-report-list/⚡meta.blade.php",
-                        "lines": [
-                            13,
-                            29,
-                            31,
-                            47,
-                            49,
-                            65
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-                        "lines": [
-                            27,
                             39,
                             41,
                             52,
@@ -4214,169 +4678,193 @@
                             67,
                             78,
                             80,
-                            124,
-                            126,
-                            172,
-                            175,
-                            207,
-                            209,
-                            231,
-                            233,
-                            275
+                            91,
+                            93,
+                            104,
+                            106
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/fallback-report-list/⚡meta.blade.php",
+                        "lines": [
+                            18,
+                            20,
+                            36,
+                            38,
+                            54,
+                            56
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
+                        "lines": [
+                            32,
+                            34,
+                            45,
+                            47,
+                            58,
+                            60,
+                            71,
+                            73,
+                            85,
+                            87,
+                            131,
+                            133,
+                            180,
+                            182,
+                            214,
+                            216,
+                            238,
+                            240
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
                         "lines": [
-                            46,
-                            58,
-                            60,
-                            100,
-                            102,
-                            128,
-                            130,
-                            163,
-                            165,
-                            196,
-                            198,
-                            235
+                            51,
+                            53,
+                            65,
+                            67,
+                            107,
+                            109,
+                            135,
+                            137,
+                            170,
+                            172,
+                            203,
+                            205
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
                         "lines": [
-                            106,
-                            183,
-                            201,
-                            204,
-                            222,
-                            225,
-                            246,
-                            332,
-                            349,
-                            352,
-                            369,
-                            372,
-                            389,
-                            396,
-                            413,
-                            416,
-                            433,
-                            439
+                            111,
+                            113
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/permission-list/⚡meta-overview.blade.php",
                         "lines": [
-                            11,
-                            27,
-                            29,
-                            45,
-                            47,
-                            63,
-                            65,
-                            81
+                            16,
+                            18,
+                            34,
+                            36,
+                            52,
+                            54,
+                            70,
+                            72
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/permission-list/⚡modal-role-permissions.blade.php",
                         "lines": [
-                            61,
-                            73,
-                            75,
-                            87,
-                            89,
-                            101,
-                            103,
-                            115,
-                            117,
-                            129
+                            66,
+                            68,
+                            80,
+                            82,
+                            94,
+                            96,
+                            108,
+                            110,
+                            122,
+                            124
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/person-list/⚡meta.blade.php",
                         "lines": [
-                            11,
-                            27,
-                            29,
-                            45,
-                            47,
-                            63,
-                            65,
-                            81,
-                            83,
-                            99
+                            16,
+                            18,
+                            34,
+                            36,
+                            52,
+                            54,
+                            70,
+                            72,
+                            88,
+                            90
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/role-list/⚡meta.blade.php",
                         "lines": [
-                            13,
-                            28,
-                            30,
-                            45,
-                            47,
-                            62,
-                            64,
-                            79
+                            17,
+                            19,
+                            34,
+                            36,
+                            51,
+                            53,
+                            68,
+                            70
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                         "lines": [
-                            11,
-                            26,
-                            28,
-                            43,
-                            45,
-                            60,
-                            62,
-                            127
+                            16,
+                            18,
+                            34,
+                            36,
+                            52,
+                            54,
+                            70,
+                            72,
+                            88,
+                            90,
+                            106,
+                            108,
+                            124,
+                            126,
+                            142,
+                            144,
+                            160,
+                            162
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            35,
+                            37,
+                            63,
+                            65,
+                            86,
+                            88,
+                            102,
+                            104
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/user-list/⚡meta.blade.php",
                         "lines": [
-                            10,
-                            26,
-                            28,
-                            44,
-                            46,
-                            78,
-                            80,
-                            112,
-                            116,
-                            145,
-                            147,
-                            176
+                            15,
+                            17,
+                            33,
+                            35,
+                            51,
+                            53,
+                            85,
+                            87,
+                            121,
+                            123,
+                            152,
+                            154
                         ]
                     },
                     {
                         "path": "resources/views/components/management/people/create-person/⚡form-login.blade.php",
                         "lines": [
-                            35,
-                            46
+                            39,
+                            41
                         ]
                     },
                     {
                         "path": "resources/views/components/management/people/create-person/⚡generated-password.blade.php",
                         "lines": [
-                            4,
-                            48,
-                            52,
-                            76
-                        ]
-                    },
-                    {
-                        "path": "resources/views/pages/settings/two-factor/⚡recovery-codes.blade.php",
-                        "lines": [
-                            110
-                        ]
-                    },
-                    {
-                        "path": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-                        "lines": [
-                            218
+                            9,
+                            11,
+                            57,
+                            59
                         ]
                     }
                 ]
@@ -4477,12 +4965,12 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            45,
-                            60,
-                            73,
-                            94,
-                            107,
-                            127
+                            67,
+                            82,
+                            95,
+                            116,
+                            129,
+                            149
                         ]
                     },
                     {
@@ -4746,12 +5234,12 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            46,
-                            48,
-                            74,
-                            76,
-                            108,
-                            110
+                            68,
+                            70,
+                            96,
+                            98,
+                            130,
+                            132
                         ]
                     },
                     {
@@ -4920,7 +5408,7 @@
                 ]
             },
             "flux:card": {
-                "count": 142,
+                "count": 144,
                 "files": [
                     {
                         "path": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
@@ -4951,6 +5439,13 @@
                         ]
                     },
                     {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                        "lines": [
+                            3,
+                            40
+                        ]
+                    },
+                    {
                         "path": "resources/views/components/admin/partials/app-settings/⚡meta-health.blade.php",
                         "lines": [
                             4,
@@ -4961,7 +5456,7 @@
                         "path": "resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php",
                         "lines": [
                             4,
-                            89
+                            108
                         ]
                     },
                     {
@@ -5143,21 +5638,21 @@
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
                             4,
-                            143
+                            165
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                         "lines": [
                             4,
-                            129
+                            232
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
                             4,
-                            195
+                            297
                         ]
                     },
                     {
@@ -5184,8 +5679,8 @@
                     {
                         "path": "resources/views/components/admin/⚡app-settings.blade.php",
                         "lines": [
-                            5,
-                            23
+                            3,
+                            24
                         ]
                     },
                     {
@@ -5241,7 +5736,7 @@
                         "path": "resources/views/components/admin/⚡translation-list.blade.php",
                         "lines": [
                             5,
-                            22
+                            27
                         ]
                     },
                     {
@@ -5631,234 +6126,8 @@
                     }
                 ]
             },
-            "flux:callout.heading": {
-                "count": 136,
-                "files": [
-                    {
-                        "path": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
-                        "lines": [
-                            43,
-                            45
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/app-settings/⚡meta-health.blade.php",
-                        "lines": [
-                            19,
-                            21,
-                            38,
-                            40
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php",
-                        "lines": [
-                            19,
-                            21,
-                            38,
-                            40,
-                            57,
-                            59,
-                            76,
-                            78
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/client-list/⚡meta.blade.php",
-                        "lines": [
-                            18,
-                            20,
-                            36,
-                            38,
-                            54,
-                            56,
-                            72,
-                            74,
-                            90,
-                            92
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/country-reference-list/⚡meta.blade.php",
-                        "lines": [
-                            39,
-                            41,
-                            52,
-                            54,
-                            65,
-                            67,
-                            78,
-                            80,
-                            91,
-                            93,
-                            104,
-                            106
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/fallback-report-list/⚡meta.blade.php",
-                        "lines": [
-                            18,
-                            20,
-                            36,
-                            38,
-                            54,
-                            56
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
-                        "lines": [
-                            32,
-                            34,
-                            45,
-                            47,
-                            58,
-                            60,
-                            71,
-                            73,
-                            85,
-                            87,
-                            131,
-                            133,
-                            180,
-                            182,
-                            214,
-                            216,
-                            238,
-                            240
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
-                        "lines": [
-                            51,
-                            53,
-                            65,
-                            67,
-                            107,
-                            109,
-                            135,
-                            137,
-                            170,
-                            172,
-                            203,
-                            205
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
-                        "lines": [
-                            111,
-                            113
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/permission-list/⚡meta-overview.blade.php",
-                        "lines": [
-                            16,
-                            18,
-                            34,
-                            36,
-                            52,
-                            54,
-                            70,
-                            72
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/permission-list/⚡modal-role-permissions.blade.php",
-                        "lines": [
-                            66,
-                            68,
-                            80,
-                            82,
-                            94,
-                            96,
-                            108,
-                            110,
-                            122,
-                            124
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/person-list/⚡meta.blade.php",
-                        "lines": [
-                            16,
-                            18,
-                            34,
-                            36,
-                            52,
-                            54,
-                            70,
-                            72,
-                            88,
-                            90
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/role-list/⚡meta.blade.php",
-                        "lines": [
-                            17,
-                            19,
-                            34,
-                            36,
-                            51,
-                            53,
-                            68,
-                            70
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-                        "lines": [
-                            15,
-                            17,
-                            32,
-                            34,
-                            49,
-                            51,
-                            66,
-                            68
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/admin/partials/user-list/⚡meta.blade.php",
-                        "lines": [
-                            15,
-                            17,
-                            33,
-                            35,
-                            51,
-                            53,
-                            85,
-                            87,
-                            121,
-                            123,
-                            152,
-                            154
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/management/people/create-person/⚡form-login.blade.php",
-                        "lines": [
-                            39,
-                            41
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/management/people/create-person/⚡generated-password.blade.php",
-                        "lines": [
-                            9,
-                            11,
-                            57,
-                            59
-                        ]
-                    }
-                ]
-            },
             "flux:button": {
-                "count": 126,
+                "count": 132,
                 "files": [
                     {
                         "path": "resources/views/components/account/partials/preferences/⚡current-user.blade.php",
@@ -5875,6 +6144,13 @@
                         ]
                     },
                     {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                        "lines": [
+                            22,
+                            33
+                        ]
+                    },
+                    {
                         "path": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
                         "lines": [
                             236,
@@ -5888,6 +6164,13 @@
                         "lines": [
                             16,
                             26
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "lines": [
+                            258,
+                            266
                         ]
                     },
                     {
@@ -6035,6 +6318,13 @@
                         ]
                     },
                     {
+                        "path": "resources/views/components/ui/text/copyable-field.blade.php",
+                        "lines": [
+                            95,
+                            116
+                        ]
+                    },
+                    {
                         "path": "resources/views/pages/auth/confirm-password.blade.php",
                         "lines": [
                             23,
@@ -6124,7 +6414,7 @@
                 ]
             },
             "flux:field": {
-                "count": 112,
+                "count": 114,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
@@ -6163,6 +6453,13 @@
                         "lines": [
                             9,
                             14
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "lines": [
+                            29,
+                            48
                         ]
                     },
                     {
@@ -6451,10 +6748,10 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            78,
-                            93,
-                            112,
-                            126
+                            100,
+                            115,
+                            134,
+                            148
                         ]
                     },
                     {
@@ -6804,7 +7101,7 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            50
+                            72
                         ]
                     },
                     {
@@ -7160,7 +7457,7 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            184
+                            285
                         ]
                     },
                     {
@@ -7278,10 +7575,10 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            70,
-                            169,
-                            171,
-                            177
+                            102,
+                            268,
+                            270,
+                            278
                         ]
                     },
                     {
@@ -7360,14 +7657,14 @@
     },
     "custom": {
         "counts": {
-            "available": 24,
-            "used": 23,
+            "available": 27,
+            "used": 26,
             "unused": 1,
             "used_unknown": 0
         },
         "top_used": {
             "x-ui.tooltip.trigger": {
-                "count": 296,
+                "count": 298,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
@@ -7620,27 +7917,29 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            35,
-                            42,
-                            65,
-                            70,
-                            99,
-                            104
+                            57,
+                            64,
+                            87,
+                            92,
+                            121,
+                            126
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            15,
-                            22,
-                            26,
-                            31,
-                            35,
-                            42,
-                            46,
-                            53,
-                            57,
-                            64
+                            25,
+                            33,
+                            38,
+                            43,
+                            48,
+                            55,
+                            60,
+                            67,
+                            72,
+                            79,
+                            87,
+                            93
                         ]
                     },
                     {
@@ -7803,8 +8102,14 @@
                 ]
             },
             "x-ui.headers.card": {
-                "count": 56,
+                "count": 58,
                 "files": [
+                    {
+                        "path": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                        "lines": [
+                            5
+                        ]
+                    },
                     {
                         "path": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
                         "lines": [
@@ -7948,13 +8253,19 @@
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
                             5,
-                            30
+                            52
                         ]
                     },
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                         "lines": [
                             5
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            12
                         ]
                     },
                     {
@@ -8183,7 +8494,7 @@
                     {
                         "path": "resources/views/components/admin/⚡app-settings.blade.php",
                         "lines": [
-                            6
+                            4
                         ]
                     },
                     {
@@ -8399,7 +8710,7 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                         "lines": [
-                            190
+                            292
                         ]
                     },
                     {
@@ -8458,7 +8769,7 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            131
+                            153
                         ]
                     },
                     {
@@ -8481,9 +8792,9 @@
                             209,
                             213,
                             217,
-                            233,
-                            237,
-                            241
+                            230,
+                            234,
+                            238
                         ]
                     }
                 ]
@@ -8530,7 +8841,7 @@
                     {
                         "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
                         "lines": [
-                            140
+                            162
                         ]
                     },
                     {
@@ -8559,8 +8870,35 @@
                     }
                 ]
             },
+            "x-ui.badge.context": {
+                "count": 7,
+                "files": [
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            42,
+                            49,
+                            160
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "lines": [
+                            111,
+                            179,
+                            218
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/ui/text/copyable-field.blade.php",
+                        "lines": [
+                            77
+                        ]
+                    }
+                ]
+            },
             "x-ui.button.cancel": {
-                "count": 6,
+                "count": 7,
                 "files": [
                     {
                         "path": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php",
@@ -8590,6 +8928,12 @@
                         "path": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
                         "lines": [
                             159
+                        ]
+                    },
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            324
                         ]
                     },
                     {
@@ -8632,6 +8976,22 @@
                         "lines": [
                             121,
                             126
+                        ]
+                    }
+                ]
+            },
+            "x-ui.text.copyable-field": {
+                "count": 6,
+                "files": [
+                    {
+                        "path": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "lines": [
+                            174,
+                            184,
+                            198,
+                            231,
+                            249,
+                            306
                         ]
                     }
                 ]
@@ -8719,36 +9079,6 @@
                         ]
                     }
                 ]
-            },
-            "x-ui.text.stat-value-num": {
-                "count": 3,
-                "files": [
-                    {
-                        "path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
-                        "lines": [
-                            338,
-                            358,
-                            378
-                        ]
-                    }
-                ]
-            },
-            "x-ui.button.confirm": {
-                "count": 2,
-                "files": [
-                    {
-                        "path": "resources/views/components/admin/⚡permission-list.blade.php",
-                        "lines": [
-                            10
-                        ]
-                    },
-                    {
-                        "path": "resources/views/components/management/people/create-person/⚡generated-password.blade.php",
-                        "lines": [
-                            70
-                        ]
-                    }
-                ]
             }
         },
         "unused": {
@@ -8760,7 +9090,7 @@
     },
     "includes": {
         "counts": {
-            "used": 64
+            "used": 66
         },
         "used": {
             "components.account.partials.preferences.⚡application-preferences": {
@@ -8796,13 +9126,24 @@
                     }
                 ]
             },
+            "components.admin.partials.app-settings.⚡locale": {
+                "count": 1,
+                "files": [
+                    {
+                        "path": "resources/views/components/admin/⚡app-settings.blade.php",
+                        "lines": [
+                            13
+                        ]
+                    }
+                ]
+            },
             "components.admin.partials.app-settings.⚡meta-health": {
                 "count": 1,
                 "files": [
                     {
                         "path": "resources/views/components/admin/⚡app-settings.blade.php",
                         "lines": [
-                            15
+                            16
                         ]
                     }
                 ]
@@ -8813,7 +9154,7 @@
                     {
                         "path": "resources/views/components/admin/⚡app-settings.blade.php",
                         "lines": [
-                            12
+                            10
                         ]
                     }
                 ]
@@ -8824,7 +9165,7 @@
                     {
                         "path": "resources/views/components/admin/⚡app-settings.blade.php",
                         "lines": [
-                            21
+                            22
                         ]
                     }
                 ]
@@ -8835,7 +9176,7 @@
                     {
                         "path": "resources/views/components/admin/⚡app-settings.blade.php",
                         "lines": [
-                            18
+                            19
                         ]
                     }
                 ]
@@ -8968,17 +9309,6 @@
                         "path": "resources/views/components/admin/⚡html-view-audit.blade.php",
                         "lines": [
                             32
-                        ]
-                    }
-                ]
-            },
-            "components.admin.partials.html-view-audit.⚡statistic": {
-                "count": 1,
-                "files": [
-                    {
-                        "path": "resources/views/components/admin/⚡html-view-audit.blade.php",
-                        "lines": [
-                            20
                         ]
                     }
                 ]

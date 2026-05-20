@@ -1,9 +1,5 @@
 {{-- resources/views/components/admin/⚡app-settings.blade.php --}}
 
-{{--
-TODO: app-settings weiter ausarbeiten, evtl. in separate Komponenten aufteilen, z.B. ⚡app-settings-role-badges.blade.php und ⚡app-settings-icon-registry.blade.php für die jeweiligen Tabellen, damit die Hauptkomponente übersichtlicher bleibt und die Teile ggf. auch einzeln wiederverwendet werden können.
- --}}
-
 <flux:card>
     <x-ui.headers.page
         :title="__('App Settings')"
@@ -12,6 +8,9 @@ TODO: app-settings weiter ausarbeiten, evtl. in separate Komponenten aufteilen, 
 
     {{-- Overview of application settings related to role badges and icon registry. This is intended as a diagnostic tool to quickly identify potential misconfigurations or issues with role badge display and icon availability. --}}
     @include('components.admin.partials.app-settings.⚡meta-overview')
+
+    {{-- Global application language setting. This controls the app locale used for translated interface strings across the application. --}}
+    @include('components.admin.partials.app-settings.⚡locale')
 
     {{-- Settings health and diagnostics related to role badge configuration and icon registry. This section surfaces potential issues such as roles that lack badge configuration or badge settings that reference non-existent roles, which can help identify misconfigurations that may lead to incorrect or missing badge displays in the UI. --}}
     @include('components.admin.partials.app-settings.⚡meta-health')

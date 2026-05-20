@@ -176,7 +176,7 @@ class TranslationsAuditCode extends Command
                 $calls[] = [
                     'function' => $match['function'][0],
                     'value' => stripcslashes($match['value'][0]),
-                    'raw' => $match[0][0],
+                    'raw' => $this->extractCallSnippet($contents, $match[0][1]),
                     'offset' => $match[0][1],
                     'dynamic' => false,
                     'reason' => null,
@@ -238,13 +238,72 @@ class TranslationsAuditCode extends Command
      */
     private function extractCallSnippet(string $contents, int $offset): string
     {
-        $snippet = substr($contents, $offset, 500);
-        $endPosition = strpos($snippet, ');');
+        $length = strlen($contents);
+        $position = $offset;
+        $depth = 0;
+        $quote = null;
+        $escaped = false;
 
-        if ($endPosition !== false) {
-            return trim(substr($snippet, 0, $endPosition + 2));
+        while ($position < $length) {
+            $character = $contents[$position];
+
+            if ($quote !== null) {
+                if ($escaped) {
+                    $escaped = false;
+                    $position++;
+
+                    continue;
+                }
+
+                if ($character === '\\') {
+                    $escaped = true;
+                    $position++;
+
+                    continue;
+                }
+
+                if ($character === $quote) {
+                    $quote = null;
+                }
+
+                $position++;
+
+                continue;
+            }
+
+            if ($character === '\'' || $character === '"') {
+                $quote = $character;
+                $position++;
+
+                continue;
+            }
+
+            if ($character === '(') {
+                $depth++;
+                $position++;
+
+                continue;
+            }
+
+            if ($character === ')') {
+                $depth--;
+                $position++;
+
+                if ($depth <= 0) {
+                    return trim(substr($contents, $offset, $position - $offset));
+                }
+
+                continue;
+            }
+
+            if ($character === "\n" && $depth <= 0) {
+                return trim(substr($contents, $offset, $position - $offset));
+            }
+
+            $position++;
         }
 
+        $snippet = substr($contents, $offset, 500);
         $lineEndPosition = strpos($snippet, "\n");
 
         if ($lineEndPosition !== false) {
