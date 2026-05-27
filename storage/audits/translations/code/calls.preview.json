@@ -1,7 +1,7 @@
 {
     "preview": true,
     "preview_limit": 20,
-    "total": 1461,
+    "total": 1564,
     "items": [
         {
             "classification": "native",
@@ -11,7 +11,7 @@
             "reason": null,
             "suggested_key": "account.preferences.preferences_saved",
             "file": "app/Livewire/Account/Preferences.php",
-            "line": 50
+            "line": 60
         },
         {
             "classification": "native",
@@ -21,7 +21,7 @@
             "reason": null,
             "suggested_key": "account.preferences.your_personal_application_preferences_have_been_updated",
             "file": "app/Livewire/Account/Preferences.php",
-            "line": 51
+            "line": 61
         },
         {
             "classification": "native",
@@ -31,7 +31,7 @@
             "reason": null,
             "suggested_key": "admin.app_settings.invalid_application_language",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 38
+            "line": 198
         },
         {
             "classification": "native",
@@ -41,7 +41,97 @@
             "reason": null,
             "suggested_key": "admin.app_settings.application_language_updated",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 51
+            "line": 211
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "Invalid application language.",
+            "raw": "__('Invalid application language.')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.invalid_application_language",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 250
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "Invalid application language.",
+            "raw": "__('Invalid application language.')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.invalid_application_language",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 258
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "This application language is mandatory and cannot be disabled.",
+            "raw": "__('This application language is mandatory and cannot be disabled.')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.this_application_language_is_mandatory_and_cannot_be_disabled",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 268
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "The current application language cannot be disabled.",
+            "raw": "__('The current application language cannot be disabled.')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.the_current_application_language_cannot_be_disabled",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 274
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "At least one application language must remain enabled.",
+            "raw": "__('At least one application language must remain enabled.')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.at_least_one_application_language_must_remain_enabled",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 282
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "Available application languages updated.",
+            "raw": "__('Available application languages updated.')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.available_application_languages_updated",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 297
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "The current application language cannot be removed from the available languages.",
+            "raw": "__('The current application language cannot be removed from the available languages.')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.the_current_application_language_cannot_be_removed_from_the_available_languages",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 328
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "At least one application language must remain enabled.",
+            "raw": "__('At least one application language must remain enabled.')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.at_least_one_application_language_must_remain_enabled",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 346
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "Available application languages updated.",
+            "raw": "__('Available application languages updated.')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.available_application_languages_updated",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 355
         },
         {
             "classification": "native",
@@ -51,7 +141,7 @@
             "reason": null,
             "suggested_key": "admin.app_settings.without_role",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 85
+            "line": 394
         },
         {
             "classification": "key",
@@ -61,7 +151,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 301
+            "line": 340
         },
         {
             "classification": "key",
@@ -71,7 +161,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 302
+            "line": 341
         },
         {
             "classification": "key",
@@ -81,7 +171,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 327
+            "line": 366
         },
         {
             "classification": "key",
@@ -91,7 +181,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 328
+            "line": 367
         },
         {
             "classification": "key",
@@ -101,7 +191,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 360
+            "line": 402
         },
         {
             "classification": "key",
@@ -111,97 +201,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 361
-        },
-        {
-            "classification": "key",
-            "function": "__",
-            "value": "admin.permissions.messages.permission_saved.heading",
-            "raw": "__('admin.permissions.messages.permission_saved.heading')",
-            "reason": null,
-            "suggested_key": null,
-            "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 395
-        },
-        {
-            "classification": "key",
-            "function": "__",
-            "value": "admin.permissions.messages.permission_saved.text",
-            "raw": "__('admin.permissions.messages.permission_saved.text', [\n                'permission' => $permission->name,\n            ])",
-            "reason": null,
-            "suggested_key": null,
-            "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 396
-        },
-        {
-            "classification": "native",
-            "function": "__",
-            "value": "Not allowed",
-            "raw": "__('Not allowed')",
-            "reason": null,
-            "suggested_key": "admin.role_list.not_allowed",
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 124
-        },
-        {
-            "classification": "key",
-            "function": "__",
-            "value": "admin.roles.messages.not_allowed.heading",
-            "raw": "__('admin.roles.messages.not_allowed.heading')",
-            "reason": null,
-            "suggested_key": null,
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 125
-        },
-        {
-            "classification": "native",
-            "function": "__",
-            "value": "Only Super-Admins may create roles.",
-            "raw": "__('Only Super-Admins may create roles.')",
-            "reason": null,
-            "suggested_key": "admin.role_list.only_super_admins_may_create_roles",
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 126
-        },
-        {
-            "classification": "key",
-            "function": "__",
-            "value": "admin.roles.messages.not_allowed.only_super_admins_may_create_roles",
-            "raw": "__('admin.roles.messages.not_allowed.only_super_admins_may_create_roles')",
-            "reason": null,
-            "suggested_key": null,
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 127
-        },
-        {
-            "classification": "native",
-            "function": "__",
-            "value": "Role created",
-            "raw": "__('Role created')",
-            "reason": null,
-            "suggested_key": "admin.role_list.role_created",
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 202
-        },
-        {
-            "classification": "key",
-            "function": "__",
-            "value": "admin.roles.messages.role_created.heading",
-            "raw": "__('admin.roles.messages.role_created.heading')",
-            "reason": null,
-            "suggested_key": null,
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 203
-        },
-        {
-            "classification": "native",
-            "function": "__",
-            "value": "Role :role has been created.",
-            "raw": "__('Role :role has been created.')",
-            "reason": null,
-            "suggested_key": "admin.role_list.role_role_has_been_created",
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 204
+            "line": 403
         }
     ]
 }

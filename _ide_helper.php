@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 13.9.0.
+ * Generated for Laravel 13.11.2.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -13063,6 +13063,20 @@ namespace Illuminate\Support\Facades {
         }
 
         /**
+         * Determine which of the given queues are currently paused.
+         *
+         * @param string $connection
+         * @param array $queues
+         * @return array
+         * @static
+         */
+        public static function getPausedQueues($connection, $queues)
+        {
+            /** @var \Illuminate\Queue\QueueManager $instance */
+            return $instance->getPausedQueues($connection, $queues);
+        }
+
+        /**
          * Indicate that queue workers should not poll for restart or pause signals.
          *
          * This prevents the workers from hitting the application cache to determine if they need to pause or restart.
@@ -13235,6 +13249,19 @@ namespace Illuminate\Support\Facades {
         }
 
         /**
+         * Assert if a job was pushed exactly once.
+         *
+         * @param string $job
+         * @return void
+         * @static
+         */
+        public static function assertPushedOnce($job)
+        {
+            /** @var \Illuminate\Support\Testing\Fakes\QueueFake $instance */
+            $instance->assertPushedOnce($job);
+        }
+
+        /**
          * Assert if a job was pushed based on a truth-test callback.
          *
          * @param \UnitEnum|string $queue
@@ -13400,7 +13427,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the size of the queue.
          *
-         * @param string|null $queue
+         * @param \UnitEnum|string|null $queue
          * @return int
          * @static
          */
@@ -13413,7 +13440,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the number of pending jobs.
          *
-         * @param string|null $queue
+         * @param \UnitEnum|string|null $queue
          * @return int
          * @static
          */
@@ -13426,7 +13453,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the number of delayed jobs.
          *
-         * @param string|null $queue
+         * @param \UnitEnum|string|null $queue
          * @return int
          * @static
          */
@@ -13439,7 +13466,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the number of reserved jobs.
          *
-         * @param string|null $queue
+         * @param \UnitEnum|string|null $queue
          * @return int
          * @static
          */
@@ -13452,7 +13479,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the pending jobs for the given queue.
          *
-         * @param string|null $queue
+         * @param \UnitEnum|string|null $queue
          * @return \Illuminate\Support\Collection<int, \Illuminate\Queue\Jobs\InspectedJob>
          * @static
          */
@@ -13465,7 +13492,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the delayed jobs for the given queue.
          *
-         * @param string|null $queue
+         * @param \UnitEnum|string|null $queue
          * @return \Illuminate\Support\Collection
          * @static
          */
@@ -13478,7 +13505,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the reserved jobs for the given queue.
          *
-         * @param string|null $queue
+         * @param \UnitEnum|string|null $queue
          * @return \Illuminate\Support\Collection
          * @static
          */
@@ -13527,7 +13554,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the creation timestamp of the oldest pending job, excluding delayed jobs.
          *
-         * @param string|null $queue
+         * @param \UnitEnum|string|null $queue
          * @return int|null
          * @static
          */
@@ -13542,7 +13569,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string|object $job
          * @param mixed $data
-         * @param string|null $queue
+         * @param \UnitEnum|string|null $queue
          * @return mixed
          * @static
          */
@@ -13569,7 +13596,7 @@ namespace Illuminate\Support\Facades {
          * Push a raw payload onto the queue.
          *
          * @param string $payload
-         * @param string|null $queue
+         * @param \UnitEnum|string|null $queue
          * @param array $options
          * @return mixed
          * @static
@@ -13586,7 +13613,7 @@ namespace Illuminate\Support\Facades {
          * @param \DateTimeInterface|\DateInterval|int $delay
          * @param string|object $job
          * @param mixed $data
-         * @param string|null $queue
+         * @param \UnitEnum|string|null $queue
          * @return mixed
          * @static
          */
@@ -13599,7 +13626,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Push a new job onto the queue.
          *
-         * @param string $queue
+         * @param \UnitEnum|string $queue
          * @param string|object $job
          * @param mixed $data
          * @return mixed
@@ -13614,7 +13641,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Push a new job onto a specific queue after (n) seconds.
          *
-         * @param string $queue
+         * @param \UnitEnum|string $queue
          * @param \DateTimeInterface|\DateInterval|int $delay
          * @param string|object $job
          * @param mixed $data
@@ -13630,7 +13657,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Pop the next job off of the queue.
          *
-         * @param string|null $queue
+         * @param \UnitEnum|string|null $queue
          * @return \Illuminate\Contracts\Queue\Job|null
          * @static
          */
@@ -13645,7 +13672,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param array $jobs
          * @param mixed $data
-         * @param string|null $queue
+         * @param \UnitEnum|string|null $queue
          * @return mixed
          * @static
          */
@@ -19187,6 +19214,21 @@ namespace Illuminate\Support\Facades {
             //Method inherited from \Illuminate\Database\Schema\Builder 
             /** @var \Illuminate\Database\Schema\PostgresBuilder $instance */
             return $instance->hasIndex($table, $index, $type);
+        }
+
+        /**
+         * Determine if the table has a given foreign key.
+         *
+         * @param string $table
+         * @param array|string $foreignKey
+         * @return bool
+         * @static
+         */
+        public static function hasForeignKey($table, $foreignKey)
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder 
+            /** @var \Illuminate\Database\Schema\PostgresBuilder $instance */
+            return $instance->hasForeignKey($table, $foreignKey);
         }
 
         /**
@@ -25653,6 +25695,92 @@ namespace Illuminate\View {
             return \Illuminate\View\View::response($callback);
         }
 
+            }
+    }
+
+namespace App\Livewire\Account {
+    /**
+     * Account preferences component for locale and user-specific list defaults.
+     *
+     */
+    class Preferences extends \Livewire\Component {
+            }
+    }
+
+namespace App\Livewire\Admin {
+    /**
+     * Administrative user list with role filtering, pagination and role assignment modal.
+     *
+     */
+    class UserList extends \Livewire\Component {
+            }
+    /**
+     * Administrative people list with relation-aware filters, sorting and pagination.
+     *
+     */
+    class PersonList extends \Livewire\Component {
+            }
+    /**
+     * Administrative client list with filtering, sorting and pagination.
+     *
+     */
+    class ClientList extends \Livewire\Component {
+            }
+    /**
+     * Administrative role list with role creation/editing workflows and badge settings.
+     *
+     */
+    class RoleList extends \Livewire\Component {
+            }
+    /**
+     * Administrative permission list with metadata editing and role-permission assignment.
+     *
+     */
+    class PermissionList extends \Livewire\Component {
+            }
+    /**
+     * Translation administration list with filtering, pagination and modal workflows.
+     *
+     */
+    class TranslationList extends \Livewire\Component {
+            }
+    /**
+     * Administrative settings component for locale and role-badge configuration.
+     *
+     * Manages:
+     * - globally available primary locales
+     * - active sub-locales for a selected primary language
+     * - global default app locale
+     *
+     */
+    class AppSettings extends \Livewire\Component {
+            }
+    /**
+     * Administrative country reference list with audit-oriented filters and metrics.
+     *
+     */
+    class CountryReferenceList extends \Livewire\Component {
+            }
+    /**
+     * Administrative HTML view audit dashboard with finding filters and details modal.
+     *
+     */
+    class HtmlViewAudit extends \Livewire\Component {
+            }
+    /**
+     * Administrative list for fallback reports with review workflow controls.
+     *
+     */
+    class FallbackReportList extends \Livewire\Component {
+            }
+    }
+
+namespace App\Livewire\Management\People {
+    /**
+     * Management form component for creating a person with initial related records.
+     *
+     */
+    class CreatePerson extends \Livewire\Component {
             }
     }
 

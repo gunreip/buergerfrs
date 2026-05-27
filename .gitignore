@@ -21,6 +21,9 @@
 /storage/app/private/dev/
 /storage/pail
 /vendor
+/tools/phpdoc/phpDocumentor.phar
+/docs/phpdoc
+/public/docs/phpdoc
 Homestead.json
 Homestead.yaml
 npm-debug.log

@@ -12,22 +12,37 @@ let tooltipShowTimeout = null;
 let tooltipHideTimeout = null;
 let activeTooltip = null;
 let activeAnchor = null;
+let tooltipsInitialized = false;
 
 export function setupGlobalTooltips() {
-    document.body.addEventListener('mouseenter', function (e) {
-        const trigger = e.target.closest('.tooltip-trigger');
+    if (tooltipsInitialized) {
+        return;
+    }
+
+    tooltipsInitialized = true;
+
+    document.body.addEventListener('pointerover', function (e) {
+        const trigger = getTooltipTrigger(e.target);
 
         if (!trigger) {
+            return;
+        }
+
+        if (isWithinElement(e.relatedTarget, trigger) || isWithinElement(e.relatedTarget, activeTooltip)) {
             return;
         }
 
         scheduleShowGlobalTooltip(trigger, e);
     }, true);
 
-    document.body.addEventListener('mouseleave', function (e) {
-        const trigger = e.target.closest('.tooltip-trigger');
+    document.body.addEventListener('pointerout', function (e) {
+        const trigger = getTooltipTrigger(e.target);
 
         if (!trigger) {
+            return;
+        }
+
+        if (isWithinElement(e.relatedTarget, trigger) || isWithinElement(e.relatedTarget, activeTooltip)) {
             return;
         }
 
@@ -35,7 +50,7 @@ export function setupGlobalTooltips() {
     }, true);
 
     document.body.addEventListener('click', function (e) {
-        const trigger = e.target.closest('.tooltip-trigger');
+        const trigger = getTooltipTrigger(e.target);
 
         if (!trigger) {
             return;
@@ -57,6 +72,22 @@ export function setupGlobalTooltips() {
             removeGlobalTooltip();
         }
     });
+}
+
+function getTooltipTrigger(target) {
+    if (!(target instanceof Element)) {
+        return null;
+    }
+
+    return target.closest('[data-tooltip-trigger="true"]');
+}
+
+function isWithinElement(target, element) {
+    if (!(target instanceof Node) || !(element instanceof Element)) {
+        return false;
+    }
+
+    return element === target || element.contains(target);
 }
 
 function scheduleShowGlobalTooltip(anchorEl, event = null) {

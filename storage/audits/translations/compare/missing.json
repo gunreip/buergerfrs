@@ -161,7 +161,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/RoleList.php",
-                "line": 125,
+                "line": 138,
                 "function": "__",
                 "raw": "__('admin.roles.messages.not_allowed.heading')"
             }
@@ -173,7 +173,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/RoleList.php",
-                "line": 127,
+                "line": 140,
                 "function": "__",
                 "raw": "__('admin.roles.messages.not_allowed.only_super_admins_may_create_roles')"
             }
@@ -185,7 +185,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/RoleList.php",
-                "line": 203,
+                "line": 216,
                 "function": "__",
                 "raw": "__('admin.roles.messages.role_created.heading')"
             }
@@ -197,7 +197,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/RoleList.php",
-                "line": 205,
+                "line": 218,
                 "function": "__",
                 "raw": "__('admin.roles.messages.role_created.text', [\n                'role' => $role->name,\n            ])"
             }
@@ -209,7 +209,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/RoleList.php",
-                "line": 358,
+                "line": 383,
                 "function": "__",
                 "raw": "__('admin.roles.messages.role_saved.heading')"
             }
@@ -221,7 +221,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/RoleList.php",
-                "line": 360,
+                "line": 385,
                 "function": "__",
                 "raw": "__('admin.roles.messages.role_saved.text', [\n                'role' => $savedRoleName,\n            ])"
             }
@@ -296,6 +296,18 @@
                 "line": 13,
                 "function": "__",
                 "raw": "__('admin.roles.title')"
+            }
+        ]
+    },
+    {
+        "full_key": "pages.settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars",
+        "usage_count": 1,
+        "usages": [
+            {
+                "file": "resources/views/pages/settings/⚡profile.blade.php",
+                "line": 68,
+                "function": "__",
+                "raw": "__('pages.settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars')"
             }
         ]
     },

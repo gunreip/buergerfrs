@@ -135,8 +135,6 @@
 
                 <flux:error name="socialSecurityNumber" />
             </flux:field>
-            {{-- </div> --}}
-            {{-- </div> --}}
 
             {{-- Pension insurance number --}}
             <flux:field>

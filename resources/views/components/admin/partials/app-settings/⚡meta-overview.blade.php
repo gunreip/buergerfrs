@@ -9,7 +9,7 @@
         {{ __('Overview') }}
     </flux:heading>
 
-    <div class="grid grid-cols-6 gap-3">
+    <div class="grid grid-cols-5 gap-3">
         {{-- Settings group --}}
         <flux:callout
             class="col-span-4 md:col-span-1"

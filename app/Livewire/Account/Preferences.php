@@ -6,18 +6,25 @@ namespace App\Livewire\Account;
 
 use App\Models\User;
 use Flux\Flux;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 
+/**
+ * Account preferences component for locale and user-specific list defaults.
+ */
 class Preferences extends Component
 {
     public string $locale = 'de';
 
     public int $adminUsersPerPage = 50;
 
+    /**
+     * Load persisted preferences for the authenticated user.
+     */
     public function mount(): void
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         if (! $user instanceof User) {
             return;
@@ -29,6 +36,9 @@ class Preferences extends Component
         );
     }
 
+    /**
+     * Validate and persist account preferences.
+     */
     public function save(): void
     {
         $this->validate([
@@ -36,7 +46,7 @@ class Preferences extends Component
             'adminUsersPerPage' => ['required', 'integer', Rule::in([10, 25, 50, 100])],
         ]);
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         if (! $user instanceof User) {
             return;
@@ -54,6 +64,9 @@ class Preferences extends Component
         );
     }
 
+    /**
+     * Normalize selectable pagination size.
+     */
     private function normalizePerPage(mixed $value): int
     {
         $value = (int) $value;
@@ -65,6 +78,11 @@ class Preferences extends Component
         return $value;
     }
 
+    /**
+     * Render preferences form.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function render()
     {
         return view('components.account.⚡preferences');

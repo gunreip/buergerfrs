@@ -152,12 +152,11 @@
                             {{-- ISO (flag, iso2, iso3, iso numeric) --}}
                             <flux:table.cell>
                                 <div class="flex items-center gap-2">
-                                    <flux:text
-                                        class="text-3xl leading-none"
-                                        inline
-                                    >
-                                        {{ $country->emoji_flag ?: '—' }}
-                                    </flux:text>
+                                    <x-ui.country.flag
+                                        :country="$country->iso2"
+                                        size="xl"
+                                        :title="$country->name"
+                                    />
 
                                     <flux:field>
                                         <flux:text variant="strong">

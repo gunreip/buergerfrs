@@ -27,4 +27,15 @@
         'selectedTranslationKey' => $selectedTranslationKey,
     ])
 
+    {{-- Translation values edit modal --}}
+    @include('components.admin.partials.translation-list.⚡modal-edit', [
+        'editingTranslationKey' => $editingTranslationKey,
+    ])
+
+    {{-- Translation history modal --}}
+    @include('components.admin.partials.translation-list.⚡modal-history', [
+        'historyTranslationKey' => $historyTranslationKey,
+        'historyEvents' => $historyEvents,
+    ])
+
 </flux:card>

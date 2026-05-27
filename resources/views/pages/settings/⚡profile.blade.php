@@ -65,7 +65,8 @@ new #[Title('Profile settings')] class extends Component {
             } catch (\Throwable $exception) {
                 report($exception);
 
-                Flux::toast(heading: __('Avatar could not be saved'), text: __('Please check the storage permissions for storage/app/public/avatars.'), variant: 'danger', duration: 6000);
+                Flux::toast(heading: __('Avatar could not be saved'), text: __('pages.settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars'), variant: 'danger', duration: 6000);
+                // Flux::toast(heading: __('Avatar could not be saved'), text: __('Please check the storage permissions for storage/app/public/avatars.'), variant: 'danger', duration: 6000);
 
                 return;
             }

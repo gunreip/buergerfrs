@@ -11,6 +11,7 @@ use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 #[Signature('translations:sync-audits')]
@@ -18,6 +19,11 @@ use Illuminate\Support\Facades\File;
 class SyncTranslationAudits extends Command
 {
     private const DEFAULT_LOCALES = ['de', 'en'];
+
+    /**
+     * @var array<int, string>
+     */
+    private array $seenUsageFingerprints = [];
 
     /**
      * Execute the console command.
@@ -30,8 +36,7 @@ class SyncTranslationAudits extends Command
         $locales = $this->loadLocales($langValues);
 
         $seenFingerprints = [];
-
-        TranslationUsage::query()->delete();
+        $this->seenUsageFingerprints = [];
 
         $counters = [
             'ok' => 0,
@@ -213,7 +218,8 @@ class SyncTranslationAudits extends Command
             }
         }
 
-        $staleCount = $this->pruneStaleAuditKeys($seenFingerprints);
+        $staleUsageCount = $this->markStaleAuditUsages($this->seenUsageFingerprints, $now);
+        $staleCount = $this->markStaleAuditKeys($seenFingerprints, $now);
 
         $this->components->info('Translation audits synced.');
 
@@ -228,7 +234,8 @@ class SyncTranslationAudits extends Command
                 ['Invalid entries', $counters['invalid']],
                 ['Values synced', $counters['values']],
                 ['Usages synced', $counters['usages']],
-                ['Stale audit keys pruned', $staleCount],
+                ['Stale audit usages marked', $staleUsageCount],
+                ['Stale audit keys marked', $staleCount],
             ],
         );
 
@@ -248,26 +255,98 @@ class SyncTranslationAudits extends Command
             'fingerprint' => $fingerprint,
         ]);
 
+        $wasExisting = $translationKey->exists;
+        $oldStatus = $translationKey->status;
+        $oldClassification = $translationKey->classification;
+        $oldNativeText = $translationKey->native_text;
+        $oldObsoleteAt = $translationKey->obsolete_at;
+
         if (! $translationKey->exists) {
             $translationKey->first_seen_at = $now;
         }
 
-        $translationKey->fill([
+        $resolvedClassification = $this->resolveClassificationForSync(
+            currentClassification: $oldClassification,
+            incomingClassification: $classification,
+            currentNativeText: $oldNativeText,
+            incomingNativeText: $nativeText,
+        );
+
+        $attributes = [
             'key' => $key,
             'namespace' => $this->namespaceFromKey($key ?? $suggestedKey),
             'group' => $this->groupFromKey($key ?? $suggestedKey),
             'status' => $status,
-            'classification' => $classification,
+            'classification' => $resolvedClassification,
             'source' => 'audit',
             'suggested_key' => $suggestedKey,
-            'native_text' => $nativeText,
             'last_seen_at' => $now,
             'obsolete_at' => $status === 'obsolete' ? $now : null,
-        ]);
+        ];
+
+        if ($nativeText !== null) {
+            $attributes['native_text'] = $nativeText;
+        }
+
+        $translationKey->fill($attributes);
 
         $translationKey->save();
 
+        if ($wasExisting && $oldStatus === 'obsolete' && $status !== 'obsolete') {
+            $this->createAuditEvent([
+                'translation_key_id' => $translationKey->id,
+                'entity_type' => 'translation_key',
+                'event_type' => 'reactivated',
+                'old_fingerprint' => $translationKey->fingerprint,
+                'new_fingerprint' => $translationKey->fingerprint,
+                'old_key' => $translationKey->getOriginal('key'),
+                'new_key' => $translationKey->key,
+                'old_status' => $oldStatus,
+                'new_status' => $status,
+                'reason' => 'audit_key_seen_again_in_latest_sync',
+                'context' => [
+                    'old_obsolete_at' => $oldObsoleteAt ? (string) $oldObsoleteAt : null,
+                ],
+            ]);
+        }
+
+        if ($wasExisting && $nativeText !== null && $oldNativeText !== $nativeText) {
+            $this->createAuditEvent([
+                'translation_key_id' => $translationKey->id,
+                'entity_type' => 'translation_key',
+                'event_type' => $oldNativeText === null ? 'native_text_filled' : 'native_text_changed',
+                'old_fingerprint' => $translationKey->fingerprint,
+                'new_fingerprint' => $translationKey->fingerprint,
+                'old_key' => $translationKey->key,
+                'new_key' => $translationKey->key,
+                'old_value' => $oldNativeText,
+                'new_value' => $nativeText,
+                'old_status' => $oldStatus,
+                'new_status' => $translationKey->status,
+                'reason' => 'native_text_synced_from_audit_source',
+            ]);
+        }
+
         return $translationKey;
+    }
+
+    private function resolveClassificationForSync(
+        ?string $currentClassification,
+        string $incomingClassification,
+        ?string $currentNativeText,
+        ?string $incomingNativeText,
+    ): string {
+        if (
+            $currentClassification === 'backfill_by_translation'
+            && $incomingClassification === 'key'
+            && $incomingNativeText === null
+            && $currentNativeText !== null
+            && trim($currentNativeText) !== ''
+        ) {
+            return $currentClassification;
+        }
+
+        return $incomingClassification;
     }
 
     private function syncValue(
@@ -294,39 +373,255 @@ class SyncTranslationAudits extends Command
 
     private function syncUsage(TranslationKey $translationKey, array $entry, string $classification): void
     {
+        $raw = $entry['raw'] ?? null;
+        $file = (string) ($entry['file'] ?? '');
+        $line = $entry['line'] ?? null;
+        $function = $entry['function'] ?? null;
+
         $fingerprint = $this->fingerprint(implode('|', [
-            $translationKey->fingerprint,
-            $entry['file'] ?? '',
-            $entry['line'] ?? '',
-            $entry['function'] ?? '',
-            $entry['raw'] ?? '',
-            $classification,
+            $this->usageIdentity($translationKey),
+            $file,
+            $line ?? '',
+            $function ?? '',
         ]));
 
-        TranslationUsage::query()->updateOrCreate(
-            ['fingerprint' => $fingerprint],
-            [
+        $translationUsage = TranslationUsage::query()
+            ->where('fingerprint', $fingerprint)
+            ->first();
+
+        $eventType = null;
+        $oldFingerprint = null;
+        $oldFile = null;
+        $oldLine = null;
+        $oldReason = null;
+
+        if (! $translationUsage) {
+            $translationUsage = TranslationUsage::query()
+                ->where('translation_key_id', $translationKey->id)
+                ->where('classification', $classification)
+                ->where('function', $function)
+                ->where(function ($query) use ($raw) {
+                    if ($raw === null) {
+                        $query
+                            ->whereNull('raw')
+                            ->orWhereNull('original_raw');
+
+                        return;
+                    }
+
+                    $query
+                        ->where('raw', $raw)
+                        ->orWhere('original_raw', $raw);
+                })
+                ->first();
+
+            if ($translationUsage) {
+                $oldFingerprint = $translationUsage->fingerprint;
+                $oldFile = $translationUsage->file;
+                $oldLine = $translationUsage->line;
+                $oldReason = $translationUsage->reason;
+
+                $eventType = ($oldFile !== $file || $oldLine !== $line)
+                    ? 'moved'
+                    : 'fingerprint_changed';
+
+                $translationUsage->fingerprint = $fingerprint;
+            }
+        }
+
+        if (! $translationUsage) {
+            $translationUsage = new TranslationUsage([
+                'fingerprint' => $fingerprint,
+            ]);
+        }
+
+        if (! $translationUsage->exists || blank($translationUsage->original_raw)) {
+            $translationUsage->original_raw = $raw;
+        }
+
+        if ($translationUsage->exists && $translationUsage->reason === 'stale_audit_usage_not_seen_in_latest_sync') {
+            $eventType ??= 'reactivated';
+            $oldFingerprint ??= $translationUsage->fingerprint;
+            $oldFile ??= $translationUsage->file;
+            $oldLine ??= $translationUsage->line;
+            $oldReason ??= $translationUsage->reason;
+        }
+
+        $translationUsage->fill([
+            'translation_key_id' => $translationKey->id,
+            'file' => $file,
+            'line' => $line,
+            'function' => $function,
+            'classification' => $classification,
+            'reason' => $entry['reason'] ?? null,
+            'raw' => $raw,
+        ]);
+
+        $translationUsage->save();
+
+        if ($eventType !== null) {
+            $this->createAuditEvent([
                 'translation_key_id' => $translationKey->id,
-                'file' => (string) ($entry['file'] ?? ''),
-                'line' => $entry['line'] ?? null,
-                'function' => $entry['function'] ?? null,
-                'classification' => $classification,
-                'reason' => $entry['reason'] ?? null,
-                'raw' => $entry['raw'] ?? null,
-            ],
-        );
+                'translation_usage_id' => $translationUsage->id,
+                'entity_type' => 'translation_usage',
+                'event_type' => $eventType,
+                'old_fingerprint' => $oldFingerprint,
+                'new_fingerprint' => $translationUsage->fingerprint,
+                'old_file' => $oldFile,
+                'new_file' => $translationUsage->file,
+                'old_line' => $oldLine,
+                'new_line' => $translationUsage->line,
+                'old_key' => $translationKey->getOriginal('key'),
+                'new_key' => $translationKey->key,
+                'old_value' => $oldReason,
+                'new_value' => $translationUsage->reason,
+                'old_status' => null,
+                'new_status' => null,
+                'reason' => match ($eventType) {
+                    'moved' => 'same_usage_seen_at_different_code_position',
+                    'reactivated' => 'stale_usage_seen_again_in_latest_sync',
+                    default => 'same_usage_seen_with_different_fingerprint',
+                },
+                'context' => [
+                    'raw' => $raw,
+                    'function' => $function,
+                    'classification' => $classification,
+                ],
+            ]);
+        }
+
+        $this->seenUsageFingerprints[] = $fingerprint;
     }
 
-    private function pruneStaleAuditKeys(array $seenFingerprints): int
+    private function usageIdentity(TranslationKey $translationKey): string
+    {
+        $identity = $translationKey->key
+            ?: $translationKey->suggested_key
+            ?: $translationKey->fingerprint;
+
+        return (string) $identity;
+    }
+
+    private function markStaleAuditUsages(array $seenFingerprints, mixed $now): int
     {
         if ($seenFingerprints === []) {
             return 0;
         }
 
-        return TranslationKey::query()
+        $staleUsages = TranslationUsage::query()
+            ->whereNotIn('fingerprint', array_values(array_unique($seenFingerprints)), 'and')
+            ->where(function ($query) {
+                $query
+                    ->whereNull('reason')
+                    ->orWhere('reason', '!=', 'stale_audit_usage_not_seen_in_latest_sync');
+            })
+            ->get();
+
+        foreach ($staleUsages as $usage) {
+            $this->createAuditEvent([
+                'translation_key_id' => $usage->translation_key_id,
+                'translation_usage_id' => $usage->id,
+                'entity_type' => 'translation_usage',
+                'event_type' => 'stale_marked',
+                'old_fingerprint' => $usage->fingerprint,
+                'new_fingerprint' => $usage->fingerprint,
+                'old_file' => $usage->file,
+                'new_file' => $usage->file,
+                'old_line' => $usage->line,
+                'new_line' => $usage->line,
+                'old_value' => $usage->reason,
+                'new_value' => 'stale_audit_usage_not_seen_in_latest_sync',
+                'reason' => 'usage_not_seen_in_latest_audit_sync',
+                'context' => [
+                    'raw' => $usage->raw,
+                    'original_raw' => $usage->original_raw,
+                    'function' => $usage->function,
+                    'classification' => $usage->classification,
+                ],
+            ]);
+
+            $usage->forceFill([
+                'reason' => 'stale_audit_usage_not_seen_in_latest_sync',
+                'updated_at' => $now,
+            ])->save();
+        }
+
+        return $staleUsages->count();
+    }
+
+    private function markStaleAuditKeys(array $seenFingerprints, mixed $now): int
+    {
+        if ($seenFingerprints === []) {
+            return 0;
+        }
+
+        $staleKeys = TranslationKey::query()
             ->where('source', 'audit')
-            ->whereNotIn('fingerprint', array_values(array_unique($seenFingerprints)))
-            ->delete();
+            ->whereNotIn('fingerprint', array_values(array_unique($seenFingerprints)), 'and')
+            ->where(function ($query) {
+                $query
+                    ->where('status', '!=', 'obsolete')
+                    ->orWhereNull('obsolete_at');
+            })
+            ->get();
+
+        foreach ($staleKeys as $key) {
+            $this->createAuditEvent([
+                'translation_key_id' => $key->id,
+                'entity_type' => 'translation_key',
+                'event_type' => 'stale_marked',
+                'old_fingerprint' => $key->fingerprint,
+                'new_fingerprint' => $key->fingerprint,
+                'old_key' => $key->key,
+                'new_key' => $key->key,
+                'old_value' => $key->native_text,
+                'new_value' => $key->native_text,
+                'old_status' => $key->status,
+                'new_status' => 'obsolete',
+                'reason' => 'key_not_seen_in_latest_audit_sync',
+                'context' => [
+                    'classification' => $key->classification,
+                    'suggested_key' => $key->suggested_key,
+                    'last_seen_at' => $key->last_seen_at ? (string) $key->last_seen_at : null,
+                ],
+            ]);
+
+            $key->forceFill([
+                'status' => 'obsolete',
+                'obsolete_at' => $now,
+                'updated_at' => $now,
+            ])->save();
+        }
+
+        return $staleKeys->count();
+    }
+
+    private function createAuditEvent(array $payload): void
+    {
+        DB::table('translation_audit_events')->insert([
+            'translation_key_id' => $payload['translation_key_id'] ?? null,
+            'translation_usage_id' => $payload['translation_usage_id'] ?? null,
+            'entity_type' => $payload['entity_type'],
+            'event_type' => $payload['event_type'],
+            'old_fingerprint' => $payload['old_fingerprint'] ?? null,
+            'new_fingerprint' => $payload['new_fingerprint'] ?? null,
+            'old_file' => $payload['old_file'] ?? null,
+            'new_file' => $payload['new_file'] ?? null,
+            'old_line' => $payload['old_line'] ?? null,
+            'new_line' => $payload['new_line'] ?? null,
+            'old_key' => $payload['old_key'] ?? null,
+            'new_key' => $payload['new_key'] ?? null,
+            'old_value' => $payload['old_value'] ?? null,
+            'new_value' => $payload['new_value'] ?? null,
+            'old_status' => $payload['old_status'] ?? null,
+            'new_status' => $payload['new_status'] ?? null,
+            'reason' => $payload['reason'] ?? null,
+            'context' => isset($payload['context'])
+                ? json_encode($payload['context'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                : null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     /**

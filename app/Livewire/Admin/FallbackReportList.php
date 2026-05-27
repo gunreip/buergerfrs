@@ -6,9 +6,13 @@ namespace App\Livewire\Admin;
 
 use App\Models\FallbackReport;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+/**
+ * Administrative list for fallback reports with review workflow controls.
+ */
 class FallbackReportList extends Component
 {
     use WithPagination;
@@ -33,16 +37,25 @@ class FallbackReportList extends Component
 
     public int $perPage = 25;
 
+    /**
+     * Reset pagination when search changes.
+     */
     public function updatedSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reset pagination when status filter changes.
+     */
     public function updatedStatusFilter(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Normalize page size and reset pagination.
+     */
     public function updatedPerPage(): void
     {
         $this->perPage = $this->normalizedPerPage();
@@ -50,6 +63,9 @@ class FallbackReportList extends Component
         $this->resetPage();
     }
 
+    /**
+     * Sort by a whitelisted pseudo-field and toggle direction on repeat selection.
+     */
     public function sortBy(string $field): void
     {
         if (! array_key_exists($field, self::SORT_FIELDS)) {
@@ -70,6 +86,9 @@ class FallbackReportList extends Component
         $this->resetPage();
     }
 
+    /**
+     * Restore default filters and pagination size.
+     */
     public function clearFilters(): void
     {
         $this->search = '';
@@ -79,16 +98,22 @@ class FallbackReportList extends Component
         $this->resetPage();
     }
 
+    /**
+     * Mark a fallback report as reviewed.
+     */
     public function markReviewed(int $reportId): void
     {
         $report = FallbackReport::query()->findOrFail($reportId);
 
         $report->markReviewed(
-            userId: auth()->id(),
+            userId: Auth::id(),
             note: 'Reviewed in fallback report list.',
         );
     }
 
+    /**
+     * Mark a fallback report as open/unreviewed.
+     */
     public function markUnreviewed(int $reportId): void
     {
         $report = FallbackReport::query()->findOrFail($reportId);
@@ -96,6 +121,9 @@ class FallbackReportList extends Component
         $report->markUnreviewed();
     }
 
+    /**
+     * Normalize selectable pagination size.
+     */
     private function normalizedPerPage(): int
     {
         return in_array($this->perPage, [10, 25, 50, 100], true)
@@ -103,6 +131,11 @@ class FallbackReportList extends Component
             : 10;
     }
 
+    /**
+     * Build filtered list and summary metrics for rendering.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function render()
     {
         $query = FallbackReport::query()
@@ -120,13 +153,16 @@ class FallbackReportList extends Component
         return view('components.admin.⚡fallback-report-list', [
             'reports' => $reports,
             'summary' => [
-                'open' => FallbackReport::query()->open()->count(),
-                'reviewed' => FallbackReport::query()->reviewed()->count(),
-                'total' => FallbackReport::query()->count(),
+                'open' => FallbackReport::query()->open()->count('*'),
+                'reviewed' => FallbackReport::query()->reviewed()->count('*'),
+                'total' => FallbackReport::query()->count('*'),
             ],
         ]);
     }
 
+    /**
+     * Apply full-text-like search across key fallback report fields.
+     */
     private function applySearch(Builder $query): Builder
     {
         $search = trim($this->search);

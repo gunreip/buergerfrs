@@ -7,7 +7,7 @@
         "reason": null,
         "suggested_key": "account.preferences.preferences_saved",
         "file": "app/Livewire/Account/Preferences.php",
-        "line": 50
+        "line": 60
     },
     {
         "classification": "native",
@@ -17,7 +17,7 @@
         "reason": null,
         "suggested_key": "account.preferences.your_personal_application_preferences_have_been_updated",
         "file": "app/Livewire/Account/Preferences.php",
-        "line": 51
+        "line": 61
     },
     {
         "classification": "native",
@@ -27,7 +27,7 @@
         "reason": null,
         "suggested_key": "admin.app_settings.invalid_application_language",
         "file": "app/Livewire/Admin/AppSettings.php",
-        "line": 38
+        "line": 198
     },
     {
         "classification": "native",
@@ -37,7 +37,97 @@
         "reason": null,
         "suggested_key": "admin.app_settings.application_language_updated",
         "file": "app/Livewire/Admin/AppSettings.php",
-        "line": 51
+        "line": 211
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Invalid application language.",
+        "raw": "__('Invalid application language.')",
+        "reason": null,
+        "suggested_key": "admin.app_settings.invalid_application_language",
+        "file": "app/Livewire/Admin/AppSettings.php",
+        "line": 250
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Invalid application language.",
+        "raw": "__('Invalid application language.')",
+        "reason": null,
+        "suggested_key": "admin.app_settings.invalid_application_language",
+        "file": "app/Livewire/Admin/AppSettings.php",
+        "line": 258
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "This application language is mandatory and cannot be disabled.",
+        "raw": "__('This application language is mandatory and cannot be disabled.')",
+        "reason": null,
+        "suggested_key": "admin.app_settings.this_application_language_is_mandatory_and_cannot_be_disabled",
+        "file": "app/Livewire/Admin/AppSettings.php",
+        "line": 268
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "The current application language cannot be disabled.",
+        "raw": "__('The current application language cannot be disabled.')",
+        "reason": null,
+        "suggested_key": "admin.app_settings.the_current_application_language_cannot_be_disabled",
+        "file": "app/Livewire/Admin/AppSettings.php",
+        "line": 274
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "At least one application language must remain enabled.",
+        "raw": "__('At least one application language must remain enabled.')",
+        "reason": null,
+        "suggested_key": "admin.app_settings.at_least_one_application_language_must_remain_enabled",
+        "file": "app/Livewire/Admin/AppSettings.php",
+        "line": 282
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Available application languages updated.",
+        "raw": "__('Available application languages updated.')",
+        "reason": null,
+        "suggested_key": "admin.app_settings.available_application_languages_updated",
+        "file": "app/Livewire/Admin/AppSettings.php",
+        "line": 297
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "The current application language cannot be removed from the available languages.",
+        "raw": "__('The current application language cannot be removed from the available languages.')",
+        "reason": null,
+        "suggested_key": "admin.app_settings.the_current_application_language_cannot_be_removed_from_the_available_languages",
+        "file": "app/Livewire/Admin/AppSettings.php",
+        "line": 328
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "At least one application language must remain enabled.",
+        "raw": "__('At least one application language must remain enabled.')",
+        "reason": null,
+        "suggested_key": "admin.app_settings.at_least_one_application_language_must_remain_enabled",
+        "file": "app/Livewire/Admin/AppSettings.php",
+        "line": 346
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Available application languages updated.",
+        "raw": "__('Available application languages updated.')",
+        "reason": null,
+        "suggested_key": "admin.app_settings.available_application_languages_updated",
+        "file": "app/Livewire/Admin/AppSettings.php",
+        "line": 355
     },
     {
         "classification": "native",
@@ -47,7 +137,7 @@
         "reason": null,
         "suggested_key": "admin.app_settings.without_role",
         "file": "app/Livewire/Admin/AppSettings.php",
-        "line": 85
+        "line": 394
     },
     {
         "classification": "native",
@@ -57,7 +147,7 @@
         "reason": null,
         "suggested_key": "admin.role_list.not_allowed",
         "file": "app/Livewire/Admin/RoleList.php",
-        "line": 124
+        "line": 137
     },
     {
         "classification": "native",
@@ -67,7 +157,7 @@
         "reason": null,
         "suggested_key": "admin.role_list.only_super_admins_may_create_roles",
         "file": "app/Livewire/Admin/RoleList.php",
-        "line": 126
+        "line": 139
     },
     {
         "classification": "native",
@@ -77,7 +167,7 @@
         "reason": null,
         "suggested_key": "admin.role_list.role_created",
         "file": "app/Livewire/Admin/RoleList.php",
-        "line": 202
+        "line": 215
     },
     {
         "classification": "native",
@@ -87,7 +177,7 @@
         "reason": null,
         "suggested_key": "admin.role_list.role_role_has_been_created",
         "file": "app/Livewire/Admin/RoleList.php",
-        "line": 204
+        "line": 217
     },
     {
         "classification": "native",
@@ -97,7 +187,7 @@
         "reason": null,
         "suggested_key": "admin.role_list.role_saved",
         "file": "app/Livewire/Admin/RoleList.php",
-        "line": 357
+        "line": 382
     },
     {
         "classification": "native",
@@ -107,7 +197,27 @@
         "reason": null,
         "suggested_key": "admin.role_list.role_metadata_and_badge_settings_for_role_have_been_updated",
         "file": "app/Livewire/Admin/RoleList.php",
-        "line": 359
+        "line": 384
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Translation values saved",
+        "raw": "__('Translation values saved')",
+        "reason": null,
+        "suggested_key": "admin.translation_list.translation_values_saved",
+        "file": "app/Livewire/Admin/TranslationList.php",
+        "line": 339
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "The translation values have been saved successfully.",
+        "raw": "__('The translation values have been saved successfully.')",
+        "reason": null,
+        "suggested_key": "admin.translation_list.the_translation_values_have_been_saved_successfully",
+        "file": "app/Livewire/Admin/TranslationList.php",
+        "line": 340
     },
     {
         "classification": "native",
@@ -117,7 +227,7 @@
         "reason": null,
         "suggested_key": "admin.user_list.please_select_a_role",
         "file": "app/Livewire/Admin/UserList.php",
-        "line": 178
+        "line": 224
     },
     {
         "classification": "native",
@@ -127,7 +237,7 @@
         "reason": null,
         "suggested_key": "admin.user_list.please_select_a_valid_role",
         "file": "app/Livewire/Admin/UserList.php",
-        "line": 189
+        "line": 235
     },
     {
         "classification": "native",
@@ -137,7 +247,7 @@
         "reason": null,
         "suggested_key": "admin.user_list.user_role_updated",
         "file": "app/Livewire/Admin/UserList.php",
-        "line": 228
+        "line": 274
     },
     {
         "classification": "native",
@@ -147,7 +257,7 @@
         "reason": null,
         "suggested_key": "admin.user_list.the_role_for_user_has_been_changed_to_role",
         "file": "app/Livewire/Admin/UserList.php",
-        "line": 229
+        "line": 275
     },
     {
         "classification": "native",
@@ -157,7 +267,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.salutation",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 191
+        "line": 195
     },
     {
         "classification": "native",
@@ -167,7 +277,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.title",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 195
+        "line": 199
     },
     {
         "classification": "native",
@@ -177,7 +287,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.gender",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 199
+        "line": 203
     },
     {
         "classification": "native",
@@ -187,7 +297,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.marital_status",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 203
+        "line": 207
     },
     {
         "classification": "native",
@@ -197,7 +307,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.first_name",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 207
+        "line": 211
     },
     {
         "classification": "native",
@@ -207,7 +317,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.middle_name",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 211
+        "line": 215
     },
     {
         "classification": "native",
@@ -217,7 +327,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.preferred_name",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 215
+        "line": 219
     },
     {
         "classification": "native",
@@ -227,7 +337,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.last_name",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 219
+        "line": 223
     },
     {
         "classification": "native",
@@ -237,7 +347,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.date_of_birth",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 223
+        "line": 227
     },
     {
         "classification": "native",
@@ -247,7 +357,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.avatar_passphoto",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 227
+        "line": 231
     },
     {
         "classification": "native",
@@ -257,7 +367,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.birth_country",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 231
+        "line": 235
     },
     {
         "classification": "native",
@@ -267,7 +377,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.birth_place",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 235
+        "line": 239
     },
     {
         "classification": "native",
@@ -277,7 +387,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.birth_name",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 239
+        "line": 243
     },
     {
         "classification": "native",
@@ -287,7 +397,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.phone",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 243
+        "line": 247
     },
     {
         "classification": "native",
@@ -297,7 +407,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.mobile",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 247
+        "line": 251
     },
     {
         "classification": "native",
@@ -307,7 +417,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.private_email",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 251
+        "line": 255
     },
     {
         "classification": "native",
@@ -317,7 +427,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.work_email",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 255
+        "line": 259
     },
     {
         "classification": "native",
@@ -327,7 +437,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.address_country",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 259
+        "line": 263
     },
     {
         "classification": "native",
@@ -337,7 +447,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.postal_code",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 263
+        "line": 267
     },
     {
         "classification": "native",
@@ -347,7 +457,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.city",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 267
+        "line": 271
     },
     {
         "classification": "native",
@@ -357,7 +467,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.street",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 271
+        "line": 275
     },
     {
         "classification": "native",
@@ -367,7 +477,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.house_number",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 275
+        "line": 279
     },
     {
         "classification": "native",
@@ -377,7 +487,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.address_line_2",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 279
+        "line": 283
     },
     {
         "classification": "native",
@@ -387,7 +497,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.email",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 283
+        "line": 287
     },
     {
         "classification": "native",
@@ -397,7 +507,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.primary_nationality",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 287
+        "line": 291
     },
     {
         "classification": "native",
@@ -407,7 +517,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.primary_language",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 291
+        "line": 295
     },
     {
         "classification": "native",
@@ -417,7 +527,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.national_id_number",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 295
+        "line": 299
     },
     {
         "classification": "native",
@@ -427,7 +537,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.issuing_authority",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 299
+        "line": 303
     },
     {
         "classification": "native",
@@ -437,7 +547,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.tax_id",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 303
+        "line": 307
     },
     {
         "classification": "native",
@@ -447,7 +557,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.social_security_number",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 307
+        "line": 311
     },
     {
         "classification": "native",
@@ -457,7 +567,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.emergency_contact_name",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 311
+        "line": 315
     },
     {
         "classification": "native",
@@ -467,7 +577,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.emergency_contact_relationship",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 315
+        "line": 319
     },
     {
         "classification": "native",
@@ -477,7 +587,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.emergency_contact_phone",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 319
+        "line": 323
     },
     {
         "classification": "native",
@@ -487,7 +597,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.emergency_contact_email",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 323
+        "line": 327
     },
     {
         "classification": "native",
@@ -497,7 +607,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.pension_insurance_number",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 327
+        "line": 331
     },
     {
         "classification": "native",
@@ -507,7 +617,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.health_insurance_number",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 331
+        "line": 335
     },
     {
         "classification": "native",
@@ -517,7 +627,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.health_insurance_provider",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 335
+        "line": 339
     },
     {
         "classification": "native",
@@ -527,7 +637,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.residence_permit_number",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 339
+        "line": 343
     },
     {
         "classification": "native",
@@ -537,7 +647,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.document_type",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 343
+        "line": 347
     },
     {
         "classification": "native",
@@ -547,7 +657,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.document_title",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 347
+        "line": 351
     },
     {
         "classification": "native",
@@ -557,7 +667,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.document_number",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 351
+        "line": 355
     },
     {
         "classification": "native",
@@ -567,7 +677,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.document_issuing_authority",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 355
+        "line": 359
     },
     {
         "classification": "native",
@@ -577,7 +687,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.document_issued_at",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 359
+        "line": 363
     },
     {
         "classification": "native",
@@ -587,7 +697,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.document_expires_at",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 363
+        "line": 367
     },
     {
         "classification": "native",
@@ -597,7 +707,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.document_file",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 367
+        "line": 371
     },
     {
         "classification": "native",
@@ -607,7 +717,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.person_created",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 481
+        "line": 488
     },
     {
         "classification": "native",
@@ -617,7 +727,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.the_person_and_login_account_have_been_created",
         "file": "app/Livewire/Management/People/CreatePerson.php",
-        "line": 482
+        "line": 489
     },
     {
         "classification": "native",
@@ -922,20 +1032,20 @@
     {
         "classification": "native",
         "function": "__",
-        "value": "Application language",
-        "raw": "__('Application language')",
+        "value": "Application languages",
+        "raw": "__('Application languages')",
         "reason": null,
-        "suggested_key": "admin.partials.app_settings.locale.application_language",
+        "suggested_key": "admin.partials.app_settings.locale.application_languages",
         "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
         "line": 6
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Global application language used for interface translations. This setting applies to all users.",
-        "raw": "__(\n                'Global application language used for interface translations. This setting applies to all users.',\n            )",
+        "value": "Configure which languages are available for the App/UI and choose the global default language.",
+        "raw": "__(\n                'Configure which languages are available for the App/UI and choose the global default language.',\n            )",
         "reason": null,
-        "suggested_key": "admin.partials.app_settings.locale.global_application_language_used_for_interface_translations_this_setting_applies",
+        "suggested_key": "admin.partials.app_settings.locale.configure_which_languages_are_available_for_the_app_ui_and_choose_the_global_def",
         "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
         "line": 7
     },
@@ -952,32 +1062,212 @@
     {
         "classification": "native",
         "function": "__",
-        "value": "Deutsch",
-        "raw": "__('Deutsch')",
+        "value": "Top languages",
+        "raw": "__('Top languages')",
         "reason": null,
-        "suggested_key": "admin.partials.app_settings.locale.deutsch",
-        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
-        "line": 29
-    },
-    {
-        "classification": "native",
-        "function": "__",
-        "value": "English",
-        "raw": "__('English')",
-        "reason": null,
-        "suggested_key": "admin.partials.app_settings.locale.english",
+        "suggested_key": "admin.partials.app_settings.locale.top_languages",
         "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
         "line": 30
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Changing this setting affects the global app locale for subsequent requests and rendered views.",
-        "raw": "__('Changing this setting affects the global app locale for subsequent requests and rendered views.')",
+        "value": "Select the top languages by their usage.",
+        "raw": "__('Select the top languages by their usage.')",
         "reason": null,
-        "suggested_key": "admin.partials.app_settings.locale.changing_this_setting_affects_the_global_app_locale_for_subsequent_requests_and_",
+        "suggested_key": "admin.partials.app_settings.locale.select_the_top_languages_by_their_usage",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 32
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Top languages",
+        "raw": "__('Top languages')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.top_languages",
         "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
         "line": 38
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Narrow down your selection ...",
+        "raw": "__('Narrow down your selection ...')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.narrow_down_your_selection",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 39
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select available languages",
+        "raw": "__('Select available languages')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.select_available_languages",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 81
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select which languages should be available for the App/UI. You can choose from all languages that have translations in the system. The global default language must be among the available languages.",
+        "raw": "__(\n                                    'Select which languages should be available for the App/UI. You can choose from all languages that have translations in the system. The global default language must be among the available languages.',\n                                )",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.select_which_languages_should_be_available_for_the_app_ui_you_can_choose_from_al",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 83
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Primary languages",
+        "raw": "__('Primary languages')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.primary_languages",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 91
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Please select",
+        "raw": "__('Please select')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.please_select",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 110
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Sub languages",
+        "raw": "__('Sub languages')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.sub_languages",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 173
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select the entries you want from the sub-languages listed below that correspond to the main language.",
+        "raw": "__(\n                    'Select the entries you want from the sub-languages listed below that correspond to the main language.',\n                )",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.select_the_entries_you_want_from_the_sub_languages_listed_below_that_correspond_",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 174
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Deselect all",
+        "raw": "__('Deselect all')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.deselect_all",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 186
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select all",
+        "raw": "__('Select all')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.select_all",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 186
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No sub languages are available for the selected primary language.",
+        "raw": "__('No sub languages are available for the selected primary language.')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.no_sub_languages_are_available_for_the_selected_primary_language",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 194
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Toggle the availability of this sub-language for the App/UI.",
+        "raw": "__('Toggle the availability of this sub-language for the App/UI.')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.toggle_the_availability_of_this_sub_language_for_the_app_ui",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 223
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Global App / UI language",
+        "raw": "__('Global App / UI language')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.global_app_ui_language",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 272
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Enable the language and any sub-languages you may have enabled above that should apply globally to the APP/UI. The order of the selected languages, after activating a new language, will reorder the buttons!",
+        "raw": "__(\n                    'Enable the language and any sub-languages you may have enabled above that should apply globally to the APP/UI. The order of the selected languages, after activating a new language, will reorder the buttons!',\n                )",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.enable_the_language_and_any_sub_languages_you_may_have_enabled_above_that_should",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 273
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Number of sub-languages available for this primary language.",
+        "raw": "__('Number of sub-languages available for this primary language.')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.number_of_sub_languages_available_for_this_primary_language",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 306
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "The country- / language-flag of the global available App/UI language. ",
+        "raw": "__('The country- / language-flag of the global available App/UI language. ')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.the_country_language_flag_of_the_global_available_app_ui_language",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 324
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Select this primary language to manage its sub-languages and activation state.",
+        "raw": "__(\n                                'Select this primary language to manage its sub-languages and activation state.',\n                            )",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.select_this_primary_language_to_manage_its_sub_languages_and_activation_state",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 345
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "The number of sub-languages selected for this primary language.",
+        "raw": "__('The number of sub-languages selected for this primary language.')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.the_number_of_sub_languages_selected_for_this_primary_language",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 366
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "This setting defines the global default App/UI language. User-specific language settings may override it later.",
+        "raw": "__('This setting defines the global default App/UI language. User-specific language settings may override it later.')",
+        "reason": null,
+        "suggested_key": "admin.partials.app_settings.locale.this_setting_defines_the_global_default_app_ui_language_user_specific_language_s",
+        "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+        "line": 384
     },
     {
         "classification": "native",
@@ -2707,7 +2997,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.address_format_available",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 237
+        "line": 236
     },
     {
         "classification": "native",
@@ -2717,7 +3007,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.address_format_missing",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 249
+        "line": 248
     },
     {
         "classification": "native",
@@ -2727,7 +3017,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.active",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 271
+        "line": 270
     },
     {
         "classification": "native",
@@ -2737,7 +3027,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.active",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 276
+        "line": 275
     },
     {
         "classification": "native",
@@ -2747,7 +3037,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.inactive",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 284
+        "line": 283
     },
     {
         "classification": "native",
@@ -2757,7 +3047,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.inactive",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 289
+        "line": 288
     },
     {
         "classification": "native",
@@ -2767,7 +3057,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.no_countries_found",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 303
+        "line": 302
     },
     {
         "classification": "native",
@@ -2777,7 +3067,7 @@
         "reason": null,
         "suggested_key": "admin.partials.country_reference_list.table.pagination",
         "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-        "line": 312
+        "line": 311
     },
     {
         "classification": "native",
@@ -7172,12 +7462,52 @@
     {
         "classification": "native",
         "function": "__",
+        "value": "Status",
+        "raw": "__('Status')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.filter.status",
+        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+        "line": 17
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Type",
+        "raw": "__('Type')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.filter.type",
+        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+        "line": 44
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "All types",
+        "raw": "__('All types')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.filter.all_types",
+        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+        "line": 51
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Backfill",
+        "raw": "__('Backfill')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.filter.backfill",
+        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+        "line": 52
+    },
+    {
+        "classification": "native",
+        "function": "__",
         "value": "Only problems",
         "raw": "__('Only problems')",
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.only_problems",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 41
+        "line": 85
     },
     {
         "classification": "native",
@@ -7187,7 +7517,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.filter_by_search",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 58
+        "line": 101
     },
     {
         "classification": "native",
@@ -7197,7 +7527,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.enter_a_search_term_to_filter_the_list_of_translations_by_key_or_value_the_searc",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 59
+        "line": 102
     },
     {
         "classification": "native",
@@ -7207,7 +7537,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.search",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 63
+        "line": 106
     },
     {
         "classification": "native",
@@ -7217,37 +7547,37 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.search_by_key_or_value",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 80
+        "line": 123
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Filter by language",
-        "raw": "__('Filter by language')",
+        "value": "Select a target language",
+        "raw": "__('Select a target language')",
         "reason": null,
-        "suggested_key": "admin.partials.translation_list.filter.filter_by_language",
+        "suggested_key": "admin.partials.translation_list.filter.select_a_target_language",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 88
+        "line": 131
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Select a language to filter the list of translations.",
-        "raw": "__('Select a language to filter the list of translations.')",
+        "value": "Select a target language to filter the list of translations.",
+        "raw": "__('Select a target language to filter the list of translations.')",
         "reason": null,
-        "suggested_key": "admin.partials.translation_list.filter.select_a_language_to_filter_the_list_of_translations",
+        "suggested_key": "admin.partials.translation_list.filter.select_a_target_language_to_filter_the_list_of_translations",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 89
+        "line": 132
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Language",
-        "raw": "__('Language')",
+        "value": "Target Language",
+        "raw": "__('Target Language')",
         "reason": null,
-        "suggested_key": "admin.partials.translation_list.filter.language",
+        "suggested_key": "admin.partials.translation_list.filter.target_language",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 91
+        "line": 134
     },
     {
         "classification": "native",
@@ -7257,7 +7587,17 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.all_languages",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 106
+        "line": 149
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "translation only",
+        "raw": "__('translation only')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.filter.translation_only",
+        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+        "line": 158
     },
     {
         "classification": "native",
@@ -7267,7 +7607,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.filter_by_translation_file",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 122
+        "line": 170
     },
     {
         "classification": "native",
@@ -7277,7 +7617,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.select_a_translation_file_to_filter_the_list_of_translations",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 123
+        "line": 171
     },
     {
         "classification": "native",
@@ -7287,7 +7627,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.translation_file",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 125
+        "line": 173
     },
     {
         "classification": "native",
@@ -7297,7 +7637,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.filter.all_files",
         "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-        "line": 140
+        "line": 188
     },
     {
         "classification": "native",
@@ -7422,42 +7762,122 @@
     {
         "classification": "native",
         "function": "__",
-        "value": "Dynamic",
-        "raw": "__('Dynamic')",
+        "value": "Vendor",
+        "raw": "__('Vendor')",
         "reason": null,
-        "suggested_key": "admin.partials.translation_list.meta.dynamic",
+        "suggested_key": "admin.partials.translation_list.meta.vendor",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
         "line": 107
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Dynamic translation usages that require manual review.",
-        "raw": "__('Dynamic translation usages that require manual review.')",
+        "value": "Translation keys imported from vendor/package sources.",
+        "raw": "__('Translation keys imported from vendor/package sources.')",
         "reason": null,
-        "suggested_key": "admin.partials.translation_list.meta.dynamic_translation_usages_that_require_manual_review",
+        "suggested_key": "admin.partials.translation_list.meta.translation_keys_imported_from_vendor_package_sources",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
         "line": 115
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Native",
-        "raw": "__('Native')",
+        "value": "Backfill",
+        "raw": "__('Backfill')",
         "reason": null,
-        "suggested_key": "admin.partials.translation_list.meta.native",
+        "suggested_key": "admin.partials.translation_list.meta.backfill",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
         "line": 125
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Native text entries available as translation candidates.",
-        "raw": "__('Native text entries available as translation candidates.')",
+        "value": "Native texts reconstructed from existing EN translation values.",
+        "raw": "__('Native texts reconstructed from existing EN translation values.')",
         "reason": null,
-        "suggested_key": "admin.partials.translation_list.meta.native_text_entries_available_as_translation_candidates",
+        "suggested_key": "admin.partials.translation_list.meta.native_texts_reconstructed_from_existing_en_translation_values",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
         "line": 133
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Key",
+        "raw": "__('Key')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.meta.key",
+        "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+        "line": 143
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Regular audit keys without special origin classification.",
+        "raw": "__('Regular audit keys without special origin classification.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.meta.regular_audit_keys_without_special_origin_classification",
+        "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+        "line": 151
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Type native",
+        "raw": "__('Type native')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.meta.type_native",
+        "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+        "line": 161
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Translation keys classified as native source entries.",
+        "raw": "__('Translation keys classified as native source entries.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.meta.translation_keys_classified_as_native_source_entries",
+        "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+        "line": 169
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Status dynamic",
+        "raw": "__('Status dynamic')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.meta.status_dynamic",
+        "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+        "line": 179
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Translation keys currently marked with dynamic status.",
+        "raw": "__('Translation keys currently marked with dynamic status.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.meta.translation_keys_currently_marked_with_dynamic_status",
+        "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+        "line": 187
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Status native",
+        "raw": "__('Status native')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.meta.status_native",
+        "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+        "line": 197
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Translation keys currently marked with native status.",
+        "raw": "__('Translation keys currently marked with native status.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.meta.translation_keys_currently_marked_with_native_status",
+        "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+        "line": 205
     },
     {
         "classification": "native",
@@ -7467,7 +7887,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.meta.filter_state",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-        "line": 143
+        "line": 215
     },
     {
         "classification": "native",
@@ -7477,7 +7897,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.meta.filtered",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-        "line": 147
+        "line": 219
     },
     {
         "classification": "native",
@@ -7487,7 +7907,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.meta.unfiltered",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-        "line": 147
+        "line": 219
     },
     {
         "classification": "native",
@@ -7497,7 +7917,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.meta.one_or_more_filters_are_currently_active",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-        "line": 151
+        "line": 223
     },
     {
         "classification": "native",
@@ -7507,7 +7927,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.meta.no_filters_are_currently_active",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-        "line": 151
+        "line": 223
     },
     {
         "classification": "native",
@@ -7517,7 +7937,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.meta.active_filters",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-        "line": 161
+        "line": 233
     },
     {
         "classification": "native",
@@ -7527,7 +7947,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.meta.search",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-        "line": 171
+        "line": 243
     },
     {
         "classification": "native",
@@ -7537,7 +7957,27 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.meta.status",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-        "line": 180
+        "line": 252
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Backfill",
+        "raw": "__('Backfill')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.meta.backfill",
+        "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+        "line": 259
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Type",
+        "raw": "__('Type')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.meta.type",
+        "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
+        "line": 268
     },
     {
         "classification": "native",
@@ -7547,7 +7987,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.meta.only_problems",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-        "line": 189
+        "line": 277
     },
     {
         "classification": "native",
@@ -7557,7 +7997,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.meta.language",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-        "line": 198
+        "line": 293
     },
     {
         "classification": "native",
@@ -7567,7 +8007,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.meta.file",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-        "line": 207
+        "line": 304
     },
     {
         "classification": "native",
@@ -7577,7 +8017,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.meta.per_page",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-        "line": 216
+        "line": 313
     },
     {
         "classification": "native",
@@ -7587,7 +8027,357 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.meta.no_active_filters",
         "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-        "line": 225
+        "line": 322
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Translation values edit",
+        "raw": "__('Translation values edit')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.translation_values_edit",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 13
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Edit translation values for the selected key. Key metadata is read-only.",
+        "raw": "__('Edit translation values for the selected key. Key metadata is read-only.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.edit_translation_values_for_the_selected_key_key_metadata_is_read_only",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 14
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Edit mode",
+        "raw": "__('Edit mode')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.edit_mode",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 34
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Only translation values are editable. Keys, native text and usage metadata are read-only.",
+        "raw": "__('Only translation values are editable. Keys, native text and usage metadata are read-only.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.only_translation_values_are_editable_keys_native_text_and_usage_metadata_are_rea",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 38
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Key",
+        "raw": "__('Key')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.key",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 52
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Group",
+        "raw": "__('Group')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.group",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 67
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Namespace",
+        "raw": "__('Namespace')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.namespace",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 72
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Group",
+        "raw": "__('Group')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.group",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 77
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Native text",
+        "raw": "__('Native text')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.native_text",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 92
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "The native text is the original string in the source language. It serves as a reference for translators and may be used in the application when a translation is missing.",
+        "raw": "__('The native text is the original string in the source language. It serves as a reference for translators and may be used in the application when a translation is missing.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.the_native_text_is_the_original_string_in_the_source_language_it_serves_as_a_ref",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 95
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Usage locations",
+        "raw": "__('Usage locations')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.usage_locations",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 112
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Readonly source locations where this translation key is currently used.",
+        "raw": "__('Readonly source locations where this translation key is currently used.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.readonly_source_locations_where_this_translation_key_is_currently_used",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 116
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Path",
+        "raw": "__('Path')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.path",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 136
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Line",
+        "raw": "__('Line')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.line",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 149
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Raw",
+        "raw": "__('Raw')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.raw",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 157
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No usage records available.",
+        "raw": "__('No usage records available.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.no_usage_records_available",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 168
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Translation values",
+        "raw": "__('Translation values')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.translation_values",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 181
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Below are the translation values for each language. You can edit the values and save your changes.",
+        "raw": "__('Below are the translation values for each language. You can edit the values and save your changes.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.below_are_the_translation_values_for_each_language_you_can_edit_the_values_and_s",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 185
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Missing",
+        "raw": "__('Missing')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_edit.missing",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+        "line": 224
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Translation history",
+        "raw": "__('Translation history')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.translation_history",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 11
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Audit events and change history for the selected translation key.",
+        "raw": "__('Audit events and change history for the selected translation key.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.audit_events_and_change_history_for_the_selected_translation_key",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 12
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Translation key",
+        "raw": "__('Translation key')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.translation_key",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 29
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Events",
+        "raw": "__('Events')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.events",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 45
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Latest audit events for this translation key.",
+        "raw": "__('Latest audit events for this translation key.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.latest_audit_events_for_this_translation_key",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 49
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Event",
+        "raw": "__('Event')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.event",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 115
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Reason",
+        "raw": "__('Reason')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.reason",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 121
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Old value",
+        "raw": "__('Old value')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.old_value",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 130
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "New value",
+        "raw": "__('New value')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.new_value",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 142
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Old status",
+        "raw": "__('Old status')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.old_status",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 155
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "New status",
+        "raw": "__('New status')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.new_status",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 160
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Old location",
+        "raw": "__('Old location')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.old_location",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 171
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "New location",
+        "raw": "__('New location')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.new_location",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 182
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Context",
+        "raw": "__('Context')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.context",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 197
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No history events available for this translation key.",
+        "raw": "__('No history events available for this translation key.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.no_history_events_available_for_this_translation_key",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 207
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Close",
+        "raw": "__('Close')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal_history.close",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+        "line": 215
     },
     {
         "classification": "native",
@@ -7627,7 +8417,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.group",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 64
+        "line": 58
     },
     {
         "classification": "native",
@@ -7637,7 +8427,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.namespace",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 69
+        "line": 63
     },
     {
         "classification": "native",
@@ -7647,7 +8437,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.group",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 74
+        "line": 68
     },
     {
         "classification": "native",
@@ -7657,7 +8447,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.source",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 87
+        "line": 81
     },
     {
         "classification": "native",
@@ -7667,7 +8457,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.usage",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 103
+        "line": 97
     },
     {
         "classification": "native",
@@ -7677,7 +8467,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.missing_key",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 119
+        "line": 113
     },
     {
         "classification": "native",
@@ -7687,7 +8477,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.no_translation_key_is_set_the_suggested_key_can_be_used_as_a_starting_point",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 120
+        "line": 114
     },
     {
         "classification": "native",
@@ -7697,7 +8487,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.matches_suggested_key",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 129
+        "line": 123
     },
     {
         "classification": "native",
@@ -7707,7 +8497,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.the_current_key_matches_the_generated_suggestion",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 130
+        "line": 124
     },
     {
         "classification": "native",
@@ -7717,7 +8507,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.differs_from_suggested_key",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 137
+        "line": 131
     },
     {
         "classification": "native",
@@ -7727,7 +8517,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.the_current_key_differs_from_the_generated_suggestion_this_can_be_intentional_bu",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 138
+        "line": 132
     },
     {
         "classification": "native",
@@ -7737,7 +8527,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.no_suggestion",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 143
+        "line": 137
     },
     {
         "classification": "native",
@@ -7747,7 +8537,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.no_suggested_key_is_available_for_this_entry",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 144
+        "line": 138
     },
     {
         "classification": "native",
@@ -7757,7 +8547,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.key_suggestion_check",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 152
+        "line": 146
     },
     {
         "classification": "native",
@@ -7767,7 +8557,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.key",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 175
+        "line": 169
     },
     {
         "classification": "native",
@@ -7777,7 +8567,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.suggested_key",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 185
+        "line": 179
     },
     {
         "classification": "native",
@@ -7787,7 +8577,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.native_text",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 199
+        "line": 193
     },
     {
         "classification": "native",
@@ -7797,7 +8587,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.values",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 212
+        "line": 206
     },
     {
         "classification": "native",
@@ -7807,7 +8597,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.no_translation_values_available",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 255
+        "line": 249
     },
     {
         "classification": "native",
@@ -7817,7 +8607,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.usages",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 268
+        "line": 262
     },
     {
         "classification": "native",
@@ -7827,7 +8617,97 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.path",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 286
+        "line": 289
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Original raw unchanged",
+        "raw": "__('Original raw unchanged')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal.original_raw_unchanged",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+        "line": 302
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "The current raw usage snippet matches the original raw reference captured for this usage.",
+        "raw": "__(\n                                                'The current raw usage snippet matches the original raw reference captured for this usage.',\n                                            )",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal.the_current_raw_usage_snippet_matches_the_original_raw_reference_captured_for_th",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+        "line": 303
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Original unchanged",
+        "raw": "__('Original unchanged')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal.original_unchanged",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+        "line": 312
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Original raw differs",
+        "raw": "__('Original raw differs')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal.original_raw_differs",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+        "line": 318
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "The current raw usage snippet differs from the original raw reference. The original raw value is preserved below.",
+        "raw": "__(\n                                                'The current raw usage snippet differs from the original raw reference. The original raw value is preserved below.',\n                                            )",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal.the_current_raw_usage_snippet_differs_from_the_original_raw_reference_the_origin",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+        "line": 319
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Original changed",
+        "raw": "__('Original changed')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal.original_changed",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+        "line": 328
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No original raw reference",
+        "raw": "__('No original raw reference')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal.no_original_raw_reference",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+        "line": 334
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No original raw reference has been captured for this usage yet.",
+        "raw": "__(\n                                                'No original raw reference has been captured for this usage yet.',\n                                            )",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal.no_original_raw_reference_has_been_captured_for_this_usage_yet",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+        "line": 335
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No original raw",
+        "raw": "__('No original raw')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal.no_original_raw",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+        "line": 344
     },
     {
         "classification": "native",
@@ -7837,17 +8717,27 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.line",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 299
+        "line": 355
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Key",
-        "raw": "__('Key')",
+        "value": "Current raw",
+        "raw": "__('Current raw')",
         "reason": null,
-        "suggested_key": "admin.partials.translation_list.modal.key",
+        "suggested_key": "admin.partials.translation_list.modal.current_raw",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 308
+        "line": 364
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Original raw",
+        "raw": "__('Original raw')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal.original_raw",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+        "line": 374
     },
     {
         "classification": "native",
@@ -7857,7 +8747,17 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.no_usage_records_available",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 317
+        "line": 383
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Edit",
+        "raw": "__('Edit')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.modal.edit",
+        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+        "line": 398
     },
     {
         "classification": "native",
@@ -7867,7 +8767,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.close",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 325
+        "line": 402
     },
     {
         "classification": "native",
@@ -7877,7 +8777,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.modal.no_translation_key_selected",
         "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
-        "line": 333
+        "line": 410
     },
     {
         "classification": "native",
@@ -7902,12 +8802,42 @@
     {
         "classification": "native",
         "function": "__",
+        "value": "ID",
+        "raw": "__('ID')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.id",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 54
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Internal database ID of the translation key.",
+        "raw": "__('Internal database ID of the translation key.')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.internal_database_id_of_the_translation_key",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 55
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "ID",
+        "raw": "__('ID')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.id",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 57
+    },
+    {
+        "classification": "native",
+        "function": "__",
         "value": "Status",
         "raw": "__('Status')",
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.status",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 27
+        "line": 69
     },
     {
         "classification": "native",
@@ -7917,7 +8847,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.current_status_of_the_translation_key_useful_for_identification_and_reference",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 28
+        "line": 70
     },
     {
         "classification": "native",
@@ -7927,7 +8857,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.status",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 32
+        "line": 74
     },
     {
         "classification": "native",
@@ -7937,7 +8867,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.key_suggested_key",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 39
+        "line": 84
     },
     {
         "classification": "native",
@@ -7947,7 +8877,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.translation_key_or_suggested_key_useful_for_identification_and_reference",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 40
+        "line": 85
     },
     {
         "classification": "native",
@@ -7957,7 +8887,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.key_suggested_key",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 42
+        "line": 87
     },
     {
         "classification": "native",
@@ -7967,7 +8897,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.native_text",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 49
+        "line": 97
     },
     {
         "classification": "native",
@@ -7977,7 +8907,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.original_text_in_the_source_language_useful_for_identification_and_reference",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 50
+        "line": 98
     },
     {
         "classification": "native",
@@ -7987,7 +8917,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.native_text",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 54
+        "line": 102
     },
     {
         "classification": "native",
@@ -7997,7 +8927,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.values",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 61
+        "line": 109
     },
     {
         "classification": "native",
@@ -8007,7 +8937,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.translated_values_for_the_key_across_different_languages_useful_for_identificati",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 62
+        "line": 110
     },
     {
         "classification": "native",
@@ -8017,7 +8947,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.values",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 66
+        "line": 114
     },
     {
         "classification": "native",
@@ -8027,7 +8957,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.usage",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 73
+        "line": 124
     },
     {
         "classification": "native",
@@ -8037,7 +8967,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.usage_information_of_the_translation_key_useful_for_identification_and_reference",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 74
+        "line": 125
     },
     {
         "classification": "native",
@@ -8047,7 +8977,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.usage",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 78
+        "line": 129
     },
     {
         "classification": "native",
@@ -8057,7 +8987,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.actions",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 89
+        "line": 140
     },
     {
         "classification": "native",
@@ -8067,7 +8997,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.open_the_translation_key_review_modal",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 90
+        "line": 141
     },
     {
         "classification": "native",
@@ -8077,7 +9007,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.actions",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 92
+        "line": 143
     },
     {
         "classification": "native",
@@ -8087,7 +9017,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.missing_key",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 129
+        "line": 197
     },
     {
         "classification": "native",
@@ -8097,7 +9027,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.matches_suggested_key",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 132
+        "line": 200
     },
     {
         "classification": "native",
@@ -8107,7 +9037,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.differs_from_suggested_key",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 135
+        "line": 203
     },
     {
         "classification": "native",
@@ -8117,7 +9047,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.no_suggestion",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 138
+        "line": 206
     },
     {
         "classification": "native",
@@ -8127,7 +9057,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.key",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 146
+        "line": 214
     },
     {
         "classification": "native",
@@ -8137,7 +9067,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.suggested_key",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 164
+        "line": 232
     },
     {
         "classification": "native",
@@ -8147,7 +9077,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.usage_s",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 241
+        "line": 315
     },
     {
         "classification": "native",
@@ -8157,17 +9087,37 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.last_seen",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 246
+        "line": 321
     },
     {
         "classification": "native",
         "function": "__",
-        "value": "Review",
-        "raw": "__('Review')",
+        "value": "Open history",
+        "raw": "__('Open history')",
         "reason": null,
-        "suggested_key": "admin.partials.translation_list.table.review",
+        "suggested_key": "admin.partials.translation_list.table.open_history",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 265
+        "line": 361
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "No history entries available",
+        "raw": "__('No history entries available')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.no_history_entries_available",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 361
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "History",
+        "raw": "__('History')",
+        "reason": null,
+        "suggested_key": "admin.partials.translation_list.table.history",
+        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+        "line": 364
     },
     {
         "classification": "native",
@@ -8177,7 +9127,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.no_translation_records_found",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 275
+        "line": 376
     },
     {
         "classification": "native",
@@ -8187,7 +9137,7 @@
         "reason": null,
         "suggested_key": "admin.partials.translation_list.table.pagination",
         "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-        "line": 287
+        "line": 388
     },
     {
         "classification": "native",
@@ -9927,7 +10877,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.sections.identification.pension_insurance_number",
         "file": "resources/views/components/management/people/create-person/sections/⚡identification.blade.php",
-        "line": 144
+        "line": 142
     },
     {
         "classification": "native",
@@ -9937,7 +10887,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.sections.identification.please_enter_the_pension_insurance_number_for_the_person_this_is_important_for_c",
         "file": "resources/views/components/management/people/create-person/sections/⚡identification.blade.php",
-        "line": 146
+        "line": 144
     },
     {
         "classification": "native",
@@ -9947,7 +10897,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.sections.identification.pension_insurance_number",
         "file": "resources/views/components/management/people/create-person/sections/⚡identification.blade.php",
-        "line": 150
+        "line": 148
     },
     {
         "classification": "native",
@@ -9957,7 +10907,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.sections.identification.residence_permit_number",
         "file": "resources/views/components/management/people/create-person/sections/⚡identification.blade.php",
-        "line": 176
+        "line": 174
     },
     {
         "classification": "native",
@@ -9967,7 +10917,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.sections.identification.please_enter_the_residence_permit_number_for_the_person_this_is_important_for_co",
         "file": "resources/views/components/management/people/create-person/sections/⚡identification.blade.php",
-        "line": 178
+        "line": 176
     },
     {
         "classification": "native",
@@ -9977,7 +10927,7 @@
         "reason": null,
         "suggested_key": "management.people.create_person.sections.identification.residence_permit_number",
         "file": "resources/views/components/management/people/create-person/sections/⚡identification.blade.php",
-        "line": 182
+        "line": 180
     },
     {
         "classification": "native",
@@ -11012,6 +11962,36 @@
     {
         "classification": "native",
         "function": "__",
+        "value": "Language",
+        "raw": "__('Language')",
+        "reason": null,
+        "suggested_key": "ui.button.activate_deactivate.language",
+        "file": "resources/views/components/ui/button/activate-deactivate.blade.php",
+        "line": 21
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Deactivate :language",
+        "raw": "__('Deactivate :language', ['language' => $languageLabel])",
+        "reason": null,
+        "suggested_key": "ui.button.activate_deactivate.deactivate_language",
+        "file": "resources/views/components/ui/button/activate-deactivate.blade.php",
+        "line": 24
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Activate :language",
+        "raw": "__('Activate :language', ['language' => $languageLabel])",
+        "reason": null,
+        "suggested_key": "ui.button.activate_deactivate.activate_language",
+        "file": "resources/views/components/ui/button/activate-deactivate.blade.php",
+        "line": 25
+    },
+    {
+        "classification": "native",
+        "function": "__",
         "value": "Cancel",
         "raw": "__('Cancel')",
         "reason": null,
@@ -11147,6 +12127,26 @@
         "reason": null,
         "suggested_key": "ui.button.reset.reset",
         "file": "resources/views/components/ui/button/reset.blade.php",
+        "line": 13
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Review",
+        "raw": "__('Review')",
+        "reason": null,
+        "suggested_key": "ui.button.review.review",
+        "file": "resources/views/components/ui/button/review.blade.php",
+        "line": 7
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "Review",
+        "raw": "__('Review')",
+        "reason": null,
+        "suggested_key": "ui.button.review.review",
+        "file": "resources/views/components/ui/button/review.blade.php",
         "line": 13
     },
     {
@@ -11237,7 +12237,7 @@
         "reason": null,
         "suggested_key": "ui.table.pagination.showing",
         "file": "resources/views/components/ui/table/pagination.blade.php",
-        "line": 27
+        "line": 48
     },
     {
         "classification": "native",
@@ -11247,7 +12247,7 @@
         "reason": null,
         "suggested_key": "ui.table.pagination.to",
         "file": "resources/views/components/ui/table/pagination.blade.php",
-        "line": 29
+        "line": 50
     },
     {
         "classification": "native",
@@ -11257,7 +12257,7 @@
         "reason": null,
         "suggested_key": "ui.table.pagination.of",
         "file": "resources/views/components/ui/table/pagination.blade.php",
-        "line": 31
+        "line": 52
     },
     {
         "classification": "native",
@@ -11267,7 +12267,7 @@
         "reason": null,
         "suggested_key": "ui.table.pagination.results",
         "file": "resources/views/components/ui/table/pagination.blade.php",
-        "line": 33
+        "line": 54
     },
     {
         "classification": "native",
@@ -11477,7 +12477,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.users",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 26
+        "line": 29
     },
     {
         "classification": "native",
@@ -11487,7 +12487,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.persons",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 36
+        "line": 39
     },
     {
         "classification": "native",
@@ -11497,7 +12497,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.clients",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 46
+        "line": 49
     },
     {
         "classification": "native",
@@ -11507,7 +12507,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.roles",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 56
+        "line": 59
     },
     {
         "classification": "native",
@@ -11517,7 +12517,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.permissions",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 66
+        "line": 69
     },
     {
         "classification": "native",
@@ -11527,7 +12527,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.translations",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 76
+        "line": 79
     },
     {
         "classification": "native",
@@ -11537,7 +12537,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.app_settings",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 86
+        "line": 89
     },
     {
         "classification": "native",
@@ -11547,7 +12547,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.reference",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 92
+        "line": 95
     },
     {
         "classification": "native",
@@ -11557,7 +12557,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.countries",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 105
+        "line": 111
     },
     {
         "classification": "native",
@@ -11567,7 +12567,7 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.html_tags_check",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 117
+        "line": 126
     },
     {
         "classification": "native",
@@ -11577,7 +12577,17 @@
         "reason": null,
         "suggested_key": "layouts.sidebar.administration.fallback_reports",
         "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
-        "line": 135
+        "line": 139
+    },
+    {
+        "classification": "native",
+        "function": "__",
+        "value": "PHPDoc",
+        "raw": "__('PHPDoc')",
+        "reason": null,
+        "suggested_key": "layouts.sidebar.administration.phpdoc",
+        "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
+        "line": 149
     },
     {
         "classification": "native",
@@ -12572,12 +13582,22 @@
     {
         "classification": "native",
         "function": "__",
+        "value": "Avatar could not be saved",
+        "raw": "__('Avatar could not be saved')",
+        "reason": null,
+        "suggested_key": "pages.settings.profile.avatar_could_not_be_saved",
+        "file": "resources/views/pages/settings/⚡profile.blade.php",
+        "line": 69
+    },
+    {
+        "classification": "native",
+        "function": "__",
         "value": "Please check the storage permissions for storage/app/public/avatars.",
         "raw": "__('Please check the storage permissions for storage/app/public/avatars.')",
         "reason": null,
         "suggested_key": "pages.settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 68
+        "line": 69
     },
     {
         "classification": "native",
@@ -12587,7 +13607,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.profile_updated",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 85
+        "line": 86
     },
     {
         "classification": "native",
@@ -12597,7 +13617,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.a_new_verification_link_has_been_sent_to_your_email_address",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 118
+        "line": 119
     },
     {
         "classification": "native",
@@ -12607,7 +13627,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.profile_settings",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 143
+        "line": 144
     },
     {
         "classification": "native",
@@ -12617,7 +13637,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.profile",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 146
+        "line": 147
     },
     {
         "classification": "native",
@@ -12627,7 +13647,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.update_your_name_and_email_address",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 147
+        "line": 148
     },
     {
         "classification": "native",
@@ -12637,7 +13657,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.name",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 159
+        "line": 160
     },
     {
         "classification": "native",
@@ -12647,7 +13667,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.nickname",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 182
+        "line": 183
     },
     {
         "classification": "native",
@@ -12657,7 +13677,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.optional_display_name",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 197
+        "line": 198
     },
     {
         "classification": "native",
@@ -12667,7 +13687,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.email",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 204
+        "line": 205
     },
     {
         "classification": "native",
@@ -12677,7 +13697,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.your_email_address_is_unverified",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 226
+        "line": 227
     },
     {
         "classification": "native",
@@ -12687,7 +13707,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.click_here_to_re_send_the_verification_email",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 232
+        "line": 233
     },
     {
         "classification": "native",
@@ -12697,7 +13717,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.save",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 243
+        "line": 244
     },
     {
         "classification": "native",
@@ -12707,7 +13727,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.save",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 254
+        "line": 255
     },
     {
         "classification": "native",
@@ -12717,7 +13737,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.avatar",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 263
+        "line": 264
     },
     {
         "classification": "native",
@@ -12727,7 +13747,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.upload_a_personal_profile_avatar_jpg_png_or_webp_up_to_2_mb",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 267
+        "line": 268
     },
     {
         "classification": "native",
@@ -12737,7 +13757,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.avatar_preview",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 276
+        "line": 277
     },
     {
         "classification": "native",
@@ -12747,7 +13767,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.current_avatar",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 282
+        "line": 283
     },
     {
         "classification": "native",
@@ -12757,7 +13777,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.avatar_image",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 316
+        "line": 317
     },
     {
         "classification": "native",
@@ -12767,7 +13787,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.remove_avatar",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 333
+        "line": 334
     },
     {
         "classification": "native",
@@ -12777,7 +13797,7 @@
         "reason": null,
         "suggested_key": "pages.settings.profile.will_be_removed_on_save",
         "file": "resources/views/pages/settings/⚡profile.blade.php",
-        "line": 341
+        "line": 342
     },
     {
         "classification": "native",

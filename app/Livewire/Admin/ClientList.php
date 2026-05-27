@@ -9,6 +9,9 @@ use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
+/**
+ * Administrative client list with filtering, sorting and pagination.
+ */
 class ClientList extends Component
 {
     use WithoutUrlPagination;
@@ -28,26 +31,41 @@ class ClientList extends Component
 
     public string $sortDirection = 'asc';
 
+    /**
+     * Reset pagination when search input changes.
+     */
     public function updatedSearch(): void
     {
         $this->setPage(1);
     }
 
+    /**
+     * Reset pagination when client type filter changes.
+     */
     public function updatedTypeFilter(): void
     {
         $this->setPage(1);
     }
 
+    /**
+     * Reset pagination when status filter changes.
+     */
     public function updatedStatusFilter(): void
     {
         $this->setPage(1);
     }
 
+    /**
+     * Reset pagination when people-relation filter changes.
+     */
     public function updatedPeopleFilter(): void
     {
         $this->setPage(1);
     }
 
+    /**
+     * Normalize page size and reset pagination.
+     */
     public function updatedPerPage(): void
     {
         $this->perPage = $this->normalizePerPage($this->perPage);
@@ -55,6 +73,9 @@ class ClientList extends Component
         $this->setPage(1);
     }
 
+    /**
+     * Reset all filter controls to default values.
+     */
     public function clearFilters(): void
     {
         $this->search = '';
@@ -66,6 +87,9 @@ class ClientList extends Component
         $this->setPage(1);
     }
 
+    /**
+     * Sort by a whitelisted column and toggle direction on repeated selection.
+     */
     public function sortBy(string $field): void
     {
         $allowedFields = [
@@ -96,6 +120,11 @@ class ClientList extends Component
         $this->setPage(1);
     }
 
+    /**
+     * Build list data, summary metrics and option lists for rendering.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function render()
     {
         $clientsQuery = Client::query()
@@ -127,30 +156,30 @@ class ClientList extends Component
 
         $clients = $clientsQuery
             ->orderBy($this->sortField, $this->sortDirection)
-            ->orderBy('name')
+            ->orderBy('name', 'asc')
             ->paginate($this->normalizePerPage($this->perPage));
 
         $summary = [
-            'totalClients' => Client::query()->count(),
-            'pendingClients' => Client::query()->where('status', Client::STATUS_PENDING)->count(),
-            'activeClients' => Client::query()->where('status', Client::STATUS_ACTIVE)->count(),
-            'clientsWithPeople' => Client::query()->has('people')->count(),
-            'clientsWithoutPeople' => Client::query()->doesntHave('people')->count(),
+            'totalClients' => Client::query()->count('*'),
+            'pendingClients' => Client::query()->where('status', Client::STATUS_PENDING)->count('*'),
+            'activeClients' => Client::query()->where('status', Client::STATUS_ACTIVE)->count('*'),
+            'clientsWithPeople' => Client::query()->has('people')->count('*'),
+            'clientsWithoutPeople' => Client::query()->doesntHave('people')->count('*'),
         ];
 
         $typeOptions = Client::query()
-            ->whereNotNull('type')
+            ->whereNotNull('type', 'and')
             ->select('type')
             ->distinct()
-            ->orderBy('type')
+            ->orderBy('type', 'asc')
             ->pluck('type')
             ->all();
 
         $statusOptions = Client::query()
-            ->whereNotNull('status')
+            ->whereNotNull('status', 'and')
             ->select('status')
             ->distinct()
-            ->orderBy('status')
+            ->orderBy('status', 'asc')
             ->pluck('status')
             ->all();
 
@@ -162,6 +191,9 @@ class ClientList extends Component
         ]);
     }
 
+    /**
+     * Normalize selectable pagination size.
+     */
     private function normalizePerPage(mixed $value): int
     {
         $value = (int) $value;

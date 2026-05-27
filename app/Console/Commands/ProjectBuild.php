@@ -7,8 +7,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use RuntimeException;
 use Symfony\Component\Process\Process;
+use Throwable;
 
 class ProjectBuild extends Command
 {
@@ -19,7 +22,8 @@ class ProjectBuild extends Command
      */
     protected $signature = 'project:build
         {--no-assets : Überspringt npm run build}
-        {--no-optimize : Überspringt php artisan optimize}';
+        {--no-optimize : Überspringt php artisan optimize}
+        {--allow-empty-db : Erlaubt Build auch bei leeren Kern-Tabellen}';
 
     /**
      * The console command description.
@@ -33,6 +37,10 @@ class ProjectBuild extends Command
      */
     public function handle(): int
     {
+        if (! $this->option('allow-empty-db') && ! $this->assertCriticalDataPresent()) {
+            return self::FAILURE;
+        }
+
         $clearSteps = [
             ['desc' => 'Cache leeren', 'cmd' => 'cache:clear'],
             ['desc' => 'Config-Cache leeren', 'cmd' => 'config:clear'],
@@ -73,6 +81,45 @@ class ProjectBuild extends Command
         $this->info('✅ Projekt-Build abgeschlossen!');
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Block build when critical tables are empty to avoid silent "empty app" runs.
+     */
+    private function assertCriticalDataPresent(): bool
+    {
+        $criticalTables = ['users', 'countries', 'languages'];
+        $emptyTables = [];
+
+        try {
+            foreach ($criticalTables as $table) {
+                if (! Schema::hasTable($table)) {
+                    $this->error('❌ Build abgebrochen: Tabelle fehlt: ' . $table);
+                    $this->warn('ℹ️ Führe zuerst Migrationen aus (z. B. php artisan migrate --seed).');
+
+                    return false;
+                }
+
+                if ((int) DB::table($table)->count('*') === 0) {
+                    $emptyTables[] = $table;
+                }
+            }
+        } catch (Throwable $exception) {
+            $this->error('❌ Build abgebrochen: Datenbankprüfung fehlgeschlagen.');
+            $this->warn(trim($exception->getMessage()));
+
+            return false;
+        }
+
+        if ($emptyTables === []) {
+            return true;
+        }
+
+        $this->error('❌ Build abgebrochen: Kritische Tabellen sind leer: ' . implode(', ', $emptyTables));
+        $this->warn('ℹ️ Erwarteter Zustand? Dann mit --allow-empty-db starten.');
+        $this->warn('ℹ️ Sonst Daten wiederherstellen/seeden (z. B. php artisan db:seed --class=DatabaseSeeder).');
+
+        return false;
     }
 
     private function runArtisanStep(string $description, string $command): void

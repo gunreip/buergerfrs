@@ -14,7 +14,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('translation_usages', function (Blueprint $table) {
-            //
+            $table
+                ->text('original_raw')
+                ->nullable()
+                ->after('raw');
+
+            // TODO: Optional explicit backfill for existing rows can set original_raw = raw once,
+            // but this must stay a conscious data maintenance step and must not be repeated by sync commands.
+            // der Backfill:
+            // php artisan tinker --execute="\DB::table('translation_usages')->whereNull('original_raw')->update(['original_raw' => \DB::raw('raw')]);"
         });
     }
 
@@ -24,7 +32,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('translation_usages', function (Blueprint $table) {
-            //
+            $table->dropColumn('original_raw');
         });
     }
 };

@@ -5,6 +5,9 @@ namespace App\Livewire\Actions;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
+/**
+ * Invokable logout action used by Livewire auth flows.
+ */
 class Logout
 {
     /**

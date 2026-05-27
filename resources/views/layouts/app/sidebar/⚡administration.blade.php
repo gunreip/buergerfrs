@@ -13,6 +13,9 @@
     class="{{ $administrationNeedsAttention ? $attentionDotClass : '' }} mt-4 grid"
     :heading="__('Administration')"
     icon="settings-2"
+    @class([
+        'sidebar-group-attention-dot' => $htmlViewAuditNeedsAttention,
+    ])
     expandable
     :expanded="request()->routeIs('admin.*')"
 >
@@ -91,6 +94,9 @@
         class="{{ $referenceNeedsAttention ? $attentionDotClass : '' }} grid"
         :heading="__('Reference')"
         icon="globe"
+        @class([
+            'sidebar-group-attention-dot' => $htmlViewAuditNeedsAttention,
+        ])
         expandable
         :expanded="request()->routeIs('admin.country-references') || request()->routeIs('admin.html-view-audit')"
     >
@@ -110,16 +116,14 @@
             icon="code-xml"
             :href="route('admin.html-view-audit')"
             :current="request()->routeIs('admin.html-view-audit')"
+            :badge="$htmlViewAuditNeedsAttention ? ' ' : null"
+            @class([
+                'sidebar-attention-dot' => $htmlViewAuditNeedsAttention,
+            ])
             wire:navigate
         >
-            <span class="inline-flex w-full items-center gap-2">
-                <span>
-                    {{ __('HTML-Tags-Check') }}
-                </span>
-
-                @if ($htmlViewAuditNeedsAttention)
-                    <span class="ml-auto size-2 rounded-full bg-red-500"></span>
-                @endif
+            <span class="flex-1 text-left text-sm font-medium leading-none rtl:text-right">
+                {{ __('HTML-Tags-Check') }}
             </span>
         </flux:sidebar.item>
 
@@ -134,4 +138,15 @@
     >
         {{ __('Fallback Reports') }}
     </flux:sidebar.item>
+
+    @role('Super-Admin')
+        {{-- Admin -> phpdoc documentation --}}
+        <flux:sidebar.item
+            icon="book-open-text"
+            :href="route('admin.phpdoc')"
+            :current="request()->routeIs('admin.phpdoc')"
+        >
+            {{ __('PHPDoc') }}
+        </flux:sidebar.item>
+    @endrole
 </flux:sidebar.group>

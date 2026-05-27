@@ -9,11 +9,15 @@ use App\Support\Audit\AdminActivity;
 use App\Support\Icons\IconRegistry;
 use App\Support\Settings\RoleBadgeResolver;
 use Flux\Flux;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
 
+/**
+ * Administrative role list with role creation/editing workflows and badge settings.
+ */
 class RoleList extends Component
 {
     use WithPagination;
@@ -94,6 +98,9 @@ class RoleList extends Component
         }
     }
 
+    /**
+     * Open and initialize the create-role modal state.
+     */
     public function openCreateRoleModal(): void
     {
         $this->resetValidation();
@@ -112,14 +119,20 @@ class RoleList extends Component
         $this->showCreateRoleModal = true;
     }
 
+    /**
+     * Close and reset the create-role modal state.
+     */
     public function closeCreateRoleModal(): void
     {
         $this->resetCreateRoleModal();
     }
 
+    /**
+     * Validate input, create a role, persist badge configuration and log audit activity.
+     */
     public function createRole(AppDisplaySettings $settings, IconRegistry $iconRegistry, AdminActivity $adminActivity): void
     {
-        if (! auth()->user()?->hasRole('Super-Admin')) {
+        if (! Auth::user()?->hasRole('Super-Admin')) {
             Flux::toast(
                 // i18n-native: __('Not allowed')
                 heading: __('admin.roles.messages.not_allowed.heading'),
@@ -212,6 +225,9 @@ class RoleList extends Component
         $this->dispatch('$refresh');
     }
 
+    /**
+     * Reset create-role modal fields to defaults.
+     */
     private function resetCreateRoleModal(): void
     {
         $this->resetValidation();
@@ -230,6 +246,9 @@ class RoleList extends Component
         $this->creatingBadgeIcon = 'tag';
     }
 
+    /**
+     * Open and hydrate edit-role modal state for a specific role.
+     */
     public function openEditRoleModal(int $roleId, AppDisplaySettings $settings): void
     {
         $this->resetValidation();
@@ -257,11 +276,17 @@ class RoleList extends Component
         $this->showEditRoleModal = true;
     }
 
+    /**
+     * Close and reset the edit-role modal state.
+     */
     public function closeEditRoleModal(): void
     {
         $this->resetEditRoleModal();
     }
 
+    /**
+     * Save editable role metadata and badge settings, then log audit activity.
+     */
     public function saveRole(AppDisplaySettings $settings, IconRegistry $iconRegistry, AdminActivity $adminActivity): void
     {
         if ($this->editingRoleId === null) {
@@ -367,6 +392,9 @@ class RoleList extends Component
         $this->dispatch('$refresh');
     }
 
+    /**
+     * Reset edit-role modal fields to defaults.
+     */
     private function resetEditRoleModal(): void
     {
         $this->resetValidation();
@@ -388,6 +416,9 @@ class RoleList extends Component
         $this->editingBadgeIcon = 'tag';
     }
 
+    /**
+     * Sort by a whitelisted field and toggle direction on repeated selection.
+     */
     public function sortBy(string $field): void
     {
         $allowedFields = [
@@ -414,6 +445,9 @@ class RoleList extends Component
         $this->resetPage();
     }
 
+    /**
+     * Reset all active list filters to defaults.
+     */
     public function clearFilters(): void
     {
         $this->search = '';
@@ -435,6 +469,11 @@ class RoleList extends Component
             : 10;
     }
 
+    /**
+     * Build list, badge metadata and option payloads for rendering.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function render(RoleBadgeResolver $roleBadgeResolver, IconRegistry $iconRegistry)
     {
         $rolesQuery = Role::query()

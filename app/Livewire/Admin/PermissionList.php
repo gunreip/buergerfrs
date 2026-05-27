@@ -12,6 +12,9 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
+/**
+ * Administrative permission list with metadata editing and role-permission assignment.
+ */
 class PermissionList extends Component
 {
     use WithPagination;
@@ -84,6 +87,9 @@ class PermissionList extends Component
         }
     }
 
+    /**
+     * Reset active filters to defaults.
+     */
     public function clearFilters(): void
     {
         $this->search = '';
@@ -97,6 +103,9 @@ class PermissionList extends Component
         $this->resetPage();
     }
 
+    /**
+     * Sort by a whitelisted column and toggle sort direction on repeat selection.
+     */
     public function sortBy(string $field): void
     {
         $allowedFields = [
@@ -125,6 +134,9 @@ class PermissionList extends Component
         $this->resetPage();
     }
 
+    /**
+     * Determine whether role-permission assignments differ from original state.
+     */
     public function hasRolePermissionChanges(): bool
     {
         $selected = $this->normalizedPermissionNames($this->selectedPermissionNames);
@@ -133,6 +145,9 @@ class PermissionList extends Component
         return $selected !== $original;
     }
 
+    /**
+     * Determine whether editable permission metadata changed.
+     */
     public function hasPermissionMetadataChanges(): bool
     {
         if ($this->editingPermissionId === null) {
@@ -170,6 +185,9 @@ class PermissionList extends Component
         return $permissionNames;
     }
 
+    /**
+     * Open permission metadata modal and hydrate editable fields.
+     */
     public function openEditPermissionModal(int $permissionId): void
     {
         $permission = Permission::query()
@@ -191,6 +209,9 @@ class PermissionList extends Component
         $this->showEditPermissionModal = true;
     }
 
+    /**
+     * Close permission metadata modal and clear state.
+     */
     public function closeEditPermissionModal(): void
     {
         $this->showEditPermissionModal = false;
@@ -208,10 +229,19 @@ class PermissionList extends Component
         $this->resetValidation();
     }
 
+    /**
+     * Open role-permission assignment modal for a role or first available role.
+     */
     public function openRolePermissionsModal(?string $roleName = null): void
     {
-        $role = Role::query()
-            ->when($roleName !== null && $roleName !== '', fn($query) => $query->where('name', $roleName))
+        $roleQuery = Role::query();
+
+        if ($roleName !== null && $roleName !== '') {
+            $roleQuery->where('name', $roleName);
+        }
+
+        /** @var Role|null $role */
+        $role = $roleQuery
             ->orderBy('category')
             ->orderBy('sort_order')
             ->orderBy('name')
@@ -241,6 +271,9 @@ class PermissionList extends Component
         $this->showRolePermissionsModal = true;
     }
 
+    /**
+     * Close role-permission assignment modal and reset selection state.
+     */
     public function closeRolePermissionsModal(): void
     {
         $this->showRolePermissionsModal = false;
@@ -255,6 +288,9 @@ class PermissionList extends Component
         $this->resetValidation();
     }
 
+    /**
+     * Reload selected role permission names when role selection changes.
+     */
     public function updatedSelectedRoleName(): void
     {
         if ($this->selectedRoleName === '') {
@@ -281,6 +317,9 @@ class PermissionList extends Component
         $this->originalPermissionNames = $this->selectedPermissionNames;
     }
 
+    /**
+     * Persist selected permission names for the chosen role and write audit activity.
+     */
     public function saveRolePermissions(AdminActivity $adminActivity): void
     {
         $this->validate([
@@ -333,6 +372,9 @@ class PermissionList extends Component
         );
     }
 
+    /**
+     * Persist editable permission metadata and write audit activity.
+     */
     public function savePermissionMetadata(AdminActivity $adminActivity): void
     {
         $this->validate([

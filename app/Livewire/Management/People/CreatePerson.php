@@ -23,6 +23,7 @@ use App\Support\Avatar\AvatarPath;
 use App\Support\Forms\FormFieldRegistry;
 use Flux\Flux;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -32,6 +33,9 @@ use Livewire\WithFileUploads;
 use RuntimeException;
 use Spatie\Permission\Models\Role;
 
+/**
+ * Management form component for creating a person with initial related records.
+ */
 class CreatePerson extends Component
 {
     use WithFileUploads;
@@ -370,6 +374,9 @@ class CreatePerson extends Component
         ];
     }
 
+    /**
+     * Create person, linked user and initial related entities in one transaction.
+     */
     public function create(GeneratedPasswordLogger $passwordLogger, ManagementActivity $managementActivity): void
     {
         $this->resetCreatedState();
@@ -460,7 +467,7 @@ class CreatePerson extends Component
             user: $user,
             person: $person,
             password: $plainPassword,
-            createdByUser: auth()->user() instanceof User ? auth()->user() : null,
+            createdByUser: Auth::user() instanceof User ? Auth::user() : null,
         );
 
         $managementActivity->personCreated(
@@ -485,6 +492,9 @@ class CreatePerson extends Component
         );
     }
 
+    /**
+     * Reset form input, created-state indicators and validation errors.
+     */
     public function resetForm(): void
     {
         $this->resetFormState();
@@ -541,16 +551,27 @@ class CreatePerson extends Component
         $this->email = '';
     }
 
+    /**
+     * Clear only the displayed generated password value.
+     */
     public function clearGeneratedPassword(): void
     {
         $this->generatedPassword = '';
     }
 
+    /**
+     * Determine whether a field is configured as required in the form registry.
+     */
     public function isRequiredField(string $field): bool
     {
         return app(FormFieldRegistry::class)->isRequired(self::FORM_KEY, $field);
     }
 
+    /**
+     * Compute completion/error status for a form tab based on configured fields.
+     *
+     * @return array{total:int, filled:int, required_total:int, required_filled:int, has_errors:bool, status:string}
+     */
     public function formTabStatus(string $tab): array
     {
         $registry = app(FormFieldRegistry::class);
@@ -644,6 +665,9 @@ class CreatePerson extends Component
         return $value !== null;
     }
 
+    /**
+     * Dispatch focus event for a validation field based on registry metadata.
+     */
     public function focusValidationField(string $field): void
     {
         $meta = $this->validationFieldMeta()[$field] ?? null;
@@ -655,6 +679,11 @@ class CreatePerson extends Component
         $this->dispatch('buergerfrs:focus-field', inputId: $meta['input_id']);
     }
 
+    /**
+     * Render create-person form with select options.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function render()
     {
         return view('components.management.people.⚡create-person', [
@@ -682,6 +711,9 @@ class CreatePerson extends Component
         ]);
     }
 
+    /**
+     * Reset post-create state fields used for UI feedback.
+     */
     private function resetCreatedState(): void
     {
         $this->createdPersonId = null;
@@ -1062,7 +1094,7 @@ class CreatePerson extends Component
         $mimeType = $upload->getMimeType();
         $fileSize = $upload->getSize();
 
-        $storedFilename = (string) Str::uuid().($extension !== '' ? ".{$extension}" : '');
+        $storedFilename = (string) Str::uuid() . ($extension !== '' ? ".{$extension}" : '');
         $directory = "person-documents/{$person->id}";
 
         $path = $upload->storeAs($directory, $storedFilename, 'local');
@@ -1140,7 +1172,7 @@ class CreatePerson extends Component
 
     private function buildUserName(string $firstName, string $lastName): string
     {
-        return trim($firstName.' '.$lastName);
+        return trim($firstName . ' ' . $lastName);
     }
 
     private function buildUniquePersonNumber(): string

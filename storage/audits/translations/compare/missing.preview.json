@@ -1,7 +1,7 @@
 {
     "preview": true,
     "preview_limit": 20,
-    "total": 27,
+    "total": 28,
     "items": [
         {
             "full_key": "admin.roles.actions.create",
@@ -165,7 +165,7 @@
             "usages": [
                 {
                     "file": "app/Livewire/Admin/RoleList.php",
-                    "line": 125,
+                    "line": 138,
                     "function": "__",
                     "raw": "__('admin.roles.messages.not_allowed.heading')"
                 }
@@ -177,7 +177,7 @@
             "usages": [
                 {
                     "file": "app/Livewire/Admin/RoleList.php",
-                    "line": 127,
+                    "line": 140,
                     "function": "__",
                     "raw": "__('admin.roles.messages.not_allowed.only_super_admins_may_create_roles')"
                 }
@@ -189,7 +189,7 @@
             "usages": [
                 {
                     "file": "app/Livewire/Admin/RoleList.php",
-                    "line": 203,
+                    "line": 216,
                     "function": "__",
                     "raw": "__('admin.roles.messages.role_created.heading')"
                 }
@@ -201,7 +201,7 @@
             "usages": [
                 {
                     "file": "app/Livewire/Admin/RoleList.php",
-                    "line": 205,
+                    "line": 218,
                     "function": "__",
                     "raw": "__('admin.roles.messages.role_created.text', [\n                'role' => $role->name,\n            ])"
                 }
@@ -213,7 +213,7 @@
             "usages": [
                 {
                     "file": "app/Livewire/Admin/RoleList.php",
-                    "line": 358,
+                    "line": 383,
                     "function": "__",
                     "raw": "__('admin.roles.messages.role_saved.heading')"
                 }
@@ -225,7 +225,7 @@
             "usages": [
                 {
                     "file": "app/Livewire/Admin/RoleList.php",
-                    "line": 360,
+                    "line": 385,
                     "function": "__",
                     "raw": "__('admin.roles.messages.role_saved.text', [\n                'role' => $savedRoleName,\n            ])"
                 }

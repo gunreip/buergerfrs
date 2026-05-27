@@ -41,4 +41,14 @@ Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
         Route::get('html-view-audit', HtmlViewAudit::class)->name('html-view-audit');
 
         Route::get('fallback-reports', FallbackReportList::class)->name('fallback-reports');
+
+        Route::middleware(['role:Super-Admin'])
+            ->get('phpdoc', function () {
+                if (! file_exists(public_path('docs/phpdoc/index.html'))) {
+                    abort(404, 'PHPDoc documentation has not been published yet. Run composer docs:phpdoc:public.');
+                }
+
+                return redirect('/docs/phpdoc/index.html');
+            })
+            ->name('phpdoc');
     });

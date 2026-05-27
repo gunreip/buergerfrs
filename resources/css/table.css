@@ -48,3 +48,57 @@ tr[data-flux-row]:hover>td[data-flux-cell]:first-child::before {
 tr[data-flux-row]:hover>td[data-flux-cell]:last-child::before {
     @apply rounded-r-lg;
 }
+
+/*
+|--------------------------------------------------------------------------
+| App Table Column Widths
+|--------------------------------------------------------------------------
+|
+| Zentrale Spaltenbreiten für wiederverwendbare Tabellen-Spaltentypen.
+|
+*/
+
+.app-table {
+    /* width: 100%; */
+    @apply w-full;
+}
+
+.app-table--fixed {
+    table-layout: fixed;
+}
+
+.app-table-col--id {
+    width: 5rem;
+}
+
+.app-table-col--status {
+    width: 6rem;
+}
+
+.app-table-col--usage {
+    width: 16rem;
+}
+
+.app-table-col--actions {
+    width: 8rem;
+}
+
+.app-table--translation-list {
+    --app-table-balanced-column-width: calc((100% - 35rem) / 3);
+}
+
+.app-table-cell-item-header {
+    @apply text-sm font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider;
+}
+
+.app-table-cell-item-timestamp,
+.app-table-cell-item-date,
+.app-table-cell-item-time {
+    @apply text-sm text-zinc-700 dark:text-zinc-300 ml-3;
+}
+
+.app-table--translation-list .app-table-col--key,
+.app-table--translation-list .app-table-col--native,
+.app-table--translation-list .app-table-col--values {
+    width: var(--app-table-balanced-column-width);
+}

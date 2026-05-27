@@ -31,7 +31,7 @@
             type="{{ $type }}"
             icon="{{ $resolvedIcon }}"
             {{ $attributes }}
-            variant="danger"
+            variant="filled"
             color="red"
             :size="$size"
         ></flux:button>
@@ -39,7 +39,7 @@
             class="hover:cursor-pointer"
             type="{{ $type }}"
             {{ $attributes }}
-            variant="danger"
+            variant="filled"
             color="red"
             :size="$size"
         >
@@ -51,7 +51,7 @@
         class="hover:cursor-pointer"
         type="{{ $type }}"
         {{ $attributes }}
-        variant="danger"
+        variant="filled"
         color="red"
         :size="$size"
     >

@@ -14,6 +14,9 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Pagination\LengthAwarePaginator;
 
+/**
+ * Administrative HTML view audit dashboard with finding filters and details modal.
+ */
 class HtmlViewAudit extends Component
 {
     use WithPagination;
@@ -52,6 +55,9 @@ class HtmlViewAudit extends Component
         }
     }
 
+    /**
+     * Reset filters to their default values.
+     */
     public function clearFilters(): void
     {
         $this->statusFilter = 'open';
@@ -63,6 +69,9 @@ class HtmlViewAudit extends Component
         $this->resetPage();
     }
 
+    /**
+     * Sort findings by a whitelisted field and toggle sort direction.
+     */
     public function sortBy(string $field): void
     {
         $allowedFields = [
@@ -95,18 +104,27 @@ class HtmlViewAudit extends Component
         $this->resetPage();
     }
 
+    /**
+     * Open the finding details modal for the selected finding.
+     */
     public function showFindingDetails(int $findingId): void
     {
         $this->selectedFindingId = $findingId;
         $this->showFindingDetailsModal = true;
     }
 
+    /**
+     * Close the finding details modal and clear selection.
+     */
     public function closeFindingDetailsModal(): void
     {
         $this->showFindingDetailsModal = false;
         $this->selectedFindingId = null;
     }
 
+    /**
+     * Build audit dashboard payload and filtered findings list for rendering.
+     */
     public function render(): View
     {
         $audit = $this->audit();
@@ -415,7 +433,7 @@ class HtmlViewAudit extends Component
     }
 
     /**
-     * @return array<int, array<string, mixed>>
+     * @return LengthAwarePaginator<int, array<string, mixed>>
      */
     private function filteredFindings(): LengthAwarePaginator
     {

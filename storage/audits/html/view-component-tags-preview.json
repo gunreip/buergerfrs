@@ -1,13 +1,13 @@
 {
-    "generated_at": "2026-05-20T17:33:29+00:00",
+    "generated_at": "2026-05-27T04:22:54+02:00",
     "paths": [
         "resources/views"
     ],
-    "files_scanned": 236,
+    "files_scanned": 256,
     "counts": {
-        "total": 170,
-        "flux": 128,
-        "custom": 38,
+        "total": 177,
+        "flux": 129,
+        "custom": 44,
         "livewire": 4
     },
     "tags": {
@@ -39,7 +39,6 @@
             "x-auth-header",
             "x-auth-session-status",
             "x-desktop-user-menu",
-            "x-dynamic-component",
             "x-layouts::app",
             "x-layouts::app.sidebar",
             "x-layouts::auth",
@@ -47,13 +46,14 @@
             "x-pages::settings.layout",
             "x-placeholder-pattern",
             "x-ui.badge.context",
+            "x-ui.button.activate-deactivate",
             "x-ui.button.cancel",
             "x-ui.button.confirm",
             "x-ui.button.create",
             "x-ui.button.delete",
             "x-ui.button.edit",
             "x-ui.button.reset",
-            "x-ui.button.save"
+            "x-ui.button.review"
         ],
         "livewire": [
             "livewire:pages::settings.delete-user-form",
@@ -92,7 +92,7 @@
             },
             {
                 "file": "resources/views/pages/settings/⚡profile.blade.php",
-                "line": 285
+                "line": 286
             }
         ],
         "flux:badge": [
@@ -118,7 +118,7 @@
             },
             {
                 "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-                "line": 238
+                "line": 237
             },
             {
                 "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
@@ -158,23 +158,23 @@
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
-                "line": 167
+                "line": 239
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+                "line": 18
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+                "line": 15
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
                 "line": 18
             },
             {
-                "file": "resources/views/components/ui/badge/context.blade.php",
-                "line": 22
-            },
-            {
-                "file": "resources/views/components/ui/role-badge.blade.php",
+                "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
                 "line": 16
-            },
-            {
-                "file": "resources/views/components/ui/text/copyable-field.blade.php",
-                "line": 83
             }
         ],
         "flux:brand": [
@@ -194,7 +194,7 @@
             },
             {
                 "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
-                "line": 22
+                "line": 179
             },
             {
                 "file": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php",
@@ -202,11 +202,15 @@
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-                "line": 16
+                "line": 25
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                "line": 390
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
-                "line": 258
+                "line": 354
             },
             {
                 "file": "resources/views/components/management/people/create-person/⚡form-person.blade.php",
@@ -217,6 +221,10 @@
                 "line": 23
             },
             {
+                "file": "resources/views/components/ui/button/activate-deactivate.blade.php",
+                "line": 40
+            },
+            {
                 "file": "resources/views/components/ui/button/cancel.blade.php",
                 "line": 29
             },
@@ -242,6 +250,10 @@
             },
             {
                 "file": "resources/views/components/ui/button/reset.blade.php",
+                "line": 29
+            },
+            {
+                "file": "resources/views/components/ui/button/review.blade.php",
                 "line": 29
             },
             {
@@ -251,21 +263,13 @@
             {
                 "file": "resources/views/components/ui/button/show-hide.blade.php",
                 "line": 3
-            },
-            {
-                "file": "resources/views/components/ui/table/pagination.blade.php",
-                "line": 38
-            },
-            {
-                "file": "resources/views/components/ui/text/copyable-field.blade.php",
-                "line": 95
-            },
-            {
-                "file": "resources/views/pages/auth/confirm-password.blade.php",
-                "line": 23
             }
         ],
         "flux:button.group": [
+            {
+                "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                "line": 302
+            },
             {
                 "file": "resources/views/components/admin/partials/role-list/⚡table.blade.php",
                 "line": 205
@@ -273,6 +277,10 @@
             {
                 "file": "resources/views/components/admin/partials/user-list/⚡table.blade.php",
                 "line": 135
+            },
+            {
+                "file": "resources/views/components/ui/button/activate-deactivate.blade.php",
+                "line": 39
             },
             {
                 "file": "resources/views/components/ui/button/cancel.blade.php",
@@ -303,12 +311,16 @@
                 "line": 28
             },
             {
+                "file": "resources/views/components/ui/button/review.blade.php",
+                "line": 28
+            },
+            {
                 "file": "resources/views/components/ui/button/save.blade.php",
                 "line": 28
             },
             {
                 "file": "resources/views/components/ui/table/pagination.blade.php",
-                "line": 37
+                "line": 58
             }
         ],
         "flux:callout": [
@@ -369,6 +381,14 @@
                 "line": 11
             },
             {
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+                "line": 28
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+                "line": 24
+            },
+            {
                 "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
                 "line": 30
             },
@@ -383,14 +403,6 @@
             {
                 "file": "resources/views/components/management/people/create-person/⚡generated-password.blade.php",
                 "line": 4
-            },
-            {
-                "file": "resources/views/pages/settings/two-factor/⚡recovery-codes.blade.php",
-                "line": 110
-            },
-            {
-                "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
-                "line": 218
             }
         ],
         "flux:callout.heading": [
@@ -449,6 +461,14 @@
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                 "line": 16
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+                "line": 33
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+                "line": 28
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
@@ -523,6 +543,14 @@
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php",
                 "line": 20
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+                "line": 37
+            },
+            {
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+                "line": 48
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
@@ -657,6 +685,10 @@
         ],
         "flux:error": [
             {
+                "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                "line": 150
+            },
+            {
                 "file": "resources/views/components/management/people/create-person/sections/⚡address.blade.php",
                 "line": 40
             },
@@ -699,8 +731,12 @@
         ],
         "flux:field": [
             {
+                "file": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+                "line": 28
+            },
+            {
                 "file": "resources/views/components/admin/partials/country-reference-list/⚡table.blade.php",
-                "line": 162
+                "line": 161
             },
             {
                 "file": "resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php",
@@ -720,7 +756,7 @@
             },
             {
                 "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
-                "line": 29
+                "line": 75
             },
             {
                 "file": "resources/views/components/admin/partials/user-list/⚡modal.blade.php",
@@ -849,6 +885,10 @@
                 "line": 10
             },
             {
+                "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+                "line": 51
+            },
+            {
                 "file": "resources/views/components/auth-header.blade.php",
                 "line": 7
             },
@@ -867,10 +907,6 @@
             {
                 "file": "resources/views/components/ui/headers/page.blade.php",
                 "line": 9
-            },
-            {
-                "file": "resources/views/layouts/app/sidebar/⚡mobile-user-menu.blade.php",
-                "line": 29
             }
         ],
         "flux:icon.arrow-up-tray": [

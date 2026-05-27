@@ -7,46 +7,89 @@
         :description="__('Refine the translation list by key, value, language, and translation file.')"
     >
 
-        <div class="flex flex-wrap gap-2">
-            @foreach ($statusOptions as $option)
-                @php
-                    $count = $option === 'all' ? $total : $statusCounts[$option] ?? 0;
-                @endphp
-
-                <flux:button
-                    type="button"
-                    size="sm"
-                    variant="{{ $status === $option ? 'primary' : 'ghost' }}"
-                    wire:click="setStatus('{{ $option }}')"
-                >
-                    {{ str($option)->headline() }}
-                    <span class="ml-1 opacity-70">
-                        {{ $count }}
+        <div class="mb-6 grid gap-2 xl:grid-cols-[1fr_auto]">
+            <div class="space-y-2">
+                {{-- Status filters --}}
+                <div class="flex flex-wrap items-center gap-2 rounded-md bg-zinc-50/50 px-3 py-2 dark:bg-zinc-800/50">
+                    <span
+                        class="mr-2 w-24 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
+                    >
+                        {{ __('Status') }}
                     </span>
-                </flux:button>
-            @endforeach
 
-            <flux:field
-                class="ml-3 w-64 align-middle"
-                variant="inline"
-            >
-                <flux:switch
-                    class="switch-colored mr-1 mt-1.5 hover:cursor-pointer"
-                    wire:click="toggleOnlyProblems"
-                />
-                <flux:label
-                    class="text-sm opacity-70 hover:cursor-pointer"
-                    wire:click="toggleOnlyProblems"
-                >
-                    {{ __('Only problems') }}
+                    @foreach ($statusOptions as $option)
+                        @php
+                            $count = $option === 'all' ? $total : $statusCounts[$option] ?? 0;
+                        @endphp
 
-                    <span class="ml-1 opacity-70">
-                        {{ $problemCount }}
+                        <flux:button
+                            type="button"
+                            size="sm"
+                            variant="{{ $status === $option ? 'primary' : 'ghost' }}"
+                            wire:click="setStatus('{{ $option }}')"
+                        >
+                            {{ str($option)->headline() }}
+                            <span class="ml-1 opacity-70">
+                                {{ $count }}
+                            </span>
+                        </flux:button>
+                    @endforeach
+                </div>
+
+                {{-- Classification filters --}}
+                <div class="flex flex-wrap items-center gap-2 rounded-md bg-zinc-50/50 px-3 py-2 dark:bg-zinc-800/50">
+                    <span
+                        class="mr-2 w-24 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
+                    >
+                        {{ __('Type') }}
                     </span>
-                </flux:label>
 
-            </flux:field>
+                    @foreach ($classificationOptions as $option)
+                        @php
+                            $count = $option === 'all' ? $total : $classificationCounts[$option] ?? 0;
+                            $label = match ($option) {
+                                'all' => __('All types'),
+                                'backfill_by_translation' => __('Backfill'),
+                                default => str($option)->headline(),
+                            };
+                        @endphp
 
+                        <flux:button
+                            type="button"
+                            size="sm"
+                            variant="{{ $classification === $option ? 'primary' : 'ghost' }}"
+                            wire:click="setClassification('{{ $option }}')"
+                        >
+                            {{ $label }}
+                            <span class="ml-1 opacity-70">
+                                {{ $count }}
+                            </span>
+                        </flux:button>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- Problems only toggle --}}
+            <div
+                class="min-w-58 flex items-center justify-center rounded-md bg-zinc-50/50 px-6 py-2 dark:bg-zinc-800/50">
+                <flux:field variant="inline">
+                    <flux:switch
+                        class="switch-colored mr-3 hover:cursor-pointer"
+                        wire:click="toggleOnlyProblems"
+                    />
+
+                    <flux:label
+                        class="text-sm opacity-70 hover:cursor-pointer"
+                        wire:click="toggleOnlyProblems"
+                    >
+                        {{ __('Only problems') }}
+
+                        <span class="ml-1 opacity-70">
+                            {{ $problemCount }}
+                        </span>
+                    </flux:label>
+                </flux:field>
+            </div>
         </div>
 
     </x-ui.headers.card>
@@ -85,10 +128,10 @@
         <div class="min-w-0 flex-1 basis-64">
             <flux:label for="translation-list-language-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by language')"
-                    :text="__('Select a language to filter the list of translations.')"
+                    :title="__('Select a target language')"
+                    :text="__('Select a target language to filter the list of translations.')"
                 >
-                    {{ __('Language') }}
+                    {{ __('Target Language') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -106,9 +149,14 @@
                         {{ __('All languages') }}
                     </flux:select.option>
 
-                    @foreach ($locales as $locale)
-                        <flux:select.option value="{{ $locale }}">
-                            {{ $locale }}
+                    @foreach ($translationLanguages as $translationLanguage)
+                        <flux:select.option value="{{ $translationLanguage->locale }}">
+                            {{ $translationLanguage->locale }}
+                            ·
+                            {{ $translationLanguage->native_name }}
+                            @if (!$translationLanguage->is_enabled_for_app)
+                                · {{ __('translation only') }}
+                            @endif
                         </flux:select.option>
                     @endforeach
 

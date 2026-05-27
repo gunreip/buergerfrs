@@ -241,9 +241,59 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property string $fingerprint
+ * @property string $source_fingerprint
+ * @property int|null $previous_finding_id
+ * @property string $status
+ * @property string $section
+ * @property string $type
+ * @property string $file
+ * @property string|null $tag
+ * @property string|null $closing_tag
+ * @property int|null $opened_line
+ * @property int|null $closing_line
+ * @property string|null $expected_closing
+ * @property string|null $actual_closing
+ * @property \Carbon\CarbonImmutable|null $first_seen_at
+ * @property \Carbon\CarbonImmutable|null $last_seen_at
+ * @property \Carbon\CarbonImmutable|null $resolved_at
+ * @property string|null $resolved_source
+ * @property \Carbon\CarbonImmutable|null $ignored_at
+ * @property int|null $ignored_by
+ * @property string|null $comment
+ * @property array<array-key, mixed>|null $snapshot_payload
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\User|null $ignoredBy
+ * @property-read HtmlViewAuditFinding|null $previousFinding
  * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereActualClosing($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereClosingLine($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereClosingTag($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereExpectedClosing($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereFile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereFingerprint($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereFirstSeenAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereIgnoredAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereIgnoredBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereLastSeenAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereOpenedLine($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding wherePreviousFindingId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereResolvedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereResolvedSource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereSection($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereSnapshotPayload($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereSourceFingerprint($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereTag($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|HtmlViewAuditFinding whereUpdatedAt($value)
  */
 	class HtmlViewAuditFinding extends \Eloquent {}
 }
@@ -689,6 +739,15 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage query()
+ */
+	class TranslationLanguage extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * @property int $id
  * @property int $translation_key_id
  * @property string $fingerprint
@@ -700,6 +759,7 @@ namespace App\Models{
  * @property string|null $raw
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property string|null $original_raw
  * @property-read \App\Models\TranslationKey $translationKey
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage newQuery()
@@ -711,6 +771,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereFunction($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereLine($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereOriginalRaw($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereRaw($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereReason($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage whereTranslationKeyId($value)

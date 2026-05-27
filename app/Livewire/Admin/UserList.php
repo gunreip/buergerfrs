@@ -8,11 +8,15 @@ use App\Models\User;
 use App\Support\Audit\AdminActivity;
 use App\Support\Settings\RoleBadgeResolver;
 use Flux\Flux;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
 
+/**
+ * Administrative user list with role filtering, pagination and role assignment modal.
+ */
 class UserList extends Component
 {
     private const PER_PAGE_SETTING_KEY = 'ui.per_page.admin_users';
@@ -42,30 +46,42 @@ class UserList extends Component
 
     public string $editingRoleName = '';
 
+    /**
+     * Initialize persisted pagination preference.
+     */
     public function mount(): void
     {
         $this->perPage = $this->normalizePerPage(
-            auth()->user()?->setting(self::PER_PAGE_SETTING_KEY, $this->perPage)
+            Auth::user()?->setting(self::PER_PAGE_SETTING_KEY, $this->perPage)
         );
 
         $this->setPage(1);
     }
 
+    /**
+     * Reset pagination when search text changes.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reset pagination when role filter changes.
+     */
     public function updatedRoleFilter(): void
     {
         $this->setPage(1);
     }
 
+    /**
+     * Normalize and persist page-size preference for the current user.
+     */
     public function updatedPerPage(): void
     {
         $this->perPage = $this->normalizePerPage($this->perPage);
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($user instanceof User) {
             $user->setSetting(self::PER_PAGE_SETTING_KEY, $this->perPage);
@@ -75,6 +91,9 @@ class UserList extends Component
         $this->setPage(1);
     }
 
+    /**
+     * Normalize selectable pagination size.
+     */
     private function normalizePerPage(mixed $value): int
     {
         $value = (int) $value;
@@ -88,31 +107,49 @@ class UserList extends Component
         return $value;
     }
 
+    /**
+     * Jump to first paginated page.
+     */
     public function goToFirstPage(): void
     {
         $this->setPage(1);
     }
 
+    /**
+     * Jump to previous paginated page.
+     */
     public function goToPreviousPage(): void
     {
         $this->previousPage();
     }
 
+    /**
+     * Jump to next paginated page.
+     */
     public function goToNextPage(): void
     {
         $this->nextPage();
     }
 
+    /**
+     * Jump to last available paginated page.
+     */
     public function goToLastPage(): void
     {
         $this->setPage($this->getPageCount());
     }
 
+    /**
+     * Jump to a bounded paginated page index.
+     */
     public function goToPage(int $page): void
     {
         $this->setPage(max(1, min($page, $this->getPageCount())));
     }
 
+    /**
+     * Sort by a whitelisted field and toggle direction on repeat selection.
+     */
     public function sortBy($field): void
     {
         if (! in_array($field, [
@@ -138,6 +175,9 @@ class UserList extends Component
         $this->resetPage();
     }
 
+    /**
+     * Open modal for assigning a single role to a user.
+     */
     public function openEditRolesModal(int $userId): void
     {
         $this->resetValidation('editingRoleName');
@@ -163,11 +203,17 @@ class UserList extends Component
         $this->showEditRolesModal = true;
     }
 
+    /**
+     * Close role-edit modal and clear state.
+     */
     public function closeEditRolesModal(): void
     {
         $this->resetEditRolesModal();
     }
 
+    /**
+     * Persist selected role for the edited user and write audit activity.
+     */
     public function saveEditRoles(AdminActivity $adminActivity): void
     {
         if ($this->editingUserId === null) {
@@ -237,6 +283,9 @@ class UserList extends Component
         $this->dispatch('$refresh');
     }
 
+    /**
+     * Reset role-edit modal fields.
+     */
     private function resetEditRolesModal(): void
     {
         $this->resetValidation('editingRoleName');
@@ -249,6 +298,9 @@ class UserList extends Component
         $this->editingRoleName = '';
     }
 
+    /**
+     * Build base filtered user query for listing and pagination.
+     */
     private function getFilteredUserQuery()
     {
         $query = User::query()
@@ -268,13 +320,21 @@ class UserList extends Component
         return $query;
     }
 
+    /**
+     * Resolve total page count for current filters and per-page setting.
+     */
     private function getPageCount(): int
     {
-        $total = $this->getFilteredUserQuery()->count();
+        $total = $this->getFilteredUserQuery()->count('*');
 
         return max(1, (int) ceil($total / (int) $this->perPage));
     }
 
+    /**
+     * Build paginated users and role summary payload for rendering.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function render(RoleBadgeResolver $roleBadgeResolver)
     {
         $query = $this->getFilteredUserQuery()
@@ -306,11 +366,9 @@ class UserList extends Component
             ->all();
 
         $assignedUserCountsByRoleCategory = User::query()
-            ->join('model_has_roles', function ($join) {
-                $join->on('users.id', '=', 'model_has_roles.model_id')
-                    ->where('model_has_roles.model_type', '=', User::class);
-            })
-            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id', 'inner', false)
+            ->where('model_has_roles.model_type', User::class)
+            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id', 'inner', false)
             ->selectRaw("COALESCE(roles.category, 'other') as category, COUNT(DISTINCT users.id) as aggregate")
             ->groupByRaw("COALESCE(roles.category, 'other')")
             ->pluck('aggregate', 'category')
@@ -347,8 +405,8 @@ class UserList extends Component
             ->all();
 
         $summary = [
-            'totalUsers' => User::query()->count(),
-            'withoutRoleUsers' => User::query()->doesntHave('roles')->count(),
+            'totalUsers' => User::query()->count('*'),
+            'withoutRoleUsers' => User::query()->doesntHave('roles')->count('*'),
             'assignedUsersByRoleCategory' => $assignedUserCountsByRoleCategory,
             'assignableRolesByCategory' => $assignableRoleCountsByCategory,
             'assignedUsersByRole' => $assignedUserCountsByRole,

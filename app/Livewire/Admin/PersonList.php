@@ -9,6 +9,9 @@ use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
+/**
+ * Administrative people list with relation-aware filters, sorting and pagination.
+ */
 class PersonList extends Component
 {
     use WithoutUrlPagination;
@@ -26,21 +29,33 @@ class PersonList extends Component
 
     public string $sortDirection = 'asc';
 
+    /**
+     * Reset pagination when search input changes.
+     */
     public function updatedSearch(): void
     {
         $this->setPage(1);
     }
 
+    /**
+     * Reset pagination when user relation filter changes.
+     */
     public function updatedUserFilter(): void
     {
         $this->setPage(1);
     }
 
+    /**
+     * Reset pagination when client relation filter changes.
+     */
     public function updatedClientFilter(): void
     {
         $this->setPage(1);
     }
 
+    /**
+     * Normalize page size and reset pagination.
+     */
     public function updatedPerPage(): void
     {
         $this->perPage = $this->normalizePerPage($this->perPage);
@@ -48,6 +63,9 @@ class PersonList extends Component
         $this->setPage(1);
     }
 
+    /**
+     * Reset all active filters to defaults.
+     */
     public function clearFilters(): void
     {
         $this->search = '';
@@ -58,6 +76,9 @@ class PersonList extends Component
         $this->setPage(1);
     }
 
+    /**
+     * Sort by a whitelisted column and toggle direction when selected repeatedly.
+     */
     public function sortBy(string $field): void
     {
         $allowedFields = [
@@ -87,6 +108,11 @@ class PersonList extends Component
         $this->setPage(1);
     }
 
+    /**
+     * Build paginated list and summary data for rendering.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function render()
     {
         $peopleQuery = Person::query()
@@ -131,11 +157,11 @@ class PersonList extends Component
             ->paginate($this->normalizePerPage($this->perPage));
 
         $summary = [
-            'totalPeople' => Person::query()->count(),
-            'peopleWithUser' => Person::query()->has('user')->count(),
-            'peopleWithoutUser' => Person::query()->doesntHave('user')->count(),
-            'peopleWithClients' => Person::query()->has('clients')->count(),
-            'peopleWithoutClients' => Person::query()->doesntHave('clients')->count(),
+            'totalPeople' => Person::query()->count('*'),
+            'peopleWithUser' => Person::query()->has('user')->count('*'),
+            'peopleWithoutUser' => Person::query()->doesntHave('user')->count('*'),
+            'peopleWithClients' => Person::query()->has('clients')->count('*'),
+            'peopleWithoutClients' => Person::query()->doesntHave('clients')->count('*'),
         ];
 
         return view('components.admin.⚡person-list', [
@@ -144,6 +170,9 @@ class PersonList extends Component
         ]);
     }
 
+    /**
+     * Normalize selectable pagination size.
+     */
     private function normalizePerPage(mixed $value): int
     {
         $value = (int) $value;

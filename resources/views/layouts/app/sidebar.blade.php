@@ -14,7 +14,7 @@
 
     {{-- Desktop Menu --}}
     <flux:sidebar
-        class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900"
+        class="w-72 border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900"
         sticky
         collapsible
     >

@@ -2,6 +2,7 @@
 
 <span
     {{ $attributes->class(['tooltip-trigger inline-flex cursor-help'])->merge([
+        'data-tooltip-trigger' => 'true',
         'data-tooltip-title' => $tooltipTitle(),
         'data-tooltip' => $tooltipText(),
     ]) }}

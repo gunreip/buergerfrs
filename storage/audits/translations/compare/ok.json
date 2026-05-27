@@ -273,13 +273,13 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 301,
+                "line": 340,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.no_changes.heading')"
             },
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 360,
+                "line": 402,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.no_changes.heading')"
             }
@@ -299,13 +299,13 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 302,
+                "line": 341,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged', [\n                    'role' => $role->name,\n                ])"
             },
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 361,
+                "line": 403,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged', [\n                    'permission' => $permission->name,\n                ])"
             }
@@ -325,7 +325,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 395,
+                "line": 437,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.permission_saved.heading')"
             }
@@ -345,7 +345,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 396,
+                "line": 438,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.permission_saved.text', [\n                'permission' => $permission->name,\n            ])"
             }
@@ -365,7 +365,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 327,
+                "line": 366,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.role_permissions_saved.heading')"
             }
@@ -385,7 +385,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 328,
+                "line": 367,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.role_permissions_saved.text', [\n                'role' => $role->name,\n            ])"
             }

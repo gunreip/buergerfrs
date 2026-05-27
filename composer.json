@@ -76,9 +76,25 @@
         "lint:check": [
             "pint --parallel --test"
         ],
+        "docs:phpdoc:install": [
+            "@php scripts/phpdoc/install.php"
+        ],
+        "docs:phpdoc": [
+            "@php scripts/phpdoc/generate.php"
+        ],
+        "docs:phpdoc:publish": [
+            "@php scripts/phpdoc/publish.php"
+        ],
+        "docs:phpdoc:public": [
+            "@docs:phpdoc",
+            "@docs:phpdoc:publish"
+        ],
         "ci:check": [
             "Composer\\Config::disableProcessTimeout",
             "@test"
+        ],
+        "bootstrap:data": [
+            "@php artisan project:bootstrap-data"
         ],
         "test": [
             "@php artisan config:clear --ansi",

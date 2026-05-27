@@ -18,6 +18,7 @@ class TranslationUsage extends Model
         'classification',
         'reason',
         'raw',
+        'original_raw',
     ];
 
     public function translationKey(): BelongsTo

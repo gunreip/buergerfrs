@@ -7,9 +7,9 @@
         :description="__('Overview of the active translation filters and the currently matching result set.')"
     />
 
-    <div class="md:grid-cols-20 grid flex-1 gap-3">
+    <div class="grid flex-1 gap-3 md:grid-cols-12">
         <flux:callout
-            class="col-span-4"
+            class="col-span-2"
             color="sky"
             icon="list-filter"
         >
@@ -27,7 +27,7 @@
         </flux:callout>
 
         <flux:callout
-            class="col-span-4"
+            class="col-span-2"
             color="orange"
             icon="database"
         >
@@ -45,7 +45,7 @@
         </flux:callout>
 
         <flux:callout
-            class="col-span-4"
+            class="col-span-2"
             color="{{ $problemCount > 0 ? 'amber' : 'green' }}"
             icon="triangle-alert"
         >
@@ -63,7 +63,7 @@
         </flux:callout>
 
         <flux:callout
-            class="col-span-4"
+            class="col-span-2"
             color="green"
             icon="check-circle"
         >
@@ -81,7 +81,7 @@
         </flux:callout>
 
         <flux:callout
-            class="col-span-4"
+            class="col-span-2"
             color="amber"
             icon="shield-alert"
         >
@@ -99,12 +99,84 @@
         </flux:callout>
 
         <flux:callout
-            class="col-span-5"
+            class="col-span-2"
             color="purple"
+            icon="package"
+        >
+            <flux:callout.heading>
+                {{ __('Vendor') }}
+            </flux:callout.heading>
+
+            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                {{ $classificationCounts['vendor'] ?? 0 }}
+            </flux:callout.text>
+
+            <flux:callout.text class="font-extralight">
+                {{ __('Translation keys imported from vendor/package sources.') }}
+            </flux:callout.text>
+        </flux:callout>
+
+        <flux:callout
+            class="col-span-2"
+            color="sky"
+            icon="history"
+        >
+            <flux:callout.heading>
+                {{ __('Backfill') }}
+            </flux:callout.heading>
+
+            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                {{ $classificationCounts['backfill_by_translation'] ?? 0 }}
+            </flux:callout.text>
+
+            <flux:callout.text class="font-extralight">
+                {{ __('Native texts reconstructed from existing EN translation values.') }}
+            </flux:callout.text>
+        </flux:callout>
+
+        <flux:callout
+            class="col-span-2"
+            color="rose"
+            icon="key-round"
+        >
+            <flux:callout.heading>
+                {{ __('Key') }}
+            </flux:callout.heading>
+
+            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                {{ $classificationCounts['key'] ?? 0 }}
+            </flux:callout.text>
+
+            <flux:callout.text class="font-extralight">
+                {{ __('Regular audit keys without special origin classification.') }}
+            </flux:callout.text>
+        </flux:callout>
+
+        <flux:callout
+            class="col-span-2"
+            color="yellow"
+            icon="file-text"
+        >
+            <flux:callout.heading>
+                {{ __('Type native') }}
+            </flux:callout.heading>
+
+            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                {{ $classificationCounts['native'] ?? 0 }}
+            </flux:callout.text>
+
+            <flux:callout.text class="font-extralight">
+                {{ __('Translation keys classified as native source entries.') }}
+            </flux:callout.text>
+        </flux:callout>
+
+        <flux:callout
+            class="col-span-2"
+            color="teal"
             icon="braces"
         >
             <flux:callout.heading>
-                {{ __('Dynamic') }}
+                {{ __('Status dynamic') }}
             </flux:callout.heading>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -112,17 +184,17 @@
             </flux:callout.text>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Dynamic translation usages that require manual review.') }}
+                {{ __('Translation keys currently marked with dynamic status.') }}
             </flux:callout.text>
         </flux:callout>
 
         <flux:callout
-            class="col-span-5"
-            color="zinc"
+            class="col-span-2"
+            color="purple"
             icon="square-dashed-text"
         >
             <flux:callout.heading>
-                {{ __('Native') }}
+                {{ __('Status native') }}
             </flux:callout.heading>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -130,12 +202,12 @@
             </flux:callout.text>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Native text entries available as translation candidates.') }}
+                {{ __('Translation keys currently marked with native status.') }}
             </flux:callout.text>
         </flux:callout>
 
         <flux:callout
-            class="col-span-5"
+            class="col-span-2"
             color="{{ $hasActiveFilters ? 'amber' : 'green' }}"
             icon="{{ $hasActiveFilters ? 'funnel' : 'check-circle' }}"
         >
@@ -153,7 +225,7 @@
         </flux:callout>
 
         <flux:callout
-            class="col-span-5"
+            class="col-span-12"
             color="purple"
             icon="sliders-horizontal"
         >
@@ -181,6 +253,22 @@
                         </flux:badge>
                     @endif
 
+                    @if ($classification !== 'all')
+                        @php
+                            $classificationLabel = match ($classification) {
+                                'backfill_by_translation' => __('Backfill'),
+                                default => str($classification)->headline(),
+                            };
+                        @endphp
+
+                        <flux:badge
+                            color="purple"
+                            variant="subtle"
+                        >
+                            {{ __('Type') }}: {{ $classificationLabel }}
+                        </flux:badge>
+                    @endif
+
                     @if ($onlyProblems)
                         <flux:badge
                             color="red"
@@ -195,7 +283,16 @@
                             color="purple"
                             variant="subtle"
                         >
-                            {{ __('Language') }}: {{ $languageFilter }}
+                            <span class="inline-flex items-center gap-1.5">
+                                <x-ui.locale.flag
+                                    :locale="$languageFilter"
+                                    size="xs"
+                                />
+
+                                <span>
+                                    {{ __('Language') }}: {{ $languageFilter }}
+                                </span>
+                            </span>
                         </flux:badge>
                     @endif
 

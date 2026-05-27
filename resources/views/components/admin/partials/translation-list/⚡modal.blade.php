@@ -14,7 +14,7 @@
                     :description="__('Read-only review of the selected translation key, its values and usage metadata.')"
                 />
 
-                {{-- Badge with translation key ID for reference in discussions or issue tracking, useful for quickly identifying the specific translation key being reviewed, especially when communicating about it in a team setting or across different tools. --}}
+                {{-- Badge with translation key ID --}}
                 <flux:badge
                     class="mr-8 mt-2"
                     variant="subtle"
@@ -26,7 +26,7 @@
 
             <div class="grid gap-3 md:grid-cols-4">
 
-                {{-- Callout components for key metadata such as status, group/namespace, source, and usage count. These provide a quick overview of important attributes of the translation key at a glance, with visual emphasis and contextual information to aid in understanding the key's state and relevance without needing to delve into the details immediately. The status callout can surface information about whether the key is active, missing translations, or has other noteworthy conditions that may require attention. The group/namespace callout helps identify the organizational context of the key within the translation system, while the source callout can indicate where the key is defined or used in the codebase. The usage callout provides insight into how widely used the key is across the application, which can be helpful for prioritizing review or identifying potential impact of changes to the key. --}}
+                {{-- Callout components for key metadata --}}
                 <flux:callout
                     color="sky"
                     icon="tag"
@@ -38,19 +38,13 @@
 
                     <flux:callout.text class="space-y-2">
 
-                        {{-- Badge with the translation key status, using contextual colors and labels to indicate the current state of the translation key, such as whether it is active, missing translations, or has other relevant conditions. This provides an immediate visual cue about the key's status, which can help prioritize review or identify potential issues that may need attention. The additional text below the badge can provide further classification or context about the key's status, such as whether it is considered critical, deprecated, or has other noteworthy attributes that may be relevant during the review process. --}}
+                        {{-- Badge with the translation key status --}}
                         <x-ui.badge.context
                             context="translation.key.status"
                             :value="$selectedTranslationKey->status"
                             :label="str($selectedTranslationKey->status)->headline()"
                         />
 
-                        {{-- Classification --}}
-                        <x-ui.badge.context
-                            context="translation.key.classification"
-                            :value="$selectedTranslationKey->classification"
-                            :label="str($selectedTranslationKey->classification)->headline()"
-                        />
                     </flux:callout.text>
                 </flux:callout>
 
@@ -77,7 +71,7 @@
                     </flux:callout.text>
                 </flux:callout>
 
-                {{-- Source and usage callouts in the modal provide important contextual information about the translation key. The source callout indicates where the translation key is defined or used in the codebase, which can help reviewers understand its origin and relevance. The usage callout provides insight into how widely used the key is across the application, which can be helpful for prioritizing review or identifying potential impact of changes to the key. Both callouts use visual emphasis and contextual information to aid in understanding the key's state and relevance without needing to delve into the details immediately, allowing for a more efficient review process. --}}
+                {{-- Source and usage callouts --}}
                 <flux:callout
                     color="amber"
                     icon="scan-search"
@@ -87,13 +81,13 @@
                         {{ __('Source') }}
                     </flux:callout.heading>
 
-                    {{-- Source-Path information about where the translation key is defined or used in the codebase, which can help reviewers understand its origin and relevance. This can include file paths, line numbers, or other contextual information that indicates where the key is located within the application's code. Providing this information in a callout allows for quick reference during the review process, enabling reviewers to easily locate the key in the codebase if needed for further investigation or context. If source information is not available, a placeholder (e.g., '—') can be displayed to indicate that this information is not currently accessible. --}}
+                    {{-- Source-Path information --}}
                     <flux:callout.text class="text-sm">
                         {{ $selectedTranslationKey->source ?? '—' }}
                     </flux:callout.text>
                 </flux:callout>
 
-                {{-- Usage callout with count of how many times the translation key is used across the application, providing insight into its relevance and potential impact. This information can help reviewers prioritize their attention, as keys that are used more frequently may require more careful consideration during review or changes. The usage count can be displayed prominently within the callout, using visual emphasis to draw attention to this important piece of metadata about the translation key. If usage information is not available, a placeholder (e.g., '—') can be displayed to indicate that this information is not currently accessible. --}}
+                {{-- Usage callout --}}
                 <flux:callout
                     color="green"
                     icon="route"
@@ -221,7 +215,7 @@
                     </flux:badge>
                 </div>
 
-                {{-- Values List with locale flags, translation values, and status badges. This section provides a comprehensive overview of all the translations associated with the key, allowing reviewers to quickly assess the completeness and quality of the translations for that key. Each value is displayed with its corresponding locale flag for easy identification, along with the actual translation value and a status badge that indicates the current state of that translation (e.g., active, missing, needs review). This information is crucial for understanding the overall health of the translations for that key and for identifying any potential issues or discrepancies that may require attention during the review process. If no translation values are available, a placeholder message can be displayed to indicate that this information is not currently accessible. --}}
+                {{-- Values List --}}
                 <div class="grid gap-3 md:grid-cols-2">
 
                     @forelse ($selectedTranslationKey->values as $value)
@@ -260,7 +254,7 @@
 
             <div class="flex min-h-0 flex-1 flex-col rounded-xl border border-zinc-200 p-4 dark:border-zinc-700">
 
-                {{-- Usages and detailed information about where the translation key is used across the application, including file paths, line numbers, and raw usage snippets. This section provides crucial context for reviewers to understand how the translation key is utilized within the codebase, which can help identify any potential issues or discrepancies during the review process. Each usage entry includes information about the file path where the key is used, along with an optional line number for more precise localization. Additionally, if available, a raw usage snippet can be displayed to provide further context about how the key is used in that specific instance. By presenting this information in an organized manner within the modal, reviewers can efficiently navigate through the usage details and gain a comprehensive understanding of the translation key's role within the application. If no usage records are available, a placeholder message can be displayed to indicate that this information is not currently accessible. --}}
+                {{-- Usages --}}
                 <div class="mb-3 flex shrink-0 items-center justify-between gap-3">
 
                     {{-- Usages --}}
@@ -279,6 +273,15 @@
 
                 <div class="min-h-0 flex-1 space-y-2 overflow-y-auto pr-2">
                     @forelse ($selectedTranslationKey->usages as $usage)
+                        @php
+                            $usageRaw = trim((string) ($usage->raw ?? ''));
+                            $usageOriginalRaw = trim((string) ($usage->original_raw ?? ''));
+
+                            $usageHasOriginalRaw = $usageOriginalRaw !== '';
+                            $usageOriginalMatchesRaw = $usageHasOriginalRaw && $usageRaw === $usageOriginalRaw;
+                            $usageOriginalDiffersRaw = $usageHasOriginalRaw && $usageRaw !== $usageOriginalRaw;
+                        @endphp
+
                         <div class="text-sm dark:border-zinc-700">
                             <div
                                 class="flex flex-wrap items-center justify-between gap-2 border-t pt-1 dark:border-zinc-700">
@@ -290,6 +293,59 @@
                                 </div>
 
                                 <div class="flex items-center gap-2">
+                                    @if ($usageOriginalMatchesRaw)
+                                        {{--
+                                        TODO: Z-Index für die Tooltips!
+                                        --}}
+                                        <x-ui.tooltip.trigger
+                                            class="z-9999"
+                                            :title="__('Original raw unchanged')"
+                                            :text="__(
+                                                'The current raw usage snippet matches the original raw reference captured for this usage.',
+                                            )"
+                                        >
+                                            <flux:badge
+                                                size="sm"
+                                                variant="subtle"
+                                                color="green"
+                                            >
+                                                {{ __('Original unchanged') }}
+                                            </flux:badge>
+                                        </x-ui.tooltip.trigger>
+                                    @elseif ($usageOriginalDiffersRaw)
+                                        <x-ui.tooltip.trigger
+                                            class="z-9999"
+                                            :title="__('Original raw differs')"
+                                            :text="__(
+                                                'The current raw usage snippet differs from the original raw reference. The original raw value is preserved below.',
+                                            )"
+                                        >
+                                            <flux:badge
+                                                size="sm"
+                                                variant="subtle"
+                                                color="amber"
+                                            >
+                                                {{ __('Original changed') }}
+                                            </flux:badge>
+                                        </x-ui.tooltip.trigger>
+                                    @else
+                                        <x-ui.tooltip.trigger
+                                            class="z-9999"
+                                            :title="__('No original raw reference')"
+                                            :text="__(
+                                                'No original raw reference has been captured for this usage yet.',
+                                            )"
+                                        >
+                                            <flux:badge
+                                                size="sm"
+                                                variant="subtle"
+                                                color="zinc"
+                                            >
+                                                {{ __('No original raw') }}
+                                            </flux:badge>
+                                        </x-ui.tooltip.trigger>
+                                    @endif
+
                                     @if (!empty($usage->line))
                                         <flux:badge
                                             size="sm"
@@ -302,11 +358,21 @@
                                 </div>
                             </div>
 
-                            @if (!empty($usage->raw))
+                            @if ($usageRaw !== '')
                                 <x-ui.text.copyable-field
                                     class="mt-2"
-                                    :title="__('Key')"
+                                    :title="__('Current raw')"
                                     :value="$usage->raw"
+                                    :mono="true"
+                                    content-class="text-xs"
+                                />
+                            @endif
+
+                            @if ($usageOriginalDiffersRaw)
+                                <x-ui.text.copyable-field
+                                    class="mt-2"
+                                    :title="__('Original raw')"
+                                    :value="$usage->original_raw"
                                     :mono="true"
                                     content-class="text-xs"
                                 />
@@ -320,7 +386,18 @@
                 </div>
             </div>
 
-            <div class="flex shrink-0 justify-end">
+            <div class="flex shrink-0 justify-end gap-3">
+                <flux:button
+                    type="button"
+                    variant="primary"
+                    color="amber"
+                    icon="pen-line"
+                    :disabled="$selectedKey === ''"
+                    wire:click="openTranslationEditFromReview({{ $selectedTranslationKey->id }})"
+                >
+                    {{ __('Edit') }}
+                </flux:button>
+
                 <x-ui.button.cancel
                     label="{{ __('Close') }}"
                     icon="circle-x"

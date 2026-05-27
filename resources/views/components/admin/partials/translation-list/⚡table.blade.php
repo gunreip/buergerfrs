@@ -5,21 +5,63 @@
     <x-ui.headers.card
         :title="__('Translation List')"
         :description="__('Review and manage translation keys, their values across languages, and associated metadata.')"
-    />
+    >
+        @php
+            $appLanguages = $translationLanguages->where('is_enabled_for_app', true);
+        @endphp
 
-    <div class="mx-auto max-w-full">
+        @if ($appLanguages->isNotEmpty())
+            <div class="flex flex-wrap items-center justify-end gap-1.5">
+                @foreach ($appLanguages as $translationLanguage)
+                    <flux:badge
+                        label="{{ $translationLanguage->native_name ?: $translationLanguage->name ?: $translationLanguage->locale }}"
+                    >
+                        <x-ui.locale.flag
+                            :locale="$translationLanguage->locale"
+                            size="lg"
+                        />
+
+                        <span class="ml-2 font-mono uppercase">
+                            {{ $translationLanguage->locale }}
+                        </span>
+                    </flux:badge>
+                @endforeach
+            </div>
+        @endif
+    </x-ui.headers.card>
+
+    <div
+        class="mx-auto max-w-full scroll-mt-6"
+        id="translation-list-table"
+    >
         <div class="overflow-hidden rounded-t-lg">
 
             {{-- Table --}}
-            {{-- Status, Key/Suggested Key, Native Text, Values, Usage, Actions --}}
-            <flux:table>
+            {{-- ID, Status, Key/Suggested Key, Native Text, Values, Usage, Actions --}}
+            <flux:table class="app-table">
 
-                {{-- Table Headers with tooltips for additional context on each column, providing insights into the information presented in each column to assist reviewers in understanding the relevance and purpose of the data displayed. The tooltips can offer explanations about the status indicators, key classifications, native text, translation values, usage information, and available actions for each translation key, enhancing the overall usability and clarity of the table for effective review and management of translation keys within the application. --}}
+                {{-- Table Headers with tooltips for additional context on each column --}}
                 <flux:table.columns class="bg-zinc-800 text-zinc-400">
+
+                    {{-- Column ID --}}
+                    <flux:table.column
+                        class="w-32 tabular-nums"
+                        sortable
+                        align="center"
+                    >
+                        <x-ui.tooltip.trigger
+                            class="ml-3"
+                            :title="__('ID')"
+                            :text="__('Internal database ID of the translation key.')"
+                        >
+                            {{ __('ID') }}
+                        </x-ui.tooltip.trigger>
+                    </flux:table.column>
 
                     {{-- Column Status --}}
                     <flux:table.column
                         class="w-24"
+                        sortable
                         align="center"
                     >
                         <x-ui.tooltip.trigger
@@ -34,7 +76,10 @@
                     </flux:table.column>
 
                     {{-- Column Key / Suggested Key --}}
-                    <flux:table.column>
+                    <flux:table.column
+                        class="w-(--translation-balanced-column-width)"
+                        sortable
+                    >
                         <x-ui.tooltip.trigger
                             :title="__('Key / Suggested Key')"
                             :text="__('Translation key or suggested key, useful for identification and reference.')"
@@ -44,7 +89,10 @@
                     </flux:table.column>
 
                     {{-- Column Native Text --}}
-                    <flux:table.column>
+                    <flux:table.column
+                        class="w-(--translation-balanced-column-width)"
+                        sortable
+                    >
                         <x-ui.tooltip.trigger
                             :title="__('Native Text')"
                             :text="__(
@@ -56,7 +104,7 @@
                     </flux:table.column>
 
                     {{-- Column Values --}}
-                    <flux:table.column>
+                    <flux:table.column class="w-(--translation-balanced-column-width)">
                         <x-ui.tooltip.trigger
                             :title="__('Values')"
                             :text="__(
@@ -68,7 +116,10 @@
                     </flux:table.column>
 
                     {{-- Column Usage --}}
-                    <flux:table.column class="w-64">
+                    <flux:table.column
+                        class="w-36"
+                        sortable
+                    >
                         <x-ui.tooltip.trigger
                             :title="__('Usage')"
                             :text="__(
@@ -81,7 +132,7 @@
 
                     {{-- Column Actions --}}
                     <flux:table.column
-                        class="w-24"
+                        class="w-32"
                         align="center"
                     >
                         <x-ui.tooltip.trigger
@@ -94,12 +145,27 @@
                     </flux:table.column>
                 </flux:table.columns>
 
-                {{-- Tabel rows --}}
+                {{-- Table rows --}}
                 <flux:table.rows>
                     @forelse ($translationKeys as $translationKey)
 
                         {{-- Table row --}}
-                        <flux:table.row wire:key="translation-key-{{ $translationKey->id }}">
+                        <flux:table.row
+                            wire:key="translation-key-{{ $translationKey->id }}"
+                            @class([
+                                'transition-colors',
+                                'bg-sky-50/80 ring-1 ring-inset ring-sky-300 dark:bg-sky-950/30 dark:ring-sky-700' =>
+                                    $focusedTranslationKeyId === $translationKey->id,
+                            ])
+                        >
+
+                            {{-- Cell ID --}}
+                            <flux:table.cell
+                                class="w-32 align-top tabular-nums text-zinc-500 dark:text-zinc-400"
+                                align="end"
+                            >
+                                #{{ $translationKey->id }}
+                            </flux:table.cell>
 
                             {{-- Cell Status --}}
                             <flux:table.cell
@@ -123,6 +189,8 @@
                                 @php
                                     $key = trim((string) ($translationKey->key ?? ''));
                                     $suggestedKey = trim((string) ($translationKey->suggested_key ?? ''));
+                                    $canEditTranslations = $key !== '';
+                                    $canOpenHistory = (int) ($translationKey->history_events_count ?? 0) > 0;
 
                                     if ($key === '' && $suggestedKey !== '') {
                                         $keySuggestionState = 'missing_key';
@@ -203,9 +271,10 @@
                             <flux:table.cell class="align-top">
                                 <div class="space-y-2">
                                     @forelse ($translationKey->values as $value)
-                                        <div class="rounded-lg border border-zinc-200 p-2 dark:border-zinc-700">
+                                        <div
+                                            class="max-w-full rounded-lg border border-zinc-200 p-2 dark:border-zinc-200/30">
                                             <div class="mb-1 flex items-center justify-between gap-2">
-                                                <span class="font-mono font-semibold">
+                                                <span class="min-w-0 font-mono font-semibold">
                                                     <x-ui.locale.flag
                                                         class="-mt-1"
                                                         :locale="$value->locale"
@@ -222,7 +291,10 @@
                                                 />
                                             </div>
 
-                                            <div class="text-zinc-600 dark:text-zinc-300">
+                                            <div
+                                                class="wrap-anywhere max-h-36 max-w-full overflow-y-auto hyphens-auto whitespace-normal pr-1 text-zinc-600 dark:text-zinc-300"
+                                                lang="{{ $value->locale }}"
+                                            >
                                                 {{ $value->value ?: '—' }}
                                             </div>
                                         </div>
@@ -238,39 +310,68 @@
                             <flux:table.cell class="align-top tabular-nums">
                                 <div class="space-y-1 text-zinc-500 dark:text-zinc-400">
                                     <div>
-                                        {{ $translationKey->usages_count }} {{ __('usage(s)') }}
+                                        <span
+                                            class="font-semibold tabular-nums">{{ $translationKey->usages_count }}</span>
+                                        {{ __('usage(s)') }}
                                     </div>
 
                                     @if ($translationKey->last_seen_at)
                                         <div>
-                                            {{ __('Last seen') }}:
-                                            {{ $translationKey->last_seen_at->format('Y-m-d H:i') }}
+                                            <div class="app-table-cell-item-header">
+                                                {{ __('Last seen') }}:
+                                            </div>
+                                            <div class="app-table-cell-item-timestamp">
+                                                <x-ui.date-time.date :value="$translationKey->last_seen_at" />
+                                            </div>
+                                            <div class="app-table-cell-item-timestamp">
+                                                <x-ui.date-time.time :value="$translationKey->last_seen_at" />
+                                            </div>
                                         </div>
                                     @endif
                                 </div>
                             </flux:table.cell>
 
-                            {{-- Cell Actions / Review --}}
+                            {{-- Cell Actions / Review / Edit --}}
                             <flux:table.cell
                                 class="align-top"
                                 align="center"
                             >
-                                <flux:button
-                                    type="button"
-                                    size="xs"
-                                    variant="primary"
-                                    color="cyan"
-                                    wire:click="openTranslationKey({{ $translationKey->id }})"
-                                >
-                                    {{ __('Review') }}
-                                </flux:button>
+                                <div class="grid grid-cols-1 place-items-center space-y-3">
+                                    {{-- Review button --}}
+                                    <x-ui.button.review
+                                        size="sm"
+                                        wire:click="openTranslationKey({{ $translationKey->id }})"
+                                    />
+
+                                    {{-- Edit button --}}
+                                    <x-ui.button.edit
+                                        size="sm"
+                                        :disabled="!$canEditTranslations"
+                                        wire:click="openTranslationEdit({{ $translationKey->id }})"
+                                    />
+
+                                    {{-- History button --}}
+                                    <flux:button
+                                        type="button"
+                                        size="sm"
+                                        variant="primary"
+                                        color="zinc"
+                                        icon="history"
+                                        :disabled="!$canOpenHistory"
+                                        :title="$canOpenHistory ? __('Open history') : __('No history entries available')"
+                                        wire:click="openTranslationHistory({{ $translationKey->id }})"
+                                    >
+                                        {{ __('History') }}
+                                    </flux:button>
+
+                                </div>
                             </flux:table.cell>
                         </flux:table.row>
                     @empty
                         <flux:table.row>
 
                             {{-- No translation records found --}}
-                            <flux:table.cell colspan="6">
+                            <flux:table.cell colspan="7">
                                 <div class="py-10 text-center text-sm text-zinc-500 dark:text-zinc-400">
                                     {{ __('No translation records found.') }}
                                 </div>
@@ -289,7 +390,10 @@
 
             {{-- Pagination --}}
             <div class="mt-4">
-                <x-ui.table.pagination :paginator="$translationKeys" />
+                <flux:pagination
+                    :paginator="$translationKeys"
+                    scroll-to="#translation-list-table"
+                />
             </div>
         @endif
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor
+    configVersion="3"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://www.phpdoc.org"
+    xsi:noNamespaceSchemaLocation="https://docs.phpdoc.org/latest/phpdoc.xsd"
+>
+    <title>buergerfrs API Documentation</title>
+
+    <paths>
+        <output>docs/phpdoc</output>
+        <cache>.phpdoc/cache</cache>
+    </paths>
+
+    <version number="1.0.0">
+        <api>
+            <source dsn="app" />
+            <ignore hidden="true">
+                <path>vendor/**/*</path>
+                <path>node_modules/**/*</path>
+                <path>storage/**/*</path>
+                <path>bootstrap/cache/**/*</path>
+                <path>docs/**/*</path>
+                <path>tests/**/*</path>
+                <path>database/**/*</path>
+            </ignore>
+        </api>
+    </version>
+</phpdocumentor>

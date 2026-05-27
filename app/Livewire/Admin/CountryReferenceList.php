@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+/**
+ * Administrative country reference list with audit-oriented filters and metrics.
+ */
 class CountryReferenceList extends Component
 {
     use WithPagination;
@@ -82,6 +85,46 @@ class CountryReferenceList extends Component
     }
 
     /**
+     * Jump to first paginated page.
+     */
+    public function goToFirstPage(): void
+    {
+        $this->setPage(1);
+    }
+
+    /**
+     * Jump to previous paginated page.
+     */
+    public function goToPreviousPage(): void
+    {
+        $this->previousPage();
+    }
+
+    /**
+     * Jump to next paginated page.
+     */
+    public function goToNextPage(): void
+    {
+        $this->nextPage();
+    }
+
+    /**
+     * Jump to last available paginated page.
+     */
+    public function goToLastPage(): void
+    {
+        $this->setPage($this->getPageCount());
+    }
+
+    /**
+     * Jump to a bounded paginated page index.
+     */
+    public function goToPage(int $page): void
+    {
+        $this->setPage(max(1, min($page, $this->getPageCount())));
+    }
+
+    /**
      * Render the country reference audit list.
      */
     public function render(): View
@@ -98,7 +141,7 @@ class CountryReferenceList extends Component
     /**
      * Build the filtered country query.
      */
-    private function countryQuery(): Builder
+    private function countryQuery()
     {
         return Country::query()
             ->with('addressFormat')
@@ -155,7 +198,7 @@ class CountryReferenceList extends Component
                 $query->doesntHave('subdivisions');
             })
             ->orderBy($this->sortField, $this->sortDirection)
-            ->orderBy('iso2');
+            ->orderBy('iso2', 'asc');
     }
 
     /**
@@ -176,9 +219,9 @@ class CountryReferenceList extends Component
     private function regions(): array
     {
         return Country::query()
-            ->whereNotNull('region')
+            ->whereNotNull('region', 'and')
             ->distinct()
-            ->orderBy('region')
+            ->orderBy('region', 'asc')
             ->pluck('region')
             ->all();
     }
@@ -191,15 +234,25 @@ class CountryReferenceList extends Component
     private function summary(): array
     {
         return [
-            'total' => Country::query()->count(),
-            'active' => Country::query()->where('is_active', true)->count(),
-            'with_address_format' => Country::query()->whereNotNull('address_format_key')->count(),
-            'with_subdivisions' => Country::query()->has('subdivisions')->count(),
-            'missing_capital' => Country::query()->whereNull('capital')->count(),
-            'missing_phone_code' => Country::query()->whereNull('phone_code')->count(),
-            'eu' => Country::query()->where('is_eu_member', true)->count(),
-            'eea' => Country::query()->where('is_eea_member', true)->count(),
-            'schengen' => Country::query()->where('is_schengen_member', true)->count(),
+            'total' => Country::query()->count('*'),
+            'active' => Country::query()->where('is_active', true)->count('*'),
+            'with_address_format' => Country::query()->whereNotNull('address_format_key', 'and')->count('*'),
+            'with_subdivisions' => Country::query()->has('subdivisions')->count('*'),
+            'missing_capital' => Country::query()->whereNull('capital', 'and', false)->count('*'),
+            'missing_phone_code' => Country::query()->whereNull('phone_code', 'and', false)->count('*'),
+            'eu' => Country::query()->where('is_eu_member', true)->count('*'),
+            'eea' => Country::query()->where('is_eea_member', true)->count('*'),
+            'schengen' => Country::query()->where('is_schengen_member', true)->count('*'),
         ];
+    }
+
+    /**
+     * Resolve current total page count for the active filter/sort state.
+     */
+    private function getPageCount(): int
+    {
+        $perPage = $this->normalizedPerPage();
+
+        return max(1, (int) $this->countryQuery()->paginate($perPage)->lastPage());
     }
 }
