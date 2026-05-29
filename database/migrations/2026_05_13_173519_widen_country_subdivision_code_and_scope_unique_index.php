@@ -3,7 +3,8 @@
 // database/migrations/YYYY_MM_DD_HHMMSS_widen_country_subdivision_code_and_scope_unique_index.php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -12,9 +13,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('ALTER TABLE country_subdivisions DROP CONSTRAINT country_subdivisions_country_id_code_unique');
-        DB::statement('ALTER TABLE country_subdivisions ALTER COLUMN code TYPE varchar(255)');
-        DB::statement('CREATE UNIQUE INDEX country_subdivisions_country_parent_code_unique ON country_subdivisions (country_id, parent_id, code)');
+        Schema::table('country_subdivisions', function (Blueprint $table): void {
+            $table->dropUnique('country_subdivisions_country_id_code_unique');
+            $table->string('code', 255)->change();
+            $table->unique(['country_id', 'parent_id', 'code'], 'country_subdivisions_country_parent_code_unique');
+        });
     }
 
     /**
@@ -22,8 +25,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement('DROP INDEX country_subdivisions_country_parent_code_unique');
-        DB::statement('ALTER TABLE country_subdivisions ALTER COLUMN code TYPE varchar(32)');
-        DB::statement('ALTER TABLE country_subdivisions ADD CONSTRAINT country_subdivisions_country_id_code_unique UNIQUE (country_id, code)');
+        Schema::table('country_subdivisions', function (Blueprint $table): void {
+            $table->dropUnique('country_subdivisions_country_parent_code_unique');
+            $table->string('code', 32)->change();
+            $table->unique(['country_id', 'code'], 'country_subdivisions_country_id_code_unique');
+        });
     }
 };

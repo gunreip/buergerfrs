@@ -12,7 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('ALTER TABLE countries ALTER COLUMN postal_code_regex TYPE text');
+        $driver = DB::getDriverName();
+
+        if ($driver === 'pgsql') {
+            DB::statement('ALTER TABLE countries ALTER COLUMN postal_code_regex TYPE text');
+        }
     }
 
     /**
@@ -20,6 +24,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement('ALTER TABLE countries ALTER COLUMN postal_code_regex TYPE varchar(255)');
+        $driver = DB::getDriverName();
+
+        if ($driver === 'pgsql') {
+            DB::statement('ALTER TABLE countries ALTER COLUMN postal_code_regex TYPE varchar(255)');
+        }
     }
 };
