@@ -67,6 +67,7 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
 - **Response-Cache:** Spatie ResponseCache (`config/responsecache.php`)
 - **Queue:** Horizon
 - **Debugging:** Debugbar, Telescope, Ray
+- **Abstimmung vor Umsetzung:** Bei komplexeren Änderungen, Workflow-Anpassungen, UI-/UX-Entscheidungen oder bereits mehrfach fehlgeschlagenen Themen nicht direkt implementieren. Zuerst fachlich abstimmen: Zielbild, gewünschtes Verhalten, Varianten, Vor-/Nachteile, Risiken, Randbedingungen und was ausdrücklich noch nicht umgesetzt werden soll. Hinweise wie „nur zur Info“ oder Vorab-Kontext sind als Orientierung zu behandeln, nicht als unmittelbarer Implementierungsauftrag.
 - **Migrations:** Alle wichtigen Pakete bringen eigene Migrationen mit (bereits veröffentlicht)
 - **Settings:** Spatie Laravel Settings; Einstellungsklassen liegen in `app/Settings/`. Gruppen-Name entspricht dem Klassennamen in snake_case (z.B. `AppDisplaySettings` → `app_display`). Nach neuen Settings-Klassen oder Settings-Migrations: php artisan migrate ausführen, danach php artisan settings:discover und php artisan settings:clear-cache.
 - **Permission Metadata:** Die Tabelle `permissions` ist um `category`, `sort_order`, `description`, `is_system` erweitert. Diese Felder dienen nur der Admin-UI-Strukturierung und ändern nicht die technische Permission-Identität.

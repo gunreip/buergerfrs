@@ -78,6 +78,20 @@
                     </div>
 
                     <div class="tooltip-content text-sm leading-relaxed text-zinc-200"></div>
+
+                    <div
+                        class="tooltip-action mt-2 flex items-center gap-3 border-t border-zinc-700/70 pt-2"
+                        hidden
+                    >
+                        <div class="tooltip-action-text min-w-0 flex-1 text-xs leading-relaxed text-zinc-300"></div>
+
+                        <flux:button
+                            class="tooltip-action-button ml-auto shrink-0"
+                            type="button"
+                            size="sm"
+                            variant="primary"
+                        ></flux:button>
+                    </div>
                 </div>
             </div>
         </div>

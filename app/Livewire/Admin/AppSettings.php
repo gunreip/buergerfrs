@@ -5,14 +5,16 @@
 namespace App\Livewire\Admin;
 
 use App\Settings\AppDisplaySettings;
-use Illuminate\Support\Facades\DB;
 use App\Settings\AppGeneralSettings;
 use App\Support\Icons\IconRegistry;
 use App\Support\Locale\LocaleCode;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
+use Throwable;
 
 /**
  * Administrative settings component for locale and role-badge configuration.
@@ -90,6 +92,8 @@ class AppSettings extends Component
 
     public string $primaryLanguageScope = 'all';
 
+    public ?string $pendingLocaleDeactivationCode = null;
+
     /**
      * @var array<int, string>
      */
@@ -139,7 +143,9 @@ class AppSettings extends Component
 
         if (in_array($locale, $this->selectedSubLocaleCodes, true)) {
             $this->selectedSubLocaleCodes = array_values(array_diff($this->selectedSubLocaleCodes, [$locale]));
-            $this->persistSelectedSubLocaleCodesForSelectedPrimaryLanguage();
+            $this->persistSelectedSubLocaleCodesForSelectedPrimaryLanguage('single_toggle', [
+                'toggled_locale' => $locale,
+            ]);
 
             return;
         }
@@ -147,7 +153,9 @@ class AppSettings extends Component
         $this->selectedSubLocaleCodes[] = $locale;
         $this->selectedSubLocaleCodes = array_values(array_unique($this->selectedSubLocaleCodes));
 
-        $this->persistSelectedSubLocaleCodesForSelectedPrimaryLanguage();
+        $this->persistSelectedSubLocaleCodesForSelectedPrimaryLanguage('single_toggle', [
+            'toggled_locale' => $locale,
+        ]);
     }
 
     /**
@@ -176,13 +184,17 @@ class AppSettings extends Component
         if ($allSelected) {
             $this->selectedSubLocaleCodes = [];
 
-            $this->persistSelectedSubLocaleCodesForSelectedPrimaryLanguage();
+            $this->persistSelectedSubLocaleCodesForSelectedPrimaryLanguage('toggle_all', [
+                'target_state' => 'none_selected',
+            ]);
 
             return;
         }
 
         $this->selectedSubLocaleCodes = $subLocaleCodes;
-        $this->persistSelectedSubLocaleCodesForSelectedPrimaryLanguage();
+        $this->persistSelectedSubLocaleCodesForSelectedPrimaryLanguage('toggle_all', [
+            'target_state' => 'all_selected',
+        ]);
     }
 
     /**
@@ -191,6 +203,7 @@ class AppSettings extends Component
     public function setLocale(string $locale, AppGeneralSettings $appGeneralSettings): void
     {
         $locale = LocaleCode::normalize($locale);
+        $previousLocale = LocaleCode::normalize((string) $appGeneralSettings->locale);
 
         $availableLocales = $this->normaliseAvailableLocales($appGeneralSettings->availableLocales);
 
@@ -207,6 +220,21 @@ class AppSettings extends Component
 
         $this->locale = $locale;
         $this->availableLocales = $availableLocales;
+
+        if ($previousLocale !== $locale) {
+            $this->logLocaleActivity(
+                event: 'admin.app_settings.locale.global_locale_changed',
+                description: __('Global app locale changed'),
+                properties: [
+                    'before' => [
+                        'locale' => $previousLocale,
+                    ],
+                    'after' => [
+                        'locale' => $locale,
+                    ],
+                ],
+            );
+        }
 
         $this->dispatch('toast', type: 'success', message: __('Application language updated.'));
     }
@@ -240,6 +268,80 @@ class AppSettings extends Component
     }
 
     /**
+     * Arm a primary locale for explicit deactivation confirmation in UI.
+     */
+    public function armLocaleDeactivation(string $locale, AppGeneralSettings $appGeneralSettings): void
+    {
+        $locale = LocaleCode::normalize($locale);
+
+        if ($locale === '') {
+            return;
+        }
+
+        $currentLocale = LocaleCode::normalize((string) $appGeneralSettings->locale);
+        $availableLocales = $this->normaliseAvailableLocales($appGeneralSettings->availableLocales);
+
+        if (! in_array($locale, $availableLocales, true)) {
+            return;
+        }
+
+        if (in_array($locale, self::MANDATORY_AVAILABLE_LOCALES, true) || $locale === $currentLocale) {
+            return;
+        }
+
+        $this->pendingLocaleDeactivationCode = $locale;
+    }
+
+    /**
+     * Activate a primary locale for App/UI availability.
+     */
+    public function activateAvailableLocale(string $locale, AppGeneralSettings $appGeneralSettings): void
+    {
+        $locale = LocaleCode::normalize($locale);
+
+        if ($locale === '') {
+            $this->dispatch('toast', type: 'error', message: __('Invalid application language.'));
+
+            return;
+        }
+
+        $availableLocales = $this->normaliseAvailableLocales($appGeneralSettings->availableLocales);
+
+        if (in_array($locale, $availableLocales, true)) {
+            return;
+        }
+
+        $this->toggleAvailableLocale($locale, $appGeneralSettings);
+    }
+
+    /**
+     * Deactivate a primary locale for App/UI availability.
+     */
+    public function deactivateAvailableLocale(string $locale, AppGeneralSettings $appGeneralSettings): void
+    {
+        $locale = LocaleCode::normalize($locale);
+
+        if ($locale === '') {
+            $this->dispatch('toast', type: 'error', message: __('Invalid application language.'));
+
+            return;
+        }
+
+        $availableLocales = $this->normaliseAvailableLocales($appGeneralSettings->availableLocales);
+
+        if (! in_array($locale, $availableLocales, true)) {
+            return;
+        }
+
+        if ($this->pendingLocaleDeactivationCode !== $locale) {
+            return;
+        }
+
+        $this->toggleAvailableLocale($locale, $appGeneralSettings);
+        $this->pendingLocaleDeactivationCode = null;
+    }
+
+    /**
      * Activate/deactivate a primary locale and persist available locales.
      */
     public function toggleAvailableLocale(string $locale, AppGeneralSettings $appGeneralSettings): void
@@ -262,6 +364,8 @@ class AppSettings extends Component
 
         $currentLocale = LocaleCode::normalize($appGeneralSettings->locale);
         $availableLocales = $this->normaliseAvailableLocales($appGeneralSettings->availableLocales);
+        $beforeAvailableLocales = $availableLocales;
+        $wasActive = in_array($locale, $availableLocales, true);
 
         if (in_array($locale, $availableLocales, true)) {
             if (in_array($locale, self::MANDATORY_AVAILABLE_LOCALES, true)) {
@@ -294,6 +398,27 @@ class AppSettings extends Component
 
         $this->availableLocales = $availableLocales;
 
+        if ($this->localeListsChanged($beforeAvailableLocales, $availableLocales)) {
+            $this->logLocaleActivity(
+                event: 'admin.app_settings.locale.primary_locale_toggled',
+                description: __('Primary locale availability updated'),
+                properties: [
+                    'action' => $wasActive ? 'deactivated' : 'activated',
+                    'target_locale' => $locale,
+                    'before' => [
+                        'available_locales' => $beforeAvailableLocales,
+                    ],
+                    'after' => [
+                        'available_locales' => $availableLocales,
+                    ],
+                ],
+            );
+        }
+
+        if (! in_array($this->pendingLocaleDeactivationCode, $availableLocales, true)) {
+            $this->pendingLocaleDeactivationCode = null;
+        }
+
         $this->dispatch('toast', type: 'success', message: __('Available application languages updated.'));
     }
 
@@ -308,6 +433,7 @@ class AppSettings extends Component
     public function updatedAvailableLocales(mixed $value): void
     {
         $appGeneralSettings = app(AppGeneralSettings::class);
+        $beforeAvailableLocales = $this->normaliseAvailableLocales($appGeneralSettings->availableLocales);
 
         $selectableLocales = $this->selectablePrimaryLocaleCodes();
 
@@ -351,6 +477,21 @@ class AppSettings extends Component
         $appGeneralSettings->save();
 
         $this->availableLocales = $availableLocales;
+
+        if ($this->localeListsChanged($beforeAvailableLocales, $availableLocales)) {
+            $this->logLocaleActivity(
+                event: 'admin.app_settings.locale.available_locales_updated',
+                description: __('Available app locales updated'),
+                properties: [
+                    'before' => [
+                        'available_locales' => $beforeAvailableLocales,
+                    ],
+                    'after' => [
+                        'available_locales' => $availableLocales,
+                    ],
+                ],
+            );
+        }
 
         $this->dispatch('toast', type: 'success', message: __('Available application languages updated.'));
     }
@@ -646,7 +787,7 @@ class AppSettings extends Component
      * All sub-locales for that primary language are first deactivated and then
      * the currently selected subset is activated inside a transaction.
      */
-    private function persistSelectedSubLocaleCodesForSelectedPrimaryLanguage(): void
+    private function persistSelectedSubLocaleCodesForSelectedPrimaryLanguage(string $trigger = 'unknown', array $context = []): void
     {
         $selectedPrimaryLanguageCode = LocaleCode::normalize($this->selectedPrimaryLanguageCode);
         $selectedPrimaryLanguageId = $this->selectedPrimaryLanguageId();
@@ -690,6 +831,18 @@ class AppSettings extends Component
             return;
         }
 
+        $beforeSelectedSubLocaleCodes = DB::table('locales')
+            ->where('language_id', $selectedPrimaryLanguageId)
+            ->where('is_active', true)
+            ->whereRaw('LOWER(code) <> ?', [strtolower($selectedPrimaryLanguageCode)])
+            ->orderBy('sort_order')
+            ->orderBy('code')
+            ->pluck('code')
+            ->map(static fn(string $code): string => LocaleCode::normalize($code))
+            ->filter()
+            ->values()
+            ->all();
+
         $selectedSubLocaleCodes = collect($this->selectedSubLocaleCodes)
             ->map(static fn(mixed $code): string => is_string($code) ? LocaleCode::normalize($code) : '')
             ->filter()
@@ -720,6 +873,74 @@ class AppSettings extends Component
         });
 
         $this->syncSelectedSubLocaleCodesFromDatabase();
+
+        $afterSelectedSubLocaleCodes = $this->selectedSubLocaleCodes;
+
+        $activatedLocales = array_values(array_diff($afterSelectedSubLocaleCodes, $beforeSelectedSubLocaleCodes));
+        $deactivatedLocales = array_values(array_diff($beforeSelectedSubLocaleCodes, $afterSelectedSubLocaleCodes));
+
+        if ($activatedLocales !== [] || $deactivatedLocales !== []) {
+            $this->logLocaleActivity(
+                event: 'admin.app_settings.locale.sub_locales_updated',
+                description: __('Sub locales updated'),
+                properties: [
+                    'primary_locale' => $selectedPrimaryLanguageCode,
+                    'trigger' => $trigger,
+                    'context' => $context,
+                    'activated_locales' => $activatedLocales,
+                    'deactivated_locales' => $deactivatedLocales,
+                    'before' => [
+                        'selected_sub_locales' => $beforeSelectedSubLocaleCodes,
+                    ],
+                    'after' => [
+                        'selected_sub_locales' => $afterSelectedSubLocaleCodes,
+                    ],
+                ],
+            );
+        }
+    }
+
+    /**
+     * Write locale-related admin changes to activity_log.
+     */
+    private function logLocaleActivity(string $event, string $description, array $properties = []): void
+    {
+        try {
+            $logger = activity('admin')
+                ->event($event)
+                ->withProperties(array_merge($properties, [
+                    'source' => [
+                        'route' => request()?->route()?->getName(),
+                        'url' => request()?->fullUrl(),
+                        'component' => static::class,
+                    ],
+                ]));
+
+            if (Auth::check()) {
+                $logger->causedBy(Auth::user());
+            }
+
+            $logger->log($description);
+        } catch (Throwable) {
+            // Logging darf den App-Settings-Workflow nicht blockieren.
+        }
+    }
+
+    /**
+     * Compare locale lists independent of order.
+     *
+     * @param  array<int, string>  $before
+     * @param  array<int, string>  $after
+     */
+    private function localeListsChanged(array $before, array $after): bool
+    {
+        $beforeNormalized = $before;
+        $afterNormalized = $after;
+
+        sort($beforeNormalized);
+        sort($afterNormalized);
+
+        return $beforeNormalized !== $afterNormalized;
     }
 
     /**

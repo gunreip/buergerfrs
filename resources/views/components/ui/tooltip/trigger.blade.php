@@ -9,6 +9,7 @@
     @if ($tooltipField() !== null) data-form-field="{{ $tooltipField() }}" @endif
     @if ($tooltipRequired()) data-tooltip-required="true" @endif
     @if ($tooltipDelay() !== null) data-tooltip-delay="{{ $tooltipDelay() }}" @endif
+    @if ($tooltipActionJson() !== null) data-tooltip-action='{{ $tooltipActionJson() }}' @endif
 >
     {{ $slot }}
 </span>

@@ -1,6 +1,10 @@
 {{-- resources/views/components/admin/partials/app-settings/⚡locale.blade.php --}}
 
-<flux:card class="mt-6">
+<flux:card
+    class="mt-6"
+    x-data="{}"
+    x-on:tooltip-locale-deactivate-confirm.window="$wire.armLocaleDeactivation($event.detail.locale ?? '')"
+>
     <div class="flex items-start justify-between gap-4">
         <x-ui.headers.card
             :title="__('Application languages')"
@@ -12,10 +16,12 @@
         <flux:badge
             variant="subtle"
             color="sky"
+            size="lg"
         >
             {{ __('Current') }}:
             <x-ui.locale.flag
                 class="ml-2"
+                size="lg"
                 :locale="$locale"
             />
         </flux:badge>
@@ -67,9 +73,12 @@
                 $isSelectedPrimaryLanguageActive =
                     $selectedPrimaryLanguageCode !== '' &&
                     in_array($selectedPrimaryLanguageCode, $availableLocales, true);
-                $canToggleSelectedPrimaryLanguage =
-                    $selectedPrimaryLanguageCode !== '' &&
-                    !in_array(strtolower($selectedPrimaryLanguageCode), ['en', 'de'], true);
+                $canActivateSelectedPrimaryLanguage =
+                    $selectedPrimaryLanguageCode !== '' && !$isSelectedPrimaryLanguageActive;
+                $availablePrimaryLocaleCodesNormalized = array_map(
+                    static fn(string $localeCode): string => strtolower($localeCode),
+                    $availableLocales,
+                );
             @endphp
 
             {{-- Select Primary language --}}
@@ -107,7 +116,7 @@
                                 <flux:select
                                     id="primary-language-select"
                                     wire:model.live="selectedPrimaryLanguageCode"
-                                    placeholder="{{ __('Please select') }}"
+                                    placeholder="{{ __('Please select a primary language ...') }}"
                                 >
                                     @foreach ($primaryLocaleRows as $localeRow)
                                         @php
@@ -125,9 +134,17 @@
                                                     : (string) $localeRow->code;
 
                                             $label = $localizedLabel . ' (' . $labelSuffix . ')';
+                                            $isAlreadyAvailable = in_array(
+                                                strtolower((string) $localeRow->code),
+                                                $availablePrimaryLocaleCodesNormalized,
+                                                true,
+                                            );
                                         @endphp
 
-                                        <flux:select.option value="{{ $localeRow->code }}">
+                                        <flux:select.option
+                                            value="{{ $localeRow->code }}"
+                                            :disabled="$isAlreadyAvailable"
+                                        >
                                             {{ $label }}
                                         </flux:select.option>
                                     @endforeach
@@ -137,11 +154,11 @@
                     </div>
 
                     <div class="lg:col-span-2 lg:flex lg:items-end">
-                        @if ($canToggleSelectedPrimaryLanguage)
+                        @if ($canActivateSelectedPrimaryLanguage)
                             <x-ui.button.activate-deactivate
-                                :active="$isSelectedPrimaryLanguageActive"
+                                :active="false"
                                 :language="$selectedPrimaryLanguageLabel"
-                                wire:click="toggleAvailableLocale('{{ $selectedPrimaryLanguageCode }}')"
+                                wire:click="activateAvailableLocale('{{ $selectedPrimaryLanguageCode }}')"
                             />
                         @endif
                     </div>
@@ -283,6 +300,12 @@
                         $localeCodeNormalized = strtolower($localeRow->code);
                         $label =
                             $localeRow->native_display_name ?: $localeRow->display_name ?: strtoupper($localeRow->code);
+                        $canDeactivateFromGlobal =
+                            !in_array($localeCodeNormalized, ['en', 'de'], true) &&
+                            $localeCodeNormalized !== strtolower($locale);
+                        $isPendingDeactivate =
+                            $canDeactivateFromGlobal &&
+                            strtolower((string) $pendingLocaleDeactivationCode) === $localeCodeNormalized;
 
                         $subLocaleStats = $subLocaleStatsByPrimary[$localeCodeNormalized] ?? [
                             'total' => 0,
@@ -299,7 +322,9 @@
                         }
                     @endphp
 
+                    {{-- Button group with flag, label and sub-locale stats --}}
                     <flux:button.group class="flex w-full">
+                        {{-- Button sublocale overall --}}
                         <x-ui.tooltip.trigger
                             :title="$label"
                             field="locale-{{ $localeRow->code }}-sub-locale-stats"
@@ -310,7 +335,7 @@
                                 type="button"
                                 size="sm"
                                 :variant="$locale === $localeRow->code ? 'primary' : 'filled'"
-                                wire:click="selectPrimaryLanguage('{{ $localeRow->code }}')"
+                                wire:click="setLocaleAndSelectPrimary('{{ $localeRow->code }}')"
                             >
                                 {{ $subLocaleAllCount }}
                             </flux:button>
@@ -318,6 +343,7 @@
 
                         <flux:separator vertical />
 
+                        {{-- Button locale flag --}}
                         <x-ui.tooltip.trigger
                             :title="$label"
                             field="locale-{{ $localeRow->code }}"
@@ -339,6 +365,7 @@
 
                         <flux:separator vertical />
 
+                        {{-- Button locale label and select primary language (which also shows sub-locale management and stats) --}}
                         <x-ui.tooltip.trigger
                             :title="$label"
                             field="locale-{{ $localeRow->code }}-label"
@@ -350,7 +377,7 @@
                                 class="min-w-0 flex-1 justify-start overflow-hidden"
                                 size="sm"
                                 :variant="$locale === $localeRow->code ? 'primary' : 'filled'"
-                                wire:click="selectPrimaryLanguage('{{ $localeRow->code }}')"
+                                wire:click="setLocaleAndSelectPrimary('{{ $localeRow->code }}')"
                             >
                                 <span class="block w-full overflow-hidden text-ellipsis text-left">
                                     {{ $label }}
@@ -360,21 +387,43 @@
 
                         <flux:separator vertical />
 
-                        <x-ui.tooltip.trigger
-                            :title="$label"
-                            field="locale-{{ $localeRow->code }}-sub-locale-stats"
-                            :text="__('The number of sub-languages selected for this primary language.')"
-                        >
+                        {{-- Button sublocale active summary --}}
+                        @if ($isPendingDeactivate)
                             <flux:button
-                                class="w-12 justify-center tabular-nums"
+                                class="w-12 justify-center hover:cursor-pointer"
                                 type="button"
                                 size="sm"
-                                :variant="$locale === $localeRow->code ? 'primary' : 'filled'"
-                                wire:click="selectPrimaryLanguage('{{ $localeRow->code }}')"
+                                icon="x-mark"
+                                variant="danger"
+                                wire:click="deactivateAvailableLocale('{{ $localeRow->code }}')"
+                            ></flux:button>
+                        @else
+                            <x-ui.tooltip.trigger
+                                :title="$label"
+                                field="locale-{{ $localeRow->code }}-sub-locale-selected"
+                                :text="__('The number of sub-languages selected for this primary language.')"
+                                :action-text="$canDeactivateFromGlobal
+                                    ? __('Do you really want to deactivate this language?')
+                                    : null"
+                                :action="$canDeactivateFromGlobal
+                                    ? [
+                                        'label' => 'Yes',
+                                        'event' => 'tooltip-locale-deactivate-confirm',
+                                        'detail' => ['locale' => $localeRow->code],
+                                    ]
+                                    : null"
                             >
-                                {{ $subLocaleSelectedCount }}
-                            </flux:button>
-                        </x-ui.tooltip.trigger>
+                                <flux:button
+                                    class="w-12 justify-center tabular-nums"
+                                    type="button"
+                                    size="sm"
+                                    :variant="$locale === $localeRow->code ? 'primary' : 'filled'"
+                                    wire:click="selectPrimaryLanguage('{{ $localeRow->code }}')"
+                                >
+                                    {{ $subLocaleSelectedCount }}
+                                </flux:button>
+                            </x-ui.tooltip.trigger>
+                        @endif
                     </flux:button.group>
                 @endforeach
             </div>

@@ -21,7 +21,7 @@ export function setupGlobalTooltips() {
 
     tooltipsInitialized = true;
 
-    document.body.addEventListener('pointerover', function (e) {
+    document.addEventListener('pointerover', function (e) {
         const trigger = getTooltipTrigger(e.target);
 
         if (!trigger) {
@@ -35,7 +35,7 @@ export function setupGlobalTooltips() {
         scheduleShowGlobalTooltip(trigger, e);
     }, true);
 
-    document.body.addEventListener('pointerout', function (e) {
+    document.addEventListener('pointerout', function (e) {
         const trigger = getTooltipTrigger(e.target);
 
         if (!trigger) {
@@ -49,7 +49,7 @@ export function setupGlobalTooltips() {
         scheduleRemoveGlobalTooltip(trigger);
     }, true);
 
-    document.body.addEventListener('click', function (e) {
+    document.addEventListener('click', function (e) {
         const trigger = getTooltipTrigger(e.target);
 
         if (!trigger) {
@@ -125,7 +125,7 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
 
     removeGlobalTooltip();
 
-    const template = document.getElementById(TOOLTIP_TEMPLATE_ID);
+    const template = getTooltipTemplate();
 
     if (!template) {
         return;
@@ -134,8 +134,9 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
     const content = anchorEl.dataset.tooltip || '';
     const title = anchorEl.dataset.tooltipTitle || '';
     const required = anchorEl.dataset.tooltipRequired === 'true';
+    const action = parseTooltipAction(anchorEl.dataset.tooltipAction || '');
 
-    if (!content && !title) {
+    if (!content && !title && !action) {
         return;
     }
 
@@ -149,6 +150,9 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
     const titleEl = tooltip.querySelector('.tooltip-title');
     const contentEl = tooltip.querySelector('.tooltip-content');
     const requiredBadge = tooltip.querySelector('.tooltip-required-badge');
+    const actionWrapEl = tooltip.querySelector('.tooltip-action');
+    const actionTextEl = tooltip.querySelector('.tooltip-action-text');
+    const actionButtonEl = tooltip.querySelector('.tooltip-action-button');
 
     if (titleEl) {
         titleEl.textContent = title;
@@ -162,6 +166,8 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
         requiredBadge.toggleAttribute('hidden', !required);
     }
 
+    renderTooltipAction(actionWrapEl, actionTextEl, actionButtonEl, action);
+
     tooltip.style.visibility = 'hidden';
     tooltip.style.position = 'absolute';
 
@@ -171,6 +177,7 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
 
     tooltip.classList.add('global-tooltip-active');
     tooltip.style.visibility = '';
+    tooltip.style.opacity = '0';
 
     activeTooltip = tooltip;
     activeAnchor = anchorEl;
@@ -186,9 +193,110 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
     const showDelay = delay ?? 0;
 
     tooltipShowTimeout = setTimeout(() => {
-        tooltip.classList.add('opacity-100');
-        tooltip.classList.remove('opacity-0');
+        tooltip.style.opacity = '1';
     }, showDelay);
+}
+
+function getTooltipTemplate() {
+    const existingTemplate = document.getElementById(TOOLTIP_TEMPLATE_ID);
+
+    if (existingTemplate instanceof HTMLTemplateElement) {
+        return existingTemplate;
+    }
+
+    const fallbackTemplate = document.createElement('template');
+    fallbackTemplate.id = TOOLTIP_TEMPLATE_ID;
+    fallbackTemplate.innerHTML = `
+        <div class="my-tooltip" role="tooltip">
+            <div class="my-tooltip-row">
+                <span class="my-tooltip-icon" aria-hidden="true">i</span>
+                <div class="my-tooltip-body">
+                    <div class="my-tooltip-heading">
+                        <div class="tooltip-title my-tooltip-title"></div>
+                        <span class="tooltip-required-badge my-tooltip-required-badge" hidden>Required</span>
+                    </div>
+                    <div class="tooltip-content my-tooltip-content"></div>
+                    <div class="tooltip-action my-tooltip-action" hidden>
+                        <div class="tooltip-action-text my-tooltip-action-text"></div>
+                        <button class="tooltip-action-button my-tooltip-action-button" type="button"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(fallbackTemplate);
+
+    return fallbackTemplate;
+}
+
+function parseTooltipAction(rawValue) {
+    const value = String(rawValue || '').trim();
+
+    if (value === '') {
+        return null;
+    }
+
+    try {
+        const action = JSON.parse(value);
+
+        if (!action || typeof action !== 'object') {
+            return null;
+        }
+
+        const label = String(action.label || '').trim();
+        const event = String(action.event || '').trim();
+
+        if (label === '' || event === '') {
+            return null;
+        }
+
+        return {
+            label,
+            text: String(action.text || '').trim(),
+            event,
+            detail: action.detail && typeof action.detail === 'object' ? action.detail : {},
+        };
+    } catch {
+        return null;
+    }
+}
+
+function renderTooltipAction(actionWrapEl, actionTextEl, actionButtonEl, action) {
+    if (!(actionWrapEl instanceof HTMLElement) || !(actionTextEl instanceof HTMLElement) || !(actionButtonEl instanceof HTMLElement)) {
+        return;
+    }
+
+    actionButtonEl.replaceWith(actionButtonEl.cloneNode(true));
+    const freshActionButtonEl = actionWrapEl.querySelector('.tooltip-action-button');
+
+    if (!(freshActionButtonEl instanceof HTMLElement)) {
+        return;
+    }
+
+    if (!action) {
+        actionWrapEl.hidden = true;
+        actionTextEl.textContent = '';
+        freshActionButtonEl.textContent = '';
+
+        return;
+    }
+
+    actionWrapEl.hidden = false;
+    actionTextEl.textContent = action.text;
+    actionTextEl.hidden = action.text === '';
+    freshActionButtonEl.textContent = action.label;
+
+    freshActionButtonEl.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        removeGlobalTooltip();
+
+        window.dispatchEvent(new CustomEvent(action.event, {
+            detail: action.detail,
+        }));
+    });
 }
 
 function positionTooltip(tooltip, anchorEl, pointer = null) {
@@ -354,8 +462,7 @@ function removeGlobalTooltip() {
 }
 
 function fadeOutAndRemoveTooltip(tooltip) {
-    tooltip.classList.remove('opacity-100');
-    tooltip.classList.add('opacity-0');
+    tooltip.style.opacity = '0';
 
     setTimeout(() => {
         tooltip.remove();
