@@ -1,5 +1,9 @@
 <?php
 
+// php artisan project:db-backup
+// php artisan schedule:run
+// php artisan schedule:list
+
 namespace App\Console\Commands;
 
 use Carbon\CarbonImmutable;

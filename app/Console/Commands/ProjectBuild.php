@@ -78,6 +78,8 @@ class ProjectBuild extends Command
             $this->runArtisanStep('Optimieren der Klassen- und Service-Container', 'optimize');
         }
 
+        $this->runArtisanStep('App-Version nach public/version.txt schreiben', 'app:write-app-version');
+
         $this->info('✅ Projekt-Build abgeschlossen!');
 
         return self::SUCCESS;
