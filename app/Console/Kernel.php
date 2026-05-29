@@ -16,12 +16,8 @@ class Kernel extends ConsoleKernel
             ->hourly()
             ->withoutOverlapping();
 
-        $schedule->command('backup:run --only-db')
-            ->dailyAt('03:10')
-            ->withoutOverlapping();
-
-        $schedule->command('backup:clean')
-            ->dailyAt('03:40')
+        $schedule->command('project:db-backup')
+            ->everyTenMinutes()
             ->withoutOverlapping();
     }
 

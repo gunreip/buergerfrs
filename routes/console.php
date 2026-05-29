@@ -8,14 +8,12 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+// Stündlicher Healthcheck der Kern-Datenbanktabellen.
 Schedule::command('project:db-health --fail-on-empty --quiet-ok')
     ->hourly()
     ->withoutOverlapping();
 
-Schedule::command('backup:run --only-db')
-    ->dailyAt('03:10')
-    ->withoutOverlapping();
-
-Schedule::command('backup:clean')
-    ->dailyAt('03:40')
+// DB-Backup alle 10 Minuten inkl. projektspezifischer Aufbewahrungslogik.
+Schedule::command('project:db-backup')
+    ->everyTenMinutes()
     ->withoutOverlapping();
