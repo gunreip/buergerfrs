@@ -101,9 +101,9 @@ namespace App\Models{
  * @property string|null $notes
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read \App\Models\Client $client
+ * @property-read \App\Models\Client|null $client
  * @property-read \App\Models\User|null $createdByUser
- * @property-read \App\Models\Person $person
+ * @property-read \App\Models\Person|null $person
  * @property-read \App\Models\User|null $verifiedByUser
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ClientPerson newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ClientPerson newQuery()
@@ -138,7 +138,7 @@ namespace App\Models{
  * @property bool $is_default
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read \App\Models\Country $country
+ * @property-read \App\Models\Country|null $country
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CountryName query()
@@ -173,7 +173,7 @@ namespace App\Models{
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, CountrySubdivision> $children
  * @property-read int|null $children_count
- * @property-read \App\Models\Country $country
+ * @property-read \App\Models\Country|null $country
  * @property-read CountrySubdivision|null $parent
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision active()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CountrySubdivision newModelQuery()
@@ -349,7 +349,7 @@ namespace App\Models{
  * @property bool $is_default
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read \App\Models\Language $language
+ * @property-read \App\Models\Language|null $language
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LanguageName query()
@@ -421,8 +421,8 @@ namespace App\Models{
  * @property string|null $notes
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read \App\Models\Address $address
- * @property-read \App\Models\Person $person
+ * @property-read \App\Models\Address|null $address
+ * @property-read \App\Models\Person|null $person
  * @property-read \App\Models\User|null $verifiedByUser
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonAddress newQuery()
@@ -461,7 +461,7 @@ namespace App\Models{
  * @property string|null $notes
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read \App\Models\Person $person
+ * @property-read \App\Models\Person|null $person
  * @property-read \App\Models\Person|null $relatedPerson
  * @property-read \App\Models\User|null $verifiedByUser
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonContact newModelQuery()
@@ -510,7 +510,7 @@ namespace App\Models{
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property-read \App\Models\Country|null $issuingCountry
- * @property-read \App\Models\Person $person
+ * @property-read \App\Models\Person|null $person
  * @property-read \App\Models\PersonIdentifier|null $personIdentifier
  * @property-read \App\Models\User|null $verifiedByUser
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonDocument newModelQuery()
@@ -555,7 +555,7 @@ namespace App\Models{
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property-read \App\Models\InsuranceProvider|null $insuranceProvider
- * @property-read \App\Models\Person $person
+ * @property-read \App\Models\Person|null $person
  * @property-read \App\Models\User|null $verifiedByUser
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonHealthInsurance newQuery()
@@ -596,7 +596,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PersonDocument> $documentRows
  * @property-read int|null $document_rows_count
  * @property-read \App\Models\Country|null $issuingCountry
- * @property-read \App\Models\Person $person
+ * @property-read \App\Models\Person|null $person
  * @property-read \App\Models\User|null $verifiedByUser
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonIdentifier newQuery()
@@ -636,8 +636,8 @@ namespace App\Models{
  * @property string|null $notes
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read \App\Models\Language $language
- * @property-read \App\Models\Person $person
+ * @property-read \App\Models\Language|null $language
+ * @property-read \App\Models\Person|null $person
  * @property-read \App\Models\User|null $verifiedByUser
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonLanguage newQuery()
@@ -673,8 +673,8 @@ namespace App\Models{
  * @property string|null $notes
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read \App\Models\Country $country
- * @property-read \App\Models\Person $person
+ * @property-read \App\Models\Country|null $country
+ * @property-read \App\Models\Person|null $person
  * @property-read \App\Models\User|null $verifiedByUser
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PersonNationality newQuery()
@@ -739,9 +739,29 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property string $locale
+ * @property string $name
+ * @property string $native_name
+ * @property bool $is_default
+ * @property bool $is_enabled_for_translation
+ * @property bool $is_enabled_for_app
+ * @property int $sort_order
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage whereIsDefault($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage whereIsEnabledForApp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage whereIsEnabledForTranslation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage whereLocale($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage whereNativeName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLanguage whereUpdatedAt($value)
  */
 	class TranslationLanguage extends \Eloquent {}
 }
@@ -760,7 +780,7 @@ namespace App\Models{
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property string|null $original_raw
- * @property-read \App\Models\TranslationKey $translationKey
+ * @property-read \App\Models\TranslationKey|null $translationKey
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsage query()
@@ -793,7 +813,7 @@ namespace App\Models{
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property-read \App\Models\User|null $reviewedBy
- * @property-read \App\Models\TranslationKey $translationKey
+ * @property-read \App\Models\TranslationKey|null $translationKey
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue query()

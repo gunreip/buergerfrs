@@ -1,1 +1,1025 @@
-[]
+[
+    {
+        "full_key": "actions.ui.actions.save",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/actions.php",
+            "lang/en/actions.php"
+        ]
+    },
+    {
+        "full_key": "actions.ui.actions.search",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/actions.php",
+            "lang/en/actions.php"
+        ]
+    },
+    {
+        "full_key": "labels.ui.labels.actions",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/labels.php",
+            "lang/en/labels.php"
+        ]
+    },
+    {
+        "full_key": "labels.ui.labels.category",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/labels.php",
+            "lang/en/labels.php"
+        ]
+    },
+    {
+        "full_key": "labels.ui.labels.description",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/labels.php",
+            "lang/en/labels.php"
+        ]
+    },
+    {
+        "full_key": "labels.ui.labels.guard",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/labels.php",
+            "lang/en/labels.php"
+        ]
+    },
+    {
+        "full_key": "labels.ui.labels.name",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/labels.php",
+            "lang/en/labels.php"
+        ]
+    },
+    {
+        "full_key": "labels.ui.labels.number_short",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/labels.php",
+            "lang/en/labels.php"
+        ]
+    },
+    {
+        "full_key": "labels.ui.labels.preview",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/labels.php",
+            "lang/en/labels.php"
+        ]
+    },
+    {
+        "full_key": "labels.ui.labels.role",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/labels.php",
+            "lang/en/labels.php"
+        ]
+    },
+    {
+        "full_key": "labels.ui.labels.roles",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/labels.php",
+            "lang/en/labels.php"
+        ]
+    },
+    {
+        "full_key": "layouts.header.search",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/layouts.php",
+            "lang/en/layouts.php"
+        ]
+    },
+    {
+        "full_key": "layouts.sidebar.administration.countries",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/layouts.php",
+            "lang/en/layouts.php"
+        ]
+    },
+    {
+        "full_key": "layouts.sidebar.administration.fallback_reports",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/layouts.php",
+            "lang/en/layouts.php"
+        ]
+    },
+    {
+        "full_key": "layouts.sidebar.management.client",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/layouts.php",
+            "lang/en/layouts.php"
+        ]
+    },
+    {
+        "full_key": "layouts.sidebar.management.create",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/layouts.php",
+            "lang/en/layouts.php"
+        ]
+    },
+    {
+        "full_key": "messages.ui.messages.no_description_available",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/messages.php",
+            "lang/en/messages.php"
+        ]
+    },
+    {
+        "full_key": "pages.auth.confirm_password.confirm_password",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/pages.php",
+            "lang/en/pages.php"
+        ]
+    },
+    {
+        "full_key": "pages.settings.profile.avatar_image",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/pages.php",
+            "lang/en/pages.php"
+        ]
+    },
+    {
+        "full_key": "pages.settings.profile.current_avatar",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/pages.php",
+            "lang/en/pages.php"
+        ]
+    },
+    {
+        "full_key": "pages.settings.security.confirm_password",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/pages.php",
+            "lang/en/pages.php"
+        ]
+    },
+    {
+        "full_key": "pages.settings.security.disable_2fa",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/pages.php",
+            "lang/en/pages.php"
+        ]
+    },
+    {
+        "full_key": "pages.settings.security.save",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/pages.php",
+            "lang/en/pages.php"
+        ]
+    },
+    {
+        "full_key": "pages.settings.security.security_settings",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/pages.php",
+            "lang/en/pages.php"
+        ]
+    },
+    {
+        "full_key": "pages.settings.security.two_factor_authentication",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/pages.php",
+            "lang/en/pages.php"
+        ]
+    },
+    {
+        "full_key": "pages.settings.two_factor_setup_modal.back",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/pages.php",
+            "lang/en/pages.php"
+        ]
+    },
+    {
+        "full_key": "pages.settings.two_factor_setup_modal.confirm",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/pages.php",
+            "lang/en/pages.php"
+        ]
+    },
+    {
+        "full_key": "pages.settings.two_factor_setup_modal.to_finish_enabling_two_factor_authentication_scan_the_qr_code_or_enter_the_setup",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/pages.php",
+            "lang/en/pages.php"
+        ]
+    },
+    {
+        "full_key": "people.management.people.create_person.form_person.emergency",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/people.php",
+            "lang/en/people.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.actions.edit_role_permissions",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.description",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.filters.assignment.label",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.filters.categories.all",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.filters.description",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.filters.guards.all",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.filters.roles.all",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.filters.search.placeholder",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.filters.system.label",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.filters.title",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.labels.assigned_roles",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.labels.sort_order",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.labels.system_permission",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.messages.no_changes.heading",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.messages.no_changes.role_permissions_unchanged",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.messages.permission_saved.heading",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.messages.permission_saved.text",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.messages.role_permissions_saved.heading",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.messages.role_permissions_saved.text",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.edit.category_placeholder",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.edit.description",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.edit.description_placeholder",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.edit.details_section",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.edit.editable_scope",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.edit.metadata_only",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.edit.metadata_section",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.edit.title",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.roles.changes",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.roles.current_permissions",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.roles.description",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.roles.edit_section",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.roles.overview_for",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.roles.select_role",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.roles.selected_permissions",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.roles.set_permissions_section",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.modals.roles.title",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.overview.assigned.heading",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.overview.assigned.text",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.overview.description",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.overview.guards.heading",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.overview.guards.text",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.overview.title",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.overview.total.heading",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.overview.total.text",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.overview.unassigned.heading",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.overview.unassigned.text",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.table.columns.assigned_roles",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.table.columns.flags",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.table.columns.sort",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.table.description",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.table.empty",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.table.title",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "permissions.admin.permissions.title",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/permissions.php",
+            "lang/en/permissions.php"
+        ]
+    },
+    {
+        "full_key": "roles.admin.roles.actions.create",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/roles.php",
+            "lang/en/roles.php"
+        ]
+    },
+    {
+        "full_key": "roles.admin.roles.badge.color",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/roles.php",
+            "lang/en/roles.php"
+        ]
+    },
+    {
+        "full_key": "states.ui.states.all",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/states.php",
+            "lang/en/states.php"
+        ]
+    },
+    {
+        "full_key": "states.ui.states.assigned",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/states.php",
+            "lang/en/states.php"
+        ]
+    },
+    {
+        "full_key": "states.ui.states.custom",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/states.php",
+            "lang/en/states.php"
+        ]
+    },
+    {
+        "full_key": "states.ui.states.no_changes",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/states.php",
+            "lang/en/states.php"
+        ]
+    },
+    {
+        "full_key": "states.ui.states.non_system",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/states.php",
+            "lang/en/states.php"
+        ]
+    },
+    {
+        "full_key": "states.ui.states.other",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/states.php",
+            "lang/en/states.php"
+        ]
+    },
+    {
+        "full_key": "states.ui.states.system",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/states.php",
+            "lang/en/states.php"
+        ]
+    },
+    {
+        "full_key": "states.ui.states.unassigned",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/states.php",
+            "lang/en/states.php"
+        ]
+    },
+    {
+        "full_key": "states.ui.states.unsaved_changes",
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/states.php",
+            "lang/en/states.php"
+        ]
+    }
+]

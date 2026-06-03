@@ -1,6 +1,20 @@
 [
     {
         "locale": "de",
+        "group": "actions",
+        "key": "ui.actions.save",
+        "full_key": "actions.ui.actions.save",
+        "file": "lang/de/actions.php"
+    },
+    {
+        "locale": "de",
+        "group": "actions",
+        "key": "ui.actions.search",
+        "full_key": "actions.ui.actions.search",
+        "file": "lang/de/actions.php"
+    },
+    {
+        "locale": "de",
         "group": "admin",
         "key": "permissions.actions.edit_role_permissions",
         "full_key": "admin.permissions.actions.edit_role_permissions",
@@ -372,9 +386,821 @@
     },
     {
         "locale": "de",
+        "group": "admin",
+        "key": "roles.actions.create",
+        "full_key": "admin.roles.actions.create",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.badge.color",
+        "full_key": "admin.roles.badge.color",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.badge.icon",
+        "full_key": "admin.roles.badge.icon",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.badge.title",
+        "full_key": "admin.roles.badge.title",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.badge.variant",
+        "full_key": "admin.roles.badge.variant",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.description",
+        "full_key": "admin.roles.description",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.labels.assignable_through_ui",
+        "full_key": "admin.roles.labels.assignable_through_ui",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.labels.assigned_users",
+        "full_key": "admin.roles.labels.assigned_users",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.labels.sort_order",
+        "full_key": "admin.roles.labels.sort_order",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.labels.system_role",
+        "full_key": "admin.roles.labels.system_role",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.messages.not_allowed.heading",
+        "full_key": "admin.roles.messages.not_allowed.heading",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.messages.not_allowed.only_super_admins_may_create_roles",
+        "full_key": "admin.roles.messages.not_allowed.only_super_admins_may_create_roles",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.messages.role_created.heading",
+        "full_key": "admin.roles.messages.role_created.heading",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.messages.role_created.text",
+        "full_key": "admin.roles.messages.role_created.text",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.messages.role_saved.heading",
+        "full_key": "admin.roles.messages.role_saved.heading",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.messages.role_saved.text",
+        "full_key": "admin.roles.messages.role_saved.text",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.modals.create.description",
+        "full_key": "admin.roles.modals.create.description",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.modals.create.name_placeholder",
+        "full_key": "admin.roles.modals.create.name_placeholder",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.modals.create.title",
+        "full_key": "admin.roles.modals.create.title",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.modals.edit.title",
+        "full_key": "admin.roles.modals.edit.title",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.preview.new_role",
+        "full_key": "admin.roles.preview.new_role",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "admin",
+        "key": "roles.title",
+        "full_key": "admin.roles.title",
+        "file": "lang/de/admin.php"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.actions",
+        "full_key": "labels.ui.labels.actions",
+        "file": "lang/de/labels.php"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.category",
+        "full_key": "labels.ui.labels.category",
+        "file": "lang/de/labels.php"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.description",
+        "full_key": "labels.ui.labels.description",
+        "file": "lang/de/labels.php"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.guard",
+        "full_key": "labels.ui.labels.guard",
+        "file": "lang/de/labels.php"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.name",
+        "full_key": "labels.ui.labels.name",
+        "file": "lang/de/labels.php"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.number_short",
+        "full_key": "labels.ui.labels.number_short",
+        "file": "lang/de/labels.php"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.preview",
+        "full_key": "labels.ui.labels.preview",
+        "file": "lang/de/labels.php"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.role",
+        "full_key": "labels.ui.labels.role",
+        "file": "lang/de/labels.php"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.roles",
+        "full_key": "labels.ui.labels.roles",
+        "file": "lang/de/labels.php"
+    },
+    {
+        "locale": "de",
+        "group": "layouts",
+        "key": "header.search",
+        "full_key": "layouts.header.search",
+        "file": "lang/de/layouts.php"
+    },
+    {
+        "locale": "de",
+        "group": "layouts",
+        "key": "sidebar.administration.countries",
+        "full_key": "layouts.sidebar.administration.countries",
+        "file": "lang/de/layouts.php"
+    },
+    {
+        "locale": "de",
+        "group": "layouts",
+        "key": "sidebar.administration.fallback_reports",
+        "full_key": "layouts.sidebar.administration.fallback_reports",
+        "file": "lang/de/layouts.php"
+    },
+    {
+        "locale": "de",
+        "group": "layouts",
+        "key": "sidebar.management.client",
+        "full_key": "layouts.sidebar.management.client",
+        "file": "lang/de/layouts.php"
+    },
+    {
+        "locale": "de",
+        "group": "layouts",
+        "key": "sidebar.management.create",
+        "full_key": "layouts.sidebar.management.create",
+        "file": "lang/de/layouts.php"
+    },
+    {
+        "locale": "de",
+        "group": "management",
+        "key": "people.create_person.form_person.emergency",
+        "full_key": "management.people.create_person.form_person.emergency",
+        "file": "lang/de/management.php"
+    },
+    {
+        "locale": "de",
+        "group": "messages",
+        "key": "ui.messages.no_description_available",
+        "full_key": "messages.ui.messages.no_description_available",
+        "file": "lang/de/messages.php"
+    },
+    {
+        "locale": "de",
+        "group": "pages",
+        "key": "auth.confirm_password.confirm_password",
+        "full_key": "pages.auth.confirm_password.confirm_password",
+        "file": "lang/de/pages.php"
+    },
+    {
+        "locale": "de",
+        "group": "pages",
+        "key": "settings.profile.avatar_image",
+        "full_key": "pages.settings.profile.avatar_image",
+        "file": "lang/de/pages.php"
+    },
+    {
+        "locale": "de",
+        "group": "pages",
+        "key": "settings.profile.current_avatar",
+        "full_key": "pages.settings.profile.current_avatar",
+        "file": "lang/de/pages.php"
+    },
+    {
+        "locale": "de",
+        "group": "pages",
+        "key": "settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars",
+        "full_key": "pages.settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars",
+        "file": "lang/de/pages.php"
+    },
+    {
+        "locale": "de",
+        "group": "pages",
+        "key": "settings.security.confirm_password",
+        "full_key": "pages.settings.security.confirm_password",
+        "file": "lang/de/pages.php"
+    },
+    {
+        "locale": "de",
+        "group": "pages",
+        "key": "settings.security.disable_2fa",
+        "full_key": "pages.settings.security.disable_2fa",
+        "file": "lang/de/pages.php"
+    },
+    {
+        "locale": "de",
+        "group": "pages",
+        "key": "settings.security.save",
+        "full_key": "pages.settings.security.save",
+        "file": "lang/de/pages.php"
+    },
+    {
+        "locale": "de",
+        "group": "pages",
+        "key": "settings.security.security_settings",
+        "full_key": "pages.settings.security.security_settings",
+        "file": "lang/de/pages.php"
+    },
+    {
+        "locale": "de",
+        "group": "pages",
+        "key": "settings.security.two_factor_authentication",
+        "full_key": "pages.settings.security.two_factor_authentication",
+        "file": "lang/de/pages.php"
+    },
+    {
+        "locale": "de",
+        "group": "pages",
+        "key": "settings.two_factor_setup_modal.back",
+        "full_key": "pages.settings.two_factor_setup_modal.back",
+        "file": "lang/de/pages.php"
+    },
+    {
+        "locale": "de",
+        "group": "pages",
+        "key": "settings.two_factor_setup_modal.confirm",
+        "full_key": "pages.settings.two_factor_setup_modal.confirm",
+        "file": "lang/de/pages.php"
+    },
+    {
+        "locale": "de",
+        "group": "pages",
+        "key": "settings.two_factor_setup_modal.to_finish_enabling_two_factor_authentication_scan_the_qr_code_or_enter_the_setup",
+        "full_key": "pages.settings.two_factor_setup_modal.to_finish_enabling_two_factor_authentication_scan_the_qr_code_or_enter_the_setup",
+        "file": "lang/de/pages.php"
+    },
+    {
+        "locale": "de",
+        "group": "people",
+        "key": "management.people.create_person.form_person.emergency",
+        "full_key": "people.management.people.create_person.form_person.emergency",
+        "file": "lang/de/people.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.actions.edit_role_permissions",
+        "full_key": "permissions.admin.permissions.actions.edit_role_permissions",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.description",
+        "full_key": "permissions.admin.permissions.description",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.assignment.label",
+        "full_key": "permissions.admin.permissions.filters.assignment.label",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.categories.all",
+        "full_key": "permissions.admin.permissions.filters.categories.all",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.description",
+        "full_key": "permissions.admin.permissions.filters.description",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.guards.all",
+        "full_key": "permissions.admin.permissions.filters.guards.all",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.roles.all",
+        "full_key": "permissions.admin.permissions.filters.roles.all",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.search.placeholder",
+        "full_key": "permissions.admin.permissions.filters.search.placeholder",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.system.label",
+        "full_key": "permissions.admin.permissions.filters.system.label",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.title",
+        "full_key": "permissions.admin.permissions.filters.title",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.labels.assigned_roles",
+        "full_key": "permissions.admin.permissions.labels.assigned_roles",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.labels.sort_order",
+        "full_key": "permissions.admin.permissions.labels.sort_order",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.labels.system_permission",
+        "full_key": "permissions.admin.permissions.labels.system_permission",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.messages.no_changes.heading",
+        "full_key": "permissions.admin.permissions.messages.no_changes.heading",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.messages.no_changes.role_permissions_unchanged",
+        "full_key": "permissions.admin.permissions.messages.no_changes.role_permissions_unchanged",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.messages.permission_saved.heading",
+        "full_key": "permissions.admin.permissions.messages.permission_saved.heading",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.messages.permission_saved.text",
+        "full_key": "permissions.admin.permissions.messages.permission_saved.text",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.messages.role_permissions_saved.heading",
+        "full_key": "permissions.admin.permissions.messages.role_permissions_saved.heading",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.messages.role_permissions_saved.text",
+        "full_key": "permissions.admin.permissions.messages.role_permissions_saved.text",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.category_placeholder",
+        "full_key": "permissions.admin.permissions.modals.edit.category_placeholder",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.description",
+        "full_key": "permissions.admin.permissions.modals.edit.description",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.description_placeholder",
+        "full_key": "permissions.admin.permissions.modals.edit.description_placeholder",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.details_section",
+        "full_key": "permissions.admin.permissions.modals.edit.details_section",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.editable_scope",
+        "full_key": "permissions.admin.permissions.modals.edit.editable_scope",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.metadata_only",
+        "full_key": "permissions.admin.permissions.modals.edit.metadata_only",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.metadata_section",
+        "full_key": "permissions.admin.permissions.modals.edit.metadata_section",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.title",
+        "full_key": "permissions.admin.permissions.modals.edit.title",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.changes",
+        "full_key": "permissions.admin.permissions.modals.roles.changes",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.current_permissions",
+        "full_key": "permissions.admin.permissions.modals.roles.current_permissions",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.description",
+        "full_key": "permissions.admin.permissions.modals.roles.description",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.edit_section",
+        "full_key": "permissions.admin.permissions.modals.roles.edit_section",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.overview_for",
+        "full_key": "permissions.admin.permissions.modals.roles.overview_for",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.select_role",
+        "full_key": "permissions.admin.permissions.modals.roles.select_role",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.selected_permissions",
+        "full_key": "permissions.admin.permissions.modals.roles.selected_permissions",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.set_permissions_section",
+        "full_key": "permissions.admin.permissions.modals.roles.set_permissions_section",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.title",
+        "full_key": "permissions.admin.permissions.modals.roles.title",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.assigned.heading",
+        "full_key": "permissions.admin.permissions.overview.assigned.heading",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.assigned.text",
+        "full_key": "permissions.admin.permissions.overview.assigned.text",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.description",
+        "full_key": "permissions.admin.permissions.overview.description",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.guards.heading",
+        "full_key": "permissions.admin.permissions.overview.guards.heading",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.guards.text",
+        "full_key": "permissions.admin.permissions.overview.guards.text",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.title",
+        "full_key": "permissions.admin.permissions.overview.title",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.total.heading",
+        "full_key": "permissions.admin.permissions.overview.total.heading",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.total.text",
+        "full_key": "permissions.admin.permissions.overview.total.text",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.unassigned.heading",
+        "full_key": "permissions.admin.permissions.overview.unassigned.heading",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.unassigned.text",
+        "full_key": "permissions.admin.permissions.overview.unassigned.text",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.table.columns.assigned_roles",
+        "full_key": "permissions.admin.permissions.table.columns.assigned_roles",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.table.columns.flags",
+        "full_key": "permissions.admin.permissions.table.columns.flags",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.table.columns.sort",
+        "full_key": "permissions.admin.permissions.table.columns.sort",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.table.description",
+        "full_key": "permissions.admin.permissions.table.description",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.table.empty",
+        "full_key": "permissions.admin.permissions.table.empty",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.table.title",
+        "full_key": "permissions.admin.permissions.table.title",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.title",
+        "full_key": "permissions.admin.permissions.title",
+        "file": "lang/de/permissions.php"
+    },
+    {
+        "locale": "de",
+        "group": "roles",
+        "key": "admin.roles.actions.create",
+        "full_key": "roles.admin.roles.actions.create",
+        "file": "lang/de/roles.php"
+    },
+    {
+        "locale": "de",
+        "group": "roles",
+        "key": "admin.roles.badge.color",
+        "full_key": "roles.admin.roles.badge.color",
+        "file": "lang/de/roles.php"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.all",
+        "full_key": "states.ui.states.all",
+        "file": "lang/de/states.php"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.assigned",
+        "full_key": "states.ui.states.assigned",
+        "file": "lang/de/states.php"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.custom",
+        "full_key": "states.ui.states.custom",
+        "file": "lang/de/states.php"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.no_changes",
+        "full_key": "states.ui.states.no_changes",
+        "file": "lang/de/states.php"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.non_system",
+        "full_key": "states.ui.states.non_system",
+        "file": "lang/de/states.php"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.other",
+        "full_key": "states.ui.states.other",
+        "file": "lang/de/states.php"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.system",
+        "full_key": "states.ui.states.system",
+        "file": "lang/de/states.php"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.unassigned",
+        "full_key": "states.ui.states.unassigned",
+        "file": "lang/de/states.php"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.unsaved_changes",
+        "full_key": "states.ui.states.unsaved_changes",
+        "file": "lang/de/states.php"
+    },
+    {
+        "locale": "de",
         "group": "ui",
         "key": "actions.save",
         "full_key": "ui.actions.save",
+        "file": "lang/de/ui.php"
+    },
+    {
+        "locale": "de",
+        "group": "ui",
+        "key": "actions.save_changes",
+        "full_key": "ui.actions.save_changes",
         "file": "lang/de/ui.php"
     },
     {
@@ -422,8 +1248,22 @@
     {
         "locale": "de",
         "group": "ui",
+        "key": "labels.number",
+        "full_key": "ui.labels.number",
+        "file": "lang/de/ui.php"
+    },
+    {
+        "locale": "de",
+        "group": "ui",
         "key": "labels.number_short",
         "full_key": "ui.labels.number_short",
+        "file": "lang/de/ui.php"
+    },
+    {
+        "locale": "de",
+        "group": "ui",
+        "key": "labels.preview",
+        "full_key": "ui.labels.preview",
         "file": "lang/de/ui.php"
     },
     {
@@ -471,6 +1311,13 @@
     {
         "locale": "de",
         "group": "ui",
+        "key": "states.no",
+        "full_key": "ui.states.no",
+        "file": "lang/de/ui.php"
+    },
+    {
+        "locale": "de",
+        "group": "ui",
         "key": "states.no_changes",
         "full_key": "ui.states.no_changes",
         "file": "lang/de/ui.php"
@@ -509,6 +1356,48 @@
         "key": "states.unsaved_changes",
         "full_key": "ui.states.unsaved_changes",
         "file": "lang/de/ui.php"
+    },
+    {
+        "locale": "de",
+        "group": "ui",
+        "key": "states.yes",
+        "full_key": "ui.states.yes",
+        "file": "lang/de/ui.php"
+    },
+    {
+        "locale": "de-at",
+        "group": "admin",
+        "key": "permissions.actions.edit_role_permissions",
+        "full_key": "admin.permissions.actions.edit_role_permissions",
+        "file": "lang/de-at/admin.php"
+    },
+    {
+        "locale": "de-ch",
+        "group": "admin",
+        "key": "permissions.actions.edit_role_permissions",
+        "full_key": "admin.permissions.actions.edit_role_permissions",
+        "file": "lang/de-ch/admin.php"
+    },
+    {
+        "locale": "de-it",
+        "group": "admin",
+        "key": "permissions.actions.edit_role_permissions",
+        "full_key": "admin.permissions.actions.edit_role_permissions",
+        "file": "lang/de-it/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "actions",
+        "key": "ui.actions.save",
+        "full_key": "actions.ui.actions.save",
+        "file": "lang/en/actions.php"
+    },
+    {
+        "locale": "en",
+        "group": "actions",
+        "key": "ui.actions.search",
+        "full_key": "actions.ui.actions.search",
+        "file": "lang/en/actions.php"
     },
     {
         "locale": "en",
@@ -883,9 +1772,821 @@
     },
     {
         "locale": "en",
+        "group": "admin",
+        "key": "roles.actions.create",
+        "full_key": "admin.roles.actions.create",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.badge.color",
+        "full_key": "admin.roles.badge.color",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.badge.icon",
+        "full_key": "admin.roles.badge.icon",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.badge.title",
+        "full_key": "admin.roles.badge.title",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.badge.variant",
+        "full_key": "admin.roles.badge.variant",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.description",
+        "full_key": "admin.roles.description",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.labels.assignable_through_ui",
+        "full_key": "admin.roles.labels.assignable_through_ui",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.labels.assigned_users",
+        "full_key": "admin.roles.labels.assigned_users",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.labels.sort_order",
+        "full_key": "admin.roles.labels.sort_order",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.labels.system_role",
+        "full_key": "admin.roles.labels.system_role",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.messages.not_allowed.heading",
+        "full_key": "admin.roles.messages.not_allowed.heading",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.messages.not_allowed.only_super_admins_may_create_roles",
+        "full_key": "admin.roles.messages.not_allowed.only_super_admins_may_create_roles",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.messages.role_created.heading",
+        "full_key": "admin.roles.messages.role_created.heading",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.messages.role_created.text",
+        "full_key": "admin.roles.messages.role_created.text",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.messages.role_saved.heading",
+        "full_key": "admin.roles.messages.role_saved.heading",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.messages.role_saved.text",
+        "full_key": "admin.roles.messages.role_saved.text",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.modals.create.description",
+        "full_key": "admin.roles.modals.create.description",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.modals.create.name_placeholder",
+        "full_key": "admin.roles.modals.create.name_placeholder",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.modals.create.title",
+        "full_key": "admin.roles.modals.create.title",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.modals.edit.title",
+        "full_key": "admin.roles.modals.edit.title",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.preview.new_role",
+        "full_key": "admin.roles.preview.new_role",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "admin",
+        "key": "roles.title",
+        "full_key": "admin.roles.title",
+        "file": "lang/en/admin.php"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.actions",
+        "full_key": "labels.ui.labels.actions",
+        "file": "lang/en/labels.php"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.category",
+        "full_key": "labels.ui.labels.category",
+        "file": "lang/en/labels.php"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.description",
+        "full_key": "labels.ui.labels.description",
+        "file": "lang/en/labels.php"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.guard",
+        "full_key": "labels.ui.labels.guard",
+        "file": "lang/en/labels.php"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.name",
+        "full_key": "labels.ui.labels.name",
+        "file": "lang/en/labels.php"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.number_short",
+        "full_key": "labels.ui.labels.number_short",
+        "file": "lang/en/labels.php"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.preview",
+        "full_key": "labels.ui.labels.preview",
+        "file": "lang/en/labels.php"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.role",
+        "full_key": "labels.ui.labels.role",
+        "file": "lang/en/labels.php"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.roles",
+        "full_key": "labels.ui.labels.roles",
+        "file": "lang/en/labels.php"
+    },
+    {
+        "locale": "en",
+        "group": "layouts",
+        "key": "header.search",
+        "full_key": "layouts.header.search",
+        "file": "lang/en/layouts.php"
+    },
+    {
+        "locale": "en",
+        "group": "layouts",
+        "key": "sidebar.administration.countries",
+        "full_key": "layouts.sidebar.administration.countries",
+        "file": "lang/en/layouts.php"
+    },
+    {
+        "locale": "en",
+        "group": "layouts",
+        "key": "sidebar.administration.fallback_reports",
+        "full_key": "layouts.sidebar.administration.fallback_reports",
+        "file": "lang/en/layouts.php"
+    },
+    {
+        "locale": "en",
+        "group": "layouts",
+        "key": "sidebar.management.client",
+        "full_key": "layouts.sidebar.management.client",
+        "file": "lang/en/layouts.php"
+    },
+    {
+        "locale": "en",
+        "group": "layouts",
+        "key": "sidebar.management.create",
+        "full_key": "layouts.sidebar.management.create",
+        "file": "lang/en/layouts.php"
+    },
+    {
+        "locale": "en",
+        "group": "management",
+        "key": "people.create_person.form_person.emergency",
+        "full_key": "management.people.create_person.form_person.emergency",
+        "file": "lang/en/management.php"
+    },
+    {
+        "locale": "en",
+        "group": "messages",
+        "key": "ui.messages.no_description_available",
+        "full_key": "messages.ui.messages.no_description_available",
+        "file": "lang/en/messages.php"
+    },
+    {
+        "locale": "en",
+        "group": "pages",
+        "key": "auth.confirm_password.confirm_password",
+        "full_key": "pages.auth.confirm_password.confirm_password",
+        "file": "lang/en/pages.php"
+    },
+    {
+        "locale": "en",
+        "group": "pages",
+        "key": "settings.profile.avatar_image",
+        "full_key": "pages.settings.profile.avatar_image",
+        "file": "lang/en/pages.php"
+    },
+    {
+        "locale": "en",
+        "group": "pages",
+        "key": "settings.profile.current_avatar",
+        "full_key": "pages.settings.profile.current_avatar",
+        "file": "lang/en/pages.php"
+    },
+    {
+        "locale": "en",
+        "group": "pages",
+        "key": "settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars",
+        "full_key": "pages.settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars",
+        "file": "lang/en/pages.php"
+    },
+    {
+        "locale": "en",
+        "group": "pages",
+        "key": "settings.security.confirm_password",
+        "full_key": "pages.settings.security.confirm_password",
+        "file": "lang/en/pages.php"
+    },
+    {
+        "locale": "en",
+        "group": "pages",
+        "key": "settings.security.disable_2fa",
+        "full_key": "pages.settings.security.disable_2fa",
+        "file": "lang/en/pages.php"
+    },
+    {
+        "locale": "en",
+        "group": "pages",
+        "key": "settings.security.save",
+        "full_key": "pages.settings.security.save",
+        "file": "lang/en/pages.php"
+    },
+    {
+        "locale": "en",
+        "group": "pages",
+        "key": "settings.security.security_settings",
+        "full_key": "pages.settings.security.security_settings",
+        "file": "lang/en/pages.php"
+    },
+    {
+        "locale": "en",
+        "group": "pages",
+        "key": "settings.security.two_factor_authentication",
+        "full_key": "pages.settings.security.two_factor_authentication",
+        "file": "lang/en/pages.php"
+    },
+    {
+        "locale": "en",
+        "group": "pages",
+        "key": "settings.two_factor_setup_modal.back",
+        "full_key": "pages.settings.two_factor_setup_modal.back",
+        "file": "lang/en/pages.php"
+    },
+    {
+        "locale": "en",
+        "group": "pages",
+        "key": "settings.two_factor_setup_modal.confirm",
+        "full_key": "pages.settings.two_factor_setup_modal.confirm",
+        "file": "lang/en/pages.php"
+    },
+    {
+        "locale": "en",
+        "group": "pages",
+        "key": "settings.two_factor_setup_modal.to_finish_enabling_two_factor_authentication_scan_the_qr_code_or_enter_the_setup",
+        "full_key": "pages.settings.two_factor_setup_modal.to_finish_enabling_two_factor_authentication_scan_the_qr_code_or_enter_the_setup",
+        "file": "lang/en/pages.php"
+    },
+    {
+        "locale": "en",
+        "group": "people",
+        "key": "management.people.create_person.form_person.emergency",
+        "full_key": "people.management.people.create_person.form_person.emergency",
+        "file": "lang/en/people.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.actions.edit_role_permissions",
+        "full_key": "permissions.admin.permissions.actions.edit_role_permissions",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.description",
+        "full_key": "permissions.admin.permissions.description",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.assignment.label",
+        "full_key": "permissions.admin.permissions.filters.assignment.label",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.categories.all",
+        "full_key": "permissions.admin.permissions.filters.categories.all",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.description",
+        "full_key": "permissions.admin.permissions.filters.description",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.guards.all",
+        "full_key": "permissions.admin.permissions.filters.guards.all",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.roles.all",
+        "full_key": "permissions.admin.permissions.filters.roles.all",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.search.placeholder",
+        "full_key": "permissions.admin.permissions.filters.search.placeholder",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.system.label",
+        "full_key": "permissions.admin.permissions.filters.system.label",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.title",
+        "full_key": "permissions.admin.permissions.filters.title",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.labels.assigned_roles",
+        "full_key": "permissions.admin.permissions.labels.assigned_roles",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.labels.sort_order",
+        "full_key": "permissions.admin.permissions.labels.sort_order",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.labels.system_permission",
+        "full_key": "permissions.admin.permissions.labels.system_permission",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.messages.no_changes.heading",
+        "full_key": "permissions.admin.permissions.messages.no_changes.heading",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.messages.no_changes.role_permissions_unchanged",
+        "full_key": "permissions.admin.permissions.messages.no_changes.role_permissions_unchanged",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.messages.permission_saved.heading",
+        "full_key": "permissions.admin.permissions.messages.permission_saved.heading",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.messages.permission_saved.text",
+        "full_key": "permissions.admin.permissions.messages.permission_saved.text",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.messages.role_permissions_saved.heading",
+        "full_key": "permissions.admin.permissions.messages.role_permissions_saved.heading",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.messages.role_permissions_saved.text",
+        "full_key": "permissions.admin.permissions.messages.role_permissions_saved.text",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.category_placeholder",
+        "full_key": "permissions.admin.permissions.modals.edit.category_placeholder",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.description",
+        "full_key": "permissions.admin.permissions.modals.edit.description",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.description_placeholder",
+        "full_key": "permissions.admin.permissions.modals.edit.description_placeholder",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.details_section",
+        "full_key": "permissions.admin.permissions.modals.edit.details_section",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.editable_scope",
+        "full_key": "permissions.admin.permissions.modals.edit.editable_scope",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.metadata_only",
+        "full_key": "permissions.admin.permissions.modals.edit.metadata_only",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.metadata_section",
+        "full_key": "permissions.admin.permissions.modals.edit.metadata_section",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.title",
+        "full_key": "permissions.admin.permissions.modals.edit.title",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.changes",
+        "full_key": "permissions.admin.permissions.modals.roles.changes",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.current_permissions",
+        "full_key": "permissions.admin.permissions.modals.roles.current_permissions",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.description",
+        "full_key": "permissions.admin.permissions.modals.roles.description",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.edit_section",
+        "full_key": "permissions.admin.permissions.modals.roles.edit_section",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.overview_for",
+        "full_key": "permissions.admin.permissions.modals.roles.overview_for",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.select_role",
+        "full_key": "permissions.admin.permissions.modals.roles.select_role",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.selected_permissions",
+        "full_key": "permissions.admin.permissions.modals.roles.selected_permissions",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.set_permissions_section",
+        "full_key": "permissions.admin.permissions.modals.roles.set_permissions_section",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.title",
+        "full_key": "permissions.admin.permissions.modals.roles.title",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.assigned.heading",
+        "full_key": "permissions.admin.permissions.overview.assigned.heading",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.assigned.text",
+        "full_key": "permissions.admin.permissions.overview.assigned.text",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.description",
+        "full_key": "permissions.admin.permissions.overview.description",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.guards.heading",
+        "full_key": "permissions.admin.permissions.overview.guards.heading",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.guards.text",
+        "full_key": "permissions.admin.permissions.overview.guards.text",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.title",
+        "full_key": "permissions.admin.permissions.overview.title",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.total.heading",
+        "full_key": "permissions.admin.permissions.overview.total.heading",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.total.text",
+        "full_key": "permissions.admin.permissions.overview.total.text",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.unassigned.heading",
+        "full_key": "permissions.admin.permissions.overview.unassigned.heading",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.unassigned.text",
+        "full_key": "permissions.admin.permissions.overview.unassigned.text",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.table.columns.assigned_roles",
+        "full_key": "permissions.admin.permissions.table.columns.assigned_roles",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.table.columns.flags",
+        "full_key": "permissions.admin.permissions.table.columns.flags",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.table.columns.sort",
+        "full_key": "permissions.admin.permissions.table.columns.sort",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.table.description",
+        "full_key": "permissions.admin.permissions.table.description",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.table.empty",
+        "full_key": "permissions.admin.permissions.table.empty",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.table.title",
+        "full_key": "permissions.admin.permissions.table.title",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.title",
+        "full_key": "permissions.admin.permissions.title",
+        "file": "lang/en/permissions.php"
+    },
+    {
+        "locale": "en",
+        "group": "roles",
+        "key": "admin.roles.actions.create",
+        "full_key": "roles.admin.roles.actions.create",
+        "file": "lang/en/roles.php"
+    },
+    {
+        "locale": "en",
+        "group": "roles",
+        "key": "admin.roles.badge.color",
+        "full_key": "roles.admin.roles.badge.color",
+        "file": "lang/en/roles.php"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.all",
+        "full_key": "states.ui.states.all",
+        "file": "lang/en/states.php"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.assigned",
+        "full_key": "states.ui.states.assigned",
+        "file": "lang/en/states.php"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.custom",
+        "full_key": "states.ui.states.custom",
+        "file": "lang/en/states.php"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.no_changes",
+        "full_key": "states.ui.states.no_changes",
+        "file": "lang/en/states.php"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.non_system",
+        "full_key": "states.ui.states.non_system",
+        "file": "lang/en/states.php"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.other",
+        "full_key": "states.ui.states.other",
+        "file": "lang/en/states.php"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.system",
+        "full_key": "states.ui.states.system",
+        "file": "lang/en/states.php"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.unassigned",
+        "full_key": "states.ui.states.unassigned",
+        "file": "lang/en/states.php"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.unsaved_changes",
+        "full_key": "states.ui.states.unsaved_changes",
+        "file": "lang/en/states.php"
+    },
+    {
+        "locale": "en",
         "group": "ui",
         "key": "actions.save",
         "full_key": "ui.actions.save",
+        "file": "lang/en/ui.php"
+    },
+    {
+        "locale": "en",
+        "group": "ui",
+        "key": "actions.save_changes",
+        "full_key": "ui.actions.save_changes",
         "file": "lang/en/ui.php"
     },
     {
@@ -933,8 +2634,22 @@
     {
         "locale": "en",
         "group": "ui",
+        "key": "labels.number",
+        "full_key": "ui.labels.number",
+        "file": "lang/en/ui.php"
+    },
+    {
+        "locale": "en",
+        "group": "ui",
         "key": "labels.number_short",
         "full_key": "ui.labels.number_short",
+        "file": "lang/en/ui.php"
+    },
+    {
+        "locale": "en",
+        "group": "ui",
+        "key": "labels.preview",
+        "full_key": "ui.labels.preview",
         "file": "lang/en/ui.php"
     },
     {
@@ -982,6 +2697,13 @@
     {
         "locale": "en",
         "group": "ui",
+        "key": "states.no",
+        "full_key": "ui.states.no",
+        "file": "lang/en/ui.php"
+    },
+    {
+        "locale": "en",
+        "group": "ui",
         "key": "states.no_changes",
         "full_key": "ui.states.no_changes",
         "file": "lang/en/ui.php"
@@ -1019,6 +2741,13 @@
         "group": "ui",
         "key": "states.unsaved_changes",
         "full_key": "ui.states.unsaved_changes",
+        "file": "lang/en/ui.php"
+    },
+    {
+        "locale": "en",
+        "group": "ui",
+        "key": "states.yes",
+        "full_key": "ui.states.yes",
         "file": "lang/en/ui.php"
     }
 ]

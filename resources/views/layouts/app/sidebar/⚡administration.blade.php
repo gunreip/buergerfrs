@@ -69,15 +69,44 @@
         {{ __('Permissions') }}
     </flux:sidebar.item>
 
-    {{-- Admin -> translations --}}
-    <flux:sidebar.item
+    {{-- Admin -> translations (group) --}}
+    <flux:sidebar.group
+        class="grid"
+        :heading="__('Translations')"
         icon="languages"
-        :href="route('admin.translations')"
-        :current="request()->routeIs('admin.translations')"
-        wire:navigate
+        expandable
+        :expanded="request()->routeIs('admin.translations') || request()->routeIs('admin.translation-statistics') || request()->routeIs('admin.translation-sub-languages')"
     >
-        {{ __('Translations') }}
-    </flux:sidebar.item>
+        {{-- Admin -> translations -> management --}}
+        <flux:sidebar.item
+            icon="table-cells"
+            :href="route('admin.translations')"
+            :current="request()->routeIs('admin.translations')"
+            wire:navigate
+        >
+            {{ __('Management') }}
+        </flux:sidebar.item>
+
+        {{-- Admin -> translations -> sub-languages --}}
+        <flux:sidebar.item
+            icon="languages"
+            :href="route('admin.translation-sub-languages')"
+            :current="request()->routeIs('admin.translation-sub-languages')"
+            wire:navigate
+        >
+            {{ __('Sub-Languages') }}
+        </flux:sidebar.item>
+
+        {{-- Admin -> translations -> statistics --}}
+        <flux:sidebar.item
+            icon="chart-bar"
+            :href="route('admin.translation-statistics')"
+            :current="request()->routeIs('admin.translation-statistics')"
+            wire:navigate
+        >
+            {{ __('Statistics') }}
+        </flux:sidebar.item>
+    </flux:sidebar.group>
 
     {{-- Admin -> app settings --}}
     <flux:sidebar.item
@@ -98,7 +127,7 @@
             'sidebar-group-attention-dot' => $htmlViewAuditNeedsAttention,
         ])
         expandable
-        :expanded="request()->routeIs('admin.country-references') || request()->routeIs('admin.html-view-audit')"
+        :expanded="request()->routeIs('admin.country-references') || request()->routeIs('admin.flag-references') || request()->routeIs('admin.html-view-audit')"
     >
 
         {{-- Admin -> reference -> countries --}}
@@ -109,6 +138,16 @@
             wire:navigate
         >
             {{ __('Countries') }}
+        </flux:sidebar.item>
+
+        {{-- Admin -> reference -> flags --}}
+        <flux:sidebar.item
+            icon="flag"
+            :href="route('admin.flag-references')"
+            :current="request()->routeIs('admin.flag-references')"
+            wire:navigate
+        >
+            {{ __('Flags') }}
         </flux:sidebar.item>
 
         {{-- Admin -> reference -> HTML tags check --}}

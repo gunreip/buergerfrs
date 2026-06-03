@@ -1,6 +1,6 @@
 {{-- resources/views/components/ui/table/pagination.blade.php --}}
 
-@props(['paginator', 'scrollTo' => null])
+@props(['paginator', 'scrollTo' => null, 'pageName' => 'page'])
 
 @if ($paginator->hasPages())
     @php
@@ -60,7 +60,8 @@
                         class="enabled:hover:bg-sky-300/30! enabled:hover:text-white!"
                         size="sm"
                         icon="chevrons-left"
-                        x-on:click="$wire.setPage(1).then(() => scrollAfterPagination())"
+                        wire:click="setPage(1, '{{ $pageName }}')"
+                        x-on:click="scrollAfterPagination()"
                         :disabled="$paginator->onFirstPage()"
                     />
 
@@ -68,7 +69,8 @@
                         class="enabled:hover:bg-sky-300/30! enabled:hover:text-white!"
                         size="sm"
                         icon="chevron-left"
-                        x-on:click="$wire.previousPage().then(() => scrollAfterPagination())"
+                        wire:click="previousPage('{{ $pageName }}')"
+                        x-on:click="scrollAfterPagination()"
                         :disabled="$paginator->onFirstPage()"
                     />
 
@@ -76,7 +78,8 @@
                         <flux:button
                             class="hover:bg-white/5! text-zinc-300"
                             size="sm"
-                            x-on:click="$wire.setPage(1).then(() => scrollAfterPagination())"
+                            wire:click="setPage(1, '{{ $pageName }}')"
+                            x-on:click="scrollAfterPagination()"
                         >
                             1
                         </flux:button>
@@ -96,7 +99,7 @@
                     @for ($page = $windowStart; $page <= $windowEnd; $page++)
                         <flux:button
                             size="sm"
-                            wire:click="setPage({{ $page }})"
+                            wire:click="setPage({{ $page }}, '{{ $pageName }}')"
                             x-on:click="scrollAfterPagination()"
                             @class([
                                 'bg-sky-400/10! text-white! ring-1 ring-sky-400/20!' =>
@@ -124,7 +127,7 @@
                         <flux:button
                             class="hover:bg-white/5! text-zinc-300"
                             size="sm"
-                            wire:click="setPage({{ $lastPage }})"
+                            wire:click="setPage({{ $lastPage }}, '{{ $pageName }}')"
                             x-on:click="scrollAfterPagination()"
                         >
                             {{ $lastPage }}
@@ -135,7 +138,7 @@
                         class="enabled:hover:bg-sky-300/30! enabled:hover:text-white!"
                         size="sm"
                         icon="chevron-right"
-                        wire:click="nextPage"
+                        wire:click="nextPage('{{ $pageName }}')"
                         :disabled="! $paginator->hasMorePages()"
                         x-on:click="scrollAfterPagination()"
                     />
@@ -144,7 +147,7 @@
                         class="enabled:hover:bg-sky-300/30! enabled:hover:text-white!"
                         size="sm"
                         icon="chevrons-right"
-                        wire:click="setPage({{ $lastPage }})"
+                        wire:click="setPage({{ $lastPage }}, '{{ $pageName }}')"
                         :disabled="! $paginator->hasMorePages()"
                         x-on:click="scrollAfterPagination()"
                     />

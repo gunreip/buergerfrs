@@ -1,12 +1,27 @@
 [
     {
         "locale": "de",
-        "files": 2,
-        "keys": 73
+        "files": 12,
+        "keys": 195
+    },
+    {
+        "locale": "de-at",
+        "files": 1,
+        "keys": 1
+    },
+    {
+        "locale": "de-ch",
+        "files": 1,
+        "keys": 1
+    },
+    {
+        "locale": "de-it",
+        "files": 1,
+        "keys": 1
     },
     {
         "locale": "en",
-        "files": 2,
-        "keys": 73
+        "files": 12,
+        "keys": 195
     }
 ]

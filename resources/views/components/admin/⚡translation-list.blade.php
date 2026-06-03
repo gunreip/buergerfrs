@@ -5,7 +5,10 @@
     TODO: switch per toggle
 @endphp --}}
 
-<flux:card>
+<flux:card
+    x-data="{}"
+    x-on:translation-obsolete-reviewed.window="$wire.markObsoleteAsReviewed(Number($event.detail.translationKeyId ?? 0))"
+>
     {{-- <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between"> --}}
     <x-ui.headers.page
         :title="__('Translation Management')"
@@ -30,6 +33,7 @@
     {{-- Translation values edit modal --}}
     @include('components.admin.partials.translation-list.⚡modal-edit', [
         'editingTranslationKey' => $editingTranslationKey,
+        'nextEditTranslationKeyId' => $nextEditTranslationKeyId,
     ])
 
     {{-- Translation history modal --}}

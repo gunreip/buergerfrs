@@ -4,6 +4,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Livewire\Concerns\InteractsWithUserSettings;
 use App\Settings\AppDisplaySettings;
 use App\Support\Audit\AdminActivity;
 use App\Support\Icons\IconRegistry;
@@ -20,7 +21,10 @@ use Spatie\Permission\Models\Role;
  */
 class RoleList extends Component
 {
+    use InteractsWithUserSettings;
     use WithPagination;
+
+    private const UI_STATE_SETTING_KEY = 'ui.pages.admin_role_list';
 
     public bool $showEditRoleModal = false;
 
@@ -82,6 +86,33 @@ class RoleList extends Component
 
     public int $perPage = 25;
 
+    public function mount(): void
+    {
+        $state = $this->userSetting(self::UI_STATE_SETTING_KEY, []);
+
+        if (is_array($state)) {
+            $this->search = trim((string) ($state['search'] ?? $this->search));
+            $this->categoryFilter = trim((string) ($state['categoryFilter'] ?? $this->categoryFilter));
+            $this->assignableFilter = trim((string) ($state['assignableFilter'] ?? $this->assignableFilter));
+            $this->systemFilter = trim((string) ($state['systemFilter'] ?? $this->systemFilter));
+            $this->perPage = (int) ($state['perPage'] ?? $this->perPage);
+            $this->perPage = $this->normalizedPerPage();
+
+            $sortField = trim((string) ($state['sortField'] ?? $this->sortField));
+            $this->sortField = in_array($sortField, [
+                'name',
+                'category',
+                'sort_order',
+                'users_count',
+            ], true) ? $sortField : 'sort_order';
+
+            $sortDirection = trim((string) ($state['sortDirection'] ?? $this->sortDirection));
+            $this->sortDirection = in_array($sortDirection, ['asc', 'desc'], true) ? $sortDirection : 'asc';
+        }
+
+        $this->setPage(1);
+    }
+
     /**
      * Reset pagination when a filter changes.
      */
@@ -96,6 +127,24 @@ class RoleList extends Component
         ], true)) {
             $this->resetPage();
         }
+    }
+
+    public function updated(string $property): void
+    {
+        if (in_array($property, [
+            'search',
+            'categoryFilter',
+            'assignableFilter',
+            'systemFilter',
+        ], true)) {
+            $this->persistUiState();
+        }
+    }
+
+    public function updatedPerPage(): void
+    {
+        $this->perPage = $this->normalizedPerPage();
+        $this->persistUiState();
     }
 
     /**
@@ -435,6 +484,7 @@ class RoleList extends Component
         if ($this->sortField === $field) {
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
             $this->resetPage();
+            $this->persistUiState();
 
             return;
         }
@@ -443,6 +493,7 @@ class RoleList extends Component
         $this->sortDirection = 'asc';
 
         $this->resetPage();
+        $this->persistUiState();
     }
 
     /**
@@ -457,6 +508,20 @@ class RoleList extends Component
         $this->perPage = 10;
 
         $this->resetPage();
+        $this->persistUiState();
+    }
+
+    private function persistUiState(): void
+    {
+        $this->setUserSetting(self::UI_STATE_SETTING_KEY, [
+            'search' => $this->search,
+            'categoryFilter' => $this->categoryFilter,
+            'assignableFilter' => $this->assignableFilter,
+            'systemFilter' => $this->systemFilter,
+            'perPage' => $this->perPage,
+            'sortField' => $this->sortField,
+            'sortDirection' => $this->sortDirection,
+        ]);
     }
 
     /**

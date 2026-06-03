@@ -15,6 +15,9 @@ use Spatie\Backup\BackupDestination\BackupDestinationFactory;
 use Spatie\Backup\Config\Config;
 use Throwable;
 
+/**
+ * Creates database backups and applies project-specific retention rules.
+ */
 class ProjectDbBackup extends Command
 {
     /**

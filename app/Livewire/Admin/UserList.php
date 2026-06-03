@@ -4,6 +4,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Livewire\Concerns\InteractsWithUserSettings;
 use App\Models\User;
 use App\Support\Audit\AdminActivity;
 use App\Support\Settings\RoleBadgeResolver;
@@ -19,10 +20,14 @@ use Spatie\Permission\Models\Role;
  */
 class UserList extends Component
 {
-    private const PER_PAGE_SETTING_KEY = 'ui.per_page.admin_users';
+    use InteractsWithUserSettings;
 
     use WithoutUrlPagination;
     use WithPagination;
+
+    private const UI_STATE_SETTING_KEY = 'ui.pages.admin_user_list';
+
+    private const LEGACY_PER_PAGE_SETTING_KEY = 'ui.per_page.admin_users';
 
     public $search = '';
 
@@ -51,9 +56,28 @@ class UserList extends Component
      */
     public function mount(): void
     {
-        $this->perPage = $this->normalizePerPage(
-            Auth::user()?->setting(self::PER_PAGE_SETTING_KEY, $this->perPage)
-        );
+        $state = $this->userSetting(self::UI_STATE_SETTING_KEY, []);
+
+        if (is_array($state)) {
+            $this->search = trim((string) ($state['search'] ?? $this->search));
+            $this->roleFilter = trim((string) ($state['roleFilter'] ?? $this->roleFilter));
+            $this->perPage = $this->normalizePerPage($state['perPage'] ?? $this->perPage);
+
+            $sortField = trim((string) ($state['sortField'] ?? $this->sortField));
+            $this->sortField = in_array($sortField, [
+                'id',
+                'name',
+                'email',
+                'roles.name',
+            ], true) ? $sortField : 'id';
+
+            $sortDirection = trim((string) ($state['sortDirection'] ?? $this->sortDirection));
+            $this->sortDirection = in_array($sortDirection, ['asc', 'desc'], true) ? $sortDirection : 'asc';
+        } else {
+            $this->perPage = $this->normalizePerPage(
+                $this->userSetting(self::LEGACY_PER_PAGE_SETTING_KEY, $this->perPage)
+            );
+        }
 
         $this->setPage(1);
     }
@@ -67,11 +91,20 @@ class UserList extends Component
     }
 
     /**
+     * Persist list state when search text changed.
+     */
+    public function updatedSearch(): void
+    {
+        $this->persistUiState();
+    }
+
+    /**
      * Reset pagination when role filter changes.
      */
     public function updatedRoleFilter(): void
     {
         $this->setPage(1);
+        $this->persistUiState();
     }
 
     /**
@@ -81,14 +114,8 @@ class UserList extends Component
     {
         $this->perPage = $this->normalizePerPage($this->perPage);
 
-        $user = Auth::user();
-
-        if ($user instanceof User) {
-            $user->setSetting(self::PER_PAGE_SETTING_KEY, $this->perPage);
-            $user->save();
-        }
-
         $this->setPage(1);
+        $this->persistUiState();
     }
 
     /**
@@ -165,6 +192,7 @@ class UserList extends Component
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
 
             $this->resetPage();
+            $this->persistUiState();
 
             return;
         }
@@ -173,6 +201,18 @@ class UserList extends Component
         $this->sortDirection = 'asc';
 
         $this->resetPage();
+        $this->persistUiState();
+    }
+
+    private function persistUiState(): void
+    {
+        $this->setUserSetting(self::UI_STATE_SETTING_KEY, [
+            'search' => $this->search,
+            'roleFilter' => $this->roleFilter,
+            'perPage' => $this->perPage,
+            'sortField' => $this->sortField,
+            'sortDirection' => $this->sortDirection,
+        ]);
     }
 
     /**

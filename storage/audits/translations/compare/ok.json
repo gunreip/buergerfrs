@@ -4,9 +4,15 @@
         "usage_count": 1,
         "defined_locales": [
             "de",
+            "de-at",
+            "de-ch",
+            "de-it",
             "en"
         ],
         "defined_files": [
+            "lang/de-at/admin.php",
+            "lang/de-ch/admin.php",
+            "lang/de-it/admin.php",
             "lang/de/admin.php",
             "lang/en/admin.php"
         ],
@@ -273,13 +279,13 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 340,
+                "line": 397,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.no_changes.heading')"
             },
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 402,
+                "line": 459,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.no_changes.heading')"
             }
@@ -299,13 +305,13 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 341,
+                "line": 398,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged', [\n                    'role' => $role->name,\n                ])"
             },
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 403,
+                "line": 460,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged', [\n                    'permission' => $permission->name,\n                ])"
             }
@@ -325,7 +331,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 437,
+                "line": 494,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.permission_saved.heading')"
             }
@@ -345,7 +351,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 438,
+                "line": 495,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.permission_saved.text', [\n                'permission' => $permission->name,\n            ])"
             }
@@ -365,7 +371,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 366,
+                "line": 423,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.role_permissions_saved.heading')"
             }
@@ -385,7 +391,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 367,
+                "line": 424,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.role_permissions_saved.text', [\n                'role' => $role->name,\n            ])"
             }
@@ -1090,6 +1096,528 @@
         ]
     },
     {
+        "full_key": "admin.roles.actions.create",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/⚡role-list.blade.php",
+                "line": 21,
+                "function": "__",
+                "raw": "__('admin.roles.actions.create')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.badge.color",
+        "usage_count": 2,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "line": 88,
+                "function": "__",
+                "raw": "__('admin.roles.badge.color')"
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 105,
+                "function": "__",
+                "raw": "__('admin.roles.badge.color')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.badge.icon",
+        "usage_count": 2,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "line": 107,
+                "function": "__",
+                "raw": "__('admin.roles.badge.icon')"
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 129,
+                "function": "__",
+                "raw": "__('admin.roles.badge.icon')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.badge.title",
+        "usage_count": 2,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "line": 78,
+                "function": "__",
+                "raw": "__('admin.roles.badge.title')"
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 100,
+                "function": "__",
+                "raw": "__('admin.roles.badge.title')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.badge.variant",
+        "usage_count": 2,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "line": 95,
+                "function": "__",
+                "raw": "__('admin.roles.badge.variant')"
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 117,
+                "function": "__",
+                "raw": "__('admin.roles.badge.variant')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.description",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/⚡role-list.blade.php",
+                "line": 15,
+                "function": "__",
+                "raw": "__('admin.roles.description')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.labels.assignable_through_ui",
+        "usage_count": 2,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "line": 71,
+                "function": "__",
+                "raw": "__('admin.roles.labels.assignable_through_ui')"
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 93,
+                "function": "__",
+                "raw": "__('admin.roles.labels.assignable_through_ui')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.labels.assigned_users",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 53,
+                "function": "__",
+                "raw": "__('admin.roles.labels.assigned_users')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.labels.sort_order",
+        "usage_count": 2,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "line": 55,
+                "function": "__",
+                "raw": "__('admin.roles.labels.sort_order')"
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 77,
+                "function": "__",
+                "raw": "__('admin.roles.labels.sort_order')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.labels.system_role",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 41,
+                "function": "__",
+                "raw": "__('admin.roles.labels.system_role')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.messages.not_allowed.heading",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "app/Livewire/Admin/RoleList.php",
+                "line": 187,
+                "function": "__",
+                "raw": "__('admin.roles.messages.not_allowed.heading')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.messages.not_allowed.only_super_admins_may_create_roles",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "app/Livewire/Admin/RoleList.php",
+                "line": 189,
+                "function": "__",
+                "raw": "__('admin.roles.messages.not_allowed.only_super_admins_may_create_roles')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.messages.role_created.heading",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "app/Livewire/Admin/RoleList.php",
+                "line": 265,
+                "function": "__",
+                "raw": "__('admin.roles.messages.role_created.heading')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.messages.role_created.text",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "app/Livewire/Admin/RoleList.php",
+                "line": 267,
+                "function": "__",
+                "raw": "__('admin.roles.messages.role_created.text', [\n                'role' => $role->name,\n            ])"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.messages.role_saved.heading",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "app/Livewire/Admin/RoleList.php",
+                "line": 432,
+                "function": "__",
+                "raw": "__('admin.roles.messages.role_saved.heading')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.messages.role_saved.text",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "app/Livewire/Admin/RoleList.php",
+                "line": 434,
+                "function": "__",
+                "raw": "__('admin.roles.messages.role_saved.text', [\n                'role' => $savedRoleName,\n            ])"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.modals.create.description",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "line": 19,
+                "function": "__",
+                "raw": "__('admin.roles.modals.create.description')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.modals.create.name_placeholder",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "line": 32,
+                "function": "__",
+                "raw": "__('admin.roles.modals.create.name_placeholder')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.modals.create.title",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "line": 12,
+                "function": "__",
+                "raw": "__('admin.roles.modals.create.title')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.modals.edit.title",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 12,
+                "function": "__",
+                "raw": "__('admin.roles.modals.edit.title')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.preview.new_role",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "line": 126,
+                "function": "__",
+                "raw": "__('admin.roles.preview.new_role')"
+            }
+        ]
+    },
+    {
+        "full_key": "admin.roles.title",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/admin.php",
+            "lang/en/admin.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/⚡role-list.blade.php",
+                "line": 13,
+                "function": "__",
+                "raw": "__('admin.roles.title')"
+            }
+        ]
+    },
+    {
+        "full_key": "management.people.create_person.form_person.emergency",
+        "usage_count": 2,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/management.php",
+            "lang/en/management.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+                "line": 155,
+                "function": "__",
+                "raw": "__('management.people.create_person.form_person.emergency')"
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+                "line": 158,
+                "function": "__",
+                "raw": "__('management.people.create_person.form_person.emergency')"
+            }
+        ]
+    },
+    {
+        "full_key": "pages.settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/pages.php",
+            "lang/en/pages.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/pages/settings/⚡profile.blade.php",
+                "line": 68,
+                "function": "__",
+                "raw": "__('pages.settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars')"
+            }
+        ]
+    },
+    {
         "full_key": "ui.actions.save",
         "usage_count": 1,
         "defined_locales": [
@@ -1106,6 +1634,26 @@
                 "line": 104,
                 "function": "__",
                 "raw": "__('ui.actions.save')"
+            }
+        ]
+    },
+    {
+        "full_key": "ui.actions.save_changes",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/ui.php",
+            "lang/en/ui.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 163,
+                "function": "__",
+                "raw": "__('ui.actions.save_changes')"
             }
         ]
     },
@@ -1350,6 +1898,26 @@
         ]
     },
     {
+        "full_key": "ui.labels.number",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/ui.php",
+            "lang/en/ui.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                "line": 18,
+                "function": "__",
+                "raw": "__('ui.labels.number')"
+            }
+        ]
+    },
+    {
         "full_key": "ui.labels.number_short",
         "usage_count": 1,
         "defined_locales": [
@@ -1366,6 +1934,32 @@
                 "line": 23,
                 "function": "__",
                 "raw": "__('ui.labels.number_short')"
+            }
+        ]
+    },
+    {
+        "full_key": "ui.labels.preview",
+        "usage_count": 2,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/ui.php",
+            "lang/en/ui.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "line": 121,
+                "function": "__",
+                "raw": "__('ui.labels.preview')"
+            },
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 143,
+                "function": "__",
+                "raw": "__('ui.labels.preview')"
             }
         ]
     },
@@ -1520,6 +2114,26 @@
         ]
     },
     {
+        "full_key": "ui.states.no",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/ui.php",
+            "lang/en/ui.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 46,
+                "function": "__",
+                "raw": "__('ui.states.no')"
+            }
+        ]
+    },
+    {
         "full_key": "ui.states.no_changes",
         "usage_count": 1,
         "defined_locales": [
@@ -1654,6 +2268,26 @@
                 "line": 127,
                 "function": "__",
                 "raw": "__('ui.states.unsaved_changes')"
+            }
+        ]
+    },
+    {
+        "full_key": "ui.states.yes",
+        "usage_count": 1,
+        "defined_locales": [
+            "de",
+            "en"
+        ],
+        "defined_files": [
+            "lang/de/ui.php",
+            "lang/en/ui.php"
+        ],
+        "usages": [
+            {
+                "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "line": 46,
+                "function": "__",
+                "raw": "__('ui.states.yes')"
             }
         ]
     }

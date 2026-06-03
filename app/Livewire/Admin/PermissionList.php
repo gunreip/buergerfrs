@@ -4,6 +4,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Livewire\Concerns\InteractsWithUserSettings;
 use App\Support\Audit\AdminActivity;
 use Flux\Flux;
 use Livewire\Component;
@@ -17,7 +18,10 @@ use Spatie\Permission\PermissionRegistrar;
  */
 class PermissionList extends Component
 {
+    use InteractsWithUserSettings;
     use WithPagination;
+
+    private const UI_STATE_SETTING_KEY = 'ui.pages.admin_permission_list';
 
     public string $search = '';
 
@@ -69,6 +73,36 @@ class PermissionList extends Component
 
     public int $selectedRoleCurrentPermissionCount = 0;
 
+    public function mount(): void
+    {
+        $state = $this->userSetting(self::UI_STATE_SETTING_KEY, []);
+
+        if (is_array($state)) {
+            $this->search = trim((string) ($state['search'] ?? $this->search));
+            $this->guardFilter = trim((string) ($state['guardFilter'] ?? $this->guardFilter));
+            $this->roleFilter = trim((string) ($state['roleFilter'] ?? $this->roleFilter));
+            $this->assignmentFilter = trim((string) ($state['assignmentFilter'] ?? $this->assignmentFilter));
+            $this->categoryFilter = trim((string) ($state['categoryFilter'] ?? $this->categoryFilter));
+            $this->systemFilter = trim((string) ($state['systemFilter'] ?? $this->systemFilter));
+            $this->perPage = (int) ($state['perPage'] ?? $this->perPage);
+            $this->perPage = $this->normalizedPerPage();
+
+            $sortField = trim((string) ($state['sortField'] ?? $this->sortField));
+            $this->sortField = in_array($sortField, [
+                'name',
+                'guard_name',
+                'category',
+                'sort_order',
+                'roles_count',
+            ], true) ? $sortField : 'sort_order';
+
+            $sortDirection = trim((string) ($state['sortDirection'] ?? $this->sortDirection));
+            $this->sortDirection = in_array($sortDirection, ['asc', 'desc'], true) ? $sortDirection : 'asc';
+        }
+
+        $this->setPage(1);
+    }
+
     /**
      * Reset pagination when a filter changes.
      */
@@ -87,6 +121,26 @@ class PermissionList extends Component
         }
     }
 
+    public function updated(string $property): void
+    {
+        if (in_array($property, [
+            'search',
+            'guardFilter',
+            'roleFilter',
+            'assignmentFilter',
+            'categoryFilter',
+            'systemFilter',
+        ], true)) {
+            $this->persistUiState();
+        }
+    }
+
+    public function updatedPerPage(): void
+    {
+        $this->perPage = $this->normalizedPerPage();
+        $this->persistUiState();
+    }
+
     /**
      * Reset active filters to defaults.
      */
@@ -101,6 +155,7 @@ class PermissionList extends Component
         $this->perPage = 10;
 
         $this->resetPage();
+        $this->persistUiState();
     }
 
     /**
@@ -124,6 +179,7 @@ class PermissionList extends Component
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
 
             $this->resetPage();
+            $this->persistUiState();
 
             return;
         }
@@ -132,6 +188,7 @@ class PermissionList extends Component
         $this->sortDirection = 'asc';
 
         $this->resetPage();
+        $this->persistUiState();
     }
 
     /**
@@ -451,6 +508,21 @@ class PermissionList extends Component
         return in_array($this->perPage, [10, 25, 50, 100], true)
             ? $this->perPage
             : 10;
+    }
+
+    private function persistUiState(): void
+    {
+        $this->setUserSetting(self::UI_STATE_SETTING_KEY, [
+            'search' => $this->search,
+            'guardFilter' => $this->guardFilter,
+            'roleFilter' => $this->roleFilter,
+            'assignmentFilter' => $this->assignmentFilter,
+            'categoryFilter' => $this->categoryFilter,
+            'systemFilter' => $this->systemFilter,
+            'perPage' => $this->perPage,
+            'sortField' => $this->sortField,
+            'sortDirection' => $this->sortDirection,
+        ]);
     }
 
     public function render()

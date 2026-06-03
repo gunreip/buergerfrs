@@ -1,7 +1,7 @@
 {
     "preview": true,
     "preview_limit": 20,
-    "total": 141,
+    "total": 143,
     "items": [
         {
             "classification": "key",
@@ -11,7 +11,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 340
+            "line": 397
         },
         {
             "classification": "key",
@@ -21,7 +21,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 341
+            "line": 398
         },
         {
             "classification": "key",
@@ -31,7 +31,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 366
+            "line": 423
         },
         {
             "classification": "key",
@@ -41,7 +41,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 367
+            "line": 424
         },
         {
             "classification": "key",
@@ -51,7 +51,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 402
+            "line": 459
         },
         {
             "classification": "key",
@@ -61,7 +61,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 403
+            "line": 460
         },
         {
             "classification": "key",
@@ -71,7 +71,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 437
+            "line": 494
         },
         {
             "classification": "key",
@@ -81,7 +81,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 438
+            "line": 495
         },
         {
             "classification": "key",
@@ -91,7 +91,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/RoleList.php",
-            "line": 138
+            "line": 187
         },
         {
             "classification": "key",
@@ -101,7 +101,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/RoleList.php",
-            "line": 140
+            "line": 189
         },
         {
             "classification": "key",
@@ -111,7 +111,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/RoleList.php",
-            "line": 216
+            "line": 265
         },
         {
             "classification": "key",
@@ -121,7 +121,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/RoleList.php",
-            "line": 218
+            "line": 267
         },
         {
             "classification": "key",
@@ -131,7 +131,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/RoleList.php",
-            "line": 383
+            "line": 432
         },
         {
             "classification": "key",
@@ -141,7 +141,7 @@
             "reason": null,
             "suggested_key": null,
             "file": "app/Livewire/Admin/RoleList.php",
-            "line": 385
+            "line": 434
         },
         {
             "classification": "key",

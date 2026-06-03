@@ -1,0 +1,133 @@
+/* resources/css/tooltip.css */
+
+/*
+ * Tooltip context convention:
+ * - default: neutral tooltip, no emphasis.
+ * - info: explanatory or non-critical guidance.
+ * - success: confirmed/healthy states (e.g. reviewed/ok).
+ * - warning: caution states (e.g. obsolete/dynamic).
+ * - danger: blocking/error/missing/required states.
+ */
+
+@layer components {
+    .my-tooltip {
+        --tooltip-bg: #27272a;
+        --tooltip-border: #52525b;
+        --tooltip-title: #f4f4f5;
+        --tooltip-text: #e4e4e7;
+        --tooltip-muted: #d4d4d8;
+        --tooltip-divider: rgb(82 82 91 / 0.65);
+        --tooltip-icon: #d4d4d8;
+
+        border-radius: 0.5rem;
+        border: 1px solid var(--tooltip-border);
+        background-color: var(--tooltip-bg);
+        color: var(--tooltip-text);
+        box-shadow: 0 14px 38px rgb(0 0 0 / 0.35);
+    }
+
+    .my-tooltip .tooltip-title {
+        color: var(--tooltip-title);
+    }
+
+    .my-tooltip .tooltip-content {
+        color: var(--tooltip-text);
+    }
+
+    .my-tooltip .tooltip-action {
+        border-top-color: var(--tooltip-divider);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .my-tooltip .tooltip-action-text {
+        color: var(--tooltip-muted);
+        min-width: 0;
+        flex: 1 1 auto;
+        margin: 0;
+    }
+
+    .my-tooltip .tooltip-action-button {
+        flex: 0 0 auto;
+        width: auto;
+        min-width: max-content;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 30rem) {
+        .my-tooltip .tooltip-action {
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .my-tooltip .tooltip-action-text {
+            flex-basis: 100%;
+        }
+
+        .my-tooltip .tooltip-action-button {
+            margin-left: 0;
+        }
+    }
+
+    .my-tooltip :is(svg, .my-tooltip-icon):first-child {
+        color: var(--tooltip-icon);
+    }
+
+    .my-tooltip.tooltip-context--info {
+        --tooltip-bg: #082f49;
+        --tooltip-border: #0c4a6e;
+        --tooltip-title: #e0f2fe;
+        --tooltip-text: #bae6fd;
+        --tooltip-muted: #7dd3fc;
+        --tooltip-divider: rgb(56 189 248 / 0.35);
+        --tooltip-icon: #7dd3fc;
+    }
+
+    .my-tooltip.tooltip-context--success {
+        --tooltip-bg: #052e16;
+        --tooltip-border: #166534;
+        --tooltip-title: #dcfce7;
+        --tooltip-text: #bbf7d0;
+        --tooltip-muted: #86efac;
+        --tooltip-divider: rgb(34 197 94 / 0.35);
+        --tooltip-icon: #86efac;
+    }
+
+    .my-tooltip.tooltip-context--warning,
+    .my-tooltip.tooltip-context--obsolete,
+    .my-tooltip.tooltip-context--dynamic {
+        --tooltip-bg: #422006;
+        --tooltip-border: #92400e;
+        --tooltip-title: #fef3c7;
+        --tooltip-text: #fde68a;
+        --tooltip-muted: #fcd34d;
+        --tooltip-divider: rgb(245 158 11 / 0.35);
+        --tooltip-icon: #fcd34d;
+    }
+
+    .my-tooltip.tooltip-context--danger,
+    .my-tooltip.tooltip-context--error,
+    .my-tooltip.tooltip-context--missing,
+    .my-tooltip.tooltip-context--required {
+        --tooltip-bg: #450a0a;
+        --tooltip-border: #991b1b;
+        --tooltip-title: #fee2e2;
+        --tooltip-text: #fecaca;
+        --tooltip-muted: #fca5a5;
+        --tooltip-divider: rgb(248 113 113 / 0.35);
+        --tooltip-icon: #fca5a5;
+    }
+
+    .my-tooltip.tooltip-context--reviewed,
+    .my-tooltip.tooltip-context--ok {
+        --tooltip-bg: #052e16;
+        --tooltip-border: #166534;
+        --tooltip-title: #dcfce7;
+        --tooltip-text: #bbf7d0;
+        --tooltip-muted: #86efac;
+        --tooltip-divider: rgb(34 197 94 / 0.35);
+        --tooltip-icon: #86efac;
+    }
+}

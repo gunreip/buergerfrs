@@ -8,6 +8,9 @@ use RuntimeException;
 use Symfony\Component\Process\Process;
 use Throwable;
 
+/**
+ * Runs tests with guaranteed database snapshot backup and restore safeguards.
+ */
 class ProjectTestSafe extends Command
 {
     /**
@@ -46,6 +49,10 @@ class ProjectTestSafe extends Command
             $this->error('❌ project:test-safe unterstützt aktuell nur PostgreSQL als aktive DB-Verbindung.');
             $this->warn('ℹ️ Aktiver Driver: ' . $driver);
 
+            $this->logRunActivity('project.test_safe.failed', 'Test-safe run failed due to unsupported database driver.', [
+                'driver' => $driver,
+            ]);
+
             return self::FAILURE;
         }
 
@@ -58,6 +65,11 @@ class ProjectTestSafe extends Command
 
             if ($lintExit !== self::SUCCESS) {
                 $this->error('❌ Lint-Check fehlgeschlagen. Testlauf wird nicht gestartet.');
+
+                $this->logRunActivity('project.test_safe.failed', 'Test-safe run aborted because lint check failed.', [
+                    'with_lint' => true,
+                    'lint_exit_code' => $lintExit,
+                ]);
 
                 return self::FAILURE;
             }
@@ -91,8 +103,26 @@ class ProjectTestSafe extends Command
         }
 
         if (! $this->restoreFinished) {
+            $this->logRunActivity('project.test_safe.failed', 'Test-safe run completed with failed restore.', [
+                'test_exit_code' => $testExit,
+                'restore_finished' => $this->restoreFinished,
+                'restore_started' => $this->restoreStarted,
+            ]);
+
             return self::FAILURE;
         }
+
+        $this->logRunActivity('project.test_safe.completed', 'Test-safe run completed.', [
+            'test_exit_code' => $testExit,
+            'restore_finished' => $this->restoreFinished,
+            'restore_started' => $this->restoreStarted,
+            'options' => [
+                'with_lint' => (bool) $this->option('with-lint'),
+                'filter' => (string) ($this->option('filter') ?? ''),
+                'testsuite' => (string) ($this->option('testsuite') ?? ''),
+                'parallel' => (bool) $this->option('parallel'),
+            ],
+        ]);
 
         return $testExit;
     }
@@ -292,5 +322,19 @@ class ProjectTestSafe extends Command
         $process->run();
 
         return $process->getExitCode() ?? self::FAILURE;
+    }
+
+    private function logRunActivity(string $event, string $description, array $properties = []): void
+    {
+        try {
+            activity('project')
+                ->event($event)
+                ->withProperties(array_merge([
+                    'command' => $this->getName(),
+                ], $properties))
+                ->log($description);
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: ' . $exception->getMessage());
+        }
     }
 }

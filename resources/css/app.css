@@ -130,9 +130,9 @@ option::checkmark {
     color: lime;
 } */
 
-
 @import './table.css';
 @import './modal.css';
 @import './button.css';
 @import './errors.css';
+@import './tooltip.css';
 @import './animations.css';

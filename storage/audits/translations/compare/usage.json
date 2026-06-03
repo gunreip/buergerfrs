@@ -161,13 +161,13 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 340,
+                "line": 397,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.no_changes.heading')"
             },
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 402,
+                "line": 459,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.no_changes.heading')"
             }
@@ -179,13 +179,13 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 341,
+                "line": 398,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged', [\n                    'role' => $role->name,\n                ])"
             },
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 403,
+                "line": 460,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged', [\n                    'permission' => $permission->name,\n                ])"
             }
@@ -197,7 +197,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 437,
+                "line": 494,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.permission_saved.heading')"
             }
@@ -209,7 +209,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 438,
+                "line": 495,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.permission_saved.text', [\n                'permission' => $permission->name,\n            ])"
             }
@@ -221,7 +221,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 366,
+                "line": 423,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.role_permissions_saved.heading')"
             }
@@ -233,7 +233,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/PermissionList.php",
-                "line": 367,
+                "line": 424,
                 "function": "__",
                 "raw": "__('admin.permissions.messages.role_permissions_saved.text', [\n                'role' => $role->name,\n            ])"
             }
@@ -827,7 +827,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/RoleList.php",
-                "line": 138,
+                "line": 187,
                 "function": "__",
                 "raw": "__('admin.roles.messages.not_allowed.heading')"
             }
@@ -839,7 +839,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/RoleList.php",
-                "line": 140,
+                "line": 189,
                 "function": "__",
                 "raw": "__('admin.roles.messages.not_allowed.only_super_admins_may_create_roles')"
             }
@@ -851,7 +851,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/RoleList.php",
-                "line": 216,
+                "line": 265,
                 "function": "__",
                 "raw": "__('admin.roles.messages.role_created.heading')"
             }
@@ -863,7 +863,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/RoleList.php",
-                "line": 218,
+                "line": 267,
                 "function": "__",
                 "raw": "__('admin.roles.messages.role_created.text', [\n                'role' => $role->name,\n            ])"
             }
@@ -875,7 +875,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/RoleList.php",
-                "line": 383,
+                "line": 432,
                 "function": "__",
                 "raw": "__('admin.roles.messages.role_saved.heading')"
             }
@@ -887,7 +887,7 @@
         "usages": [
             {
                 "file": "app/Livewire/Admin/RoleList.php",
-                "line": 385,
+                "line": 434,
                 "function": "__",
                 "raw": "__('admin.roles.messages.role_saved.text', [\n                'role' => $savedRoleName,\n            ])"
             }
@@ -962,6 +962,24 @@
                 "line": 13,
                 "function": "__",
                 "raw": "__('admin.roles.title')"
+            }
+        ]
+    },
+    {
+        "full_key": "management.people.create_person.form_person.emergency",
+        "usage_count": 2,
+        "usages": [
+            {
+                "file": "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+                "line": 155,
+                "function": "__",
+                "raw": "__('management.people.create_person.form_person.emergency')"
+            },
+            {
+                "file": "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+                "line": 158,
+                "function": "__",
+                "raw": "__('management.people.create_person.form_person.emergency')"
             }
         ]
     },

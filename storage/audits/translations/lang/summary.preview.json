@@ -2,12 +2,12 @@
     "preview": true,
     "preview_limit": 20,
     "data": {
-        "generated_at": "2026-05-29T08:32:06+02:00",
+        "generated_at": "2026-06-03T17:12:28+02:00",
         "root_path": "/home/gunreip/code/buergerfrs",
         "preview_limit": 20,
-        "files_scanned": 4,
-        "locales": 2,
-        "defined_keys": 146,
+        "files_scanned": 27,
+        "locales": 5,
+        "defined_keys": 393,
         "duplicate_keys": 0,
         "invalid_files": 0,
         "vendor_files_ignored": true

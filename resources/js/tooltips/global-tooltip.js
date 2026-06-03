@@ -7,6 +7,8 @@ const FADE_DURATION = 200;
 const TOOLTIP_OFFSET = 8;
 const VIEWPORT_PADDING = 12;
 const TOOLTIP_MAX_WIDTH = 448;
+const TOOLTIP_Z_INDEX = '2147483647';
+const TOOLTIP_CONTEXT_CLASS_PREFIX = 'tooltip-context--';
 
 let tooltipShowTimeout = null;
 let tooltipHideTimeout = null;
@@ -135,6 +137,7 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
     const title = anchorEl.dataset.tooltipTitle || '';
     const required = anchorEl.dataset.tooltipRequired === 'true';
     const action = parseTooltipAction(anchorEl.dataset.tooltipAction || '');
+    const context = normalizeTooltipContext(anchorEl.dataset.tooltipContext || '');
 
     if (!content && !title && !action) {
         return;
@@ -154,6 +157,8 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
     const actionTextEl = tooltip.querySelector('.tooltip-action-text');
     const actionButtonEl = tooltip.querySelector('.tooltip-action-button');
 
+    applyTooltipContext(tooltip, context);
+
     if (titleEl) {
         titleEl.textContent = title;
     }
@@ -168,12 +173,15 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
 
     renderTooltipAction(actionWrapEl, actionTextEl, actionButtonEl, action);
 
+    const tooltipContainer = resolveTooltipContainer(anchorEl);
+
     tooltip.style.visibility = 'hidden';
     tooltip.style.position = 'absolute';
+    tooltip.style.zIndex = TOOLTIP_Z_INDEX;
 
-    document.body.appendChild(tooltip);
+    tooltipContainer.appendChild(tooltip);
 
-    positionTooltip(tooltip, anchorEl, pointer);
+    positionTooltip(tooltip, anchorEl, pointer, tooltipContainer);
 
     tooltip.classList.add('global-tooltip-active');
     tooltip.style.visibility = '';
@@ -197,6 +205,12 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
     }, showDelay);
 }
 
+function resolveTooltipContainer(anchorEl) {
+    const modalContainer = anchorEl.closest('dialog, [role="dialog"], [data-flux-modal], .flux-modal');
+
+    return modalContainer instanceof HTMLElement ? modalContainer : document.body;
+}
+
 function getTooltipTemplate() {
     const existingTemplate = document.getElementById(TOOLTIP_TEMPLATE_ID);
 
@@ -217,7 +231,7 @@ function getTooltipTemplate() {
                     </div>
                     <div class="tooltip-content my-tooltip-content"></div>
                     <div class="tooltip-action my-tooltip-action" hidden>
-                        <div class="tooltip-action-text my-tooltip-action-text"></div>
+                        <span class="tooltip-action-text my-tooltip-action-text"></span>
                         <button class="tooltip-action-button my-tooltip-action-button" type="button"></button>
                     </div>
                 </div>
@@ -299,13 +313,22 @@ function renderTooltipAction(actionWrapEl, actionTextEl, actionButtonEl, action)
     });
 }
 
-function positionTooltip(tooltip, anchorEl, pointer = null) {
+function positionTooltip(tooltip, anchorEl, pointer = null, tooltipContainer = document.body) {
     const rect = anchorEl.getBoundingClientRect();
-    const scrollY = window.scrollY;
-    const scrollX = window.scrollX;
 
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
+    const isBodyContainer = tooltipContainer === document.body;
+    const containerRect = isBodyContainer
+        ? { left: 0, top: 0 }
+        : tooltipContainer.getBoundingClientRect();
+    const containerScrollX = isBodyContainer ? window.scrollX : tooltipContainer.scrollLeft;
+    const containerScrollY = isBodyContainer ? window.scrollY : tooltipContainer.scrollTop;
+
+    const localAnchorLeft = rect.left - containerRect.left + containerScrollX;
+    const localAnchorTop = rect.top - containerRect.top + containerScrollY;
+    const localAnchorBottom = rect.bottom - containerRect.top + containerScrollY;
+
+    const viewportWidth = isBodyContainer ? window.innerWidth : tooltipContainer.clientWidth;
+    const viewportHeight = isBodyContainer ? window.innerHeight : tooltipContainer.clientHeight;
     const maxTooltipWidth = Math.min(TOOLTIP_MAX_WIDTH, viewportWidth - VIEWPORT_PADDING * 2);
 
     tooltip.style.width = 'max-content';
@@ -315,29 +338,29 @@ function positionTooltip(tooltip, anchorEl, pointer = null) {
     const tooltipRect = tooltip.getBoundingClientRect();
 
     const preferredCenterX = pointer
-        ? pointer.clientX
-        : rect.left + rect.width / 2;
+        ? pointer.clientX - containerRect.left + containerScrollX
+        : localAnchorLeft + rect.width / 2;
 
     const preferredLeft = preferredCenterX - tooltipRect.width / 2;
     const minLeft = VIEWPORT_PADDING;
     const maxLeft = viewportWidth - VIEWPORT_PADDING - tooltipRect.width;
     const left = clamp(preferredLeft, minLeft, Math.max(minLeft, maxLeft));
 
-    const spaceAbove = rect.top;
-    const spaceBelow = viewportHeight - rect.bottom;
+    const spaceAbove = localAnchorTop;
+    const spaceBelow = viewportHeight - localAnchorBottom;
     const shouldPlaceAbove = spaceAbove >= tooltipRect.height + TOOLTIP_OFFSET
         || spaceAbove > spaceBelow;
 
     const preferredTop = shouldPlaceAbove
-        ? rect.top - tooltipRect.height - TOOLTIP_OFFSET
-        : rect.bottom + TOOLTIP_OFFSET;
+        ? localAnchorTop - tooltipRect.height - TOOLTIP_OFFSET
+        : localAnchorBottom + TOOLTIP_OFFSET;
 
     const minTop = VIEWPORT_PADDING;
     const maxTop = viewportHeight - VIEWPORT_PADDING - tooltipRect.height;
     const top = clamp(preferredTop, minTop, Math.max(minTop, maxTop));
 
-    tooltip.style.left = `${scrollX + left}px`;
-    tooltip.style.top = `${scrollY + top}px`;
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
     tooltip.scrollTop = 0;
 }
 
@@ -459,6 +482,36 @@ function removeGlobalTooltip() {
 
     activeTooltip = null;
     activeAnchor = null;
+}
+
+function normalizeTooltipContext(value) {
+    const normalized = String(value || '')
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9_-]+/g, '-')
+        .replace(/^[-_]+|[-_]+$/g, '');
+
+    return normalized;
+}
+
+function applyTooltipContext(tooltip, context) {
+    if (!(tooltip instanceof HTMLElement)) {
+        return;
+    }
+
+    tooltip.className = tooltip.className
+        .split(/\s+/)
+        .filter((className) => className !== '' && !className.startsWith(TOOLTIP_CONTEXT_CLASS_PREFIX))
+        .join(' ');
+
+    if (context === '') {
+        tooltip.dataset.tooltipContext = 'default';
+
+        return;
+    }
+
+    tooltip.dataset.tooltipContext = context;
+    tooltip.classList.add(`${TOOLTIP_CONTEXT_CLASS_PREFIX}${context}`);
 }
 
 function fadeOutAndRemoveTooltip(tooltip) {

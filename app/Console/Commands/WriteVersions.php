@@ -3,7 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Throwable;
 
+/**
+ * Writes environment and dependency version information into VERSIONS.md.
+ */
 class WriteVersions extends Command
 {
     // Artisan-Aufruf: php artisan system:versions
@@ -11,7 +15,10 @@ class WriteVersions extends Command
 
     protected $description = 'Schreibt OS-, PHP- und Package-Versionen in VERSIONS.md';
 
-    public function handle()
+    /**
+     * Execute the console command.
+     */
+    public function handle(): int
     {
         $os = php_uname();
         $php = phpversion();
@@ -27,14 +34,14 @@ class WriteVersions extends Command
         $content .= "| Composer   | $composer |\n";
         $content .= "| Node.js    | $node |\n";
         $content .= "| npm        | $npm |\n";
-        $content .= "\n**Stand:** ".date('Y-m-d H:i:s')."\n";
+        $content .= "\n**Stand:** " . date('Y-m-d H:i:s') . "\n";
 
         // Composer-Pakete (nur direkte Abhängigkeiten)
         $composerPackagesPath = base_path('composer_packages.json');
         if (file_exists($composerPackagesPath)) {
             $json = json_decode(file_get_contents($composerPackagesPath), true);
             $locked = $json['locked'] ?? [];
-            $direct = array_filter($locked, fn ($pkg) => ($pkg['direct-dependency'] ?? false) === true);
+            $direct = array_filter($locked, fn($pkg) => ($pkg['direct-dependency'] ?? false) === true);
             if (count($direct) > 0) {
                 $content .= "\n## Wichtige Composer-Packages (direkte Abhängigkeiten)\n\n";
                 $content .= "| Package | Version | Beschreibung |\n";
@@ -94,5 +101,30 @@ class WriteVersions extends Command
 
         file_put_contents(base_path('VERSIONS.md'), $content);
         $this->info('VERSIONS.md wurde aktualisiert.');
+
+        $this->logRunActivity('system.versions.completed', 'System versions file updated.', [
+            'path' => 'VERSIONS.md',
+            'os' => $os,
+            'php' => $php,
+            'composer' => $composer,
+            'node' => $node,
+            'npm' => $npm,
+        ]);
+
+        return self::SUCCESS;
+    }
+
+    private function logRunActivity(string $event, string $description, array $properties = []): void
+    {
+        try {
+            activity('project')
+                ->event($event)
+                ->withProperties(array_merge([
+                    'command' => $this->getName(),
+                ], $properties))
+                ->log($description);
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: ' . $exception->getMessage());
+        }
     }
 }

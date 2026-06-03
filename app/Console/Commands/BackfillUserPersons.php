@@ -17,6 +17,9 @@ use Throwable;
 
 #[Signature('app:backfill-user-persons {--dry-run : Show what would be created without writing changes}')]
 #[Description('Create and link Person records for users without a person_id.')]
+/**
+ * Backfill helper command to ensure users have linked person records.
+ */
 class BackfillUserPersons extends Command
 {
     /**
@@ -34,6 +37,10 @@ class BackfillUserPersons extends Command
         if ($users->isEmpty()) {
             $this->info('No users without person_id found.');
 
+            $this->logRunActivity('app.backfill_user_persons.no_changes', 'No users without person_id found for backfill.', [
+                'dry_run' => $dryRun,
+            ]);
+
             return self::SUCCESS;
         }
 
@@ -41,7 +48,7 @@ class BackfillUserPersons extends Command
         $linked = 0;
         $skipped = 0;
 
-        $this->info(($dryRun ? '[DRY RUN] ' : '')."Found {$users->count()} user(s) without person_id.");
+        $this->info(($dryRun ? '[DRY RUN] ' : '') . "Found {$users->count()} user(s) without person_id.");
 
         foreach ($users as $user) {
             $nameParts = $this->splitUserName((string) $user->name);
@@ -94,6 +101,14 @@ class BackfillUserPersons extends Command
         $this->info("Linked users: {$linked}");
         $this->info("Skipped users: {$skipped}");
 
+        $this->logRunActivity('app.backfill_user_persons.completed', 'Backfill user persons command completed.', [
+            'dry_run' => $dryRun,
+            'users_without_person' => $users->count(),
+            'created_persons' => $created,
+            'linked_users' => $linked,
+            'skipped_users' => $skipped,
+        ]);
+
         return self::SUCCESS;
     }
 
@@ -128,5 +143,19 @@ class BackfillUserPersons extends Command
             'first_name' => $firstName,
             'last_name' => implode(' ', $parts),
         ];
+    }
+
+    private function logRunActivity(string $event, string $description, array $properties = []): void
+    {
+        try {
+            activity('project')
+                ->event($event)
+                ->withProperties(array_merge([
+                    'command' => $this->getName(),
+                ], $properties))
+                ->log($description);
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: ' . $exception->getMessage());
+        }
     }
 }

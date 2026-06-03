@@ -4,6 +4,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Livewire\Concerns\InteractsWithUserSettings;
 use App\Models\Client;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
@@ -14,8 +15,11 @@ use Livewire\WithPagination;
  */
 class ClientList extends Component
 {
+    use InteractsWithUserSettings;
     use WithoutUrlPagination;
     use WithPagination;
+
+    private const UI_STATE_SETTING_KEY = 'ui.pages.admin_client_list';
 
     public string $search = '';
 
@@ -31,12 +35,42 @@ class ClientList extends Component
 
     public string $sortDirection = 'asc';
 
+    public function mount(): void
+    {
+        $state = $this->userSetting(self::UI_STATE_SETTING_KEY, []);
+
+        if (is_array($state)) {
+            $this->search = trim((string) ($state['search'] ?? $this->search));
+            $this->typeFilter = trim((string) ($state['typeFilter'] ?? $this->typeFilter));
+            $this->statusFilter = trim((string) ($state['statusFilter'] ?? $this->statusFilter));
+            $this->peopleFilter = trim((string) ($state['peopleFilter'] ?? $this->peopleFilter));
+            $this->perPage = $this->normalizePerPage($state['perPage'] ?? $this->perPage);
+
+            $sortField = trim((string) ($state['sortField'] ?? $this->sortField));
+            $this->sortField = in_array($sortField, [
+                'client_number',
+                'name',
+                'legal_name',
+                'type',
+                'status',
+                'people_count',
+                'created_at',
+            ], true) ? $sortField : 'name';
+
+            $sortDirection = trim((string) ($state['sortDirection'] ?? $this->sortDirection));
+            $this->sortDirection = in_array($sortDirection, ['asc', 'desc'], true) ? $sortDirection : 'asc';
+        }
+
+        $this->setPage(1);
+    }
+
     /**
      * Reset pagination when search input changes.
      */
     public function updatedSearch(): void
     {
         $this->setPage(1);
+        $this->persistUiState();
     }
 
     /**
@@ -45,6 +79,7 @@ class ClientList extends Component
     public function updatedTypeFilter(): void
     {
         $this->setPage(1);
+        $this->persistUiState();
     }
 
     /**
@@ -53,6 +88,7 @@ class ClientList extends Component
     public function updatedStatusFilter(): void
     {
         $this->setPage(1);
+        $this->persistUiState();
     }
 
     /**
@@ -61,6 +97,7 @@ class ClientList extends Component
     public function updatedPeopleFilter(): void
     {
         $this->setPage(1);
+        $this->persistUiState();
     }
 
     /**
@@ -71,6 +108,7 @@ class ClientList extends Component
         $this->perPage = $this->normalizePerPage($this->perPage);
 
         $this->setPage(1);
+        $this->persistUiState();
     }
 
     /**
@@ -85,6 +123,7 @@ class ClientList extends Component
         $this->perPage = 50;
 
         $this->setPage(1);
+        $this->persistUiState();
     }
 
     /**
@@ -110,6 +149,7 @@ class ClientList extends Component
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
 
             $this->setPage(1);
+            $this->persistUiState();
 
             return;
         }
@@ -118,6 +158,20 @@ class ClientList extends Component
         $this->sortDirection = 'asc';
 
         $this->setPage(1);
+        $this->persistUiState();
+    }
+
+    private function persistUiState(): void
+    {
+        $this->setUserSetting(self::UI_STATE_SETTING_KEY, [
+            'search' => $this->search,
+            'typeFilter' => $this->typeFilter,
+            'statusFilter' => $this->statusFilter,
+            'peopleFilter' => $this->peopleFilter,
+            'perPage' => $this->perPage,
+            'sortField' => $this->sortField,
+            'sortDirection' => $this->sortDirection,
+        ]);
     }
 
     /**

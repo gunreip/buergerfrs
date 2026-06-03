@@ -15,12 +15,16 @@ use Illuminate\Support\Facades\Http;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
+use Throwable;
 
 #[Signature('html:sync-native-tags
     {--raw : Write the fetched WHATWG response body to storage/audits/html/native-html-tags-raw.html}
     {--raw-limit=20000 : Number of response body characters written to the raw preview file}
 ')]
 #[Description('Sync the WHATWG HTML Living Standard native element reference into storage.')]
+/**
+ * Fetches and synchronizes WHATWG native HTML tag references to local storage.
+ */
 class SyncNativeHtmlTags extends Command
 {
     /**
@@ -43,6 +47,11 @@ class SyncNativeHtmlTags extends Command
             $this->error('Unable to fetch WHATWG HTML index.');
             $this->line('HTTP status: ' . $response->status());
 
+            $this->logRunActivity('html.native_tags_sync.failed', 'Native HTML tags sync failed while fetching source.', [
+                'source_url' => $sourceUrl,
+                'http_status' => $response->status(),
+            ]);
+
             return self::FAILURE;
         }
 
@@ -60,6 +69,10 @@ class SyncNativeHtmlTags extends Command
         if ($elements === []) {
             $this->error('No native HTML tags could be extracted from the WHATWG HTML index.');
             $this->line('Run with --raw to inspect the fetched source: php artisan html:sync-native-tags --raw');
+
+            $this->logRunActivity('html.native_tags_sync.failed', 'Native HTML tags sync failed because no elements were extracted.', [
+                'source_url' => $sourceUrl,
+            ]);
 
             return self::FAILURE;
         }
@@ -134,6 +147,13 @@ class SyncNativeHtmlTags extends Command
         $this->newLine();
         $this->line('Reference written: storage/audits/html/native-html-tags.json');
         $this->line('Preview written: storage/audits/html/native-html-tags-preview.json');
+
+        $this->logRunActivity('html.native_tags_sync.completed', 'Native HTML tags sync completed.', [
+            'source_url' => $sourceUrl,
+            'counts' => $payload['counts'],
+            'raw_option' => (bool) $this->option('raw'),
+            'raw_limit' => (int) $this->option('raw-limit'),
+        ]);
 
         return self::SUCCESS;
     }
@@ -352,6 +372,20 @@ class SyncNativeHtmlTags extends Command
                 'math',
                 'svg',
             ], true);
+    }
+
+    private function logRunActivity(string $event, string $description, array $properties = []): void
+    {
+        try {
+            activity('html')
+                ->event($event)
+                ->withProperties(array_merge([
+                    'command' => $this->getName(),
+                ], $properties))
+                ->log($description);
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: ' . $exception->getMessage());
+        }
     }
 
     /**

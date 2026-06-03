@@ -1,7 +1,7 @@
 {
     "preview": true,
     "preview_limit": 20,
-    "total": 1412,
+    "total": 1694,
     "items": [
         {
             "classification": "native",
@@ -31,7 +31,17 @@
             "reason": null,
             "suggested_key": "admin.app_settings.invalid_application_language",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 198
+            "line": 211
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "Global app locale changed",
+            "raw": "__('Global app locale changed')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.global_app_locale_changed",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 227
         },
         {
             "classification": "native",
@@ -41,7 +51,7 @@
             "reason": null,
             "suggested_key": "admin.app_settings.application_language_updated",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 211
+            "line": 239
         },
         {
             "classification": "native",
@@ -51,7 +61,7 @@
             "reason": null,
             "suggested_key": "admin.app_settings.invalid_application_language",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 250
+            "line": 303
         },
         {
             "classification": "native",
@@ -61,7 +71,27 @@
             "reason": null,
             "suggested_key": "admin.app_settings.invalid_application_language",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 258
+            "line": 325
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "Invalid application language.",
+            "raw": "__('Invalid application language.')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.invalid_application_language",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 352
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "Invalid application language.",
+            "raw": "__('Invalid application language.')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.invalid_application_language",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 360
         },
         {
             "classification": "native",
@@ -71,7 +101,7 @@
             "reason": null,
             "suggested_key": "admin.app_settings.this_application_language_is_mandatory_and_cannot_be_disabled",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 268
+            "line": 372
         },
         {
             "classification": "native",
@@ -81,7 +111,7 @@
             "reason": null,
             "suggested_key": "admin.app_settings.the_current_application_language_cannot_be_disabled",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 274
+            "line": 378
         },
         {
             "classification": "native",
@@ -91,7 +121,17 @@
             "reason": null,
             "suggested_key": "admin.app_settings.at_least_one_application_language_must_remain_enabled",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 282
+            "line": 386
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "Primary locale availability updated",
+            "raw": "__('Primary locale availability updated')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.primary_locale_availability_updated",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 404
         },
         {
             "classification": "native",
@@ -101,7 +141,7 @@
             "reason": null,
             "suggested_key": "admin.app_settings.available_application_languages_updated",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 297
+            "line": 422
         },
         {
             "classification": "native",
@@ -111,7 +151,7 @@
             "reason": null,
             "suggested_key": "admin.app_settings.the_current_application_language_cannot_be_removed_from_the_available_languages",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 328
+            "line": 454
         },
         {
             "classification": "native",
@@ -121,7 +161,17 @@
             "reason": null,
             "suggested_key": "admin.app_settings.at_least_one_application_language_must_remain_enabled",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 346
+            "line": 472
+        },
+        {
+            "classification": "native",
+            "function": "__",
+            "value": "Available app locales updated",
+            "raw": "__('Available app locales updated')",
+            "reason": null,
+            "suggested_key": "admin.app_settings.available_app_locales_updated",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 484
         },
         {
             "classification": "native",
@@ -131,7 +181,7 @@
             "reason": null,
             "suggested_key": "admin.app_settings.available_application_languages_updated",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 355
+            "line": 496
         },
         {
             "classification": "native",
@@ -141,67 +191,17 @@
             "reason": null,
             "suggested_key": "admin.app_settings.without_role",
             "file": "app/Livewire/Admin/AppSettings.php",
-            "line": 394
+            "line": 535
         },
         {
             "classification": "native",
             "function": "__",
-            "value": "Not allowed",
-            "raw": "__('Not allowed')",
+            "value": "Sub locales updated",
+            "raw": "__('Sub locales updated')",
             "reason": null,
-            "suggested_key": "admin.role_list.not_allowed",
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 137
-        },
-        {
-            "classification": "native",
-            "function": "__",
-            "value": "Only Super-Admins may create roles.",
-            "raw": "__('Only Super-Admins may create roles.')",
-            "reason": null,
-            "suggested_key": "admin.role_list.only_super_admins_may_create_roles",
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 139
-        },
-        {
-            "classification": "native",
-            "function": "__",
-            "value": "Role created",
-            "raw": "__('Role created')",
-            "reason": null,
-            "suggested_key": "admin.role_list.role_created",
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 215
-        },
-        {
-            "classification": "native",
-            "function": "__",
-            "value": "Role :role has been created.",
-            "raw": "__('Role :role has been created.')",
-            "reason": null,
-            "suggested_key": "admin.role_list.role_role_has_been_created",
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 217
-        },
-        {
-            "classification": "native",
-            "function": "__",
-            "value": "Role saved",
-            "raw": "__('Role saved')",
-            "reason": null,
-            "suggested_key": "admin.role_list.role_saved",
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 382
-        },
-        {
-            "classification": "native",
-            "function": "__",
-            "value": "Role metadata and badge settings for :role have been updated.",
-            "raw": "__('Role metadata and badge settings for :role have been updated.')",
-            "reason": null,
-            "suggested_key": "admin.role_list.role_metadata_and_badge_settings_for_role_have_been_updated",
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 384
+            "suggested_key": "admin.app_settings.sub_locales_updated",
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 885
         }
     ]
 }

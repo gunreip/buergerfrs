@@ -11,9 +11,13 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Throwable;
 
 #[Signature('html:sync-view-audit')]
 #[Description('Sync the current HTML view audit JSON snapshot into the database history.')]
+/**
+ * Synchronizes HTML view audit snapshots from storage into database history.
+ */
 class SyncHtmlViewAuditFindings extends Command
 {
     /**
@@ -27,6 +31,10 @@ class SyncHtmlViewAuditFindings extends Command
             $this->error('HTML view audit file missing: storage/audits/html/view-html-check.json');
             $this->line('Run php artisan html:check first.');
 
+            $this->logRunActivity('html.view_audit_sync.failed', 'HTML view audit sync failed because source file is missing.', [
+                'path' => str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path),
+            ]);
+
             return self::FAILURE;
         }
 
@@ -34,6 +42,10 @@ class SyncHtmlViewAuditFindings extends Command
 
         if (! is_array($payload)) {
             $this->error('HTML view audit file is not valid JSON: storage/audits/html/view-html-check.json');
+
+            $this->logRunActivity('html.view_audit_sync.failed', 'HTML view audit sync failed because source JSON is invalid.', [
+                'path' => str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path),
+            ]);
 
             return self::FAILURE;
         }
@@ -159,6 +171,16 @@ class SyncHtmlViewAuditFindings extends Command
         $this->line('Resolved: ' . $resolved);
         $this->line('Ignored but still seen: ' . $ignoredSeen);
 
+        $this->logRunActivity('html.view_audit_sync.completed', 'HTML view audit findings sync completed.', [
+            'current_problems' => count($problems),
+            'created' => $created,
+            'updated' => $updated,
+            'changed' => $changed,
+            'reopened' => $reopened,
+            'resolved' => $resolved,
+            'ignored_seen' => $ignoredSeen,
+        ]);
+
         return self::SUCCESS;
     }
 
@@ -272,5 +294,19 @@ class SyncHtmlViewAuditFindings extends Command
         }
 
         return is_numeric($value) ? (int) $value : null;
+    }
+
+    private function logRunActivity(string $event, string $description, array $properties = []): void
+    {
+        try {
+            activity('html')
+                ->event($event)
+                ->withProperties(array_merge([
+                    'command' => $this->getName(),
+                ], $properties))
+                ->log($description);
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: ' . $exception->getMessage());
+        }
     }
 }

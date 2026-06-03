@@ -1,6 +1,227 @@
 {
     "preview": true,
     "preview_limit": 20,
-    "total": 0,
-    "items": []
+    "total": 93,
+    "items": [
+        {
+            "full_key": "actions.ui.actions.save",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/actions.php",
+                "lang/en/actions.php"
+            ]
+        },
+        {
+            "full_key": "actions.ui.actions.search",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/actions.php",
+                "lang/en/actions.php"
+            ]
+        },
+        {
+            "full_key": "labels.ui.labels.actions",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/labels.php",
+                "lang/en/labels.php"
+            ]
+        },
+        {
+            "full_key": "labels.ui.labels.category",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/labels.php",
+                "lang/en/labels.php"
+            ]
+        },
+        {
+            "full_key": "labels.ui.labels.description",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/labels.php",
+                "lang/en/labels.php"
+            ]
+        },
+        {
+            "full_key": "labels.ui.labels.guard",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/labels.php",
+                "lang/en/labels.php"
+            ]
+        },
+        {
+            "full_key": "labels.ui.labels.name",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/labels.php",
+                "lang/en/labels.php"
+            ]
+        },
+        {
+            "full_key": "labels.ui.labels.number_short",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/labels.php",
+                "lang/en/labels.php"
+            ]
+        },
+        {
+            "full_key": "labels.ui.labels.preview",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/labels.php",
+                "lang/en/labels.php"
+            ]
+        },
+        {
+            "full_key": "labels.ui.labels.role",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/labels.php",
+                "lang/en/labels.php"
+            ]
+        },
+        {
+            "full_key": "labels.ui.labels.roles",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/labels.php",
+                "lang/en/labels.php"
+            ]
+        },
+        {
+            "full_key": "layouts.header.search",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/layouts.php",
+                "lang/en/layouts.php"
+            ]
+        },
+        {
+            "full_key": "layouts.sidebar.administration.countries",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/layouts.php",
+                "lang/en/layouts.php"
+            ]
+        },
+        {
+            "full_key": "layouts.sidebar.administration.fallback_reports",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/layouts.php",
+                "lang/en/layouts.php"
+            ]
+        },
+        {
+            "full_key": "layouts.sidebar.management.client",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/layouts.php",
+                "lang/en/layouts.php"
+            ]
+        },
+        {
+            "full_key": "layouts.sidebar.management.create",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/layouts.php",
+                "lang/en/layouts.php"
+            ]
+        },
+        {
+            "full_key": "messages.ui.messages.no_description_available",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/messages.php",
+                "lang/en/messages.php"
+            ]
+        },
+        {
+            "full_key": "pages.auth.confirm_password.confirm_password",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/pages.php",
+                "lang/en/pages.php"
+            ]
+        },
+        {
+            "full_key": "pages.settings.profile.avatar_image",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/pages.php",
+                "lang/en/pages.php"
+            ]
+        },
+        {
+            "full_key": "pages.settings.profile.current_avatar",
+            "defined_locales": [
+                "de",
+                "en"
+            ],
+            "defined_files": [
+                "lang/de/pages.php",
+                "lang/en/pages.php"
+            ]
+        }
+    ]
 }

@@ -17,10 +17,12 @@ class TranslationValue extends Model
         'source',
         'reviewed_at',
         'reviewed_by_user_id',
+        'is_base_duplicate',
     ];
 
     protected $casts = [
         'reviewed_at' => 'datetime',
+        'is_base_duplicate' => 'boolean',
     ];
 
     public function translationKey(): BelongsTo

@@ -1,8 +1,22 @@
 {
     "preview": true,
     "preview_limit": 20,
-    "total": 146,
+    "total": 393,
     "items": [
+        {
+            "locale": "de",
+            "group": "actions",
+            "key": "ui.actions.save",
+            "full_key": "actions.ui.actions.save",
+            "file": "lang/de/actions.php"
+        },
+        {
+            "locale": "de",
+            "group": "actions",
+            "key": "ui.actions.search",
+            "full_key": "actions.ui.actions.search",
+            "file": "lang/de/actions.php"
+        },
         {
             "locale": "de",
             "group": "admin",
@@ -127,20 +141,6 @@
             "group": "admin",
             "key": "permissions.messages.role_permissions_saved.heading",
             "full_key": "admin.permissions.messages.role_permissions_saved.heading",
-            "file": "lang/de/admin.php"
-        },
-        {
-            "locale": "de",
-            "group": "admin",
-            "key": "permissions.messages.role_permissions_saved.text",
-            "full_key": "admin.permissions.messages.role_permissions_saved.text",
-            "file": "lang/de/admin.php"
-        },
-        {
-            "locale": "de",
-            "group": "admin",
-            "key": "permissions.modals.edit.category_placeholder",
-            "full_key": "admin.permissions.modals.edit.category_placeholder",
             "file": "lang/de/admin.php"
         }
     ]

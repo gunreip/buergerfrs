@@ -4,6 +4,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Livewire\Concerns\InteractsWithUserSettings;
 use App\Models\Country;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,7 +16,10 @@ use Livewire\WithPagination;
  */
 class CountryReferenceList extends Component
 {
+    use InteractsWithUserSettings;
     use WithPagination;
+
+    private const UI_STATE_SETTING_KEY = 'ui.pages.admin_country_reference_list';
 
     public string $search = '';
 
@@ -33,6 +37,41 @@ class CountryReferenceList extends Component
 
     public string $sortDirection = 'asc';
 
+    public function mount(): void
+    {
+        $state = $this->userSetting(self::UI_STATE_SETTING_KEY, []);
+
+        if (is_array($state)) {
+            $this->search = trim((string) ($state['search'] ?? $this->search));
+            $this->regionFilter = trim((string) ($state['regionFilter'] ?? $this->regionFilter));
+            $this->statusFilter = trim((string) ($state['statusFilter'] ?? $this->statusFilter));
+            $this->membershipFilter = trim((string) ($state['membershipFilter'] ?? $this->membershipFilter));
+            $this->dataFilter = trim((string) ($state['dataFilter'] ?? $this->dataFilter));
+            $this->perPage = (int) ($state['perPage'] ?? $this->perPage);
+            $this->perPage = $this->normalizedPerPage();
+
+            $sortField = trim((string) ($state['sortField'] ?? $this->sortField));
+            $this->sortField = in_array($sortField, [
+                'id',
+                'iso2',
+                'iso3',
+                'name',
+                'official_name',
+                'phone_code',
+                'region',
+                'subregion',
+                'capital',
+                'subdivisions_count',
+                'is_active',
+            ], true) ? $sortField : 'iso2';
+
+            $sortDirection = trim((string) ($state['sortDirection'] ?? $this->sortDirection));
+            $this->sortDirection = in_array($sortDirection, ['asc', 'desc'], true) ? $sortDirection : 'asc';
+        }
+
+        $this->setPage(1);
+    }
+
     /**
      * Reset pagination when a filter changes.
      */
@@ -48,6 +87,25 @@ class CountryReferenceList extends Component
         ], true)) {
             $this->resetPage();
         }
+    }
+
+    public function updated(string $property): void
+    {
+        if (in_array($property, [
+            'search',
+            'regionFilter',
+            'statusFilter',
+            'membershipFilter',
+            'dataFilter',
+        ], true)) {
+            $this->persistUiState();
+        }
+    }
+
+    public function updatedPerPage(): void
+    {
+        $this->perPage = $this->normalizedPerPage();
+        $this->persistUiState();
     }
 
     /**
@@ -74,6 +132,7 @@ class CountryReferenceList extends Component
         if ($this->sortField === $field) {
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
             $this->resetPage();
+            $this->persistUiState();
 
             return;
         }
@@ -82,6 +141,21 @@ class CountryReferenceList extends Component
         $this->sortDirection = 'asc';
 
         $this->resetPage();
+        $this->persistUiState();
+    }
+
+    private function persistUiState(): void
+    {
+        $this->setUserSetting(self::UI_STATE_SETTING_KEY, [
+            'search' => $this->search,
+            'regionFilter' => $this->regionFilter,
+            'statusFilter' => $this->statusFilter,
+            'membershipFilter' => $this->membershipFilter,
+            'dataFilter' => $this->dataFilter,
+            'perPage' => $this->perPage,
+            'sortField' => $this->sortField,
+            'sortDirection' => $this->sortDirection,
+        ]);
     }
 
     /**

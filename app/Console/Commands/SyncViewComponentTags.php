@@ -12,9 +12,13 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use SplFileInfo;
+use Throwable;
 
 #[Signature('views:sync-component-tags')]
 #[Description('Scan Blade views and write a reference of used Flux, custom and Livewire component tags.')]
+/**
+ * Scans Blade templates and exports a component-tag usage reference.
+ */
 class SyncViewComponentTags extends Command
 {
     /**
@@ -27,6 +31,10 @@ class SyncViewComponentTags extends Command
         if (empty($config['include_prefixes']) || ! is_array($config['include_prefixes'])) {
             $this->error('Missing config: html-audit.component_tag_scan.include_prefixes');
             $this->line('Please configure config/html-audit.php before running views:sync-component-tags.');
+
+            $this->logRunActivity('html.component_tags_sync.failed', 'Component tag sync failed due to missing configuration.', [
+                'reason' => 'missing_include_prefixes_config',
+            ]);
 
             return self::FAILURE;
         }
@@ -108,6 +116,11 @@ class SyncViewComponentTags extends Command
         $this->line('Livewire tags: ' . $payload['counts']['livewire']);
         $this->line('Reference written: storage/audits/html/view-component-tags.json');
         $this->line('Preview written: storage/audits/html/view-component-tags-preview.json');
+
+        $this->logRunActivity('html.component_tags_sync.completed', 'Component tag sync completed.', [
+            'files_scanned' => $files->count(),
+            'counts' => $payload['counts'],
+        ]);
 
         return self::SUCCESS;
     }
@@ -300,5 +313,19 @@ class SyncViewComponentTags extends Command
     private function relativePath(string $path): string
     {
         return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+    }
+
+    private function logRunActivity(string $event, string $description, array $properties = []): void
+    {
+        try {
+            activity('html')
+                ->event($event)
+                ->withProperties(array_merge([
+                    'command' => $this->getName(),
+                ], $properties))
+                ->log($description);
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: ' . $exception->getMessage());
+        }
     }
 }

@@ -11,6 +11,29 @@ use Illuminate\View\Component;
 class Trigger extends Component
 {
     /**
+     * Canonical tooltip context aliases to keep styling usage consistent across views.
+     *
+     * @var array<string, string>
+     */
+    private const CONTEXT_ALIASES = [
+        'default' => 'default',
+        'neutral' => 'default',
+        'info' => 'info',
+        'hint' => 'info',
+        'success' => 'success',
+        'ok' => 'success',
+        'reviewed' => 'success',
+        'warning' => 'warning',
+        'warn' => 'warning',
+        'obsolete' => 'obsolete',
+        'dynamic' => 'warning',
+        'danger' => 'danger',
+        'error' => 'danger',
+        'missing' => 'danger',
+        'required' => 'danger',
+    ];
+
+    /**
      * Create a new component instance.
      */
     public bool $isRequired;
@@ -23,6 +46,7 @@ class Trigger extends Component
         bool|string|int|null $required = false,
         public ?int $delay = null,
         public array|string|null $action = null,
+        public ?string $context = null,
     ) {
         $this->isRequired = filter_var($required, FILTER_VALIDATE_BOOLEAN);
     }
@@ -108,6 +132,29 @@ class Trigger extends Component
         $field = trim((string) $this->field);
 
         return $field !== '' ? $field : null;
+    }
+
+    public function tooltipContext(): ?string
+    {
+        $context = trim((string) $this->context);
+
+        if ($context === '') {
+            return null;
+        }
+
+        $normalized = strtolower($context);
+        $normalized = preg_replace('/[^a-z0-9_-]+/', '-', $normalized) ?? '';
+        $normalized = trim($normalized, '-_');
+
+        if ($normalized === '') {
+            return null;
+        }
+
+        if (array_key_exists($normalized, self::CONTEXT_ALIASES)) {
+            return self::CONTEXT_ALIASES[$normalized];
+        }
+
+        return $normalized;
     }
 
     /**

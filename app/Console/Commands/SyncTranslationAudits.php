@@ -13,9 +13,13 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Throwable;
 
 #[Signature('translations:sync-audits')]
 #[Description('Sync translation audit JSON files into translation management tables.')]
+/**
+ * Synchronizes translation audit outputs into translation management tables.
+ */
 class SyncTranslationAudits extends Command
 {
     private const DEFAULT_LOCALES = ['de', 'en'];
@@ -220,6 +224,9 @@ class SyncTranslationAudits extends Command
 
         $staleUsageCount = $this->markStaleAuditUsages($this->seenUsageFingerprints, $now);
         $staleCount = $this->markStaleAuditKeys($seenFingerprints, $now);
+        $mergedDuplicateKeyCount = $this->normalizeDuplicateKeyRows($now);
+        $supersededNativeCount = $this->normalizeNativeRowsSupersededByKeys($now);
+        $normalizedNonKeyObsoleteCount = $this->normalizeLegacyNonKeyObsoleteStatuses($now);
 
         $this->components->info('Translation audits synced.');
 
@@ -236,8 +243,13 @@ class SyncTranslationAudits extends Command
                 ['Usages synced', $counters['usages']],
                 ['Stale audit usages marked', $staleUsageCount],
                 ['Stale audit keys marked', $staleCount],
+                ['Duplicate key rows merged', $mergedDuplicateKeyCount],
+                ['Native rows superseded by key', $supersededNativeCount],
+                ['Legacy non-key obsolete normalized', $normalizedNonKeyObsoleteCount],
             ],
         );
+
+        $this->logRunCompletedActivity($counters, $staleUsageCount, $staleCount, $locales);
 
         return self::SUCCESS;
     }
@@ -251,9 +263,11 @@ class SyncTranslationAudits extends Command
         ?string $nativeText,
         mixed $now,
     ): TranslationKey {
-        $translationKey = TranslationKey::query()->firstOrNew([
-            'fingerprint' => $fingerprint,
-        ]);
+        $translationKey = $this->resolveTranslationKeyForSync(
+            fingerprint: $fingerprint,
+            incomingKey: $key,
+            incomingClassification: $classification,
+        );
 
         $wasExisting = $translationKey->exists;
         $oldStatus = $translationKey->status;
@@ -265,24 +279,58 @@ class SyncTranslationAudits extends Command
             $translationKey->first_seen_at = $now;
         }
 
+        $resolvedKey = $key;
+
+        if (($resolvedKey === null || trim($resolvedKey) === '') && $translationKey->exists) {
+            $existingKey = trim((string) ($translationKey->key ?? ''));
+
+            if ($existingKey !== '') {
+                // Preserve manually assigned keys when incoming audit records represent
+                // native/dynamic entries that do not carry a concrete translation key.
+                $resolvedKey = $existingKey;
+            }
+        }
+
         $resolvedClassification = $this->resolveClassificationForSync(
             currentClassification: $oldClassification,
             incomingClassification: $classification,
             currentNativeText: $oldNativeText,
             incomingNativeText: $nativeText,
+            incomingKey: $key,
+            resolvedKey: $resolvedKey,
         );
 
+        $resolvedStatus = $this->resolveStatusForSync(
+            currentStatus: $oldStatus,
+            incomingStatus: $status,
+            incomingClassification: $classification,
+            incomingKey: $key,
+            resolvedKey: $resolvedKey,
+        );
+
+        $resolvedObsoleteAt = $resolvedStatus === 'obsolete'
+            ? ($translationKey->obsolete_at ?? $now)
+            : null;
+
         $attributes = [
-            'key' => $key,
-            'namespace' => $this->namespaceFromKey($key ?? $suggestedKey),
-            'group' => $this->groupFromKey($key ?? $suggestedKey),
-            'status' => $status,
+            'fingerprint' => $fingerprint,
+            'key' => $resolvedKey,
+            'namespace' => $this->namespaceFromKey($resolvedKey ?? $suggestedKey),
+            'group' => $this->groupFromKey($resolvedKey ?? $suggestedKey),
+            'status' => $resolvedStatus,
             'classification' => $resolvedClassification,
             'source' => 'audit',
             'suggested_key' => $suggestedKey,
             'last_seen_at' => $now,
-            'obsolete_at' => $status === 'obsolete' ? $now : null,
+            'obsolete_at' => $resolvedObsoleteAt,
         ];
+
+        if ($oldStatus === 'obsolete' && $resolvedStatus !== 'obsolete') {
+            $attributes['workflow_status'] = 'open';
+            $attributes['reviewed_at'] = null;
+            $attributes['reviewed_by_user_id'] = null;
+            $attributes['review_note'] = null;
+        }
 
         if ($nativeText !== null) {
             $attributes['native_text'] = $nativeText;
@@ -292,7 +340,11 @@ class SyncTranslationAudits extends Command
 
         $translationKey->save();
 
-        if ($wasExisting && $oldStatus === 'obsolete' && $status !== 'obsolete') {
+        if ($resolvedClassification === 'key' && $resolvedKey !== null && trim($resolvedKey) !== '') {
+            $translationKey = $this->mergeDuplicateKeyRows($translationKey, $resolvedKey, $now);
+        }
+
+        if ($wasExisting && $oldStatus === 'obsolete' && $resolvedStatus !== 'obsolete') {
             $this->createAuditEvent([
                 'translation_key_id' => $translationKey->id,
                 'entity_type' => 'translation_key',
@@ -302,7 +354,7 @@ class SyncTranslationAudits extends Command
                 'old_key' => $translationKey->getOriginal('key'),
                 'new_key' => $translationKey->key,
                 'old_status' => $oldStatus,
-                'new_status' => $status,
+                'new_status' => $resolvedStatus,
                 'reason' => 'audit_key_seen_again_in_latest_sync',
                 'context' => [
                     'old_obsolete_at' => $oldObsoleteAt ? (string) $oldObsoleteAt : null,
@@ -330,12 +382,314 @@ class SyncTranslationAudits extends Command
         return $translationKey;
     }
 
+    private function resolveTranslationKeyForSync(
+        string $fingerprint,
+        ?string $incomingKey,
+        string $incomingClassification,
+    ): TranslationKey {
+        $existingByFingerprint = TranslationKey::query()
+            ->where('fingerprint', $fingerprint)
+            ->first();
+
+        if ($existingByFingerprint) {
+            return $existingByFingerprint;
+        }
+
+        $normalizedKey = trim((string) $incomingKey);
+
+        if ($incomingClassification === 'key' && $normalizedKey !== '') {
+            $existingByKey = TranslationKey::query()
+                ->where('classification', 'key')
+                ->where('key', $normalizedKey)
+                ->orderByDesc('updated_at')
+                ->orderByDesc('id')
+                ->first();
+
+            if ($existingByKey) {
+                return $existingByKey;
+            }
+        }
+
+        return new TranslationKey([
+            'fingerprint' => $fingerprint,
+        ]);
+    }
+
+    private function mergeDuplicateKeyRows(TranslationKey $primary, string $resolvedKey, mixed $now): TranslationKey
+    {
+        $duplicates = TranslationKey::query()
+            ->where('classification', 'key')
+            ->where('key', $resolvedKey)
+            ->whereKeyNot($primary->id)
+            ->orderBy('id')
+            ->get();
+
+        if ($duplicates->isEmpty()) {
+            return $primary;
+        }
+
+        foreach ($duplicates as $duplicate) {
+            $this->mergeDuplicateValuesIntoPrimary($primary, $duplicate);
+
+            TranslationUsage::query()
+                ->where('translation_key_id', $duplicate->id)
+                ->update(['translation_key_id' => $primary->id]);
+
+            DB::table('translation_audit_events')
+                ->where('translation_key_id', $duplicate->id)
+                ->update(['translation_key_id' => $primary->id]);
+
+            $primary->forceFill([
+                'first_seen_at' => $this->earlierTimestamp($primary->first_seen_at, $duplicate->first_seen_at),
+                'last_seen_at' => $this->laterTimestamp($primary->last_seen_at, $duplicate->last_seen_at ?? $now),
+                'native_text' => $this->preferNonEmptyString($primary->native_text, $duplicate->native_text),
+                'suggested_key' => $this->preferNonEmptyString($primary->suggested_key, $duplicate->suggested_key),
+                'workflow_status' => $this->preferOpenWorkflowStatus($primary->workflow_status, $duplicate->workflow_status),
+                'reviewed_at' => $primary->workflow_status === 'reviewed'
+                    ? $this->laterTimestamp($primary->reviewed_at, $duplicate->reviewed_at)
+                    : null,
+                'reviewed_by_user_id' => $primary->workflow_status === 'reviewed'
+                    ? ($primary->reviewed_by_user_id ?? $duplicate->reviewed_by_user_id)
+                    : null,
+                'review_note' => $primary->workflow_status === 'reviewed'
+                    ? $this->preferNonEmptyString($primary->review_note, $duplicate->review_note)
+                    : null,
+            ])->save();
+
+            $duplicate->delete();
+        }
+
+        return $primary->refresh();
+    }
+
+    private function mergeDuplicateValuesIntoPrimary(TranslationKey $primary, TranslationKey $duplicate): void
+    {
+        $duplicateValues = TranslationValue::query()
+            ->where('translation_key_id', $duplicate->id)
+            ->orderBy('id')
+            ->get();
+
+        foreach ($duplicateValues as $duplicateValue) {
+            $primaryValue = TranslationValue::query()
+                ->where('translation_key_id', $primary->id)
+                ->where('locale', $duplicateValue->locale)
+                ->first();
+
+            if (! $primaryValue) {
+                $duplicateValue->translation_key_id = $primary->id;
+                $duplicateValue->save();
+
+                continue;
+            }
+
+            $primaryValue->forceFill([
+                'value' => $this->preferNonEmptyString($primaryValue->value, $duplicateValue->value),
+                'status' => $this->preferValueStatus($primaryValue->status, $duplicateValue->status),
+                'source' => $this->preferManualSource($primaryValue->source, $duplicateValue->source),
+                'reviewed_at' => $this->laterTimestamp($primaryValue->reviewed_at, $duplicateValue->reviewed_at),
+                'reviewed_by_user_id' => $primaryValue->reviewed_by_user_id ?? $duplicateValue->reviewed_by_user_id,
+            ])->save();
+
+            $duplicateValue->delete();
+        }
+    }
+
+    private function preferNonEmptyString(?string $preferred, ?string $fallback): ?string
+    {
+        $preferredValue = trim((string) ($preferred ?? ''));
+
+        if ($preferredValue !== '') {
+            return $preferred;
+        }
+
+        $fallbackValue = trim((string) ($fallback ?? ''));
+
+        return $fallbackValue !== '' ? $fallback : $preferred;
+    }
+
+    private function preferValueStatus(?string $primaryStatus, ?string $duplicateStatus): string
+    {
+        $priority = [
+            'ok' => 4,
+            'obsolete' => 3,
+            'missing' => 2,
+            'dynamic' => 1,
+            'invalid' => 0,
+        ];
+
+        $left = $priority[$primaryStatus ?? ''] ?? -1;
+        $right = $priority[$duplicateStatus ?? ''] ?? -1;
+
+        return $left >= $right
+            ? (string) ($primaryStatus ?? 'missing')
+            : (string) ($duplicateStatus ?? 'missing');
+    }
+
+    private function preferManualSource(?string $primarySource, ?string $duplicateSource): string
+    {
+        if (($primarySource ?? '') === 'manual' || ($duplicateSource ?? '') !== 'manual') {
+            return (string) ($primarySource ?? 'audit');
+        }
+
+        return 'manual';
+    }
+
+    private function preferOpenWorkflowStatus(?string $primaryWorkflowStatus, ?string $duplicateWorkflowStatus): string
+    {
+        return ($primaryWorkflowStatus ?? 'open') === 'open' || ($duplicateWorkflowStatus ?? 'open') !== 'open'
+            ? (string) ($primaryWorkflowStatus ?? 'open')
+            : (string) ($duplicateWorkflowStatus ?? 'open');
+    }
+
+    private function earlierTimestamp(mixed $left, mixed $right): mixed
+    {
+        if ($left === null) {
+            return $right;
+        }
+
+        if ($right === null) {
+            return $left;
+        }
+
+        return $left <= $right ? $left : $right;
+    }
+
+    private function laterTimestamp(mixed $left, mixed $right): mixed
+    {
+        if ($left === null) {
+            return $right;
+        }
+
+        if ($right === null) {
+            return $left;
+        }
+
+        return $left >= $right ? $left : $right;
+    }
+
+    private function normalizeDuplicateKeyRows(mixed $now): int
+    {
+        $duplicateKeys = TranslationKey::query()
+            ->where('classification', 'key')
+            ->whereNotNull('key')
+            ->where('key', '!=', '')
+            ->groupBy('key')
+            ->havingRaw('count(*) > 1')
+            ->pluck('key');
+
+        $mergedCount = 0;
+
+        foreach ($duplicateKeys as $resolvedKey) {
+            $rows = TranslationKey::query()
+                ->where('classification', 'key')
+                ->where('key', $resolvedKey)
+                ->orderByRaw("case when status = 'ok' then 0 when status = 'missing' then 1 when status = 'obsolete' then 2 else 3 end")
+                ->orderByDesc('updated_at')
+                ->orderByDesc('id')
+                ->get();
+
+            $primary = $rows->first();
+
+            if (! $primary || $rows->count() < 2) {
+                continue;
+            }
+
+            $mergedCount += $rows->count() - 1;
+            $this->mergeDuplicateKeyRows($primary, (string) $resolvedKey, $now);
+        }
+
+        return $mergedCount;
+    }
+
+    private function normalizeNativeRowsSupersededByKeys(mixed $now): int
+    {
+        $nativeRows = TranslationKey::query()
+            ->where('classification', 'native')
+            ->where('workflow_status', 'open')
+            ->whereNotNull('suggested_key')
+            ->where('suggested_key', '!=', '')
+            ->get();
+
+        $count = 0;
+
+        foreach ($nativeRows as $nativeRow) {
+            $matchedKey = TranslationKey::query()
+                ->where('classification', 'key')
+                ->where('key', $nativeRow->suggested_key)
+                ->orderByRaw("case when status = 'ok' then 0 when status = 'missing' then 1 when status = 'obsolete' then 2 else 3 end")
+                ->orderByDesc('updated_at')
+                ->orderByDesc('id')
+                ->first();
+
+            if (! $matchedKey) {
+                continue;
+            }
+
+            $oldWorkflowStatus = (string) ($nativeRow->workflow_status ?? 'open');
+
+            $nativeRow->forceFill([
+                'workflow_status' => 'reviewed',
+                'reviewed_at' => $nativeRow->reviewed_at ?? $now,
+                'reviewed_by_user_id' => $nativeRow->reviewed_by_user_id,
+                'review_note' => 'superseded_by_key_sync',
+            ])->save();
+
+            $this->createAuditEvent([
+                'translation_key_id' => $nativeRow->id,
+                'entity_type' => 'translation_key',
+                'event_type' => 'workflow_status_changed',
+                'old_fingerprint' => $nativeRow->fingerprint,
+                'new_fingerprint' => $nativeRow->fingerprint,
+                'old_key' => $nativeRow->key,
+                'new_key' => $nativeRow->key,
+                'old_value' => $oldWorkflowStatus,
+                'new_value' => 'reviewed',
+                'old_status' => $nativeRow->status,
+                'new_status' => $nativeRow->status,
+                'reason' => 'native_row_superseded_by_key_sync',
+                'context' => [
+                    'suggested_key' => $nativeRow->suggested_key,
+                    'superseding_translation_key_id' => $matchedKey->id,
+                    'superseding_key' => $matchedKey->key,
+                    'superseding_status' => $matchedKey->status,
+                    'old_workflow_status' => $oldWorkflowStatus,
+                    'new_workflow_status' => 'reviewed',
+                ],
+            ]);
+
+            $count++;
+        }
+
+        return $count;
+    }
+
     private function resolveClassificationForSync(
         ?string $currentClassification,
         string $incomingClassification,
         ?string $currentNativeText,
         ?string $incomingNativeText,
+        ?string $incomingKey,
+        ?string $resolvedKey,
     ): string {
+        $incomingKeyIsEmpty = $incomingKey === null || trim($incomingKey) === '';
+        $resolvedKeyIsSet = $resolvedKey !== null && trim($resolvedKey) !== '';
+
+        if (
+            in_array($incomingClassification, ['native', 'dynamic'], true)
+            && $incomingKeyIsEmpty
+            && $resolvedKeyIsSet
+        ) {
+            return 'key';
+        }
+
+        if (
+            $currentClassification === 'key'
+            && $incomingClassification !== 'key'
+            && $resolvedKeyIsSet
+        ) {
+            return 'key';
+        }
+
         if (
             $currentClassification === 'backfill_by_translation'
             && $incomingClassification === 'key'
@@ -347,6 +701,33 @@ class SyncTranslationAudits extends Command
         }
 
         return $incomingClassification;
+    }
+
+    private function resolveStatusForSync(
+        ?string $currentStatus,
+        string $incomingStatus,
+        string $incomingClassification,
+        ?string $incomingKey,
+        ?string $resolvedKey,
+    ): string {
+        $currentStatus = trim((string) ($currentStatus ?? ''));
+        $incomingKeyIsEmpty = $incomingKey === null || trim($incomingKey) === '';
+        $resolvedKeyIsSet = $resolvedKey !== null && trim($resolvedKey) !== '';
+        $keyStatuses = ['ok', 'missing', 'obsolete'];
+
+        if (
+            in_array($incomingClassification, ['native', 'dynamic'], true)
+            && $incomingKeyIsEmpty
+            && $resolvedKeyIsSet
+        ) {
+            if (in_array($currentStatus, $keyStatuses, true)) {
+                return $currentStatus;
+            }
+
+            return 'missing';
+        }
+
+        return $incomingStatus;
     }
 
     private function syncValue(
@@ -557,6 +938,8 @@ class SyncTranslationAudits extends Command
 
         $staleKeys = TranslationKey::query()
             ->where('source', 'audit')
+            ->where('classification', 'key')
+            ->whereNotNull('key', 'and')
             ->whereNotIn('fingerprint', array_values(array_unique($seenFingerprints)), 'and')
             ->where(function ($query) {
                 $query
@@ -588,12 +971,64 @@ class SyncTranslationAudits extends Command
 
             $key->forceFill([
                 'status' => 'obsolete',
-                'obsolete_at' => $now,
+                'obsolete_at' => $key->obsolete_at ?? $now,
                 'updated_at' => $now,
             ])->save();
         }
 
         return $staleKeys->count();
+    }
+
+    private function normalizeLegacyNonKeyObsoleteStatuses(mixed $now): int
+    {
+        $legacyRows = TranslationKey::query()
+            ->where('source', 'audit')
+            ->where('status', 'obsolete')
+            ->where(function ($query) {
+                $query
+                    ->whereNull('key')
+                    ->orWhereIn('classification', ['native', 'dynamic', 'invalid']);
+            })
+            ->get();
+
+        foreach ($legacyRows as $key) {
+            $newStatus = match ($key->classification) {
+                'dynamic' => 'dynamic',
+                'invalid' => 'invalid',
+                default => 'native',
+            };
+
+            $this->createAuditEvent([
+                'translation_key_id' => $key->id,
+                'entity_type' => 'translation_key',
+                'event_type' => 'legacy_status_normalized',
+                'old_fingerprint' => $key->fingerprint,
+                'new_fingerprint' => $key->fingerprint,
+                'old_key' => $key->key,
+                'new_key' => $key->key,
+                'old_value' => $key->native_text,
+                'new_value' => $key->native_text,
+                'old_status' => $key->status,
+                'new_status' => $newStatus,
+                'reason' => 'non_key_audit_entry_removed_from_obsolete_bucket',
+                'context' => [
+                    'classification' => $key->classification,
+                    'workflow_status' => $key->workflow_status,
+                ],
+            ]);
+
+            $key->forceFill([
+                'status' => $newStatus,
+                'obsolete_at' => null,
+                'workflow_status' => 'open',
+                'reviewed_at' => null,
+                'reviewed_by_user_id' => null,
+                'review_note' => null,
+                'updated_at' => $now,
+            ])->save();
+        }
+
+        return $legacyRows->count();
     }
 
     private function createAuditEvent(array $payload): void
@@ -796,5 +1231,29 @@ class SyncTranslationAudits extends Command
     private function fingerprint(string $value): string
     {
         return hash('sha256', $value);
+    }
+
+    /**
+     * @param array<string, int> $counters
+     * @param array<int, string> $locales
+     */
+    private function logRunCompletedActivity(array $counters, int $staleUsageCount, int $staleCount, array $locales): void
+    {
+        try {
+            activity('translations')
+                ->event('translations.audit.sync.completed')
+                ->withProperties([
+                    'command' => $this->getName(),
+                    'summary' => [
+                        'locales' => $locales,
+                        'counters' => $counters,
+                        'stale_usage_marked' => $staleUsageCount,
+                        'stale_keys_marked' => $staleCount,
+                    ],
+                ])
+                ->log('Translation audit sync completed');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed for command run summary: ' . $exception->getMessage());
+        }
     }
 }

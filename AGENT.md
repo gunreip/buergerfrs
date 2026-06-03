@@ -1,3 +1,13 @@
+## Translation-Workflow Guardrails
+
+- Die Grundmenge der Translation-List basiert auf `translation_keys` als Work-Items, nicht auf vorhandenen `translation_values`.
+- `Target Language` ist primär Fokus-/Bewertungskontext. Fehlende Übersetzungen (`missing`) für die gewählte Sprache müssen sichtbar und bearbeitbar bleiben; Sprachwechsel darf offene Fälle nicht ausblenden.
+- Counter und Tabelle müssen immer aus derselben Filter- und Row-Menge berechnet werden.
+- `Suggested Key` ist der einzige sichtbare Empfehlungskandidat in der Standard-UI. `Expected Key` gehört nicht in die Standard-UI.
+- Key-Pflege (`native`, `dynamic`, no-key) und Übersetzungsarbeit (gekeyte Einträge pro Sprache) nicht stillschweigend vermischen. Wenn unterschiedliche Arbeitsmodi nötig sind, diese explizit benennen statt implizit über Filterlogik zu vermengen.
+- `obsolete` ist Nebenworkflow für Review/Cleanup und darf den normalen Übersetzungsworkflow nicht dominieren.
+- Vor Änderungen an Query-Semantik, Counterlogik, Suggested-Key-Regeln oder Translation-Commands zuerst `docs/reports/key-rules-pattern.md` und die abgestimmten Workflow-Regeln prüfen; bei Abweichungen erneut fachlich abstimmen statt stillschweigend umbauen.
+
 # AGENT.md
 
 ## Projektüberblick
@@ -138,3 +148,7 @@ Dies ist ein Laravel 13.x Projekt mit Livewire, Fortify, Horizon, Telescope und 
 ---
 
 > Diese Datei hilft AI Coding Agents, Build-/Test-Kommandos, Konventionen und Besonderheiten dieses Projekts sofort zu verstehen. Bei Änderungen an der Projektstruktur bitte diese Datei anpassen.
+
+## Ergänzung: Artisan Activity Logging
+
+Für projekt-spezifische Artisan-Commands gilt die einheitliche Activity-Log-Konvention aus [docs/artisan-commands.md](docs/artisan-commands.md) (Event-Namensschema, log_name-Domänen, Mindest-Properties). Bei neuen Commands diese Konvention verpflichtend anwenden.

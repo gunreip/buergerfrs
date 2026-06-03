@@ -152,10 +152,10 @@
                 x-on:click="activeSection = 'emergency'"
             >
                 <span class="inline-flex items-center gap-2">
-                    {{ __('Emergency') }}
+                    {{ __('management.people.create_person.form_person.emergency') }}
                     <x-ui.form.tab-status-dot
                         :meta="$this->formTabStatus('emergency')"
-                        :label="__('Emergency')"
+                        :label="__('management.people.create_person.form_person.emergency')"
                         icon="siren"
                     />
                 </span>

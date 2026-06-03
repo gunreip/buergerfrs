@@ -4,11 +4,11 @@
 |------------|---------|
 | OS         | Linux DESKTOP-I7C75P2 6.6.114.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Mon Dec  1 20:46:23 UTC 2025 x86_64 |
 | PHP        | 8.4.21 |
-| Composer   | Composer version 2.7.1 2024-02-09 15:26:28 |
+| Composer   | Composer version 2.9.8 2026-05-13 09:28:38 |
 | Node.js    | v22.20.0 |
 | npm        | 11.8.0 |
 
-**Stand:** 2026-05-13 05:20:52
+**Stand:** 2026-05-29 17:37:16
 
 ## Wichtige Composer-Packages (direkte Abhängigkeiten)
 

@@ -12,11 +12,18 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use SplFileInfo;
+use Throwable;
 
 #[Signature('html:check-view-html-used')]
 #[Description('Audit used native HTML tags, Flux components and custom Blade components in Blade views.')]
+/**
+ * Audit command for tracking native HTML and component usage across Blade views.
+ */
 class CheckViewHtmlUsed extends Command
 {
+    /**
+     * Execute the console command.
+     */
     public function handle(): int
     {
         $this->info('Check used native HTML tags, Flux components and custom Blade components');
@@ -86,6 +93,14 @@ class CheckViewHtmlUsed extends Command
         $this->line('Custom used:         ' . $custom['counts']['used']);
         $this->line('Custom unused:       ' . $custom['counts']['unused']);
         $this->line('Custom used unknown: ' . $custom['counts']['used_unknown']);
+        $this->logRunActivity('html.view_usage_check.completed', 'HTML view usage audit completed.', [
+            'files_scanned' => $scanResult['files_scanned'],
+            'native_counts' => $native['counts'],
+            'flux_counts' => $flux['counts'],
+            'custom_counts' => $custom['counts'],
+            'includes_used' => count($scanResult['includes']),
+            'livewire_used' => count($scanResult['livewire']),
+        ]);
         return self::SUCCESS;
     }
 
@@ -672,5 +687,19 @@ class CheckViewHtmlUsed extends Command
             ->replace('\\', '/')
             ->replace(Str::of(base_path())->replace('\\', '/')->toString() . '/', '')
             ->toString();
+    }
+
+    private function logRunActivity(string $event, string $description, array $properties = []): void
+    {
+        try {
+            activity('html')
+                ->event($event)
+                ->withProperties(array_merge([
+                    'command' => $this->getName(),
+                ], $properties))
+                ->log($description);
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: ' . $exception->getMessage());
+        }
     }
 }

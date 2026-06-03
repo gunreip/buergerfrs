@@ -1,0 +1,1648 @@
+--- a/app/Livewire/Admin/RoleList.php
++++ b/app/Livewire/Admin/RoleList.php
+@@ -183,9 +183,9 @@
+     {
+         if (! Auth::user()?->hasRole('Super-Admin')) {
+             Flux::toast(
+-                // i18n-native: __('Not allowed')
++                // i18n-native: __('admin.roles.messages.not_allowed.heading')
+                 heading: __('admin.roles.messages.not_allowed.heading'),
+-                // i18n-native: __('Only Super-Admins may create roles.')
++                // i18n-native: __('admin.roles.messages.not_allowed.only_super_admins_may_create_roles')
+                 text: __('admin.roles.messages.not_allowed.only_super_admins_may_create_roles'),
+                 variant: 'danger',
+                 duration: 4000,
+@@ -261,9 +261,9 @@
+         $this->resetCreateRoleModal();
+ 
+         Flux::toast(
+-            // i18n-native: __('Role created')
++            // i18n-native: __('admin.roles.messages.role_created.heading')
+             heading: __('admin.roles.messages.role_created.heading'),
+-            // i18n-native: __('Role :role has been created.')
++            // i18n-native: __('admin.roles.messages.role_created.text')
+             text: __('admin.roles.messages.role_created.text', [
+                 'role' => $role->name,
+             ]),
+@@ -428,9 +428,9 @@
+         $this->resetEditRoleModal();
+ 
+         Flux::toast(
+-            // i18n-native: __('Role saved')
++            // i18n-native: __('admin.roles.messages.role_saved.heading')
+             heading: __('admin.roles.messages.role_saved.heading'),
+-            // i18n-native: __('Role metadata and badge settings for :role have been updated.')
++            // i18n-native: __('admin.roles.messages.role_saved.text')
+             text: __('admin.roles.messages.role_saved.text', [
+                 'role' => $savedRoleName,
+             ]),
+
+--- a/app/Support/Audit/AdminActivity.php
++++ b/app/Support/Audit/AdminActivity.php
+@@ -39,7 +39,7 @@
+     {
+         $this->log(
+             event: 'admin.role.created',
+-            description: __('Role created'),
++            description: __('admin.roles.messages.role_created.heading'),
+             subject: $role,
+             properties: [
+                 'role' => [
+
+--- a/resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php
++++ b/resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php
+@@ -8,13 +8,13 @@
+             {{-- Emergency contact name --}}
+             <flux:field>
+                 <x-ui.tooltip.trigger
+-                    title="{{ __('Name') }}"
++                    title="{{ __('ui.labels.name') }}"
+                     field="emergencyContactName"
+                     text="{{ __('Please enter the name of the emergency contact. This is important for correctly identifying the person\'s emergency contact and for any name-specific validations.') }}"
+                     :required="$this->isRequiredField('emergencyContactName')"
+                 >
+                     <flux:label for="create-person-emergency-contact-name">
+-                        {{ __('Name') }}
++                        {{ __('ui.labels.name') }}
+                         <x-ui.tooltip.badge-required :required="$this->isRequiredField('emergencyContactName')" />
+                     </flux:label>
+                 </x-ui.tooltip.trigger>
+
+--- a/resources/views/components/ui/button/create.blade.php
++++ b/resources/views/components/ui/button/create.blade.php
+@@ -4,13 +4,13 @@
+ <x-ui.button.create />
+ <x-ui.button.create icon="plus" />
+ <x-ui.button.create :icon="false" />
+-<x-ui.button.create label="{{ __('Create') }}" />
++<x-ui.button.create label="{{ __('admin.roles.actions.create') }}" />
+ --}}
+ 
+ {{-- create  → green/primary, plus, Create --}}
+ 
+ @props([
+-    'label' => __('Create'),
++    'label' => __('admin.roles.actions.create'),
+     'icon' => true,
+     'type' => 'button',
+     'size' => null,
+
+--- a/resources/views/components/ui/button/save.blade.php
++++ b/resources/views/components/ui/button/save.blade.php
+@@ -10,7 +10,7 @@
+ {{-- save    → green/primary, check, Save --}}
+ 
+ @props([
+-    'label' => __('Save'),
++    'label' => __('ui.actions.save'),
+     'icon' => true,
+     'type' => 'button',
+     'size' => null,
+
+--- a/resources/views/components/ui/button/confirm.blade.php
++++ b/resources/views/components/ui/button/confirm.blade.php
+@@ -4,13 +4,13 @@
+ <x-ui.button.confirm />
+ <x-ui.button.confirm icon="shield-check" />
+ <x-ui.button.confirm :icon="false" />
+-<x-ui.button.confirm label="{{ __('Confirm') }}" />
++<x-ui.button.confirm label="{{ __('pages.settings.two_factor_setup_modal.confirm') }}" />
+ --}}
+ 
+ {{-- confirm  → green/primary, shield-check, Confirm --}}
+ 
+ @props([
+-    'label' => __('Confirm'),
++    'label' => __('pages.settings.two_factor_setup_modal.confirm'),
+     'icon' => true,
+     'type' => 'button',
+     'size' => null,
+
+--- a/resources/views/components/admin/partials/role-list/⚡meta.blade.php
++++ b/resources/views/components/admin/partials/role-list/⚡meta.blade.php
+@@ -3,7 +3,7 @@
+ {{-- Metablock: Overview --}}
+ <flux:card class="mt-6">
+     <x-ui.headers.card
+-        :title="__('Overview')"
++        :title="__('admin.permissions.overview.title')"
+         :description="__(
+             'Get a quick snapshot of role statistics, including total roles, assignable roles, system roles, and user assignments.',
+         )"
+@@ -66,7 +66,7 @@
+             icon="users"
+         >
+             <flux:callout.heading>
+-                {{ __('Assigned users') }}
++                {{ __('admin.roles.labels.assigned_users') }}
+             </flux:callout.heading>
+ 
+             <flux:callout.text class="font-extralight">
+
+--- a/resources/views/components/admin/partials/role-list/⚡filter.blade.php
++++ b/resources/views/components/admin/partials/role-list/⚡filter.blade.php
+@@ -3,7 +3,7 @@
+ {{-- Filter part --}}
+ <flux:card class="mt-6">
+     <x-ui.headers.card
+-        :title="__('Filtering')"
++        :title="__('admin.permissions.filters.title')"
+         :description="__('Refine the role list by name, category, assignability, and system status.')"
+     />
+ 
+@@ -14,7 +14,7 @@
+                     :title="__('Filter by search')"
+                     :text="__('Enter a search term to filter the list of roles.')"
+                 >
+-                    {{ __('Search') }}
++                    {{ __('ui.actions.search') }}
+                 </x-ui.tooltip.trigger>
+             </flux:label>
+ 
+@@ -42,7 +42,7 @@
+                     :title="__('Filter by category')"
+                     :text="__('Select a category to filter the list of roles.')"
+                 >
+-                    {{ __('Category') }}
++                    {{ __('ui.labels.category') }}
+                 </x-ui.tooltip.trigger>
+             </flux:label>
+ 
+@@ -57,7 +57,7 @@
+                     wire:model.live="categoryFilter"
+                 >
+                     <flux:select.option value="">
+-                        {{ __('All categories') }}
++                        {{ __('admin.permissions.filters.categories.all') }}
+                     </flux:select.option>
+ 
+                     @foreach ($roleCategories as $category)
+@@ -90,7 +90,7 @@
+                     wire:model.live="assignableFilter"
+                 >
+                     <flux:select.option value="">
+-                        {{ __('All') }}
++                        {{ __('ui.states.all') }}
+                     </flux:select.option>
+ 
+                     <flux:select.option value="yes">
+@@ -110,7 +110,7 @@
+                     :title="__('Filter by system')"
+                     :text="__('Select a system status to filter the list of roles.')"
+                 >
+-                    {{ __('System') }}
++                    {{ __('admin.permissions.filters.system.label') }}
+                 </x-ui.tooltip.trigger>
+             </flux:label>
+ 
+@@ -125,7 +125,7 @@
+                     wire:model.live="systemFilter"
+                 >
+                     <flux:select.option value="">
+-                        {{ __('All') }}
++                        {{ __('ui.states.all') }}
+                     </flux:select.option>
+ 
+                     <flux:select.option value="yes">
+
+--- a/resources/views/components/admin/partials/role-list/⚡modal-create.blade.php
++++ b/resources/views/components/admin/partials/role-list/⚡modal-create.blade.php
+@@ -8,14 +8,14 @@
+     <div class="space-y-6">
+         <div>
+             <flux:heading size="xl">
+-                {{-- i18n-native: __('Create Role') --}}
++                {{-- i18n-native: __('admin.roles.modals.create.title') --}}
+                 {{ __('admin.roles.modals.create.title') }}
+             </flux:heading>
+ 
+             <flux:separator class="mb-6 mt-3" />
+ 
+             <flux:text>
+-                {{-- i18n-native: __('Create a new assignable role for user and role management.') --}}
++                {{-- i18n-native: __('admin.roles.modals.create.description') --}}
+                 {{ __('admin.roles.modals.create.description') }}
+             </flux:text>
+         </div>
+@@ -25,16 +25,16 @@
+         <div class="grid grid-cols-2 gap-4">
+             <flux:input
+                 type="text"
+-                {{-- i18n-native: __('Name') --}}
++                {{-- i18n-native: __('ui.labels.name') --}}
+                 label="{{ __('ui.labels.name') }}"
+                 wire:model.live="creatingRoleName"
+-                {{-- i18n-native: __('Support Manager') --}}
++                {{-- i18n-native: __('admin.roles.modals.create.name_placeholder') --}}
+                 placeholder="{{ __('admin.roles.modals.create.name_placeholder') }}"
+             />
+ 
+             <flux:input
+                 type="text"
+-                {{-- i18n-native: __('Guard') --}}
++                {{-- i18n-native: __('ui.labels.guard') --}}
+                 label="{{ __('ui.labels.guard') }}"
+                 wire:model.live="creatingGuardName"
+                 readonly
+@@ -42,7 +42,7 @@
+ 
+             <flux:input
+                 type="text"
+-                {{-- i18n-native: __('Category') --}}
++                {{-- i18n-native: __('ui.labels.category') --}}
+                 label="{{ __('ui.labels.category') }}"
+                 wire:model.live="creatingCategory"
+             />
+@@ -51,14 +51,14 @@
+                 type="number"
+                 min="0"
+                 max="65535"
+-                {{-- i18n-native: __('Sort order') --}}
++                {{-- i18n-native: __('admin.permissions.labels.sort_order') --}}
+                 label="{{ __('admin.roles.labels.sort_order') }}"
+                 wire:model.live="creatingSortOrder"
+             />
+ 
+             <div class="col-span-2">
+                 <flux:textarea
+-                    {{-- i18n-native: __('Description') --}}
++                    {{-- i18n-native: __('ui.labels.description') --}}
+                     label="{{ __('ui.labels.description') }}"
+                     wire:model.live="creatingDescription"
+                     rows="3"
+@@ -67,31 +67,31 @@
+ 
+             <div class="col-span-2">
+                 <flux:checkbox
+-                    {{-- i18n-native: __('Assignable through UI') --}}
++                    {{-- i18n-native: __('admin.roles.labels.assignable_through_ui') --}}
+                     label="{{ __('admin.roles.labels.assignable_through_ui') }}"
+                     wire:model.live="creatingIsAssignable"
+                 />
+             </div>
+         </div>
+ 
+-        {{-- i18n-native: __('Badge') --}}
++        {{-- i18n-native: __('admin.roles.badge.title') --}}
+         <flux:separator text="{{ __('admin.roles.badge.title') }}" />
+ 
+         <div class="grid grid-cols-3 gap-4">
+             <flux:select
+-                label="{{ __('Color') }}"
++                label="{{ __('admin.roles.badge.color') }}"
+                 wire:model.live="creatingBadgeColor"
+             >
+                 @foreach ($roleBadgeColorOptions as $color => $label)
+                     <flux:select.option value="{{ $color }}">
+-                        {{-- i18n-native: __('Color') --}}
++                        {{-- i18n-native: __('admin.roles.badge.color') --}}
+                         label="{{ __('admin.roles.badge.color') }}"
+                     </flux:select.option>
+                 @endforeach
+             </flux:select>
+ 
+             <flux:select
+-                {{-- i18n-native: __('Variant') --}}
++                {{-- i18n-native: __('admin.roles.badge.variant') --}}
+                 label="{{ __('admin.roles.badge.variant') }}"
+                 wire:model.live="creatingBadgeVariant"
+             >
+@@ -103,7 +103,7 @@
+             </flux:select>
+ 
+             <flux:select
+-                {{-- i18n-native: __('Icon') --}}
++                {{-- i18n-native: __('admin.roles.badge.icon') --}}
+                 label="{{ __('admin.roles.badge.icon') }}"
+                 wire:model.live="creatingBadgeIcon"
+             >
+@@ -117,12 +117,12 @@
+ 
+         <div>
+             <flux:text class="mb-2 text-sm text-zinc-400">
+-                {{-- i18n-native: __('Preview') --}}
++                {{-- i18n-native: __('ui.labels.preview') --}}
+                 {{ __('ui.labels.preview') }}
+             </flux:text>
+ 
+             <x-ui.role-badge
+-                {{-- i18n-native: __('New role') --}}
++                {{-- i18n-native: __('admin.roles.preview.new_role') --}}
+                 :label="$creatingRoleName !== '' ? $creatingRoleName : __('admin.roles.preview.new_role')"
+                 :badge="[
+                     'color' => $creatingBadgeColor,
+
+--- a/resources/views/components/admin/partials/role-list/⚡table.blade.php
++++ b/resources/views/components/admin/partials/role-list/⚡table.blade.php
+@@ -27,10 +27,10 @@
+ 
+                     <flux:table.column align="center">
+                         <x-ui.tooltip.trigger
+-                            :title="__('Badge')"
++                            :title="__('admin.roles.badge.title')"
+                             :text="__('Visual representation of the role, useful for quick identification.')"
+                         >
+-                            {{ __('Badge') }}
++                            {{ __('admin.roles.badge.title') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+ 
+@@ -39,10 +39,10 @@
+                         wire:click="sortBy('name')"
+                     >
+                         <x-ui.tooltip.trigger
+-                            :title="__('Name')"
++                            :title="__('ui.labels.name')"
+                             :text="__('Name of the role, useful for identification and reference.')"
+                         >
+-                            {{ __('Name') }}
++                            {{ __('ui.labels.name') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+ 
+@@ -51,10 +51,10 @@
+                         wire:click="sortBy('category')"
+                     >
+                         <x-ui.tooltip.trigger
+-                            :title="__('Category')"
++                            :title="__('ui.labels.category')"
+                             :text="__('Category of the role, useful for identification and reference.')"
+                         >
+-                            {{ __('Category') }}
++                            {{ __('ui.labels.category') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+ 
+@@ -64,28 +64,28 @@
+                         wire:click="sortBy('sort_order')"
+                     >
+                         <x-ui.tooltip.trigger
+-                            :title="__('Sort')"
++                            :title="__('admin.permissions.table.columns.sort')"
+                             :text="__('Sort order of the role, useful for identification and reference.')"
+                         >
+-                            {{ __('Sort') }}
++                            {{ __('admin.permissions.table.columns.sort') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+ 
+                     <flux:table.column>
+                         <x-ui.tooltip.trigger
+-                            :title="__('Description')"
++                            :title="__('ui.labels.description')"
+                             :text="__('Description of the role, useful for identification and reference.')"
+                         >
+-                            {{ __('Description') }}
++                            {{ __('ui.labels.description') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+ 
+                     <flux:table.column align="center">
+                         <x-ui.tooltip.trigger
+-                            :title="__('Flags')"
++                            :title="__('admin.permissions.table.columns.flags')"
+                             :text="__('Flags associated with the role, useful for identification and reference.')"
+                         >
+-                            {{ __('Flags') }}
++                            {{ __('admin.permissions.table.columns.flags') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+ 
+@@ -106,12 +106,12 @@
+ 
+                     <flux:table.column align="center">
+                         <x-ui.tooltip.trigger
+-                            :title="__('Actions')"
++                            :title="__('ui.labels.actions')"
+                             :text="__(
+                                 'Actions that can be performed on the role, useful for management and administration.',
+                             )"
+                         >
+-                            {{ __('Actions') }}
++                            {{ __('ui.labels.actions') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+                 </flux:table.columns>
+@@ -146,7 +146,7 @@
+ 
+                             <flux:table.cell>
+                                 <x-ui.text.highlight
+-                                    :value="$role->category !== null && $role->category !== '' ? Str::headline($role->category) : __('Other')"
++                                    :value="$role->category !== null && $role->category !== '' ? Str::headline($role->category) : __('ui.states.other')"
+                                     :search="$search"
+                                 />
+                             </flux:table.cell>
+@@ -172,7 +172,7 @@
+                                             color="purple"
+                                             variant="subtle"
+                                         >
+-                                            {{ __('System') }}
++                                            {{ __('admin.permissions.filters.system.label') }}
+                                         </flux:badge>
+                                     @endif
+ 
+@@ -205,7 +205,7 @@
+                                 <flux:button.group class="justify-center">
+                                     <x-ui.button.edit
+                                         icon="pencil-square"
+-                                        label="{{ __('Edit Role') }}"
++                                        label="{{ __('admin.roles.modals.edit.title') }}"
+                                         size="sm"
+                                         wire:click="openEditRoleModal({{ $role->id }})"
+                                     />
+
+--- a/resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php
++++ b/resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php
+@@ -8,7 +8,7 @@
+     <div class="space-y-6">
+         <div>
+             <flux:heading size="xl">
+-                {{-- i18n-native: __('Edit Role') --}}
++                {{-- i18n-native: __('admin.roles.modals.edit.title') --}}
+                 {{ __('admin.roles.modals.edit.title') }}
+             </flux:heading>
+ 
+@@ -17,7 +17,7 @@
+             <div class="grid grid-cols-2 gap-4 text-sm">
+                 <div>
+                     <flux:text class="text-zinc-400">
+-                        {{-- i18n-native: __('Name') --}}
++                        {{-- i18n-native: __('ui.labels.name') --}}
+                         {{ __('ui.labels.name') }}
+                     </flux:text>
+                     <div class="mt-1 font-semibold text-zinc-100">
+@@ -27,7 +27,7 @@
+ 
+                 <div>
+                     <flux:text class="text-zinc-400">
+-                        {{-- i18n-native: __('Guard') --}}
++                        {{-- i18n-native: __('ui.labels.guard') --}}
+                         {{ __('ui.labels.guard') }}
+                     </flux:text>
+                     <div class="mt-1 font-semibold text-zinc-100">
+@@ -37,19 +37,19 @@
+ 
+                 <div>
+                     <flux:text class="text-zinc-400">
+-                        {{-- i18n-native: __('System role') --}}
++                        {{-- i18n-native: __('admin.roles.labels.system_role') --}}
+                         {{ __('admin.roles.labels.system_role') }}
+                     </flux:text>
+                     <div class="mt-1 font-semibold text-zinc-100">
+-                        {{-- i18n-native: __('Yes') --}}
+-                        {{-- i18n-native: __('No') --}}
++                        {{-- i18n-native: __('ui.states.yes') --}}
++                        {{-- i18n-native: __('ui.states.no') --}}
+                         {{ $editingIsSystem ? __('ui.states.yes') : __('ui.states.no') }}
+                     </div>
+                 </div>
+ 
+                 <div>
+                     <flux:text class="text-zinc-400">
+-                        {{-- i18n-native: __('Assigned users') --}}
++                        {{-- i18n-native: __('admin.roles.labels.assigned_users') --}}
+                         {{ __('admin.roles.labels.assigned_users') }}
+                     </flux:text>
+                     <div class="mt-1 font-semibold tabular-nums text-zinc-100">
+@@ -64,7 +64,7 @@
+         <div class="grid grid-cols-2 gap-4">
+             <flux:input
+                 type="text"
+-                {{-- i18n-native: __('Category') --}}
++                {{-- i18n-native: __('ui.labels.category') --}}
+                 label="{{ __('ui.labels.category') }}"
+                 wire:model.live="editingCategory"
+             />
+@@ -73,14 +73,14 @@
+                 type="number"
+                 min="0"
+                 max="65535"
+-                {{-- i18n-native: __('Sort order') --}}
++                {{-- i18n-native: __('admin.permissions.labels.sort_order') --}}
+                 label="{{ __('admin.roles.labels.sort_order') }}"
+                 wire:model.live="editingSortOrder"
+             />
+ 
+             <div class="col-span-2">
+                 <flux:textarea
+-                    {{-- i18n-native: __('Description') --}}
++                    {{-- i18n-native: __('ui.labels.description') --}}
+                     label="{{ __('ui.labels.description') }}"
+                     wire:model.live="editingDescription"
+                     rows="3"
+@@ -89,19 +89,19 @@
+ 
+             <div class="col-span-2">
+                 <flux:checkbox
+-                    {{-- i18n-native: __('Assignable through UI') --}}
++                    {{-- i18n-native: __('admin.roles.labels.assignable_through_ui') --}}
+                     label="{{ __('admin.roles.labels.assignable_through_ui') }}"
+                     wire:model.live="editingIsAssignable"
+                 />
+             </div>
+         </div>
+ 
+-        {{-- i18n-native: __('Badge') --}}
++        {{-- i18n-native: __('admin.roles.badge.title') --}}
+         <flux:separator text="{{ __('admin.roles.badge.title') }}" />
+ 
+         <div class="grid grid-cols-3 gap-4">
+             <flux:select
+-                {{-- i18n-native: __('Color') --}}
++                {{-- i18n-native: __('admin.roles.badge.color') --}}
+                 label="{{ __('admin.roles.badge.color') }}"
+                 wire:model.live="editingBadgeColor"
+             >
+@@ -113,7 +113,7 @@
+             </flux:select>
+ 
+             <flux:select
+-                {{-- i18n-native: __('Variant') --}}
++                {{-- i18n-native: __('admin.roles.badge.variant') --}}
+                 label="{{ __('admin.roles.badge.variant') }}"
+                 wire:model.live="editingBadgeVariant"
+             >
+@@ -125,7 +125,7 @@
+             </flux:select>
+ 
+             <flux:select
+-                {{-- i18n-native: __('Icon') --}}
++                {{-- i18n-native: __('admin.roles.badge.icon') --}}
+                 label="{{ __('admin.roles.badge.icon') }}"
+                 wire:model.live="editingBadgeIcon"
+             >
+@@ -139,7 +139,7 @@
+ 
+         <div>
+             <flux:text class="mb-2 text-sm text-zinc-400">
+-                {{-- i18n-native: __('Preview') --}}
++                {{-- i18n-native: __('ui.labels.preview') --}}
+                 {{ __('ui.labels.preview') }}
+             </flux:text>
+ 
+@@ -159,7 +159,7 @@
+             <x-ui.button.cancel wire:click="closeEditRoleModal" />
+ 
+             <x-ui.button.save
+-                {{-- i18n-native: __('Save Changes') --}}
++                {{-- i18n-native: __('ui.actions.save_changes') --}}
+                 :label="__('ui.actions.save_changes')"
+                 wire:click="saveRole"
+             />
+
+--- a/resources/views/components/admin/partials/app-settings/⚡table-role-badges.blade.php
++++ b/resources/views/components/admin/partials/app-settings/⚡table-role-badges.blade.php
+@@ -13,27 +13,27 @@
+         <flux:table>
+             <flux:table.columns class="bg-zinc-800 text-zinc-400">
+                 <flux:table.column align="center">
+-                    {{ __('#') }}
++                    {{ __('ui.labels.number_short') }}
+                 </flux:table.column>
+ 
+                 <flux:table.column sortable>
+-                    {{ __('Role') }}
++                    {{ __('ui.labels.role') }}
+                 </flux:table.column>
+ 
+                 <flux:table.column>
+-                    {{ __('Preview') }}
++                    {{ __('ui.labels.preview') }}
+                 </flux:table.column>
+ 
+                 <flux:table.column sortable>
+-                    {{ __('Color') }}
++                    {{ __('admin.roles.badge.color') }}
+                 </flux:table.column>
+ 
+                 <flux:table.column sortable>
+-                    {{ __('Variant') }}
++                    {{ __('admin.roles.badge.variant') }}
+                 </flux:table.column>
+ 
+                 <flux:table.column sortable>
+-                    {{ __('Icon') }}
++                    {{ __('admin.roles.badge.icon') }}
+                 </flux:table.column>
+ 
+                 <flux:table.column align="center">
+
+--- a/resources/views/components/admin/partials/app-settings/⚡table-icon-registry.blade.php
++++ b/resources/views/components/admin/partials/app-settings/⚡table-icon-registry.blade.php
+@@ -13,11 +13,11 @@
+         <flux:table>
+             <flux:table.columns class="bg-zinc-800 text-zinc-400">
+                 <flux:table.column align="center">
+-                    {{ __('#') }}
++                    {{ __('ui.labels.number_short') }}
+                 </flux:table.column>
+ 
+                 <flux:table.column sortable>
+-                    {{ __('Icon') }}
++                    {{ __('admin.roles.badge.icon') }}
+                 </flux:table.column>
+ 
+                 <flux:table.column sortable>
+
+--- a/resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php
++++ b/resources/views/components/admin/partials/app-settings/⚡meta-overview.blade.php
+@@ -6,7 +6,7 @@
+         class="mb-4"
+         size="lg"
+     >
+-        {{ __('Overview') }}
++        {{ __('admin.permissions.overview.title') }}
+     </flux:heading>
+ 
+     <div class="grid grid-cols-5 gap-3">
+
+--- a/resources/views/components/admin/partials/permission-list/⚡filter.blade.php
++++ b/resources/views/components/admin/partials/permission-list/⚡filter.blade.php
+@@ -11,12 +11,12 @@
+         <div class="min-w-0 flex-none basis-1/4">
+             <flux:label for="permission-list-search">
+                 <x-ui.tooltip.trigger
+-                    :title="__('Search')"
++                    :title="__('ui.actions.search')"
+                     :text="__(
+                         'Enter a search term to filter permissions by name, guard, category, or description. The search is case-sensitive.',
+                     )"
+                 >
+-                    {{ __('Search') }}
++                    {{ __('ui.actions.search') }}
+                 </x-ui.tooltip.trigger>
+                 {{ __('ui.actions.search') }}
+             </flux:label>
+
+--- a/resources/views/components/admin/partials/translation-list/⚡meta.blade.php
++++ b/resources/views/components/admin/partials/translation-list/⚡meta.blade.php
+@@ -259,7 +259,7 @@
+                                 color="blue"
+                                 variant="subtle"
+                             >
+-                                {{ __('Search') }}: {{ $search }}
++                                {{ __('ui.actions.search') }}: {{ $search }}
+                             </flux:badge>
+                         @endif
+
+--- a/resources/views/components/admin/partials/translation-list/⚡filter.blade.php
++++ b/resources/views/components/admin/partials/translation-list/⚡filter.blade.php
+@@ -4,7 +4,7 @@
+ <flux:card class="mt-6">
+ 
+     <x-ui.headers.card
+-        :title="__('Filtering')"
++        :title="__('admin.permissions.filters.title')"
+         :description="__('Refine the translation list by key, value, language, and translation file.')"
+     >
+ 
+@@ -161,7 +161,7 @@
+                             variant="{{ !($showArchived ?? false) && $workflowStatus === 'all' && $status === 'all' ? 'primary' : 'ghost' }}"
+                             wire:click="showAllRelevantTranslations"
+                         >
+-                            {{ __('All') }}
++                            {{ __('ui.states.all') }}
+                             <span class="ml-1 opacity-70">
+                                 {{ $workflowRelevantTotal ?? 0 }}
+                             </span>
+@@ -397,7 +397,7 @@
+                         'Enter a search term to filter the list of translations by key or value. The search is case-sensitive.',
+                     )"
+                 >
+-                    {{ __('Search') }}
++                    {{ __('ui.actions.search') }}
+                 </x-ui.tooltip.trigger>
+             </flux:label>
+
+--- a/resources/views/components/admin/partials/translation-list/⚡table.blade.php
++++ b/resources/views/components/admin/partials/translation-list/⚡table.blade.php
+@@ -138,10 +138,10 @@
+                     >
+                         <x-ui.tooltip.trigger
+                             class="mr-3"
+-                            :title="__('Actions')"
++                            :title="__('ui.labels.actions')"
+                             :text="__('Open the translation key review modal.')"
+                         >
+-                            {{ __('Actions') }}
++                            {{ __('ui.labels.actions') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+                 </flux:table.columns>
+
+--- a/resources/views/components/admin/partials/country-reference-list/⚡meta.blade.php
++++ b/resources/views/components/admin/partials/country-reference-list/⚡meta.blade.php
+@@ -3,7 +3,7 @@
+ {{-- Overview / Meta --}}
+ <flux:card class="mt-6">
+     <x-ui.headers.card
+-        :title="__('Overview')"
++        :title="__('admin.permissions.overview.title')"
+         :description="__('Summary of imported country reference data, address formats and available subdivisions.')"
+     >
+ 
+@@ -37,7 +37,7 @@
+             icon="globe"
+         >
+             <flux:callout.heading>
+-                {{ __('Countries') }}
++                {{ __('layouts.sidebar.administration.countries') }}
+             </flux:callout.heading>
+ 
+             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+
+--- a/resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php
++++ b/resources/views/components/admin/partials/country-reference-list/⚡filter.blade.php
+@@ -3,7 +3,7 @@
+ {{-- Filter --}}
+ <flux:card class="mt-6">
+     <x-ui.headers.card
+-        :title="__('Filtering')"
++        :title="__('admin.permissions.filters.title')"
+         :description="__(
+             'Refine the list of reference countries by searching for specific attributes or applying filters based on region, status, membership and data quality.',
+         )"
+@@ -13,12 +13,12 @@
+         <div class="col-span-2">
+             <flux:label for="country-reference-list-search">
+                 <x-ui.tooltip.trigger
+-                    :title="__('Search')"
++                    :title="__('ui.actions.search')"
+                     :text="__(
+                         'Enter a search term to filter countries by ISO code, name, phone code, capital city or region. The search is case-sensitive.',
+                     )"
+                 >
+-                    {{ __('Search') }}
++                    {{ __('ui.actions.search') }}
+                 </x-ui.tooltip.trigger>
+             </flux:label>
+ 
+@@ -55,7 +55,7 @@
+                 wire:model.live="regionFilter"
+             >
+                 <flux:select.option value="">
+-                    {{ __('All') }}
++                    {{ __('ui.states.all') }}
+                 </flux:select.option>
+ 
+                 @foreach ($regions as $region)
+@@ -82,7 +82,7 @@
+                 wire:model.live="statusFilter"
+             >
+                 <flux:select.option value="">
+-                    {{ __('All') }}
++                    {{ __('ui.states.all') }}
+                 </flux:select.option>
+ 
+                 <flux:select.option value="active">
+@@ -111,7 +111,7 @@
+                 wire:model.live="membershipFilter"
+             >
+                 <flux:select.option value="">
+-                    {{ __('All') }}
++                    {{ __('ui.states.all') }}
+                 </flux:select.option>
+ 
+                 <flux:select.option value="eu">
+@@ -144,7 +144,7 @@
+                 wire:model.live="dataFilter"
+             >
+                 <flux:select.option value="">
+-                    {{ __('All') }}
++                    {{ __('ui.states.all') }}
+                 </flux:select.option>
+ 
+                 <flux:select.option value="missing_capital">
+
+--- a/resources/views/components/admin/partials/country-reference-list/⚡table.blade.php
++++ b/resources/views/components/admin/partials/country-reference-list/⚡table.blade.php
+@@ -3,7 +3,7 @@
+ {{-- Table --}}
+ <flux:card class="mt-6">
+     <x-ui.headers.card
+-        :title="__('Countries')"
++        :title="__('layouts.sidebar.administration.countries')"
+         :description="__('List of imported country reference data, address formats and available subdivisions.')"
+     />
+ 
+@@ -41,10 +41,10 @@
+                         wire:click="sortBy('name')"
+                     >
+                         <x-ui.tooltip.trigger
+-                            :title="__('Name')"
++                            :title="__('ui.labels.name')"
+                             :text="__('Name of the country, useful for identification and reference.')"
+                         >
+-                            {{ __('Name') }}
++                            {{ __('ui.labels.name') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+
+--- a/resources/views/components/admin/partials/translation-sub-languages/⚡filter.blade.php
++++ b/resources/views/components/admin/partials/translation-sub-languages/⚡filter.blade.php
+@@ -3,14 +3,14 @@
+ <flux:card class="mt-6">
+ 
+     <x-ui.headers.card
+-        :title="__('Filtering')"
++        :title="__('admin.permissions.filters.title')"
+         :description="__('Refine sub-language variants by locale, base language, and override availability.')"
+     />
+ 
+     <div class="flex flex-wrap items-end gap-3">
+         <div class="min-w-0 flex-1 basis-72">
+             <flux:label for="translation-sub-language-search">
+-                {{ __('Search') }}
++                {{ __('ui.actions.search') }}
+             </flux:label>
+ 
+             <flux:input.group class="w-full min-w-0">
+
+--- a/resources/views/components/admin/partials/translation-sub-languages/⚡modal-edit.blade.php
++++ b/resources/views/components/admin/partials/translation-sub-languages/⚡modal-edit.blade.php
+@@ -109,7 +109,7 @@
+             <x-ui.button.cancel wire:click="closeTranslationEntryEditModal" />
+ 
+             <x-ui.button.save
+-                :label="__('Save Changes')"
++                :label="__('ui.actions.save_changes')"
+                 wire:click="saveTranslationEntryEdit"
+                 :disabled="!$this->translationEntryHasChanges"
+             />
+
+--- a/resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php
++++ b/resources/views/components/admin/partials/html-view-audit/⚡meta.blade.php
+@@ -19,7 +19,7 @@
+ 
+ <flux:card class="mt-6">
+     <x-ui.headers.card
+-        :title="__('Overview')"
++        :title="__('admin.permissions.overview.title')"
+         :description="$audit['note'] ?? __('Current HTML / Blade view structure audit result.')"
+     />
+
+--- a/resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php
++++ b/resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php
+@@ -15,7 +15,7 @@
+                         'Enter a search term to filter the audit history by file name, tag name, or other relevant information. The search is case-sensitive.',
+                     )"
+                 >
+-                    {{ __('Search') }}
++                    {{ __('ui.actions.search') }}
+                 </x-ui.tooltip.trigger>
+             </flux:label>
+
+--- a/resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php
++++ b/resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php
+@@ -21,7 +21,7 @@
+                 $typeMeta = $tableLegend['type'][$selectedFinding->type] ?? [];
+             @endphp
+ 
+-            <flux:separator text="{{ __('Overview') }}" />
++            <flux:separator text="{{ __('admin.permissions.overview.title') }}" />
+ 
+             <div class="grid grid-cols-2 gap-4">
+                 <div>
+
+--- a/resources/views/components/admin/partials/fallback-report-list/⚡meta.blade.php
++++ b/resources/views/components/admin/partials/fallback-report-list/⚡meta.blade.php
+@@ -3,7 +3,7 @@
+ {{-- Overview --}}
+ <flux:card class="mt-6">
+     <x-ui.headers.card
+-        :title="__('Overview')"
++        :title="__('admin.permissions.overview.title')"
+         :description="__(
+             'Summary of technical fallback events such as missing icons, missing config values or other recoverable UI fallbacks.',
+         )"
+
+--- a/resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php
++++ b/resources/views/components/admin/partials/fallback-report-list/⚡filter.blade.php
+@@ -6,19 +6,19 @@
+         class="mb-4"
+         size="lg"
+     >
+-        {{ __('Filtering') }}
++        {{ __('admin.permissions.filters.title') }}
+     </flux:heading>
+ 
+     <div class="flex w-full items-end gap-3">
+         <div class="min-w-0 flex-none basis-1/4">
+             <flux:label for="fallback-report-list-search">
+                 <x-ui.tooltip.trigger
+-                    :title="__('Search')"
++                    :title="__('ui.actions.search')"
+                     :text="__(
+                         'Enter a search term to filter fallback reports by ID, type, key, fallback or context. The search is case-sensitive.',
+                     )"
+                 >
+-                    {{ __('Search') }}
++                    {{ __('ui.actions.search') }}
+                 </x-ui.tooltip.trigger>
+             </flux:label>
+ 
+@@ -61,7 +61,7 @@
+                     wire:model.live="statusFilter"
+                 >
+                     <flux:select.option value="">
+-                        {{ __('All') }}
++                        {{ __('ui.states.all') }}
+                     </flux:select.option>
+ 
+                     <flux:select.option value="open">
+
+--- a/resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php
++++ b/resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php
+@@ -5,7 +5,7 @@
+ 
+     {{-- Card Header --}}
+     <x-ui.headers.card
+-        :title="__('Fallback Reports')"
++        :title="__('layouts.sidebar.administration.fallback_reports')"
+         :description="__(
+             'List of technical fallback events such as missing icons, missing config values or other recoverable UI fallbacks.',
+         )"
+@@ -33,7 +33,7 @@
+                                 'Unique identifier of the fallback report, useful for tracking and reference.',
+                             )"
+                         >
+-                            {{ __('#') }}
++                            {{ __('ui.labels.number_short') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+ 
+@@ -144,12 +144,12 @@
+                     {{-- Column Actions --}}
+                     <flux:table.column align="center">
+                         <x-ui.tooltip.trigger
+-                            :title="__('Actions')"
++                            :title="__('ui.labels.actions')"
+                             :text="__(
+                                 'Actions available for the fallback report, useful for tracking and reference.',
+                             )"
+                         >
+-                            {{ __('Actions') }}
++                            {{ __('ui.labels.actions') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+                 </flux:table.columns>
+
+--- a/resources/views/components/admin/partials/user-list/⚡meta.blade.php
++++ b/resources/views/components/admin/partials/user-list/⚡meta.blade.php
+@@ -2,7 +2,7 @@
+ 
+ <flux:card class="mt-6">
+     <x-ui.headers.card
+-        :title="__('Overview')"
++        :title="__('admin.permissions.overview.title')"
+         :description="__('Summary of users in the system, their assigned roles and role categories.')"
+     />
+ 
+@@ -49,7 +49,7 @@
+             icon="user-check"
+         >
+             <flux:callout.heading>
+-                {{ __('Assigned users') }}
++                {{ __('admin.roles.labels.assigned_users') }}
+             </flux:callout.heading>
+ 
+             <flux:callout.text class="font-extralight">
+@@ -59,7 +59,7 @@
+             <div class="mt-3 space-y-1 text-sm">
+                 <div class="flex items-center justify-between gap-4">
+                     <span class="text-zinc-300">
+-                        {{ __('System') }}
++                        {{ __('admin.permissions.filters.system.label') }}
+                     </span>
+                     <span class="font-semibold tabular-nums text-zinc-100">
+                         {{ $summary['assignedUsersByRoleCategory']['system'] ?? 0 }}
+@@ -93,7 +93,7 @@
+             <div class="mt-3 space-y-1 text-sm">
+                 <div class="flex items-center justify-between gap-4">
+                     <span class="text-zinc-300">
+-                        {{ __('System') }}
++                        {{ __('admin.permissions.filters.system.label') }}
+                     </span>
+                     <span class="font-semibold tabular-nums text-zinc-100">
+                         {{ $summary['assignableRolesByCategory']['system'] ?? 0 }}
+
+--- a/resources/views/components/admin/partials/user-list/⚡filter.blade.php
++++ b/resources/views/components/admin/partials/user-list/⚡filter.blade.php
+@@ -2,7 +2,7 @@
+ 
+ <flux:card class="mt-6">
+     <x-ui.headers.card
+-        :title="__('Filtering')"
++        :title="__('admin.permissions.filters.title')"
+         :description="__('Filter the list of users by name, email or assigned roles.')"
+     />
+ 
+@@ -15,7 +15,7 @@
+                         'Enter a search term to filter the list of users by name or email. The search is case-sensitive.',
+                     )"
+                 >
+-                    {{ __('Search') }}
++                    {{ __('ui.actions.search') }}
+                 </x-ui.tooltip.trigger>
+             </flux:label>
+ 
+@@ -43,7 +43,7 @@
+                     :title="__('Filter by role')"
+                     :text="__('Select a role to filter the list of users.')"
+                 >
+-                    {{ __('Role') }}
++                    {{ __('ui.labels.role') }}
+                 </x-ui.tooltip.trigger>
+             </flux:label>
+ 
+@@ -58,7 +58,7 @@
+                     wire:model.live="roleFilter"
+                 >
+                     <flux:select.option value="">
+-                        {{ __('All roles') }}
++                        {{ __('admin.permissions.filters.roles.all') }}
+                     </flux:select.option>
+ 
+                     <flux:select.option value="__none__">
+
+--- a/resources/views/components/admin/partials/user-list/⚡table.blade.php
++++ b/resources/views/components/admin/partials/user-list/⚡table.blade.php
+@@ -39,10 +39,10 @@
+                         wire:click="sortBy('name')"
+                     >
+                         <x-ui.tooltip.trigger
+-                            :title="__('Name')"
++                            :title="__('ui.labels.name')"
+                             :text="__('Full name of the user, useful for identification.')"
+                         >
+-                            {{ __('Name') }}
++                            {{ __('ui.labels.name') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+ 
+@@ -65,22 +65,22 @@
+                         wire:click="sortBy('roles.name')"
+                     >
+                         <x-ui.tooltip.trigger
+-                            :title="__('Roles')"
++                            :title="__('ui.labels.roles')"
+                             :text="__(
+                                 'Roles assigned to the user, determining their permissions and access levels.',
+                             )"
+                         >
+-                            {{ __('Roles') }}
++                            {{ __('ui.labels.roles') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+ 
+                     {{-- Column Actions --}}
+                     <flux:table.column align="center">
+                         <x-ui.tooltip.trigger
+-                            :title="__('Actions')"
++                            :title="__('ui.labels.actions')"
+                             :text="__('Available actions for the user, such as editing roles.')"
+                         >
+-                            {{ __('Actions') }}
++                            {{ __('ui.labels.actions') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+                 </flux:table.columns>
+
+--- a/resources/views/components/admin/partials/user-list/⚡modal.blade.php
++++ b/resources/views/components/admin/partials/user-list/⚡modal.blade.php
+@@ -49,7 +49,7 @@
+         <div>
+             <flux:fieldset>
+                 <flux:legend class="mb-2 text-base font-semibold uppercase tracking-wide text-zinc-500">
+-                    {{ __('Roles') }}
++                    {{ __('ui.labels.roles') }}
+                 </flux:legend>
+ 
+                 <flux:radio.group wire:model.live="editingRoleName">
+
+--- a/resources/views/components/admin/partials/client-list/⚡meta.blade.php
++++ b/resources/views/components/admin/partials/client-list/⚡meta.blade.php
+@@ -3,7 +3,7 @@
+ {{-- Overview --}}
+ <flux:card class="mt-6">
+     <x-ui.headers.card
+-        :title="__('Overview')"
++        :title="__('admin.permissions.overview.title')"
+         :description="__(
+             'Get a quick snapshot of client statistics, including total clients, pending activations, active clients, and assignment status.',
+         )"
+
+--- a/resources/views/components/admin/partials/client-list/⚡filter.blade.php
++++ b/resources/views/components/admin/partials/client-list/⚡filter.blade.php
+@@ -3,7 +3,7 @@
+ {{-- Filter --}}
+ <flux:card class="mt-6">
+     <x-ui.headers.card
+-        :title="__('Filtering')"
++        :title="__('admin.permissions.filters.title')"
+         :description="__(
+             'Refine the client list with powerful filters: search by name, legal name, client number or description; filter by type, status, and people associations.',
+         )"
+@@ -18,7 +18,7 @@
+                         'Enter a search term to filter clients by name, legal name, client number or description. The search is case-sensitive.',
+                     )"
+                 >
+-                    {{ __('Search') }}
++                    {{ __('ui.actions.search') }}
+                 </x-ui.tooltip.trigger>
+             </flux:label>
+ 
+@@ -127,7 +127,7 @@
+                     wire:model.live="peopleFilter"
+                 >
+                     <flux:select.option value="">
+-                        {{ __('All') }}
++                        {{ __('ui.states.all') }}
+                     </flux:select.option>
+ 
+                     <flux:select.option value="with_people">
+
+--- a/resources/views/components/admin/partials/client-list/⚡table.blade.php
++++ b/resources/views/components/admin/partials/client-list/⚡table.blade.php
+@@ -18,7 +18,7 @@
+                             :title="__('ID')"
+                             :text="__('Unique identifier of the client, useful for tracking and reference.')"
+                         >
+-                            {{ __('#') }}
++                            {{ __('ui.labels.number_short') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+ 
+@@ -27,10 +27,10 @@
+                         wire:click="sortBy('name')"
+                     >
+                         <x-ui.tooltip.trigger
+-                            :title="__('Client')"
++                            :title="__('layouts.sidebar.management.client')"
+                             :text="__('Name of the client, useful for identification.')"
+                         >
+-                            {{ __('Client') }}
++                            {{ __('layouts.sidebar.management.client') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+
+--- a/resources/views/components/admin/partials/person-list/⚡meta.blade.php
++++ b/resources/views/components/admin/partials/person-list/⚡meta.blade.php
+@@ -3,7 +3,7 @@
+ {{-- Overview --}}
+ <flux:card class="mt-6">
+     <x-ui.headers.card
+-        :title="__('Overview')"
++        :title="__('admin.permissions.overview.title')"
+         :description="__('Summary of people in the system, their linked user accounts and client assignments.')"
+     />
+
+--- a/resources/views/components/admin/partials/person-list/⚡filter.blade.php
++++ b/resources/views/components/admin/partials/person-list/⚡filter.blade.php
+@@ -6,7 +6,7 @@
+         class="mb-4"
+         size="lg"
+     >
+-        {{ __('Filtering') }}
++        {{ __('admin.permissions.filters.title') }}
+     </flux:heading>
+ 
+     <div class="flex w-full items-end gap-3">
+@@ -16,7 +16,7 @@
+                     :title="__('Filter by search')"
+                     :text="__('Enter a search term to filter the list of persons.')"
+                 >
+-                    {{ __('Search') }}
++                    {{ __('ui.actions.search') }}
+                 </x-ui.tooltip.trigger>
+             </flux:label>
+ 
+@@ -59,7 +59,7 @@
+                     wire:model.live="userFilter"
+                 >
+                     <flux:select.option value="">
+-                        {{ __('All') }}
++                        {{ __('ui.states.all') }}
+                     </flux:select.option>
+ 
+                     <flux:select.option value="with_user">
+@@ -79,7 +79,7 @@
+                     :title="__('Filter by client')"
+                     :text="__('Select a client to filter the list of persons.')"
+                 >
+-                    {{ __('Client') }}
++                    {{ __('layouts.sidebar.management.client') }}
+                 </x-ui.tooltip.trigger>
+             </flux:label>
+ 
+@@ -94,7 +94,7 @@
+                     wire:model.live="clientFilter"
+                 >
+                     <flux:select.option value="">
+-                        {{ __('All') }}
++                        {{ __('ui.states.all') }}
+                     </flux:select.option>
+ 
+                     <flux:select.option value="with_client">
+
+--- a/resources/views/components/admin/partials/person-list/⚡table.blade.php
++++ b/resources/views/components/admin/partials/person-list/⚡table.blade.php
+@@ -15,10 +15,10 @@
+                 <flux:table.columns class="bg-zinc-800 text-zinc-400">
+                     <flux:table.column align="center">
+                         <x-ui.tooltip.trigger
+-                            :title="__('#')"
++                            :title="__('ui.labels.number_short')"
+                             :text="__('Unique identifier of the person, useful for tracking and reference.')"
+                         >
+-                            {{ __('#') }}
++                            {{ __('ui.labels.number_short') }}
+                         </x-ui.tooltip.trigger>
+                     </flux:table.column>
+
+--- a/resources/views/components/admin/partials/flag-reference-list/⚡meta.blade.php
++++ b/resources/views/components/admin/partials/flag-reference-list/⚡meta.blade.php
+@@ -2,7 +2,7 @@
+ 
+ <flux:card class="mt-6">
+     <x-ui.headers.card
+-        :title="__('Overview')"
++        :title="__('admin.permissions.overview.title')"
+         :description="__('Current audit status and data source for this flag reference page.')"
+     />
+
+--- a/resources/views/components/admin/partials/flag-reference-list/⚡filter.blade.php
++++ b/resources/views/components/admin/partials/flag-reference-list/⚡filter.blade.php
+@@ -5,13 +5,13 @@
+         class="mb-4"
+         size="lg"
+     >
+-        {{ __('Filtering') }}
++        {{ __('admin.permissions.filters.title') }}
+     </flux:heading>
+ 
+     <div class="flex w-full flex-wrap items-end gap-3">
+         <div class="min-w-0 flex-1">
+             <flux:label for="flag-reference-search">
+-                {{ __('Search') }}
++                {{ __('ui.actions.search') }}
+             </flux:label>
+ 
+             <flux:input.group class="w-full">
+@@ -42,7 +42,7 @@
+                 wire:model.live="typeFilter"
+             >
+                 <flux:select.option value="">
+-                    {{ __('All') }}
++                    {{ __('ui.states.all') }}
+                 </flux:select.option>
+ 
+                 <flux:select.option value="ll">ll</flux:select.option>
+@@ -64,7 +64,7 @@
+                 wire:model.live="statusFilter"
+             >
+                 <flux:select.option value="">
+-                    {{ __('All') }}
++                    {{ __('ui.states.all') }}
+                 </flux:select.option>
+ 
+                 <flux:select.option value="resolved">
+
+--- a/resources/views/components/admin/⚡fallback-report-list.blade.php
++++ b/resources/views/components/admin/⚡fallback-report-list.blade.php
+@@ -2,7 +2,7 @@
+ 
+ <flux:card>
+     <x-ui.headers.page
+-        :title="__('Fallback Reports')"
++        :title="__('layouts.sidebar.administration.fallback_reports')"
+         :description="__(
+             'Review technical fallback events such as missing icons, missing config values or other recoverable UI fallbacks.',
+         )"
+
+--- a/resources/views/components/admin/⚡role-list.blade.php
++++ b/resources/views/components/admin/⚡role-list.blade.php
+@@ -9,15 +9,15 @@
+ 
+     {{-- Header part --}}
+     <x-ui.headers.page
+-        {{-- i18n-native: __('Role Management') --}}
++        {{-- i18n-native: __('admin.roles.title') --}}
+         :title="__('admin.roles.title')"
+-        {{-- i18n-native: __('Manage role metadata, assignment visibility, and role badge display settings.') --}}
++        {{-- i18n-native: __('admin.roles.description') --}}
+         :description="__('admin.roles.description')"
+     >
+         @role('Super-Admin')
+             <x-ui.button.save
+                 icon="plus"
+-                {{-- i18n-native: __('Create Role') --}}
++                {{-- i18n-native: __('admin.roles.modals.create.title') --}}
+                 label="{{ __('admin.roles.actions.create') }}"
+                 wire:click="openCreateRoleModal"
+             />
+
+--- a/resources/views/pages/settings/⚡security.blade.php
++++ b/resources/views/pages/settings/⚡security.blade.php
+@@ -89,7 +89,7 @@
+ <section class="w-full">
+     @include('partials.settings-heading')
+ 
+-    <flux:heading class="sr-only">{{ __('Security settings') }}</flux:heading>
++    <flux:heading class="sr-only">{{ __('pages.settings.security.security_settings') }}</flux:heading>
+ 
+     <x-pages::settings.layout
+         :heading="__('Update password')"
+@@ -119,7 +119,7 @@
+             <flux:input
+                 type="password"
+                 wire:model="password_confirmation"
+-                :label="__('Confirm password')"
++                :label="__('pages.settings.security.confirm_password')"
+                 required
+                 autocomplete="new-password"
+                 viewable
+@@ -128,19 +128,19 @@
+             <div class="flex items-center gap-4">
+                 <x-ui.button.save
+                     data-test="update-password-button"
+-                    label="{{ __('Save') }}"
++                    label="{{ __('ui.actions.save') }}"
+                     {{-- icon="save" --}}
+                     {{-- color="green" --}}
+                 />
+                 {{-- <flux:button variant="primary" type="submit" data-test="update-password-button">
+-                    {{ __('Save') }}
++                    {{ __('ui.actions.save') }}
+                 </flux:button> --}}
+             </div>
+         </form>
+ 
+         @if ($canManageTwoFactor)
+             <section class="mt-12">
+-                <flux:heading>{{ __('Two-factor authentication') }}</flux:heading>
++                <flux:heading>{{ __('pages.settings.security.two_factor_authentication') }}</flux:heading>
+                 <flux:subheading>{{ __('Manage your two-factor authentication settings') }}</flux:subheading>
+ 
+                 <div
+@@ -155,7 +155,7 @@
+ 
+                             <div class="flex justify-start">
+                                 <x-ui.button.delete
+-                                    label="{{ __('Disable 2FA') }}"
++                                    label="{{ __('pages.settings.security.disable_2fa') }}"
+                                     icon="shield-off"
+                                     wire:click="disable"
+                                 />
+@@ -163,7 +163,7 @@
+                                     variant="danger"
+                                     wire:click="disable"
+                                 >
+-                                    {{ __('Disable 2FA') }}
++                                    {{ __('pages.settings.security.disable_2fa') }}
+                                 </flux:button> --}}
+                             </div>
+
+--- a/resources/views/pages/settings/⚡profile.blade.php
++++ b/resources/views/pages/settings/⚡profile.blade.php
+@@ -66,7 +66,7 @@
+                 report($exception);
+ 
+                 Flux::toast(heading: __('Avatar could not be saved'), text: __('pages.settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars'), variant: 'danger', duration: 6000);
+-                // Flux::toast(heading: __('Avatar could not be saved'), text: __('Please check the storage permissions for storage/app/public/avatars.'), variant: 'danger', duration: 6000);
++                // Flux::toast(heading: __('Avatar could not be saved'), text: __('pages.settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars'), variant: 'danger', duration: 6000);
+ 
+                 return;
+             }
+@@ -157,7 +157,7 @@
+                 <div class="space-y-6">
+                     <div>
+                         <flux:label for="name">
+-                            {{ __('Name') }}
++                            {{ __('ui.labels.name') }}
+                         </flux:label>
+ 
+                         <flux:input.group>
+@@ -241,7 +241,7 @@
+                         <x-ui.button.save
+                             data-test="update-profile-button"
+                             type="submit"
+-                            label="{{ __('Save') }}"
++                            label="{{ __('ui.actions.save') }}"
+                             {{-- icon="save" --}}
+                             {{-- color="green" --}}
+                         />
+@@ -252,7 +252,7 @@
+                             color="green"
+                             icon="save"
+                         >
+-                            {{ __('Save') }}
++                            {{ __('ui.actions.save') }}
+                         </flux:button> --}}
+                     </div>
+                 </div>
+@@ -280,7 +280,7 @@
+                             <img
+                                 class="h-24 w-24 rounded-2xl object-cover ring-1 ring-zinc-700"
+                                 src="{{ $this->avatarUrl }}"
+-                                alt="{{ __('Current avatar') }}"
++                                alt="{{ __('pages.settings.profile.current_avatar') }}"
+                             >
+                         @else
+                             <flux:avatar
+@@ -314,7 +314,7 @@
+                         type="file"
+                         wire:model="avatarUpload"
+                         accept="image/jpeg,image/png,image/webp"
+-                        label="{{ __('Avatar image') }}"
++                        label="{{ __('pages.settings.profile.avatar_image') }}"
+                     />
+ 
+                     @error('avatarUpload')
+
+--- a/resources/views/pages/settings/⚡appearance.blade.php
++++ b/resources/views/pages/settings/⚡appearance.blade.php
+@@ -16,7 +16,7 @@
+         <flux:radio.group x-data variant="segmented" x-model="$flux.appearance">
+             <flux:radio value="light" icon="sun">{{ __('Light') }}</flux:radio>
+             <flux:radio value="dark" icon="moon">{{ __('Dark') }}</flux:radio>
+-            <flux:radio value="system" icon="computer-desktop">{{ __('System') }}</flux:radio>
++            <flux:radio value="system" icon="computer-desktop">{{ __('admin.permissions.filters.system.label') }}</flux:radio>
+         </flux:radio.group>
+     </x-pages::settings.layout>
+ </section>
+
+--- a/resources/views/pages/settings/⚡two-factor-setup-modal.blade.php
++++ b/resources/views/pages/settings/⚡two-factor-setup-modal.blade.php
+@@ -140,7 +140,7 @@
+ 
+         return [
+             'title' => __('Enable two-factor authentication'),
+-            'description' => __('To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app.'),
++            'description' => __('pages.settings.two_factor_setup_modal.to_finish_enabling_two_factor_authentication_scan_the_qr_code_or_enter_the_setup'),
+             'buttonText' => __('Continue'),
+         ];
+     }
+@@ -200,7 +200,7 @@
+                         variant="outline"
+                         wire:click="resetVerification"
+                     >
+-                        {{ __('Back') }}
++                        {{ __('pages.settings.two_factor_setup_modal.back') }}
+                     </flux:button>
+ 
+                     <flux:button
+@@ -209,7 +209,7 @@
+                         wire:click="confirmTwoFactor"
+                         x-bind:disabled="$wire.code.length < 6"
+                     >
+-                        {{ __('Confirm') }}
++                        {{ __('pages.settings.two_factor_setup_modal.confirm') }}
+                     </flux:button>
+                 </div>
+             </div>
+
+--- a/resources/views/pages/auth/reset-password.blade.php
++++ b/resources/views/pages/auth/reset-password.blade.php
+@@ -34,11 +34,11 @@
+             <!-- Confirm Password -->
+             <flux:input
+                 name="password_confirmation"
+-                :label="__('Confirm password')"
++                :label="__('pages.settings.security.confirm_password')"
+                 type="password"
+                 required
+                 autocomplete="new-password"
+-                :placeholder="__('Confirm password')"
++                :placeholder="__('pages.settings.security.confirm_password')"
+                 viewable
+             />
+
+--- a/resources/views/pages/auth/register.blade.php
++++ b/resources/views/pages/auth/register.blade.php
+@@ -10,7 +10,7 @@
+             <!-- Name -->
+             <flux:input
+                 name="name"
+-                :label="__('Name')"
++                :label="__('ui.labels.name')"
+                 :value="old('name')"
+                 type="text"
+                 required
+@@ -44,11 +44,11 @@
+             <!-- Confirm Password -->
+             <flux:input
+                 name="password_confirmation"
+-                :label="__('Confirm password')"
++                :label="__('pages.settings.security.confirm_password')"
+                 type="password"
+                 required
+                 autocomplete="new-password"
+-                :placeholder="__('Confirm password')"
++                :placeholder="__('pages.settings.security.confirm_password')"
+                 viewable
+             />
+
+--- a/resources/views/pages/auth/two-factor-challenge.blade.php
++++ b/resources/views/pages/auth/two-factor-challenge.blade.php
+@@ -1,4 +1,4 @@
+-<x-layouts::auth :title="__('Two-factor authentication')">
++<x-layouts::auth :title="__('pages.settings.security.two_factor_authentication')">
+     <div class="flex flex-col gap-6">
+         <div
+             class="relative w-full h-auto"
+
+--- a/resources/views/pages/auth/confirm-password.blade.php
++++ b/resources/views/pages/auth/confirm-password.blade.php
+@@ -1,7 +1,7 @@
+-<x-layouts::auth :title="__('Confirm password')">
++<x-layouts::auth :title="__('pages.settings.security.confirm_password')">
+     <div class="flex flex-col gap-6">
+         <x-auth-header
+-            :title="__('Confirm password')"
++            :title="__('pages.settings.security.confirm_password')"
+             :description="__('This is a secure area of the application. Please confirm your password before continuing.')"
+         />
+ 
+@@ -21,7 +21,7 @@
+             />
+ 
+             <flux:button variant="primary" type="submit" class="w-full" data-test="confirm-password-button">
+-                {{ __('Confirm') }}
++                {{ __('pages.settings.two_factor_setup_modal.confirm') }}
+             </flux:button>
+         </form>
+     </div>
+
+--- a/resources/views/layouts/app/sidebar/⚡management.blade.php
++++ b/resources/views/layouts/app/sidebar/⚡management.blade.php
+@@ -22,14 +22,14 @@
+             :current="request()->routeIs('management.people.create')"
+             wire:navigate
+         >
+-            {{ __('Create') }}
++            {{ __('admin.roles.actions.create') }}
+         </flux:sidebar.item>
+     </flux:sidebar.group>
+ 
+     {{-- Management -> client --}}
+     <flux:sidebar.group
+         class="grid"
+-        :heading="__('Client')"
++        :heading="__('layouts.sidebar.management.client')"
+         icon="building-2"
+         expandable
+         :expanded="false"
+
+--- a/resources/views/layouts/app/sidebar/⚡administration.blade.php
++++ b/resources/views/layouts/app/sidebar/⚡administration.blade.php
+@@ -56,7 +56,7 @@
+         :current="request()->routeIs('admin.roles')"
+         wire:navigate
+     >
+-        {{ __('Roles') }}
++        {{ __('ui.labels.roles') }}
+     </flux:sidebar.item>
+ 
+     {{-- Admin -> permissions --}}
+@@ -137,7 +137,7 @@
+             :current="request()->routeIs('admin.country-references')"
+             wire:navigate
+         >
+-            {{ __('Countries') }}
++            {{ __('layouts.sidebar.administration.countries') }}
+         </flux:sidebar.item>
+ 
+         {{-- Admin -> reference -> flags --}}
+@@ -147,7 +147,7 @@
+             :current="request()->routeIs('admin.flag-references')"
+             wire:navigate
+         >
+-            {{ __('Flags') }}
++            {{ __('admin.permissions.table.columns.flags') }}
+         </flux:sidebar.item>
+ 
+         {{-- Admin -> reference -> HTML tags check --}}
+@@ -175,7 +175,7 @@
+         :current="request()->routeIs('admin.fallback-reports')"
+         wire:navigate
+     >
+-        {{ __('Fallback Reports') }}
++        {{ __('layouts.sidebar.administration.fallback_reports') }}
+     </flux:sidebar.item>
+ 
+     @role('Super-Admin')
+
+--- a/resources/views/layouts/app/header.blade.php
++++ b/resources/views/layouts/app/header.blade.php
+@@ -18,8 +18,8 @@
+             <flux:spacer />
+ 
+             <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse py-0!">
+-                <flux:tooltip :content="__('Search')" position="bottom">
+-                    <flux:navbar.item class="!h-10 [&>div>svg]:size-5" icon="magnifying-glass" href="#" :label="__('Search')" />
++                <flux:tooltip :content="__('ui.actions.search')" position="bottom">
++                    <flux:navbar.item class="!h-10 [&>div>svg]:size-5" icon="magnifying-glass" href="#" :label="__('ui.actions.search')" />
+                 </flux:tooltip>
+                 <flux:tooltip :content="__('Repository')" position="bottom">
+                     <flux:navbar.item

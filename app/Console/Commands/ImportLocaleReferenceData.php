@@ -6,7 +6,11 @@ namespace App\Console\Commands;
 
 use App\Support\Locale\LocaleReferenceImporter;
 use Illuminate\Console\Command;
+use Throwable;
 
+/**
+ * Imports locale, country and language reference data into project tables.
+ */
 class ImportLocaleReferenceData extends Command
 {
     /**
@@ -62,6 +66,31 @@ class ImportLocaleReferenceData extends Command
             $this->components->warn('Dry run only: all database changes were rolled back.');
         }
 
+        $this->logRunActivity('reference.import_locale_data.completed', 'Locale reference data import completed.', [
+            'display_locales' => $displayLocales,
+            'options' => [
+                'dry_run' => (bool) $this->option('dry-run'),
+                'with_country_meta' => (bool) $this->option('with-country-meta'),
+                'with_addressing' => (bool) $this->option('with-addressing'),
+                'with_subdivisions' => (bool) $this->option('with-subdivisions'),
+            ],
+            'result' => $result,
+        ]);
+
         return self::SUCCESS;
+    }
+
+    private function logRunActivity(string $event, string $description, array $properties = []): void
+    {
+        try {
+            activity('reference')
+                ->event($event)
+                ->withProperties(array_merge([
+                    'command' => $this->getName(),
+                ], $properties))
+                ->log($description);
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: ' . $exception->getMessage());
+        }
     }
 }

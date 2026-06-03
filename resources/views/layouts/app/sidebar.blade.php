@@ -57,11 +57,11 @@
     {{-- Global Tooltip --}}
     <template id="global-tooltip-template">
         <div
-            class="my-tooltip pointer-events-auto z-50 max-w-[24rem] rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-3 text-zinc-100 opacity-0 shadow-xl transition-opacity duration-200"
+            class="my-tooltip z-9999 pointer-events-auto max-w-[24rem] px-4 py-3 opacity-0 transition-opacity duration-200"
             role="tooltip"
         >
             <div class="flex gap-3">
-                <flux:icon.information-circle class="mt-0.5 size-5 shrink-0 text-zinc-300" />
+                <flux:icon.information-circle class="mt-0.5 size-5 shrink-0" />
 
                 <div class="min-w-0 space-y-1">
                     <div class="flex flex-wrap items-center gap-2">
@@ -77,16 +77,17 @@
                         </flux:badge>
                     </div>
 
-                    <div class="tooltip-content text-sm leading-relaxed text-zinc-200"></div>
+                    <div class="tooltip-content text-sm leading-relaxed"></div>
 
                     <div
-                        class="tooltip-action mt-2 flex items-center gap-3 border-t border-zinc-700/70 pt-2"
+                        class="tooltip-action mt-2 flex items-center gap-3 border-t pt-2"
+                        {{-- class="tooltip-action mt-2 flex flex-col items-start gap-2 border-t border-zinc-700/70 pt-2" --}}
                         hidden
                     >
-                        <div class="tooltip-action-text min-w-0 flex-1 text-xs leading-relaxed text-zinc-300"></div>
+                        <span class="tooltip-action-text min-w-0 flex-1 text-xs leading-relaxed"></span>
 
                         <flux:button
-                            class="tooltip-action-button ml-auto shrink-0"
+                            class="tooltip-action-button h-8 px-3 text-xs font-semibold"
                             type="button"
                             size="sm"
                             variant="primary"

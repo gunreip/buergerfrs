@@ -4,6 +4,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Livewire\Concerns\InteractsWithUserSettings;
 use App\Models\FallbackReport;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,10 @@ use Livewire\WithPagination;
  */
 class FallbackReportList extends Component
 {
+    use InteractsWithUserSettings;
     use WithPagination;
+
+    private const UI_STATE_SETTING_KEY = 'ui.pages.admin_fallback_report_list';
 
     private const SORT_FIELDS = [
         'id' => 'id',
@@ -37,12 +41,33 @@ class FallbackReportList extends Component
 
     public int $perPage = 25;
 
+    public function mount(): void
+    {
+        $state = $this->userSetting(self::UI_STATE_SETTING_KEY, []);
+
+        if (is_array($state)) {
+            $this->search = trim((string) ($state['search'] ?? $this->search));
+            $this->statusFilter = trim((string) ($state['statusFilter'] ?? $this->statusFilter));
+            $this->perPage = (int) ($state['perPage'] ?? $this->perPage);
+            $this->perPage = $this->normalizedPerPage();
+
+            $sortField = trim((string) ($state['sortField'] ?? $this->sortField));
+            $this->sortField = array_key_exists($sortField, self::SORT_FIELDS) ? $sortField : 'last_seen_at';
+
+            $sortDirection = trim((string) ($state['sortDirection'] ?? $this->sortDirection));
+            $this->sortDirection = in_array($sortDirection, ['asc', 'desc'], true) ? $sortDirection : 'desc';
+        }
+
+        $this->setPage(1);
+    }
+
     /**
      * Reset pagination when search changes.
      */
     public function updatedSearch(): void
     {
         $this->resetPage();
+        $this->persistUiState();
     }
 
     /**
@@ -51,6 +76,7 @@ class FallbackReportList extends Component
     public function updatedStatusFilter(): void
     {
         $this->resetPage();
+        $this->persistUiState();
     }
 
     /**
@@ -61,6 +87,7 @@ class FallbackReportList extends Component
         $this->perPage = $this->normalizedPerPage();
 
         $this->resetPage();
+        $this->persistUiState();
     }
 
     /**
@@ -76,6 +103,7 @@ class FallbackReportList extends Component
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
 
             $this->resetPage();
+            $this->persistUiState();
 
             return;
         }
@@ -84,6 +112,7 @@ class FallbackReportList extends Component
         $this->sortDirection = 'asc';
 
         $this->resetPage();
+        $this->persistUiState();
     }
 
     /**
@@ -96,6 +125,18 @@ class FallbackReportList extends Component
         $this->perPage = 10;
 
         $this->resetPage();
+        $this->persistUiState();
+    }
+
+    private function persistUiState(): void
+    {
+        $this->setUserSetting(self::UI_STATE_SETTING_KEY, [
+            'search' => $this->search,
+            'statusFilter' => $this->statusFilter,
+            'perPage' => $this->perPage,
+            'sortField' => $this->sortField,
+            'sortDirection' => $this->sortDirection,
+        ]);
     }
 
     /**

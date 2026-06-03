@@ -1,0 +1,223 @@
+{
+    "generated_at": "2026-06-03T17:12:23+02:00",
+    "files_with_diff": 54,
+    "replacements": 190,
+    "entries": [
+        {
+            "file": "app/Livewire/Admin/RoleList.php",
+            "replacements": 6
+        },
+        {
+            "file": "app/Support/Audit/AdminActivity.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/management/people/create-person/sections/\u26a1emergency-contact.blade.php",
+            "replacements": 2
+        },
+        {
+            "file": "resources/views/components/ui/button/create.blade.php",
+            "replacements": 2
+        },
+        {
+            "file": "resources/views/components/ui/button/save.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/ui/button/confirm.blade.php",
+            "replacements": 2
+        },
+        {
+            "file": "resources/views/components/admin/partials/role-list/\u26a1meta.blade.php",
+            "replacements": 2
+        },
+        {
+            "file": "resources/views/components/admin/partials/role-list/\u26a1filter.blade.php",
+            "replacements": 7
+        },
+        {
+            "file": "resources/views/components/admin/partials/role-list/\u26a1modal-create.blade.php",
+            "replacements": 16
+        },
+        {
+            "file": "resources/views/components/admin/partials/role-list/\u26a1table.blade.php",
+            "replacements": 17
+        },
+        {
+            "file": "resources/views/components/admin/partials/role-list/\u26a1modal-edit.blade.php",
+            "replacements": 17
+        },
+        {
+            "file": "resources/views/components/admin/partials/app-settings/\u26a1table-role-badges.blade.php",
+            "replacements": 6
+        },
+        {
+            "file": "resources/views/components/admin/partials/app-settings/\u26a1table-icon-registry.blade.php",
+            "replacements": 2
+        },
+        {
+            "file": "resources/views/components/admin/partials/app-settings/\u26a1meta-overview.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/admin/partials/permission-list/\u26a1filter.blade.php",
+            "replacements": 2
+        },
+        {
+            "file": "resources/views/components/admin/partials/translation-list/\u26a1meta.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/admin/partials/translation-list/\u26a1filter.blade.php",
+            "replacements": 3
+        },
+        {
+            "file": "resources/views/components/admin/partials/translation-list/\u26a1table.blade.php",
+            "replacements": 2
+        },
+        {
+            "file": "resources/views/components/admin/partials/country-reference-list/\u26a1meta.blade.php",
+            "replacements": 2
+        },
+        {
+            "file": "resources/views/components/admin/partials/country-reference-list/\u26a1filter.blade.php",
+            "replacements": 7
+        },
+        {
+            "file": "resources/views/components/admin/partials/country-reference-list/\u26a1table.blade.php",
+            "replacements": 3
+        },
+        {
+            "file": "resources/views/components/admin/partials/translation-sub-languages/\u26a1filter.blade.php",
+            "replacements": 2
+        },
+        {
+            "file": "resources/views/components/admin/partials/translation-sub-languages/\u26a1modal-edit.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/admin/partials/html-view-audit/\u26a1meta.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/admin/partials/html-view-audit/\u26a1filter.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/admin/partials/html-view-audit/\u26a1modal.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/admin/partials/fallback-report-list/\u26a1meta.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/admin/partials/fallback-report-list/\u26a1filter.blade.php",
+            "replacements": 4
+        },
+        {
+            "file": "resources/views/components/admin/partials/fallback-report-list/\u26a1table.blade.php",
+            "replacements": 4
+        },
+        {
+            "file": "resources/views/components/admin/partials/user-list/\u26a1meta.blade.php",
+            "replacements": 4
+        },
+        {
+            "file": "resources/views/components/admin/partials/user-list/\u26a1filter.blade.php",
+            "replacements": 4
+        },
+        {
+            "file": "resources/views/components/admin/partials/user-list/\u26a1table.blade.php",
+            "replacements": 6
+        },
+        {
+            "file": "resources/views/components/admin/partials/user-list/\u26a1modal.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/admin/partials/client-list/\u26a1meta.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/admin/partials/client-list/\u26a1filter.blade.php",
+            "replacements": 3
+        },
+        {
+            "file": "resources/views/components/admin/partials/client-list/\u26a1table.blade.php",
+            "replacements": 3
+        },
+        {
+            "file": "resources/views/components/admin/partials/person-list/\u26a1meta.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/admin/partials/person-list/\u26a1filter.blade.php",
+            "replacements": 5
+        },
+        {
+            "file": "resources/views/components/admin/partials/person-list/\u26a1table.blade.php",
+            "replacements": 2
+        },
+        {
+            "file": "resources/views/components/admin/partials/flag-reference-list/\u26a1meta.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/admin/partials/flag-reference-list/\u26a1filter.blade.php",
+            "replacements": 4
+        },
+        {
+            "file": "resources/views/components/admin/\u26a1fallback-report-list.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/components/admin/\u26a1role-list.blade.php",
+            "replacements": 3
+        },
+        {
+            "file": "resources/views/pages/settings/\u26a1security.blade.php",
+            "replacements": 7
+        },
+        {
+            "file": "resources/views/pages/settings/\u26a1profile.blade.php",
+            "replacements": 6
+        },
+        {
+            "file": "resources/views/pages/settings/\u26a1appearance.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/pages/settings/\u26a1two-factor-setup-modal.blade.php",
+            "replacements": 3
+        },
+        {
+            "file": "resources/views/pages/auth/reset-password.blade.php",
+            "replacements": 2
+        },
+        {
+            "file": "resources/views/pages/auth/register.blade.php",
+            "replacements": 3
+        },
+        {
+            "file": "resources/views/pages/auth/two-factor-challenge.blade.php",
+            "replacements": 1
+        },
+        {
+            "file": "resources/views/pages/auth/confirm-password.blade.php",
+            "replacements": 3
+        },
+        {
+            "file": "resources/views/layouts/app/sidebar/\u26a1management.blade.php",
+            "replacements": 2
+        },
+        {
+            "file": "resources/views/layouts/app/sidebar/\u26a1administration.blade.php",
+            "replacements": 4
+        },
+        {
+            "file": "resources/views/layouts/app/header.blade.php",
+            "replacements": 2
+        }
+    ]
+}

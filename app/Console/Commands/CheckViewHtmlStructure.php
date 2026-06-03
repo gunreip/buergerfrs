@@ -12,10 +12,13 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use SplFileInfo;
+use Throwable;
 
 #[Signature('html:check')]
 #[Description('Check Blade views for unclosed or mismatched native HTML tags and selected custom components.')]
-
+/**
+ * Audits Blade view structure and reports invalid HTML/component nesting issues.
+ */
 class CheckViewHtmlStructure extends Command
 {
     /**
@@ -148,7 +151,22 @@ class CheckViewHtmlStructure extends Command
         $this->line('Audit written: storage/audits/html/view-html-check.json');
         $this->line('Preview written: storage/audits/html/view-html-check-preview.json');
 
-        return $problemCount === 0 ? self::SUCCESS : self::FAILURE;
+        $exitCode = $problemCount === 0 ? self::SUCCESS : self::FAILURE;
+
+        $this->logRunActivity(
+            $exitCode === self::SUCCESS ? 'html.view_check.completed' : 'html.view_check.completed_with_findings',
+            $exitCode === self::SUCCESS
+                ? 'HTML view structure check completed without findings.'
+                : 'HTML view structure check completed with findings.',
+            [
+                'files_scanned' => $files->count(),
+                'problem_count' => $problemCount,
+                'native_problem_count' => count($nativeProblems),
+                'custom_problem_count' => count($customProblems),
+            ],
+        );
+
+        return $exitCode;
     }
 
     /**
@@ -615,5 +633,19 @@ class CheckViewHtmlStructure extends Command
     private function relativePath(string $path): string
     {
         return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+    }
+
+    private function logRunActivity(string $event, string $description, array $properties = []): void
+    {
+        try {
+            activity('html')
+                ->event($event)
+                ->withProperties(array_merge([
+                    'command' => $this->getName(),
+                ], $properties))
+                ->log($description);
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: ' . $exception->getMessage());
+        }
     }
 }

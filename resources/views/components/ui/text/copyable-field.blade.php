@@ -3,15 +3,18 @@
 @props([
     'title' => null,
     'value' => null,
+    'rows' => 1,
     'mono' => false,
     'emptyValue' => '—',
     'copyLabel' => __('Copy to clipboard'),
     'copiedLabel' => __('Copied'),
     'contentClass' => '',
+    'showHiddenButton' => false,
     'badge' => null,
     'badgeColor' => 'zinc',
     'badgeVariant' => 'subtle',
     'badgeContext' => null,
+    'syncResizeGroup' => null,
 ])
 
 @php
@@ -20,40 +23,33 @@
     $copyValue = is_string($value) || is_numeric($value) ? trim((string) $value) : '';
 
     $hasCopyValue = $copyValue !== '' && $copyValue !== '—' && $copyValue !== '-';
+    $hasActionSlot = isset($action) && $action->isNotEmpty();
+    $hasVisibleControls = $hasActionSlot || $hasCopyValue;
+    $syncResizeGroupValue = is_string($syncResizeGroup) ? trim($syncResizeGroup) : '';
 @endphp
 
 <div
+    data-copyable-field-sync-group="{{ $syncResizeGroupValue }}"
     x-data="{
         copied: false,
-        value: @js($copyValue),
-        copy() {
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(this.value);
-            } else {
-                const textarea = document.createElement('textarea');
-
-                textarea.value = this.value;
-                textarea.setAttribute('readonly', '');
-                textarea.style.position = 'fixed';
-                textarea.style.opacity = '0';
-
-                document.body.appendChild(textarea);
-
-                textarea.select();
-                document.execCommand('copy');
-
-                document.body.removeChild(textarea);
+        async copy() {
+            if (!@js($hasCopyValue)) {
+                return;
             }
 
-            this.copied = true;
-
-            setTimeout(() => {
-                this.copied = false;
-            }, 2000);
+            try {
+                await navigator.clipboard.writeText(@js($copyValue));
+                this.copied = true;
+                setTimeout(() => {
+                    this.copied = false;
+                }, 2000);
+            } catch (error) {
+                console.error('Failed to copy value.', error);
+            }
         },
     }"
-    {{ $attributes->class('space-y-2') }}
->
+    @if ($syncResizeGroupValue !== '')
+    @endif {{ $attributes->class('space-y-2') }}>
     <div class="flex items-center justify-between gap-3">
         <div class="flex min-w-0 items-center gap-2">
 
@@ -91,38 +87,63 @@
             @endif
         </div>
 
-        @if ($hasCopyValue)
+        @if ($hasVisibleControls)
+            <div class="flex items-center gap-2">
+                @if ($hasActionSlot)
+                    {{ $action }}
+                @endif
+
+                @if ($hasCopyValue)
+                    <flux:button
+                        class="h-8 w-8 shrink-0 p-0"
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        x-on:click.prevent.stop="copy()"
+                        x-bind:title="copied ? @js($copiedLabel) : @js($copyLabel)"
+                        x-bind:aria-label="copied ? @js($copiedLabel) : @js($copyLabel)"
+                    >
+                        <flux:icon.copy-plus
+                            class="size-5"
+                            stroke-width="1"
+                            x-show="! copied"
+                        />
+
+                        <flux:icon.copy-check
+                            class="size-5"
+                            stroke-width="1"
+                            x-cloak
+                            x-show="copied"
+                        />
+                    </flux:button>
+                @endif
+            </div>
+        @elseif ($showHiddenButton)
             <flux:button
-                class="h-8 w-8 shrink-0 p-0"
+                class="pointer-events-none invisible h-8 w-8 shrink-0 p-0"
                 type="button"
+                aria-hidden="true"
+                tabindex="-1"
                 size="sm"
                 variant="ghost"
-                x-on:click.prevent.stop="copy()"
-                x-bind:title="copied ? @js($copiedLabel) : @js($copyLabel)"
-                x-bind:aria-label="copied ? @js($copiedLabel) : @js($copyLabel)"
             >
                 <flux:icon.copy-plus
                     class="size-5"
                     stroke-width="1"
-                    x-show="! copied"
-                />
-
-                <flux:icon.copy-check
-                    class="size-5"
-                    stroke-width="1"
-                    x-cloak
-                    x-show="copied"
                 />
             </flux:button>
         @endif
     </div>
 
-    <div
-        class="shadow-xs bg-zinc-100 px-3 pb-2 text-sm text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100">
-        <code @class([
-            'block whitespace-pre-wrap [overflow-wrap:anywhere]',
+    <flux:textarea
+        readonly
+        rows="{{ $rows }}"
+        @class([
+            'whitespace-pre-wrap [overflow-wrap:anywhere]',
+            'resize-y' => $syncResizeGroupValue !== '',
+            'resize-none' => $syncResizeGroupValue === '',
             'font-mono' => $mono,
             $contentClass,
-        ])>{{ $displayValue }}</code>
-    </div>
+        ])
+    >{{ $displayValue }}</flux:textarea>
 </div>

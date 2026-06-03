@@ -15,6 +15,7 @@ class TranslationKey extends Model
         'namespace',
         'group',
         'status',
+        'workflow_status',
         'classification',
         'source',
         'suggested_key',
@@ -22,12 +23,16 @@ class TranslationKey extends Model
         'first_seen_at',
         'last_seen_at',
         'obsolete_at',
+        'reviewed_at',
+        'reviewed_by_user_id',
+        'review_note',
     ];
 
     protected $casts = [
         'first_seen_at' => 'datetime',
         'last_seen_at' => 'datetime',
         'obsolete_at' => 'datetime',
+        'reviewed_at' => 'datetime',
     ];
 
     public function values(): HasMany

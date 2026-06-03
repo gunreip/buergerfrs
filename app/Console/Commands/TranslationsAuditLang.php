@@ -9,6 +9,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Throwable;
 
+/**
+ * Audits language files under lang/ and writes structured audit reports.
+ */
 class TranslationsAuditLang extends Command
 {
     /**
@@ -113,6 +116,8 @@ class TranslationsAuditLang extends Command
                 ['Invalid files', $summary['invalid_files']],
             ],
         );
+
+        $this->logRunCompletedActivity($summary);
 
         return self::SUCCESS;
     }
@@ -331,15 +336,31 @@ class TranslationsAuditLang extends Command
 
         File::ensureDirectoryExists($directory);
 
-        File::put(
-            $directory . DIRECTORY_SEPARATOR . $name . '.json',
-            json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL,
-        );
+        $fullPath = $directory . DIRECTORY_SEPARATOR . $name . '.json';
+        $previewPath = $directory . DIRECTORY_SEPARATOR . $name . '.preview.json';
+        $fullPathExisted = File::exists($fullPath);
+        $previewPathExisted = File::exists($previewPath);
+        $fullPreviousContent = $fullPathExisted ? (string) File::get($fullPath) : null;
+        $previewPreviousContent = $previewPathExisted ? (string) File::get($previewPath) : null;
 
-        File::put(
-            $directory . DIRECTORY_SEPARATOR . $name . '.preview.json',
-            json_encode($this->previewData($data), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL,
-        );
+        $fullContent = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL;
+        $previewContent = json_encode($this->previewData($data), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL;
+
+        File::put($fullPath, $fullContent);
+
+        File::put($previewPath, $previewContent);
+
+        if (! $fullPathExisted) {
+            $this->logCreatedFileActivity('translations.audit.lang.file_created', $fullPath);
+        } elseif ($fullPreviousContent !== $fullContent) {
+            $this->logUpdatedFileActivity('translations.audit.lang.file_updated', $fullPath);
+        }
+
+        if (! $previewPathExisted) {
+            $this->logCreatedFileActivity('translations.audit.lang.preview_file_created', $previewPath);
+        } elseif ($previewPreviousContent !== $previewContent) {
+            $this->logUpdatedFileActivity('translations.audit.lang.preview_file_updated', $previewPath);
+        }
     }
 
     /**
@@ -377,5 +398,55 @@ class TranslationsAuditLang extends Command
     private function relativePath(string $path): string
     {
         return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+    }
+
+    private function logCreatedFileActivity(string $event, string $path): void
+    {
+        try {
+            activity('translations')
+                ->event($event)
+                ->withProperties([
+                    'path' => $this->relativePath($path),
+                    'absolute_path' => $path,
+                    'command' => $this->getName(),
+                ])
+                ->log('Translation audit file created');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed for file "' . $this->relativePath($path) . '": ' . $exception->getMessage());
+        }
+    }
+
+    private function logUpdatedFileActivity(string $event, string $path): void
+    {
+        try {
+            activity('translations')
+                ->event($event)
+                ->withProperties([
+                    'path' => $this->relativePath($path),
+                    'absolute_path' => $path,
+                    'command' => $this->getName(),
+                ])
+                ->log('Translation audit file updated');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed for file "' . $this->relativePath($path) . '": ' . $exception->getMessage());
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $summary
+     */
+    private function logRunCompletedActivity(array $summary): void
+    {
+        try {
+            activity('translations')
+                ->event('translations.audit.lang.completed')
+                ->withProperties([
+                    'command' => $this->getName(),
+                    'summary' => $summary,
+                ])
+                ->log('Translation language-file audit completed');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed for command run summary: ' . $exception->getMessage());
+        }
     }
 }

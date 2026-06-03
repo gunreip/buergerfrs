@@ -13,6 +13,9 @@ use RuntimeException;
 use Symfony\Component\Process\Process;
 use Throwable;
 
+/**
+ * Executes the project maintenance and build pipeline.
+ */
 class ProjectBuild extends Command
 {
     /**
@@ -37,52 +40,85 @@ class ProjectBuild extends Command
      */
     public function handle(): int
     {
-        if (! $this->option('allow-empty-db') && ! $this->assertCriticalDataPresent()) {
+        try {
+            if (! $this->option('allow-empty-db') && ! $this->assertCriticalDataPresent()) {
+                $this->logRunActivity('project.build.blocked_empty_db', 'Project build blocked due to missing or empty critical data.', [
+                    'options' => [
+                        'allow_empty_db' => (bool) $this->option('allow-empty-db'),
+                    ],
+                ]);
+
+                return self::FAILURE;
+            }
+
+            $clearSteps = [
+                ['desc' => 'Cache leeren', 'cmd' => 'cache:clear'],
+                ['desc' => 'Config-Cache leeren', 'cmd' => 'config:clear'],
+                ['desc' => 'Route-Cache leeren', 'cmd' => 'route:clear'],
+                ['desc' => 'View-Cache leeren', 'cmd' => 'view:clear'],
+                ['desc' => 'Event-Cache leeren', 'cmd' => 'event:clear'],
+                ['desc' => 'Optimierungs-Cache leeren', 'cmd' => 'optimize:clear'],
+                ['desc' => 'Settings-Cache leeren', 'cmd' => 'settings:clear-cache'],
+                ['desc' => 'Settings-Discovery-Cache leeren', 'cmd' => 'settings:clear-discovered'],
+                ['desc' => 'Settings entdecken', 'cmd' => 'settings:discover'],
+            ];
+
+            foreach ($clearSteps as $step) {
+                $this->runArtisanStep($step['desc'], $step['cmd']);
+            }
+
+            $this->runArtisanStep('Lang-Locale-Verzeichnisse sicherstellen', 'translations:ensure-lang-directories');
+
+            $this->runArtisanStep('Translation-Code-Audit schreiben', 'translations:audit-code');
+            $this->runArtisanStep('Translation-Lang-Audit schreiben', 'translations:audit-lang');
+            $this->runArtisanStep('Translation-Compare-Audit schreiben', 'translations:audit-compare');
+            $this->runArtisanStep('Translation-Audits in Datenbank synchronisieren', 'translations:sync-audits');
+            $this->runArtisanStep('Sub-Language-Redundanz prüfen', 'translations:audit-sub-language-redundancy');
+            $this->runArtisanStep('Translation-Dateien nach lang exportieren', 'translations:export-lang-files');
+
+            $this->runArtisanStep('Blade-Component-Tag-Reference schreiben', 'views:sync-component-tags');
+            $this->runArtisanStep('HTML-/Blade-View-Struktur-Audit schreiben', 'html:check');
+            $this->runArtisanStep('HTML-/Blade-View-Struktur-Audit in Datenbank synchronisieren', 'html:sync-view-audit');
+            $this->runArtisanStep('HTML-/Blade-View-Usage-Audit schreiben', 'html:check-view-html-used');
+            $this->warn('⚠️ Hinweis: Native HTML reference gelegentlich mit php artisan html:sync-native-tags aktualisieren.');
+
+            $this->runOptionalProcess(['./audit.cp.bat'], 'Translation-Audit-Previews nach /tmp kopieren');
+
+            if (! $this->option('no-assets')) {
+                $this->runProcess(['npm', 'run', 'build'], 'Frontend-Assets bauen');
+            }
+
+            if (! $this->option('no-optimize')) {
+                $this->runArtisanStep('Optimieren der Klassen- und Service-Container', 'optimize');
+            }
+
+            $this->runArtisanStep('App-Version nach public/version.txt schreiben', 'app:write-app-version');
+
+            $this->info('✅ Projekt-Build abgeschlossen!');
+
+            $this->logRunActivity('project.build.completed', 'Project build command completed.', [
+                'options' => [
+                    'no_assets' => (bool) $this->option('no-assets'),
+                    'no_optimize' => (bool) $this->option('no-optimize'),
+                    'allow_empty_db' => (bool) $this->option('allow-empty-db'),
+                ],
+            ]);
+
+            return self::SUCCESS;
+        } catch (Throwable $exception) {
+            $this->error('❌ Projekt-Build fehlgeschlagen: ' . trim($exception->getMessage()));
+
+            $this->logRunActivity('project.build.failed', 'Project build command failed.', [
+                'error' => trim($exception->getMessage()),
+                'options' => [
+                    'no_assets' => (bool) $this->option('no-assets'),
+                    'no_optimize' => (bool) $this->option('no-optimize'),
+                    'allow_empty_db' => (bool) $this->option('allow-empty-db'),
+                ],
+            ]);
+
             return self::FAILURE;
         }
-
-        $clearSteps = [
-            ['desc' => 'Cache leeren', 'cmd' => 'cache:clear'],
-            ['desc' => 'Config-Cache leeren', 'cmd' => 'config:clear'],
-            ['desc' => 'Route-Cache leeren', 'cmd' => 'route:clear'],
-            ['desc' => 'View-Cache leeren', 'cmd' => 'view:clear'],
-            ['desc' => 'Event-Cache leeren', 'cmd' => 'event:clear'],
-            ['desc' => 'Optimierungs-Cache leeren', 'cmd' => 'optimize:clear'],
-            ['desc' => 'Settings-Cache leeren', 'cmd' => 'settings:clear-cache'],
-            ['desc' => 'Settings-Discovery-Cache leeren', 'cmd' => 'settings:clear-discovered'],
-            ['desc' => 'Settings entdecken', 'cmd' => 'settings:discover'],
-        ];
-
-        foreach ($clearSteps as $step) {
-            $this->runArtisanStep($step['desc'], $step['cmd']);
-        }
-
-        $this->runArtisanStep('Translation-Code-Audit schreiben', 'translations:audit-code');
-        $this->runArtisanStep('Translation-Lang-Audit schreiben', 'translations:audit-lang');
-        $this->runArtisanStep('Translation-Compare-Audit schreiben', 'translations:audit-compare');
-        $this->runArtisanStep('Translation-Audits in Datenbank synchronisieren', 'translations:sync-audits');
-
-        $this->runArtisanStep('Blade-Component-Tag-Reference schreiben', 'views:sync-component-tags');
-        $this->runArtisanStep('HTML-/Blade-View-Struktur-Audit schreiben', 'html:check');
-        $this->runArtisanStep('HTML-/Blade-View-Struktur-Audit in Datenbank synchronisieren', 'html:sync-view-audit');
-        $this->runArtisanStep('HTML-/Blade-View-Usage-Audit schreiben', 'html:check-view-html-used');
-        $this->warn('⚠️ Hinweis: Native HTML reference gelegentlich mit php artisan html:sync-native-tags aktualisieren.');
-
-        $this->runOptionalProcess(['./audit.cp.bat'], 'Translation-Audit-Previews nach /tmp kopieren');
-
-        if (! $this->option('no-assets')) {
-            $this->runProcess(['npm', 'run', 'build'], 'Frontend-Assets bauen');
-        }
-
-        if (! $this->option('no-optimize')) {
-            $this->runArtisanStep('Optimieren der Klassen- und Service-Container', 'optimize');
-        }
-
-        $this->runArtisanStep('App-Version nach public/version.txt schreiben', 'app:write-app-version');
-
-        $this->info('✅ Projekt-Build abgeschlossen!');
-
-        return self::SUCCESS;
     }
 
     /**
@@ -177,6 +213,20 @@ class ProjectBuild extends Command
         if (! $process->isSuccessful()) {
             $this->warn('⚠️ Fehler bei optionalem Schritt: ' . implode(' ', $command));
             $this->warn(trim($process->getErrorOutput() ?: $process->getOutput()));
+        }
+    }
+
+    private function logRunActivity(string $event, string $description, array $properties = []): void
+    {
+        try {
+            activity('project')
+                ->event($event)
+                ->withProperties(array_merge([
+                    'command' => $this->getName(),
+                ], $properties))
+                ->log($description);
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: ' . $exception->getMessage());
         }
     }
 }

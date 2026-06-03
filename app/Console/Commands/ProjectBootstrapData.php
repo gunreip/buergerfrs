@@ -7,7 +7,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Throwable;
 
+/**
+ * Bootstraps project data state for local environments.
+ */
 class ProjectBootstrapData extends Command
 {
     /**
@@ -40,12 +44,20 @@ class ProjectBootstrapData extends Command
                 'migrate',
                 ['--force' => true],
             )) {
+                $this->logRunActivity('project.bootstrap_data.failed', 'Project bootstrap failed during migrate step.', [
+                    'failed_step' => 'migrate',
+                ]);
+
                 return self::FAILURE;
             }
         }
 
         if (! $this->option('skip-seed')) {
             if (! $this->seedBaselineData()) {
+                $this->logRunActivity('project.bootstrap_data.failed', 'Project bootstrap failed during seeding step.', [
+                    'failed_step' => 'seed',
+                ]);
+
                 return self::FAILURE;
             }
         }
@@ -65,6 +77,10 @@ class ProjectBootstrapData extends Command
                 'reference:import-locale-data',
                 $importOptions,
             )) {
+                $this->logRunActivity('project.bootstrap_data.failed', 'Project bootstrap failed during reference import step.', [
+                    'failed_step' => 'reference_import',
+                ]);
+
                 return self::FAILURE;
             }
         }
@@ -74,10 +90,24 @@ class ProjectBootstrapData extends Command
             'project:db-health',
             ['--fail-on-empty' => true],
         )) {
+            $this->logRunActivity('project.bootstrap_data.failed', 'Project bootstrap failed during database health check step.', [
+                'failed_step' => 'db_health',
+            ]);
+
             return self::FAILURE;
         }
 
         $this->info('Projekt-Daten-Bootstrap abgeschlossen.');
+
+        $this->logRunActivity('project.bootstrap_data.completed', 'Project bootstrap data command completed.', [
+            'options' => [
+                'skip_migrate' => (bool) $this->option('skip-migrate'),
+                'skip_seed' => (bool) $this->option('skip-seed'),
+                'skip_reference_import' => (bool) $this->option('skip-reference-import'),
+                'with_test_users' => (bool) $this->option('with-test-users'),
+                'without_subdivisions' => (bool) $this->option('without-subdivisions'),
+            ],
+        ]);
 
         return self::SUCCESS;
     }
@@ -127,5 +157,19 @@ class ProjectBootstrapData extends Command
         $this->error('Schritt fehlgeschlagen: ' . $command);
 
         return false;
+    }
+
+    private function logRunActivity(string $event, string $description, array $properties = []): void
+    {
+        try {
+            activity('project')
+                ->event($event)
+                ->withProperties(array_merge([
+                    'command' => $this->getName(),
+                ], $properties))
+                ->log($description);
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: ' . $exception->getMessage());
+        }
     }
 }

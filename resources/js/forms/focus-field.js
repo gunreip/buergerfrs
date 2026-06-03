@@ -41,3 +41,31 @@ window.addEventListener('buergerfrs:focus-field', (event) => {
         element.focus({ preventScroll: true });
     }, 250);
 });
+
+window.addEventListener('buergerfrs:focus-field-and-select', (event) => {
+    const inputId = event.detail?.inputId;
+
+    if (!inputId) {
+        return;
+    }
+
+    const element = document.getElementById(inputId);
+
+    if (!(element instanceof HTMLTextAreaElement) && !(element instanceof HTMLInputElement)) {
+        return;
+    }
+
+    element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest',
+    });
+
+    window.setTimeout(() => {
+        element.focus({ preventScroll: true });
+
+        if (typeof element.select === 'function') {
+            element.select();
+        }
+    }, 250);
+});
