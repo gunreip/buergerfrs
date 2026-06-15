@@ -62,7 +62,7 @@
                     @php
                         $pct = $totalKeys > 0 ? round(($count / $totalKeys) * 100, 1) : 0;
                         $label = match ($classification) {
-                            'backfill_by_translation' => __('Backfill'),
+                            'backfill_by_translation' => __('admin.translation_list.meta.backfill'),
                             default => str($classification)->headline(),
                         };
                     @endphp

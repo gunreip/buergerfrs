@@ -11,14 +11,12 @@
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="permission-list-search">
                 <x-ui.tooltip.trigger
-                    :title="__('Search')"
-                    :text="__(
-                        'Enter a search term to filter permissions by name, guard, category, or description. The search is case-sensitive.',
+                    :title="__('ui.actions.search')"
+                    :text="__('admin.permission_list.filter.enter_a_search_term_to_filter_permissions_by_name_guard_category_or_description_',
                     )"
                 >
-                    {{ __('Search') }}
+                    {{ __('ui.actions.search') }}
                 </x-ui.tooltip.trigger>
-                {{ __('ui.actions.search') }}
             </flux:label>
 
             <flux:input.group class="w-full min-w-0">
@@ -42,8 +40,8 @@
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="permission-list-guard-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by guard')"
-                    :text="__('Select a guard to filter the list of permissions.')"
+                    :title="__('admin.permission_list.filter.filter_by_guard')"
+                    :text="__('admin.permission_list.filter.select_a_guard_to_filter_the_list_of_permissions')"
                 >
                     {{ __('ui.labels.guard') }}
                 </x-ui.tooltip.trigger>
@@ -75,8 +73,8 @@
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="permission-list-category-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by category')"
-                    :text="__('Select a category to filter the list of permissions.')"
+                    :title="__('admin.permission_list.filter.filter_by_category')"
+                    :text="__('admin.permission_list.filter.select_a_category_to_filter_the_list_of_permissions')"
                 >
                     {{ __('ui.labels.category') }}
                 </x-ui.tooltip.trigger>
@@ -108,8 +106,8 @@
         <div class="min-w-0 flex-none basis-1/5">
             <flux:label for="permission-list-role-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by role')"
-                    :text="__('Select a role to filter the list of permissions.')"
+                    :title="__('admin.permission_list.filter.filter_by_role')"
+                    :text="__('admin.permission_list.filter.select_a_role_to_filter_the_list_of_permissions')"
                 >
                     {{ __('ui.labels.role') }}
                 </x-ui.tooltip.trigger>
@@ -152,8 +150,8 @@
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="permission-list-assignment-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by assignment')"
-                    :text="__('Select an assignment status to filter the list of permissions.')"
+                    :title="__('admin.permission_list.filter.filter_by_assignment')"
+                    :text="__('admin.permission_list.filter.select_an_assignment_status_to_filter_the_list_of_permissions')"
                 >
                     {{ __('admin.permissions.filters.assignment.label') }}
                 </x-ui.tooltip.trigger>
@@ -187,8 +185,8 @@
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="permission-list-system-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by system')"
-                    :text="__('Select a system status to filter the list of permissions.')"
+                    :title="__('admin.permission_list.filter.filter_by_system')"
+                    :text="__('admin.permission_list.filter.select_a_system_status_to_filter_the_list_of_permissions')"
                 >
                     {{ __('admin.permissions.filters.system.label') }}
                 </x-ui.tooltip.trigger>

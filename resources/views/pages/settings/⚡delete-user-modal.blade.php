@@ -47,7 +47,7 @@ new class extends Component {
         <flux:input
             type="password"
             wire:model="password"
-            :label="__('Password')"
+            :label="__('pages.auth.register.password')"
             viewable
         />
 
@@ -56,7 +56,7 @@ new class extends Component {
                 <flux:button
                     variant="filled"
                     icon="x"
-                >{{ __('Cancel') }}</flux:button>
+                >{{ __('ui.button.cancel.cancel') }}</flux:button>
             </flux:modal.close>
 
             <x-ui.button.delete

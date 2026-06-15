@@ -5,13 +5,13 @@
         class="mb-4"
         size="lg"
     >
-        {{ __('Filtering') }}
+        {{ __('admin.permissions.filters.title') }}
     </flux:heading>
 
     <div class="flex w-full flex-wrap items-end gap-3">
         <div class="min-w-0 flex-1">
             <flux:label for="flag-reference-search">
-                {{ __('Search') }}
+                {{ __('ui.actions.search') }}
             </flux:label>
 
             <flux:input.group class="w-full">
@@ -33,7 +33,7 @@
 
         <div class="min-w-44">
             <flux:label for="flag-reference-type-filter">
-                {{ __('Type') }}
+                {{ __('admin.client_list.table.type') }}
             </flux:label>
 
             <flux:select
@@ -42,7 +42,7 @@
                 wire:model.live="typeFilter"
             >
                 <flux:select.option value="">
-                    {{ __('All') }}
+                    {{ __('ui.states.all') }}
                 </flux:select.option>
 
                 <flux:select.option value="ll">ll</flux:select.option>
@@ -55,7 +55,7 @@
 
         <div class="min-w-44">
             <flux:label for="flag-reference-status-filter">
-                {{ __('Status') }}
+                {{ __('admin.app_settings.table_icon_registry.status') }}
             </flux:label>
 
             <flux:select
@@ -64,7 +64,7 @@
                 wire:model.live="statusFilter"
             >
                 <flux:select.option value="">
-                    {{ __('All') }}
+                    {{ __('ui.states.all') }}
                 </flux:select.option>
 
                 <flux:select.option value="resolved">

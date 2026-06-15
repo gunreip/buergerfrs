@@ -38,7 +38,7 @@
             icon="check-circle"
         >
             <flux:callout.heading>
-                {{ __('OK') }}
+                {{ __('admin.translation_list.meta.ok') }}
             </flux:callout.heading>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -55,7 +55,7 @@
             icon="shield-alert"
         >
             <flux:callout.heading>
-                {{ __('Missing') }}
+                {{ __('admin.app_settings.table_icon_registry.missing') }}
             </flux:callout.heading>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -72,7 +72,7 @@
             icon="archive"
         >
             <flux:callout.heading>
-                {{ __('Obsolete') }}
+                {{ __('admin.translation_list.meta.obsolete') }}
             </flux:callout.heading>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">

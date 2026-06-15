@@ -3,14 +3,14 @@
 <flux:card class="mt-6">
 
     <x-ui.headers.card
-        :title="__('Filtering')"
+        :title="__('admin.permissions.filters.title')"
         :description="__('Refine sub-language variants by locale, base language, and override availability.')"
     />
 
     <div class="flex flex-wrap items-end gap-3">
         <div class="min-w-0 flex-1 basis-72">
             <flux:label for="translation-sub-language-search">
-                {{ __('Search') }}
+                {{ __('ui.actions.search') }}
             </flux:label>
 
             <flux:input.group class="w-full min-w-0">
@@ -152,7 +152,7 @@
             color="sky"
             variant="subtle"
         >
-            {{ __('Showing') }} {{ number_format($subLocales->count()) }} {{ __('of') }}
+            {{ __('admin.translation_list.filter.showing') }} {{ number_format($subLocales->count()) }} {{ __('admin.translation_list.filter.of') }}
             {{ number_format($activeSubLocalesTotal) }}
         </flux:badge>
 
@@ -161,7 +161,7 @@
                 color="amber"
                 variant="subtle"
             >
-                {{ __('Filters active') }}
+                {{ __('admin.translation_list.filter.filters_active') }}
             </flux:badge>
         @endif
     </div>

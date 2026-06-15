@@ -4,13 +4,13 @@
 <x-ui.button.create />
 <x-ui.button.create icon="plus" />
 <x-ui.button.create :icon="false" />
-<x-ui.button.create label="{{ __('Create') }}" />
+<x-ui.button.create label="{{ __('admin.roles.actions.create') }}" />
 --}}
 
 {{-- create  → green/primary, plus, Create --}}
 
 @props([
-    'label' => __('Create'),
+    'label' => __('admin.roles.actions.create'),
     'icon' => true,
     'type' => 'button',
     'size' => null,

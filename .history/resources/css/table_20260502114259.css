@@ -1,5 +1,0 @@
-/* resources/css/table.css */
-
-tr[data-flux-row]:hover {
-    @apply bg-white/5 rounded rounded-lg text-red transition-colors duration-150;
-}

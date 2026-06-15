@@ -711,6 +711,14 @@ namespace App\Models{
  * @property \Carbon\CarbonImmutable|null $obsolete_at
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property string $workflow_status
+ * @property \Carbon\CarbonImmutable|null $reviewed_at
+ * @property int|null $reviewed_by_user_id
+ * @property string|null $review_note
+ * @property \Carbon\CarbonImmutable|null $needs_new_key_marked_at
+ * @property int|null $needs_new_key_marked_by_user_id
+ * @property string|null $needs_new_key_note
+ * @property \Carbon\CarbonImmutable|null $needs_new_key_resolved_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TranslationUsage> $usages
  * @property-read int|null $usages_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TranslationValue> $values
@@ -728,13 +736,30 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereLastSeenAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereNamespace($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereNativeText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereNeedsNewKeyMarkedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereNeedsNewKeyMarkedByUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereNeedsNewKeyNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereNeedsNewKeyResolvedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereObsoleteAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereReviewNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereReviewedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereReviewedByUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereSource($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereSuggestedKey($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationKey whereWorkflowStatus($value)
  */
 	class TranslationKey extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLangBallastDecision newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLangBallastDecision newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationLangBallastDecision query()
+ */
+	class TranslationLangBallastDecision extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -803,6 +828,95 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $audit_type
+ * @property string $normalized_value_hash
+ * @property string|null $normalized_value
+ * @property string $source_locale
+ * @property string|null $source_value
+ * @property string|null $suggested_translation_key
+ * @property string|null $target_translation_key
+ * @property string $decision_action
+ * @property string $decision_status
+ * @property string|null $review_note
+ * @property array<array-key, mixed>|null $snapshot
+ * @property int|null $reviewed_by_user_id
+ * @property \Carbon\CarbonImmutable|null $reviewed_at
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\User|null $reviewedBy
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TranslationUsageAuditDecisionUsage> $usages
+ * @property-read int|null $usages_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereAuditType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereDecisionAction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereDecisionStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereNormalizedValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereNormalizedValueHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereReviewNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereReviewedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereReviewedByUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereSnapshot($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereSourceLocale($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereSourceValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereSuggestedTranslationKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereTargetTranslationKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecision whereUpdatedAt($value)
+ */
+	class TranslationUsageAuditDecision extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $translation_usage_audit_decision_id
+ * @property int|null $translation_key_id
+ * @property string|null $current_translation_key
+ * @property string|null $target_translation_key
+ * @property string|null $file
+ * @property int|null $line
+ * @property string|null $detected_function
+ * @property string|null $classification
+ * @property string|null $reason
+ * @property bool $is_stale
+ * @property string|null $raw
+ * @property string|null $original_raw
+ * @property bool $include_in_change
+ * @property string $change_status
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\TranslationUsageAuditDecision $decision
+ * @property-read \App\Models\TranslationKey|null $translationKey
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereChangeStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereClassification($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereCurrentTranslationKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereDetectedFunction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereFile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereIncludeInChange($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereIsStale($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereLine($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereOriginalRaw($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereRaw($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereTargetTranslationKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereTranslationKeyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereTranslationUsageAuditDecisionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationUsageAuditDecisionUsage whereUpdatedAt($value)
+ */
+	class TranslationUsageAuditDecisionUsage extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property int $translation_key_id
  * @property string $locale
  * @property string|null $value
@@ -812,6 +926,7 @@ namespace App\Models{
  * @property int|null $reviewed_by_user_id
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property bool|null $is_base_duplicate null = not checked, true = identical to base locale (redundant), false = confirmed override
  * @property-read \App\Models\User|null $reviewedBy
  * @property-read \App\Models\TranslationKey|null $translationKey
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue newModelQuery()
@@ -819,6 +934,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereIsBaseDuplicate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereLocale($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereReviewedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TranslationValue whereReviewedByUserId($value)

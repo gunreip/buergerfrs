@@ -3,8 +3,8 @@
 {{-- Overview / Meta --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Overview')"
-        :description="__('Summary of imported country reference data, address formats and available subdivisions.')"
+        :title="__('admin.permissions.overview.title')"
+        :description="__('admin.country_reference_list.meta.summary_of_imported_country_reference_data_address_formats_and_available_subdivi')"
     >
 
         <div class="mt-4 flex flex-wrap gap-2">
@@ -12,21 +12,21 @@
                 color="blue"
                 variant="subtle"
             >
-                {{ __('EU') }}: {{ $summary['eu'] }}
+                {{ __('admin.country_reference_list.filter.eu') }}: {{ $summary['eu'] }}
             </flux:badge>
 
             <flux:badge
                 color="blue"
                 variant="subtle"
             >
-                {{ __('EEA') }}: {{ $summary['eea'] }}
+                {{ __('admin.country_reference_list.filter.eea') }}: {{ $summary['eea'] }}
             </flux:badge>
 
             <flux:badge
                 color="blue"
                 variant="subtle"
             >
-                {{ __('Schengen') }}: {{ $summary['schengen'] }}
+                {{ __('admin.country_reference_list.filter.schengen') }}: {{ $summary['schengen'] }}
             </flux:badge>
         </div>
     </x-ui.headers.card>
@@ -37,7 +37,7 @@
             icon="globe"
         >
             <flux:callout.heading>
-                {{ __('Countries') }}
+                {{ __('layouts.sidebar.administration.countries') }}
             </flux:callout.heading>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -50,7 +50,7 @@
             icon="check-circle"
         >
             <flux:callout.heading>
-                {{ __('Active') }}
+                {{ __('admin.country_reference_list.filter.active') }}
             </flux:callout.heading>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -63,7 +63,7 @@
             icon="map"
         >
             <flux:callout.heading>
-                {{ __('Address formats') }}
+                {{ __('admin.country_reference_list.meta.address_formats') }}
             </flux:callout.heading>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -76,7 +76,7 @@
             icon="waypoints"
         >
             <flux:callout.heading>
-                {{ __('Subdivisions') }}
+                {{ __('admin.country_reference_list.meta.subdivisions') }}
             </flux:callout.heading>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -89,7 +89,7 @@
             icon="circle-question-mark"
         >
             <flux:callout.heading>
-                {{ __('Missing capital') }}
+                {{ __('admin.country_reference_list.filter.missing_capital') }}
             </flux:callout.heading>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -102,7 +102,7 @@
             icon="phone-off"
         >
             <flux:callout.heading>
-                {{ __('Missing phone') }}
+                {{ __('admin.country_reference_list.meta.missing_phone') }}
             </flux:callout.heading>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">

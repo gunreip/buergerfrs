@@ -73,7 +73,7 @@
                             inset="top bottom"
                             hidden
                         >
-                            {{ __('Required') }}
+                            {{ __('ui.form.tab_status_dot.required') }}
                         </flux:badge>
                     </div>
 

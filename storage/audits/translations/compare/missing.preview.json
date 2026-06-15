@@ -1,6 +1,37 @@
 {
     "preview": true,
     "preview_limit": 20,
-    "total": 0,
-    "items": []
+    "total": 2,
+    "items": [
+        {
+            "full_key": "admin.common.ui.example_admin_actions_save",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/translation-usage-audit/⚡modal-edit.blade.php",
+                    "line": 127,
+                    "function": "__",
+                    "raw": "__('admin.common.ui.example_admin_actions_save')"
+                }
+            ]
+        },
+        {
+            "full_key": "ui.assigned_roles",
+            "usage_count": 2,
+            "usages": [
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
+                    "line": 43,
+                    "function": "__",
+                    "raw": "__('ui.assigned_roles')"
+                },
+                {
+                    "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                    "line": 121,
+                    "function": "__",
+                    "raw": "__('ui.assigned_roles')"
+                }
+            ]
+        }
+    ]
 }

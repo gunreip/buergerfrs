@@ -31,10 +31,10 @@
                         <flux:table.column>
                             <x-ui.tooltip.trigger
                                 class="ml-3"
-                                :title="__('Language')"
+                                :title="__('admin.translation_list.meta.language')"
                                 :text="__('Locale variant covered by the statistics row.')"
                             >
-                                {{ __('Language') }}
+                                {{ __('admin.translation_list.meta.language') }}
                             </x-ui.tooltip.trigger>
                         </flux:table.column>
 
@@ -57,10 +57,10 @@
                         >
                             <x-ui.tooltip.trigger
                                 class="mr-3"
-                                :title="__('Translated')"
+                                :title="__('admin.translation_list.meta.translated')"
                                 :text="__('Number of keys translated in the effective language combination.')"
                             >
-                                {{ __('Translated') }}
+                                {{ __('admin.translation_list.meta.translated') }}
                             </x-ui.tooltip.trigger>
                         </flux:table.column>
 
@@ -70,10 +70,10 @@
                         >
                             <x-ui.tooltip.trigger
                                 class="mr-3"
-                                :title="__('Missing')"
+                                :title="__('admin.app_settings.table_icon_registry.missing')"
                                 :text="__('Keys that are not translated yet in this language combination.')"
                             >
-                                {{ __('Missing') }}
+                                {{ __('admin.app_settings.table_icon_registry.missing') }}
                             </x-ui.tooltip.trigger>
                         </flux:table.column>
 
@@ -83,10 +83,10 @@
                         >
                             <x-ui.tooltip.trigger
                                 class="mr-3"
-                                :title="__('Reviewed')"
+                                :title="__('admin.translation_list.modal_edit.reviewed')"
                                 :text="__('Number of translated keys already marked as reviewed.')"
                             >
-                                {{ __('Reviewed') }}
+                                {{ __('admin.translation_list.modal_edit.reviewed') }}
                             </x-ui.tooltip.trigger>
                         </flux:table.column>
 

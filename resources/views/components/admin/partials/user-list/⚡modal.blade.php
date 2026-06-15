@@ -8,13 +8,13 @@
         <div class="-mb-1 flex items-start justify-between gap-4">
             <flux:field>
                 <x-ui.headers.card
-                    :title="__('Edit Roles')"
-                    :description="__('Change assigned roles for the selected user.')"
+                    :title="__('admin.user_list.modal.edit_roles')"
+                    :description="__('admin.user_list.modal.change_assigned_roles_for_the_selected_user')"
                 />
             </flux:field>
 
             {{-- <flux:heading size="xl">
-                {{ __('Edit Roles') }}
+                {{ __('admin.user_list.modal.edit_roles') }}
             </flux:heading> --}}
         </div>
 
@@ -23,7 +23,7 @@
         <div class="-mb-1 grid gap-4">
 
             <flux:text class="text-sm">
-                {{ __('Change assigned roles for') }}:
+                {{ __('admin.user_list.modal.change_assigned_roles_for') }}:
                 <p class="ml-6">
                     <span class="font-semibold text-zinc-100">
                         {{ $editingUserName }}
@@ -38,7 +38,7 @@
                 {{ __('Current role') }}:
                 <p class="ml-6">
                     <span class="font-semibold text-zinc-100">
-                        {{ $editingCurrentRoleName !== '' ? $editingCurrentRoleName : __('Without role') }}
+                        {{ $editingCurrentRoleName !== '' ? $editingCurrentRoleName : __('admin.user_list.filter.without_role') }}
                     </span>
                 </p>
             </flux:text>
@@ -49,7 +49,7 @@
         <div>
             <flux:fieldset>
                 <flux:legend class="mb-2 text-base font-semibold uppercase tracking-wide text-zinc-500">
-                    {{ __('Roles') }}
+                    {{ __('ui.labels.roles') }}
                 </flux:legend>
 
                 <flux:radio.group wire:model.live="editingRoleName">
@@ -80,7 +80,7 @@
         <div class="flex justify-end gap-3">
             <x-ui.button.cancel wire:click="closeEditRolesModal" />
             <x-ui.button.save
-                label="{{ __('Change Role') }}"
+                label="{{ __('admin.user_list.modal.change_role') }}"
                 wire:click="saveEditRoles"
                 :disabled="$editingRoleName === ''"
             />

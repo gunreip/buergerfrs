@@ -8,13 +8,13 @@
             {{-- Emergency contact name --}}
             <flux:field>
                 <x-ui.tooltip.trigger
-                    title="{{ __('Name') }}"
+                    title="{{ __('ui.labels.name') }}"
                     field="emergencyContactName"
                     text="{{ __('Please enter the name of the emergency contact. This is important for correctly identifying the person\'s emergency contact and for any name-specific validations.') }}"
                     :required="$this->isRequiredField('emergencyContactName')"
                 >
                     <flux:label for="create-person-emergency-contact-name">
-                        {{ __('Name') }}
+                        {{ __('ui.labels.name') }}
                         <x-ui.tooltip.badge-required :required="$this->isRequiredField('emergencyContactName')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>

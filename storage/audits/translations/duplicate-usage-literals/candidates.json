@@ -1,0 +1,1048 @@
+[
+    {
+        "locale": "en",
+        "value": "Close",
+        "normalized_value": "close",
+        "value_variants": [
+            "Close"
+        ],
+        "translation_key_count": 2,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 3,
+        "usage_count_total": 3,
+        "usage_count_current": 2,
+        "usage_count_stale": 1,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": true,
+        "ui_keys": [
+            "ui.actions.close"
+        ],
+        "suggested_ui_key": "ui.actions.close",
+        "keys": [
+            {
+                "translation_key_id": 6006,
+                "key": "ui.actions.close",
+                "full_key": "ui.actions.close",
+                "namespace": "ui",
+                "group": "actions",
+                "status": "ok",
+                "classification": "key",
+                "native_text": null,
+                "is_ui_key": true,
+                "usage_count": 1,
+                "usage_count_total": 1,
+                "usage_count_current": 1,
+                "usage_count_stale": 0,
+                "has_stale_usages": false,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Schließen",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Close",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/pages/settings/⚡two-factor-setup-modal.blade.php",
+                        "line": 129,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('ui.actions.close')",
+                        "original_raw": "__('ui.actions.close')"
+                    }
+                ]
+            },
+            {
+                "translation_key_id": 1501,
+                "key": "pages.settings.two_factor_setup_modal.close",
+                "full_key": "settings.pages.settings.two_factor_setup_modal.close",
+                "namespace": "pages",
+                "group": "settings",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Close",
+                "is_ui_key": false,
+                "usage_count": 2,
+                "usage_count_total": 2,
+                "usage_count_current": 1,
+                "usage_count_stale": 1,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Schließen",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Close",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal-history.blade.php",
+                        "line": 215,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('pages.settings.two_factor_setup_modal.close')",
+                        "original_raw": "__('Close')"
+                    },
+                    {
+                        "file": "resources/views/components/ui/button/close.blade.php",
+                        "line": 8,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('pages.settings.two_factor_setup_modal.close')",
+                        "original_raw": "__('pages.settings.two_factor_setup_modal.close')"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Filtering",
+        "normalized_value": "filtering",
+        "value_variants": [
+            "Filtering"
+        ],
+        "translation_key_count": 2,
+        "non_ui_translation_key_count": 2,
+        "usage_count": 2,
+        "usage_count_total": 2,
+        "usage_count_current": 2,
+        "usage_count_stale": 0,
+        "has_stale_usages": false,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "suggested_ui_key": "ui.filtering",
+        "keys": [
+            {
+                "translation_key_id": 268,
+                "key": "admin.client_list.filter.filtering",
+                "full_key": "admin.client_list.filter.filtering",
+                "namespace": "admin",
+                "group": "client_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Filtering",
+                "is_ui_key": false,
+                "usage_count": 1,
+                "usage_count_total": 1,
+                "usage_count_current": 1,
+                "usage_count_stale": 0,
+                "has_stale_usages": false,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Filtern",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Filtering",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/client-list/⚡filter.blade.php",
+                        "line": 6,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.client_list.filter.filtering')",
+                        "original_raw": "__('Filtering')"
+                    }
+                ]
+            },
+            {
+                "translation_key_id": 10,
+                "key": "admin.permissions.filters.title",
+                "full_key": "admin.permissions.filters.title",
+                "namespace": "admin",
+                "group": "permissions",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Filtering",
+                "is_ui_key": false,
+                "usage_count": 1,
+                "usage_count_total": 1,
+                "usage_count_current": 1,
+                "usage_count_stale": 0,
+                "has_stale_usages": false,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Filter",
+                        "status": "ok",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Filtering",
+                        "status": "ok",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/user-list/⚡filter.blade.php",
+                        "line": 5,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.permissions.filters.title')",
+                        "original_raw": "__('admin.permissions.filters.title')"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "No changes",
+        "normalized_value": "no changes",
+        "value_variants": [
+            "No changes"
+        ],
+        "translation_key_count": 2,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 2,
+        "usage_count_total": 2,
+        "usage_count_current": 2,
+        "usage_count_stale": 0,
+        "has_stale_usages": false,
+        "already_has_ui_candidate": true,
+        "ui_keys": [
+            "ui.states.no_changes"
+        ],
+        "suggested_ui_key": "ui.states.no_changes",
+        "keys": [
+            {
+                "translation_key_id": 68,
+                "key": "ui.states.no_changes",
+                "full_key": "ui.states.no_changes",
+                "namespace": "ui",
+                "group": "states",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "No changes",
+                "is_ui_key": true,
+                "usage_count": 1,
+                "usage_count_total": 1,
+                "usage_count_current": 1,
+                "usage_count_stale": 0,
+                "has_stale_usages": false,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Keine Änderungen",
+                        "status": "ok",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "No changes",
+                        "status": "ok",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/permission-list/⚡modal-role-permissions.blade.php",
+                        "line": 127,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('ui.states.no_changes')",
+                        "original_raw": "__('ui.states.no_changes')"
+                    }
+                ]
+            },
+            {
+                "translation_key_id": 14,
+                "key": "admin.permissions.messages.no_changes.heading",
+                "full_key": "admin.permissions.messages.no_changes.heading",
+                "namespace": "admin",
+                "group": "permissions",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "No changes",
+                "is_ui_key": false,
+                "usage_count": 1,
+                "usage_count_total": 1,
+                "usage_count_current": 1,
+                "usage_count_stale": 0,
+                "has_stale_usages": false,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Keine Änderungen",
+                        "status": "ok",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "No changes",
+                        "status": "ok",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "app/Livewire/Admin/PermissionList.php",
+                        "line": 397,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.permissions.messages.no_changes.heading')",
+                        "original_raw": "__('admin.permissions.messages.no_changes.heading')"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Sort order",
+        "normalized_value": "sort order",
+        "value_variants": [
+            "Sort order"
+        ],
+        "translation_key_count": 2,
+        "non_ui_translation_key_count": 2,
+        "usage_count": 2,
+        "usage_count_total": 2,
+        "usage_count_current": 2,
+        "usage_count_stale": 0,
+        "has_stale_usages": false,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "suggested_ui_key": "ui.sort_order",
+        "keys": [
+            {
+                "translation_key_id": 12,
+                "key": "admin.permissions.labels.sort_order",
+                "full_key": "admin.permissions.labels.sort_order",
+                "namespace": "admin",
+                "group": "permissions",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Sort order",
+                "is_ui_key": false,
+                "usage_count": 1,
+                "usage_count_total": 1,
+                "usage_count_current": 1,
+                "usage_count_stale": 0,
+                "has_stale_usages": false,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Sortierreihenfolge",
+                        "status": "ok",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Sort order",
+                        "status": "ok",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                        "line": 76,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.permissions.labels.sort_order')",
+                        "original_raw": "__('admin.permissions.labels.sort_order')"
+                    }
+                ]
+            },
+            {
+                "translation_key_id": 82,
+                "key": "admin.roles.labels.sort_order",
+                "full_key": "admin.roles.labels.sort_order",
+                "namespace": "admin",
+                "group": "roles",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Sort order",
+                "is_ui_key": false,
+                "usage_count": 1,
+                "usage_count_total": 1,
+                "usage_count_current": 1,
+                "usage_count_stale": 0,
+                "has_stale_usages": false,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Sortierreihenfolge",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Sort order",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                        "line": 77,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.roles.labels.sort_order')",
+                        "original_raw": "__('admin.roles.labels.sort_order')"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "System",
+        "normalized_value": "system",
+        "value_variants": [
+            "System"
+        ],
+        "translation_key_count": 2,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 2,
+        "usage_count_total": 2,
+        "usage_count_current": 2,
+        "usage_count_stale": 0,
+        "has_stale_usages": false,
+        "already_has_ui_candidate": true,
+        "ui_keys": [
+            "ui.states.system"
+        ],
+        "suggested_ui_key": "ui.states.system",
+        "keys": [
+            {
+                "translation_key_id": 71,
+                "key": "ui.states.system",
+                "full_key": "ui.states.system",
+                "namespace": "ui",
+                "group": "states",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "System",
+                "is_ui_key": true,
+                "usage_count": 1,
+                "usage_count_total": 1,
+                "usage_count_current": 1,
+                "usage_count_stale": 0,
+                "has_stale_usages": false,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "System",
+                        "status": "ok",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "System",
+                        "status": "ok",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/permission-list/⚡table-permissions.blade.php",
+                        "line": 193,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('ui.states.system')",
+                        "original_raw": "__('ui.states.system')"
+                    }
+                ]
+            },
+            {
+                "translation_key_id": 9,
+                "key": "admin.permissions.filters.system.label",
+                "full_key": "admin.permissions.filters.system.label",
+                "namespace": "admin",
+                "group": "permissions",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "System",
+                "is_ui_key": false,
+                "usage_count": 1,
+                "usage_count_total": 1,
+                "usage_count_current": 1,
+                "usage_count_stale": 0,
+                "has_stale_usages": false,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "System",
+                        "status": "ok",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "System",
+                        "status": "ok",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/pages/settings/⚡appearance.blade.php",
+                        "line": 19,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.permissions.filters.system.label')",
+                        "original_raw": "__('admin.permissions.filters.system.label')"
+                    }
+                ]
+            }
+        ]
+    }
+]

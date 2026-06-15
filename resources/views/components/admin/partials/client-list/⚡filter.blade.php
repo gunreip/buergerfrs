@@ -3,9 +3,8 @@
 {{-- Filter --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Filtering')"
-        :description="__(
-            'Refine the client list with powerful filters: search by name, legal name, client number or description; filter by type, status, and people associations.',
+        :title="__('admin.client_list.filter.filtering')"
+        :description="__('admin.client_list.filter.refine_the_client_list_with_powerful_filters_search_by_name_legal_name_client_nu',
         )"
     />
 
@@ -13,12 +12,11 @@
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="client-list-search">
                 <x-ui.tooltip.trigger
-                    :title="__('Search clients')"
-                    :text="__(
-                        'Enter a search term to filter clients by name, legal name, client number or description. The search is case-sensitive.',
+                    :title="__('admin.client_list.filter.search_clients')"
+                    :text="__('admin.client_list.filter.enter_a_search_term_to_filter_clients_by_name_legal_name_client_number_or_descri',
                     )"
                 >
-                    {{ __('Search') }}
+                    {{ __('ui.actions.search') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -35,7 +33,7 @@
                     copyable
                     clearable
                     wire:model.live.debounce.300ms="search"
-                    placeholder="{{ __('Search by name, legal name, client number or description') }}"
+                    placeholder="{{ __('admin.client_list.filter.search_by_name_legal_name_client_number_or_description') }}"
                 />
             </flux:input.group>
         </div>
@@ -43,10 +41,10 @@
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="client-list-type-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by type')"
-                    :text="__('Select a type to filter the client list.')"
+                    :title="__('admin.client_list.filter.filter_by_type')"
+                    :text="__('admin.client_list.filter.select_a_type_to_filter_the_client_list')"
                 >
-                    {{ __('Type') }}
+                    {{ __('admin.client_list.table.type') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -61,7 +59,7 @@
                     wire:model.live="typeFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All types') }}
+                        {{ __('admin.client_list.filter.all_types') }}
                     </flux:select.option>
 
                     @foreach ($typeOptions as $type)
@@ -76,10 +74,10 @@
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="client-list-status-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by status')"
-                    :text="__('Select a status to filter the client list.')"
+                    :title="__('admin.client_list.filter.filter_by_status')"
+                    :text="__('admin.client_list.filter.select_a_status_to_filter_the_client_list')"
                 >
-                    {{ __('Status') }}
+                    {{ __('admin.app_settings.table_icon_registry.status') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -94,7 +92,7 @@
                     wire:model.live="statusFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All statuses') }}
+                        {{ __('admin.client_list.filter.all_statuses') }}
                     </flux:select.option>
 
                     @foreach ($statusOptions as $status)
@@ -109,10 +107,10 @@
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="client-list-people-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by people')"
-                    :text="__('Select a people filter to filter the client list.')"
+                    :title="__('admin.client_list.filter.filter_by_people')"
+                    :text="__('admin.client_list.filter.select_a_people_filter_to_filter_the_client_list')"
                 >
-                    {{ __('People') }}
+                    {{ __('admin.client_list.table.people') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -127,15 +125,15 @@
                     wire:model.live="peopleFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All') }}
+                        {{ __('ui.states.all') }}
                     </flux:select.option>
 
                     <flux:select.option value="with_people">
-                        {{ __('With people') }}
+                        {{ __('admin.client_list.meta.with_people') }}
                     </flux:select.option>
 
                     <flux:select.option value="without_people">
-                        {{ __('Without people') }}
+                        {{ __('admin.client_list.meta.without_people') }}
                     </flux:select.option>
                 </flux:select>
             </flux:input.group>

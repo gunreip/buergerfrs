@@ -5,6 +5,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Throwable;
 
@@ -40,6 +41,8 @@ class TranslationsAuditCompare extends Command
 
         $usage = $this->buildUsage($codeKeys);
         $defined = $this->buildDefinedKeys($langKeys);
+        $localeScopedDefinitions = $this->buildLocaleScopedDefinitions($langKeys);
+        $exportableDefinitions = $this->buildExportableDefinitions();
 
         $missing = [];
         $ok = [];
@@ -85,6 +88,23 @@ class TranslationsAuditCompare extends Command
             ];
         }
 
+        $fileObsolete = [];
+
+        foreach ($localeScopedDefinitions as $scopedKey => $definition) {
+            if (isset($exportableDefinitions[$scopedKey])) {
+                continue;
+            }
+
+            $fileObsolete[] = [
+                'locale' => $definition['locale'],
+                'group' => $definition['group'],
+                'key' => $definition['key'],
+                'full_key' => $definition['full_key'],
+                'defined_files' => $definition['files'],
+                'reason' => 'present_in_lang_files_but_not_exportable_from_current_db_state',
+            ];
+        }
+
         $invalid = [
             'code' => $codeInvalid,
             'lang' => $langInvalid,
@@ -100,6 +120,7 @@ class TranslationsAuditCompare extends Command
             'unique_lang_keys' => count($defined),
             'missing_keys' => count($missing),
             'obsolete_keys' => count($obsolete),
+            'file_obsolete_entries' => count($fileObsolete),
             'ok_keys' => count($ok),
             'native_texts' => count($native),
             'dynamic_keys' => count($dynamic),
@@ -110,6 +131,7 @@ class TranslationsAuditCompare extends Command
         $this->writeAuditFile('summary', $summary);
         $this->writeAuditFile('missing', $missing);
         $this->writeAuditFile('obsolete', $obsolete);
+        $this->writeAuditFile('file-obsolete', $fileObsolete);
         $this->writeAuditFile('ok', $ok);
         $this->writeAuditFile('usage', array_values($usage));
         $this->writeAuditFile('native', $native);
@@ -127,6 +149,7 @@ class TranslationsAuditCompare extends Command
                 ['Unique lang keys', $summary['unique_lang_keys']],
                 ['Missing keys', $summary['missing_keys']],
                 ['Obsolete keys', $summary['obsolete_keys']],
+                ['File-obsolete entries', $summary['file_obsolete_entries']],
                 ['OK keys', $summary['ok_keys']],
                 ['Native texts', $summary['native_texts']],
                 ['Dynamic keys', $summary['dynamic_keys']],
@@ -218,6 +241,146 @@ class TranslationsAuditCompare extends Command
         ksort($defined);
 
         return $defined;
+    }
+
+    /**
+     * Build locale-scoped language definitions from lang audit keys.
+     *
+     * @return array<string, array{locale:string, group:?string, key:string, full_key:string, files:array<int, string>}>
+     */
+    private function buildLocaleScopedDefinitions(array $langKeys): array
+    {
+        $definitions = [];
+
+        foreach ($langKeys as $entry) {
+            $locale = trim((string) ($entry['locale'] ?? ''));
+            $fullKey = trim((string) ($entry['full_key'] ?? ''));
+
+            if ($locale === '' || $fullKey === '') {
+                continue;
+            }
+
+            $scopedKey = $locale . '::' . $fullKey;
+
+            $definitions[$scopedKey] ??= [
+                'locale' => $locale,
+                'group' => $entry['group'] !== null ? (string) $entry['group'] : null,
+                'key' => (string) ($entry['key'] ?? ''),
+                'full_key' => $fullKey,
+                'files' => [],
+            ];
+
+            if (($entry['file'] ?? null) !== null) {
+                $definitions[$scopedKey]['files'][] = (string) $entry['file'];
+            }
+        }
+
+        foreach ($definitions as $scopedKey => $definition) {
+            $definitions[$scopedKey]['files'] = array_values(array_unique($definition['files']));
+            sort($definitions[$scopedKey]['files']);
+        }
+
+        ksort($definitions);
+
+        return $definitions;
+    }
+
+    /**
+     * Build locale-scoped definitions from the current DB export rules.
+     *
+     * @return array<string, array{locale:string, group:?string, key:string, full_key:string}>
+     */
+    private function buildExportableDefinitions(): array
+    {
+        $definitions = [];
+
+        $rows = DB::table('translation_values')
+            ->select([
+                'translation_values.locale',
+                'translation_keys.group',
+                'translation_keys.key',
+            ])
+            ->join('translation_keys', 'translation_keys.id', '=', 'translation_values.translation_key_id')
+            ->whereNotNull('translation_values.locale')
+            ->where('translation_values.locale', '<>', '')
+            ->where('translation_values.status', '=', 'ok')
+            ->whereNotNull('translation_values.value')
+            ->where('translation_values.value', '<>', '')
+            ->where(function ($query): void {
+                $query
+                    ->whereNull('translation_values.is_base_duplicate')
+                    ->orWhere('translation_values.is_base_duplicate', false);
+            })
+            ->whereNotNull('translation_keys.key')
+            ->where('translation_keys.key', '<>', '')
+            ->where(function ($query): void {
+                $query
+                    ->whereNull('translation_keys.status')
+                    ->orWhere('translation_keys.status', '<>', 'obsolete')
+                    ->orWhere(function ($query): void {
+                        $query
+                            ->where('translation_keys.status', 'obsolete')
+                            ->where(function ($query): void {
+                                $query
+                                    ->whereNull('translation_keys.workflow_status')
+                                    ->orWhere('translation_keys.workflow_status', '<>', 'reviewed');
+                            });
+                    });
+            })
+            ->orderBy('translation_values.locale', 'asc')
+            ->orderBy('translation_keys.group', 'asc')
+            ->orderBy('translation_keys.key', 'asc')
+            ->get();
+
+        foreach ($rows as $row) {
+            $locale = str_replace('_', '-', strtolower(trim((string) $row->locale)));
+            $group = $row->group !== null ? trim((string) $row->group) : null;
+            $key = trim((string) $row->key);
+
+            if ($locale === '' || $key === '') {
+                continue;
+            }
+
+            $normalizedKey = $this->normalizeFullKeyForExport($group, $key);
+            $scopedKey = $locale . '::' . $normalizedKey;
+
+            $definitions[$scopedKey] = [
+                'locale' => $locale,
+                'group' => $group !== '' ? $group : null,
+                'key' => $key,
+                'full_key' => $normalizedKey,
+            ];
+        }
+
+        ksort($definitions);
+
+        return $definitions;
+    }
+
+    private function normalizeFullKeyForExport(?string $group, string $key): string
+    {
+        $normalizedGroup = $group !== null ? trim($group) : null;
+        $normalizedKey = trim($key);
+
+        if ($normalizedGroup === null || $normalizedGroup === '') {
+            return $normalizedKey;
+        }
+
+        if (str_contains($normalizedKey, '.')) {
+            $firstSegment = explode('.', $normalizedKey, 2)[0] ?? null;
+
+            if (is_string($firstSegment) && $firstSegment !== '' && $firstSegment !== $normalizedGroup) {
+                $normalizedGroup = $firstSegment;
+            }
+        }
+
+        $prefix = $normalizedGroup . '.';
+
+        if (str_starts_with($normalizedKey, $prefix)) {
+            return $normalizedKey;
+        }
+
+        return $prefix . $normalizedKey;
     }
 
     /**

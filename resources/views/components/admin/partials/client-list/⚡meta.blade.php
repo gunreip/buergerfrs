@@ -3,9 +3,8 @@
 {{-- Overview --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Overview')"
-        :description="__(
-            'Get a quick snapshot of client statistics, including total clients, pending activations, active clients, and assignment status.',
+        :title="__('admin.permissions.overview.title')"
+        :description="__('admin.client_list.meta.get_a_quick_snapshot_of_client_statistics_including_total_clients_pending_activa',
         )"
     />
 
@@ -16,11 +15,11 @@
             icon="building-2"
         >
             <flux:callout.heading>
-                {{ __('Total clients') }}
+                {{ __('admin.client_list.meta.total_clients') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Total number of registered clients.') }}
+                {{ __('admin.client_list.meta.total_number_of_registered_clients') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -34,11 +33,11 @@
             icon="clock"
         >
             <flux:callout.heading>
-                {{ __('Pending clients') }}
+                {{ __('admin.client_list.meta.pending_clients') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Clients waiting for activation or verification.') }}
+                {{ __('admin.client_list.meta.clients_waiting_for_activation_or_verification') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -52,11 +51,11 @@
             icon="badge-check"
         >
             <flux:callout.heading>
-                {{ __('Active clients') }}
+                {{ __('admin.client_list.meta.active_clients') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Clients currently marked as active.') }}
+                {{ __('admin.client_list.meta.clients_currently_marked_as_active') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -70,11 +69,11 @@
             icon="users"
         >
             <flux:callout.heading>
-                {{ __('With people') }}
+                {{ __('admin.client_list.meta.with_people') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Clients assigned to at least one person.') }}
+                {{ __('admin.client_list.meta.clients_assigned_to_at_least_one_person') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -88,11 +87,11 @@
             icon="user-x"
         >
             <flux:callout.heading>
-                {{ __('Without people') }}
+                {{ __('admin.client_list.meta.without_people') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Clients without assigned people.') }}
+                {{ __('admin.client_list.meta.clients_without_assigned_people') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">

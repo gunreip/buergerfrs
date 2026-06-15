@@ -56,7 +56,7 @@
         :current="request()->routeIs('admin.roles')"
         wire:navigate
     >
-        {{ __('Roles') }}
+        {{ __('ui.labels.roles') }}
     </flux:sidebar.item>
 
     {{-- Admin -> permissions --}}
@@ -75,7 +75,11 @@
         :heading="__('Translations')"
         icon="languages"
         expandable
-        :expanded="request()->routeIs('admin.translations') || request()->routeIs('admin.translation-statistics') || request()->routeIs('admin.translation-sub-languages')"
+        :expanded="request()->routeIs('admin.translations')
+                                || request()->routeIs('admin.translation-statistics')
+                                || request()->routeIs('admin.translation-sub-languages')
+                                || request()->routeIs('admin.translation-usage')
+                                || request()->routeIs('admin.translation-lang-ballast')"
     >
         {{-- Admin -> translations -> management --}}
         <flux:sidebar.item
@@ -97,6 +101,26 @@
             {{ __('Sub-Languages') }}
         </flux:sidebar.item>
 
+        {{-- Admin -> translations -> usage --}}
+        <flux:sidebar.item
+            icon="scan-search"
+            :href="route('admin.translation-usage')"
+            :current="request()->routeIs('admin.translation-usage')"
+            wire:navigate
+        >
+            {{ __('admin.translation_list.modal.usage') }}
+        </flux:sidebar.item>
+
+        {{-- Admin -> translations -> lang ballast --}}
+        <flux:sidebar.item
+            icon="archive-x"
+            :href="route('admin.translation-lang-ballast')"
+            :current="request()->routeIs('admin.translation-lang-ballast')"
+            wire:navigate
+        >
+            {{ __('Lang Ballast') }}
+        </flux:sidebar.item>
+
         {{-- Admin -> translations -> statistics --}}
         <flux:sidebar.item
             icon="chart-bar"
@@ -115,7 +139,7 @@
         :current="request()->routeIs('admin.app-settings')"
         wire:navigate
     >
-        {{ __('App Settings') }}
+        {{ __('admin.app_settings.app_settings') }}
     </flux:sidebar.item>
 
     {{-- Admin -> reference --}}
@@ -137,7 +161,7 @@
             :current="request()->routeIs('admin.country-references')"
             wire:navigate
         >
-            {{ __('Countries') }}
+            {{ __('layouts.sidebar.administration.countries') }}
         </flux:sidebar.item>
 
         {{-- Admin -> reference -> flags --}}
@@ -147,7 +171,7 @@
             :current="request()->routeIs('admin.flag-references')"
             wire:navigate
         >
-            {{ __('Flags') }}
+            {{ __('admin.permissions.table.columns.flags') }}
         </flux:sidebar.item>
 
         {{-- Admin -> reference -> HTML tags check --}}
@@ -175,7 +199,7 @@
         :current="request()->routeIs('admin.fallback-reports')"
         wire:navigate
     >
-        {{ __('Fallback Reports') }}
+        {{ __('layouts.sidebar.administration.fallback_reports') }}
     </flux:sidebar.item>
 
     @role('Super-Admin')

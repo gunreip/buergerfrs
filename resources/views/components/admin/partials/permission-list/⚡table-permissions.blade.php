@@ -16,8 +16,7 @@
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
                             :title="__('ui.labels.number')"
-                            :text="__(
-                                'Sequential number of the permission in the current list, useful for reference.',
+                            :text="__('admin.permission_list.table_permissions.sequential_number_of_the_permission_in_the_current_list_useful_for_reference',
                             )"
                         >
                             {{ __('ui.labels.number_short') }}
@@ -31,7 +30,7 @@
                     >
                         <x-ui.tooltip.trigger
                             :title="__('ui.labels.name')"
-                            :text="__('Name of the permission, useful for identification and reference.')"
+                            :text="__('admin.permission_list.table_permissions.name_of_the_permission_useful_for_identification_and_reference')"
                         >
                             {{ __('ui.labels.name') }}
                         </x-ui.tooltip.trigger>
@@ -44,7 +43,7 @@
                     >
                         <x-ui.tooltip.trigger
                             :title="__('ui.labels.category')"
-                            :text="__('Category of the permission, useful for identification and reference.')"
+                            :text="__('admin.permission_list.table_permissions.category_of_the_permission_useful_for_identification_and_reference')"
                         >
                             {{ __('ui.labels.category') }}
                         </x-ui.tooltip.trigger>
@@ -58,7 +57,7 @@
                     >
                         <x-ui.tooltip.trigger
                             :title="__('admin.permissions.table.columns.sort')"
-                            :text="__('Sort order of the permission, useful for identification and reference.')"
+                            :text="__('admin.permission_list.table_permissions.sort_order_of_the_permission_useful_for_identification_and_reference')"
                         >
                             {{ __('admin.permissions.table.columns.sort') }}
                         </x-ui.tooltip.trigger>
@@ -71,7 +70,7 @@
                     >
                         <x-ui.tooltip.trigger
                             :title="__('ui.labels.guard')"
-                            :text="__('Guard of the permission, useful for identification and reference.')"
+                            :text="__('admin.permission_list.table_permissions.guard_of_the_permission_useful_for_identification_and_reference')"
                         >
                             {{ __('ui.labels.guard') }}
                         </x-ui.tooltip.trigger>
@@ -81,7 +80,7 @@
                     <flux:table.column>
                         <x-ui.tooltip.trigger
                             :title="__('ui.labels.description')"
-                            :text="__('Description of the permission, useful for identification and reference.')"
+                            :text="__('admin.permission_list.table_permissions.description_of_the_permission_useful_for_identification_and_reference')"
                         >
                             {{ __('ui.labels.description') }}
                         </x-ui.tooltip.trigger>
@@ -91,8 +90,7 @@
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
                             :title="__('admin.permissions.table.columns.flags')"
-                            :text="__(
-                                'Flags indicating special attributes of the permission, such as system or custom, useful for identification and reference.',
+                            :text="__('admin.permission_list.table_permissions.flags_indicating_special_attributes_of_the_permission_such_as_system_or_custom_u',
                             )"
                         >
                             {{ __('admin.permissions.table.columns.flags') }}
@@ -107,8 +105,7 @@
                     >
                         <x-ui.tooltip.trigger
                             :title="__('ui.labels.roles')"
-                            :text="__(
-                                'Number of roles associated with the permission, useful for identification and reference.',
+                            :text="__('admin.permission_list.table_permissions.number_of_roles_associated_with_the_permission_useful_for_identification_and_ref',
                             )"
                         >
                             {{ __('ui.labels.roles') }}
@@ -119,9 +116,9 @@
                     <flux:table.column>
                         <x-ui.tooltip.trigger
                             :title="__('admin.permissions.table.columns.assigned_roles')"
-                            :text="__('Roles assigned to the permission, useful for identification and reference.')"
+                            :text="__('admin.permission_list.table_permissions.roles_assigned_to_the_permission_useful_for_identification_and_reference')"
                         >
-                            {{ __('admin.permissions.table.columns.assigned_roles') }}
+                            {{ __('ui.assigned_roles') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -129,8 +126,7 @@
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
                             :title="__('ui.labels.actions')"
-                            :text="__(
-                                'Actions available for the permission, useful for identification and reference.',
+                            :text="__('admin.permission_list.table_permissions.actions_available_for_the_permission_useful_for_identification_and_reference',
                             )"
                         >
                             {{ __('ui.labels.actions') }}
@@ -253,7 +249,7 @@
         </div>
 
         @if ($permissions->hasPages())
-            <flux:separator text="{{ __('Pagination') }}" />
+            <flux:separator text="{{ __('admin.client_list.table.pagination') }}" />
 
             <div class="mt-4">
                 <x-ui.table.pagination :paginator="$permissions" />

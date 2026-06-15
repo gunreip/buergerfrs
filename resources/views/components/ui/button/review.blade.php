@@ -4,13 +4,13 @@
 <x-ui.button.review />
 <x-ui.button.review icon="shield-check" />
 <x-ui.button.review :icon="false" />
-<x-ui.button.review label="{{ __('Review') }}" />
+<x-ui.button.review label="{{ __('ui.button.review.review') }}" />
 --}}
 
 {{-- review  → fuchsia/primary, scan-search, Review --}}
 
 @props([
-    'label' => __('Review'),
+    'label' => __('ui.button.review.review'),
     'icon' => true,
     'type' => 'button',
     'size' => null,

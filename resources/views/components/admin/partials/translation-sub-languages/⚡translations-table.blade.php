@@ -13,7 +13,7 @@
                     id="translation-entries-per-page"
                     name="translation-entries-per-page"
                     model="translationRowsPerPage"
-                    :label="__('Per Page')"
+                    :label="__('ui.table.per_page_selector.per_page')"
                 />
             </div>
         @endif
@@ -97,7 +97,7 @@
                         :direction="$translationRowsSortDirection"
                         wire:click="sortTranslationRowsBy('id')"
                     >
-                        {{ __('ID') }}
+                        {{ __('admin.user_list.table.id') }}
                     </flux:table.column>
 
                     <flux:table.column
@@ -106,7 +106,7 @@
                         :direction="$translationRowsSortDirection"
                         wire:click="sortTranslationRowsBy('key')"
                     >
-                        {{ __('Translation key') }}
+                        {{ __('admin.translation_list.modal_edit.translation_key') }}
                     </flux:table.column>
 
                     <flux:table.column
@@ -294,7 +294,7 @@
 
         <flux:separator
             class="mt-4"
-            text="{{ __('Pagination') }}"
+            text="{{ __('admin.client_list.table.pagination') }}"
         />
 
         @if ($translationRows->hasPages())

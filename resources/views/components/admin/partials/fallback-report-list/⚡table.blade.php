@@ -5,7 +5,7 @@
 
     {{-- Card Header --}}
     <x-ui.headers.card
-        :title="__('Fallback Reports')"
+        :title="__('layouts.sidebar.administration.fallback_reports')"
         :description="__(
             'List of technical fallback events such as missing icons, missing config values or other recoverable UI fallbacks.',
         )"
@@ -28,12 +28,12 @@
                         wire:click="sortBy('id')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('ID')"
+                            :title="__('admin.user_list.table.id')"
                             :text="__(
                                 'Unique identifier of the fallback report, useful for tracking and reference.',
                             )"
                         >
-                            {{ __('#') }}
+                            {{ __('ui.labels.number_short') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -46,10 +46,10 @@
                         wire:click="sortBy('status')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Status')"
+                            :title="__('admin.app_settings.table_icon_registry.status')"
                             :text="__('Status of the fallback report, useful for tracking and reference.')"
                         >
-                            {{ __('Status') }}
+                            {{ __('admin.app_settings.table_icon_registry.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -61,10 +61,10 @@
                         wire:click="sortBy('type')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Type')"
+                            :title="__('admin.client_list.table.type')"
                             :text="__('Type of the fallback report, useful for tracking and reference.')"
                         >
-                            {{ __('Type') }}
+                            {{ __('admin.client_list.table.type') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -76,10 +76,10 @@
                         wire:click="sortBy('key')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Key')"
+                            :title="__('admin.translation_list.table.key')"
                             :text="__('Key of the fallback report, useful for tracking and reference.')"
                         >
-                            {{ __('Key') }}
+                            {{ __('admin.translation_list.table.key') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -134,22 +134,22 @@
                     {{-- Column Context --}}
                     <flux:table.column>
                         <x-ui.tooltip.trigger
-                            :title="__('Context')"
+                            :title="__('admin.translation_list.modal_history.context')"
                             :text="__('Context of the fallback report, useful for tracking and reference.')"
                         >
-                            {{ __('Context') }}
+                            {{ __('admin.translation_list.modal_history.context') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Actions --}}
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('Actions')"
+                            :title="__('ui.labels.actions')"
                             :text="__(
                                 'Actions available for the fallback report, useful for tracking and reference.',
                             )"
                         >
-                            {{ __('Actions') }}
+                            {{ __('ui.labels.actions') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
@@ -175,14 +175,14 @@
                                         color="green"
                                         variant="subtle"
                                     >
-                                        {{ __('Reviewed') }}
+                                        {{ __('admin.translation_list.modal_edit.reviewed') }}
                                     </flux:badge>
                                 @else
                                     <flux:badge
                                         color="amber"
                                         variant="subtle"
                                     >
-                                        {{ __('Open') }}
+                                        {{ __('admin.translation_list.filter.open') }}
                                     </flux:badge>
                                 @endif
                             </flux:table.cell>
@@ -249,7 +249,7 @@
                                         variant="primary"
                                         wire:click="markReviewed({{ $report->id }})"
                                     >
-                                        {{ __('Mark reviewed') }}
+                                        {{ __('admin.translation_list.table.mark_reviewed') }}
                                     </flux:button>
                                 @endif
                             </flux:table.cell>
@@ -273,7 +273,7 @@
         @if ($reports->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('Pagination') }}"
+                text="{{ __('admin.client_list.table.pagination') }}"
             />
 
             <div class="mt-4">

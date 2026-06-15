@@ -22,14 +22,14 @@
             :current="request()->routeIs('management.people.create')"
             wire:navigate
         >
-            {{ __('Create') }}
+            {{ __('admin.roles.actions.create') }}
         </flux:sidebar.item>
     </flux:sidebar.group>
 
     {{-- Management -> client --}}
     <flux:sidebar.group
         class="grid"
-        :heading="__('Client')"
+        :heading="__('layouts.sidebar.management.client')"
         icon="building-2"
         expandable
         :expanded="false"

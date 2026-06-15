@@ -9,8 +9,8 @@
 
     {{-- Header part --}}
     <x-ui.headers.page
-        :title="__('User / Role Management')"
-        :description="__('Manage your system\'s users, assign roles, and manage permissions')"
+        :title="__('admin.user_list.user_role_management')"
+        :description="__('admin.user_list.manage_your_system_s_users_assign_roles_and_manage_permissions')"
     />
 
     {{-- Metablock: Overview --}}

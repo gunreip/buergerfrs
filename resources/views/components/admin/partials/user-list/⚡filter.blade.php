@@ -2,7 +2,7 @@
 
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Filtering')"
+        :title="__('admin.permissions.filters.title')"
         :description="__('Filter the list of users by name, email or assigned roles.')"
     />
 
@@ -10,12 +10,12 @@
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="user-list-search">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by search')"
+                    :title="__('admin.translation_list.filter.filter_by_search')"
                     :text="__(
                         'Enter a search term to filter the list of users by name or email. The search is case-sensitive.',
                     )"
                 >
-                    {{ __('Search') }}
+                    {{ __('ui.actions.search') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -40,10 +40,10 @@
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="user-list-role-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by role')"
+                    :title="__('admin.permission_list.filter.filter_by_role')"
                     :text="__('Select a role to filter the list of users.')"
                 >
-                    {{ __('Role') }}
+                    {{ __('ui.labels.role') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -58,11 +58,11 @@
                     wire:model.live="roleFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All roles') }}
+                        {{ __('admin.permissions.filters.roles.all') }}
                     </flux:select.option>
 
                     <flux:select.option value="__none__">
-                        {{ __('Without role') }}
+                        {{ __('admin.user_list.filter.without_role') }}
                     </flux:select.option>
 
                     @foreach ($roles as $role)

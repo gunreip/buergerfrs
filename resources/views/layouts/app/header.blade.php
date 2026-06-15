@@ -18,8 +18,8 @@
             <flux:spacer />
 
             <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse py-0!">
-                <flux:tooltip :content="__('Search')" position="bottom">
-                    <flux:navbar.item class="!h-10 [&>div>svg]:size-5" icon="magnifying-glass" href="#" :label="__('Search')" />
+                <flux:tooltip :content="__('ui.actions.search')" position="bottom">
+                    <flux:navbar.item class="!h-10 [&>div>svg]:size-5" icon="magnifying-glass" href="#" :label="__('ui.actions.search')" />
                 </flux:tooltip>
                 <flux:tooltip :content="__('Repository')" position="bottom">
                     <flux:navbar.item

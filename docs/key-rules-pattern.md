@@ -26,3 +26,8 @@ Bei Änderungen an Translation-List, Target-Language-Logik, Suggested-Key-Regeln
 | <n>namespace</n>.<g>group</g>.<se>section</se> | `resources/views/components`/<n>admin</n>/partials/<g>app-settings</g>/⚡<se>table-role-badges</se>.blade.php | <n>admin</n>.<g>app-settings</g>.<se>table-role-badges</se>. &hellip; |  |
 | <n>namespace</n>.<g>group</g>.<se>section</se> | `resources/views/components`/<n>admin</n>/partials/<g>app-settings</g>/⚡<se>meta-health</se>.blade.php | <n>admin</n>.<g>app-settings</g>.<se>meta-health</se>. &hellip; |  |
 
+
+Verbindliche Zusatzregel:
+- `partials` ist nur ein technischer Strukturordner und darf bei neu erzeugten oder vorgeschlagenen Translation-Keys niemals als Namespace-Segment erscheinen.
+- Für neue Keys gilt daher: `resources/views/components/admin/partials/user-list/⚡modal.blade.php` erzeugt `admin.user_list.modal.*` und nicht `admin.partials.user_list.modal.*`.
+- Bestehende Legacy-Keys mit `.partials.` dürfen als Altbestand bestehen bleiben, werden aber nicht mehr als Zielmuster für neue Keys verwendet.

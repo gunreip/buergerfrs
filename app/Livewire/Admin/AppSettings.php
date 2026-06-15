@@ -208,7 +208,7 @@ class AppSettings extends Component
         $availableLocales = $this->normaliseAvailableLocales($appGeneralSettings->availableLocales);
 
         if (! in_array($locale, $availableLocales, true)) {
-            $this->dispatch('toast', type: 'error', message: __('Invalid application language.'));
+            $this->dispatch('toast', type: 'error', message: __('admin.app_settings.invalid_application_language'));
 
             return;
         }
@@ -224,7 +224,7 @@ class AppSettings extends Component
         if ($previousLocale !== $locale) {
             $this->logLocaleActivity(
                 event: 'admin.app_settings.locale.global_locale_changed',
-                description: __('Global app locale changed'),
+                description: __('admin.app_settings.global_app_locale_changed'),
                 properties: [
                     'before' => [
                         'locale' => $previousLocale,
@@ -236,7 +236,7 @@ class AppSettings extends Component
             );
         }
 
-        $this->dispatch('toast', type: 'success', message: __('Application language updated.'));
+        $this->dispatch('toast', type: 'success', message: __('admin.app_settings.application_language_updated'));
     }
 
     /**
@@ -300,7 +300,7 @@ class AppSettings extends Component
         $locale = LocaleCode::normalize($locale);
 
         if ($locale === '') {
-            $this->dispatch('toast', type: 'error', message: __('Invalid application language.'));
+            $this->dispatch('toast', type: 'error', message: __('admin.app_settings.invalid_application_language'));
 
             return;
         }
@@ -322,7 +322,7 @@ class AppSettings extends Component
         $locale = LocaleCode::normalize($locale);
 
         if ($locale === '') {
-            $this->dispatch('toast', type: 'error', message: __('Invalid application language.'));
+            $this->dispatch('toast', type: 'error', message: __('admin.app_settings.invalid_application_language'));
 
             return;
         }
@@ -349,7 +349,7 @@ class AppSettings extends Component
         $locale = LocaleCode::normalize($locale);
 
         if ($locale === '') {
-            $this->dispatch('toast', type: 'error', message: __('Invalid application language.'));
+            $this->dispatch('toast', type: 'error', message: __('admin.app_settings.invalid_application_language'));
 
             return;
         }
@@ -357,7 +357,7 @@ class AppSettings extends Component
         $isSelectableLocale = in_array($locale, $this->selectablePrimaryLocaleCodes(), true);
 
         if (! $isSelectableLocale) {
-            $this->dispatch('toast', type: 'error', message: __('Invalid application language.'));
+            $this->dispatch('toast', type: 'error', message: __('admin.app_settings.invalid_application_language'));
 
             return;
         }
@@ -369,13 +369,13 @@ class AppSettings extends Component
 
         if (in_array($locale, $availableLocales, true)) {
             if (in_array($locale, self::MANDATORY_AVAILABLE_LOCALES, true)) {
-                $this->dispatch('toast', type: 'error', message: __('This application language is mandatory and cannot be disabled.'));
+                $this->dispatch('toast', type: 'error', message: __('admin.app_settings.this_application_language_is_mandatory_and_cannot_be_disabled'));
 
                 return;
             }
 
             if ($locale === $currentLocale) {
-                $this->dispatch('toast', type: 'error', message: __('The current application language cannot be disabled.'));
+                $this->dispatch('toast', type: 'error', message: __('admin.app_settings.the_current_application_language_cannot_be_disabled'));
 
                 return;
             }
@@ -383,7 +383,7 @@ class AppSettings extends Component
             $availableLocales = array_values(array_diff($availableLocales, [$locale]));
 
             if ($availableLocales === []) {
-                $this->dispatch('toast', type: 'error', message: __('At least one application language must remain enabled.'));
+                $this->dispatch('toast', type: 'error', message: __('admin.app_settings.at_least_one_application_language_must_remain_enabled'));
 
                 return;
             }
@@ -401,7 +401,7 @@ class AppSettings extends Component
         if ($this->localeListsChanged($beforeAvailableLocales, $availableLocales)) {
             $this->logLocaleActivity(
                 event: 'admin.app_settings.locale.primary_locale_toggled',
-                description: __('Primary locale availability updated'),
+                description: __('admin.app_settings.primary_locale_availability_updated'),
                 properties: [
                     'action' => $wasActive ? 'deactivated' : 'activated',
                     'target_locale' => $locale,
@@ -419,7 +419,7 @@ class AppSettings extends Component
             $this->pendingLocaleDeactivationCode = null;
         }
 
-        $this->dispatch('toast', type: 'success', message: __('Available application languages updated.'));
+        $this->dispatch('toast', type: 'success', message: __('admin.app_settings.available_application_languages_updated'));
     }
 
     /**
@@ -451,7 +451,7 @@ class AppSettings extends Component
             $this->dispatch(
                 'toast',
                 type: 'error',
-                message: __('The current application language cannot be removed from the available languages.')
+                message: __('admin.app_settings.the_current_application_language_cannot_be_removed_from_the_available_languages')
             );
         }
 
@@ -469,7 +469,7 @@ class AppSettings extends Component
             $this->dispatch(
                 'toast',
                 type: 'error',
-                message: __('At least one application language must remain enabled.')
+                message: __('admin.app_settings.at_least_one_application_language_must_remain_enabled')
             );
         }
 
@@ -481,7 +481,7 @@ class AppSettings extends Component
         if ($this->localeListsChanged($beforeAvailableLocales, $availableLocales)) {
             $this->logLocaleActivity(
                 event: 'admin.app_settings.locale.available_locales_updated',
-                description: __('Available app locales updated'),
+                description: __('admin.app_settings.available_app_locales_updated'),
                 properties: [
                     'before' => [
                         'available_locales' => $beforeAvailableLocales,
@@ -493,7 +493,7 @@ class AppSettings extends Component
             );
         }
 
-        $this->dispatch('toast', type: 'success', message: __('Available application languages updated.'));
+        $this->dispatch('toast', type: 'success', message: __('admin.app_settings.available_application_languages_updated'));
     }
 
     /**
@@ -532,7 +532,7 @@ class AppSettings extends Component
 
                 return [
                     'roleName' => $roleName,
-                    'displayLabel' => $isPseudoRoleBadgeKey ? __('Without role') : $roleName,
+                    'displayLabel' => $isPseudoRoleBadgeKey ? __('admin.user_list.filter.without_role') : $roleName,
                     'isPseudoRoleBadgeKey' => $isPseudoRoleBadgeKey,
                     'roleExists' => in_array($roleName, $roleNames, true),
                     'color' => (string) ($badge['color'] ?? ''),
@@ -882,7 +882,7 @@ class AppSettings extends Component
         if ($activatedLocales !== [] || $deactivatedLocales !== []) {
             $this->logLocaleActivity(
                 event: 'admin.app_settings.locale.sub_locales_updated',
-                description: __('Sub locales updated'),
+                description: __('admin.app_settings.sub_locales_updated'),
                 properties: [
                     'primary_locale' => $selectedPrimaryLanguageCode,
                     'trigger' => $trigger,

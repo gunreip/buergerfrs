@@ -1,0 +1,207 @@
+{
+    "preview": true,
+    "preview_limit": 20,
+    "total": 153,
+    "items": [
+        {
+            "locale": "de",
+            "group": "actions",
+            "key": "ui.actions.save",
+            "full_key": "actions.ui.actions.save",
+            "defined_files": [
+                "lang/de/actions.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "actions",
+            "key": "ui.actions.search",
+            "full_key": "actions.ui.actions.search",
+            "defined_files": [
+                "lang/de/actions.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "labels",
+            "key": "ui.labels.actions",
+            "full_key": "labels.ui.labels.actions",
+            "defined_files": [
+                "lang/de/labels.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "labels",
+            "key": "ui.labels.category",
+            "full_key": "labels.ui.labels.category",
+            "defined_files": [
+                "lang/de/labels.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "labels",
+            "key": "ui.labels.description",
+            "full_key": "labels.ui.labels.description",
+            "defined_files": [
+                "lang/de/labels.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "labels",
+            "key": "ui.labels.guard",
+            "full_key": "labels.ui.labels.guard",
+            "defined_files": [
+                "lang/de/labels.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "labels",
+            "key": "ui.labels.name",
+            "full_key": "labels.ui.labels.name",
+            "defined_files": [
+                "lang/de/labels.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "labels",
+            "key": "ui.labels.number_short",
+            "full_key": "labels.ui.labels.number_short",
+            "defined_files": [
+                "lang/de/labels.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "labels",
+            "key": "ui.labels.preview",
+            "full_key": "labels.ui.labels.preview",
+            "defined_files": [
+                "lang/de/labels.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "labels",
+            "key": "ui.labels.role",
+            "full_key": "labels.ui.labels.role",
+            "defined_files": [
+                "lang/de/labels.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "labels",
+            "key": "ui.labels.roles",
+            "full_key": "labels.ui.labels.roles",
+            "defined_files": [
+                "lang/de/labels.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "messages",
+            "key": "ui.messages.no_description_available",
+            "full_key": "messages.ui.messages.no_description_available",
+            "defined_files": [
+                "lang/de/messages.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "people",
+            "key": "management.people.create_person.form_person.emergency",
+            "full_key": "people.management.people.create_person.form_person.emergency",
+            "defined_files": [
+                "lang/de/people.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "permissions",
+            "key": "admin.permissions.description",
+            "full_key": "permissions.admin.permissions.description",
+            "defined_files": [
+                "lang/de/permissions.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "permissions",
+            "key": "admin.permissions.filters.assignment.label",
+            "full_key": "permissions.admin.permissions.filters.assignment.label",
+            "defined_files": [
+                "lang/de/permissions.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "permissions",
+            "key": "admin.permissions.filters.categories.all",
+            "full_key": "permissions.admin.permissions.filters.categories.all",
+            "defined_files": [
+                "lang/de/permissions.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "permissions",
+            "key": "admin.permissions.filters.description",
+            "full_key": "permissions.admin.permissions.filters.description",
+            "defined_files": [
+                "lang/de/permissions.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "permissions",
+            "key": "admin.permissions.filters.guards.all",
+            "full_key": "permissions.admin.permissions.filters.guards.all",
+            "defined_files": [
+                "lang/de/permissions.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "permissions",
+            "key": "admin.permissions.filters.roles.all",
+            "full_key": "permissions.admin.permissions.filters.roles.all",
+            "defined_files": [
+                "lang/de/permissions.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        },
+        {
+            "locale": "de",
+            "group": "permissions",
+            "key": "admin.permissions.filters.search.placeholder",
+            "full_key": "permissions.admin.permissions.filters.search.placeholder",
+            "defined_files": [
+                "lang/de/permissions.php"
+            ],
+            "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+        }
+    ]
+}

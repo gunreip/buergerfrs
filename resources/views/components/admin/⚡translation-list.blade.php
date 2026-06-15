@@ -11,8 +11,8 @@
 >
     {{-- <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between"> --}}
     <x-ui.headers.page
-        :title="__('Translation Management')"
-        :description="__('Review translation keys, missing values, native strings, dynamic calls, and audit states.')"
+        :title="__('admin.translation_list.translation_management')"
+        :description="__('admin.translation_list.review_translation_keys_missing_values_native_strings_dynamic_calls_and_audit_st')"
     >
     </x-ui.headers.page>
 

@@ -57,8 +57,8 @@ class Preferences extends Component
         $user->save();
 
         Flux::toast(
-            heading: __('Preferences saved'),
-            text: __('Your personal application preferences have been updated.'),
+            heading: __('account.preferences.preferences_saved'),
+            text: __('account.preferences.your_personal_application_preferences_have_been_updated'),
             variant: 'success',
             duration: 3000,
         );

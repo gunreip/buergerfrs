@@ -6,25 +6,25 @@
         class="mb-4"
         size="lg"
     >
-        {{ __('Application Preferences') }}
+        {{ __('account.preferences.application_preferences.application_preferences') }}
     </flux:heading>
 
     <div class="grid grid-cols-2 gap-4">
         <flux:select
-            label="{{ __('Preferred locale') }}"
+            label="{{ __('account.preferences.application_preferences.preferred_locale') }}"
             wire:model.live="locale"
         >
             <flux:select.option value="de">
-                {{ __('German') }}
+                {{ __('account.preferences.application_preferences.german') }}
             </flux:select.option>
 
             <flux:select.option value="en">
-                {{ __('English') }}
+                {{ __('account.preferences.application_preferences.english') }}
             </flux:select.option>
         </flux:select>
 
         <flux:select
-            label="{{ __('Admin users per page') }}"
+            label="{{ __('account.preferences.application_preferences.admin_users_per_page') }}"
             wire:model.live="adminUsersPerPage"
         >
             @foreach ([10, 25, 50, 100] as $value)
@@ -41,11 +41,11 @@
         icon="info"
     >
         <flux:callout.heading>
-            {{ __('Stored preference') }}
+            {{ __('account.preferences.application_preferences.stored_preference') }}
         </flux:callout.heading>
 
         <flux:callout.text>
-            {{ __('The locale preference is stored now and can be connected to application locale handling later.') }}
+            {{ __('account.preferences.application_preferences.the_locale_preference_is_stored_now_and_can_be_connected_to_application_locale_h') }}
         </flux:callout.text>
     </flux:callout>
 </flux:card>

@@ -2,8 +2,8 @@
 
 <flux:card>
     <x-ui.headers.page
-        :title="__('App Settings')"
-        :description="__('Review global application settings, role badge configuration, and icon registry health.')"
+        :title="__('admin.app_settings.app_settings')"
+        :description="__('admin.app_settings.review_global_application_settings_role_badge_configuration_and_icon_registry_he')"
     />
 
     {{-- Overview of application settings related to role badges and icon registry. This is intended as a diagnostic tool to quickly identify potential misconfigurations or issues with role badge display and icon availability. --}}

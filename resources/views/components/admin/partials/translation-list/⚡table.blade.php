@@ -3,32 +3,83 @@
 {{-- Table part --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Translation List')"
-        :description="__('Review and manage translation keys, their values across languages, and associated metadata.')"
+        :title="__('admin.translation_list.table.translation_list')"
+        :description="__(
+            'admin.translation_list.table.review_and_manage_translation_keys_their_values_across_languages_and_associated_',
+        )"
     >
         @php
             $appLanguages = $targetLanguages ?? collect();
+            $activeTargetSubLanguages = collect($activeTargetSubLanguages ?? []);
         @endphp
 
-        @if ($appLanguages->isNotEmpty())
-            <div class="flex flex-wrap items-center justify-end gap-1.5">
-                @foreach ($appLanguages as $translationLanguage)
-                    <flux:badge
-                        label="{{ $translationLanguage->native_name ?: $translationLanguage->name ?: $translationLanguage->locale }}"
-                    >
-                        <x-ui.locale.flag
-                            :locale="$translationLanguage->locale"
-                            size="lg"
-                        />
+        <div class="flex flex-wrap items-center justify-end gap-2">
+            @if ($appLanguages->isNotEmpty())
+                <div class="flex flex-wrap items-center justify-end gap-1.5">
+                    @foreach ($appLanguages as $translationLanguage)
+                        <x-ui.tooltip.trigger
+                            :title="__('admin.translation_list.table.language_translations', [
+                                'language' =>
+                                    $translationLanguage->native_name ?:
+                                    $translationLanguage->name ?:
+                                    $translationLanguage->locale,
+                            ])"
+                            :text="__(
+                                'admin.translation_list.table.review_translation_values_for_the_language_language_including_its_sub_languages_',
+                                [
+                                    'language' =>
+                                        $translationLanguage->native_name ?:
+                                        $translationLanguage->name ?:
+                                        $translationLanguage->locale,
+                                ],
+                            )"
+                        >
+                            <flux:badge
+                                label="{{ $translationLanguage->native_name ?: $translationLanguage->name ?: $translationLanguage->locale }}"
+                            >
+                                <x-ui.locale.flag
+                                    :locale="$translationLanguage->locale"
+                                    size="lg"
+                                />
 
-                        <span class="ml-2 font-mono uppercase">
-                            {{ $translationLanguage->locale }}
-                        </span>
-                    </flux:badge>
-                @endforeach
-            </div>
-        @endif
+                                <span class="ml-2 font-mono uppercase">
+                                    {{ $translationLanguage->locale }}
+                                </span>
+                            </flux:badge>
+                        </x-ui.tooltip.trigger>
+                    @endforeach
+                </div>
+            @endif
+
+            <x-ui.tooltip.trigger
+                :title="__('admin.translation_list.table.reload_translation_list')"
+                :text="__('admin.translation_list.table.refresh_the_translation_list_to_see_the_latest_changes')"
+            >
+
+                <x-ui.button.reset
+                    icon="arrow-path"
+                    :label="__('admin.translation_list.table.reload_translation_list')"
+                    :aria-label="__('admin.translation_list.table.reload_translation_list')"
+                    wire:click="$refresh"
+                    wire:loading.attr="disabled"
+                    wire:target="$refresh"
+                />
+
+            </x-ui.tooltip.trigger>
+        </div>
     </x-ui.headers.card>
+
+    @if ($translationKeys->hasPages())
+        {{-- Pagination --}}
+        <div class="mb-2 mt-2">
+            <x-ui.table.pagination
+                class="m-0! p-0!"
+                id="translation-list-pagination-top"
+                :paginator="$translationKeys"
+                scroll-to="#translation-list-pagination-top"
+            />
+        </div>
+    @endif
 
     <div
         class="mx-auto max-w-full scroll-mt-6"
@@ -38,23 +89,43 @@
 
             {{-- Table --}}
             {{-- ID, Status, Key/Suggested Key, Native Text, Values, Usage, Actions --}}
-            <flux:table class="app-table">
+            <flux:table
+                container:class="max-h-280 app-table scrollbar-gutter-auto border-b-1 border-zinc-200 dark:border-zinc-700 mb-3 pb-2"
+            >
 
                 {{-- Table Headers with tooltips for additional context on each column --}}
-                <flux:table.columns class="bg-zinc-800 text-zinc-400">
+                <flux:table.columns
+                    class="bg-zinc-800 text-zinc-400"
+                    sticky
+                >
+
+                    {{-- Sequence Number (not sortable, reflects current order in the list, useful for reference and identification) --}}
+                    <flux:table.column
+                        class="w-14 tabular-nums"
+                        align="center"
+                    >
+                        <flux:icon.tally-5
+                            class="ml-3"
+                            stroke-width="1"
+                        />
+
+                    </flux:table.column>
 
                     {{-- Column ID --}}
                     <flux:table.column
                         class="w-32 tabular-nums"
                         sortable
+                        :sorted="$sortField === 'id'"
+                        :direction="$sortDirection"
                         align="center"
+                        wire:click="sortBy('id')"
                     >
                         <x-ui.tooltip.trigger
                             class="ml-3"
-                            :title="__('ID')"
-                            :text="__('Internal database ID of the translation key.')"
+                            :title="__('admin.user_list.table.id')"
+                            :text="__('admin.translation_list.table.internal_database_id_of_the_translation_key')"
                         >
-                            {{ __('ID') }}
+                            {{ __('admin.user_list.table.id') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -62,16 +133,19 @@
                     <flux:table.column
                         class="w-24"
                         sortable
+                        :sorted="$sortField === 'status'"
+                        :direction="$sortDirection"
                         align="center"
+                        wire:click="sortBy('status')"
                     >
                         <x-ui.tooltip.trigger
                             class="ml-3"
-                            :title="__('Status')"
+                            :title="__('admin.app_settings.table_icon_registry.status')"
                             :text="__(
-                                'Current status of the translation key, useful for identification and reference.',
+                                'admin.translation_list.table.current_status_of_the_translation_key_useful_for_identification_and_reference',
                             )"
                         >
-                            {{ __('Status') }}
+                            {{ __('admin.app_settings.table_icon_registry.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -79,12 +153,17 @@
                     <flux:table.column
                         class="w-(--translation-balanced-column-width)"
                         sortable
+                        :sorted="$sortField === 'key'"
+                        :direction="$sortDirection"
+                        wire:click="sortBy('key')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Key / Suggested Key')"
-                            :text="__('Translation key or suggested key, useful for identification and reference.')"
+                            :title="__('admin.translation_list.table.key_suggested_key')"
+                            :text="__(
+                                'admin.translation_list.table.translation_key_or_suggested_key_useful_for_identification_and_reference',
+                            )"
                         >
-                            {{ __('Key / Suggested Key') }}
+                            {{ __('admin.translation_list.table.key_suggested_key') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -92,27 +171,31 @@
                     <flux:table.column
                         class="w-(--translation-balanced-column-width)"
                         sortable
+                        :sorted="$sortField === 'native_text'"
+                        :direction="$sortDirection"
+                        wire:click="sortBy('native_text')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Source language value (EN) / Native Text')"
+                            :title="__('admin.translation_list.table.source_language_value_en_native_text')"
                             :text="__(
-                                'Original text in the source language, useful for identification and reference.',
+                                'admin.translation_list.table.original_text_in_the_source_language_useful_for_identification_and_reference',
                             )"
                         >
-                            {{ __('Source language value (EN) / Native Text') }}
+                            {{ __('admin.translation_list.table.source_language_value_en_native_text') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Values --}}
                     <flux:table.column class="w-(--translation-balanced-column-width)">
                         <x-ui.tooltip.trigger
-                            :title="__('Target language values')"
+                            :title="__('admin.translation_list.table.target_sub_language_values')"
                             :text="__(
-                                'Translated values for the key across different languages, useful for identification and reference.',
+                                'admin.translation_list.table.translated_values_for_the_key_across_different_main_languages_and_their_respecti',
                             )"
                         >
-                            {{ __('Target language values') }}
-                            {{-- <span class="ml-1 text-xs opacity-70">({{ $appLanguages->count() }})</span> --}}
+                            {{-- <div class="flex flex-wrap items-center gap-2"> --}}
+                            <span>{{ __('admin.translation_list.table.target_language_values') }}</span>
+                            {{-- </div> --}}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -120,29 +203,90 @@
                     <flux:table.column
                         class="w-36"
                         sortable
+                        :sorted="$sortField === 'usages_count'"
+                        :direction="$sortDirection"
+                        wire:click="sortBy('usages_count')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Usage')"
+                            :title="__('admin.translation_list.modal.usage')"
                             :text="__(
-                                'Usage information of the translation key, useful for identification and reference.',
+                                'admin.translation_list.table.usage_information_of_the_translation_key_useful_for_identification_and_reference',
                             )"
                         >
-                            {{ __('Usage') }}
+                            {{ __('admin.translation_list.modal.usage') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Actions --}}
                     <flux:table.column
-                        class="w-32"
+                        class="app-table-col--actions"
                         align="center"
                     >
                         <x-ui.tooltip.trigger
                             class="mr-3"
-                            :title="__('Actions')"
-                            :text="__('Open the translation key review modal.')"
+                            :title="__('ui.labels.actions')"
+                            :text="__('admin.translation_list.table.open_the_translation_key_review_modal')"
                         >
-                            {{ __('Actions') }}
+                            {{ __('ui.labels.actions') }}
                         </x-ui.tooltip.trigger>
+                    </flux:table.column>
+
+                </flux:table.columns>
+
+                {{-- Second table header row for active target sub-language badges and layout balance, does not contain data but helps maintain a visually balanced table layout when active target sub-languages are present. --}}
+                <flux:table.columns class="bg-zinc-800/70 text-zinc-400">
+                    {{-- cloumn 1 to 5 --}}
+                    <flux:table.column>
+                        {{-- Empty column for spacing and layout balance, does not contain data but helps maintain a visually balanced table layout. --}}
+                    </flux:table.column>
+
+                    <flux:table.column>
+                        {{-- Empty column for spacing and layout balance, does not contain data but helps maintain a visually balanced table layout. --}}
+                    </flux:table.column>
+
+                    <flux:table.column>
+                        {{-- Empty column for spacing and layout balance, does not contain data but helps maintain a visually balanced table layout. --}}
+                    </flux:table.column>
+
+                    <flux:table.column>
+                        {{-- Empty column for spacing and layout balance, does not contain data but helps maintain a visually balanced table layout. --}}
+                    </flux:table.column>
+
+                    <flux:table.column>
+                        {{-- Empty column for spacing and layout balance, does not contain data but helps maintain a visually balanced table layout. --}}
+                    </flux:table.column>
+
+                    {{-- Column 5 --}}
+                    <flux:table.column>
+                        @if ($activeTargetSubLanguages->isNotEmpty())
+                            <div class="flex max-h-9 flex-wrap items-center gap-1.5 overflow-x-hidden pr-3">
+                                @foreach ($activeTargetSubLanguages as $subLanguage)
+                                    <flux:badge
+                                        size="sm"
+                                        variant="subtle"
+                                        label="{{ $subLanguage->native_name ?: $subLanguage->name ?: $subLanguage->locale }}"
+                                    >
+                                        <x-ui.locale.flag
+                                            :locale="$subLanguage->locale"
+                                            size="sm"
+                                        />
+
+                                        <span class="ml-1 font-mono uppercase">
+                                            {{ $subLanguage->locale }}
+                                        </span>
+                                    </flux:badge>
+                                @endforeach
+                            </div>
+                        @endif
+                    </flux:table.column>
+
+                    {{-- Column 6 to 7 --}}
+                    <flux:table.column>
+                        {{-- Empty column for spacing and layout balance, does not contain data but helps maintain a visually balanced table layout. --}}
+                    </flux:table.column>
+
+                    <flux:table.column>
+                        {{-- Empty column for spacing and layout balance, does not contain data but helps maintain a visually balanced table layout. --}}
                     </flux:table.column>
                 </flux:table.columns>
 
@@ -159,6 +303,12 @@
                                     $focusedTranslationKeyId === $translationKey->id,
                             ])
                         >
+                            <flux:table.cell
+                                class="align-top tabular-nums text-zinc-500 dark:text-zinc-400"
+                                align="end"
+                            >
+                                {{ $translationKeys->firstItem() + $loop->index }}
+                            </flux:table.cell>
 
                             {{-- Cell ID --}}
                             <flux:table.cell
@@ -170,18 +320,59 @@
 
                             {{-- Cell Status --}}
                             <flux:table.cell
-                                class="align-top"
+                                class="w-px whitespace-nowrap align-top"
                                 align="center"
                             >
-                                <div class="space-y-2">
-                                    <div class="space-y-2">
-                                        <x-ui.badge.context
-                                            context="translation.key.status"
-                                            :value="$translationKey->status"
-                                            :label="str($translationKey->status)->headline()"
-                                            size="sm"
-                                        />
-                                    </div>
+                                @php
+                                    $translationKeyNeedsNewKeyManually =
+                                        $translationKey->needs_new_key_marked_at !== null &&
+                                        $translationKey->needs_new_key_resolved_at === null;
+
+                                    $translationKeyNeedsNewKeyFromAudit =
+                                        (int) ($translationKey->needs_key_usage_audit_follow_up_count ?? 0) > 0;
+                                @endphp
+
+                                <div class="flex flex-col items-center gap-1.5 space-y-2">
+                                    <x-ui.badge.context
+                                        context="translation.key.status"
+                                        :value="$translationKey->status"
+                                        :label="str($translationKey->status)->headline()"
+                                        size="sm"
+                                    />
+
+                                    @if ($translationKeyNeedsNewKeyManually)
+                                        <x-ui.tooltip.trigger
+                                            :title="__('Manual needs new key')"
+                                            :text="__(
+                                                'This translation key was manually marked as needing a new key and is independent from generated audit results.',
+                                            )"
+                                        >
+                                            <flux:badge
+                                                size="sm"
+                                                variant="subtle"
+                                                color="violet"
+                                            >
+                                                {{ __('Needs new key') }}
+                                            </flux:badge>
+                                        </x-ui.tooltip.trigger>
+                                    @endif
+
+                                    @if ($translationKeyNeedsNewKeyFromAudit)
+                                        <x-ui.tooltip.trigger
+                                            :title="__('Audit needs new key')"
+                                            :text="__(
+                                                'This Needs-New-Key follow-up comes from translation usage audit decisions or usage rows.',
+                                            )"
+                                        >
+                                            <flux:badge
+                                                size="sm"
+                                                variant="subtle"
+                                                color="yellow"
+                                            >
+                                                {{ __('Audit needs key') }}
+                                            </flux:badge>
+                                        </x-ui.tooltip.trigger>
+                                    @endif
                                 </div>
                             </flux:table.cell>
 
@@ -232,16 +423,18 @@
 
                                     if ($key === '' && $suggestedKey !== '') {
                                         $keySuggestionState = 'missing_key';
-                                        $keySuggestionLabel = __('Missing key');
+                                        $keySuggestionLabel = __('admin.translation_list.modal.missing_key');
                                     } elseif ($key !== '' && $suggestedKey !== '' && $key === $suggestedKey) {
                                         $keySuggestionState = 'matches_suggested_key';
-                                        $keySuggestionLabel = __('Matches suggested key');
+                                        $keySuggestionLabel = __('admin.translation_list.modal.matches_suggested_key');
                                     } elseif ($key !== '' && $suggestedKey !== '' && $key !== $suggestedKey) {
                                         $keySuggestionState = 'differs_from_suggested_key';
-                                        $keySuggestionLabel = __('Differs from suggested key');
+                                        $keySuggestionLabel = __(
+                                            'admin.translation_list.table.differs_from_suggested_key',
+                                        );
                                     } else {
                                         $keySuggestionState = 'no_suggestion';
-                                        $keySuggestionLabel = __('No suggestion');
+                                        $keySuggestionLabel = __('admin.translation_list.modal.no_suggestion');
                                     }
                                 @endphp
 
@@ -249,21 +442,21 @@
                                     <div class="space-y-1">
                                         <div
                                             class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                                            <span>{{ __('Key') }}</span>
+                                            <span>{{ __('admin.translation_list.table.key') }}</span>
 
                                             @if (($translationKey->status ?? '') === 'obsolete')
                                                 <x-ui.tooltip.trigger
                                                     context="obsolete"
-                                                    :title="__('Obsolete key')"
+                                                    :title="__('admin.translation_list.table.obsolete_key')"
                                                     :text="__(
-                                                        'This key is currently not found in code usage. It can indicate a legacy export mismatch or a truly unused translation entry.',
+                                                        'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',
                                                     )"
                                                     :action="$isObsoleteReviewed
                                                         ? null
                                                         : [
-                                                            'label' => __('Mark reviewed'),
+                                                            'label' => __('admin.translation_list.table.mark_reviewed'),
                                                             'text' => __(
-                                                                'Mark this obsolete entry as reviewed so it is removed from the default open workflow list.',
+                                                                'admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',
                                                             ),
                                                             'event' => 'translation-obsolete-reviewed',
                                                             'detail' => ['translationKeyId' => $translationKey->id],
@@ -274,7 +467,7 @@
                                                         size="sm"
                                                         variant="subtle"
                                                     >
-                                                        {{ __('Obsolete') }}
+                                                        {{ __('admin.translation_list.meta.obsolete') }}
                                                     </flux:badge>
                                                 </x-ui.tooltip.trigger>
 
@@ -284,7 +477,7 @@
                                                         size="sm"
                                                         variant="subtle"
                                                     >
-                                                        {{ __('Reviewed') }}
+                                                        {{ __('admin.translation_list.modal_edit.reviewed') }}
                                                     </flux:badge>
                                                 @endif
                                             @endif
@@ -307,7 +500,7 @@
                                     <div class="space-y-1">
                                         <div
                                             class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                                            {{ __('Suggested key') }}
+                                            {{ __('admin.translation_list.table.suggested_key') }}
                                         </div>
 
                                         @if ($suggestedKey !== '')
@@ -328,13 +521,13 @@
 
                                     @if ($showObsoleteDiffHint)
                                         <div class="text-xs text-amber-700 dark:text-amber-300">
-                                            {{ __('Wavy underline marks only the differing key block.') }}
+                                            {{ __('admin.translation_list.modal.wavy_underline_marks_only_the_differing_key_block') }}
                                         </div>
                                     @endif
 
                                     @if ($showObsoleteNoDiffHint)
                                         <div class="text-xs text-amber-700 dark:text-amber-300">
-                                            {{ __('No key-shape diff detected. Obsolete is likely caused by missing in-code usage.') }}
+                                            {{ __('admin.translation_list.modal.no_key_shape_diff_detected_obsolete_is_likely_caused_by_missing_in_code_usage') }}
                                         </div>
                                     @endif
 
@@ -404,6 +597,46 @@
                                         ) === $selectedTargetLocale;
                                     });
                                 }
+
+                                $selectedTargetMainLocale = $selectedTargetLocale;
+
+                                if (str_contains($selectedTargetMainLocale, '-')) {
+                                    $selectedTargetMainLocale = explode('-', $selectedTargetMainLocale, 2)[0];
+                                }
+
+                                $selectedTargetSubLanguageValues = collect();
+
+                                if ($selectedTargetMainLocale !== '') {
+                                    $selectedTargetSubLanguageLocales = $activeTargetSubLanguages
+                                        ->map(static function ($subLanguage): string {
+                                            return \App\Support\Locale\LocaleCode::normalize(
+                                                (string) ($subLanguage->locale ?? ''),
+                                            );
+                                        })
+                                        ->filter(static function (string $locale) use (
+                                            $selectedTargetMainLocale,
+                                        ): bool {
+                                            return str_starts_with($locale, $selectedTargetMainLocale . '-');
+                                        })
+                                        ->unique()
+                                        ->values();
+
+                                    $selectedTargetSubLanguageValues = $targetLanguageValues
+                                        ->filter(static function ($item) use ($selectedTargetSubLanguageLocales): bool {
+                                            $locale = \App\Support\Locale\LocaleCode::normalize(
+                                                (string) ($item->locale ?? ''),
+                                            );
+
+                                            return $selectedTargetSubLanguageLocales->contains($locale) &&
+                                                trim((string) ($item->value ?? '')) !== '';
+                                        })
+                                        ->sortBy(static function ($item): string {
+                                            return \App\Support\Locale\LocaleCode::normalize(
+                                                (string) ($item->locale ?? ''),
+                                            );
+                                        }, SORT_NATURAL | SORT_FLAG_CASE)
+                                        ->values();
+                                }
                             @endphp
 
                             {{-- Cell Source Language (EN) / Native Text --}}
@@ -444,7 +677,7 @@
                                                     color="amber"
                                                     variant="subtle"
                                                 >
-                                                    {{ __('Missing') }}
+                                                    {{ __('admin.app_settings.table_icon_registry.missing') }}
                                                 </flux:badge>
                                             @endif
                                         </div>
@@ -458,7 +691,8 @@
                                     </div>
 
                                     <div class="max-w-md text-wrap text-xs text-zinc-500 dark:text-zinc-400">
-                                        <span class="font-semibold">{{ __('Native text') }}:</span>
+                                        <span
+                                            class="font-semibold">{{ __('admin.translation_list.modal.native_text') }}:</span>
                                         {{ $translationKey->native_text ?: '—' }}
                                     </div>
                                 </div>
@@ -502,7 +736,7 @@
                                                         color="amber"
                                                         variant="subtle"
                                                     >
-                                                        {{ __('Missing') }}
+                                                        {{ __('admin.app_settings.table_icon_registry.missing') }}
                                                     </flux:badge>
                                                 @endif
                                             </div>
@@ -513,6 +747,54 @@
                                             >
                                                 {{ $selectedTargetValue?->value ?: '—' }}
                                             </div>
+
+                                            @if ($selectedTargetSubLanguageValues->isNotEmpty())
+                                                <div class="mt-2 border-t border-zinc-200 pt-2 dark:border-zinc-700">
+                                                    <div
+                                                        class="mb-1 flex items-center justify-between gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+                                                        <span class="font-semibold">
+                                                            {{ __('admin.translation_list.modal_edit.sub_language_values') }}
+                                                        </span>
+
+                                                        <flux:badge
+                                                            size="sm"
+                                                            variant="subtle"
+                                                            color="sky"
+                                                        >
+                                                            {{ $selectedTargetSubLanguageValues->count() }}
+                                                        </flux:badge>
+                                                    </div>
+
+                                                    <div class="flex flex-wrap items-center gap-1.5">
+                                                        @foreach ($selectedTargetSubLanguageValues as $subLanguageValue)
+                                                            @php
+                                                                $subLanguageLocale = \App\Support\Locale\LocaleCode::normalize(
+                                                                    (string) ($subLanguageValue->locale ?? ''),
+                                                                );
+                                                            @endphp
+
+                                                            <x-ui.tooltip.trigger
+                                                                :title="strtoupper($subLanguageLocale)"
+                                                                :text="$subLanguageValue->value"
+                                                            >
+                                                                <flux:badge
+                                                                    size="sm"
+                                                                    variant="subtle"
+                                                                >
+                                                                    <x-ui.locale.flag
+                                                                        :locale="$subLanguageLocale"
+                                                                        size="sm"
+                                                                    />
+
+                                                                    <span class="ml-1 font-mono uppercase">
+                                                                        {{ $subLanguageLocale }}
+                                                                    </span>
+                                                                </flux:badge>
+                                                            </x-ui.tooltip.trigger>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
                                     @else
                                         @forelse ($targetLanguageValues as $value)
@@ -574,13 +856,13 @@
                                     <div>
                                         <span
                                             class="font-semibold tabular-nums">{{ $translationKey->usages_count }}</span>
-                                        {{ __('usage(s)') }}
+                                        {{ __('admin.translation_list.table.usage_s') }}
                                     </div>
 
                                     @if ($translationKey->last_seen_at)
                                         <div>
                                             <div class="app-table-cell-item-header">
-                                                {{ __('Last seen') }}:
+                                                {{ __('admin.translation_list.table.last_seen') }}:
                                             </div>
                                             <div class="app-table-cell-item-timestamp">
                                                 <x-ui.date-time.date :value="$translationKey->last_seen_at" />
@@ -598,7 +880,7 @@
                                 class="align-top"
                                 align="center"
                             >
-                                <div class="grid grid-cols-1 place-items-center space-y-3">
+                                <div class="mr-4 inline-flex flex-col items-center gap-3">
                                     {{-- Review button --}}
                                     <x-ui.button.review
                                         size="sm"
@@ -620,10 +902,11 @@
                                         color="zinc"
                                         icon="history"
                                         :disabled="!$canOpenHistory"
-                                        :title="$canOpenHistory ? __('Open history') : __('No history entries available')"
+                                        :title="$canOpenHistory ? __('admin.translation_list.table.open_history') : __(
+                                            'admin.translation_list.table.no_history_entries_available')"
                                         wire:click="openTranslationHistory({{ $translationKey->id }})"
                                     >
-                                        {{ __('History') }}
+                                        {{ __('admin.translation_list.table.history') }}
                                     </flux:button>
 
                                 </div>
@@ -635,7 +918,7 @@
                             {{-- No translation records found --}}
                             <flux:table.cell colspan="7">
                                 <div class="py-10 text-center text-sm text-zinc-500 dark:text-zinc-400">
-                                    {{ __('No translation records found.') }}
+                                    {{ __('admin.translation_list.table.no_translation_records_found') }}
                                 </div>
                             </flux:table.cell>
                         </flux:table.row>
@@ -646,15 +929,15 @@
 
         @if ($translationKeys->hasPages())
             <flux:separator
-                class="mt-4"
-                text="{{ __('Pagination') }}"
+                class=""
+                text="{{ __('admin.client_list.table.pagination') }}"
             />
 
             {{-- Pagination --}}
             <div class="mt-4">
                 <x-ui.table.pagination
                     :paginator="$translationKeys"
-                    scroll-to="#translation-list-table"
+                    scroll-to="#translation-list-pagination-top"
                 />
             </div>
         @endif

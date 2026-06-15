@@ -25,8 +25,8 @@
                         type="button"
                         size="sm"
                         variant="ghost"
-                        {{-- :title="__('Open next editable entry')" --}}
-                        :aria-label="__('Open next editable entry')"
+                        {{-- :title="__('admin.translation_list.modal_edit.open_next_editable_entry')" --}}
+                        :aria-label="__('admin.translation_list.modal_edit.open_next_editable_entry')"
                         wire:click="openNextTranslationEntryEditFromList"
                     >
                         <flux:icon.arrow-big-right
@@ -44,7 +44,7 @@
             <flux:callout
                 icon="key"
                 color="sky"
-                :heading="__('Translation key')"
+                :heading="__('admin.translation_list.modal_edit.translation_key')"
                 :text="$editingTranslationKeyName ? : '—'"
             />
 
@@ -109,7 +109,7 @@
             <x-ui.button.cancel wire:click="closeTranslationEntryEditModal" />
 
             <x-ui.button.save
-                :label="__('Save Changes')"
+                :label="__('ui.actions.save_changes')"
                 wire:click="saveTranslationEntryEdit"
                 :disabled="!$this->translationEntryHasChanges"
             />

@@ -1,5 +1,0 @@
-/* resources/css/table.css */
-
-tr[data-flux-row]>td[data-flux-cell] {
-    @apply hover:dark:bg-white/5;
-}

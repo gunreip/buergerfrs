@@ -186,7 +186,7 @@
                         >
                             <div class="mt-1 text-zinc-600 dark:text-zinc-300">
                                 <x-ui.text.stat-value
-                                    :label="__('Available')"
+                                    :label="__('admin.app_settings.table_icon_registry.available')"
                                     :value="$usageNativeCounts['available'] ?? 0"
                                 /> ·
                                 <x-ui.text.stat-value
@@ -207,7 +207,7 @@
                         >
                             <div class="mt-1 text-zinc-600 dark:text-zinc-300">
                                 <x-ui.text.stat-value
-                                    :label="__('Available')"
+                                    :label="__('admin.app_settings.table_icon_registry.available')"
                                     :value="$usageFluxCounts['available'] ?? 0"
                                 /> ·
                                 <x-ui.text.stat-value
@@ -228,7 +228,7 @@
                         >
                             <div class="mt-1 text-zinc-600 dark:text-zinc-300">
                                 <x-ui.text.stat-value
-                                    :label="__('Available')"
+                                    :label="__('admin.app_settings.table_icon_registry.available')"
                                     :value="$usageCustomCounts['available'] ?? 0"
                                 /> ·
                                 <x-ui.text.stat-value

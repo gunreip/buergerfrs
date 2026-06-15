@@ -1,27 +1,47 @@
 [
     {
         "locale": "de",
-        "files": 12,
-        "keys": 195
+        "files": 14,
+        "keys": 722
     },
     {
         "locale": "de-at",
-        "files": 1,
-        "keys": 1
+        "files": 2,
+        "keys": 12
+    },
+    {
+        "locale": "de-be",
+        "files": 2,
+        "keys": 12
     },
     {
         "locale": "de-ch",
-        "files": 1,
-        "keys": 1
+        "files": 2,
+        "keys": 12
+    },
+    {
+        "locale": "de-de",
+        "files": 2,
+        "keys": 17
     },
     {
         "locale": "de-it",
-        "files": 1,
-        "keys": 1
+        "files": 2,
+        "keys": 12
+    },
+    {
+        "locale": "de-li",
+        "files": 2,
+        "keys": 12
+    },
+    {
+        "locale": "de-lu",
+        "files": 2,
+        "keys": 12
     },
     {
         "locale": "en",
-        "files": 12,
-        "keys": 195
+        "files": 14,
+        "keys": 727
     }
 ]

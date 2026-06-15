@@ -1,207 +1,207 @@
 {
     "preview": true,
     "preview_limit": 20,
-    "total": 143,
+    "total": 1151,
     "items": [
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.permissions.messages.no_changes.heading",
-            "raw": "__('admin.permissions.messages.no_changes.heading')",
+            "value": "account.preferences.preferences_saved",
+            "raw": "__('account.preferences.preferences_saved')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 397
+            "file": "app/Livewire/Account/Preferences.php",
+            "line": 60
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.permissions.messages.no_changes.role_permissions_unchanged",
-            "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged', [\n                    'role' => $role->name,\n                ])",
+            "value": "account.preferences.your_personal_application_preferences_have_been_updated",
+            "raw": "__('account.preferences.your_personal_application_preferences_have_been_updated')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 398
+            "file": "app/Livewire/Account/Preferences.php",
+            "line": 61
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.permissions.messages.role_permissions_saved.heading",
-            "raw": "__('admin.permissions.messages.role_permissions_saved.heading')",
+            "value": "admin.app_settings.invalid_application_language",
+            "raw": "__('admin.app_settings.invalid_application_language')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 423
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 211
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.permissions.messages.role_permissions_saved.text",
-            "raw": "__('admin.permissions.messages.role_permissions_saved.text', [\n                'role' => $role->name,\n            ])",
+            "value": "admin.app_settings.global_app_locale_changed",
+            "raw": "__('admin.app_settings.global_app_locale_changed')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 424
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 227
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.permissions.messages.no_changes.heading",
-            "raw": "__('admin.permissions.messages.no_changes.heading')",
+            "value": "admin.app_settings.application_language_updated",
+            "raw": "__('admin.app_settings.application_language_updated')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 459
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 239
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.permissions.messages.no_changes.role_permissions_unchanged",
-            "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged', [\n                    'permission' => $permission->name,\n                ])",
+            "value": "admin.app_settings.invalid_application_language",
+            "raw": "__('admin.app_settings.invalid_application_language')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 460
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 303
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.permissions.messages.permission_saved.heading",
-            "raw": "__('admin.permissions.messages.permission_saved.heading')",
+            "value": "admin.app_settings.invalid_application_language",
+            "raw": "__('admin.app_settings.invalid_application_language')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 494
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 325
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.permissions.messages.permission_saved.text",
-            "raw": "__('admin.permissions.messages.permission_saved.text', [\n                'permission' => $permission->name,\n            ])",
+            "value": "admin.app_settings.invalid_application_language",
+            "raw": "__('admin.app_settings.invalid_application_language')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/PermissionList.php",
-            "line": 495
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 352
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.roles.messages.not_allowed.heading",
-            "raw": "__('admin.roles.messages.not_allowed.heading')",
+            "value": "admin.app_settings.invalid_application_language",
+            "raw": "__('admin.app_settings.invalid_application_language')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 187
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 360
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.roles.messages.not_allowed.only_super_admins_may_create_roles",
-            "raw": "__('admin.roles.messages.not_allowed.only_super_admins_may_create_roles')",
+            "value": "admin.app_settings.this_application_language_is_mandatory_and_cannot_be_disabled",
+            "raw": "__('admin.app_settings.this_application_language_is_mandatory_and_cannot_be_disabled')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 189
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 372
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.roles.messages.role_created.heading",
-            "raw": "__('admin.roles.messages.role_created.heading')",
+            "value": "admin.app_settings.the_current_application_language_cannot_be_disabled",
+            "raw": "__('admin.app_settings.the_current_application_language_cannot_be_disabled')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 265
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 378
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.roles.messages.role_created.text",
-            "raw": "__('admin.roles.messages.role_created.text', [\n                'role' => $role->name,\n            ])",
+            "value": "admin.app_settings.at_least_one_application_language_must_remain_enabled",
+            "raw": "__('admin.app_settings.at_least_one_application_language_must_remain_enabled')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 267
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 386
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.roles.messages.role_saved.heading",
-            "raw": "__('admin.roles.messages.role_saved.heading')",
+            "value": "admin.app_settings.primary_locale_availability_updated",
+            "raw": "__('admin.app_settings.primary_locale_availability_updated')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 432
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 404
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.roles.messages.role_saved.text",
-            "raw": "__('admin.roles.messages.role_saved.text', [\n                'role' => $savedRoleName,\n            ])",
+            "value": "admin.app_settings.available_application_languages_updated",
+            "raw": "__('admin.app_settings.available_application_languages_updated')",
             "reason": null,
             "suggested_key": null,
-            "file": "app/Livewire/Admin/RoleList.php",
-            "line": 434
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 422
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.permissions.filters.title",
-            "raw": "__('admin.permissions.filters.title')",
+            "value": "admin.app_settings.the_current_application_language_cannot_be_removed_from_the_available_languages",
+            "raw": "__('admin.app_settings.the_current_application_language_cannot_be_removed_from_the_available_languages')",
             "reason": null,
             "suggested_key": null,
-            "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-            "line": 6
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 454
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.permissions.filters.description",
-            "raw": "__('admin.permissions.filters.description')",
+            "value": "admin.app_settings.at_least_one_application_language_must_remain_enabled",
+            "raw": "__('admin.app_settings.at_least_one_application_language_must_remain_enabled')",
             "reason": null,
             "suggested_key": null,
-            "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-            "line": 7
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 472
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "ui.actions.search",
-            "raw": "__('ui.actions.search')",
+            "value": "admin.app_settings.available_app_locales_updated",
+            "raw": "__('admin.app_settings.available_app_locales_updated')",
             "reason": null,
             "suggested_key": null,
-            "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-            "line": 21
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 484
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.permissions.filters.search.placeholder",
-            "raw": "__('admin.permissions.filters.search.placeholder')",
+            "value": "admin.app_settings.available_application_languages_updated",
+            "raw": "__('admin.app_settings.available_application_languages_updated')",
             "reason": null,
             "suggested_key": null,
-            "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-            "line": 37
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 496
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "ui.labels.guard",
-            "raw": "__('ui.labels.guard')",
+            "value": "admin.user_list.filter.without_role",
+            "raw": "__('admin.user_list.filter.without_role')",
             "reason": null,
             "suggested_key": null,
-            "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-            "line": 48
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 535
         },
         {
             "classification": "key",
             "function": "__",
-            "value": "admin.permissions.filters.guards.all",
-            "raw": "__('admin.permissions.filters.guards.all')",
+            "value": "admin.app_settings.sub_locales_updated",
+            "raw": "__('admin.app_settings.sub_locales_updated')",
             "reason": null,
             "suggested_key": null,
-            "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-            "line": 63
+            "file": "app/Livewire/Admin/AppSettings.php",
+            "line": 885
         }
     ]
 }

@@ -18,11 +18,11 @@
 @php
     $isActive = (bool) $active;
     $languageLabel = trim((string) $language);
-    $languageLabel = $languageLabel !== '' ? $languageLabel : __('Language');
+    $languageLabel = $languageLabel !== '' ? $languageLabel : __('admin.translation_list.meta.language');
 
     $label = $isActive
-        ? __('Deactivate :language', ['language' => $languageLabel])
-        : __('Activate :language', ['language' => $languageLabel]);
+        ? __('ui.button.activate_deactivate.deactivate_language', ['language' => $languageLabel])
+        : __('ui.button.activate_deactivate.activate_language', ['language' => $languageLabel]);
 
     $resolvedIcon = match (true) {
         $icon === false => null,

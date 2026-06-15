@@ -89,10 +89,10 @@ new #[Title('Security settings')] class extends Component {
 <section class="w-full">
     @include('partials.settings-heading')
 
-    <flux:heading class="sr-only">{{ __('Security settings') }}</flux:heading>
+    <flux:heading class="sr-only">{{ __('pages.settings.security.security_settings') }}</flux:heading>
 
     <x-pages::settings.layout
-        :heading="__('Update password')"
+        :heading="__('pages.settings.security.update_password')"
         :subheading="__('Ensure your account is using a long, random password to stay secure')"
     >
         <form
@@ -119,7 +119,7 @@ new #[Title('Security settings')] class extends Component {
             <flux:input
                 type="password"
                 wire:model="password_confirmation"
-                :label="__('Confirm password')"
+                :label="__('pages.auth.register.confirm_password')"
                 required
                 autocomplete="new-password"
                 viewable
@@ -128,20 +128,20 @@ new #[Title('Security settings')] class extends Component {
             <div class="flex items-center gap-4">
                 <x-ui.button.save
                     data-test="update-password-button"
-                    label="{{ __('Save') }}"
+                    label="{{ __('ui.actions.save') }}"
                     {{-- icon="save" --}}
                     {{-- color="green" --}}
                 />
                 {{-- <flux:button variant="primary" type="submit" data-test="update-password-button">
-                    {{ __('Save') }}
+                    {{ __('ui.actions.save') }}
                 </flux:button> --}}
             </div>
         </form>
 
         @if ($canManageTwoFactor)
             <section class="mt-12">
-                <flux:heading>{{ __('Two-factor authentication') }}</flux:heading>
-                <flux:subheading>{{ __('Manage your two-factor authentication settings') }}</flux:subheading>
+                <flux:heading>{{ __('pages.settings.security.two_factor_authentication') }}</flux:heading>
+                <flux:subheading>{{ __('pages.settings.security.manage_your_two_factor_authentication_settings') }}</flux:subheading>
 
                 <div
                     class="mx-auto flex w-full flex-col space-y-6 text-sm"
@@ -155,7 +155,7 @@ new #[Title('Security settings')] class extends Component {
 
                             <div class="flex justify-start">
                                 <x-ui.button.delete
-                                    label="{{ __('Disable 2FA') }}"
+                                    label="{{ __('pages.settings.security.disable_2fa') }}"
                                     icon="shield-off"
                                     wire:click="disable"
                                 />
@@ -163,7 +163,7 @@ new #[Title('Security settings')] class extends Component {
                                     variant="danger"
                                     wire:click="disable"
                                 >
-                                    {{ __('Disable 2FA') }}
+                                    {{ __('pages.settings.security.disable_2fa') }}
                                 </flux:button> --}}
                             </div>
 
@@ -177,7 +177,7 @@ new #[Title('Security settings')] class extends Component {
 
                             <flux:modal.trigger name="two-factor-setup-modal">
                                 <x-ui.button.save
-                                    label="{{ __('Enable 2FA') }}"
+                                    label="{{ __('pages.settings.security.enable_2fa') }}"
                                     icon="shield-check"
                                     wire:click="$dispatch('start-two-factor-setup')"
                                 />
@@ -185,7 +185,7 @@ new #[Title('Security settings')] class extends Component {
                                     variant="primary"
                                     wire:click="$dispatch('start-two-factor-setup')"
                                 >
-                                    {{ __('Enable 2FA') }}
+                                    {{ __('pages.settings.security.enable_2fa') }}
                                 </flux:button> --}}
                             </flux:modal.trigger>
 

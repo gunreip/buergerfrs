@@ -15,10 +15,10 @@
                 <flux:table.columns class="bg-zinc-800 text-zinc-400">
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('#')"
+                            :title="__('ui.labels.number_short')"
                             :text="__('Unique identifier of the person, useful for tracking and reference.')"
                         >
-                            {{ __('#') }}
+                            {{ __('ui.labels.number_short') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -61,7 +61,7 @@
                     </flux:table.column>
 
                     <flux:table.column>
-                        {{ __('User') }}
+                        {{ __('admin.user_list.meta.user') }}
                     </flux:table.column>
 
                     <flux:table.column
@@ -84,10 +84,10 @@
                         wire:click="sortBy('created_at')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Created')"
+                            :title="__('admin.client_list.table.created')"
                             :text="__('Date when the person was created, useful for identification and reference.')"
                         >
-                            {{ __('Created') }}
+                            {{ __('admin.client_list.table.created') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
@@ -128,7 +128,7 @@
                                         color="zinc"
                                         variant="subtle"
                                     >
-                                        {{ __('Missing') }}
+                                        {{ __('admin.app_settings.table_icon_registry.missing') }}
                                     </flux:badge>
                                 @endif
                             </flux:table.cell>
@@ -189,7 +189,7 @@
         @if ($people->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('Pagination') }}"
+                text="{{ __('admin.client_list.table.pagination') }}"
             />
 
             <div class="mt-4">

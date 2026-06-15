@@ -6,8 +6,8 @@
     'rows' => 1,
     'mono' => false,
     'emptyValue' => '—',
-    'copyLabel' => __('Copy to clipboard'),
-    'copiedLabel' => __('Copied'),
+    'copyLabel' => __('ui.text.copyable_field.copy_to_clipboard'),
+    'copiedLabel' => __('admin.translation_list.copied'),
     'contentClass' => '',
     'showHiddenButton' => false,
     'badge' => null,
@@ -135,15 +135,22 @@
         @endif
     </div>
 
-    <flux:textarea
-        readonly
-        rows="{{ $rows }}"
-        @class([
-            'whitespace-pre-wrap [overflow-wrap:anywhere]',
-            'resize-y' => $syncResizeGroupValue !== '',
-            'resize-none' => $syncResizeGroupValue === '',
-            'font-mono' => $mono,
-            $contentClass,
-        ])
-    >{{ $displayValue }}</flux:textarea>
+    <flux:input.group>
+        <flux:input.group.prefix>
+            <flux:icon.pen-line stroke-width="1" />
+        </flux:input.group.prefix>
+        <flux:textarea
+            readonly
+            rows="{{ $rows }}"
+            @class([
+                'whitespace-pre-wrap [overflow-wrap:anywhere]',
+                'rounded-l-none',
+                'resize-y' => $syncResizeGroupValue !== '',
+                'resize-none' => $syncResizeGroupValue === '',
+                'font-mono' => $mono,
+                $contentClass,
+            ])
+        >{{ $displayValue }}
+        </flux:textarea>
+    </flux:input.group>
 </div>

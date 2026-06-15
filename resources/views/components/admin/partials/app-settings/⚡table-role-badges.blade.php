@@ -6,38 +6,38 @@
         class="mb-4"
         size="lg"
     >
-        {{ __('Role Badge Settings') }}
+        {{ __('admin.app_settings.table_role_badges.role_badge_settings') }}
     </flux:heading>
 
     <div class="overflow-hidden rounded-t-lg">
         <flux:table>
             <flux:table.columns class="bg-zinc-800 text-zinc-400">
                 <flux:table.column align="center">
-                    {{ __('#') }}
+                    {{ __('ui.labels.number_short') }}
                 </flux:table.column>
 
                 <flux:table.column sortable>
-                    {{ __('Role') }}
+                    {{ __('ui.labels.role') }}
                 </flux:table.column>
 
                 <flux:table.column>
-                    {{ __('Preview') }}
+                    {{ __('ui.labels.preview') }}
                 </flux:table.column>
 
                 <flux:table.column sortable>
-                    {{ __('Color') }}
+                    {{ __('admin.roles.badge.color') }}
                 </flux:table.column>
 
                 <flux:table.column sortable>
-                    {{ __('Variant') }}
+                    {{ __('admin.roles.badge.variant') }}
                 </flux:table.column>
 
                 <flux:table.column sortable>
-                    {{ __('Icon') }}
+                    {{ __('admin.roles.badge.icon') }}
                 </flux:table.column>
 
                 <flux:table.column align="center">
-                    {{ __('Status') }}
+                    {{ __('admin.app_settings.table_icon_registry.status') }}
                 </flux:table.column>
             </flux:table.columns>
 
@@ -62,11 +62,11 @@
                                 </div>
 
                                 <div class="text-xs text-sky-300">
-                                    {{ __('UI state, not a database role') }}
+                                    {{ __('admin.app_settings.table_role_badges.ui_state_not_a_database_role') }}
                                 </div>
                             @elseif (!$row['roleExists'])
                                 <div class="text-xs text-orange-300">
-                                    {{ __('Role does not exist') }}
+                                    {{ __('admin.app_settings.table_role_badges.role_does_not_exist') }}
                                 </div>
                             @endif
                         </flux:table.cell>
@@ -115,21 +115,21 @@
                                         color="sky"
                                         variant="subtle"
                                     >
-                                        {{ __('Pseudo state') }}
+                                        {{ __('admin.app_settings.table_role_badges.pseudo_state') }}
                                     </flux:badge>
                                 @elseif ($row['roleExists'])
                                     <flux:badge
                                         color="green"
                                         variant="subtle"
                                     >
-                                        {{ __('Role OK') }}
+                                        {{ __('admin.app_settings.table_role_badges.role_ok') }}
                                     </flux:badge>
                                 @else
                                     <flux:badge
                                         color="orange"
                                         variant="subtle"
                                     >
-                                        {{ __('Missing role') }}
+                                        {{ __('admin.app_settings.table_role_badges.missing_role') }}
                                     </flux:badge>
                                 @endif
 
@@ -138,14 +138,14 @@
                                         color="green"
                                         variant="subtle"
                                     >
-                                        {{ __('Icon OK') }}
+                                        {{ __('admin.app_settings.table_role_badges.icon_ok') }}
                                     </flux:badge>
                                 @else
                                     <flux:badge
                                         color="red"
                                         variant="subtle"
                                     >
-                                        {{ __('Icon fallback') }}
+                                        {{ __('admin.app_settings.table_role_badges.icon_fallback') }}
                                     </flux:badge>
                                 @endif
                             </div>

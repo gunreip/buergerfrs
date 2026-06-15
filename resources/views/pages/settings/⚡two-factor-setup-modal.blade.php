@@ -124,24 +124,24 @@ new class extends Component {
     {
         if ($this->setupComplete) {
             return [
-                'title' => __('Two-factor authentication enabled'),
+                'title' => __('pages.settings.two_factor_setup_modal.two_factor_authentication_enabled'),
                 'description' => __('Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.'),
-                'buttonText' => __('Close'),
+                'buttonText' => __('ui.actions.close'),
             ];
         }
 
         if ($this->showVerificationStep) {
             return [
-                'title' => __('Verify authentication code'),
-                'description' => __('Enter the 6-digit code from your authenticator app.'),
-                'buttonText' => __('Continue'),
+                'title' => __('pages.settings.two_factor_setup_modal.verify_authentication_code'),
+                'description' => __('pages.settings.two_factor_setup_modal.enter_the_6_digit_code_from_your_authenticator_app'),
+                'buttonText' => __('pages.settings.two_factor_setup_modal.continue'),
             ];
         }
 
         return [
-            'title' => __('Enable two-factor authentication'),
-            'description' => __('To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app.'),
-            'buttonText' => __('Continue'),
+            'title' => __('pages.settings.two_factor_setup_modal.enable_two_factor_authentication'),
+            'description' => __('pages.settings.two_factor_setup_modal.to_finish_enabling_two_factor_authentication_scan_the_qr_code_or_enter_the_setup'),
+            'buttonText' => __('pages.settings.two_factor_setup_modal.continue'),
         ];
     }
 }; ?>
@@ -200,7 +200,7 @@ new class extends Component {
                         variant="outline"
                         wire:click="resetVerification"
                     >
-                        {{ __('Back') }}
+                        {{ __('pages.settings.two_factor_setup_modal.back') }}
                     </flux:button>
 
                     <flux:button
@@ -209,7 +209,7 @@ new class extends Component {
                         wire:click="confirmTwoFactor"
                         x-bind:disabled="$wire.code.length < 6"
                     >
-                        {{ __('Confirm') }}
+                        {{ __('pages.settings.two_factor_setup_modal.confirm') }}
                     </flux:button>
                 </div>
             </div>

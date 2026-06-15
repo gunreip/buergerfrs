@@ -20,7 +20,7 @@
 
                 @if ($nickname !== '')
                     <flux:text class="truncate">
-                        <span class="font-semibold">{{ __('Nickname') }}:</span> {{ $nickname }}
+                        <span class="font-semibold">{{ __('account.preferences.current_user.nickname') }}:</span> {{ $nickname }}
                     </flux:text>
                 @endif
 
@@ -37,7 +37,7 @@
             :href="route('profile.edit')"
             wire:navigate
         >
-            {{ __('Edit profile') }}
+            {{ __('account.preferences.current_user.edit_profile') }}
         </flux:button>
     </div>
 </flux:card>

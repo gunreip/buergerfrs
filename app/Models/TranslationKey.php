@@ -26,6 +26,10 @@ class TranslationKey extends Model
         'reviewed_at',
         'reviewed_by_user_id',
         'review_note',
+        'needs_new_key_marked_at',
+        'needs_new_key_marked_by_user_id',
+        'needs_new_key_note',
+        'needs_new_key_resolved_at',
     ];
 
     protected $casts = [
@@ -33,6 +37,8 @@ class TranslationKey extends Model
         'last_seen_at' => 'datetime',
         'obsolete_at' => 'datetime',
         'reviewed_at' => 'datetime',
+        'needs_new_key_marked_at' => 'datetime',
+        'needs_new_key_resolved_at' => 'datetime',
     ];
 
     public function values(): HasMany

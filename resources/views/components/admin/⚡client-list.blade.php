@@ -7,8 +7,8 @@
 
 <flux:card>
     <x-ui.headers.page
-        :title="__('Client Management')"
-        :description="__('Review organizations, client status, and assigned people.')"
+        :title="__('admin.client_list.client_management')"
+        :description="__('admin.client_list.review_organizations_client_status_and_assigned_people')"
     />
 
     {{-- Partial: Overview --}}

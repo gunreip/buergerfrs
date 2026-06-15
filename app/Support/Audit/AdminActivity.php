@@ -39,7 +39,7 @@ class AdminActivity
     {
         $this->log(
             event: 'admin.role.created',
-            description: __('Role created'),
+            description: __('admin.roles.messages.role_created.heading'),
             subject: $role,
             properties: [
                 'role' => [

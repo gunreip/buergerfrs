@@ -19,7 +19,7 @@
 
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Overview')"
+        :title="__('admin.permissions.overview.title')"
         :description="$audit['note'] ?? __('Current HTML / Blade view structure audit result.')"
     />
 
@@ -92,7 +92,7 @@
                         color="red"
                         variant="subtle"
                     >
-                        {{ __('Open') }}: {{ $historyCounts['open'] ?? 0 }}
+                        {{ __('admin.translation_list.filter.open') }}: {{ $historyCounts['open'] ?? 0 }}
                     </flux:badge>
 
                     <flux:badge
@@ -136,7 +136,7 @@
                 <div class="space-y-2">
                     <div class="gap-2">
                         <flux:field class="grid grid-cols-4 items-center">
-                            <div class="font-semibold">{{ __('Source') }}:</div>
+                            <div class="font-semibold">{{ __('admin.translation_list.modal.source') }}:</div>
                             <div class="col-span-3">{{ $audit['path'] ?? 'storage/audits/html/view-html-check.json' }}
                             </div>
                         </flux:field>
@@ -150,7 +150,7 @@
 
                         @if ($hasActiveFilters)
                             <flux:field class="grid grid-cols-4 items-center">
-                                <div class="col-span-1 font-semibold">{{ __('Filtered') }}:</div>
+                                <div class="col-span-1 font-semibold">{{ __('admin.translation_list.meta.filtered') }}:</div>
                                 <flux:badge
                                     color="amber"
                                     variant="subtle"
@@ -183,7 +183,7 @@
 
                 <flux:callout.text>
                     <div class="grid gap-x-4 gap-y-1 text-sm md:grid-cols-[auto_1fr]">
-                        <div class="font-semibold">{{ __('Source') }}:</div>
+                        <div class="font-semibold">{{ __('admin.translation_list.modal.source') }}:</div>
                         <div>
                             {{ $referenceDisplay['source_name'] ?? ($referenceDisplay['source'] ?? 'n/a') }}
                         </div>
@@ -266,7 +266,7 @@
 
                         @if ($referenceHasFallback)
                             <div class="text-sm text-amber-700 dark:text-amber-300">
-                                {{ __('Reason') }}: {{ $nativeReference['fallback_reason'] ?? 'n/a' }}
+                                {{ __('admin.translation_list.modal_history.reason') }}: {{ $nativeReference['fallback_reason'] ?? 'n/a' }}
                             </div>
                         @endif
 

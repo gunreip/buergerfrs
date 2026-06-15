@@ -40,7 +40,7 @@
 
             <div>
                 <flux:text class="text-zinc-400">
-                    {{ __('admin.permissions.labels.assigned_roles') }}
+                    {{ __('ui.assigned_roles') }}
                 </flux:text>
 
                 <flux:heading size="md">

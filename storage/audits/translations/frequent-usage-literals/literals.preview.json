@@ -1,0 +1,3052 @@
+[
+    {
+        "locale": "en",
+        "value": "This key is currently not found in code usage. It can indicate a legacy export mismatch or a truly unused translation entry.",
+        "normalized_value": "this key is currently not found in code usage. it can indicate a legacy export mismatch or a truly unused translation entry.",
+        "value_variants": [
+            "This key is currently not found in code usage. It can indicate a legacy export mismatch or a truly unused translation entry."
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 10,
+        "usage_count_total": 10,
+        "usage_count_current": 3,
+        "usage_count_stale": 7,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5463,
+                "key": "admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi",
+                "full_key": "admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "This key is currently not found in code usage. It can indicate a legacy export mismatch or a truly unused translation entry.",
+                "is_ui_key": false,
+                "usage_count": 10,
+                "usage_count_total": 10,
+                "usage_count_current": 3,
+                "usage_count_stale": 7,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Dieser Schlüssel kommt derzeit im Code nicht vor. Dies kann auf eine Diskrepanz bei einem älteren Export oder auf einen tatsächlich ungenutzten Übersetzungseintrag hindeuten.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "This key is currently not found in code usage. It can indicate a legacy export mismatch or a truly unused translation entry.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+                        "line": 75,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                                    'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                )",
+                        "original_raw": "__(\n                                    'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+                        "line": 80,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                                        'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                    )",
+                        "original_raw": "__(\n                                        'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+                        "line": 82,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                )",
+                        "original_raw": "__('admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "line": 248,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                    )",
+                        "original_raw": "__('admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "line": 279,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                                                'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                            )",
+                        "original_raw": "__(\n                                                'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                            )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "line": 309,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                                            'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                        )",
+                        "original_raw": "__(\n                                            'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                        )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "line": 395,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                                                        'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                                    )",
+                        "original_raw": "__(\n                                                        'This key is currently not found in code usage. It can indicate a legacy export mismatch or a truly unused translation entry.',\n                                                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "line": 410,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                                                        'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                                    )",
+                        "original_raw": "__('admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "line": 420,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                                                        'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                                    )",
+                        "original_raw": "__(\n                                                        'This key is currently not found in code usage. It can indicate a legacy export mismatch or a truly unused translation entry.',\n                                                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "line": 451,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                                                        'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                                    )",
+                        "original_raw": "__(\n                                                        'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',\n                                                    )"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Entries that are no longer currently code-relevant and therefore live outside the active translation work set.",
+        "normalized_value": "entries that are no longer currently code-relevant and therefore live outside the active translation work set.",
+        "value_variants": [
+            "Entries that are no longer currently code-relevant and therefore live outside the active translation work set."
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 8,
+        "usage_count_total": 8,
+        "usage_count_current": 1,
+        "usage_count_stale": 7,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5907,
+                "key": "admin.translation_list.filter.entries_that_are_no_longer_currently_code_relevant_and_therefore_live_outside_th",
+                "full_key": "admin.translation_list.filter.entries_that_are_no_longer_currently_code_relevant_and_therefore_live_outside_th",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Entries that are no longer currently code-relevant and therefore live outside the active translation work set.",
+                "is_ui_key": false,
+                "usage_count": 8,
+                "usage_count_total": 8,
+                "usage_count_current": 1,
+                "usage_count_stale": 7,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Einträge, die derzeit nicht mehr für den Code relevant sind und daher außerhalb des aktiven Übersetzungsarbeitsbereichs liegen.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Entries that are no longer currently code-relevant and therefore live outside the active translation work set.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 124,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.entries_that_are_no_longer_currently_code_relevant_and_therefore_live_outside_th',\n                    )",
+                        "original_raw": "__(\n                        'Entries that are no longer currently code-relevant and therefore live outside the active translation work set.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 127,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.entries_that_are_no_longer_currently_code_relevant_and_therefore_live_outside_th',\n                    )",
+                        "original_raw": "__(\n                        'Entries that are no longer currently code-relevant and therefore live outside the active translation work set.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 128,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.entries_that_are_no_longer_currently_code_relevant_and_therefore_live_outside_th',\n                    )",
+                        "original_raw": "__(\n                        'Entries that are no longer currently code-relevant and therefore live outside the active translation work set.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 129,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.entries_that_are_no_longer_currently_code_relevant_and_therefore_live_outside_th',\n                    )",
+                        "original_raw": "__(\n                        'Entries that are no longer currently code-relevant and therefore live outside the active translation work set.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 130,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.entries_that_are_no_longer_currently_code_relevant_and_therefore_live_outside_th',\n                    )",
+                        "original_raw": "__(\n                        'Entries that are no longer currently code-relevant and therefore live outside the active translation work set.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 131,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.entries_that_are_no_longer_currently_code_relevant_and_therefore_live_outside_th',\n                    )",
+                        "original_raw": "__(\n                        'Entries that are no longer currently code-relevant and therefore live outside the active translation work set.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 133,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.entries_that_are_no_longer_currently_code_relevant_and_therefore_live_outside_th',\n                    )",
+                        "original_raw": "__(\n                        'Entries that are no longer currently code-relevant and therefore live outside the active translation work set.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 151,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                        'admin.translation_list.filter.entries_that_are_no_longer_currently_code_relevant_and_therefore_live_outside_th',\n                    )",
+                        "original_raw": "__(\n                        'admin.translation_list.filter.entries_that_are_no_longer_currently_code_relevant_and_therefore_live_outside_th',\n                    )"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Mark this obsolete entry as reviewed so it is removed from the default open workflow list.",
+        "normalized_value": "mark this obsolete entry as reviewed so it is removed from the default open workflow list.",
+        "value_variants": [
+            "Mark this obsolete entry as reviewed so it is removed from the default open workflow list."
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 7,
+        "usage_count_total": 7,
+        "usage_count_current": 3,
+        "usage_count_stale": 4,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 2644,
+                "key": "admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work",
+                "full_key": "admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Mark this obsolete entry as reviewed so it is removed from the default open workflow list.",
+                "is_ui_key": false,
+                "usage_count": 7,
+                "usage_count_total": 7,
+                "usage_count_current": 3,
+                "usage_count_stale": 4,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Markiere diesen veralteten Eintrag als geprüft, damit er aus der Standardliste der offenen Workflows entfernt wird.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Mark this obsolete entry as reviewed so it is removed from the default open workflow list.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+                        "line": 82,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                                            'admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',\n                                        )",
+                        "original_raw": "__(\n                                            'admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',\n                                        )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+                        "line": 87,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                                                'admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',\n                                            )",
+                        "original_raw": "__(\n                                                'admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',\n                                            )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+                        "line": 88,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',\n                                        )",
+                        "original_raw": "__(\n                                            'Mark this obsolete entry as reviewed so it is removed from the default open workflow list.',\n                                        )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "line": 254,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',\n                                            )",
+                        "original_raw": "__('admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',\n                                            )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "line": 286,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                                                        'admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',\n                                                    )",
+                        "original_raw": "__(\n                                                        'admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',\n                                                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "line": 316,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                                                    'admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',\n                                                )",
+                        "original_raw": "__(\n                                                    'admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',\n                                                )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "line": 458,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                                                                'admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',\n                                                            )",
+                        "original_raw": "__('admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',\n                                                            )"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Status: Obsolete",
+        "normalized_value": "status: obsolete",
+        "value_variants": [
+            "Status: Obsolete"
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 6,
+        "usage_count_total": 6,
+        "usage_count_current": 1,
+        "usage_count_stale": 5,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 6073,
+                "key": "admin.translation_list.filter.status_obsolete",
+                "full_key": "admin.translation_list.filter.status_obsolete",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Status: Obsolete",
+                "is_ui_key": false,
+                "usage_count": 6,
+                "usage_count_total": 6,
+                "usage_count_current": 1,
+                "usage_count_stale": 5,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Status: Veraltet",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Status: Obsolete",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 77,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.status_obsolete')",
+                        "original_raw": "__('Status: Obsolete')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 78,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.status_obsolete')",
+                        "original_raw": "__('Status: Obsolete')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 79,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('Status: Obsolete')",
+                        "original_raw": "__('Status: Obsolete')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 80,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('Status: Obsolete')",
+                        "original_raw": "__('Status: Obsolete')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 82,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('Status: Obsolete')",
+                        "original_raw": "__('Status: Obsolete')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 92,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.translation_list.filter.status_obsolete')",
+                        "original_raw": "__('Status: Obsolete')"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Type: Dynamic",
+        "normalized_value": "type: dynamic",
+        "value_variants": [
+            "Type: Dynamic"
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 6,
+        "usage_count_total": 6,
+        "usage_count_current": 1,
+        "usage_count_stale": 5,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5904,
+                "key": "admin.translation_list.filter.type_dynamic",
+                "full_key": "admin.translation_list.filter.type_dynamic",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Type: Dynamic",
+                "is_ui_key": false,
+                "usage_count": 6,
+                "usage_count_total": 6,
+                "usage_count_current": 1,
+                "usage_count_stale": 5,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Typ: Dynamisch",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Type: Dynamic",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 122,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.type_dynamic')",
+                        "original_raw": "__('Type: Dynamic')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 123,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.type_dynamic')",
+                        "original_raw": "__('Type: Dynamic')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 124,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.type_dynamic')",
+                        "original_raw": "__('Type: Dynamic')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 125,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.type_dynamic')",
+                        "original_raw": "__('Type: Dynamic')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 128,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.type_dynamic')",
+                        "original_raw": "__('Type: Dynamic')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 143,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.translation_list.filter.type_dynamic')",
+                        "original_raw": "__('Type: Dynamic')"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Concrete translation keys that already exist or become real translations once they have been reviewed and maintained.",
+        "normalized_value": "concrete translation keys that already exist or become real translations once they have been reviewed and maintained.",
+        "value_variants": [
+            "Concrete translation keys that already exist or become real translations once they have been reviewed and maintained."
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 5,
+        "usage_count_total": 5,
+        "usage_count_current": 1,
+        "usage_count_stale": 4,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5948,
+                "key": "admin.translation_list.filter.concrete_translation_keys_that_already_exist_or_become_real_translations_once_th",
+                "full_key": "admin.translation_list.filter.concrete_translation_keys_that_already_exist_or_become_real_translations_once_th",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Concrete translation keys that already exist or become real translations once they have been reviewed and maintained.",
+                "is_ui_key": false,
+                "usage_count": 5,
+                "usage_count_total": 5,
+                "usage_count_current": 1,
+                "usage_count_stale": 4,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Konkrete Übersetzungsschlüssel, die bereits vorhanden sind oder nach ihrer Überprüfung und Pflege zu tatsächlichen Übersetzungen werden.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Concrete translation keys that already exist or become real translations once they have been reviewed and maintained.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 96,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.concrete_translation_keys_that_already_exist_or_become_real_translations_once_th',\n                    )",
+                        "original_raw": "__(\n                        'Concrete translation keys that already exist or become real translations once they have been reviewed and maintained.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 99,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.concrete_translation_keys_that_already_exist_or_become_real_translations_once_th',\n                    )",
+                        "original_raw": "__(\n                        'Concrete translation keys that already exist or become real translations once they have been reviewed and maintained.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 102,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.concrete_translation_keys_that_already_exist_or_become_real_translations_once_th',\n                    )",
+                        "original_raw": "__(\n                        'Concrete translation keys that already exist or become real translations once they have been reviewed and maintained.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 104,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.concrete_translation_keys_that_already_exist_or_become_real_translations_once_th',\n                    )",
+                        "original_raw": "__(\n                        'Concrete translation keys that already exist or become real translations once they have been reviewed and maintained.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 116,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                        'admin.translation_list.filter.concrete_translation_keys_that_already_exist_or_become_real_translations_once_th',\n                    )",
+                        "original_raw": "__(\n                        'admin.translation_list.filter.concrete_translation_keys_that_already_exist_or_become_real_translations_once_th',\n                    )"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Invalid application language.",
+        "normalized_value": "invalid application language.",
+        "value_variants": [
+            "Invalid application language."
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 5,
+        "usage_count_total": 5,
+        "usage_count_current": 5,
+        "usage_count_stale": 0,
+        "has_stale_usages": false,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 1573,
+                "key": "admin.app_settings.invalid_application_language",
+                "full_key": "admin.app_settings.invalid_application_language",
+                "namespace": "admin",
+                "group": "app_settings",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Invalid application language.",
+                "is_ui_key": false,
+                "usage_count": 5,
+                "usage_count_total": 5,
+                "usage_count_current": 5,
+                "usage_count_stale": 0,
+                "has_stale_usages": false,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Ungültige Anwendungssprache.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Invalid application language.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "app/Livewire/Admin/AppSettings.php",
+                        "line": 211,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.app_settings.invalid_application_language')",
+                        "original_raw": "__('Invalid application language.')"
+                    },
+                    {
+                        "file": "app/Livewire/Admin/AppSettings.php",
+                        "line": 303,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.app_settings.invalid_application_language')",
+                        "original_raw": "__('Invalid application language.')"
+                    },
+                    {
+                        "file": "app/Livewire/Admin/AppSettings.php",
+                        "line": 325,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.app_settings.invalid_application_language')",
+                        "original_raw": "__('Invalid application language.')"
+                    },
+                    {
+                        "file": "app/Livewire/Admin/AppSettings.php",
+                        "line": 352,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.app_settings.invalid_application_language')",
+                        "original_raw": "__('Invalid application language.')"
+                    },
+                    {
+                        "file": "app/Livewire/Admin/AppSettings.php",
+                        "line": 360,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.app_settings.invalid_application_language')",
+                        "original_raw": "__('Invalid application language.')"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Literal texts from code that still need to be reviewed and typically converted into translation keys.",
+        "normalized_value": "literal texts from code that still need to be reviewed and typically converted into translation keys.",
+        "value_variants": [
+            "Literal texts from code that still need to be reviewed and typically converted into translation keys."
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 5,
+        "usage_count_total": 5,
+        "usage_count_current": 1,
+        "usage_count_stale": 4,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5903,
+                "key": "admin.translation_list.filter.literal_texts_from_code_that_still_need_to_be_reviewed_and_typically_converted_i",
+                "full_key": "admin.translation_list.filter.literal_texts_from_code_that_still_need_to_be_reviewed_and_typically_converted_i",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Literal texts from code that still need to be reviewed and typically converted into translation keys.",
+                "is_ui_key": false,
+                "usage_count": 5,
+                "usage_count_total": 5,
+                "usage_count_current": 1,
+                "usage_count_stale": 4,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Wörtliche Textstellen aus dem Code, die noch überprüft und in der Regel in Übersetzungsschlüssel umgewandelt werden müssen.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Literal texts from code that still need to be reviewed and typically converted into translation keys.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 113,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.literal_texts_from_code_that_still_need_to_be_reviewed_and_typically_converted_i',\n                    )",
+                        "original_raw": "__(\n                        'Literal texts from code that still need to be reviewed and typically converted into translation keys.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 118,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.literal_texts_from_code_that_still_need_to_be_reviewed_and_typically_converted_i',\n                    )",
+                        "original_raw": "__(\n                        'Literal texts from code that still need to be reviewed and typically converted into translation keys.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 119,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.literal_texts_from_code_that_still_need_to_be_reviewed_and_typically_converted_i',\n                    )",
+                        "original_raw": "__(\n                        'Literal texts from code that still need to be reviewed and typically converted into translation keys.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 120,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.literal_texts_from_code_that_still_need_to_be_reviewed_and_typically_converted_i',\n                    )",
+                        "original_raw": "__(\n                        'Literal texts from code that still need to be reviewed and typically converted into translation keys.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 137,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                        'admin.translation_list.filter.literal_texts_from_code_that_still_need_to_be_reviewed_and_typically_converted_i',\n                    )",
+                        "original_raw": "__(\n                        'admin.translation_list.filter.literal_texts_from_code_that_still_need_to_be_reviewed_and_typically_converted_i',\n                    )"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Vendor translation entries imported from package language files.",
+        "normalized_value": "vendor translation entries imported from package language files.",
+        "value_variants": [
+            "Vendor translation entries imported from package language files."
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 5,
+        "usage_count_total": 5,
+        "usage_count_current": 1,
+        "usage_count_stale": 4,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5883,
+                "key": "admin.translation_list.filter.vendor_translation_entries_imported_from_package_language_files",
+                "full_key": "admin.translation_list.filter.vendor_translation_entries_imported_from_package_language_files",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Vendor translation entries imported from package language files.",
+                "is_ui_key": false,
+                "usage_count": 5,
+                "usage_count_total": 5,
+                "usage_count_current": 1,
+                "usage_count_stale": 4,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Von Sprachdateien des Pakets importierte Übersetzungseinträge des Anbieters.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Vendor translation entries imported from package language files.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 102,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.vendor_translation_entries_imported_from_package_language_files')",
+                        "original_raw": "__('Vendor translation entries imported from package language files.')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 105,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.vendor_translation_entries_imported_from_package_language_files')",
+                        "original_raw": "__('Vendor translation entries imported from package language files.')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 108,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.vendor_translation_entries_imported_from_package_language_files')",
+                        "original_raw": "__('Vendor translation entries imported from package language files.')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 110,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.vendor_translation_entries_imported_from_package_language_files')",
+                        "original_raw": "__('Vendor translation entries imported from package language files.')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 123,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                        'admin.translation_list.filter.vendor_translation_entries_imported_from_package_language_files',\n                    )",
+                        "original_raw": "__(\n                        'admin.translation_list.filter.vendor_translation_entries_imported_from_package_language_files',\n                    )"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": ":files lang files currently contain :entries translation entries. DB currently has :db exportable entries for this main language. :state",
+        "normalized_value": ":files lang files currently contain :entries translation entries. db currently has :db exportable entries for this main language. :state",
+        "value_variants": [
+            ":files lang files currently contain :entries translation entries. DB currently has :db exportable entries for this main language. :state"
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 4,
+        "usage_count_total": 4,
+        "usage_count_current": 1,
+        "usage_count_stale": 3,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 6142,
+                "key": "admin.translation_list.filter.files_lang_files_currently_contain_entries_translation_entries_db_currently_has_",
+                "full_key": "admin.translation_list.filter.files_lang_files_currently_contain_entries_translation_entries_db_currently_has_",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": ":files lang files currently contain :entries translation entries. DB currently has :db exportable entries for this main language. :state",
+                "is_ui_key": false,
+                "usage_count": 4,
+                "usage_count_total": 4,
+                "usage_count_current": 1,
+                "usage_count_stale": 3,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": ":files Die Sprachdateien enthalten derzeit :entries Übersetzungseinträge. Die Datenbank enthält derzeit :db exportierbare Einträge für diese Hauptsprache. :state",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": ":files lang files currently contain :entries translation entries. DB currently has :db exportable entries for this main language. :state",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 277,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.files_lang_files_currently_contain_entries_translation_entries_db_currently_has_',\n                                [\n                                    'files' => $mainLanguageFileStats->file_count,\n                                    'entries' => $mainLanguageFileStats->entry_count,\n                                    'db' => $mainLanguageFileStats->db_entry_count,\n                                    'state' => $mainLanguageFileStats->in_sync\n                                        ? __('admin.translation_list.filter.db_and_files_are_currently_in_sync')\n                                        : __('admin.translation_list.filter.db_and_files_are_currently_not_in_sync'),\n                                ],\n                            )",
+                        "original_raw": "__('admin.translation_list.filter.files_lang_files_currently_contain_entries_translation_entries_db_currently_has_',\n                                [\n                                    'files' => $mainLanguageFileStats->file_count,\n                                    'entries' => $mainLanguageFileStats->entry_count,\n                                    'db' => $mainLanguageFileStats->db_entry_count,\n                                    'state' => $mainLanguageFileStats->in_sync\n                                        ? __('admin.translation_list.filter.db_and_files_are_currently_in_sync')\n                                        : __('admin.translation_list.filter.db_and_files_are_currently_not_in_sync'),\n                                ],\n                            )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 280,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                                ':files lang files currently contain :entries translation entries. DB currently has :db exportable entries for this main language. :state',\n                                [\n                                    'files' => $mainLanguageFileStats->file_count,\n                                    'entries' => $mainLanguageFileStats->entry_count,\n                                    'db' => $mainLanguageFileStats->db_entry_count,\n                                    'state' => $mainLanguageFileStats->in_sync\n                                        ? __('DB and files are currently in sync.')\n                                        : __('admin.translation_list.filter.db_and_files_are_currently_not_in_sync'),\n                                ],\n                            )",
+                        "original_raw": "__(\n                                ':files lang files currently contain :entries translation entries. DB currently has :db exportable entries for this main language. :state',\n                                [\n                                    'files' => $mainLanguageFileStats->file_count,\n                                    'entries' => $mainLanguageFileStats->entry_count,\n                                    'db' => $mainLanguageFileStats->db_entry_count,\n                                    'state' => $mainLanguageFileStats->in_sync\n                                        ? __('DB and files are currently in sync.')\n                                        : __('admin.translation_list.filter.db_and_files_are_currently_not_in_sync'),\n                                ],\n                            )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 282,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                                ':files lang files currently contain :entries translation entries. DB currently has :db exportable entries for this main language. :state',\n                                [\n                                    'files' => $mainLanguageFileStats->file_count,\n                                    'entries' => $mainLanguageFileStats->entry_count,\n                                    'db' => $mainLanguageFileStats->db_entry_count,\n                                    'state' => $mainLanguageFileStats->in_sync\n                                        ? __('DB and files are currently in sync.')\n                                        : __('admin.translation_list.filter.db_and_files_are_currently_not_in_sync'),\n                                ],\n                            )",
+                        "original_raw": "__(\n                                ':files lang files currently contain :entries translation entries. DB currently has :db exportable entries for this main language. :state',\n                                [\n                                    'files' => $mainLanguageFileStats->file_count,\n                                    'entries' => $mainLanguageFileStats->entry_count,\n                                    'db' => $mainLanguageFileStats->db_entry_count,\n                                    'state' => $mainLanguageFileStats->in_sync\n                                        ? __('DB and files are currently in sync.')\n                                        : __('admin.translation_list.filter.db_and_files_are_currently_not_in_sync'),\n                                ],\n                            )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 305,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                                'admin.translation_list.filter.files_lang_files_currently_contain_entries_translation_entries_db_currently_has_',\n                                [\n                                    'files' => $mainLanguageFileStats->file_count,\n                                    'entries' => $mainLanguageFileStats->entry_count,\n                                    'db' => $mainLanguageFileStats->db_entry_count,\n                                    'state' => $mainLanguageFileStats->in_sync\n                                        ? __('admin.translation_list.filter.db_and_files_are_currently_in_sync')\n                                        : __('admin.translation_list.filter.db_and_files_are_currently_not_in_sync'),\n                                ],\n                            )",
+                        "original_raw": "__(\n                                'admin.translation_list.filter.files_lang_files_currently_contain_entries_translation_entries_db_currently_has_',\n                                [\n                                    'files' => $mainLanguageFileStats->file_count,\n                                    'entries' => $mainLanguageFileStats->entry_count,\n                                    'db' => $mainLanguageFileStats->db_entry_count,\n                                    'state' => $mainLanguageFileStats->in_sync\n                                        ? __('admin.translation_list.filter.db_and_files_are_currently_in_sync')\n                                        : __('admin.translation_list.filter.db_and_files_are_currently_not_in_sync'),\n                                ],\n                            )"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "All currently code-relevant translation entry types that belong to the active work set.",
+        "normalized_value": "all currently code-relevant translation entry types that belong to the active work set.",
+        "value_variants": [
+            "All currently code-relevant translation entry types that belong to the active work set."
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 4,
+        "usage_count_total": 4,
+        "usage_count_current": 1,
+        "usage_count_stale": 3,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5760,
+                "key": "admin.translation_list.filter.all_currently_code_relevant_translation_entry_types_that_belong_to_the_active_wo",
+                "full_key": "admin.translation_list.filter.all_currently_code_relevant_translation_entry_types_that_belong_to_the_active_wo",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "All currently code-relevant translation entry types that belong to the active work set.",
+                "is_ui_key": false,
+                "usage_count": 4,
+                "usage_count_total": 4,
+                "usage_count_current": 1,
+                "usage_count_stale": 3,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Alle derzeit für den Code relevanten Übersetzungseintragstypen, die zum aktiven Arbeitssatz gehören.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "All currently code-relevant translation entry types that belong to the active work set.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 90,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.all_currently_code_relevant_translation_entry_types_that_belong_to_the_active_wo',\n                    )",
+                        "original_raw": "__(\n                        'All currently code-relevant translation entry types that belong to the active work set.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 92,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                        'All currently code-relevant translation entry types that belong to the active work set.',\n                    )",
+                        "original_raw": "__(\n                        'All currently code-relevant translation entry types that belong to the active work set.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 94,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                        'All currently code-relevant translation entry types that belong to the active work set.',\n                    )",
+                        "original_raw": "__(\n                        'All currently code-relevant translation entry types that belong to the active work set.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 109,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                        'admin.translation_list.filter.all_currently_code_relevant_translation_entry_types_that_belong_to_the_active_wo',\n                    )",
+                        "original_raw": "__(\n                        'admin.translation_list.filter.all_currently_code_relevant_translation_entry_types_that_belong_to_the_active_wo',\n                    )"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Differs from suggested key",
+        "normalized_value": "differs from suggested key",
+        "value_variants": [
+            "Differs from suggested key"
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 4,
+        "usage_count_total": 4,
+        "usage_count_current": 2,
+        "usage_count_stale": 2,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5459,
+                "key": "admin.translation_list.table.differs_from_suggested_key",
+                "full_key": "admin.translation_list.table.differs_from_suggested_key",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Differs from suggested key",
+                "is_ui_key": false,
+                "usage_count": 4,
+                "usage_count_total": 4,
+                "usage_count_current": 2,
+                "usage_count_stale": 2,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Weicht vom vorgeschlagenen Schlüssel ab",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Differs from suggested key",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "line": 157,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.translation_list.table.differs_from_suggested_key')",
+                        "original_raw": "__('admin.translation_list.table.differs_from_suggested_key')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "line": 379,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('Differs from suggested key')",
+                        "original_raw": "__('Differs from suggested key')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "line": 401,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                                            'admin.translation_list.table.differs_from_suggested_key',\n                                        )",
+                        "original_raw": "__('Differs from suggested key')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "line": 432,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                                            'admin.translation_list.table.differs_from_suggested_key',\n                                        )",
+                        "original_raw": "__('Differs from suggested key')"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Dynamic translation expressions built at runtime and usually left as special cases.",
+        "normalized_value": "dynamic translation expressions built at runtime and usually left as special cases.",
+        "value_variants": [
+            "Dynamic translation expressions built at runtime and usually left as special cases."
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 4,
+        "usage_count_total": 4,
+        "usage_count_current": 1,
+        "usage_count_stale": 3,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5855,
+                "key": "admin.translation_list.filter.dynamic_translation_expressions_built_at_runtime_and_usually_left_as_special_cas",
+                "full_key": "admin.translation_list.filter.dynamic_translation_expressions_built_at_runtime_and_usually_left_as_special_cas",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Dynamic translation expressions built at runtime and usually left as special cases.",
+                "is_ui_key": false,
+                "usage_count": 4,
+                "usage_count_total": 4,
+                "usage_count_current": 1,
+                "usage_count_stale": 3,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Dynamische Übersetzungsausdrücke, die zur Laufzeit erstellt und in der Regel als Sonderfälle behandelt werden.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Dynamic translation expressions built at runtime and usually left as special cases.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 119,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.dynamic_translation_expressions_built_at_runtime_and_usually_left_as_special_cas')",
+                        "original_raw": "__('Dynamic translation expressions built at runtime and usually left as special cases.')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 124,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.dynamic_translation_expressions_built_at_runtime_and_usually_left_as_special_cas')",
+                        "original_raw": "__('Dynamic translation expressions built at runtime and usually left as special cases.')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 125,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('Dynamic translation expressions built at runtime and usually left as special cases.')",
+                        "original_raw": "__('Dynamic translation expressions built at runtime and usually left as special cases.')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 144,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                        'admin.translation_list.filter.dynamic_translation_expressions_built_at_runtime_and_usually_left_as_special_cas',\n                    )",
+                        "original_raw": "__(\n                        'admin.translation_list.filter.dynamic_translation_expressions_built_at_runtime_and_usually_left_as_special_cas',\n                    )"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Filter by search",
+        "normalized_value": "filter by search",
+        "value_variants": [
+            "Filter by search"
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 4,
+        "usage_count_total": 4,
+        "usage_count_current": 2,
+        "usage_count_stale": 2,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 6145,
+                "key": "admin.translation_list.filter.filter_by_search",
+                "full_key": "admin.translation_list.filter.filter_by_search",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Filter by search",
+                "is_ui_key": false,
+                "usage_count": 4,
+                "usage_count_total": 4,
+                "usage_count_current": 2,
+                "usage_count_stale": 2,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Nach Suchbegriff filtern",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Filter by search",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/person-list/⚡filter.blade.php",
+                        "line": 16,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.translation_list.filter.filter_by_search')",
+                        "original_raw": "__('Filter by search')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 467,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('Filter by search')",
+                        "original_raw": "__('Filter by search')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 469,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('Filter by search')",
+                        "original_raw": "__('Filter by search')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/user-list/⚡filter.blade.php",
+                        "line": 13,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.translation_list.filter.filter_by_search')",
+                        "original_raw": "__('admin.translation_list.filter.filter_by_search')"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Invalid translation calls that definitely need correction and review.",
+        "normalized_value": "invalid translation calls that definitely need correction and review.",
+        "value_variants": [
+            "Invalid translation calls that definitely need correction and review."
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 4,
+        "usage_count_total": 4,
+        "usage_count_current": 1,
+        "usage_count_stale": 3,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5758,
+                "key": "admin.translation_list.filter.invalid_translation_calls_that_definitely_need_correction_and_review",
+                "full_key": "admin.translation_list.filter.invalid_translation_calls_that_definitely_need_correction_and_review",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Invalid translation calls that definitely need correction and review.",
+                "is_ui_key": false,
+                "usage_count": 4,
+                "usage_count_total": 4,
+                "usage_count_current": 1,
+                "usage_count_stale": 3,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Ungültige Übersetzungsaufrufe, die unbedingt korrigiert und überprüft werden müssen.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Invalid translation calls that definitely need correction and review.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 83,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.invalid_translation_calls_that_definitely_need_correction_and_review')",
+                        "original_raw": "__('Invalid translation calls that definitely need correction and review.')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 85,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('Invalid translation calls that definitely need correction and review.')",
+                        "original_raw": "__('Invalid translation calls that definitely need correction and review.')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 87,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('Invalid translation calls that definitely need correction and review.')",
+                        "original_raw": "__('Invalid translation calls that definitely need correction and review.')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 100,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                        'admin.translation_list.filter.invalid_translation_calls_that_definitely_need_correction_and_review',\n                    )",
+                        "original_raw": "__(\n                        'admin.translation_list.filter.invalid_translation_calls_that_definitely_need_correction_and_review',\n                    )"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Key / Suggested Key",
+        "normalized_value": "key / suggested key",
+        "value_variants": [
+            "Key / Suggested Key"
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 4,
+        "usage_count_total": 4,
+        "usage_count_current": 2,
+        "usage_count_stale": 2,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5343,
+                "key": "admin.translation_list.table.key_suggested_key",
+                "full_key": "admin.translation_list.table.key_suggested_key",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Key / Suggested Key",
+                "is_ui_key": false,
+                "usage_count": 4,
+                "usage_count_total": 4,
+                "usage_count_current": 2,
+                "usage_count_stale": 2,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Schlüssel / Vorgeschlagener Schlüssel",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Key / Suggested Key",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "line": 156,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.table.key_suggested_key')",
+                        "original_raw": "__('Key / Suggested Key')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "line": 161,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.translation_list.table.key_suggested_key')",
+                        "original_raw": "__('Key / Suggested Key')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "line": 164,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.table.key_suggested_key')",
+                        "original_raw": "__('Key / Suggested Key')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡table.blade.php",
+                        "line": 166,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.translation_list.table.key_suggested_key')",
+                        "original_raw": "__('Key / Suggested Key')"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "No translation key selected.",
+        "normalized_value": "no translation key selected.",
+        "value_variants": [
+            "No translation key selected."
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 4,
+        "usage_count_total": 4,
+        "usage_count_current": 1,
+        "usage_count_stale": 3,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5507,
+                "key": "admin.translation_list.modal.no_translation_key_selected",
+                "full_key": "admin.translation_list.modal.no_translation_key_selected",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "No translation key selected.",
+                "is_ui_key": false,
+                "usage_count": 4,
+                "usage_count_total": 4,
+                "usage_count_current": 1,
+                "usage_count_stale": 3,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Es wurde kein Übersetzungsschlüssel ausgewählt.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "No translation key selected.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "line": 712,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('No translation key selected.')",
+                        "original_raw": "__('No translation key selected.')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "line": 722,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.modal.no_translation_key_selected')",
+                        "original_raw": "__('No translation key selected.')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "line": 729,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.modal.no_translation_key_selected')",
+                        "original_raw": "__('No translation key selected.')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal.blade.php",
+                        "line": 774,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.translation_list.modal.no_translation_key_selected')",
+                        "original_raw": "__('No translation key selected.')"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Obsolete shows two counts: first the DB-obsolete work items, then the file-obsolete lang entries from the compare audit. File-obsolete entries stay in lang files until they have been reviewed explicitly.",
+        "normalized_value": "obsolete shows two counts: first the db-obsolete work items, then the file-obsolete lang entries from the compare audit. file-obsolete entries stay in lang files until they have been reviewed explicitly.",
+        "value_variants": [
+            "Obsolete shows two counts: first the DB-obsolete work items, then the file-obsolete lang entries from the compare audit. File-obsolete entries stay in lang files until they have been reviewed explicitly."
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 4,
+        "usage_count_total": 4,
+        "usage_count_current": 1,
+        "usage_count_stale": 3,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5726,
+                "key": "admin.translation_list.filter.obsolete_shows_two_counts_first_the_db_obsolete_work_items_then_the_file_obsolet",
+                "full_key": "admin.translation_list.filter.obsolete_shows_two_counts_first_the_db_obsolete_work_items_then_the_file_obsolet",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Obsolete shows two counts: first the DB-obsolete work items, then the file-obsolete lang entries from the compare audit. File-obsolete entries stay in lang files until they have been reviewed explicitly.",
+                "is_ui_key": false,
+                "usage_count": 4,
+                "usage_count_total": 4,
+                "usage_count_current": 1,
+                "usage_count_stale": 3,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Unter „Veraltet“ werden zwei Werte angezeigt: zunächst die DB-veralteten Arbeitselemente, dann die dateiveralteten Sprachdateieinträge aus dem Vergleichs-Audit. Dateiveraltete Einträge verbleiben in den Sprachdateien, bis sie ausdrücklich überprüft wurden.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Obsolete shows two counts: first the DB-obsolete work items, then the file-obsolete lang entries from the compare audit. File-obsolete entries stay in lang files until they have been reviewed explicitly.",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 77,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.filter.obsolete_shows_two_counts_first_the_db_obsolete_work_items_then_the_file_obsolet',\n                    )",
+                        "original_raw": "__(\n                        'Obsolete shows two counts: first the DB-obsolete work items, then the file-obsolete lang entries from the compare audit. File-obsolete entries stay in lang files until they have been reviewed explicitly.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 78,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                        'Obsolete shows two counts: first the DB-obsolete work items, then the file-obsolete lang entries from the compare audit. File-obsolete entries stay in lang files until they have been reviewed explicitly.',\n                    )",
+                        "original_raw": "__(\n                        'Obsolete shows two counts: first the DB-obsolete work items, then the file-obsolete lang entries from the compare audit. File-obsolete entries stay in lang files until they have been reviewed explicitly.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 80,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__(\n                        'Obsolete shows two counts: first the DB-obsolete work items, then the file-obsolete lang entries from the compare audit. File-obsolete entries stay in lang files until they have been reviewed explicitly.',\n                    )",
+                        "original_raw": "__(\n                        'Obsolete shows two counts: first the DB-obsolete work items, then the file-obsolete lang entries from the compare audit. File-obsolete entries stay in lang files until they have been reviewed explicitly.',\n                    )"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 93,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__(\n                        'admin.translation_list.filter.obsolete_shows_two_counts_first_the_db_obsolete_work_items_then_the_file_obsolet',\n                    )",
+                        "original_raw": "__(\n                        'admin.translation_list.filter.obsolete_shows_two_counts_first_the_db_obsolete_work_items_then_the_file_obsolet',\n                    )"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Open",
+        "normalized_value": "open",
+        "value_variants": [
+            "Open"
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 4,
+        "usage_count_total": 4,
+        "usage_count_current": 2,
+        "usage_count_stale": 2,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 5959,
+                "key": "admin.translation_list.filter.open",
+                "full_key": "admin.translation_list.filter.open",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Open",
+                "is_ui_key": false,
+                "usage_count": 4,
+                "usage_count_total": 4,
+                "usage_count_current": 2,
+                "usage_count_stale": 2,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Öffnen",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Open",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-lang-ballast/⚡table.blade.php",
+                        "line": 449,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.translation_list.filter.open')",
+                        "original_raw": "__('Open')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 201,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('Open')",
+                        "original_raw": "__('Open')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 203,
+                        "function": "__",
+                        "classification": "native",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('Open')",
+                        "original_raw": "__('Open')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php",
+                        "line": 226,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.translation_list.filter.open')",
+                        "original_raw": "__('admin.translation_list.filter.open')"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "locale": "en",
+        "value": "Open next editable entry",
+        "normalized_value": "open next editable entry",
+        "value_variants": [
+            "Open next editable entry"
+        ],
+        "translation_key_count": 1,
+        "non_ui_translation_key_count": 1,
+        "usage_count": 4,
+        "usage_count_total": 4,
+        "usage_count_current": 3,
+        "usage_count_stale": 1,
+        "has_stale_usages": true,
+        "already_has_ui_candidate": false,
+        "ui_keys": [],
+        "keys": [
+            {
+                "translation_key_id": 2135,
+                "key": "admin.translation_list.modal_edit.open_next_editable_entry",
+                "full_key": "admin.translation_list.modal_edit.open_next_editable_entry",
+                "namespace": "admin",
+                "group": "translation_list",
+                "status": "ok",
+                "classification": "key",
+                "native_text": "Open next editable entry",
+                "is_ui_key": false,
+                "usage_count": 4,
+                "usage_count_total": 4,
+                "usage_count_current": 3,
+                "usage_count_stale": 1,
+                "has_stale_usages": true,
+                "values": {
+                    "de": {
+                        "locale": "de",
+                        "value": "Nächsten bearbeitbaren Eintrag öffnen",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    },
+                    "de-at": {
+                        "locale": "de-at",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-be": {
+                        "locale": "de-be",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-ch": {
+                        "locale": "de-ch",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-de": {
+                        "locale": "de-de",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-it": {
+                        "locale": "de-it",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-li": {
+                        "locale": "de-li",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "de-lu": {
+                        "locale": "de-lu",
+                        "value": null,
+                        "status": "missing",
+                        "source": "audit",
+                        "is_base_duplicate": null
+                    },
+                    "en": {
+                        "locale": "en",
+                        "value": "Open next editable entry",
+                        "status": "ok",
+                        "source": "manual",
+                        "is_base_duplicate": null
+                    }
+                },
+                "usages": [
+                    {
+                        "file": "resources/views/components/admin/partials/translation-list/⚡modal-edit.blade.php",
+                        "line": 35,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": "stale_audit_usage_not_seen_in_latest_sync",
+                        "is_stale": true,
+                        "raw": "__('admin.translation_list.modal_edit.open_next_editable_entry')",
+                        "original_raw": "__('Open next editable entry')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-sub-languages/⚡modal-edit.blade.php",
+                        "line": 28,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.translation_list.modal_edit.open_next_editable_entry')",
+                        "original_raw": "__('Open next editable entry')"
+                    },
+                    {
+                        "file": "resources/views/components/admin/partials/translation-sub-languages/⚡modal-edit.blade.php",
+                        "line": 29,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.translation_list.modal_edit.open_next_editable_entry')",
+                        "original_raw": "__('Open next editable entry')"
+                    },
+                    {
+                        "file": "resources/views/components/ui/button/next-edit.blade.php",
+                        "line": 15,
+                        "function": "__",
+                        "classification": "key",
+                        "reason": null,
+                        "is_stale": false,
+                        "raw": "__('admin.translation_list.modal_edit.open_next_editable_entry')",
+                        "original_raw": "__('Open next editable entry')"
+                    }
+                ]
+            }
+        ]
+    }
+]

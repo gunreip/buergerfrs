@@ -4,13 +4,13 @@
 <x-ui.button.edit />
 <x-ui.button.edit icon="square-pen" />
 <x-ui.button.edit :icon="false" />
-<x-ui.button.edit label="{{ __('Edit') }}" />
+<x-ui.button.edit label="{{ __('admin.translation_list.modal.edit') }}" />
 --}}
 
 {{-- edit  → sky/primary, square-pen, Edit --}}
 
 @props([
-    'label' => __('Edit'),
+    'label' => __('admin.translation_list.modal.edit'),
     'icon' => true,
     'type' => 'button',
     'size' => null,
@@ -20,7 +20,7 @@
     $resolvedIcon = match (true) {
         $icon === false => null,
         is_string($icon) && trim($icon) !== '' => trim($icon),
-        default => 'square-pen',
+        default => 'pen-line',
     };
 @endphp
 
@@ -29,10 +29,11 @@
         <flux:button
             class="hover:cursor-pointer"
             type="{{ $type }}"
+            stroke-width="1"
             icon="{{ $resolvedIcon }}"
             {{ $attributes }}
             variant="primary"
-            color="sky"
+            color="amber"
             :size="$size"
         ></flux:button>
         <flux:button
@@ -40,7 +41,7 @@
             type="{{ $type }}"
             {{ $attributes }}
             variant="primary"
-            color="sky"
+            color="amber"
             :size="$size"
         >
             {{ $label }}
@@ -52,7 +53,7 @@
         type="{{ $type }}"
         {{ $attributes }}
         variant="primary"
-        color="sky"
+        color="amber"
         :size="$size"
     >
         {{ $label }}

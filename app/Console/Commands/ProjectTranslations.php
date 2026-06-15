@@ -1,9 +1,12 @@
 <?php
 
+// app/Console/Commands/ProjectTranslations.php
+
 // Standard (sicher, ohne Patch-Apply):
 // php artisan project:translations
 
-// Mit automatischem Apply von latest.patch:
+// Mit automatischem Apply von diffs
+
 // php artisan project:translations --apply-diffs
 
 // Optional eingeschränkt:
@@ -11,6 +14,19 @@
 // php artisan project:translations --paths=resources/views,app
 // php artisan project:translations --skip-export
 // php artisan project:translations --skip-audits
+// php artisan project:translations --apply-usage-decisions
+//
+// Finale Translation-Audits enthalten:
+// php artisan translations:audit-lang
+// php artisan translations:audit-compare
+// php artisan translations:audit-lang-ballast
+// php artisan translations:lang-ballast:apply
+// php artisan translations:audit-duplicate-usage-literals
+// php artisan translations:audit-frequent-usage-literals
+// php artisan translations:usage-decisions:preview
+//
+// Optional mit --apply-usage-decisions:
+// php artisan translations:usage-decisions:apply --write
 
 namespace App\Console\Commands;
 
@@ -32,13 +48,14 @@ class ProjectTranslations extends Command
         {--paths= : Comma-separated scan paths for translations:generate-literal-diffs}
         {--locales= : Comma-separated locale list for translations:export-lang-files}
         {--apply-diffs : Apply generated latest.patch automatically}
+        {--apply-usage-decisions : Apply ready translation usage audit decisions to source files}
         {--skip-export : Skip translations:export-lang-files}
         {--skip-audits : Skip final translations:audit-lang and translations:audit-compare}';
 
     /**
      * The console command description.
      */
-    protected $description = 'Run translation workflow commands in sequence (audit, sync, diff, optional apply, export, final audits).';
+    protected $description = 'Run translation workflow commands in sequence (audit, sync, diff, optional apply, export, final language and usage audits).';
 
     /**
      * Execute the console command.
@@ -46,6 +63,7 @@ class ProjectTranslations extends Command
     public function handle(): int
     {
         $applyDiffs = (bool) $this->option('apply-diffs');
+        $applyUsageDecisions = (bool) $this->option('apply-usage-decisions');
         $skipExport = (bool) $this->option('skip-export');
         $skipAudits = (bool) $this->option('skip-audits');
         $pathsOption = trim((string) $this->option('paths'));
@@ -96,6 +114,50 @@ class ProjectTranslations extends Command
             if (! $skipAudits) {
                 $this->runArtisanStep('Translation-Lang-Audit schreiben', 'translations:audit-lang');
                 $this->runArtisanStep('Translation-Compare-Audit schreiben', 'translations:audit-compare');
+                $this->runArtisanStep('Translation-Lang-Ballast-Audit schreiben', 'translations:audit-lang-ballast');
+                $this->runArtisanStep(
+                    'Translation-Lang-Ballast-Apply-Preview schreiben',
+                    'translations:lang-ballast:apply',
+                );
+                $this->runArtisanStep(
+                    'Translation-Duplicate-Usage-Literals-Audit schreiben',
+                    'translations:audit-duplicate-usage-literals',
+                );
+                $this->runArtisanStep(
+                    'Translation-Frequent-Usage-Literals-Audit schreiben',
+                    'translations:audit-frequent-usage-literals',
+                );
+
+                $this->runArtisanStep(
+                    'Translation-Usage-Decision-Preview schreiben',
+                    'translations:usage-decisions:preview',
+                );
+
+                if ($applyUsageDecisions) {
+                    $this->runArtisanStep(
+                        'Translation-Usage-Decisions anwenden',
+                        'translations:usage-decisions:apply',
+                        ['--write' => true],
+                    );
+
+                    $this->runArtisanStep('Translation-Code-Audit nach Usage-Decision-Apply schreiben', 'translations:audit-code');
+                    $this->runArtisanStep('Translation-Audits nach Usage-Decision-Apply synchronisieren', 'translations:sync-audits');
+
+                    $this->runArtisanStep(
+                        'Translation-Duplicate-Usage-Literals-Audit nach Usage-Decision-Apply schreiben',
+                        'translations:audit-duplicate-usage-literals',
+                    );
+                    $this->runArtisanStep(
+                        'Translation-Frequent-Usage-Literals-Audit nach Usage-Decision-Apply schreiben',
+                        'translations:audit-frequent-usage-literals',
+                    );
+                    $this->runArtisanStep(
+                        'Translation-Usage-Decision-Preview nach Usage-Decision-Apply schreiben',
+                        'translations:usage-decisions:preview',
+                    );
+                } else {
+                    $this->warn('ℹ️ Usage-Decision-Apply übersprungen. Nutze --apply-usage-decisions für automatische Anwendung geprüfter Usage-Decisions.');
+                }
             } else {
                 $this->warn('ℹ️ Finale Audits übersprungen (--skip-audits).');
             }
@@ -107,6 +169,7 @@ class ProjectTranslations extends Command
                     'paths' => $pathsOption,
                     'locales' => $localesOption,
                     'apply_diffs' => $applyDiffs,
+                    'apply_usage_decisions' => $applyUsageDecisions,
                     'skip_export' => $skipExport,
                     'skip_audits' => $skipAudits,
                 ],
@@ -125,6 +188,7 @@ class ProjectTranslations extends Command
                     'paths' => $pathsOption,
                     'locales' => $localesOption,
                     'apply_diffs' => $applyDiffs,
+                    'apply_usage_decisions' => $applyUsageDecisions,
                     'skip_export' => $skipExport,
                     'skip_audits' => $skipAudits,
                 ],

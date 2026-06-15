@@ -1,11 +1,11 @@
 {
-    "generated_at": "2026-06-03T17:12:28+02:00",
+    "generated_at": "2026-06-15T14:10:28+02:00",
     "root_path": "/home/gunreip/code/buergerfrs",
     "preview_limit": 20,
-    "files_scanned": 408,
-    "translation_calls": 1848,
-    "proper_keys": 143,
-    "native_texts": 1694,
-    "dynamic_keys": 11,
+    "files_scanned": 476,
+    "translation_calls": 2250,
+    "proper_keys": 1151,
+    "native_texts": 1084,
+    "dynamic_keys": 15,
     "invalid_calls": 0
 }

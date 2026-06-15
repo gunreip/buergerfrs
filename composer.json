@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "blade-ui-kit/blade-icons": "^1.10",
         "commerceguys/addressing": "^2.2",
         "illuminate/database": "*",
         "laravel/fortify": "^1.34",

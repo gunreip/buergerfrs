@@ -66,7 +66,7 @@ new #[Title('Profile settings')] class extends Component {
                 report($exception);
 
                 Flux::toast(heading: __('Avatar could not be saved'), text: __('pages.settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars'), variant: 'danger', duration: 6000);
-                // Flux::toast(heading: __('Avatar could not be saved'), text: __('Please check the storage permissions for storage/app/public/avatars.'), variant: 'danger', duration: 6000);
+                // Flux::toast(heading: __('Avatar could not be saved'), text: __('pages.settings.profile.please_check_the_storage_permissions_for_storage_app_public_avatars'), variant: 'danger', duration: 6000);
 
                 return;
             }
@@ -157,7 +157,7 @@ new #[Title('Profile settings')] class extends Component {
                 <div class="space-y-6">
                     <div>
                         <flux:label for="name">
-                            {{ __('Name') }}
+                            {{ __('ui.labels.name') }}
                         </flux:label>
 
                         <flux:input.group>
@@ -180,7 +180,7 @@ new #[Title('Profile settings')] class extends Component {
 
                     <div>
                         <flux:label for="nickname">
-                            {{ __('Nickname') }}
+                            {{ __('account.preferences.current_user.nickname') }}
                         </flux:label>
 
                         <flux:input.group>
@@ -241,7 +241,7 @@ new #[Title('Profile settings')] class extends Component {
                         <x-ui.button.save
                             data-test="update-profile-button"
                             type="submit"
-                            label="{{ __('Save') }}"
+                            label="{{ __('ui.actions.save') }}"
                             {{-- icon="save" --}}
                             {{-- color="green" --}}
                         />
@@ -252,7 +252,7 @@ new #[Title('Profile settings')] class extends Component {
                             color="green"
                             icon="save"
                         >
-                            {{ __('Save') }}
+                            {{ __('ui.actions.save') }}
                         </flux:button> --}}
                     </div>
                 </div>
@@ -280,7 +280,7 @@ new #[Title('Profile settings')] class extends Component {
                             <img
                                 class="h-24 w-24 rounded-2xl object-cover ring-1 ring-zinc-700"
                                 src="{{ $this->avatarUrl }}"
-                                alt="{{ __('Current avatar') }}"
+                                alt="{{ __('pages.settings.profile.current_avatar') }}"
                             >
                         @else
                             <flux:avatar
@@ -314,7 +314,7 @@ new #[Title('Profile settings')] class extends Component {
                         type="file"
                         wire:model="avatarUpload"
                         accept="image/jpeg,image/png,image/webp"
-                        label="{{ __('Avatar image') }}"
+                        label="{{ __('pages.settings.profile.avatar_image') }}"
                     />
 
                     @error('avatarUpload')

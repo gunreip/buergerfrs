@@ -45,6 +45,23 @@ afterEach(function (): void {
     }
 });
 
+it('does not include partials in newly suggested native keys from component partial paths', function (): void {
+    $this->artisan('translations:audit-code')
+        ->assertSuccessful();
+
+    $nativeEntries = json_decode((string) File::get(storage_path('audits/translations/code/native.json')), true);
+
+    expect($nativeEntries)->toBeArray();
+
+    $changeRoleEntry = collect($nativeEntries)->first(function (array $entry): bool {
+        return ($entry['file'] ?? null) === 'resources/views/components/admin/partials/user-list/⚡modal.blade.php'
+            && ($entry['value'] ?? null) === 'Change Role';
+    });
+
+    expect($changeRoleEntry)->not->toBeNull()
+        ->and($changeRoleEntry['suggested_key'] ?? null)->toBe('admin.user_list.modal.change_role');
+});
+
 it('normalizes legacy non-key obsolete rows but still marks stale key rows as obsolete', function (): void {
     $legacyNativeObsolete = TranslationKey::query()->create([
         'fingerprint' => hash('sha256', 'legacy-native'),

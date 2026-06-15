@@ -7,8 +7,8 @@
 
 <flux:card>
     <x-ui.headers.page
-        :title="__('User Preferences')"
-        :description="__('Manage your personal application preferences.')"
+        :title="__('account.preferences.user_preferences')"
+        :description="__('account.preferences.manage_your_personal_application_preferences')"
     />
 
     {{-- Current user preferences: --}}
@@ -27,7 +27,7 @@
             color="green"
             wire:click="save"
         >
-            {{ __('Save Preferences') }}
+            {{ __('account.preferences.save_preferences') }}
         </flux:button>
     </div>
 

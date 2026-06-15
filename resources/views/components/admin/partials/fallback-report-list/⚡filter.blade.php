@@ -6,19 +6,19 @@
         class="mb-4"
         size="lg"
     >
-        {{ __('Filtering') }}
+        {{ __('admin.permissions.filters.title') }}
     </flux:heading>
 
     <div class="flex w-full items-end gap-3">
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="fallback-report-list-search">
                 <x-ui.tooltip.trigger
-                    :title="__('Search')"
+                    :title="__('ui.actions.search')"
                     :text="__(
                         'Enter a search term to filter fallback reports by ID, type, key, fallback or context. The search is case-sensitive.',
                     )"
                 >
-                    {{ __('Search') }}
+                    {{ __('ui.actions.search') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -43,10 +43,10 @@
         <div class="min-w-0 flex-none basis-1/5">
             <flux:label for="fallback-report-list-status-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by status')"
+                    :title="__('admin.client_list.filter.filter_by_status')"
                     :text="__('Select a status to filter the list of fallback reports.')"
                 >
-                    {{ __('Status') }}
+                    {{ __('admin.app_settings.table_icon_registry.status') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -61,15 +61,15 @@
                     wire:model.live="statusFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All') }}
+                        {{ __('ui.states.all') }}
                     </flux:select.option>
 
                     <flux:select.option value="open">
-                        {{ __('Open') }}
+                        {{ __('admin.translation_list.filter.open') }}
                     </flux:select.option>
 
                     <flux:select.option value="reviewed">
-                        {{ __('Reviewed') }}
+                        {{ __('admin.translation_list.modal_edit.reviewed') }}
                     </flux:select.option>
                 </flux:select>
             </flux:input.group>

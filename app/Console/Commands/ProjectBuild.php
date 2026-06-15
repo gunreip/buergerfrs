@@ -1,5 +1,7 @@
 <?php
 
+// app/Console/Commands/ProjectBuild.php
+
 // php artisan project:build
 // php artisan project:build --no-assets
 // php artisan project:build --no-optimize
@@ -70,11 +72,26 @@ class ProjectBuild extends Command
             $this->runArtisanStep('Lang-Locale-Verzeichnisse sicherstellen', 'translations:ensure-lang-directories');
 
             $this->runArtisanStep('Translation-Code-Audit schreiben', 'translations:audit-code');
-            $this->runArtisanStep('Translation-Lang-Audit schreiben', 'translations:audit-lang');
-            $this->runArtisanStep('Translation-Compare-Audit schreiben', 'translations:audit-compare');
             $this->runArtisanStep('Translation-Audits in Datenbank synchronisieren', 'translations:sync-audits');
             $this->runArtisanStep('Sub-Language-Redundanz prüfen', 'translations:audit-sub-language-redundancy');
             $this->runArtisanStep('Translation-Dateien nach lang exportieren', 'translations:export-lang-files');
+
+            $this->runArtisanStep('Translation-Lang-Audit schreiben', 'translations:audit-lang');
+            $this->runArtisanStep('Translation-Compare-Audit schreiben', 'translations:audit-compare');
+            $this->runArtisanStep('Translation-Lang-Ballast-Audit schreiben', 'translations:audit-lang-ballast');
+            $this->runArtisanStep('Translation-Lang-Ballast-Apply-Preview schreiben', 'translations:lang-ballast:apply');
+            $this->runArtisanStep(
+                'Translation-Duplicate-Usage-Literals-Audit schreiben',
+                'translations:audit-duplicate-usage-literals',
+            );
+            $this->runArtisanStep(
+                'Translation-Frequent-Usage-Literals-Audit schreiben',
+                'translations:audit-frequent-usage-literals',
+            );
+            $this->runArtisanStep(
+                'Translation-Usage-Decision-Preview schreiben',
+                'translations:usage-decisions:preview',
+            );
 
             $this->runArtisanStep('Blade-Component-Tag-Reference schreiben', 'views:sync-component-tags');
             $this->runArtisanStep('HTML-/Blade-View-Struktur-Audit schreiben', 'html:check');
@@ -164,7 +181,11 @@ class ProjectBuild extends Command
     {
         $this->info('➤ ' . $description);
 
-        $this->call($command);
+        $exitCode = $this->call($command);
+
+        if ($exitCode !== self::SUCCESS) {
+            throw new RuntimeException('Step failed: ' . $command . ' (exit code ' . $exitCode . ')');
+        }
     }
 
     private function runProcess(array $command, string $description): void

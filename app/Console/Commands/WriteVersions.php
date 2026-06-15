@@ -1,5 +1,7 @@
 <?php
 
+// app/Console/Commands/WriteVersions.php
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;

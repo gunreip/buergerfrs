@@ -3,7 +3,7 @@
 {{-- Filter part --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Filtering')"
+        :title="__('admin.permissions.filters.title')"
         :description="__('Refine the role list by name, category, assignability, and system status.')"
     />
 
@@ -11,10 +11,10 @@
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="role-list-search">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by search')"
+                    :title="__('admin.translation_list.filter.filter_by_search')"
                     :text="__('Enter a search term to filter the list of roles.')"
                 >
-                    {{ __('Search') }}
+                    {{ __('ui.actions.search') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -39,10 +39,10 @@
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="role-list-category-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by category')"
+                    :title="__('admin.permission_list.filter.filter_by_category')"
                     :text="__('Select a category to filter the list of roles.')"
                 >
-                    {{ __('Category') }}
+                    {{ __('ui.labels.category') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -57,7 +57,7 @@
                     wire:model.live="categoryFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All categories') }}
+                        {{ __('admin.permissions.filters.categories.all') }}
                     </flux:select.option>
 
                     @foreach ($roleCategories as $category)
@@ -90,7 +90,7 @@
                     wire:model.live="assignableFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All') }}
+                        {{ __('ui.states.all') }}
                     </flux:select.option>
 
                     <flux:select.option value="yes">
@@ -107,10 +107,10 @@
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="role-list-system-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by system')"
+                    :title="__('admin.permission_list.filter.filter_by_system')"
                     :text="__('Select a system status to filter the list of roles.')"
                 >
-                    {{ __('System') }}
+                    {{ __('admin.permissions.filters.system.label') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -125,7 +125,7 @@
                     wire:model.live="systemFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All') }}
+                        {{ __('ui.states.all') }}
                     </flux:select.option>
 
                     <flux:select.option value="yes">

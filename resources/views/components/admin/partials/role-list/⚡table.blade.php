@@ -18,19 +18,19 @@
                         align="center"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('ID')"
+                            :title="__('admin.user_list.table.id')"
                             :text="__('Unique identifier of the role, useful for tracking and reference.')"
                         >
-                            {{ __('ID') }}
+                            {{ __('admin.user_list.table.id') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('Badge')"
+                            :title="__('admin.roles.badge.title')"
                             :text="__('Visual representation of the role, useful for quick identification.')"
                         >
-                            {{ __('Badge') }}
+                            {{ __('admin.roles.badge.title') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -39,10 +39,10 @@
                         wire:click="sortBy('name')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Name')"
+                            :title="__('ui.labels.name')"
                             :text="__('Name of the role, useful for identification and reference.')"
                         >
-                            {{ __('Name') }}
+                            {{ __('ui.labels.name') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -51,10 +51,10 @@
                         wire:click="sortBy('category')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Category')"
+                            :title="__('ui.labels.category')"
                             :text="__('Category of the role, useful for identification and reference.')"
                         >
-                            {{ __('Category') }}
+                            {{ __('ui.labels.category') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -64,28 +64,28 @@
                         wire:click="sortBy('sort_order')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Sort')"
+                            :title="__('admin.permissions.table.columns.sort')"
                             :text="__('Sort order of the role, useful for identification and reference.')"
                         >
-                            {{ __('Sort') }}
+                            {{ __('admin.permissions.table.columns.sort') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column>
                         <x-ui.tooltip.trigger
-                            :title="__('Description')"
+                            :title="__('ui.labels.description')"
                             :text="__('Description of the role, useful for identification and reference.')"
                         >
-                            {{ __('Description') }}
+                            {{ __('ui.labels.description') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('Flags')"
+                            :title="__('admin.permissions.table.columns.flags')"
                             :text="__('Flags associated with the role, useful for identification and reference.')"
                         >
-                            {{ __('Flags') }}
+                            {{ __('admin.permissions.table.columns.flags') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -106,12 +106,12 @@
 
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('Actions')"
+                            :title="__('ui.labels.actions')"
                             :text="__(
                                 'Actions that can be performed on the role, useful for management and administration.',
                             )"
                         >
-                            {{ __('Actions') }}
+                            {{ __('ui.labels.actions') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
@@ -146,7 +146,7 @@
 
                             <flux:table.cell>
                                 <x-ui.text.highlight
-                                    :value="$role->category !== null && $role->category !== '' ? Str::headline($role->category) : __('Other')"
+                                    :value="$role->category !== null && $role->category !== '' ? Str::headline($role->category) : __('ui.states.other')"
                                     :search="$search"
                                 />
                             </flux:table.cell>
@@ -172,7 +172,7 @@
                                             color="purple"
                                             variant="subtle"
                                         >
-                                            {{ __('System') }}
+                                            {{ __('admin.permissions.filters.system.label') }}
                                         </flux:badge>
                                     @endif
 
@@ -205,7 +205,7 @@
                                 <flux:button.group class="justify-center">
                                     <x-ui.button.edit
                                         icon="pencil-square"
-                                        label="{{ __('Edit Role') }}"
+                                        label="{{ __('admin.roles.modals.edit.title') }}"
                                         size="sm"
                                         wire:click="openEditRoleModal({{ $role->id }})"
                                     />
@@ -220,7 +220,7 @@
         @if ($roles->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('Pagination') }}"
+                text="{{ __('admin.client_list.table.pagination') }}"
             />
 
             <div class="mt-4">

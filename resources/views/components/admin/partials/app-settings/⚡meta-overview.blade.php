@@ -6,7 +6,7 @@
         class="mb-4"
         size="lg"
     >
-        {{ __('Overview') }}
+        {{ __('admin.permissions.overview.title') }}
     </flux:heading>
 
     <div class="grid grid-cols-5 gap-3">
@@ -17,11 +17,11 @@
             icon="settings"
         >
             <flux:callout.heading>
-                {{ __('Settings group') }}
+                {{ __('admin.app_settings.meta_overview.settings_group') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Primary Spatie settings group used for display settings.') }}
+                {{ __('admin.app_settings.meta_overview.primary_spatie_settings_group_used_for_display_settings') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold">
@@ -36,11 +36,11 @@
             icon="languages"
         >
             <flux:callout.heading>
-                {{ __('App language') }}
+                {{ __('admin.app_settings.meta_overview.app_language') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Global locale currently used by the application.') }}
+                {{ __('admin.app_settings.meta_overview.global_locale_currently_used_by_the_application') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold">
@@ -55,11 +55,11 @@
             icon="badge-check"
         >
             <flux:callout.heading>
-                {{ __('Role badge entries') }}
+                {{ __('admin.app_settings.meta_overview.role_badge_entries') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Configured role badge mappings stored in app settings.') }}
+                {{ __('admin.app_settings.meta_overview.configured_role_badge_mappings_stored_in_app_settings') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -74,11 +74,11 @@
             icon="shield-exclamation"
         >
             <flux:callout.heading>
-                {{ __('Registered icons') }}
+                {{ __('admin.app_settings.meta_overview.registered_icons') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Allowed role/user-management icons registered in config.') }}
+                {{ __('admin.app_settings.meta_overview.allowed_role_user_management_icons_registered_in_config') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -93,11 +93,11 @@
             icon="file-x"
         >
             <flux:callout.heading>
-                {{ __('Missing icons') }}
+                {{ __('admin.app_settings.meta_overview.missing_icons') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Registered icons whose Flux view is currently unavailable.') }}
+                {{ __('admin.app_settings.meta_overview.registered_icons_whose_flux_view_is_currently_unavailable') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">

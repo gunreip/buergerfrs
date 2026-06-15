@@ -1,0 +1,29 @@
+{
+    "generated_at": "2026-06-15T14:10:49+02:00",
+    "root_path": "/home/gunreip/code/buergerfrs",
+    "preview_limit": 20,
+    "options": {
+        "source_locale": "en",
+        "locales": [
+            "de",
+            "de-at",
+            "de-be",
+            "de-ch",
+            "de-de",
+            "de-it",
+            "de-li",
+            "de-lu",
+            "en"
+        ],
+        "min_usages": 2,
+        "min_length": 2,
+        "include_zero_usage": false
+    },
+    "source_rows": 599,
+    "reported_literals": 194,
+    "reported_translation_keys": 199,
+    "reported_usages": 512,
+    "reported_current_usages": 295,
+    "reported_stale_usages": 217,
+    "output_directory": "storage/audits/translations/frequent-usage-literals"
+}

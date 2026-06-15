@@ -1,5 +1,7 @@
 <?php
 
+// app/Console/Commands/TranslationsRewriteLiterals.php
+
 namespace App\Console\Commands;
 
 use App\Models\TranslationKey;

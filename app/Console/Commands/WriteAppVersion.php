@@ -1,5 +1,7 @@
 <?php
 
+// app/Console/Commands/WriteAppVersion.php
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Attributes\Description;

@@ -21,12 +21,12 @@
                 $typeMeta = $tableLegend['type'][$selectedFinding->type] ?? [];
             @endphp
 
-            <flux:separator text="{{ __('Overview') }}" />
+            <flux:separator text="{{ __('admin.permissions.overview.title') }}" />
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <flux:text class="text-zinc-400">
-                        {{ __('ID') }}
+                        {{ __('admin.user_list.table.id') }}
                     </flux:text>
 
                     <flux:heading size="md">
@@ -36,7 +36,7 @@
 
                 <div>
                     <flux:text class="text-zinc-400">
-                        {{ __('Status') }}
+                        {{ __('admin.app_settings.table_icon_registry.status') }}
                     </flux:text>
 
                     <div class="flex items-center gap-2">
@@ -80,7 +80,7 @@
 
                 <div>
                     <flux:text class="text-zinc-400">
-                        {{ __('Type') }}
+                        {{ __('admin.client_list.table.type') }}
                     </flux:text>
 
                     <div class="flex items-center gap-2">
@@ -181,7 +181,7 @@
                 </div>
             </div>
 
-            <flux:separator text="{{ __('History') }}" />
+            <flux:separator text="{{ __('admin.translation_list.table.history') }}" />
 
             <div class="grid grid-cols-3 gap-4">
                 <div>
@@ -196,7 +196,7 @@
 
                 <div>
                     <flux:text class="text-zinc-400">
-                        {{ __('Last seen') }}
+                        {{ __('admin.translation_list.table.last_seen') }}
                     </flux:text>
 
                     <div class="font-mono text-sm">
@@ -221,7 +221,7 @@
                 <div class="grid grid-cols-4 gap-4">
                     <div>
                         <flux:text class="text-zinc-400">
-                            {{ __('ID') }}
+                            {{ __('admin.user_list.table.id') }}
                         </flux:text>
 
                         <div class="font-mono text-sm">
@@ -231,7 +231,7 @@
 
                     <div>
                         <flux:text class="text-zinc-400">
-                            {{ __('Status') }}
+                            {{ __('admin.app_settings.table_icon_registry.status') }}
                         </flux:text>
 
                         <div class="font-mono text-sm">
@@ -326,7 +326,7 @@
 
         <div class="flex justify-end gap-3">
             <x-ui.button.cancel
-                :label="__('Close')"
+                :label="__('ui.actions.close')"
                 wire:click="closeFindingDetailsModal"
             />
         </div>

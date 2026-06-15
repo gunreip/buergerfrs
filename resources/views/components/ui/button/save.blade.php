@@ -4,13 +4,13 @@
 <x-ui.button.save />
 <x-ui.button.save icon="check" />
 <x-ui.button.save :icon="false" />
-<x-ui.button.save label="{{ __('Save Role') }}" />
+<x-ui.button.save label="{{ __('ui.button.save.save_role') }}" />
 --}}
 
 {{-- save    → green/primary, check, Save --}}
 
 @props([
-    'label' => __('Save'),
+    'label' => __('ui.actions.save'),
     'icon' => true,
     'type' => 'button',
     'size' => null,

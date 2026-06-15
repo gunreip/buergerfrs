@@ -1,257 +1,263 @@
 {
     "preview": true,
     "preview_limit": 20,
-    "total": 102,
+    "total": 601,
     "items": [
         {
-            "full_key": "admin.permissions.actions.edit_role_permissions",
+            "full_key": "account.preferences.application_preferences.admin_users_per_page",
             "usage_count": 1,
             "usages": [
                 {
-                    "file": "resources/views/components/admin/⚡permission-list.blade.php",
+                    "file": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
+                    "line": 27,
+                    "function": "__",
+                    "raw": "__('account.preferences.application_preferences.admin_users_per_page')"
+                }
+            ]
+        },
+        {
+            "full_key": "account.preferences.application_preferences.application_preferences",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
+                    "line": 9,
+                    "function": "__",
+                    "raw": "__('account.preferences.application_preferences.application_preferences')"
+                }
+            ]
+        },
+        {
+            "full_key": "account.preferences.application_preferences.english",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
+                    "line": 22,
+                    "function": "__",
+                    "raw": "__('account.preferences.application_preferences.english')"
+                }
+            ]
+        },
+        {
+            "full_key": "account.preferences.application_preferences.german",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
+                    "line": 18,
+                    "function": "__",
+                    "raw": "__('account.preferences.application_preferences.german')"
+                }
+            ]
+        },
+        {
+            "full_key": "account.preferences.application_preferences.preferred_locale",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
                     "line": 14,
                     "function": "__",
-                    "raw": "__('admin.permissions.actions.edit_role_permissions')"
+                    "raw": "__('account.preferences.application_preferences.preferred_locale')"
                 }
             ]
         },
         {
-            "full_key": "admin.permissions.description",
+            "full_key": "account.preferences.application_preferences.stored_preference",
             "usage_count": 1,
             "usages": [
                 {
-                    "file": "resources/views/components/admin/⚡permission-list.blade.php",
+                    "file": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
+                    "line": 44,
+                    "function": "__",
+                    "raw": "__('account.preferences.application_preferences.stored_preference')"
+                }
+            ]
+        },
+        {
+            "full_key": "account.preferences.application_preferences.the_locale_preference_is_stored_now_and_can_be_connected_to_application_locale_h",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/account/partials/preferences/⚡application-preferences.blade.php",
+                    "line": 48,
+                    "function": "__",
+                    "raw": "__('account.preferences.application_preferences.the_locale_preference_is_stored_now_and_can_be_connected_to_application_locale_h')"
+                }
+            ]
+        },
+        {
+            "full_key": "account.preferences.current_user.edit_profile",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/account/partials/preferences/⚡current-user.blade.php",
+                    "line": 40,
+                    "function": "__",
+                    "raw": "__('account.preferences.current_user.edit_profile')"
+                }
+            ]
+        },
+        {
+            "full_key": "account.preferences.current_user.nickname",
+            "usage_count": 2,
+            "usages": [
+                {
+                    "file": "resources/views/components/account/partials/preferences/⚡current-user.blade.php",
+                    "line": 23,
+                    "function": "__",
+                    "raw": "__('account.preferences.current_user.nickname')"
+                },
+                {
+                    "file": "resources/views/pages/settings/⚡profile.blade.php",
+                    "line": 183,
+                    "function": "__",
+                    "raw": "__('account.preferences.current_user.nickname')"
+                }
+            ]
+        },
+        {
+            "full_key": "account.preferences.manage_your_personal_application_preferences",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "resources/views/components/account/⚡preferences.blade.php",
                     "line": 11,
                     "function": "__",
-                    "raw": "__('admin.permissions.description')"
+                    "raw": "__('account.preferences.manage_your_personal_application_preferences')"
                 }
             ]
         },
         {
-            "full_key": "admin.permissions.filters.assignment.label",
+            "full_key": "account.preferences.preferences_saved",
             "usage_count": 1,
             "usages": [
                 {
-                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 158,
+                    "file": "app/Livewire/Account/Preferences.php",
+                    "line": 60,
                     "function": "__",
-                    "raw": "__('admin.permissions.filters.assignment.label')"
+                    "raw": "__('account.preferences.preferences_saved')"
                 }
             ]
         },
         {
-            "full_key": "admin.permissions.filters.categories.all",
+            "full_key": "account.preferences.save_preferences",
             "usage_count": 1,
             "usages": [
                 {
-                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 96,
+                    "file": "resources/views/components/account/⚡preferences.blade.php",
+                    "line": 30,
                     "function": "__",
-                    "raw": "__('admin.permissions.filters.categories.all')"
+                    "raw": "__('account.preferences.save_preferences')"
                 }
             ]
         },
         {
-            "full_key": "admin.permissions.filters.description",
+            "full_key": "account.preferences.stored_settings.stored_settings",
             "usage_count": 1,
             "usages": [
                 {
-                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 7,
+                    "file": "resources/views/components/account/partials/preferences/⚡stored-settings.blade.php",
+                    "line": 10,
                     "function": "__",
-                    "raw": "__('admin.permissions.filters.description')"
+                    "raw": "__('account.preferences.stored_settings.stored_settings')"
                 }
             ]
         },
         {
-            "full_key": "admin.permissions.filters.guards.all",
+            "full_key": "account.preferences.stored_settings.these_values_are_stored_in_your_personal_users_settings_jsonb_column",
             "usage_count": 1,
             "usages": [
                 {
-                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 63,
+                    "file": "resources/views/components/account/partials/preferences/⚡stored-settings.blade.php",
+                    "line": 14,
                     "function": "__",
-                    "raw": "__('admin.permissions.filters.guards.all')"
+                    "raw": "__('account.preferences.stored_settings.these_values_are_stored_in_your_personal_users_settings_jsonb_column')"
                 }
             ]
         },
         {
-            "full_key": "admin.permissions.filters.roles.all",
+            "full_key": "account.preferences.user_preferences",
             "usage_count": 1,
             "usages": [
                 {
-                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 129,
+                    "file": "resources/views/components/account/⚡preferences.blade.php",
+                    "line": 10,
                     "function": "__",
-                    "raw": "__('admin.permissions.filters.roles.all')"
+                    "raw": "__('account.preferences.user_preferences')"
                 }
             ]
         },
         {
-            "full_key": "admin.permissions.filters.search.placeholder",
+            "full_key": "account.preferences.your_personal_application_preferences_have_been_updated",
             "usage_count": 1,
             "usages": [
                 {
-                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 37,
+                    "file": "app/Livewire/Account/Preferences.php",
+                    "line": 61,
                     "function": "__",
-                    "raw": "__('admin.permissions.filters.search.placeholder')"
+                    "raw": "__('account.preferences.your_personal_application_preferences_have_been_updated')"
                 }
             ]
         },
         {
-            "full_key": "admin.permissions.filters.system.label",
-            "usage_count": 1,
-            "usages": [
-                {
-                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 193,
-                    "function": "__",
-                    "raw": "__('admin.permissions.filters.system.label')"
-                }
-            ]
-        },
-        {
-            "full_key": "admin.permissions.filters.title",
-            "usage_count": 1,
-            "usages": [
-                {
-                    "file": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php",
-                    "line": 6,
-                    "function": "__",
-                    "raw": "__('admin.permissions.filters.title')"
-                }
-            ]
-        },
-        {
-            "full_key": "admin.permissions.labels.assigned_roles",
-            "usage_count": 1,
-            "usages": [
-                {
-                    "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
-                    "line": 43,
-                    "function": "__",
-                    "raw": "__('admin.permissions.labels.assigned_roles')"
-                }
-            ]
-        },
-        {
-            "full_key": "admin.permissions.labels.sort_order",
-            "usage_count": 1,
-            "usages": [
-                {
-                    "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
-                    "line": 78,
-                    "function": "__",
-                    "raw": "__('admin.permissions.labels.sort_order')"
-                }
-            ]
-        },
-        {
-            "full_key": "admin.permissions.labels.system_permission",
-            "usage_count": 1,
-            "usages": [
-                {
-                    "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
-                    "line": 94,
-                    "function": "__",
-                    "raw": "__('admin.permissions.labels.system_permission')"
-                }
-            ]
-        },
-        {
-            "full_key": "admin.permissions.messages.no_changes.heading",
+            "full_key": "admin.app_settings.app_settings",
             "usage_count": 2,
             "usages": [
                 {
-                    "file": "app/Livewire/Admin/PermissionList.php",
-                    "line": 397,
+                    "file": "resources/views/components/admin/⚡app-settings.blade.php",
+                    "line": 5,
                     "function": "__",
-                    "raw": "__('admin.permissions.messages.no_changes.heading')"
+                    "raw": "__('admin.app_settings.app_settings')"
                 },
                 {
-                    "file": "app/Livewire/Admin/PermissionList.php",
-                    "line": 459,
+                    "file": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
+                    "line": 142,
                     "function": "__",
-                    "raw": "__('admin.permissions.messages.no_changes.heading')"
+                    "raw": "__('admin.app_settings.app_settings')"
                 }
             ]
         },
         {
-            "full_key": "admin.permissions.messages.no_changes.role_permissions_unchanged",
+            "full_key": "admin.app_settings.application_language_updated",
+            "usage_count": 1,
+            "usages": [
+                {
+                    "file": "app/Livewire/Admin/AppSettings.php",
+                    "line": 239,
+                    "function": "__",
+                    "raw": "__('admin.app_settings.application_language_updated')"
+                }
+            ]
+        },
+        {
+            "full_key": "admin.app_settings.at_least_one_application_language_must_remain_enabled",
             "usage_count": 2,
             "usages": [
                 {
-                    "file": "app/Livewire/Admin/PermissionList.php",
-                    "line": 398,
+                    "file": "app/Livewire/Admin/AppSettings.php",
+                    "line": 386,
                     "function": "__",
-                    "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged', [\n                    'role' => $role->name,\n                ])"
+                    "raw": "__('admin.app_settings.at_least_one_application_language_must_remain_enabled')"
                 },
                 {
-                    "file": "app/Livewire/Admin/PermissionList.php",
-                    "line": 460,
+                    "file": "app/Livewire/Admin/AppSettings.php",
+                    "line": 472,
                     "function": "__",
-                    "raw": "__('admin.permissions.messages.no_changes.role_permissions_unchanged', [\n                    'permission' => $permission->name,\n                ])"
+                    "raw": "__('admin.app_settings.at_least_one_application_language_must_remain_enabled')"
                 }
             ]
         },
         {
-            "full_key": "admin.permissions.messages.permission_saved.heading",
+            "full_key": "admin.app_settings.available_app_locales_updated",
             "usage_count": 1,
             "usages": [
                 {
-                    "file": "app/Livewire/Admin/PermissionList.php",
-                    "line": 494,
+                    "file": "app/Livewire/Admin/AppSettings.php",
+                    "line": 484,
                     "function": "__",
-                    "raw": "__('admin.permissions.messages.permission_saved.heading')"
-                }
-            ]
-        },
-        {
-            "full_key": "admin.permissions.messages.permission_saved.text",
-            "usage_count": 1,
-            "usages": [
-                {
-                    "file": "app/Livewire/Admin/PermissionList.php",
-                    "line": 495,
-                    "function": "__",
-                    "raw": "__('admin.permissions.messages.permission_saved.text', [\n                'permission' => $permission->name,\n            ])"
-                }
-            ]
-        },
-        {
-            "full_key": "admin.permissions.messages.role_permissions_saved.heading",
-            "usage_count": 1,
-            "usages": [
-                {
-                    "file": "app/Livewire/Admin/PermissionList.php",
-                    "line": 423,
-                    "function": "__",
-                    "raw": "__('admin.permissions.messages.role_permissions_saved.heading')"
-                }
-            ]
-        },
-        {
-            "full_key": "admin.permissions.messages.role_permissions_saved.text",
-            "usage_count": 1,
-            "usages": [
-                {
-                    "file": "app/Livewire/Admin/PermissionList.php",
-                    "line": 424,
-                    "function": "__",
-                    "raw": "__('admin.permissions.messages.role_permissions_saved.text', [\n                'role' => $role->name,\n            ])"
-                }
-            ]
-        },
-        {
-            "full_key": "admin.permissions.modals.edit.category_placeholder",
-            "usage_count": 1,
-            "usages": [
-                {
-                    "file": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
-                    "line": 73,
-                    "function": "__",
-                    "raw": "__('admin.permissions.modals.edit.category_placeholder')"
+                    "raw": "__('admin.app_settings.available_app_locales_updated')"
                 }
             ]
         }

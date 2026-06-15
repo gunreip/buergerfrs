@@ -32,6 +32,7 @@
 
     .my-tooltip .tooltip-content {
         color: var(--tooltip-text);
+        hyphens: auto;
     }
 
     .my-tooltip .tooltip-action {

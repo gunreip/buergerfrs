@@ -261,7 +261,7 @@ class UserList extends Component
         }
 
         if ($this->editingRoleName === '') {
-            $this->addError('editingRoleName', __('Please select a role.'));
+            $this->addError('editingRoleName', __('admin.user_list.please_select_a_role'));
 
             return;
         }
@@ -272,7 +272,7 @@ class UserList extends Component
             ->value('name');
 
         if ($validRoleName === null) {
-            $this->addError('editingRoleName', __('Please select a valid role.'));
+            $this->addError('editingRoleName', __('admin.user_list.please_select_a_valid_role'));
 
             return;
         }
@@ -311,8 +311,8 @@ class UserList extends Component
         $this->resetEditRolesModal();
 
         Flux::toast(
-            heading: __('User role updated'),
-            text: __('The role for :user has been changed to :role.', [
+            heading: __('admin.user_list.user_role_updated'),
+            text: __('admin.user_list.the_role_for_user_has_been_changed_to_role', [
                 'user' => $savedUserName,
                 'role' => $savedRoleName,
             ]),

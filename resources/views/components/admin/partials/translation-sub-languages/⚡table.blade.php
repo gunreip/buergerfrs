@@ -50,10 +50,10 @@
                         >
                             <x-ui.tooltip.trigger
                                 class="ml-3"
-                                :title="__('ID')"
+                                :title="__('admin.user_list.table.id')"
                                 :text="__('Unique identifier for the sub-language locale entry.')"
                             >
-                                {{ __('ID') }}
+                                {{ __('admin.user_list.table.id') }}
                             </x-ui.tooltip.trigger>
                         </flux:table.column>
 

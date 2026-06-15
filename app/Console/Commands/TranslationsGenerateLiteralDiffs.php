@@ -1,5 +1,7 @@
 <?php
 
+// app/Console/Commands/TranslationsGenerateLiteralDiffs.php
+
 namespace App\Console\Commands;
 
 use App\Models\TranslationKey;
@@ -108,7 +110,8 @@ class TranslationsGenerateLiteralDiffs extends Command
                 $patchPathForTable = $this->relativePath($patchFile);
             }
 
-            $combinedPatch .= ($combinedPatch === '' ? '' : "\n") . rtrim($patch) . "\n";
+            // $combinedPatch .= ($combinedPatch === '' ? '' : "\n") . rtrim($patch) . "\n";
+            $combinedPatch .= ($combinedPatch === '' ? '' : "\n") . $this->normalizePatchEnding($patch);
             $rows[] = [$relativePath, $replacementsInFile, $patchPathForTable];
 
             $index[] = [
@@ -129,6 +132,8 @@ class TranslationsGenerateLiteralDiffs extends Command
 
         if ($combinedPatch !== '') {
             File::put($combinedPatchPath, $combinedPatch);
+            $this->assertPatchIsValid($combinedPatchPath);
+
             File::put($applyScriptPath, $this->applyScriptContent($this->relativePath($combinedPatchPath)));
             File::put($indexPath, json_encode([
                 'generated_at' => now()->toIso8601String(),
@@ -173,6 +178,29 @@ class TranslationsGenerateLiteralDiffs extends Command
         );
 
         return self::SUCCESS;
+    }
+
+    private function assertPatchIsValid(string $patchPath): void
+    {
+        $process = new Process([
+            'git',
+            'apply',
+            '--check',
+            $patchPath,
+        ], base_path());
+
+        $process->run();
+
+        if (! $process->isSuccessful()) {
+            throw new \RuntimeException(
+                'Generated patch is invalid: ' . trim($process->getErrorOutput() ?: $process->getOutput())
+            );
+        }
+    }
+
+    private function normalizePatchEnding(string $patch): string
+    {
+        return str_ends_with($patch, "\n") ? $patch : $patch . "\n";
     }
 
     /**

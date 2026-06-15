@@ -1,0 +1,1532 @@
+[
+    {
+        "locale": "de",
+        "group": "actions",
+        "key": "ui.actions.save",
+        "full_key": "actions.ui.actions.save",
+        "defined_files": [
+            "lang/de/actions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "actions",
+        "key": "ui.actions.search",
+        "full_key": "actions.ui.actions.search",
+        "defined_files": [
+            "lang/de/actions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.actions",
+        "full_key": "labels.ui.labels.actions",
+        "defined_files": [
+            "lang/de/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.category",
+        "full_key": "labels.ui.labels.category",
+        "defined_files": [
+            "lang/de/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.description",
+        "full_key": "labels.ui.labels.description",
+        "defined_files": [
+            "lang/de/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.guard",
+        "full_key": "labels.ui.labels.guard",
+        "defined_files": [
+            "lang/de/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.name",
+        "full_key": "labels.ui.labels.name",
+        "defined_files": [
+            "lang/de/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.number_short",
+        "full_key": "labels.ui.labels.number_short",
+        "defined_files": [
+            "lang/de/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.preview",
+        "full_key": "labels.ui.labels.preview",
+        "defined_files": [
+            "lang/de/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.role",
+        "full_key": "labels.ui.labels.role",
+        "defined_files": [
+            "lang/de/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "labels",
+        "key": "ui.labels.roles",
+        "full_key": "labels.ui.labels.roles",
+        "defined_files": [
+            "lang/de/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "messages",
+        "key": "ui.messages.no_description_available",
+        "full_key": "messages.ui.messages.no_description_available",
+        "defined_files": [
+            "lang/de/messages.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "people",
+        "key": "management.people.create_person.form_person.emergency",
+        "full_key": "people.management.people.create_person.form_person.emergency",
+        "defined_files": [
+            "lang/de/people.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.description",
+        "full_key": "permissions.admin.permissions.description",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.assignment.label",
+        "full_key": "permissions.admin.permissions.filters.assignment.label",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.categories.all",
+        "full_key": "permissions.admin.permissions.filters.categories.all",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.description",
+        "full_key": "permissions.admin.permissions.filters.description",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.guards.all",
+        "full_key": "permissions.admin.permissions.filters.guards.all",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.roles.all",
+        "full_key": "permissions.admin.permissions.filters.roles.all",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.search.placeholder",
+        "full_key": "permissions.admin.permissions.filters.search.placeholder",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.system.label",
+        "full_key": "permissions.admin.permissions.filters.system.label",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.filters.title",
+        "full_key": "permissions.admin.permissions.filters.title",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.labels.assigned_roles",
+        "full_key": "permissions.admin.permissions.labels.assigned_roles",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.labels.sort_order",
+        "full_key": "permissions.admin.permissions.labels.sort_order",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.labels.system_permission",
+        "full_key": "permissions.admin.permissions.labels.system_permission",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.messages.no_changes.heading",
+        "full_key": "permissions.admin.permissions.messages.no_changes.heading",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.messages.no_changes.role_permissions_unchanged",
+        "full_key": "permissions.admin.permissions.messages.no_changes.role_permissions_unchanged",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.messages.permission_saved.heading",
+        "full_key": "permissions.admin.permissions.messages.permission_saved.heading",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.messages.permission_saved.text",
+        "full_key": "permissions.admin.permissions.messages.permission_saved.text",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.messages.role_permissions_saved.heading",
+        "full_key": "permissions.admin.permissions.messages.role_permissions_saved.heading",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.messages.role_permissions_saved.text",
+        "full_key": "permissions.admin.permissions.messages.role_permissions_saved.text",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.category_placeholder",
+        "full_key": "permissions.admin.permissions.modals.edit.category_placeholder",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.description",
+        "full_key": "permissions.admin.permissions.modals.edit.description",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.description_placeholder",
+        "full_key": "permissions.admin.permissions.modals.edit.description_placeholder",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.details_section",
+        "full_key": "permissions.admin.permissions.modals.edit.details_section",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.editable_scope",
+        "full_key": "permissions.admin.permissions.modals.edit.editable_scope",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.metadata_only",
+        "full_key": "permissions.admin.permissions.modals.edit.metadata_only",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.metadata_section",
+        "full_key": "permissions.admin.permissions.modals.edit.metadata_section",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.title",
+        "full_key": "permissions.admin.permissions.modals.edit.title",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.changes",
+        "full_key": "permissions.admin.permissions.modals.roles.changes",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.current_permissions",
+        "full_key": "permissions.admin.permissions.modals.roles.current_permissions",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.description",
+        "full_key": "permissions.admin.permissions.modals.roles.description",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.edit_section",
+        "full_key": "permissions.admin.permissions.modals.roles.edit_section",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.overview_for",
+        "full_key": "permissions.admin.permissions.modals.roles.overview_for",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.select_role",
+        "full_key": "permissions.admin.permissions.modals.roles.select_role",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.selected_permissions",
+        "full_key": "permissions.admin.permissions.modals.roles.selected_permissions",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.set_permissions_section",
+        "full_key": "permissions.admin.permissions.modals.roles.set_permissions_section",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.title",
+        "full_key": "permissions.admin.permissions.modals.roles.title",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.assigned.heading",
+        "full_key": "permissions.admin.permissions.overview.assigned.heading",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.assigned.text",
+        "full_key": "permissions.admin.permissions.overview.assigned.text",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.description",
+        "full_key": "permissions.admin.permissions.overview.description",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.guards.heading",
+        "full_key": "permissions.admin.permissions.overview.guards.heading",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.guards.text",
+        "full_key": "permissions.admin.permissions.overview.guards.text",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.title",
+        "full_key": "permissions.admin.permissions.overview.title",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.total.heading",
+        "full_key": "permissions.admin.permissions.overview.total.heading",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.total.text",
+        "full_key": "permissions.admin.permissions.overview.total.text",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.unassigned.heading",
+        "full_key": "permissions.admin.permissions.overview.unassigned.heading",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.overview.unassigned.text",
+        "full_key": "permissions.admin.permissions.overview.unassigned.text",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.table.columns.assigned_roles",
+        "full_key": "permissions.admin.permissions.table.columns.assigned_roles",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.table.columns.flags",
+        "full_key": "permissions.admin.permissions.table.columns.flags",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.table.columns.sort",
+        "full_key": "permissions.admin.permissions.table.columns.sort",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.table.description",
+        "full_key": "permissions.admin.permissions.table.description",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.table.empty",
+        "full_key": "permissions.admin.permissions.table.empty",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.table.title",
+        "full_key": "permissions.admin.permissions.table.title",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "permissions",
+        "key": "admin.permissions.title",
+        "full_key": "permissions.admin.permissions.title",
+        "defined_files": [
+            "lang/de/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "roles",
+        "key": "admin.roles.actions.create",
+        "full_key": "roles.admin.roles.actions.create",
+        "defined_files": [
+            "lang/de/roles.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "roles",
+        "key": "admin.roles.badge.color",
+        "full_key": "roles.admin.roles.badge.color",
+        "defined_files": [
+            "lang/de/roles.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.all",
+        "full_key": "states.ui.states.all",
+        "defined_files": [
+            "lang/de/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.assigned",
+        "full_key": "states.ui.states.assigned",
+        "defined_files": [
+            "lang/de/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.custom",
+        "full_key": "states.ui.states.custom",
+        "defined_files": [
+            "lang/de/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.no_changes",
+        "full_key": "states.ui.states.no_changes",
+        "defined_files": [
+            "lang/de/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.non_system",
+        "full_key": "states.ui.states.non_system",
+        "defined_files": [
+            "lang/de/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.other",
+        "full_key": "states.ui.states.other",
+        "defined_files": [
+            "lang/de/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.system",
+        "full_key": "states.ui.states.system",
+        "defined_files": [
+            "lang/de/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.unassigned",
+        "full_key": "states.ui.states.unassigned",
+        "defined_files": [
+            "lang/de/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "de",
+        "group": "states",
+        "key": "ui.states.unsaved_changes",
+        "full_key": "states.ui.states.unsaved_changes",
+        "defined_files": [
+            "lang/de/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "actions",
+        "key": "ui.actions.save",
+        "full_key": "actions.ui.actions.save",
+        "defined_files": [
+            "lang/en/actions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "actions",
+        "key": "ui.actions.search",
+        "full_key": "actions.ui.actions.search",
+        "defined_files": [
+            "lang/en/actions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.actions",
+        "full_key": "labels.ui.labels.actions",
+        "defined_files": [
+            "lang/en/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.category",
+        "full_key": "labels.ui.labels.category",
+        "defined_files": [
+            "lang/en/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.description",
+        "full_key": "labels.ui.labels.description",
+        "defined_files": [
+            "lang/en/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.guard",
+        "full_key": "labels.ui.labels.guard",
+        "defined_files": [
+            "lang/en/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.name",
+        "full_key": "labels.ui.labels.name",
+        "defined_files": [
+            "lang/en/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.number_short",
+        "full_key": "labels.ui.labels.number_short",
+        "defined_files": [
+            "lang/en/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.preview",
+        "full_key": "labels.ui.labels.preview",
+        "defined_files": [
+            "lang/en/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.role",
+        "full_key": "labels.ui.labels.role",
+        "defined_files": [
+            "lang/en/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "labels",
+        "key": "ui.labels.roles",
+        "full_key": "labels.ui.labels.roles",
+        "defined_files": [
+            "lang/en/labels.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "messages",
+        "key": "ui.messages.no_description_available",
+        "full_key": "messages.ui.messages.no_description_available",
+        "defined_files": [
+            "lang/en/messages.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "people",
+        "key": "management.people.create_person.form_person.emergency",
+        "full_key": "people.management.people.create_person.form_person.emergency",
+        "defined_files": [
+            "lang/en/people.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.actions.edit_role_permissions",
+        "full_key": "permissions.admin.permissions.actions.edit_role_permissions",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.description",
+        "full_key": "permissions.admin.permissions.description",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.assignment.label",
+        "full_key": "permissions.admin.permissions.filters.assignment.label",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.categories.all",
+        "full_key": "permissions.admin.permissions.filters.categories.all",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.description",
+        "full_key": "permissions.admin.permissions.filters.description",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.guards.all",
+        "full_key": "permissions.admin.permissions.filters.guards.all",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.roles.all",
+        "full_key": "permissions.admin.permissions.filters.roles.all",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.search.placeholder",
+        "full_key": "permissions.admin.permissions.filters.search.placeholder",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.system.label",
+        "full_key": "permissions.admin.permissions.filters.system.label",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.filters.title",
+        "full_key": "permissions.admin.permissions.filters.title",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.labels.assigned_roles",
+        "full_key": "permissions.admin.permissions.labels.assigned_roles",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.labels.sort_order",
+        "full_key": "permissions.admin.permissions.labels.sort_order",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.labels.system_permission",
+        "full_key": "permissions.admin.permissions.labels.system_permission",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.messages.no_changes.heading",
+        "full_key": "permissions.admin.permissions.messages.no_changes.heading",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.messages.no_changes.role_permissions_unchanged",
+        "full_key": "permissions.admin.permissions.messages.no_changes.role_permissions_unchanged",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.messages.permission_saved.heading",
+        "full_key": "permissions.admin.permissions.messages.permission_saved.heading",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.messages.permission_saved.text",
+        "full_key": "permissions.admin.permissions.messages.permission_saved.text",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.messages.role_permissions_saved.heading",
+        "full_key": "permissions.admin.permissions.messages.role_permissions_saved.heading",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.messages.role_permissions_saved.text",
+        "full_key": "permissions.admin.permissions.messages.role_permissions_saved.text",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.category_placeholder",
+        "full_key": "permissions.admin.permissions.modals.edit.category_placeholder",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.description",
+        "full_key": "permissions.admin.permissions.modals.edit.description",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.description_placeholder",
+        "full_key": "permissions.admin.permissions.modals.edit.description_placeholder",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.details_section",
+        "full_key": "permissions.admin.permissions.modals.edit.details_section",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.editable_scope",
+        "full_key": "permissions.admin.permissions.modals.edit.editable_scope",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.metadata_only",
+        "full_key": "permissions.admin.permissions.modals.edit.metadata_only",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.metadata_section",
+        "full_key": "permissions.admin.permissions.modals.edit.metadata_section",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.edit.title",
+        "full_key": "permissions.admin.permissions.modals.edit.title",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.changes",
+        "full_key": "permissions.admin.permissions.modals.roles.changes",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.current_permissions",
+        "full_key": "permissions.admin.permissions.modals.roles.current_permissions",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.description",
+        "full_key": "permissions.admin.permissions.modals.roles.description",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.edit_section",
+        "full_key": "permissions.admin.permissions.modals.roles.edit_section",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.overview_for",
+        "full_key": "permissions.admin.permissions.modals.roles.overview_for",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.select_role",
+        "full_key": "permissions.admin.permissions.modals.roles.select_role",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.selected_permissions",
+        "full_key": "permissions.admin.permissions.modals.roles.selected_permissions",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.set_permissions_section",
+        "full_key": "permissions.admin.permissions.modals.roles.set_permissions_section",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.modals.roles.title",
+        "full_key": "permissions.admin.permissions.modals.roles.title",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.assigned.heading",
+        "full_key": "permissions.admin.permissions.overview.assigned.heading",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.assigned.text",
+        "full_key": "permissions.admin.permissions.overview.assigned.text",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.description",
+        "full_key": "permissions.admin.permissions.overview.description",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.guards.heading",
+        "full_key": "permissions.admin.permissions.overview.guards.heading",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.guards.text",
+        "full_key": "permissions.admin.permissions.overview.guards.text",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.title",
+        "full_key": "permissions.admin.permissions.overview.title",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.total.heading",
+        "full_key": "permissions.admin.permissions.overview.total.heading",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.total.text",
+        "full_key": "permissions.admin.permissions.overview.total.text",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.unassigned.heading",
+        "full_key": "permissions.admin.permissions.overview.unassigned.heading",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.overview.unassigned.text",
+        "full_key": "permissions.admin.permissions.overview.unassigned.text",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.table.columns.assigned_roles",
+        "full_key": "permissions.admin.permissions.table.columns.assigned_roles",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.table.columns.flags",
+        "full_key": "permissions.admin.permissions.table.columns.flags",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.table.columns.sort",
+        "full_key": "permissions.admin.permissions.table.columns.sort",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.table.description",
+        "full_key": "permissions.admin.permissions.table.description",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.table.empty",
+        "full_key": "permissions.admin.permissions.table.empty",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.table.title",
+        "full_key": "permissions.admin.permissions.table.title",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "permissions",
+        "key": "admin.permissions.title",
+        "full_key": "permissions.admin.permissions.title",
+        "defined_files": [
+            "lang/en/permissions.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "roles",
+        "key": "admin.roles.actions.create",
+        "full_key": "roles.admin.roles.actions.create",
+        "defined_files": [
+            "lang/en/roles.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "roles",
+        "key": "admin.roles.badge.color",
+        "full_key": "roles.admin.roles.badge.color",
+        "defined_files": [
+            "lang/en/roles.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.all",
+        "full_key": "states.ui.states.all",
+        "defined_files": [
+            "lang/en/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.assigned",
+        "full_key": "states.ui.states.assigned",
+        "defined_files": [
+            "lang/en/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.custom",
+        "full_key": "states.ui.states.custom",
+        "defined_files": [
+            "lang/en/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.no_changes",
+        "full_key": "states.ui.states.no_changes",
+        "defined_files": [
+            "lang/en/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.non_system",
+        "full_key": "states.ui.states.non_system",
+        "defined_files": [
+            "lang/en/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.other",
+        "full_key": "states.ui.states.other",
+        "defined_files": [
+            "lang/en/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.system",
+        "full_key": "states.ui.states.system",
+        "defined_files": [
+            "lang/en/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.unassigned",
+        "full_key": "states.ui.states.unassigned",
+        "defined_files": [
+            "lang/en/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    },
+    {
+        "locale": "en",
+        "group": "states",
+        "key": "ui.states.unsaved_changes",
+        "full_key": "states.ui.states.unsaved_changes",
+        "defined_files": [
+            "lang/en/states.php"
+        ],
+        "reason": "present_in_lang_files_but_not_exportable_from_current_db_state"
+    }
+]

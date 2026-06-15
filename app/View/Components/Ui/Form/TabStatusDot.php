@@ -52,22 +52,22 @@ class TabStatusDot extends Component
     public function statusLabel(?string $status = null): string
     {
         return match ($status ?? $this->status()) {
-            'error' => __('Validation errors'),
-            'missing-required' => __('Missing required fields'),
-            'complete' => __('Complete'),
-            'partial' => __('Partially filled'),
-            default => __('Empty'),
+            'error' => __('view.components.ui.form.tab_status_dot.validation_errors'),
+            'missing-required' => __('view.components.ui.form.tab_status_dot.missing_required_fields'),
+            'complete' => __('view.components.ui.form.tab_status_dot.complete'),
+            'partial' => __('view.components.ui.form.tab_status_dot.partially_filled'),
+            default => __('view.components.ui.form.tab_status_dot.empty'),
         };
     }
 
     public function statusDescription(?string $status = null): string
     {
         return match ($status ?? $this->status()) {
-            'error' => __('This tab contains validation errors.'),
-            'missing-required' => __('Required fields are missing.'),
-            'complete' => __('All relevant fields are filled.'),
-            'partial' => __('Some fields are filled.'),
-            default => __('No relevant field is filled.'),
+            'error' => __('view.components.ui.form.tab_status_dot.this_tab_contains_validation_errors'),
+            'missing-required' => __('view.components.ui.form.tab_status_dot.required_fields_are_missing'),
+            'complete' => __('view.components.ui.form.tab_status_dot.all_relevant_fields_are_filled'),
+            'partial' => __('view.components.ui.form.tab_status_dot.some_fields_are_filled'),
+            default => __('view.components.ui.form.tab_status_dot.no_relevant_field_is_filled'),
         };
     }
 

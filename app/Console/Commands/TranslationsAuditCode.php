@@ -384,6 +384,7 @@ class TranslationsAuditCode extends Command
             ->replace('app/Livewire/', '')
             ->replace('app/', '')
             ->replace('routes/', '')
+            ->replaceMatches('#(^|/)partials/#', '$1')
             ->replace('.blade.php', '')
             ->replace('.php', '')
             ->replace('⚡', '')

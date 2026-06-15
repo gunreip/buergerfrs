@@ -3,8 +3,8 @@
 {{-- Table --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Countries')"
-        :description="__('List of imported country reference data, address formats and available subdivisions.')"
+        :title="__('layouts.sidebar.administration.countries')"
+        :description="__('admin.country_reference_list.table.list_of_imported_country_reference_data_address_formats_and_available_subdivisio')"
     />
 
     <div class="mx-auto max-w-full">
@@ -17,10 +17,10 @@
                         align="center"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('ID')"
-                            :text="__('Unique identifier of the country, useful for tracking and reference.')"
+                            :title="__('admin.user_list.table.id')"
+                            :text="__('admin.country_reference_list.table.unique_identifier_of_the_country_useful_for_tracking_and_reference')"
                         >
-                            {{ __('ID') }}
+                            {{ __('admin.user_list.table.id') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -29,10 +29,10 @@
                         wire:click="sortBy('iso2')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('ISO')"
+                            :title="__('admin.country_reference_list.table.iso')"
                             :text="__('ISO 2-letter code of the country, useful for identification and reference.')"
                         >
-                            {{ __('ISO') }}
+                            {{ __('admin.country_reference_list.table.iso') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -41,10 +41,10 @@
                         wire:click="sortBy('name')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Name')"
+                            :title="__('ui.labels.name')"
                             :text="__('Name of the country, useful for identification and reference.')"
                         >
-                            {{ __('Name') }}
+                            {{ __('ui.labels.name') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -53,10 +53,10 @@
                         wire:click="sortBy('official_name')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Official name')"
+                            :title="__('admin.country_reference_list.table.official_name')"
                             :text="__('Official name of the country, useful for identification and reference.')"
                         >
-                            {{ __('Official name') }}
+                            {{ __('admin.country_reference_list.table.official_name') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -66,7 +66,7 @@
                     >
                         <x-ui.tooltip.trigger
                             :title="__('Phone')"
-                            :text="__('Phone code of the country, useful for identification and reference.')"
+                            :text="__('admin.country_reference_list.table.phone_code_of_the_country_useful_for_identification_and_reference')"
                         >
                             {{ __('Phone') }}
                         </x-ui.tooltip.trigger>
@@ -77,10 +77,10 @@
                         wire:click="sortBy('region')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Region')"
-                            :text="__('Region of the country, useful for identification and reference.')"
+                            :title="__('admin.country_reference_list.filter.region')"
+                            :text="__('admin.country_reference_list.table.region_of_the_country_useful_for_identification_and_reference')"
                         >
-                            {{ __('Region') }}
+                            {{ __('admin.country_reference_list.filter.region') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -89,21 +89,20 @@
                         wire:click="sortBy('capital')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Capital')"
-                            :text="__('Capital of the country, useful for identification and reference.')"
+                            :title="__('admin.country_reference_list.table.capital')"
+                            :text="__('admin.country_reference_list.table.capital_of_the_country_useful_for_identification_and_reference')"
                         >
-                            {{ __('Capital') }}
+                            {{ __('admin.country_reference_list.table.capital') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('Address')"
-                            :text="__(
-                                'Address format availability of the country, useful for identification and reference.',
+                            :title="__('admin.country_reference_list.table.address')"
+                            :text="__('admin.country_reference_list.table.address_format_availability_of_the_country_useful_for_identification_and_referen',
                             )"
                         >
-                            {{ __('Address') }}
+                            {{ __('admin.country_reference_list.table.address') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -113,12 +112,11 @@
                         wire:click="sortBy('subdivisions_count')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Subdivisions')"
-                            :text="__(
-                                'Number of subdivisions of the country, useful for identification and reference.',
+                            :title="__('admin.country_reference_list.meta.subdivisions')"
+                            :text="__('admin.country_reference_list.table.number_of_subdivisions_of_the_country_useful_for_identification_and_reference',
                             )"
                         >
-                            {{ __('Subdivisions') }}
+                            {{ __('admin.country_reference_list.meta.subdivisions') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -128,10 +126,10 @@
                         wire:click="sortBy('is_active')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Status')"
-                            :text="__('Active status of the country, useful for identification and reference.')"
+                            :title="__('admin.app_settings.table_icon_registry.status')"
+                            :text="__('admin.country_reference_list.table.active_status_of_the_country_useful_for_identification_and_reference')"
                         >
-                            {{ __('Status') }}
+                            {{ __('admin.app_settings.table_icon_registry.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
@@ -245,7 +243,7 @@
                                         </flux:badge>
                                     </flux:tooltip>
                                 @else
-                                    <flux:tooltip content="{{ __('Address format missing') }}">
+                                    <flux:tooltip content="{{ __('admin.country_reference_list.table.address_format_missing') }}">
                                         <flux:badge
                                             color="amber"
                                             variant="subtle"
@@ -267,12 +265,12 @@
 
                             <flux:table.cell align="center">
                                 @if ($country->is_active)
-                                    <flux:tooltip content="{{ __('Active') }}">
+                                    <flux:tooltip content="{{ __('admin.country_reference_list.filter.active') }}">
                                         <flux:badge
                                             color="green"
                                             variant="subtle"
                                         >
-                                            {{-- {{ __('Active') }} --}}
+                                            {{-- {{ __('admin.country_reference_list.filter.active') }} --}}
                                             <flux:icon.check
                                                 class="text-green-900"
                                                 variant="micro"
@@ -280,12 +278,12 @@
                                         </flux:badge>
                                     </flux:tooltip>
                                 @else
-                                    <flux:tooltip content="{{ __('Inactive') }}">
+                                    <flux:tooltip content="{{ __('admin.country_reference_list.filter.inactive') }}">
                                         <flux:badge
                                             color="zinc"
                                             variant="subtle"
                                         >
-                                            {{-- {{ __('Inactive') }} --}}
+                                            {{-- {{ __('admin.country_reference_list.filter.inactive') }} --}}
                                             <flux:icon.x
                                                 class="text-red-900"
                                                 variant="micro"
@@ -308,7 +306,7 @@
             </flux:table>
         </div>
 
-        <flux:separator text="{{ __('Pagination') }}" />
+        <flux:separator text="{{ __('admin.client_list.table.pagination') }}" />
 
         @if ($countries->hasPages())
             <x-ui.table.pagination :paginator="$countries" />

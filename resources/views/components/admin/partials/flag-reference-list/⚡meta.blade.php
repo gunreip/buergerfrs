@@ -2,7 +2,7 @@
 
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Overview')"
+        :title="__('admin.permissions.overview.title')"
         :description="__('Current audit status and data source for this flag reference page.')"
     />
 
@@ -36,7 +36,7 @@
             variant="subtle"
             size="lg"
         >
-            {{ __('Filtered') }}: {{ number_format((int) ($summary['filtered'] ?? 0)) }}
+            {{ __('admin.translation_list.meta.filtered') }}: {{ number_format((int) ($summary['filtered'] ?? 0)) }}
         </flux:badge>
     </div>
 

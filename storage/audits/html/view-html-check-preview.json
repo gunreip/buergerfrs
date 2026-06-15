@@ -1,6 +1,6 @@
 {
-    "generated_at": "2026-06-03T17:12:36+02:00",
-    "files_scanned": 277,
+    "generated_at": "2026-06-15T14:10:49+02:00",
+    "files_scanned": 329,
     "problem_count": 0,
     "note": "This is a static Blade structure audit. Complex conditional Blade markup may produce false positives and should be reviewed manually.",
     "references": {
@@ -17,11 +17,11 @@
         },
         "custom_components": {
             "source": "storage/audits/html/view-component-tags.json",
-            "generated_at": "2026-06-03T17:12:36+02:00",
-            "files_scanned": 277,
-            "tag_count": 181,
-            "flux_count": 131,
-            "custom_count": 46,
+            "generated_at": "2026-06-15T14:10:49+02:00",
+            "files_scanned": 329,
+            "tag_count": 193,
+            "flux_count": 140,
+            "custom_count": 49,
             "livewire_count": 4,
             "fallback": false,
             "fallback_reason": null,

@@ -51,7 +51,7 @@
             color="orange"
             icon="database"
         >
-            <flux:callout.heading>{{ __('Total keys') }}</flux:callout.heading>
+            <flux:callout.heading>{{ __('admin.translation_list.meta.total_keys') }}</flux:callout.heading>
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                 {{ number_format($totalKeys) }}
             </flux:callout.text>

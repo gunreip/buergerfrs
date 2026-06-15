@@ -2,8 +2,8 @@
 
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Overview')"
-        :description="__('Summary of users in the system, their assigned roles and role categories.')"
+        :title="__('admin.permissions.overview.title')"
+        :description="__('admin.user_list.meta.summary_of_users_in_the_system_their_assigned_roles_and_role_categories')"
     />
 
     <div class="grid gap-3 md:grid-cols-4">
@@ -13,11 +13,11 @@
             icon="users"
         >
             <flux:callout.heading>
-                {{ __('Total users') }}
+                {{ __('admin.user_list.meta.total_users') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('The total number of registered users in the system.') }}
+                {{ __('admin.user_list.meta.the_total_number_of_registered_users_in_the_system') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -31,11 +31,11 @@
             icon="shield-alert"
         >
             <flux:callout.heading>
-                {{ __('Users without roles') }}
+                {{ __('admin.user_list.meta.users_without_roles') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('The number of users without assigned roles.') }}
+                {{ __('admin.user_list.meta.the_number_of_users_without_assigned_roles') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -49,17 +49,17 @@
             icon="user-check"
         >
             <flux:callout.heading>
-                {{ __('Assigned users') }}
+                {{ __('admin.roles.labels.assigned_users') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Users grouped by assigned role category.') }}
+                {{ __('admin.user_list.meta.users_grouped_by_assigned_role_category') }}
             </flux:callout.text>
 
             <div class="mt-3 space-y-1 text-sm">
                 <div class="flex items-center justify-between gap-4">
                     <span class="text-zinc-300">
-                        {{ __('System') }}
+                        {{ __('admin.permissions.filters.system.label') }}
                     </span>
                     <span class="font-semibold tabular-nums text-zinc-100">
                         {{ $summary['assignedUsersByRoleCategory']['system'] ?? 0 }}
@@ -68,7 +68,7 @@
 
                 <div class="flex items-center justify-between gap-4">
                     <span class="text-zinc-300">
-                        {{ __('User') }}
+                        {{ __('admin.user_list.meta.user') }}
                     </span>
                     <span class="font-semibold tabular-nums text-zinc-100">
                         {{ $summary['assignedUsersByRoleCategory']['user'] ?? 0 }}
@@ -83,17 +83,17 @@
             icon="shield-alert"
         >
             <flux:callout.heading>
-                {{ __('Assignable roles') }}
+                {{ __('admin.user_list.meta.assignable_roles') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Assignable roles grouped by role category.') }}
+                {{ __('admin.user_list.meta.assignable_roles_grouped_by_role_category') }}
             </flux:callout.text>
 
             <div class="mt-3 space-y-1 text-sm">
                 <div class="flex items-center justify-between gap-4">
                     <span class="text-zinc-300">
-                        {{ __('System') }}
+                        {{ __('admin.permissions.filters.system.label') }}
                     </span>
                     <span class="font-semibold tabular-nums text-zinc-100">
                         {{ $summary['assignableRolesByCategory']['system'] ?? 0 }}
@@ -102,7 +102,7 @@
 
                 <div class="flex items-center justify-between gap-4">
                     <span class="text-zinc-300">
-                        {{ __('User') }}
+                        {{ __('admin.user_list.meta.user') }}
                     </span>
                     <span class="font-semibold tabular-nums text-zinc-100">
                         {{ $summary['assignableRolesByCategory']['user'] ?? 0 }}
@@ -119,11 +119,11 @@
             icon="crown"
         >
             <flux:callout.heading>
-                {{ __('System roles / Users') }}
+                {{ __('admin.user_list.meta.system_roles_users') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Number of users assigned to each system role.') }}
+                {{ __('admin.user_list.meta.number_of_users_assigned_to_each_system_role') }}
             </flux:callout.text>
 
             <div class="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
@@ -138,7 +138,7 @@
                     </div>
                 @empty
                     <flux:text class="col-span-2 text-sm text-zinc-400">
-                        {{ __('No system roles available.') }}
+                        {{ __('admin.user_list.meta.no_system_roles_available') }}
                     </flux:text>
                 @endforelse
             </div>
@@ -150,11 +150,11 @@
             icon="users"
         >
             <flux:callout.heading>
-                {{ __('User roles / Users') }}
+                {{ __('admin.user_list.meta.user_roles_users') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Number of users assigned to each user role.') }}
+                {{ __('admin.user_list.meta.number_of_users_assigned_to_each_user_role') }}
             </flux:callout.text>
 
             <div class="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
@@ -169,7 +169,7 @@
                     </div>
                 @empty
                     <flux:text class="col-span-2 text-sm text-zinc-400">
-                        {{ __('No user roles available.') }}
+                        {{ __('admin.user_list.meta.no_user_roles_available') }}
                     </flux:text>
                 @endforelse
             </div>

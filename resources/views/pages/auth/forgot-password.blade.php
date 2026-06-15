@@ -22,7 +22,7 @@
             <flux:input
                 name="email"
                 type="email"
-                :label="__('Email address')"
+                :label="__('pages.auth.register.email_address')"
                 required
                 autofocus
                 placeholder="email@example.com"

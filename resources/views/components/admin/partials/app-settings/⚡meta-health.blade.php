@@ -6,7 +6,7 @@
         class="mb-4"
         size="lg"
     >
-        {{ __('Settings Health') }}
+        {{ __('admin.app_settings.meta_health.settings_health') }}
     </flux:heading>
 
     <div class="grid grid-cols-2 gap-3">
@@ -17,11 +17,11 @@
             icon="shield-alert"
         >
             <flux:callout.heading>
-                {{ __('Roles without badge config') }}
+                {{ __('admin.app_settings.meta_health.roles_without_badge_config') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Roles that exist in the database but have no configured badge settings.') }}
+                {{ __('admin.app_settings.meta_health.roles_that_exist_in_the_database_but_have_no_configured_badge_settings') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -36,11 +36,11 @@
             icon="shield-alert"
         >
             <flux:callout.heading>
-                {{ __('Badge configs without role') }}
+                {{ __('admin.app_settings.meta_health.badge_configs_without_role') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
-                {{ __('Badge settings that reference roles that no longer exist.') }}
+                {{ __('admin.app_settings.meta_health.badge_settings_that_reference_roles_that_no_longer_exist') }}
             </flux:callout.text>
 
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">

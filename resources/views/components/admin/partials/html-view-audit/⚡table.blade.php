@@ -24,35 +24,35 @@
                     {{-- Column ID --}}
                     <flux:table.column
                         class="w-32"
-                        aria-label="{{ __('ID') }}"
+                        aria-label="{{ __('admin.user_list.table.id') }}"
                         sortable
                         align="center"
                         wire:click="sortBy('id')"
                     >
                         {{-- Tooltip ID: Unique identifier of the finding, useful for tracking and reference. --}}
                         <x-ui.tooltip.trigger
-                            :title="__('ID')"
+                            :title="__('admin.user_list.table.id')"
                             :text="__('Unique identifier of the finding, useful for tracking and reference.')"
                         >
-                            {{ __('ID') }}
+                            {{ __('admin.user_list.table.id') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Status --}}
                     <flux:table.column
                         class="w-22"
-                        aria-label="{{ __('Status') }}"
+                        aria-label="{{ __('admin.app_settings.table_icon_registry.status') }}"
                         align="center"
                         sortable
                         wire:click="sortBy('status')"
                     >
                         {{-- Tooltip Status: History status of the finding, open, changed, resolved, or ignored. --}}
                         <x-ui.tooltip.trigger
-                            :title="__('Status')"
+                            :title="__('admin.app_settings.table_icon_registry.status')"
                             :text="$legendTexts['status'] ??
                                 __('History status of the finding: open, changed, resolved, or ignored.')"
                         >
-                            {{ __('Status') }}
+                            {{ __('admin.app_settings.table_icon_registry.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -90,7 +90,7 @@
                             :text="$legendTexts['type'] ??
                                 __('Type of the problem, e.g. unclosed tag, unexpected closing tag, etc.')"
                         >
-                            {{ __('Type') }}
+                            {{ __('admin.client_list.table.type') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -128,16 +128,16 @@
                     {{-- Column Line --}}
                     <flux:table.column
                         class="w-36"
-                        aria-label="{{ __('Line') }}"
+                        aria-label="{{ __('admin.translation_list.modal.line') }}"
                         sortable
                         wire:click="sortBy('opened_line')"
                     >
                         {{-- Tooltip Line: Line numbers where the tag is opened and, if available, closed. --}}
                         <x-ui.tooltip.trigger
-                            :title="__('Line')"
+                            :title="__('admin.translation_list.modal.line')"
                             :text="__('Line numbers where the tag is opened and, if available, closed.')"
                         >
-                            {{ __('Line') }}
+                            {{ __('admin.translation_list.modal.line') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -346,7 +346,7 @@
         @if ($problems->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('Pagination') }}"
+                text="{{ __('admin.client_list.table.pagination') }}"
             />
 
             <div class="mt-4">

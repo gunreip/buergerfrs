@@ -3,3 +3,32 @@
 dialog[data-open]::backdrop {
     @apply bg-zinc-950/70 backdrop-blur-sm;
 }
+
+/* CSS-toasts */
+[data-flux-toast-dialog][data-variant="success"]>div {
+    border-left-width: 4px;
+    border-left-color: rgb(132 204 22);
+    border-right-width: 4px;
+    border-right-color: rgb(132 204 22);
+}
+
+[data-flux-toast-dialog][data-variant="warning"]>div {
+    border-left-width: 4px;
+    border-left-color: rgb(245 158 11);
+    border-right-width: 4px;
+    border-right-color: rgb(245 158 11);
+}
+
+[data-flux-toast-dialog][data-variant="info"]>div {
+    border-left-width: 4px;
+    border-left-color: rgb(6 182 212);
+    border-left-width: 4px;
+    border-left-color: rgb(6 182 212);
+}
+
+[data-flux-toast-dialog][data-variant="danger"]>div {
+    border-left-width: 4px;
+    border-left-color: rgb(244 63 94);
+    border-right-width: 4px;
+    border-right-color: rgb(244 63 94);
+}

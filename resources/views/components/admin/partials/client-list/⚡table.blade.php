@@ -3,9 +3,8 @@
 {{-- Table --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Client List')"
-        :description="__(
-            'Browse and manage clients with ease: view client details, sort by name, number, type, status, people count, and creation date.',
+        :title="__('admin.client_list.table.client_list')"
+        :description="__('admin.client_list.table.browse_and_manage_clients_with_ease_view_client_details_sort_by_name_number_type',
         )"
     />
 
@@ -15,10 +14,10 @@
                 <flux:table.columns class="bg-zinc-800 text-zinc-400">
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('ID')"
-                            :text="__('Unique identifier of the client, useful for tracking and reference.')"
+                            :title="__('admin.user_list.table.id')"
+                            :text="__('admin.client_list.table.unique_identifier_of_the_client_useful_for_tracking_and_reference')"
                         >
-                            {{ __('#') }}
+                            {{ __('ui.labels.number_short') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -27,10 +26,10 @@
                         wire:click="sortBy('name')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Client')"
-                            :text="__('Name of the client, useful for identification.')"
+                            :title="__('layouts.sidebar.management.client')"
+                            :text="__('admin.client_list.table.name_of_the_client_useful_for_identification')"
                         >
-                            {{ __('Client') }}
+                            {{ __('layouts.sidebar.management.client') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -39,10 +38,10 @@
                         wire:click="sortBy('client_number')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Client number')"
-                            :text="__('Unique number assigned to the client, useful for tracking and reference.')"
+                            :title="__('admin.client_list.table.client_number')"
+                            :text="__('admin.client_list.table.unique_number_assigned_to_the_client_useful_for_tracking_and_reference')"
                         >
-                            {{ __('Client number') }}
+                            {{ __('admin.client_list.table.client_number') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -51,10 +50,10 @@
                         wire:click="sortBy('type')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Type')"
-                            :text="__('Type of the client, useful for categorization and filtering.')"
+                            :title="__('admin.client_list.table.type')"
+                            :text="__('admin.client_list.table.type_of_the_client_useful_for_categorization_and_filtering')"
                         >
-                            {{ __('Type') }}
+                            {{ __('admin.client_list.table.type') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -63,10 +62,10 @@
                         wire:click="sortBy('status')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Status')"
-                            :text="__('Current status of the client, indicating their activity and engagement.')"
+                            :title="__('admin.app_settings.table_icon_registry.status')"
+                            :text="__('admin.client_list.table.current_status_of_the_client_indicating_their_activity_and_engagement')"
                         >
-                            {{ __('Status') }}
+                            {{ __('admin.app_settings.table_icon_registry.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -76,12 +75,11 @@
                         wire:click="sortBy('people_count')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('People')"
-                            :text="__(
-                                'Number of people associated with the client, useful for understanding client size and engagement.',
+                            :title="__('admin.client_list.table.people')"
+                            :text="__('admin.client_list.table.number_of_people_associated_with_the_client_useful_for_understanding_client_size',
                             )"
                         >
-                            {{ __('People') }}
+                            {{ __('admin.client_list.table.people') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -90,10 +88,10 @@
                         wire:click="sortBy('created_at')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Created')"
-                            :text="__('Date when the client was created, useful for tracking client history.')"
+                            :title="__('admin.client_list.table.created')"
+                            :text="__('admin.client_list.table.date_when_the_client_was_created_useful_for_tracking_client_history')"
                         >
-                            {{ __('Created') }}
+                            {{ __('admin.client_list.table.created') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
@@ -154,7 +152,7 @@
                                         color="zinc"
                                         variant="subtle"
                                     >
-                                        {{ __('Missing') }}
+                                        {{ __('admin.app_settings.table_icon_registry.missing') }}
                                     </flux:badge>
                                 @endif
                             </flux:table.cell>
@@ -196,7 +194,7 @@
                         <flux:table.row>
                             <flux:table.cell colspan="7">
                                 <flux:text>
-                                    {{ __('No clients found.') }}
+                                    {{ __('admin.client_list.table.no_clients_found') }}
                                 </flux:text>
                             </flux:table.cell>
                         </flux:table.row>
@@ -208,7 +206,7 @@
         @if ($clients->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('Pagination') }}"
+                text="{{ __('admin.client_list.table.pagination') }}"
             />
 
             <div class="mt-4">

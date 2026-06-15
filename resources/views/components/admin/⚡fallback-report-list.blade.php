@@ -2,7 +2,7 @@
 
 <flux:card>
     <x-ui.headers.page
-        :title="__('Fallback Reports')"
+        :title="__('layouts.sidebar.administration.fallback_reports')"
         :description="__(
             'Review technical fallback events such as missing icons, missing config values or other recoverable UI fallbacks.',
         )"

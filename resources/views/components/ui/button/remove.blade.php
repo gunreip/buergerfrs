@@ -4,13 +4,13 @@
 <x-ui.button.remove />
 <x-ui.button.remove icon="trash" />
 <x-ui.button.remove :icon="false" />
-<x-ui.button.remove label="{{ __('Remove') }}" />
+<x-ui.button.remove label="{{ __('ui.button.remove.remove') }}" />
 --}}
 
 {{-- remove  → red/ghost, trash, Remove --}}
 
 @props([
-    'label' => __('Remove'),
+    'label' => __('ui.button.remove.remove'),
     'icon' => true,
     'type' => 'button',
     'size' => null,

@@ -23,7 +23,7 @@
     <img
         class="{{ $imageClass }}"
         src="{{ $avatarUrl }}"
-        alt="{{ $user?->name ? __('Avatar for :name', ['name' => $user->name]) : __('User avatar') }}"
+        alt="{{ $user?->name ? __('ui.user_avatar.avatar_for_name', ['name' => $user->name]) : __('ui.user_avatar.user_avatar') }}"
     >
 @else
     <flux:avatar

@@ -1,5 +1,7 @@
 <?php
 
+// app/Console/Commands/ProjectDbHealth.php
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;

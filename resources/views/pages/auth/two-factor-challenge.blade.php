@@ -1,4 +1,4 @@
-<x-layouts::auth :title="__('Two-factor authentication')">
+<x-layouts::auth :title="__('pages.settings.security.two_factor_authentication')">
     <div class="flex flex-col gap-6">
         <div
             class="relative w-full h-auto"
@@ -78,7 +78,7 @@
                         type="submit"
                         class="w-full"
                     >
-                        {{ __('Continue') }}
+                        {{ __('pages.settings.two_factor_setup_modal.continue') }}
                     </flux:button>
                 </div>
 

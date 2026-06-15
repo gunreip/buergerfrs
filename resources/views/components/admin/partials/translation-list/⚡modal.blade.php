@@ -1,5 +1,6 @@
 {{-- resources/views/components/admin/partials/translation-list/⚡modal.blade.php --}}
 
+{{-- Modal (Review) --}}
 <flux:modal
     class="w-full max-w-7xl"
     wire:model="translationKeyModalOpen"
@@ -10,8 +11,10 @@
 
                 {{-- Card Header with ID badge --}}
                 <x-ui.headers.card
-                    :title="__('Translation key review')"
-                    :description="__('Read-only review of the selected translation key, its values and usage metadata.')"
+                    :title="__('admin.translation_list.modal.translation_key_review')"
+                    :description="__(
+                        'admin.translation_list.modal.read_only_review_of_the_selected_translation_key_its_values_and_usage_metadata',
+                    )"
                 />
 
                 <div class="mr-8 mt-2 flex flex-col items-end gap-2">
@@ -29,8 +32,9 @@
                             type="button"
                             size="sm"
                             variant="ghost"
-                            :title="__('Open next review entry')"
-                            :aria-label="__('Open next review entry')"
+                            :loading="true"
+                            :title="__('admin.translation_list.modal.open_next_review_entry')"
+                            :aria-label="__('admin.translation_list.modal.open_next_review_entry')"
                             wire:click="openNextTranslationKeyFromList"
                         >
                             <flux:icon.arrow-big-right
@@ -51,7 +55,7 @@
                 >
                     {{-- Status --}}
                     <flux:callout.heading>
-                        {{ __('Status') }}
+                        {{ __('admin.app_settings.table_icon_registry.status') }}
                     </flux:callout.heading>
 
                     <flux:callout.text class="space-y-2">
@@ -73,17 +77,19 @@
                 >
                     {{-- Group --}}
                     <flux:callout.heading>
-                        {{ __('Group') }}
+                        {{ __('admin.translation_list.modal.group') }}
                     </flux:callout.heading>
 
                     <flux:callout.text class="text-sm">
                         <div>
-                            <span class="inline-block w-24 font-semibold">{{ __('Namespace') }}:</span>
+                            <span
+                                class="inline-block w-24 font-semibold">{{ __('admin.translation_list.modal.namespace') }}:</span>
                             {{ $selectedTranslationKey->namespace ?? '—' }}
                         </div>
 
                         <div>
-                            <span class="inline-block w-24 font-semibold">{{ __('Group') }}:</span>
+                            <span
+                                class="inline-block w-24 font-semibold">{{ __('admin.translation_list.modal.group') }}:</span>
                             {{ $selectedTranslationKey->group ?? '—' }}
                         </div>
                     </flux:callout.text>
@@ -96,7 +102,7 @@
                 >
                     {{-- Source --}}
                     <flux:callout.heading>
-                        {{ __('Source') }}
+                        {{ __('admin.translation_list.modal.source') }}
                     </flux:callout.heading>
 
                     {{-- Source-Path information --}}
@@ -112,7 +118,7 @@
                 >
                     {{-- Usage --}}
                     <flux:callout.heading>
-                        {{ __('Usage') }}
+                        {{ __('admin.translation_list.modal.usage') }}
                     </flux:callout.heading>
 
                     {{-- Counter --}}
@@ -128,9 +134,9 @@
 
                 if ($selectedKey === '' && $selectedSuggestedKey !== '') {
                     $keySuggestionState = 'missing_key';
-                    $keySuggestionLabel = __('Missing key');
+                    $keySuggestionLabel = __('admin.translation_list.modal.missing_key');
                     $keySuggestionText = __(
-                        'No translation key is set. The suggested key can be used as a starting point.',
+                        'admin.translation_list.modal.no_translation_key_is_set_the_suggested_key_can_be_used_as_a_starting_point',
                     );
                 } elseif (
                     $selectedKey !== '' &&
@@ -138,22 +144,26 @@
                     $selectedKey === $selectedSuggestedKey
                 ) {
                     $keySuggestionState = 'matches_suggested_key';
-                    $keySuggestionLabel = __('Matches suggested key');
-                    $keySuggestionText = __('The current key matches the generated suggestion.');
+                    $keySuggestionLabel = __('admin.translation_list.modal.matches_suggested_key');
+                    $keySuggestionText = __(
+                        'admin.translation_list.modal.the_current_key_matches_the_generated_suggestion',
+                    );
                 } elseif (
                     $selectedKey !== '' &&
                     $selectedSuggestedKey !== '' &&
                     $selectedKey !== $selectedSuggestedKey
                 ) {
                     $keySuggestionState = 'differs_from_suggested_key';
-                    $keySuggestionLabel = __('Differs from suggested key');
+                    $keySuggestionLabel = __('admin.translation_list.table.differs_from_suggested_key');
                     $keySuggestionText = __(
-                        'The current key differs from the generated suggestion. This can be intentional, but should be reviewed.',
+                        'admin.translation_list.modal.the_current_key_differs_from_the_generated_suggestion_this_can_be_intentional_bu',
                     );
                 } else {
                     $keySuggestionState = 'no_suggestion';
-                    $keySuggestionLabel = __('No suggestion');
-                    $keySuggestionText = __('No suggested key is available for this entry.');
+                    $keySuggestionLabel = __('admin.translation_list.modal.no_suggestion');
+                    $keySuggestionText = __(
+                        'admin.translation_list.modal.no_suggested_key_is_available_for_this_entry',
+                    );
                 }
 
                 $selectedNamespace = trim((string) ($selectedTranslationKey->namespace ?? ''));
@@ -208,7 +218,7 @@
                 <div class="flex flex-wrap items-start justify-between gap-3">
                     <div>
                         <div class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                            {{ __('Key suggestion check') }}
+                            {{ __('admin.translation_list.modal.key_suggestion_check') }}
                         </div>
 
                         <div class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
@@ -231,55 +241,106 @@
 
                     {{-- Key --}}
                     <x-ui.text.copyable-field
-                        :title="__('Translation key')"
+                        :title="__('admin.translation_list.modal_edit.translation_key')"
                         :value="$selectedTranslationKey->key"
                         :mono="true"
                         :showHiddenButton="true"
                         :sync-resize-group="'translation-review-key-fields-' . $selectedTranslationKey->id"
                     >
-                        @if (($selectedTranslationKey->status ?? '') === 'obsolete')
-                            @php
-                                $isObsoleteReviewed =
-                                    ($selectedTranslationKey->workflow_status ?? 'open') === 'reviewed';
-                            @endphp
-                            <x-slot:action>
-                                <x-ui.tooltip.trigger
-                                    context="obsolete"
-                                    :title="__('Obsolete key')"
-                                    :text="__(
-                                        'This key is currently not found in code usage. It can indicate a legacy export mismatch or a truly unused translation entry.',
-                                    )"
-                                    :action="$isObsoleteReviewed
-                                        ? null
-                                        : [
-                                            'label' => __('Mark reviewed'),
-                                            'text' => __(
-                                                'Mark this obsolete entry as reviewed so it is removed from the default open workflow list.',
-                                            ),
-                                            'event' => 'translation-obsolete-reviewed',
-                                            'detail' => ['translationKeyId' => $selectedTranslationKey->id],
-                                        ]"
-                                >
-                                    <flux:badge
-                                        color="amber"
-                                        size="sm"
-                                        variant="subtle"
-                                    >
-                                        {{ __('Obsolete') }}
-                                    </flux:badge>
-                                </x-ui.tooltip.trigger>
+                        @php
+                            $selectedTranslationKeyNeedsNewKeyManually =
+                                $selectedTranslationKey->needs_new_key_marked_at !== null &&
+                                $selectedTranslationKey->needs_new_key_resolved_at === null;
 
-                                @if ($isObsoleteReviewed)
-                                    <flux:badge
-                                        color="emerald"
-                                        size="sm"
-                                        variant="subtle"
+                            $isObsoleteReviewed = ($selectedTranslationKey->workflow_status ?? 'open') === 'reviewed';
+                        @endphp
+
+                        <x-slot:action>
+                            <div class="flex flex-wrap items-center justify-end gap-2">
+                                @if ($selectedTranslationKeyNeedsNewKeyManually)
+                                    <x-ui.tooltip.trigger
+                                        :title="__('Needs new key')"
+                                        :text="__(
+                                            'This translation key was manually marked as needing a new key and is independent from generated audit results.',
+                                        )"
                                     >
-                                        {{ __('Reviewed') }}
-                                    </flux:badge>
+                                        <flux:badge
+                                            color="amber"
+                                            size="sm"
+                                            variant="subtle"
+                                        >
+                                            {{ __('Needs new key') }}
+                                        </flux:badge>
+                                    </x-ui.tooltip.trigger>
+
+                                    <flux:button
+                                        class="hover:cursor-pointer"
+                                        type="button"
+                                        size="sm"
+                                        icon="rotate-ccw-key"
+                                        variant="ghost"
+                                        color="amber"
+                                        wire:click="clearNeedsNewKeyManually({{ $selectedTranslationKey->id }})"
+                                        wire:loading.attr="disabled"
+                                        wire:target="clearNeedsNewKeyManually"
+                                    >
+                                        {{ __('Resolve') }}
+                                    </flux:button>
+                                @else
+                                    <flux:button
+                                        class="hover:cursor-pointer"
+                                        type="button"
+                                        size="sm"
+                                        icon="rotate-ccw-key"
+                                        variant="ghost"
+                                        color="amber"
+                                        wire:click="markNeedsNewKeyManually({{ $selectedTranslationKey->id }})"
+                                        wire:loading.attr="disabled"
+                                        wire:target="markNeedsNewKeyManually"
+                                    >
+                                        {{ __('Needs new key') }}
+                                    </flux:button>
                                 @endif
-                            </x-slot:action>
-                        @endif
+
+                                @if (($selectedTranslationKey->status ?? '') === 'obsolete')
+                                    <x-ui.tooltip.trigger
+                                        context="obsolete"
+                                        :title="__('admin.translation_list.table.obsolete_key')"
+                                        :text="__(
+                                            'admin.translation_list.table.this_key_is_currently_not_found_in_code_usage_it_can_indicate_a_legacy_export_mi',
+                                        )"
+                                        :action="$isObsoleteReviewed
+                                            ? null
+                                            : [
+                                                'label' => __('admin.translation_list.table.mark_reviewed'),
+                                                'text' => __(
+                                                    'admin.translation_list.modal_edit.mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work',
+                                                ),
+                                                'event' => 'translation-obsolete-reviewed',
+                                                'detail' => ['translationKeyId' => $selectedTranslationKey->id],
+                                            ]"
+                                    >
+                                        <flux:badge
+                                            color="amber"
+                                            size="sm"
+                                            variant="subtle"
+                                        >
+                                            {{ __('admin.translation_list.meta.obsolete') }}
+                                        </flux:badge>
+                                    </x-ui.tooltip.trigger>
+
+                                    @if ($isObsoleteReviewed)
+                                        <flux:badge
+                                            color="emerald"
+                                            size="sm"
+                                            variant="subtle"
+                                        >
+                                            {{ __('admin.translation_list.modal_edit.reviewed') }}
+                                        </flux:badge>
+                                    @endif
+                                @endif
+                            </div>
+                        </x-slot:action>
                     </x-ui.text.copyable-field>
                 </div>
 
@@ -287,7 +348,7 @@
 
                     {{-- Suggested key --}}
                     <x-ui.text.copyable-field
-                        :title="__('Suggested key')"
+                        :title="__('admin.translation_list.table.suggested_key')"
                         :value="$selectedTranslationKey->suggested_key"
                         :mono="true"
                         :sync-resize-group="'translation-review-key-fields-' . $selectedTranslationKey->id"
@@ -299,10 +360,11 @@
                                     type="button"
                                     size="sm"
                                     icon="arrow-left"
+                                    :loading="true"
                                     variant="ghost"
                                     wire:click="applySuggestedKey({{ $selectedTranslationKey->id }})"
                                 >
-                                    {{ __('Copy to translation key') }}
+                                    {{ __('admin.translation_list.modal.copy_to_translation_key') }}
                                 </flux:button>
                             </x-slot:action>
                         @endif
@@ -315,7 +377,7 @@
                     class="rounded-xl border border-amber-200 bg-amber-50/70 p-3 dark:border-amber-700/50 dark:bg-amber-950/30">
                     <div class="space-y-1">
                         <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                            {{ __('Key (obsolete diff)') }}
+                            {{ __('admin.translation_list.modal.key_obsolete_diff') }}
                         </div>
 
                         <x-ui.text.key-segment-diff
@@ -328,13 +390,13 @@
 
                     @if ($showObsoleteDiffHint)
                         <div class="mt-2 text-xs text-amber-700 dark:text-amber-300">
-                            {{ __('Wavy underline marks only the differing key block.') }}
+                            {{ __('admin.translation_list.modal.wavy_underline_marks_only_the_differing_key_block') }}
                         </div>
                     @endif
 
                     @if ($showObsoleteNoDiffHint)
                         <div class="mt-2 text-xs text-amber-700 dark:text-amber-300">
-                            {{ __('No key-shape diff detected. Obsolete is likely caused by missing in-code usage.') }}
+                            {{ __('admin.translation_list.modal.no_key_shape_diff_detected_obsolete_is_likely_caused_by_missing_in_code_usage') }}
                         </div>
                     @endif
                 </div>
@@ -347,7 +409,7 @@
 
                     {{-- Native Text --}}
                     <x-ui.text.copyable-field
-                        :title="__('Native text')"
+                        :title="__('admin.translation_list.modal.native_text')"
                         :value="$selectedTranslationKey->native_text"
                     />
                 </div>
@@ -418,7 +480,7 @@
 
                     {{-- Values --}}
                     <div class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                        {{ __('Values') }}
+                        {{ __('admin.translation_list.modal.values') }}
                     </div>
 
                     {{-- Counter --}}
@@ -444,7 +506,8 @@
                                     :value="$englishReviewValue?->value"
                                     :badge="$isDuplicate
                                         ? 'Duplicate'
-                                        : $englishReviewValue?->status ?? __('Missing')"
+                                        : $englishReviewValue?->status ??
+                                            __('admin.app_settings.table_icon_registry.missing')"
                                     :badge-context="$englishReviewValue && !$isDuplicate ? 'translation.value.status' : null"
                                     :badge-color="$isDuplicate || $englishReviewValue === null ? 'amber' : 'zinc'"
                                     :badge-variant="$isDuplicate ? 'subtle' : 'subtle'"
@@ -469,7 +532,8 @@
                                     :value="$selectedTargetReviewValue?->value"
                                     :badge="$selectedTargetReviewValue?->is_base_duplicate === true
                                         ? 'Duplicate'
-                                        : $selectedTargetReviewValue?->status ?? __('Missing')"
+                                        : $selectedTargetReviewValue?->status ??
+                                            __('admin.app_settings.table_icon_registry.missing')"
                                     :badge-context="$selectedTargetReviewValue &&
                                     $selectedTargetReviewValue->is_base_duplicate !== true
                                         ? 'translation.value.status'
@@ -531,7 +595,7 @@
                             {{-- No translation values available. --}}
                         @empty
                             <div class="px-3 text-sm text-zinc-500 dark:text-zinc-400">
-                                {{ __('No translation values available.') }}
+                                {{ __('admin.translation_list.modal.no_translation_values_available') }}
                             </div>
                         @endforelse
                     @endif
@@ -545,7 +609,7 @@
 
                     {{-- Usages --}}
                     <div class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                        {{ __('Usages') }}
+                        {{ __('admin.translation_list.modal.usages') }}
                     </div>
 
                     {{-- Counter --}}
@@ -572,7 +636,7 @@
                             <div
                                 class="flex flex-wrap items-center justify-between gap-2 border-t pt-1 dark:border-zinc-700">
                                 <div class="">
-                                    <span class="font-semibold">{{ __('Path') }}:</span>
+                                    <span class="font-semibold">{{ __('admin.translation_list.modal.path') }}:</span>
                                     <code class="wrap-anywhere whitespace-normal px-3 text-xs">
                                         {{ $usage->file ?? '—' }}
                                     </code>
@@ -580,14 +644,11 @@
 
                                 <div class="flex items-center gap-2">
                                     @if ($usageOriginalMatchesRaw)
-                                        {{--
-                                        TODO: Z-Index für die Tooltips!
-                                        --}}
                                         <x-ui.tooltip.trigger
                                             class="z-9999"
-                                            :title="__('Original raw unchanged')"
+                                            :title="__('admin.translation_list.modal.original_raw_unchanged')"
                                             :text="__(
-                                                'The current raw usage snippet matches the original raw reference captured for this usage.',
+                                                'admin.translation_list.modal.the_current_raw_usage_snippet_matches_the_original_raw_reference_captured_for_th',
                                             )"
                                         >
                                             <flux:badge
@@ -595,15 +656,15 @@
                                                 variant="subtle"
                                                 color="green"
                                             >
-                                                {{ __('Original unchanged') }}
+                                                {{ __('admin.translation_list.modal.original_unchanged') }}
                                             </flux:badge>
                                         </x-ui.tooltip.trigger>
                                     @elseif ($usageOriginalDiffersRaw)
                                         <x-ui.tooltip.trigger
                                             class="z-9999"
-                                            :title="__('Original raw differs')"
+                                            :title="__('admin.translation_list.modal.original_raw_differs')"
                                             :text="__(
-                                                'The current raw usage snippet differs from the original raw reference. The original raw value is preserved below.',
+                                                'admin.translation_list.modal.the_current_raw_usage_snippet_differs_from_the_original_raw_reference_the_origin',
                                             )"
                                         >
                                             <flux:badge
@@ -611,15 +672,15 @@
                                                 variant="subtle"
                                                 color="amber"
                                             >
-                                                {{ __('Original changed') }}
+                                                {{ __('admin.translation_list.modal.original_changed') }}
                                             </flux:badge>
                                         </x-ui.tooltip.trigger>
                                     @else
                                         <x-ui.tooltip.trigger
                                             class="z-9999"
-                                            :title="__('No original raw reference')"
+                                            :title="__('admin.translation_list.modal.no_original_raw_reference')"
                                             :text="__(
-                                                'No original raw reference has been captured for this usage yet.',
+                                                'admin.translation_list.modal.no_original_raw_reference_has_been_captured_for_this_usage_yet',
                                             )"
                                         >
                                             <flux:badge
@@ -627,7 +688,7 @@
                                                 variant="subtle"
                                                 color="zinc"
                                             >
-                                                {{ __('No original raw') }}
+                                                {{ __('admin.translation_list.modal.no_original_raw') }}
                                             </flux:badge>
                                         </x-ui.tooltip.trigger>
                                     @endif
@@ -638,7 +699,7 @@
                                             variant="subtle"
                                             color="zinc"
                                         >
-                                            {{ __('Line') }} {{ $usage->line }}
+                                            {{ __('admin.translation_list.modal.line') }} {{ $usage->line }}
                                         </flux:badge>
                                     @endif
                                 </div>
@@ -647,7 +708,7 @@
                             @if ($usageRaw !== '')
                                 <x-ui.text.copyable-field
                                     class="mt-2"
-                                    :title="__('Current raw')"
+                                    :title="__('admin.translation_list.modal.current_raw')"
                                     :value="$usage->raw"
                                     :mono="true"
                                     content-class="text-xs"
@@ -657,7 +718,7 @@
                             @if ($usageOriginalDiffersRaw)
                                 <x-ui.text.copyable-field
                                     class="mt-2"
-                                    :title="__('Original raw')"
+                                    :title="__('admin.translation_list.modal.original_raw')"
                                     :value="$usage->original_raw"
                                     :mono="true"
                                     content-class="text-xs"
@@ -666,34 +727,51 @@
                         </div>
                     @empty
                         <div class="px-3 text-sm text-zinc-500 dark:text-zinc-400">
-                            {{ __('No usage records available.') }}
+                            {{ __('admin.translation_list.modal_edit.no_usage_records_available') }}
                         </div>
                     @endforelse
                 </div>
             </div>
 
             <div class="flex shrink-0 justify-end gap-3">
-                <flux:button
-                    type="button"
-                    variant="primary"
-                    color="amber"
-                    icon="pen-line"
+                {{-- Button Edit --}}
+                <x-ui.button.edit
+                    :loading="true"
                     :disabled="$selectedKey === ''"
                     wire:click="openTranslationEditFromReview({{ $selectedTranslationKey->id }})"
-                >
-                    {{ __('Edit') }}
-                </flux:button>
+                />
 
+                {{-- Button Cancel --}}
                 <x-ui.button.cancel
-                    label="{{ __('Close') }}"
+                    label="{{ __('ui.actions.close') }}"
                     icon="circle-x"
+                    :loading="true"
                     wire:click="closeTranslationKey"
                 />
+
+                @if ($nextReviewTranslationKeyId !== null)
+                    {{-- Button Open Next Review Entry --}}
+                    <flux:button
+                        class="h-8 w-8 shrink-0 p-0"
+                        type="button"
+                        {{-- size="sm" --}}
+                        variant="ghost"
+                        :loading="true"
+                        :title="__('admin.translation_list.modal.open_next_review_entry')"
+                        :aria-label="__('admin.translation_list.modal.open_next_review_entry')"
+                        wire:click="openNextTranslationKeyFromList"
+                    >
+                        <flux:icon.arrow-big-right
+                            class="size-5"
+                            stroke-width="1"
+                        />
+                    </flux:button>
+                @endif
             </div>
         </div>
     @else
         <div class="py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
-            {{ __('No translation key selected.') }}
+            {{ __('admin.translation_list.modal.no_translation_key_selected') }}
         </div>
     @endif
 </flux:modal>

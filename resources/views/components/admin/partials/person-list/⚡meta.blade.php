@@ -3,7 +3,7 @@
 {{-- Overview --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Overview')"
+        :title="__('admin.permissions.overview.title')"
         :description="__('Summary of people in the system, their linked user accounts and client assignments.')"
     />
 

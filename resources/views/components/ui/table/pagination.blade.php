@@ -45,13 +45,13 @@
     >
         <div class="flex items-center justify-between gap-4">
             <flux:text class="text-sm text-zinc-400">
-                {{ __('Showing') }}
+                {{ __('admin.translation_list.filter.showing') }}
                 {{ $paginator->firstItem() }}
-                {{ __('to') }}
+                {{ __('ui.table.pagination.to') }}
                 {{ $paginator->lastItem() }}
-                {{ __('of') }}
+                {{ __('admin.translation_list.filter.of') }}
                 {{ $paginator->total() }}
-                {{ __('results') }}
+                {{ __('ui.table.pagination.results') }}
             </flux:text>
 
             <div class="flex items-center gap-3">

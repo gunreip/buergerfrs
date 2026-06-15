@@ -2,6 +2,46 @@
     {
         "classification": "dynamic",
         "function": "__",
+        "value": ") translation calls are supported in this apply step.',\n            ];\n        }\n\n        $proposedRaw = preg_replace(\n            \"/^__\\\\(\\\\s*(['\\\"]",
+        "raw": "__()",
+        "reason": "non_literal_first_argument",
+        "suggested_key": null,
+        "file": "app/Console/Commands/ApplyTranslationUsageAuditDecisions.php",
+        "line": 546
+    },
+    {
+        "classification": "dynamic",
+        "function": "__",
+        "value": ") call with one string argument.',\n            ];\n        }\n\n        return [\n            'proposed_raw' => $proposedRaw,\n            'can_build_replacement' => true,\n            'replacement_kind' => 'translation_call_string_argument',\n            'replacement_warning' => null,\n        ];\n    }\n\n    /**\n     * Render a readable markdown apply report.\n     *\n     * @param Collection<int, array<string, mixed>> $applyItems\n     */\n    private function renderApplyMarkdown(Collection $applyItems, bool $dryRun",
+        "raw": "__()",
+        "reason": "non_literal_first_argument",
+        "suggested_key": null,
+        "file": "app/Console/Commands/ApplyTranslationUsageAuditDecisions.php",
+        "line": 563
+    },
+    {
+        "classification": "dynamic",
+        "function": "__",
+        "value": ") translation calls are supported in this preview step.',\n            ];\n        }\n\n        $proposedRaw = preg_replace(\n            \"/^__\\\\(\\\\s*(['\\\"]",
+        "raw": "__()",
+        "reason": "non_literal_first_argument",
+        "suggested_key": null,
+        "file": "app/Console/Commands/PreviewTranslationUsageAuditDecisions.php",
+        "line": 296
+    },
+    {
+        "classification": "dynamic",
+        "function": "__",
+        "value": ") call with one string argument.',\n            ];\n        }\n\n        return [\n            'proposed_raw' => $proposedRaw,\n            'can_build_replacement' => true,\n            'replacement_kind' => 'translation_call_string_argument',\n            'replacement_warning' => null,\n        ];\n    }\n\n    /**\n     * Render a readable diff-style markdown preview.\n     *\n     * @param Collection<int, array<string, mixed>> $previewItems\n     */\n    private function renderDiffPreview(Collection $previewItems",
+        "raw": "__()",
+        "reason": "non_literal_first_argument",
+        "suggested_key": null,
+        "file": "app/Console/Commands/PreviewTranslationUsageAuditDecisions.php",
+        "line": 313
+    },
+    {
+        "classification": "dynamic",
+        "function": "__",
         "value": "$label",
         "raw": "__($label)",
         "reason": "non_literal_first_argument",
@@ -97,7 +137,7 @@
         "reason": "non_literal_first_argument",
         "suggested_key": null,
         "file": "resources/views/components/ui/button/show-hide.blade.php",
-        "line": 19
+        "line": 39
     },
     {
         "classification": "dynamic",
@@ -107,6 +147,6 @@
         "reason": "non_literal_first_argument",
         "suggested_key": null,
         "file": "resources/views/components/ui/button/show-hide.blade.php",
-        "line": 19
+        "line": 39
     }
 ]

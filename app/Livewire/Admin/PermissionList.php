@@ -456,7 +456,7 @@ class PermissionList extends Component
 
         if ($before === $after) {
             Flux::toast(
-                heading: __('admin.permissions.messages.no_changes.heading'),
+                heading: __('ui.states.no_changes'),
                 text: __('admin.permissions.messages.no_changes.role_permissions_unchanged', [
                     'permission' => $permission->name,
                 ]),

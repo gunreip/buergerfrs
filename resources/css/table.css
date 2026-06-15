@@ -80,7 +80,9 @@ tr[data-flux-row]:hover>td[data-flux-cell]:last-child::before {
 }
 
 .app-table-col--actions {
-    width: 8rem;
+    width: 1%;
+    white-space: nowrap;
+    @apply: scrollbar-gutter-auto overflow-auto;
 }
 
 .app-table--translation-list {

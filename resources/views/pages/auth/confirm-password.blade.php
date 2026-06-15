@@ -1,7 +1,7 @@
-<x-layouts::auth :title="__('Confirm password')">
+<x-layouts::auth :title="__('pages.auth.register.confirm_password')">
     <div class="flex flex-col gap-6">
         <x-auth-header
-            :title="__('Confirm password')"
+            :title="__('pages.auth.register.confirm_password')"
             :description="__('This is a secure area of the application. Please confirm your password before continuing.')"
         />
 
@@ -12,16 +12,16 @@
 
             <flux:input
                 name="password"
-                :label="__('Password')"
+                :label="__('pages.auth.register.password')"
                 type="password"
                 required
                 autocomplete="current-password"
-                :placeholder="__('Password')"
+                :placeholder="__('pages.auth.register.password')"
                 viewable
             />
 
             <flux:button variant="primary" type="submit" class="w-full" data-test="confirm-password-button">
-                {{ __('Confirm') }}
+                {{ __('pages.settings.two_factor_setup_modal.confirm') }}
             </flux:button>
         </form>
     </div>

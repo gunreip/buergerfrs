@@ -3,7 +3,7 @@
 {{-- Metablock: Overview --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Overview')"
+        :title="__('admin.permissions.overview.title')"
         :description="__(
             'Get a quick snapshot of role statistics, including total roles, assignable roles, system roles, and user assignments.',
         )"
@@ -32,7 +32,7 @@
             icon="check-circle"
         >
             <flux:callout.heading>
-                {{ __('Assignable roles') }}
+                {{ __('admin.user_list.meta.assignable_roles') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">
@@ -66,7 +66,7 @@
             icon="users"
         >
             <flux:callout.heading>
-                {{ __('Assigned users') }}
+                {{ __('admin.roles.labels.assigned_users') }}
             </flux:callout.heading>
 
             <flux:callout.text class="font-extralight">

@@ -10,19 +10,19 @@
             <!-- Name -->
             <flux:input
                 name="name"
-                :label="__('Name')"
+                :label="__('ui.labels.name')"
                 :value="old('name')"
                 type="text"
                 required
                 autofocus
                 autocomplete="name"
-                :placeholder="__('Full name')"
+                :placeholder="__('pages.auth.register.full_name')"
             />
 
             <!-- Email Address -->
             <flux:input
                 name="email"
-                :label="__('Email address')"
+                :label="__('pages.auth.register.email_address')"
                 :value="old('email')"
                 type="email"
                 required
@@ -33,35 +33,35 @@
             <!-- Password -->
             <flux:input
                 name="password"
-                :label="__('Password')"
+                :label="__('pages.auth.register.password')"
                 type="password"
                 required
                 autocomplete="new-password"
-                :placeholder="__('Password')"
+                :placeholder="__('pages.auth.register.password')"
                 viewable
             />
 
             <!-- Confirm Password -->
             <flux:input
                 name="password_confirmation"
-                :label="__('Confirm password')"
+                :label="__('pages.auth.register.confirm_password')"
                 type="password"
                 required
                 autocomplete="new-password"
-                :placeholder="__('Confirm password')"
+                :placeholder="__('pages.auth.register.confirm_password')"
                 viewable
             />
 
             <div class="flex items-center justify-end">
                 <flux:button type="submit" variant="primary" class="w-full" data-test="register-user-button">
-                    {{ __('Create account') }}
+                    {{ __('pages.auth.register.create_account') }}
                 </flux:button>
             </div>
         </form>
 
         <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-            <span>{{ __('Already have an account?') }}</span>
-            <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
+            <span>{{ __('pages.auth.register.already_have_an_account') }}</span>
+            <flux:link :href="route('login')" wire:navigate>{{ __('pages.auth.register.log_in') }}</flux:link>
         </div>
     </div>
 </x-layouts::auth>

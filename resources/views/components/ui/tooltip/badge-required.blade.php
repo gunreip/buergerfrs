@@ -1,7 +1,7 @@
 {{-- resources/views/components/ui/tooltip/badge-required.blade.php --}}
 
 @props([
-    'label' => __('Required'),
+    'label' => __('ui.form.tab_status_dot.required'),
     'required' => true,
 ])
 

@@ -5,7 +5,7 @@
 
     {{-- Card Header --}}
     <x-ui.headers.card
-        :title="__('User List')"
+        :title="__('admin.user_list.table.user_list')"
         :description="__('Overview of all users in the system, their email addresses and assigned roles.')"
     />
 
@@ -26,10 +26,10 @@
                         align="center"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('ID')"
-                            :text="__('Unique identifier of the user, useful for tracking and reference.')"
+                            :title="__('admin.user_list.table.id')"
+                            :text="__('admin.user_list.table.unique_identifier_of_the_user_useful_for_tracking_and_reference')"
                         >
-                            {{ __('ID') }}
+                            {{ __('admin.user_list.table.id') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -39,10 +39,10 @@
                         wire:click="sortBy('name')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Name')"
-                            :text="__('Full name of the user, useful for identification.')"
+                            :title="__('ui.labels.name')"
+                            :text="__('admin.user_list.table.full_name_of_the_user_useful_for_identification')"
                         >
-                            {{ __('Name') }}
+                            {{ __('ui.labels.name') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -52,10 +52,10 @@
                         wire:click="sortBy('email')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('E-Mail')"
+                            :title="__('admin.user_list.table.e_mail')"
                             :text="__('Email address of the user, used for communication and login.')"
                         >
-                            {{ __('E-Mail') }}
+                            {{ __('admin.user_list.table.e_mail') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -65,22 +65,21 @@
                         wire:click="sortBy('roles.name')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('Roles')"
-                            :text="__(
-                                'Roles assigned to the user, determining their permissions and access levels.',
+                            :title="__('ui.labels.roles')"
+                            :text="__('admin.user_list.table.roles_assigned_to_the_user_determining_their_permissions_and_access_levels',
                             )"
                         >
-                            {{ __('Roles') }}
+                            {{ __('ui.labels.roles') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
                     {{-- Column Actions --}}
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('Actions')"
+                            :title="__('ui.labels.actions')"
                             :text="__('Available actions for the user, such as editing roles.')"
                         >
-                            {{ __('Actions') }}
+                            {{ __('ui.labels.actions') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
@@ -124,7 +123,7 @@
                                     />
                                 @empty
                                     <x-ui.role-badge
-                                        :label="__('Without role')"
+                                        :label="__('admin.user_list.filter.without_role')"
                                         :badge="$withoutRoleBadge"
                                     />
                                 @endforelse
@@ -135,7 +134,7 @@
                                 <flux:button.group class="justify-center">
                                     <x-ui.button.edit
                                         icon="pencil-square"
-                                        label="{{ __('Edit Roles') }}"
+                                        label="{{ __('admin.user_list.modal.edit_roles') }}"
                                         size="sm"
                                         wire:click="openEditRolesModal({{ $user->id }})"
                                     />
@@ -151,7 +150,7 @@
         @if ($users->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('Pagination') }}"
+                text="{{ __('admin.client_list.table.pagination') }}"
             />
 
             <div class="mt-4">

@@ -1,5 +1,7 @@
 <?php
 
+// app/Console/Commands/ProjectBootstrapData.php
+
 // php artisan project:bootstrap-data
 // php artisan project:bootstrap-data --with-test-users
 // php artisan project:bootstrap-data --skip-migrate --skip-reference-import

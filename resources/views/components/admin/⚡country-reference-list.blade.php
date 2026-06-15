@@ -3,8 +3,8 @@
 {{-- <div> --}}
 <flux:card>
     <x-ui.headers.page
-        :title="__('Reference Countries')"
-        :description="__('Audit imported country reference data, address formats and available subdivisions.')"
+        :title="__('admin.country_reference_list.reference_countries')"
+        :description="__('admin.country_reference_list.audit_imported_country_reference_data_address_formats_and_available_subdivisions')"
     />
 
     {{-- Overview / Meta --}}

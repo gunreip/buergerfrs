@@ -4,13 +4,13 @@
 <x-ui.button.confirm />
 <x-ui.button.confirm icon="shield-check" />
 <x-ui.button.confirm :icon="false" />
-<x-ui.button.confirm label="{{ __('Confirm') }}" />
+<x-ui.button.confirm label="{{ __('pages.settings.two_factor_setup_modal.confirm') }}" />
 --}}
 
 {{-- confirm  → green/primary, shield-check, Confirm --}}
 
 @props([
-    'label' => __('Confirm'),
+    'label' => __('pages.settings.two_factor_setup_modal.confirm'),
     'icon' => true,
     'type' => 'button',
     'size' => null,

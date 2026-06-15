@@ -183,9 +183,9 @@ class RoleList extends Component
     {
         if (! Auth::user()?->hasRole('Super-Admin')) {
             Flux::toast(
-                // i18n-native: __('Not allowed')
+                // i18n-native: __('admin.roles.messages.not_allowed.heading')
                 heading: __('admin.roles.messages.not_allowed.heading'),
-                // i18n-native: __('Only Super-Admins may create roles.')
+                // i18n-native: __('admin.roles.messages.not_allowed.only_super_admins_may_create_roles')
                 text: __('admin.roles.messages.not_allowed.only_super_admins_may_create_roles'),
                 variant: 'danger',
                 duration: 4000,
@@ -261,9 +261,9 @@ class RoleList extends Component
         $this->resetCreateRoleModal();
 
         Flux::toast(
-            // i18n-native: __('Role created')
+            // i18n-native: __('admin.roles.messages.role_created.heading')
             heading: __('admin.roles.messages.role_created.heading'),
-            // i18n-native: __('Role :role has been created.')
+            // i18n-native: __('admin.roles.messages.role_created.text')
             text: __('admin.roles.messages.role_created.text', [
                 'role' => $role->name,
             ]),
@@ -428,9 +428,9 @@ class RoleList extends Component
         $this->resetEditRoleModal();
 
         Flux::toast(
-            // i18n-native: __('Role saved')
+            // i18n-native: __('admin.roles.messages.role_saved.heading')
             heading: __('admin.roles.messages.role_saved.heading'),
-            // i18n-native: __('Role metadata and badge settings for :role have been updated.')
+            // i18n-native: __('admin.roles.messages.role_saved.text')
             text: __('admin.roles.messages.role_saved.text', [
                 'role' => $savedRoleName,
             ]),

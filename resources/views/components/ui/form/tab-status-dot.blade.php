@@ -22,7 +22,7 @@ TODO: toggleable tooltips for form tab status dots are currently fragile due to 
 >
 
     <span
-        aria-label="{{ __('Form tab status: :status', ['status' => $statusLabel()]) }}"
+        aria-label="{{ __('ui.form.tab_status_dot.form_tab_status_status', ['status' => $statusLabel()]) }}"
         {{ $attributes->class([
             'inline-flex size-2.5 shrink-0 rounded-full ring-2',
             $toggleable ? 'cursor-pointer' : 'cursor-help',
@@ -43,12 +43,12 @@ TODO: toggleable tooltips for form tab status dots are currently fragile due to 
                     @endif
 
                     <span class="truncate">
-                        {{ $label ?? __('Form tab') }}
+                        {{ $label ?? __('ui.form.tab_status_dot.form_tab') }}
                     </span>
                 </div>
 
                 <div class="text-xs text-zinc-300">
-                    {{ __('Current status:') }}
+                    {{ __('ui.form.tab_status_dot.current_status') }}
                     <span class="font-semibold text-white">
                         {{ $statusLabel() }}
                     </span>
@@ -63,19 +63,19 @@ TODO: toggleable tooltips for form tab status dots are currently fragile due to 
 
         <div class="grid grid-cols-2 gap-2 rounded-md bg-white/5 p-2 text-xs text-zinc-200">
             <div>
-                <div class="text-zinc-400">{{ __('Fields') }}</div>
+                <div class="text-zinc-400">{{ __('ui.form.tab_status_dot.fields') }}</div>
                 <div class="font-semibold text-white">{{ $filled() }} / {{ $total() }}</div>
             </div>
 
             <div>
-                <div class="text-zinc-400">{{ __('Required') }}</div>
+                <div class="text-zinc-400">{{ __('ui.form.tab_status_dot.required') }}</div>
                 <div class="font-semibold text-white">{{ $requiredFilled() }} / {{ $requiredTotal() }}</div>
             </div>
         </div>
 
         <div class="space-y-1.5">
             <div class="text-xs font-semibold uppercase tracking-wide text-zinc-400">
-                {{ __('Legend') }}
+                {{ __('ui.form.tab_status_dot.legend') }}
             </div>
 
             @foreach ($legendStatuses() as $legendStatus)

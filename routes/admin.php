@@ -11,9 +11,11 @@ use App\Livewire\Admin\HtmlViewAudit;
 use App\Livewire\Admin\PermissionList;
 use App\Livewire\Admin\PersonList;
 use App\Livewire\Admin\RoleList;
+use App\Livewire\Admin\TranslationLangBallast;
 use App\Livewire\Admin\TranslationList;
 use App\Livewire\Admin\TranslationStatistics;
 use App\Livewire\Admin\TranslationSubLanguages;
+use App\Livewire\Admin\TranslationUsageAudit;
 use App\Livewire\Admin\UserList;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +38,10 @@ Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
         Route::get('permissions', PermissionList::class)->name('permissions');
 
         Route::get('translations', TranslationList::class)->name('translations');
+
+        Route::get('translations/usage', TranslationUsageAudit::class)->name('translation-usage');
+
+        Route::get('translations/lang-ballast', TranslationLangBallast::class)->name('translation-lang-ballast');
 
         Route::get('translation-statistics', TranslationStatistics::class)->name('translation-statistics');
 

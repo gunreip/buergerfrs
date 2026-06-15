@@ -7,9 +7,8 @@
 >
     <div class="flex items-start justify-between gap-4">
         <x-ui.headers.card
-            :title="__('Application languages')"
-            :description="__(
-                'Configure which languages are available for the App/UI and choose the global default language.',
+            :title="__('admin.app_settings.locale.application_languages')"
+            :description="__('admin.app_settings.locale.configure_which_languages_are_available_for_the_app_ui_and_choose_the_global_def',
             )"
         />
 
@@ -18,7 +17,7 @@
             color="sky"
             size="lg"
         >
-            {{ __('Current') }}:
+            {{ __('admin.app_settings.locale.current') }}:
             <x-ui.locale.flag
                 class="ml-2"
                 size="lg"
@@ -33,16 +32,16 @@
         <div class="grid grid-cols-1 gap-3 md:grid-cols-5 md:items-end">
             <flux:field class="md:col-span-2">
                 <x-ui.tooltip.trigger
-                    :title="__('Top languages')"
+                    :title="__('admin.app_settings.locale.top_languages')"
                     field="primaryLanguageScope"
-                    :text="__('Select the top languages by their usage.')"
+                    :text="__('admin.app_settings.locale.select_the_top_languages_by_their_usage')"
                 >
                     <flux:label
                         class="mb-3 text-sm font-semibold"
                         for="primary-language-scope"
                     >
-                        {{-- {{ __('Top languages') }} --}}
-                        {{ __('Narrow down your selection ...') }}
+                        {{-- {{ __('admin.app_settings.locale.top_languages') }} --}}
+                        {{ __('admin.app_settings.locale.narrow_down_your_selection') }}
                     </flux:label>
                 </x-ui.tooltip.trigger>
 
@@ -87,17 +86,16 @@
                     <div class="lg:col-span-3">
                         <flux:field>
                             <x-ui.tooltip.trigger
-                                :title="__('Select available languages')"
+                                :title="__('admin.app_settings.locale.select_available_languages')"
                                 field="selectedPrimaryLanguageCode"
-                                :text="__(
-                                    'Select which languages should be available for the App/UI. You can choose from all languages that have translations in the system. The global default language must be among the available languages.',
+                                :text="__('admin.app_settings.locale.select_which_languages_should_be_available_for_the_app_ui_you_can_choose_from_al',
                                 )"
                             >
                                 <flux:label
                                     class="mb-3 text-sm font-semibold"
                                     for="available-locales-select"
                                 >
-                                    {{ __('Primary languages') }}
+                                    {{ __('admin.app_settings.locale.primary_languages') }}
                                 </flux:label>
                             </x-ui.tooltip.trigger>
 
@@ -116,7 +114,7 @@
                                 <flux:select
                                     id="primary-language-select"
                                     wire:model.live="selectedPrimaryLanguageCode"
-                                    placeholder="{{ __('Please select a primary language ...') }}"
+                                    placeholder="{{ __('admin.app_settings.locale.please_select_a_primary_language') }}"
                                 >
                                     @foreach ($primaryLocaleRows as $localeRow)
                                         @php
@@ -187,9 +185,8 @@
             @endphp
 
             <x-ui.headers.card
-                :title="__('Sub languages')"
-                :description="__(
-                    'Select the entries you want from the sub-languages listed below that correspond to the main language.',
+                :title="__('admin.app_settings.locale.sub_languages')"
+                :description="__('admin.app_settings.locale.select_the_entries_you_want_from_the_sub_languages_listed_below_that_correspond_',
                 )"
             >
                 @if ($selectedPrimaryLanguageCode !== '' && $subLocaleRows->isNotEmpty())
@@ -200,7 +197,7 @@
                         variant="filled"
                         wire:click="toggleAllSelectedSubLocales"
                     >
-                        {{ $allSubLocalesSelected ? __('Deselect all') : __('Select all') }}
+                        {{ $allSubLocalesSelected ? __('admin.app_settings.locale.deselect_all') : __('admin.app_settings.locale.select_all') }}
                     </flux:button>
                 @endif
             </x-ui.headers.card>
@@ -208,7 +205,7 @@
             @if ($selectedPrimaryLanguageCode !== '')
                 @if ($subLocaleRows->isEmpty())
                     <div class="text-sm text-zinc-500 dark:text-zinc-400">
-                        {{ __('No sub languages are available for the selected primary language.') }}
+                        {{ __('admin.app_settings.locale.no_sub_languages_are_available_for_the_selected_primary_language') }}
                     </div>
                 @else
                     <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -237,7 +234,7 @@
                                         class="inline-flex w-full items-center"
                                         :title="$label"
                                         field="sub-locale-{{ $subLocaleRow->code }}"
-                                        :text="__('Toggle the availability of this sub-language for the App/UI.')"
+                                        :text="__('admin.app_settings.locale.toggle_the_availability_of_this_sub_language_for_the_app_ui')"
                                     >
                                         <flux:switch
                                             class="switch-colored mr-3 hover:cursor-pointer"
@@ -286,9 +283,8 @@
 
         <div class="mt-5 rounded-xl border border-zinc-200 p-4 dark:border-zinc-700">
             <x-ui.headers.card
-                :title="__('Global App / UI language')"
-                :description="__(
-                    'Enable the language and any sub-languages you may have enabled above that should apply globally to the APP/UI. The order of the selected languages, after activating a new language, will reorder the buttons!',
+                :title="__('admin.app_settings.locale.global_app_ui_language')"
+                :description="__('admin.app_settings.locale.enable_the_language_and_any_sub_languages_you_may_have_enabled_above_that_should',
                 )"
             />
 
@@ -328,7 +324,7 @@
                         <x-ui.tooltip.trigger
                             :title="$label"
                             field="locale-{{ $localeRow->code }}-sub-locale-stats"
-                            :text="__('Number of sub-languages available for this primary language.')"
+                            :text="__('admin.app_settings.locale.number_of_sub_languages_available_for_this_primary_language')"
                         >
                             <flux:button
                                 class="w-12 justify-center tabular-nums"
@@ -369,8 +365,7 @@
                         <x-ui.tooltip.trigger
                             :title="$label"
                             field="locale-{{ $localeRow->code }}-label"
-                            :text="__(
-                                'Select this primary language to manage its sub-languages and activation state.',
+                            :text="__('admin.app_settings.locale.select_this_primary_language_to_manage_its_sub_languages_and_activation_state',
                             )"
                         >
                             <flux:button
@@ -401,9 +396,9 @@
                             <x-ui.tooltip.trigger
                                 :title="$label"
                                 field="locale-{{ $localeRow->code }}-sub-locale-selected"
-                                :text="__('The number of sub-languages selected for this primary language.')"
+                                :text="__('admin.app_settings.locale.the_number_of_sub_languages_selected_for_this_primary_language')"
                                 :action-text="$canDeactivateFromGlobal
-                                    ? __('Do you really want to deactivate this language?')
+                                    ? __('admin.app_settings.locale.do_you_really_want_to_deactivate_this_language')
                                     : null"
                                 :action="$canDeactivateFromGlobal
                                     ? [
@@ -430,7 +425,7 @@
         </div>
 
         <div class="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
-            {{ __('This setting defines the global default App/UI language. User-specific language settings may override it later.') }}
+            {{ __('admin.app_settings.locale.this_setting_defines_the_global_default_app_ui_language_user_specific_language_s') }}
         </div>
     </div>
 </flux:card>

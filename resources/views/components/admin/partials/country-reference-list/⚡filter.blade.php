@@ -3,9 +3,8 @@
 {{-- Filter --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('Filtering')"
-        :description="__(
-            'Refine the list of reference countries by searching for specific attributes or applying filters based on region, status, membership and data quality.',
+        :title="__('admin.permissions.filters.title')"
+        :description="__('admin.country_reference_list.filter.refine_the_list_of_reference_countries_by_searching_for_specific_attributes_or_a',
         )"
     />
 
@@ -13,12 +12,11 @@
         <div class="col-span-2">
             <flux:label for="country-reference-list-search">
                 <x-ui.tooltip.trigger
-                    :title="__('Search')"
-                    :text="__(
-                        'Enter a search term to filter countries by ISO code, name, phone code, capital city or region. The search is case-sensitive.',
+                    :title="__('ui.actions.search')"
+                    :text="__('admin.country_reference_list.filter.enter_a_search_term_to_filter_countries_by_iso_code_name_phone_code_capital_city',
                     )"
                 >
-                    {{ __('Search') }}
+                    {{ __('ui.actions.search') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -34,7 +32,7 @@
                     clearable
                     copyable
                     wire:model.live.debounce.300ms="search"
-                    placeholder="{{ __('ISO, name, phone, capital, region') }}"
+                    placeholder="{{ __('admin.country_reference_list.filter.iso_name_phone_capital_region') }}"
                 />
             </flux:input.group>
         </div>
@@ -42,10 +40,10 @@
         <div>
             <flux:label for="country-reference-list-region-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by region')"
-                    :text="__('Select a region to filter the list of reference countries.')"
+                    :title="__('admin.country_reference_list.filter.filter_by_region')"
+                    :text="__('admin.country_reference_list.filter.select_a_region_to_filter_the_list_of_reference_countries')"
                 >
-                    {{ __('Region') }}
+                    {{ __('admin.country_reference_list.filter.region') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -55,7 +53,7 @@
                 wire:model.live="regionFilter"
             >
                 <flux:select.option value="">
-                    {{ __('All') }}
+                    {{ __('ui.states.all') }}
                 </flux:select.option>
 
                 @foreach ($regions as $region)
@@ -69,10 +67,10 @@
         <div>
             <flux:label for="country-reference-list-status-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by status')"
-                    :text="__('Select a status to filter the list of reference countries.')"
+                    :title="__('admin.client_list.filter.filter_by_status')"
+                    :text="__('admin.country_reference_list.filter.select_a_status_to_filter_the_list_of_reference_countries')"
                 >
-                    {{ __('Status') }}
+                    {{ __('admin.app_settings.table_icon_registry.status') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -82,15 +80,15 @@
                 wire:model.live="statusFilter"
             >
                 <flux:select.option value="">
-                    {{ __('All') }}
+                    {{ __('ui.states.all') }}
                 </flux:select.option>
 
                 <flux:select.option value="active">
-                    {{ __('Active') }}
+                    {{ __('admin.country_reference_list.filter.active') }}
                 </flux:select.option>
 
                 <flux:select.option value="inactive">
-                    {{ __('Inactive') }}
+                    {{ __('admin.country_reference_list.filter.inactive') }}
                 </flux:select.option>
             </flux:select>
         </div>
@@ -98,10 +96,10 @@
         <div>
             <flux:label for="country-reference-list-membership-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by membership')"
-                    :text="__('Select a membership to filter the list of reference countries.')"
+                    :title="__('admin.country_reference_list.filter.filter_by_membership')"
+                    :text="__('admin.country_reference_list.filter.select_a_membership_to_filter_the_list_of_reference_countries')"
                 >
-                    {{ __('Membership') }}
+                    {{ __('admin.country_reference_list.filter.membership') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -111,19 +109,19 @@
                 wire:model.live="membershipFilter"
             >
                 <flux:select.option value="">
-                    {{ __('All') }}
+                    {{ __('ui.states.all') }}
                 </flux:select.option>
 
                 <flux:select.option value="eu">
-                    {{ __('EU') }}
+                    {{ __('admin.country_reference_list.filter.eu') }}
                 </flux:select.option>
 
                 <flux:select.option value="eea">
-                    {{ __('EEA') }}
+                    {{ __('admin.country_reference_list.filter.eea') }}
                 </flux:select.option>
 
                 <flux:select.option value="schengen">
-                    {{ __('Schengen') }}
+                    {{ __('admin.country_reference_list.filter.schengen') }}
                 </flux:select.option>
             </flux:select>
         </div>
@@ -131,10 +129,10 @@
         <div>
             <flux:label for="country-reference-list-data-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by data quality')"
-                    :text="__('Select a data quality filter to filter the list of reference countries.')"
+                    :title="__('admin.country_reference_list.filter.filter_by_data_quality')"
+                    :text="__('admin.country_reference_list.filter.select_a_data_quality_filter_to_filter_the_list_of_reference_countries')"
                 >
-                    {{ __('Data quality') }}
+                    {{ __('admin.country_reference_list.filter.data_quality') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -144,27 +142,27 @@
                 wire:model.live="dataFilter"
             >
                 <flux:select.option value="">
-                    {{ __('All') }}
+                    {{ __('ui.states.all') }}
                 </flux:select.option>
 
                 <flux:select.option value="missing_capital">
-                    {{ __('Missing capital') }}
+                    {{ __('admin.country_reference_list.filter.missing_capital') }}
                 </flux:select.option>
 
                 <flux:select.option value="missing_phone_code">
-                    {{ __('Missing phone code') }}
+                    {{ __('admin.country_reference_list.filter.missing_phone_code') }}
                 </flux:select.option>
 
                 <flux:select.option value="missing_address_format">
-                    {{ __('Missing address format') }}
+                    {{ __('admin.country_reference_list.filter.missing_address_format') }}
                 </flux:select.option>
 
                 <flux:select.option value="with_subdivisions">
-                    {{ __('With subdivisions') }}
+                    {{ __('admin.country_reference_list.filter.with_subdivisions') }}
                 </flux:select.option>
 
                 <flux:select.option value="without_subdivisions">
-                    {{ __('Without subdivisions') }}
+                    {{ __('admin.country_reference_list.filter.without_subdivisions') }}
                 </flux:select.option>
             </flux:select>
         </div>

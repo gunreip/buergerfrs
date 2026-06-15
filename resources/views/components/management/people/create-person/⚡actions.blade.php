@@ -6,7 +6,7 @@
     --}}
     <x-ui.button.reset
         type="button"
-        :label="__('Reset')"
+        :label="__('ui.button.reset.reset')"
         wire:click="resetForm"
         wire:target="resetForm,create"
         wire:loading.attr="disabled"

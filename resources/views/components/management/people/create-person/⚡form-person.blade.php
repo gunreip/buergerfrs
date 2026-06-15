@@ -56,10 +56,10 @@
                 x-on:click="activeSection = 'address'"
             >
                 <span class="inline-flex items-center gap-2">
-                    {{ __('Address') }}
+                    {{ __('admin.country_reference_list.table.address') }}
                     <x-ui.form.tab-status-dot
                         :meta="$this->formTabStatus('address')"
-                        :label="__('Address')"
+                        :label="__('admin.country_reference_list.table.address')"
                         icon="map-pin-house"
                     />
                 </span>
@@ -224,7 +224,7 @@
             >
                 <flux:card class="space-y-4">
                     <x-ui.headers.card
-                        title="{{ __('Address') }}"
+                        title="{{ __('admin.country_reference_list.table.address') }}"
                         description="{{ __('Address fields will be placed here.') }}"
                     >
                         <flux:icon.map-pin-house

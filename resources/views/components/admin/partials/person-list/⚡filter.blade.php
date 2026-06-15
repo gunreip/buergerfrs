@@ -6,17 +6,17 @@
         class="mb-4"
         size="lg"
     >
-        {{ __('Filtering') }}
+        {{ __('admin.permissions.filters.title') }}
     </flux:heading>
 
     <div class="flex w-full items-end gap-3">
         <div class="min-w-0 flex-none basis-1/4">
             <flux:label for="person-list-search">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by search')"
+                    :title="__('admin.translation_list.filter.filter_by_search')"
                     :text="__('Enter a search term to filter the list of persons.')"
                 >
-                    {{ __('Search') }}
+                    {{ __('ui.actions.search') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -44,7 +44,7 @@
                     :title="__('Filter by user')"
                     :text="__('Select a user to filter the list of persons.')"
                 >
-                    {{ __('User') }}
+                    {{ __('admin.user_list.meta.user') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -59,7 +59,7 @@
                     wire:model.live="userFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All') }}
+                        {{ __('ui.states.all') }}
                     </flux:select.option>
 
                     <flux:select.option value="with_user">
@@ -79,7 +79,7 @@
                     :title="__('Filter by client')"
                     :text="__('Select a client to filter the list of persons.')"
                 >
-                    {{ __('Client') }}
+                    {{ __('layouts.sidebar.management.client') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -94,7 +94,7 @@
                     wire:model.live="clientFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('All') }}
+                        {{ __('ui.states.all') }}
                     </flux:select.option>
 
                     <flux:select.option value="with_client">

@@ -1,6 +1,6 @@
-<x-layouts::auth :title="__('Reset password')">
+<x-layouts::auth :title="__('pages.auth.reset_password.reset_password')">
     <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Reset password')" :description="__('Please enter your new password below')" />
+        <x-auth-header :title="__('pages.auth.reset_password.reset_password')" :description="__('Please enter your new password below')" />
 
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
@@ -23,28 +23,28 @@
             <!-- Password -->
             <flux:input
                 name="password"
-                :label="__('Password')"
+                :label="__('pages.auth.register.password')"
                 type="password"
                 required
                 autocomplete="new-password"
-                :placeholder="__('Password')"
+                :placeholder="__('pages.auth.register.password')"
                 viewable
             />
 
             <!-- Confirm Password -->
             <flux:input
                 name="password_confirmation"
-                :label="__('Confirm password')"
+                :label="__('pages.auth.register.confirm_password')"
                 type="password"
                 required
                 autocomplete="new-password"
-                :placeholder="__('Confirm password')"
+                :placeholder="__('pages.auth.register.confirm_password')"
                 viewable
             />
 
             <div class="flex items-center justify-end">
                 <flux:button type="submit" variant="primary" class="w-full" data-test="reset-password-button">
-                    {{ __('Reset password') }}
+                    {{ __('pages.auth.reset_password.reset_password') }}
                 </flux:button>
             </div>
         </form>

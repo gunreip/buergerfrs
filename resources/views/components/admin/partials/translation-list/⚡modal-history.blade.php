@@ -8,8 +8,8 @@
         <div class="flex max-h-[calc(100vh-8rem)] flex-col gap-6 overflow-hidden">
             <div class="flex shrink-0 items-start justify-between gap-4">
                 <x-ui.headers.card
-                    :title="__('Translation history')"
-                    :description="__('Audit events and change history for the selected translation key.')"
+                    :title="__('admin.translation_list.modal_history.translation_history')"
+                    :description="__('admin.translation_list.modal_history.audit_events_and_change_history_for_the_selected_translation_key')"
                 />
 
                 <flux:badge
@@ -26,7 +26,7 @@
                 stroke-width="1"
             >
                 <flux:callout.heading>
-                    {{ __('Translation key') }}
+                    {{ __('admin.translation_list.modal_edit.translation_key') }}
                 </flux:callout.heading>
 
                 <flux:text class="wrap-anywhere mt-2 font-mono text-sm">
@@ -42,11 +42,11 @@
                 <div class="mb-4 flex items-center justify-between gap-3">
                     <div>
                         <flux:callout.heading>
-                            {{ __('Events') }}
+                            {{ __('admin.translation_list.modal_history.events') }}
                         </flux:callout.heading>
 
                         <flux:callout.text>
-                            {{ __('Latest audit events for this translation key.') }}
+                            {{ __('admin.translation_list.modal_history.latest_audit_events_for_this_translation_key') }}
                         </flux:callout.text>
                     </div>
 
@@ -112,13 +112,13 @@
                                     </div>
                                 </div>
                                 <div class="text-right text-xs text-zinc-500 dark:text-zinc-400">
-                                    {{ __('Event') }} #{{ $historyEvent->id }}
+                                    {{ __('admin.translation_list.modal_history.event') }} #{{ $historyEvent->id }}
                                 </div>
                             </div>
 
                             @if ($historyEvent->reason)
                                 <div class="mt-3 text-sm">
-                                    <span class="font-semibold">{{ __('Reason') }}:</span>
+                                    <span class="font-semibold">{{ __('admin.translation_list.modal_history.reason') }}:</span>
                                     <span class="ml-2">{{ $historyEvent->reason }}</span>
                                 </div>
                             @endif
@@ -127,7 +127,7 @@
                                 <div>
                                     <div
                                         class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                                        {{ __('Old value') }}
+                                        {{ __('admin.translation_list.modal_history.old_value') }}
                                     </div>
 
                                     <div
@@ -139,7 +139,7 @@
                                 <div>
                                     <div
                                         class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                                        {{ __('New value') }}
+                                        {{ __('admin.translation_list.modal_history.new_value') }}
                                     </div>
 
                                     <div
@@ -152,12 +152,12 @@
                             @if ($historyEvent->old_status || $historyEvent->new_status)
                                 <div class="mt-3 flex flex-wrap gap-3 text-sm">
                                     <div>
-                                        <span class="font-semibold">{{ __('Old status') }}:</span>
+                                        <span class="font-semibold">{{ __('admin.translation_list.modal_history.old_status') }}:</span>
                                         <span class="ml-2 font-mono">{{ $historyEvent->old_status ?? '—' }}</span>
                                     </div>
 
                                     <div>
-                                        <span class="font-semibold">{{ __('New status') }}:</span>
+                                        <span class="font-semibold">{{ __('admin.translation_list.modal_history.new_status') }}:</span>
                                         <span class="ml-2 font-mono">{{ $historyEvent->new_status ?? '—' }}</span>
                                     </div>
                                 </div>
@@ -168,7 +168,7 @@
                                     <div>
                                         <div
                                             class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                                            {{ __('Old location') }}
+                                            {{ __('admin.translation_list.modal_history.old_location') }}
                                         </div>
 
                                         <code class="wrap-anywhere mt-1 block text-xs">
@@ -179,7 +179,7 @@
                                     <div>
                                         <div
                                             class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                                            {{ __('New location') }}
+                                            {{ __('admin.translation_list.modal_history.new_location') }}
                                         </div>
 
                                         <code class="wrap-anywhere mt-1 block text-xs">
@@ -194,7 +194,7 @@
                                     <summary
                                         class="cursor-pointer text-sm font-semibold text-zinc-600 dark:text-zinc-300"
                                     >
-                                        {{ __('Context') }}
+                                        {{ __('admin.translation_list.modal_history.context') }}
                                     </summary>
 
                                     <pre class="wrap-anywhere mt-2 overflow-x-auto rounded-lg bg-zinc-100 p-3 text-xs dark:bg-zinc-900">{{ $historyEvent->context }}</pre>
@@ -204,7 +204,7 @@
                     @empty
                         <div
                             class="rounded-xl border border-dashed border-zinc-300 p-6 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
-                            {{ __('No history events available for this translation key.') }}
+                            {{ __('admin.translation_list.modal_history.no_history_events_available_for_this_translation_key') }}
                         </div>
                     @endforelse
                 </div>
@@ -212,7 +212,7 @@
 
             <div class="flex shrink-0 justify-end">
                 <x-ui.button.cancel
-                    label="{{ __('Close') }}"
+                    label="{{ __('pages.settings.two_factor_setup_modal.close') }}"
                     icon="circle-x"
                     wire:click="closeTranslationHistory"
                 />

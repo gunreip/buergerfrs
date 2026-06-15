@@ -138,8 +138,9 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
     const required = anchorEl.dataset.tooltipRequired === 'true';
     const action = parseTooltipAction(anchorEl.dataset.tooltipAction || '');
     const context = normalizeTooltipContext(anchorEl.dataset.tooltipContext || '');
+    const contentTemplate = getTooltipContentTemplate(anchorEl);
 
-    if (!content && !title && !action) {
+    if (!content && !title && !action && !contentTemplate) {
         return;
     }
 
@@ -164,7 +165,7 @@ function showGlobalTooltip(anchorEl, delay = null, pointer = null) {
     }
 
     if (contentEl) {
-        renderTooltipContent(contentEl, content);
+        renderTooltipContent(contentEl, content, contentTemplate);
     }
 
     if (requiredBadge) {
@@ -313,6 +314,20 @@ function renderTooltipAction(actionWrapEl, actionTextEl, actionButtonEl, action)
     });
 }
 
+function getTooltipContentTemplate(anchorEl) {
+    if (!(anchorEl instanceof Element)) {
+        return null;
+    }
+
+    if (anchorEl.dataset.tooltipContent !== 'slot') {
+        return null;
+    }
+
+    const template = anchorEl.querySelector('template[data-tooltip-content-template]');
+
+    return template instanceof HTMLTemplateElement ? template : null;
+}
+
 function positionTooltip(tooltip, anchorEl, pointer = null, tooltipContainer = document.body) {
     const rect = anchorEl.getBoundingClientRect();
 
@@ -323,16 +338,27 @@ function positionTooltip(tooltip, anchorEl, pointer = null, tooltipContainer = d
     const containerScrollX = isBodyContainer ? window.scrollX : tooltipContainer.scrollLeft;
     const containerScrollY = isBodyContainer ? window.scrollY : tooltipContainer.scrollTop;
 
+    const viewportWidth = isBodyContainer ? window.innerWidth : tooltipContainer.clientWidth;
+    const viewportHeight = isBodyContainer ? window.innerHeight : tooltipContainer.clientHeight;
+    const viewportLeft = containerScrollX;
+    const viewportTop = containerScrollY;
+    const viewportRight = viewportLeft + viewportWidth;
+    const viewportBottom = viewportTop + viewportHeight;
+
     const localAnchorLeft = rect.left - containerRect.left + containerScrollX;
     const localAnchorTop = rect.top - containerRect.top + containerScrollY;
     const localAnchorBottom = rect.bottom - containerRect.top + containerScrollY;
 
-    const viewportWidth = isBodyContainer ? window.innerWidth : tooltipContainer.clientWidth;
-    const viewportHeight = isBodyContainer ? window.innerHeight : tooltipContainer.clientHeight;
-    const maxTooltipWidth = Math.min(TOOLTIP_MAX_WIDTH, viewportWidth - VIEWPORT_PADDING * 2);
+    const maxTooltipWidth = Math.max(
+        160,
+        Math.min(TOOLTIP_MAX_WIDTH, viewportWidth - VIEWPORT_PADDING * 2),
+    );
+    const maxTooltipHeight = Math.max(120, viewportHeight - VIEWPORT_PADDING * 2);
 
     tooltip.style.width = 'max-content';
     tooltip.style.maxWidth = `${maxTooltipWidth}px`;
+    tooltip.style.maxHeight = `${maxTooltipHeight}px`;
+    tooltip.style.overflowY = 'auto';
     tooltip.style.transform = 'none';
 
     const tooltipRect = tooltip.getBoundingClientRect();
@@ -342,12 +368,12 @@ function positionTooltip(tooltip, anchorEl, pointer = null, tooltipContainer = d
         : localAnchorLeft + rect.width / 2;
 
     const preferredLeft = preferredCenterX - tooltipRect.width / 2;
-    const minLeft = VIEWPORT_PADDING;
-    const maxLeft = viewportWidth - VIEWPORT_PADDING - tooltipRect.width;
+    const minLeft = viewportLeft + VIEWPORT_PADDING;
+    const maxLeft = viewportRight - VIEWPORT_PADDING - tooltipRect.width;
     const left = clamp(preferredLeft, minLeft, Math.max(minLeft, maxLeft));
 
-    const spaceAbove = localAnchorTop;
-    const spaceBelow = viewportHeight - localAnchorBottom;
+    const spaceAbove = localAnchorTop - viewportTop;
+    const spaceBelow = viewportBottom - localAnchorBottom;
     const shouldPlaceAbove = spaceAbove >= tooltipRect.height + TOOLTIP_OFFSET
         || spaceAbove > spaceBelow;
 
@@ -355,8 +381,8 @@ function positionTooltip(tooltip, anchorEl, pointer = null, tooltipContainer = d
         ? localAnchorTop - tooltipRect.height - TOOLTIP_OFFSET
         : localAnchorBottom + TOOLTIP_OFFSET;
 
-    const minTop = VIEWPORT_PADDING;
-    const maxTop = viewportHeight - VIEWPORT_PADDING - tooltipRect.height;
+    const minTop = viewportTop + VIEWPORT_PADDING;
+    const maxTop = viewportBottom - VIEWPORT_PADDING - tooltipRect.height;
     const top = clamp(preferredTop, minTop, Math.max(minTop, maxTop));
 
     tooltip.style.left = `${left}px`;
@@ -364,9 +390,16 @@ function positionTooltip(tooltip, anchorEl, pointer = null, tooltipContainer = d
     tooltip.scrollTop = 0;
 }
 
-function renderTooltipContent(contentEl, content) {
+function renderTooltipContent(contentEl, content, contentTemplate = null) {
     contentEl.replaceChildren();
-    contentEl.classList.remove('whitespace-pre-line');
+    contentEl.classList.remove('whitespace-pre-line', 'space-y-1.5', 'tooltip-content-rich');
+
+    if (contentTemplate instanceof HTMLTemplateElement) {
+        contentEl.appendChild(contentTemplate.content.cloneNode(true));
+        contentEl.classList.add('tooltip-content-rich');
+
+        return;
+    }
 
     if (isLegendContent(content)) {
         renderLegendContent(contentEl, content);

@@ -6,33 +6,33 @@
         class="mb-4"
         size="lg"
     >
-        {{ __('Icon Registry') }}
+        {{ __('admin.app_settings.table_icon_registry.icon_registry') }}
     </flux:heading>
 
     <div class="overflow-hidden rounded-t-lg">
         <flux:table>
             <flux:table.columns class="bg-zinc-800 text-zinc-400">
                 <flux:table.column align="center">
-                    {{ __('#') }}
+                    {{ __('ui.labels.number_short') }}
                 </flux:table.column>
 
                 <flux:table.column sortable>
-                    {{ __('Icon') }}
+                    {{ __('admin.roles.badge.icon') }}
                 </flux:table.column>
 
                 <flux:table.column sortable>
-                    {{ __('Label') }}
+                    {{ __('admin.app_settings.table_icon_registry.label') }}
                 </flux:table.column>
 
                 <flux:table.column sortable>
-                    {{ __('View') }}
+                    {{ __('admin.app_settings.table_icon_registry.view') }}
                 </flux:table.column>
 
                 <flux:table.column
                     align="center"
                     sortable
                 >
-                    {{ __('Status') }}
+                    {{ __('admin.app_settings.table_icon_registry.status') }}
                 </flux:table.column>
             </flux:table.columns>
 
@@ -76,14 +76,14 @@
                                     color="green"
                                     variant="subtle"
                                 >
-                                    {{ __('Available') }}
+                                    {{ __('admin.app_settings.table_icon_registry.available') }}
                                 </flux:badge>
                             @else
                                 <flux:badge
                                     color="red"
                                     variant="subtle"
                                 >
-                                    {{ __('Missing') }}
+                                    {{ __('admin.app_settings.table_icon_registry.missing') }}
                                 </flux:badge>
                             @endif
                         </flux:table.cell>

@@ -7,8 +7,8 @@
     'mono' => false,
     'resize' => 'none',
     'emptyValue' => '—',
-    'copyLabel' => __('Copy to clipboard'),
-    'copiedLabel' => __('Copied'),
+    'copyLabel' => __('ui.text.copyable_field.copy_to_clipboard'),
+    'copiedLabel' => __('admin.translation_list.copied'),
 ])
 
 @php

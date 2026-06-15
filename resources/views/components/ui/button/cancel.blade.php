@@ -4,13 +4,13 @@
 <x-ui.button.cancel />
 <x-ui.button.cancel icon="x-mark" />
 <x-ui.button.cancel :icon="false" />
-<x-ui.button.cancel label="{{ __('Cancel') }}" />
+<x-ui.button.cancel label="{{ __('ui.button.cancel.cancel') }}" />
 --}}
 
 {{-- cancel  → red/danger, x-mark, Cancel --}}
 
 @props([
-    'label' => __('Cancel'),
+    'label' => __('ui.button.cancel.cancel'),
     'icon' => true,
     'type' => 'button',
     'size' => null,

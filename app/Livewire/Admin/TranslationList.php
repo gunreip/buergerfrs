@@ -14,14 +14,34 @@ use Flux\Flux;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
 /**
- * Translation administration list with filtering, pagination and modal workflows.
+ * Livewire administration component for the translation list and review workflow.
+ *
+ * This component is the central UI controller for browsing, filtering, reviewing,
+ * editing and auditing translation keys in the administration area. It combines
+ * persisted list filters, workflow scopes, language and namespace filters, status
+ * counters, paginated table rendering and the review/edit/history modal workflows.
+ *
+ * The component intentionally separates database-level translation metadata from
+ * code-rewrite operations. UI actions may update translation values, suggested-key
+ * decisions or workflow metadata, but source-code rewrites are handled by the
+ * dedicated translation audit and project translation console commands.
+ *
+ * Main responsibilities:
+ * - maintain persisted filter, sorting and pagination state for the translation list;
+ * - provide workflow counters for open, reviewed, completed, problem and archive states;
+ * - render review, edit and history modal data for selected translation keys;
+ * - persist manual translation value changes and write audit events;
+ * - expose Usage-Audit follow-up filters such as the Needs-Key focus without directly
+ *   applying source-code changes.
  */
 class TranslationList extends Component
 {
@@ -29,11 +49,30 @@ class TranslationList extends Component
     use WithoutUrlPagination;
     use WithPagination;
 
+    /**
+     * User-settings key used to persist this page's list state per authenticated user.
+     *
+     * The persisted payload is intentionally limited to UI state such as filters, sorting and
+     * pagination. Modal state, selected rows and editable form values are kept ephemeral.
+     */
     private const UI_STATE_SETTING_KEY = 'ui.pages.admin_translation_list';
 
+    /**
+     * Translation usage reason written by the audit sync when a previously known usage was not
+     * found in the latest scan anymore.
+     *
+     * Active list scopes ignore these stale usages so the default workflow focuses on current
+     * code-relevant translation entries, while archived/review contexts can still inspect them.
+     */
     private const STALE_AUDIT_USAGE_REASON = 'stale_audit_usage_not_seen_in_latest_sync';
 
     /**
+     * Livewire public properties that are persisted as page UI state.
+     *
+     * Each property listed here resets pagination when changed and is written through the
+     * InteractsWithUserSettings concern. Keeping this allow-list explicit prevents modal-specific
+     * or transient editing state from leaking into the user's saved page preferences.
+     *
      * @var array<int, string>
      */
     private const PERSISTED_STATE_PROPERTIES = [
@@ -44,16 +83,31 @@ class TranslationList extends Component
         'showArchived',
         'onlyProblems',
         'onlyBaseDuplicates',
+        'onlyNeedsKey',
         'languageFilter',
-        'fileFilter',
+        'namespaceFilter',
+        'groupFilter',
         'perPage',
+        'sortField',
+        'sortDirection',
     ];
 
+    /**
+     * Translation-key statuses considered actionable problems by the quick-focus filter.
+     *
+     * Obsolete and invalid entries are handled by their own workflow/status controls, so this
+     * problem set intentionally stays focused on missing values and dynamic keys that need review.
+     *
+     * @var array<int, string>
+     */
     private const PROBLEM_STATUSES = [
         'missing',
         'dynamic',
     ];
 
+    /**
+     * Free-text search over keys, suggested keys, native text, values and usage metadata.
+     */
     public string $search = '';
 
     public string $status = 'all';
@@ -68,9 +122,19 @@ class TranslationList extends Component
 
     public bool $onlyBaseDuplicates = false;
 
+    /**
+     * Focus the list on translation keys that have a Usage-Audit follow-up marked as Needs-Key.
+     *
+     * This is a review/navigation filter only. It does not create keys and does not rewrite source
+     * code; those operations remain part of the translation command pipeline.
+     */
+    public bool $onlyNeedsKey = false;
+
     public string $languageFilter = '';
 
-    public string $fileFilter = '';
+    public string $namespaceFilter = '';
+
+    public string $groupFilter = '';
 
     public int $perPage = 25;
 
@@ -83,6 +147,8 @@ class TranslationList extends Component
     public bool $translationEditModalOpen = false;
 
     public array $translationEditValues = [];
+
+    public array $translationEditSubLanguageLocales = [];
 
     public ?int $focusedTranslationKeyId = null;
 
@@ -140,6 +206,9 @@ class TranslationList extends Component
 
     /**
      * Restore persisted UI state for this page.
+     *
+     * Stored values are normalized before assignment so stale settings, unsupported option values
+     * or outdated page-size values cannot put the component into an invalid filter state.
      */
     public function mount(): void
     {
@@ -156,9 +225,13 @@ class TranslationList extends Component
         $this->showArchived = (bool) ($state['showArchived'] ?? $this->showArchived);
         $this->onlyProblems = (bool) ($state['onlyProblems'] ?? $this->onlyProblems);
         $this->onlyBaseDuplicates = (bool) ($state['onlyBaseDuplicates'] ?? $this->onlyBaseDuplicates);
+        $this->onlyNeedsKey = (bool) ($state['onlyNeedsKey'] ?? $this->onlyNeedsKey);
         $this->languageFilter = trim((string) ($state['languageFilter'] ?? $this->languageFilter));
-        $this->fileFilter = trim((string) ($state['fileFilter'] ?? $this->fileFilter));
+        $this->namespaceFilter = trim((string) ($state['namespaceFilter'] ?? $this->namespaceFilter));
+        $this->groupFilter = trim((string) ($state['groupFilter'] ?? $this->groupFilter));
         $this->perPage = $this->normalizedPerPage($state['perPage'] ?? $this->perPage);
+        $this->sortField = $this->normalizeSortField($state['sortField'] ?? $this->sortField);
+        $this->sortDirection = $this->normalizeSortDirection($state['sortDirection'] ?? $this->sortDirection);
 
         $this->setPage(1);
     }
@@ -176,11 +249,55 @@ class TranslationList extends Component
     }
 
     /**
+     * Keep the group filter valid when the namespace filter changes.
+     *
+     * Groups are namespace-dependent in the UI. If the currently selected group is no longer
+     * available after changing the namespace, the group filter is cleared to avoid an empty result
+     * set caused by an impossible namespace/group combination.
+     */
+    public function updatedNamespaceFilter(): void
+    {
+        if ($this->groupFilter === '') {
+            return;
+        }
+
+        $availableGroups = $this->filteredTranslationKeyQuery(['groupFilter'])
+            ->whereNotNull('group')
+            ->distinct()
+            ->pluck('group')
+            ->filter(static fn(mixed $group): bool => is_string($group) && trim($group) !== '')
+            ->values()
+            ->all();
+
+        if (! in_array($this->groupFilter, $availableGroups, true)) {
+            $this->groupFilter = '';
+        }
+    }
+
+    /**
      * Normalize selectable page size when changed from UI.
      */
     public function updatedPerPage(): void
     {
         $this->perPage = $this->normalizedPerPage($this->perPage);
+        $this->persistUiState();
+    }
+
+    /**
+     * Sort the translation list by the selected field.
+     */
+    public function sortBy(string $field): void
+    {
+        $field = $this->normalizeSortField($field);
+
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = $field === 'updated_at' ? 'desc' : 'asc';
+        }
+
+        $this->resetPage();
         $this->persistUiState();
     }
 
@@ -321,6 +438,20 @@ class TranslationList extends Component
     }
 
     /**
+     * Toggle the Usage-Audit Needs-Key follow-up filter and reset pagination.
+     *
+     * This filter intentionally uses the decision tables as its source of truth instead of the
+     * regular translation-key status. That keeps Usage-Audit follow-up work separate from general
+     * missing/obsolete/dynamic translation status handling.
+     */
+    public function toggleOnlyNeedsKey(): void
+    {
+        $this->onlyNeedsKey = ! $this->onlyNeedsKey;
+        $this->resetPage();
+        $this->persistUiState();
+    }
+
+    /**
      * Restore default filter and pagination state.
      */
     public function clearFilters(): void
@@ -332,9 +463,13 @@ class TranslationList extends Component
         $this->showArchived = false;
         $this->onlyProblems = false;
         $this->onlyBaseDuplicates = false;
+        $this->onlyNeedsKey = false;
         $this->languageFilter = '';
-        $this->fileFilter = '';
+        $this->namespaceFilter = '';
+        $this->groupFilter = '';
         $this->perPage = 25;
+        $this->sortField = 'updated_at';
+        $this->sortDirection = 'desc';
 
         $this->resetPage();
         $this->persistUiState();
@@ -479,24 +614,22 @@ class TranslationList extends Component
             return;
         }
 
-        $translationLanguages = TranslationLanguage::query()
-            ->where('is_enabled_for_translation', true)
-            ->orderBy('sort_order', 'asc')
-            ->orderBy('locale', 'asc')
-            ->get(['locale']);
+        $translationLanguages = $this->resolveTranslationEditLanguages();
 
         $this->translationEditValues = $translationLanguages
-            ->mapWithKeys(function (TranslationLanguage $translationLanguage) use ($translationKey): array {
-                $translationValue = $translationKey->values->firstWhere('locale', $translationLanguage->locale);
+            ->mapWithKeys(function (object $translationLanguage) use ($translationKey): array {
+                $locale = LocaleCode::normalize((string) ($translationLanguage->locale ?? ''));
+                $translationValue = $translationKey->values->firstWhere('locale', $locale);
 
                 return [
-                    $translationLanguage->locale => (string) ($translationValue?->value ?? ''),
+                    $locale => (string) ($translationValue?->value ?? ''),
                 ];
             })
             ->all();
 
         $this->focusedTranslationKeyId = $translationKey->id;
         $this->editingTranslationKeyId = $translationKey->id;
+        $this->translationEditSubLanguageLocales = $this->defaultTranslationEditSubLanguageLocales();
         $this->translationEditModalOpen = true;
     }
 
@@ -505,9 +638,167 @@ class TranslationList extends Component
      */
     public function closeTranslationEdit(): void
     {
+        $hasUnsavedChanges = $this->hasUnsavedTranslationEditChanges();
+
         $this->translationEditModalOpen = false;
         $this->editingTranslationKeyId = null;
         $this->translationEditValues = [];
+        $this->translationEditSubLanguageLocales = [];
+
+        if ($hasUnsavedChanges) {
+            Flux::toast(
+                heading: __('admin.translation_list.changes_discarded'),
+                text: __('admin.translation_list.unsaved_translation_value_changes_have_been_discarded'),
+                variant: 'warning',
+                duration: 5000,
+            );
+        }
+    }
+
+    /**
+     * Determine whether the current edit modal contains unsaved value changes.
+     */
+    private function hasUnsavedTranslationEditChanges(): bool
+    {
+        if (! $this->editingTranslationKeyId) {
+            return false;
+        }
+
+        if ($this->translationEditValues === []) {
+            return false;
+        }
+
+        $storedValues = TranslationValue::query()
+            ->where('translation_key_id', $this->editingTranslationKeyId)
+            ->whereIn(
+                'locale',
+                collect($this->translationEditValues)
+                    ->keys()
+                    ->map(static fn(mixed $locale): string => LocaleCode::normalize((string) $locale))
+                    ->filter()
+                    ->unique()
+                    ->values()
+                    ->all(),
+            )
+            ->get(['locale', 'value'])
+            ->mapWithKeys(static fn(TranslationValue $translationValue): array => [
+                LocaleCode::normalize((string) ($translationValue->locale ?? '')) => (string) ($translationValue->value ?? ''),
+            ]);
+
+        foreach ($this->translationEditValues as $locale => $currentValue) {
+            $normalizedLocale = LocaleCode::normalize((string) $locale);
+
+            if ($normalizedLocale === '') {
+                continue;
+            }
+
+            $currentValue = trim((string) $currentValue);
+            $storedValue = trim((string) ($storedValues->get($normalizedLocale) ?? ''));
+
+            if ($currentValue !== $storedValue) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Toggle one active sub-language in the edit modal to reveal its textarea.
+     */
+    public function selectTranslationEditSubLanguage(string $locale): void
+    {
+        $normalizedLocale = LocaleCode::normalize($locale);
+
+        if ($normalizedLocale === '') {
+            return;
+        }
+
+        $allowedLocales = $this->resolveActiveSubLanguagesForCurrentTargetFilter()
+            ->pluck('locale')
+            ->map(static fn(mixed $item): string => LocaleCode::normalize((string) $item))
+            ->filter()
+            ->values()
+            ->all();
+
+        if (! in_array($normalizedLocale, $allowedLocales, true)) {
+            return;
+        }
+
+        $selectedLocales = collect($this->translationEditSubLanguageLocales)
+            ->map(static fn(mixed $item): string => LocaleCode::normalize((string) $item))
+            ->filter()
+            ->unique()
+            ->values();
+
+        $this->translationEditSubLanguageLocales = $selectedLocales->contains($normalizedLocale)
+            ? $selectedLocales->reject(static fn(string $locale): bool => $locale === $normalizedLocale)->values()->all()
+            : $selectedLocales->push($normalizedLocale)->unique()->values()->all();
+    }
+
+    /**
+     * Copy the first selected sub-language value to all other selected sub-language values.
+     */
+    public function copyFirstSelectedSubLanguageValueToAllSelectedSubLanguages(): void
+    {
+        if (! $this->editingTranslationKeyId) {
+            return;
+        }
+
+        $selectedLocales = collect($this->translationEditSubLanguageLocales)
+            ->map(static fn(mixed $locale): string => LocaleCode::normalize((string) $locale))
+            ->filter()
+            ->unique()
+            ->values();
+
+        if ($selectedLocales->count() < 2) {
+            return;
+        }
+
+        $sourceLocale = (string) $selectedLocales->first();
+        $sourceValue = (string) ($this->translationEditValues[$sourceLocale] ?? '');
+
+        foreach ($selectedLocales->skip(1) as $targetLocale) {
+            $this->translationEditValues[$targetLocale] = $sourceValue;
+        }
+
+        Flux::toast(
+            heading: __('admin.translation_list.copied'),
+            text: __('admin.translation_list.the_first_language_variation_value_was_copied_to_all_visible_language_variations'),
+            variant: 'info',
+            duration: 4000,
+        );
+    }
+
+    /**
+     * Clear all selected sub-language values currently visible in the edit modal.
+     */
+    public function clearSelectedSubLanguageValues(): void
+    {
+        if (! $this->editingTranslationKeyId) {
+            return;
+        }
+
+        $selectedLocales = collect($this->translationEditSubLanguageLocales)
+            ->map(static fn(mixed $locale): string => LocaleCode::normalize((string) $locale))
+            ->filter()
+            ->unique()
+            ->values();
+
+        if ($selectedLocales->isEmpty()) {
+            return;
+        }
+
+        foreach ($selectedLocales as $locale) {
+            $this->translationEditValues[$locale] = '';
+        }
+
+        Flux::toast(
+            heading: __('admin.translation_list.cleared'),
+            text: __('admin.translation_list.all_visible_language_variation_values_have_been_cleared'),
+            variant: 'warning',
+            duration: 4000,
+        );
     }
 
     /**
@@ -587,8 +878,8 @@ class TranslationList extends Component
 
         if ($suggestedKey === '') {
             Flux::toast(
-                heading: __('No suggested key available'),
-                text: __('There is no suggested key to apply for this entry.'),
+                heading: __('admin.translation_list.no_suggested_key_available'),
+                text: __('admin.translation_list.there_is_no_suggested_key_to_apply_for_this_entry'),
                 variant: 'warning',
                 duration: 5000,
             );
@@ -598,8 +889,8 @@ class TranslationList extends Component
 
         if ($currentKey === $suggestedKey) {
             Flux::toast(
-                heading: __('Suggested key already applied'),
-                text: __('The translation key already matches the suggested key.'),
+                heading: __('admin.translation_list.suggested_key_already_applied'),
+                text: __('admin.translation_list.the_translation_key_already_matches_the_suggested_key'),
                 variant: 'info',
                 duration: 4000,
             );
@@ -634,8 +925,8 @@ class TranslationList extends Component
         $this->focusedTranslationKeyId = $translationKey->id;
 
         Flux::toast(
-            heading: __('Suggested key applied'),
-            text: __('The suggested key has been copied to the translation key.'),
+            heading: __('admin.translation_list.suggested_key_applied'),
+            text: __('admin.translation_list.the_suggested_key_has_been_copied_to_the_translation_key'),
             variant: 'success',
             duration: 5000,
         );
@@ -654,8 +945,8 @@ class TranslationList extends Component
 
         if (($translationKey->status ?? '') !== 'obsolete') {
             Flux::toast(
-                heading: __('Review not applicable'),
-                text: __('Only obsolete entries can be marked as reviewed.'),
+                heading: __('admin.translation_list.review_not_applicable'),
+                text: __('admin.translation_list.only_obsolete_entries_can_be_marked_as_reviewed'),
                 variant: 'warning',
                 duration: 5000,
             );
@@ -665,8 +956,8 @@ class TranslationList extends Component
 
         if (($translationKey->workflow_status ?? 'open') === 'reviewed') {
             Flux::toast(
-                heading: __('Already reviewed'),
-                text: __('This obsolete entry is already marked as reviewed.'),
+                heading: __('admin.translation_list.already_reviewed'),
+                text: __('admin.translation_list.this_obsolete_entry_is_already_marked_as_reviewed'),
                 variant: 'info',
                 duration: 4000,
             );
@@ -696,8 +987,112 @@ class TranslationList extends Component
         $this->focusedTranslationKeyId = $translationKey->id;
 
         Flux::toast(
-            heading: __('Obsolete entry reviewed'),
-            text: __('The obsolete entry has been marked as reviewed and leaves the default workflow list.'),
+            heading: __('admin.translation_list.obsolete_entry_reviewed'),
+            text: __('admin.translation_list.the_obsolete_entry_has_been_marked_as_reviewed_and_leaves_the_default_workflow_l'),
+            variant: 'success',
+            duration: 5000,
+        );
+    }
+
+    /**
+     * Mark a translation key as manually requiring a new translation key.
+     *
+     * This state is intentionally stored directly on translation_keys and not in Usage-Audit decision
+     * rows, so it remains independent from generated audit reports and usage-decision commands.
+     */
+    public function markNeedsNewKeyManually(int $translationKeyId): void
+    {
+        $translationKey = TranslationKey::query()->find($translationKeyId);
+
+        if (! $translationKey) {
+            return;
+        }
+
+        $wasActive = $translationKey->needs_new_key_marked_at !== null
+            && $translationKey->needs_new_key_resolved_at === null;
+
+        if ($wasActive) {
+            Flux::toast(
+                heading: __('Needs new key already marked'),
+                text: __('This translation key is already marked as needing a new key.'),
+                variant: 'info',
+                duration: 4000,
+            );
+
+            return;
+        }
+
+        $translationKey->forceFill([
+            'needs_new_key_marked_at' => now(),
+            'needs_new_key_marked_by_user_id' => Auth::id(),
+            'needs_new_key_note' => 'marked_manually_from_translation_list',
+            'needs_new_key_resolved_at' => null,
+        ])->save();
+
+        $this->createTranslationManualNeedsNewKeyAuditEvent(
+            translationKey: $translationKey,
+            wasActive: false,
+            isActive: true,
+            reason: 'manual_needs_new_key_marked_from_translation_list',
+            context: [
+                'source' => 'translation_list',
+            ],
+        );
+
+        $this->focusedTranslationKeyId = $translationKey->id;
+
+        Flux::toast(
+            heading: __('Needs new key marked'),
+            text: __('This translation key has been manually marked as needing a new key.'),
+            variant: 'success',
+            duration: 5000,
+        );
+    }
+
+    /**
+     * Resolve the manual Needs-New-Key marker without touching audit-generated follow-ups.
+     */
+    public function clearNeedsNewKeyManually(int $translationKeyId): void
+    {
+        $translationKey = TranslationKey::query()->find($translationKeyId);
+
+        if (! $translationKey) {
+            return;
+        }
+
+        $wasActive = $translationKey->needs_new_key_marked_at !== null
+            && $translationKey->needs_new_key_resolved_at === null;
+
+        if (! $wasActive) {
+            Flux::toast(
+                heading: __('Needs new key is not active'),
+                text: __('This translation key is not manually marked as needing a new key.'),
+                variant: 'info',
+                duration: 4000,
+            );
+
+            return;
+        }
+
+        $translationKey->forceFill([
+            'needs_new_key_resolved_at' => now(),
+        ])->save();
+
+        $this->createTranslationManualNeedsNewKeyAuditEvent(
+            translationKey: $translationKey,
+            wasActive: true,
+            isActive: false,
+            reason: 'manual_needs_new_key_resolved_from_translation_list',
+            context: [
+                'source' => 'translation_list',
+            ],
+        );
+
+        $this->focusedTranslationKeyId = $translationKey->id;
+
+        Flux::toast(
+            heading: __('Needs new key resolved'),
+            text: __('The manual Needs-New-Key marker has been resolved.'),
             variant: 'success',
             duration: 5000,
         );
@@ -720,16 +1115,12 @@ class TranslationList extends Component
             return;
         }
 
-        $translationLanguages = TranslationLanguage::query()
-            ->where('is_enabled_for_translation', true)
-            ->orderBy('sort_order', 'asc')
-            ->orderBy('locale', 'asc')
-            ->get(['locale']);
+        $translationLanguages = $this->resolveTranslationEditLanguages();
 
         $this->validate(
             $translationLanguages
-                ->mapWithKeys(fn(TranslationLanguage $translationLanguage): array => [
-                    'translationEditValues.' . $translationLanguage->locale => [
+                ->mapWithKeys(fn(object $translationLanguage): array => [
+                    'translationEditValues.' . LocaleCode::normalize((string) ($translationLanguage->locale ?? '')) => [
                         'nullable',
                         'string',
                         'max:10000',
@@ -739,7 +1130,7 @@ class TranslationList extends Component
         );
 
         foreach ($translationLanguages as $translationLanguage) {
-            $locale = $translationLanguage->locale;
+            $locale = LocaleCode::normalize((string) ($translationLanguage->locale ?? ''));
             $value = (string) ($this->translationEditValues[$locale] ?? '');
 
             $existingTranslationValue = TranslationValue::query()
@@ -785,8 +1176,8 @@ class TranslationList extends Component
         $this->focusedTranslationKeyId = $translationKey->id;
 
         Flux::toast(
-            heading: __('Translation values saved'),
-            text: __('The translation values have been saved successfully.'),
+            heading: __('admin.translation_list.translation_values_saved'),
+            text: __('admin.translation_list.the_translation_values_have_been_saved_successfully'),
             variant: 'success',
             duration: 5000,
         );
@@ -804,17 +1195,161 @@ class TranslationList extends Component
             || $this->showArchived
             || $this->onlyProblems
             || $this->onlyBaseDuplicates
+            || $this->onlyNeedsKey
             || $this->languageFilter !== ''
-            || $this->fileFilter !== ''
+            || $this->namespaceFilter !== ''
+            || $this->groupFilter !== ''
             || $this->perPage !== 25;
     }
 
     /**
-     * Build the base translation key query with all active filters applied.
+     * Normalize sortable table field names.
+     */
+    private function normalizeSortField(mixed $field): string
+    {
+        $field = is_string($field) ? trim($field) : '';
+
+        return in_array($field, [
+            'id',
+            'status',
+            'key',
+            'native_text',
+            'usages_count',
+            'updated_at',
+        ], true)
+            ? $field
+            : 'updated_at';
+    }
+
+    /**
+     * Normalize sortable table direction.
+     */
+    private function normalizeSortDirection(mixed $direction): string
+    {
+        return $direction === 'asc' ? 'asc' : 'desc';
+    }
+
+    /**
+     * Apply the active table sorting to the translation key query.
+     */
+    private function applyTranslationKeySort(Builder $query): Builder
+    {
+        $direction = $this->normalizeSortDirection($this->sortDirection);
+
+        return match ($this->normalizeSortField($this->sortField)) {
+            'id' => $query
+                ->orderBy('translation_keys.id', $direction),
+
+            'status' => $query
+                ->orderBy('translation_keys.status', $direction)
+                ->orderBy('translation_keys.id', 'asc'),
+
+            'key' => $query
+                ->orderByRaw("LOWER(COALESCE(NULLIF(translation_keys.key, ''), translation_keys.suggested_key, '')) {$direction}")
+                ->orderBy('translation_keys.id', 'asc'),
+
+            'native_text' => $query
+                ->orderByRaw("LOWER(COALESCE(translation_keys.native_text, '')) {$direction}")
+                ->orderBy('translation_keys.id', 'asc'),
+
+            'usages_count' => $query
+                ->orderBy('usages_count', $direction)
+                ->orderBy('translation_keys.id', 'asc'),
+
+            default => $query
+                ->orderBy('translation_keys.updated_at', $direction)
+                ->orderBy('translation_keys.id', 'asc'),
+        };
+    }
+
+    /**
+     * Build the TranslationKey-id query for Usage-Audit Needs-Key follow-ups.
+     *
+     * The subquery links decision usages back to translation_keys.id and is reused for filtering
+     * the list. A TranslationKey qualifies when either the parent decision or at least one linked
+     * usage row was explicitly marked as needing a real key.
+     */
+    private function needsKeyUsageAuditTranslationKeyIdQuery()
+    {
+        return DB::table('translation_usage_audit_decision_usages')
+            ->select('translation_usage_audit_decision_usages.translation_key_id')
+            ->join(
+                'translation_usage_audit_decisions',
+                'translation_usage_audit_decisions.id',
+                '=',
+                'translation_usage_audit_decision_usages.translation_usage_audit_decision_id',
+            )
+            ->whereNotNull('translation_usage_audit_decision_usages.translation_key_id')
+            ->where(function ($query): void {
+                $query
+                    ->where('translation_usage_audit_decisions.decision_status', 'needs_key')
+                    ->orWhere('translation_usage_audit_decisions.decision_action', 'create_new_key')
+                    ->orWhere('translation_usage_audit_decision_usages.change_status', 'needs_key');
+            })
+            ->distinct();
+    }
+
+    /**
+     * Build a per-TranslationKey count query for Usage-Audit Needs-Key follow-ups.
+     *
+     * The result is selected as needs_key_usage_audit_follow_up_count for table badges and modal
+     * context. Keeping this as a correlated subquery avoids eager-loading decision models for each
+     * visible row.
+     */
+    private function needsKeyUsageAuditFollowUpCountQuery()
+    {
+        return DB::table('translation_usage_audit_decision_usages')
+            ->selectRaw('count(*)')
+            ->join(
+                'translation_usage_audit_decisions',
+                'translation_usage_audit_decisions.id',
+                '=',
+                'translation_usage_audit_decision_usages.translation_usage_audit_decision_id',
+            )
+            ->whereColumn('translation_usage_audit_decision_usages.translation_key_id', 'translation_keys.id')
+            ->where(function ($query): void {
+                $query
+                    ->where('translation_usage_audit_decisions.decision_status', 'needs_key')
+                    ->orWhere('translation_usage_audit_decisions.decision_action', 'create_new_key')
+                    ->orWhere('translation_usage_audit_decision_usages.change_status', 'needs_key');
+            });
+    }
+
+    /**
+     * Resolve filters that must not narrow the list when the Usage-Audit needs-key focus is active.
+     *
+     * @return array<int, string>
+     */
+    private function onlyNeedsKeyListFilterExceptions(): array
+    {
+        if (! $this->onlyNeedsKey) {
+            return [];
+        }
+
+        return [
+            'workflowStatus',
+            'status',
+            'classification',
+            'onlyProblems',
+            'onlyBaseDuplicates',
+            'search',
+            'languageFilter',
+            'namespaceFilter',
+            'groupFilter',
+        ];
+    }
+
+    /**
+     * Build the base translation key query used by the visible table and list-navigation actions.
+     *
+     * The query includes row metadata required by the UI, such as usage counts, history-event counts
+     * and Usage-Audit follow-up counts. Sorting is applied last so all list consumers share the same
+     * row order.
      */
     private function translationKeyQuery(): Builder
     {
-        return $this->filteredTranslationKeyQuery()
+        $query = $this->filteredTranslationKeyQuery($this->onlyNeedsKeyListFilterExceptions())
+            ->select('translation_keys.*')
             ->with([
                 'values' => fn($query) => $query->orderBy('locale'),
             ])
@@ -825,7 +1360,12 @@ class TranslationList extends Component
                     ->whereColumn('translation_audit_events.translation_key_id', 'translation_keys.id'),
                 'history_events_count'
             )
-            ->latest('updated_at');
+            ->selectSub(
+                $this->needsKeyUsageAuditFollowUpCountQuery(),
+                'needs_key_usage_audit_follow_up_count',
+            );
+
+        return $this->applyTranslationKeySort($query);
     }
 
     /**
@@ -865,8 +1405,16 @@ class TranslationList extends Component
                 },
             )
             ->when(
-                ! in_array('fileFilter', $exceptFilters, true) && $this->fileFilter !== '',
-                fn(Builder $query): Builder => $query->where('group', $this->fileFilter),
+                ! in_array('onlyNeedsKey', $exceptFilters, true) && $this->onlyNeedsKey,
+                fn(Builder $query): Builder => $this->applyNeedsKeyUsageDecisionFilter($query),
+            )
+            ->when(
+                ! in_array('namespaceFilter', $exceptFilters, true) && $this->namespaceFilter !== '',
+                fn(Builder $query): Builder => $query->where('namespace', $this->namespaceFilter),
+            )
+            ->when(
+                ! in_array('groupFilter', $exceptFilters, true) && $this->groupFilter !== '',
+                fn(Builder $query): Builder => $query->where('group', $this->groupFilter),
             )
             ->when(
                 ! in_array('search', $exceptFilters, true) && $this->search !== '',
@@ -892,13 +1440,35 @@ class TranslationList extends Component
     }
 
     /**
+     * Apply the combined "needs key" follow-up filter.
+     *
+     * A row matches when either a Usage-Audit decision/usage row requires a key or the translation key
+     * was manually marked as Needs-New-Key from the translation list.
+     */
+    private function applyNeedsKeyUsageDecisionFilter(Builder $query): Builder
+    {
+        return $query->where(function (Builder $query): void {
+            $query
+                ->whereIn(
+                    'translation_keys.id',
+                    $this->needsKeyUsageAuditTranslationKeyIdQuery(),
+                )
+                ->orWhere(function (Builder $query): void {
+                    $query
+                        ->whereNotNull('translation_keys.needs_new_key_marked_at')
+                        ->whereNull('translation_keys.needs_new_key_resolved_at');
+                });
+        });
+    }
+
+    /**
      * Build translation query scoped to entries that can be opened in edit mode.
      */
     private function editableTranslationKeyQuery(): Builder
     {
         return $this->translationKeyQuery()
-            ->whereNotNull('key', 'and')
-            ->where('key', '!=', '');
+            ->whereNotNull('translation_keys.key')
+            ->where('translation_keys.key', '!=', '');
     }
 
     /**
@@ -945,7 +1515,12 @@ class TranslationList extends Component
     }
 
     /**
-     * Build data for list, counters and modals.
+     * Build data for list, counters and modal partials.
+     *
+     * This method intentionally prepares all counters from scoped query builders instead of deriving
+     * them from the current page collection. That keeps filter counters stable across pagination and
+     * allows focus toggles such as Only Problems, Only Duplicates and Only Needs-Key to show their
+     * own independent totals.
      */
     public function render(): View
     {
@@ -956,7 +1531,7 @@ class TranslationList extends Component
             ->map(fn($value) => (int) $value)
             ->all();
 
-        $workflowCounterBaseQuery = $this->queryForRelevanceScope(false, ['workflowStatus', 'status', 'classification', 'onlyProblems', 'onlyBaseDuplicates']);
+        $workflowCounterBaseQuery = $this->queryForRelevanceScope(false, ['workflowStatus', 'status', 'classification', 'onlyProblems', 'onlyBaseDuplicates', 'onlyNeedsKey']);
 
         $workflowRelevantTotal = (clone $workflowCounterBaseQuery)->count();
 
@@ -968,7 +1543,7 @@ class TranslationList extends Component
             ->where('workflow_status', 'reviewed')
             ->count();
 
-        $workflowHistoryTotal = (int) $this->filteredTranslationKeyQuery(['workflowStatus', 'status', 'classification', 'onlyProblems', 'onlyBaseDuplicates', 'relevanceScope'])
+        $workflowHistoryTotal = (int) $this->filteredTranslationKeyQuery(['workflowStatus', 'status', 'classification', 'onlyProblems', 'onlyBaseDuplicates', 'onlyNeedsKey', 'relevanceScope'])
             ->where('workflow_status', 'reviewed')
             ->count();
 
@@ -990,7 +1565,7 @@ class TranslationList extends Component
             ->mapWithKeys(fn($value, $key): array => [(string) $key => (int) $value])
             ->all();
 
-        $activeClassificationCounts = $this->queryForRelevanceScope(false, ['workflowStatus', 'classification', 'status', 'onlyProblems', 'onlyBaseDuplicates'])
+        $activeClassificationCounts = $this->queryForRelevanceScope(false, ['workflowStatus', 'classification', 'status', 'onlyProblems', 'onlyBaseDuplicates', 'onlyNeedsKey'])
             ->selectRaw('classification, count(*) as total')
             ->groupBy('classification')
             ->pluck('total', 'classification')
@@ -1001,7 +1576,7 @@ class TranslationList extends Component
 
         $activeTypeTotal = array_sum($activeClassificationCounts);
 
-        $archiveCount = (int) $this->queryForRelevanceScope(true, ['workflowStatus', 'classification', 'status', 'onlyProblems', 'onlyBaseDuplicates'])
+        $archiveCount = (int) $this->queryForRelevanceScope(true, ['workflowStatus', 'classification', 'status', 'onlyProblems', 'onlyBaseDuplicates', 'onlyNeedsKey'])
             ->count();
 
         $problemCount = (int) $this->filteredTranslationKeyQuery(['onlyProblems'])
@@ -1013,6 +1588,20 @@ class TranslationList extends Component
                 $query->where('is_base_duplicate', true);
             })
             ->count();
+
+        $needsKeyCount = (int) $this->applyNeedsKeyUsageDecisionFilter(
+            $this->queryForRelevanceScope(false, [
+                'workflowStatus',
+                'status',
+                'classification',
+                'onlyProblems',
+                'onlyBaseDuplicates',
+                'onlyNeedsKey',
+                'search',
+                'namespaceFilter',
+                'groupFilter',
+            ])
+        )->count();
 
         $query = $this->translationKeyQuery();
 
@@ -1027,25 +1616,23 @@ class TranslationList extends Component
         );
 
         $editQuery = $this->editableTranslationKeyQuery();
-        $editPaginator = (clone $editQuery)->paginate(
-            $this->normalizedPerPage(),
-            ['*'],
-            'page',
-            $this->getPage(),
-        );
 
-        $nextEditTranslationKeyId = $this->resolveNextReviewTranslationKeyId(
+        $nextEditTranslationKeyId = $this->resolveNextTranslationKeyId(
             query: $editQuery,
-            paginator: $editPaginator,
             selectedTranslationKeyId: $this->editingTranslationKeyId,
         );
 
         $selectedTranslationKey = $this->selectedTranslationKeyId
             ? TranslationKey::query()
+            ->select('translation_keys.*')
             ->with([
                 'values' => fn($query) => $query->orderBy('locale'),
                 'usages' => fn($query) => $query->orderBy('file')->orderBy('id'),
             ])
+            ->selectSub(
+                $this->needsKeyUsageAuditFollowUpCountQuery(),
+                'needs_key_usage_audit_follow_up_count',
+            )
             ->find($this->selectedTranslationKeyId)
             : null;
 
@@ -1071,19 +1658,10 @@ class TranslationList extends Component
             ->get()
             : collect();
 
-        $translationLanguages = TranslationLanguage::query()
-            ->where('is_enabled_for_translation', true)
-            ->orderBy('sort_order', 'asc')
-            ->orderBy('locale', 'asc')
-            ->get([
-                'locale',
-                'name',
-                'native_name',
-                'is_default',
-                'is_enabled_for_app',
-            ]);
+        $translationLanguages = $this->resolveTranslationEditLanguages();
 
         $targetLanguages = $this->resolveTargetLanguagesFromAppSettings();
+        $activeTargetSubLanguages = $this->resolveActiveSubLanguagesForCurrentTargetFilter();
 
         $targetLocales = $targetLanguages->pluck('locale')->all();
 
@@ -1094,15 +1672,29 @@ class TranslationList extends Component
             ->get()
             ->mapWithKeys(fn(object $row): array => [$row->locale => $row]);
 
+        $selectedMainLanguageFileStats = $this->resolveSelectedMainLanguageFileStats($translationCoverage);
+        $fileObsoleteEntryCount = $this->resolveFileObsoleteEntryCount();
+
         $locales = $translationLanguages
             ->pluck('locale')
             ->all();
 
-        $translationFiles = TranslationKey::query()
-            ->whereNotNull('group', 'and')
+        $translationNamespaces = $this->filteredTranslationKeyQuery(['namespaceFilter', 'groupFilter'])
+            ->whereNotNull('namespace')
+            ->distinct()
+            ->orderBy('namespace', 'asc')
+            ->pluck('namespace')
+            ->filter(static fn(mixed $namespace): bool => is_string($namespace) && trim($namespace) !== '')
+            ->values()
+            ->all();
+
+        $translationGroups = $this->filteredTranslationKeyQuery(['groupFilter'])
+            ->whereNotNull('group')
             ->distinct()
             ->orderBy('group', 'asc')
             ->pluck('group')
+            ->filter(static fn(mixed $group): bool => is_string($group) && trim($group) !== '')
+            ->values()
             ->all();
 
         return view('components.admin.⚡translation-list', [
@@ -1123,14 +1715,19 @@ class TranslationList extends Component
             'problemStatuses' => self::PROBLEM_STATUSES,
             'problemCount' => $problemCount,
             'duplicateCount' => $duplicateCount,
+            'needsKeyCount' => $needsKeyCount,
             'hasActiveFilters' => $this->hasActiveFilters(),
             'nextReviewTranslationKeyId' => $nextReviewTranslationKeyId,
             'nextEditTranslationKeyId' => $nextEditTranslationKeyId,
             'locales' => $locales,
             'translationLanguages' => $translationLanguages,
             'targetLanguages' => $targetLanguages,
+            'activeTargetSubLanguages' => $activeTargetSubLanguages,
             'translationCoverage' => $translationCoverage,
-            'translationFiles' => $translationFiles,
+            'selectedMainLanguageFileStats' => $selectedMainLanguageFileStats,
+            'fileObsoleteEntryCount' => $fileObsoleteEntryCount,
+            'translationNamespaces' => $translationNamespaces,
+            'translationGroups' => $translationGroups,
             'selectedTranslationKey' => $selectedTranslationKey,
             'editingTranslationKey' => $editingTranslationKey,
             'historyTranslationKey' => $historyTranslationKey,
@@ -1140,11 +1737,14 @@ class TranslationList extends Component
 
     /**
      * Resolve app-target languages from app settings (app_general.availableLocales).
+     *
+     * These locales represent the currently configured application output languages and are merged
+     * into the edit/review context even when they are not part of the translation-language
+     * maintenance table yet.
      */
     private function resolveTargetLanguagesFromAppSettings()
     {
         $appGeneralSettings = app(AppGeneralSettings::class);
-        $defaultLocale = LocaleCode::normalize((string) ($appGeneralSettings->locale ?? ''));
 
         $availableLocales = collect($appGeneralSettings->availableLocales ?? [])
             ->map(static fn(mixed $locale): string => is_string($locale) ? LocaleCode::normalize($locale) : '')
@@ -1177,7 +1777,7 @@ class TranslationList extends Component
 
         return $availableLocales
             ->values()
-            ->map(static function (string $locale, int $index) use ($languageByCode, $defaultLocale): object {
+            ->map(static function (string $locale, int $index) use ($languageByCode): object {
                 $languageRow = $languageByCode->get($locale);
                 $fallbackLabel = strtoupper($locale);
 
@@ -1185,13 +1785,323 @@ class TranslationList extends Component
                     'locale' => $locale,
                     'name' => (string) ($languageRow->name ?? $fallbackLabel),
                     'native_name' => (string) ($languageRow->native_name ?? $fallbackLabel),
-                    'is_default' => $defaultLocale !== '' && $locale === $defaultLocale,
+                    'is_default' => false,
                     'is_enabled_for_app' => true,
                     'sort_order' => $index,
                 ];
             })
-            ->filter(static fn(object $lang): bool => ! $lang->is_default)
             ->values();
+    }
+
+    /**
+     * Resolve active sub-languages for the currently selected target base locale.
+     */
+    private function resolveActiveSubLanguagesForCurrentTargetFilter()
+    {
+        $selectedLocale = LocaleCode::normalize((string) $this->languageFilter);
+
+        if ($selectedLocale === '') {
+            return collect();
+        }
+
+        $baseLocale = LocaleCode::normalize((string) (LocaleCode::parts($selectedLocale)['language'] ?? ''));
+
+        if ($baseLocale === '') {
+            return collect();
+        }
+
+        $languageId = DB::table('locales')
+            ->whereRaw('LOWER(code) = ?', [strtolower($baseLocale)])
+            ->value('language_id');
+
+        if (! is_int($languageId) && ! is_numeric($languageId)) {
+            return collect();
+        }
+
+        return DB::table('locales')
+            ->where('language_id', (int) $languageId)
+            ->where('is_active', true)
+            ->whereRaw('LOWER(code) <> ?', [strtolower($baseLocale)])
+            ->orderBy('sort_order')
+            ->orderBy('code')
+            ->get([
+                'code',
+                'display_name',
+                'native_display_name',
+            ])
+            ->map(static function (object $row): ?object {
+                $locale = LocaleCode::normalize((string) ($row->code ?? ''));
+
+                if ($locale === '') {
+                    return null;
+                }
+
+                $fallbackLabel = strtoupper($locale);
+
+                return (object) [
+                    'locale' => $locale,
+                    'name' => (string) ($row->display_name ?? $fallbackLabel),
+                    'native_name' => (string) ($row->native_display_name ?? $fallbackLabel),
+                ];
+            })
+            ->filter()
+            ->values();
+    }
+
+    /**
+     * Translation locales available in the edit modal for the current work context.
+     */
+    private function resolveTranslationEditLanguages(): Collection
+    {
+        $enabledTranslationLanguages = TranslationLanguage::query()
+            ->where('is_enabled_for_translation', true)
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('locale', 'asc')
+            ->get([
+                'locale',
+                'name',
+                'native_name',
+                'is_default',
+                'is_enabled_for_app',
+                'sort_order',
+            ])
+            ->map(static function (TranslationLanguage $translationLanguage): object {
+                $locale = LocaleCode::normalize((string) ($translationLanguage->locale ?? ''));
+
+                return (object) [
+                    'locale' => $locale,
+                    'name' => (string) ($translationLanguage->name ?? strtoupper($locale)),
+                    'native_name' => (string) ($translationLanguage->native_name ?? strtoupper($locale)),
+                    'is_default' => (bool) ($translationLanguage->is_default ?? false),
+                    'is_enabled_for_app' => (bool) ($translationLanguage->is_enabled_for_app ?? false),
+                    'sort_order' => (int) ($translationLanguage->sort_order ?? 0),
+                ];
+            })
+            ->filter(static fn(object $translationLanguage): bool => $translationLanguage->locale !== '')
+            ->values();
+
+        $targetLanguages = $this->resolveTargetLanguagesFromAppSettings()
+            ->map(static function (object $translationLanguage): object {
+                return (object) [
+                    'locale' => LocaleCode::normalize((string) ($translationLanguage->locale ?? '')),
+                    'name' => (string) ($translationLanguage->name ?? ''),
+                    'native_name' => (string) ($translationLanguage->native_name ?? ''),
+                    'is_default' => (bool) ($translationLanguage->is_default ?? false),
+                    'is_enabled_for_app' => (bool) ($translationLanguage->is_enabled_for_app ?? true),
+                    'sort_order' => (int) ($translationLanguage->sort_order ?? 0),
+                ];
+            })
+            ->filter(static fn(object $translationLanguage): bool => $translationLanguage->locale !== '')
+            ->values();
+
+        $activeSubLanguages = $this->resolveActiveSubLanguagesForCurrentTargetFilter()
+            ->map(static function (object $translationLanguage): object {
+                $locale = LocaleCode::normalize((string) ($translationLanguage->locale ?? ''));
+
+                return (object) [
+                    'locale' => $locale,
+                    'name' => (string) ($translationLanguage->name ?? strtoupper($locale)),
+                    'native_name' => (string) ($translationLanguage->native_name ?? strtoupper($locale)),
+                    'is_default' => false,
+                    'is_enabled_for_app' => true,
+                    'sort_order' => 1000,
+                ];
+            })
+            ->filter(static fn(object $translationLanguage): bool => $translationLanguage->locale !== '')
+            ->values();
+
+        $selectedLocale = LocaleCode::normalize((string) $this->languageFilter);
+        $selectedMainLocale = LocaleCode::normalize((string) (LocaleCode::parts($selectedLocale)['language'] ?? ''));
+
+        $allKnownLanguages = $enabledTranslationLanguages
+            ->concat($targetLanguages)
+            ->concat($activeSubLanguages)
+            ->mapWithKeys(static fn(object $translationLanguage): array => [
+                $translationLanguage->locale => $translationLanguage,
+            ]);
+
+        return collect(['en', $selectedMainLocale, $selectedLocale])
+            ->merge($enabledTranslationLanguages->pluck('locale'))
+            ->merge($targetLanguages->pluck('locale'))
+            ->merge($activeSubLanguages->pluck('locale'))
+            ->map(static fn(mixed $locale): string => LocaleCode::normalize((string) $locale))
+            ->filter()
+            ->unique()
+            ->map(static function (string $locale) use ($allKnownLanguages): object {
+                $translationLanguage = $allKnownLanguages->get($locale);
+                $fallbackLabel = strtoupper($locale);
+
+                return (object) [
+                    'locale' => $locale,
+                    'name' => (string) ($translationLanguage->name ?? $fallbackLabel),
+                    'native_name' => (string) ($translationLanguage->native_name ?? $fallbackLabel),
+                    'is_default' => (bool) ($translationLanguage->is_default ?? false),
+                    'is_enabled_for_app' => (bool) ($translationLanguage->is_enabled_for_app ?? true),
+                    'sort_order' => (int) ($translationLanguage->sort_order ?? 1000),
+                ];
+            })
+            ->values();
+    }
+
+    /**
+     * File and entry counts for the currently selected main language in lang/*.
+     */
+    private function resolveSelectedMainLanguageFileStats(Collection $translationCoverage): ?object
+    {
+        $selectedLocale = LocaleCode::normalize((string) $this->languageFilter);
+
+        if ($selectedLocale === '') {
+            return null;
+        }
+
+        $mainLocale = LocaleCode::normalize((string) (LocaleCode::parts($selectedLocale)['language'] ?? ''));
+
+        if ($mainLocale === '') {
+            return null;
+        }
+
+        $fileStats = $this->countLangFilesAndEntriesForLocale($mainLocale);
+        $dbEntryCount = $this->resolveExportableTranslationEntryCountForLocale($mainLocale, $translationCoverage);
+
+        return (object) [
+            'locale' => $mainLocale,
+            'file_count' => $fileStats['file_count'],
+            'entry_count' => $fileStats['entry_count'],
+            'db_entry_count' => $dbEntryCount,
+            'in_sync' => $fileStats['entry_count'] === $dbEntryCount,
+        ];
+    }
+
+    private function resolveExportableTranslationEntryCountForLocale(string $locale, Collection $translationCoverage): int
+    {
+        $coverageRow = $translationCoverage->get($locale);
+
+        return (int) ($coverageRow->translated_count ?? 0);
+    }
+
+    private function resolveFileObsoleteEntryCount(): int
+    {
+        $path = storage_path('audits/translations/compare/summary.json');
+
+        if (! File::isFile($path)) {
+            return 0;
+        }
+
+        $payload = json_decode(File::get($path), true);
+
+        if (! is_array($payload)) {
+            return 0;
+        }
+
+        return (int) ($payload['file_obsolete_entries'] ?? 0);
+    }
+
+    /**
+     * @return array{file_count:int, entry_count:int}
+     */
+    private function countLangFilesAndEntriesForLocale(string $locale): array
+    {
+        $normalizedLocale = LocaleCode::normalize($locale);
+
+        if ($normalizedLocale === '') {
+            return ['file_count' => 0, 'entry_count' => 0];
+        }
+
+        $fileCount = 0;
+        $entryCount = 0;
+        $phpDirectory = lang_path($normalizedLocale);
+
+        if (File::isDirectory($phpDirectory)) {
+            foreach (File::allFiles($phpDirectory) as $file) {
+                $path = $file->getRealPath();
+
+                if (! is_string($path) || ! File::isFile($path) || pathinfo($path, PATHINFO_EXTENSION) !== 'php') {
+                    continue;
+                }
+
+                if ($this->isParkedLangFile($path)) {
+                    continue;
+                }
+
+                $payload = require $path;
+
+                if (! is_array($payload)) {
+                    continue;
+                }
+
+                $fileCount++;
+                $entryCount += count($this->flattenLangPayload($payload));
+            }
+        }
+
+        $jsonPath = lang_path($normalizedLocale . '.json');
+
+        if (File::isFile($jsonPath) && ! $this->isParkedLangFile($jsonPath)) {
+            $payload = json_decode(File::get($jsonPath), true);
+
+            if (is_array($payload)) {
+                $fileCount++;
+                $entryCount += count($payload);
+            }
+        }
+
+        return [
+            'file_count' => $fileCount,
+            'entry_count' => $entryCount,
+        ];
+    }
+
+    private function isParkedLangFile(string $path): bool
+    {
+        $filename = strtolower(pathinfo($path, PATHINFO_FILENAME));
+
+        return str_contains($filename, 'xxx')
+            || str_contains($filename, 'yyy')
+            || str_contains($filename, 'zzz');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function flattenLangPayload(array $items, string $prefix = ''): array
+    {
+        $result = [];
+
+        foreach ($items as $key => $value) {
+            $segment = (string) $key;
+            $fullKey = $prefix !== '' ? $prefix . '.' . $segment : $segment;
+
+            if (is_array($value)) {
+                $result += $this->flattenLangPayload($value, $fullKey);
+
+                continue;
+            }
+
+            $result[$fullKey] = $value;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Preselect the filtered sub-language in edit mode when the target filter already points to one.
+     */
+    private function defaultTranslationEditSubLanguageLocales(): array
+    {
+        $selectedLocale = LocaleCode::normalize((string) $this->languageFilter);
+
+        if ($selectedLocale === '') {
+            return [];
+        }
+
+        $activeSubLocales = $this->resolveActiveSubLanguagesForCurrentTargetFilter()
+            ->pluck('locale')
+            ->map(static fn(mixed $item): string => LocaleCode::normalize((string) $item))
+            ->filter()
+            ->values()
+            ->all();
+
+        return in_array($selectedLocale, $activeSubLocales, true) ? [$selectedLocale] : [];
     }
 
     /**
@@ -1238,7 +2148,8 @@ class TranslationList extends Component
             'onlyProblems' => $this->onlyProblems,
             'onlyBaseDuplicates' => $this->onlyBaseDuplicates,
             'languageFilter' => $this->languageFilter,
-            'fileFilter' => $this->fileFilter,
+            'namespaceFilter' => $this->namespaceFilter,
+            'groupFilter' => $this->groupFilter,
             'perPage' => $this->perPage,
         ]);
     }
@@ -1284,6 +2195,33 @@ class TranslationList extends Component
         $nextPageFirstId = $nextPagePaginator->getCollection()->pluck('id')->first();
 
         return is_numeric($nextPageFirstId) ? (int) $nextPageFirstId : null;
+    }
+
+    /**
+     * Resolve the next key ID from the full current filtered/sorted query context.
+     */
+    private function resolveNextTranslationKeyId(
+        Builder $query,
+        ?int $selectedTranslationKeyId,
+    ): ?int {
+        if (! $selectedTranslationKeyId) {
+            return null;
+        }
+
+        $ids = (clone $query)
+            ->pluck('translation_keys.id')
+            ->map(static fn(mixed $id): int => (int) $id)
+            ->values();
+
+        $currentIndex = $ids->search($selectedTranslationKeyId);
+
+        if ($currentIndex === false) {
+            return null;
+        }
+
+        $nextId = $ids->get((int) $currentIndex + 1);
+
+        return is_numeric($nextId) ? (int) $nextId : null;
     }
 
     private function namespaceFromTranslationKey(?string $key): ?string
@@ -1389,6 +2327,45 @@ class TranslationList extends Component
             'new_status' => $translationKey->status,
             'reason' => $reason,
             'context' => json_encode($context, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
+    /**
+     * Insert an audit event for manual Needs-New-Key marker changes on translation keys.
+     */
+    private function createTranslationManualNeedsNewKeyAuditEvent(
+        TranslationKey $translationKey,
+        bool $wasActive,
+        bool $isActive,
+        string $reason,
+        array $context = [],
+    ): void {
+        DB::table('translation_audit_events')->insert([
+            'translation_key_id' => $translationKey->id,
+            'translation_usage_id' => null,
+            'entity_type' => 'translation_key',
+            'event_type' => 'manual_needs_new_key_changed',
+            'old_fingerprint' => $translationKey->fingerprint,
+            'new_fingerprint' => $translationKey->fingerprint,
+            'old_file' => null,
+            'new_file' => null,
+            'old_line' => null,
+            'new_line' => null,
+            'old_key' => $translationKey->key,
+            'new_key' => $translationKey->key,
+            'old_value' => $wasActive ? 'active' : 'inactive',
+            'new_value' => $isActive ? 'active' : 'inactive',
+            'old_status' => $translationKey->status,
+            'new_status' => $translationKey->status,
+            'reason' => $reason,
+            'context' => json_encode([
+                ...$context,
+                'manual_needs_new_key_old_active' => $wasActive,
+                'manual_needs_new_key_new_active' => $isActive,
+                'needs_new_key_note' => $translationKey->needs_new_key_note,
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'created_at' => now(),
             'updated_at' => now(),
         ]);

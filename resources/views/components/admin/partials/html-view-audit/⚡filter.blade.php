@@ -15,7 +15,7 @@
                         'Enter a search term to filter the audit history by file name, tag name, or other relevant information. The search is case-sensitive.',
                     )"
                 >
-                    {{ __('Search') }}
+                    {{ __('ui.actions.search') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -40,10 +40,10 @@
         <div class="w-74">
             <flux:label for="html-view-audit-filter-status">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by status')"
+                    :title="__('admin.client_list.filter.filter_by_status')"
                     :text="__('Select a status to filter the audit history.')"
                 >
-                    {{ __('Status') }}
+                    {{ __('admin.app_settings.table_icon_registry.status') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -57,11 +57,11 @@
                     name="html-view-audit-filter-status"
                     wire:model.live="statusFilter"
                 >
-                    <flux:select.option value="open">{{ __('Open') }}</flux:select.option>
+                    <flux:select.option value="open">{{ __('admin.translation_list.filter.open') }}</flux:select.option>
                     <flux:select.option value="changed">{{ __('Changed / moved') }}</flux:select.option>
                     <flux:select.option value="resolved">{{ __('Resolved') }}</flux:select.option>
                     <flux:select.option value="ignored">{{ __('Ignored') }}</flux:select.option>
-                    <flux:select.option value="all">{{ __('All statuses') }}</flux:select.option>
+                    <flux:select.option value="all">{{ __('admin.client_list.filter.all_statuses') }}</flux:select.option>
                 </flux:select>
             </flux:input.group>
         </div>
@@ -112,7 +112,7 @@
                     name="html-view-audit-filter-type"
                     wire:model.live="typeFilter"
                 >
-                    <flux:select.option value="all">{{ __('All types') }}</flux:select.option>
+                    <flux:select.option value="all">{{ __('admin.client_list.filter.all_types') }}</flux:select.option>
                     <flux:select.option value="unclosed">{{ __('Unclosed') }}</flux:select.option>
                     <flux:select.option value="mismatched">{{ __('Mismatched') }}</flux:select.option>
                     <flux:select.option value="unexpected_closing">{{ __('Unexpected closing') }}</flux:select.option>
