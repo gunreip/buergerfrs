@@ -46,27 +46,50 @@ class ActivityLogAudit extends Command
      */
     private function runtimeMissingAudit(): array
     {
-        $items = DB::table('activity_log')
-            ->selectRaw('
-                log_name,
-                event,
-                COUNT(*) as total,
-                SUM(CASE WHEN subject_type IS NULL OR subject_id IS NULL THEN 1 ELSE 0 END) as missing_subject,
-                SUM(CASE WHEN causer_type IS NULL OR causer_id IS NULL THEN 1 ELSE 0 END) as missing_causer
-            ')
-            ->groupBy('log_name', 'event')
-            ->orderByDesc('missing_subject')
-            ->orderByDesc('missing_causer')
-            ->orderByDesc('total')
-            ->get()
-            ->map(fn (object $row): array => [
-                'log_name' => $row->log_name,
-                'event' => $row->event,
-                'total' => (int) $row->total,
-                'missing_subject' => (int) $row->missing_subject,
-                'missing_causer' => (int) $row->missing_causer,
-                'has_missing_subject' => (int) $row->missing_subject > 0,
-                'has_missing_causer' => (int) $row->missing_causer > 0,
+        $groups = [];
+
+        foreach (DB::table('activity_log')
+            ->select(['log_name', 'event', 'subject_type', 'subject_id', 'causer_type', 'causer_id', 'properties'])
+            ->orderBy('id')
+            ->cursor() as $row) {
+            $logName = trim((string) ($row->log_name ?? ''));
+            $event = trim((string) ($row->event ?? ''));
+            $groupKey = $logName."\0".$event;
+            $subjectRequired = $this->eventRequiresSubject($event);
+            $properties = $this->decodeProperties($row->properties ?? null);
+            $hasActorContext = data_get($properties, 'actor.type') !== null
+                || data_get($properties, 'actor.terminal_user') !== null;
+
+            $groups[$groupKey] ??= [
+                'log_name' => $logName,
+                'event' => $event,
+                'total' => 0,
+                'subject_required' => $subjectRequired,
+                'missing_required_subject' => 0,
+                'missing_causer_or_actor' => 0,
+            ];
+
+            $groups[$groupKey]['total']++;
+
+            if ($subjectRequired && ($row->subject_type === null || $row->subject_id === null)) {
+                $groups[$groupKey]['missing_required_subject']++;
+            }
+
+            if (($row->causer_type === null || $row->causer_id === null) && ! $hasActorContext) {
+                $groups[$groupKey]['missing_causer_or_actor']++;
+            }
+        }
+
+        $items = collect($groups)
+            ->map(static fn (array $group): array => [
+                ...$group,
+                'has_missing_required_subject' => $group['missing_required_subject'] > 0,
+                'has_missing_causer_or_actor' => $group['missing_causer_or_actor'] > 0,
+            ])
+            ->sortByDesc(fn (array $group): array => [
+                $group['missing_required_subject'],
+                $group['missing_causer_or_actor'],
+                $group['total'],
             ])
             ->values()
             ->all();
@@ -76,7 +99,7 @@ class ActivityLogAudit extends Command
             'type' => 'runtime_missing',
             'total_groups' => count($items),
             'problem_groups' => collect($items)
-                ->filter(fn (array $item): bool => $item['has_missing_subject'] || $item['has_missing_causer'])
+                ->filter(fn (array $item): bool => $item['has_missing_required_subject'] || $item['has_missing_causer_or_actor'])
                 ->count(),
             'items' => $items,
         ];
@@ -88,6 +111,7 @@ class ActivityLogAudit extends Command
     private function sourceUsageAudit(): array
     {
         $items = [];
+        $unloggedMutationCandidates = [];
 
         foreach (File::allFiles(app_path()) as $file) {
             $path = $file->getPathname();
@@ -98,6 +122,27 @@ class ActivityLogAudit extends Command
 
             $contents = (string) File::get($path);
             $lines = preg_split('/\R/', $contents) ?: [];
+            $relativePath = $this->relativePath($path);
+            $hasActivityIntegration = preg_match(
+                '/\bactivity\s*\(|AdminActivity|ManagementActivity|TranslationActivity|ConsoleActivityContext/',
+                $contents,
+            ) === 1;
+            $hasMutationCandidate = preg_match(
+                '/->\s*(?:save|delete|update|create|sync|forceFill|markReviewed|markUnreviewed|setSetting)\s*\(/',
+                $contents,
+            ) === 1;
+
+            if (
+                $hasMutationCandidate
+                && ! $hasActivityIntegration
+                && $this->isMutationAuditScope($relativePath)
+                && ! $this->isExpectedUnloggedMutation($relativePath)
+            ) {
+                $unloggedMutationCandidates[] = [
+                    'file' => $relativePath,
+                    'recommendation' => 'Review mutating code for a meaningful activity-log summary.',
+                ];
+            }
 
             foreach ($lines as $lineIndex => $line) {
                 if (! preg_match('/\bactivity\s*\(/', $line)) {
@@ -105,14 +150,12 @@ class ActivityLogAudit extends Command
                 }
 
                 $block = $this->activityBlock($lines, $lineIndex);
-                $relativePath = $this->relativePath($path);
-
                 $hasCausedBy = preg_match('/->\s*causedBy\s*\(/', $block) === 1;
                 $hasPerformedOn = preg_match('/->\s*performedOn\s*\(/', $block) === 1;
                 $hasWithProperties = preg_match('/->\s*withProperties\s*\(/', $block) === 1;
                 $hasActorMetadata = preg_match(
                     '/[\'"]actor[\'"]|consoleActor\s*\(|ConsoleActivityContext::(?:merge|forCommand|actor)\s*\(/',
-                    $block,
+                    $block."\n".$contents,
                 ) === 1;
                 $hasEvent = preg_match('/->\s*event\s*\(/', $block) === 1;
                 $hasLog = preg_match('/->\s*log\s*\(/', $block) === 1;
@@ -136,7 +179,8 @@ class ActivityLogAudit extends Command
                     'has_caused_by' => $hasCausedBy,
                     'has_performed_on' => $hasPerformedOn,
                     'has_actor_metadata' => $hasActorMetadata,
-                    'needs_subject_review' => ! $hasPerformedOn,
+                    'needs_subject_review' => false,
+                    'subject_review_recommended' => ! $hasPerformedOn,
                     'needs_causer_or_actor_review' => ! $hasCausedBy && ! $hasActorMetadata,
                     'recommendations' => $recommendations,
                     'snippet' => trim($line),
@@ -149,10 +193,70 @@ class ActivityLogAudit extends Command
             'type' => 'source_usage',
             'total_usages' => count($items),
             'problem_usages' => collect($items)
-                ->filter(fn (array $item): bool => $item['needs_subject_review'] || $item['needs_causer_or_actor_review'])
+                ->filter(fn (array $item): bool => ! $item['has_event']
+                    || ! $item['has_log']
+                    || ! $item['has_with_properties']
+                    || $item['needs_causer_or_actor_review'])
                 ->count(),
+            'unlogged_mutation_candidate_count' => count($unloggedMutationCandidates),
+            'unlogged_mutation_candidates' => $unloggedMutationCandidates,
             'items' => $items,
         ];
+    }
+
+    private function eventRequiresSubject(string $event): bool
+    {
+        foreach ([
+            'admin.user.',
+            'admin.role.',
+            'admin.permission.',
+            'admin.fallback_report.',
+            'admin.flag_reference.',
+            'management.person.',
+            'translations.admin.',
+        ] as $prefix) {
+            if (str_starts_with($event, $prefix)) {
+                return true;
+            }
+        }
+
+        return in_array($event, ['login', 'logout', 'registered', 'password_reset'], true);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function decodeProperties(mixed $properties): array
+    {
+        if (is_array($properties)) {
+            return $properties;
+        }
+
+        if (! is_string($properties) || trim($properties) === '') {
+            return [];
+        }
+
+        $decoded = json_decode($properties, true);
+
+        return is_array($decoded) ? $decoded : [];
+    }
+
+    private function isMutationAuditScope(string $relativePath): bool
+    {
+        return str_starts_with($relativePath, 'app/Livewire/')
+            || str_starts_with($relativePath, 'app/Actions/')
+            || str_starts_with($relativePath, 'app/Console/Commands/');
+    }
+
+    private function isExpectedUnloggedMutation(string $relativePath): bool
+    {
+        return in_array($relativePath, [
+            // Fortify dispatches PasswordReset after this action; the event listener owns logging.
+            'app/Actions/Fortify/ResetUserPassword.php',
+            // Personal list/filter preferences are intentionally excluded from the audit trail.
+            'app/Livewire/Account/Preferences.php',
+            'app/Livewire/Concerns/InteractsWithUserSettings.php',
+        ], true);
     }
 
     /**
@@ -196,6 +300,10 @@ class ActivityLogAudit extends Command
         return [
             ...$audit,
             'items' => collect($audit['items'] ?? [])
+                ->take(20)
+                ->values()
+                ->all(),
+            'unlogged_mutation_candidates' => collect($audit['unlogged_mutation_candidates'] ?? [])
                 ->take(20)
                 ->values()
                 ->all(),

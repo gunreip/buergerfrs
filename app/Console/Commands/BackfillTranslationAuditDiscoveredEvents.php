@@ -5,6 +5,7 @@
 namespace App\Console\Commands;
 
 use App\Models\TranslationKey;
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -89,6 +90,15 @@ class BackfillTranslationAuditDiscoveredEvents extends Command
         });
 
         $this->components->info("Created {$createdCount} discovered baseline events.");
+
+        activity('translations')
+            ->event('translations.audit.discovered_backfill.completed')
+            ->withProperties(ConsoleActivityContext::merge($this, [
+                'missing_count' => $missingCount,
+                'created_count' => $createdCount,
+                'chunk_size' => 500,
+            ]))
+            ->log('Translation discovered-event backfill completed');
 
         return self::SUCCESS;
     }

@@ -10,6 +10,7 @@ use App\Models\TranslationLanguage;
 use App\Models\TranslationUsage;
 use App\Models\TranslationValue;
 use App\Settings\AppGeneralSettings;
+use App\Support\Audit\TranslationActivity;
 use App\Support\Locale\LocaleCode;
 use Flux\Flux;
 use Illuminate\Contracts\View\View;
@@ -901,7 +902,7 @@ class TranslationList extends Component
     /**
      * Apply the suggested key as the active translation key from the review modal.
      */
-    public function applySuggestedKey(int $translationKeyId): void
+    public function applySuggestedKey(int $translationKeyId, TranslationActivity $translationActivity): void
     {
         $translationKey = TranslationKey::query()->find($translationKeyId);
 
@@ -958,6 +959,14 @@ class TranslationList extends Component
             ],
         );
 
+        $translationActivity->record(
+            event: 'translations.admin.key.suggested_key_applied',
+            description: __('Suggested translation key applied'),
+            subject: $translationKey,
+            before: ['key' => $currentKey !== '' ? $currentKey : null],
+            after: ['key' => $suggestedKey],
+        );
+
         $this->focusedTranslationKeyId = $translationKey->id;
 
         Flux::toast(
@@ -971,7 +980,7 @@ class TranslationList extends Component
     /**
      * Mark an obsolete key as reviewed so it is hidden from the default open workflow.
      */
-    public function markObsoleteAsReviewed(int $translationKeyId): void
+    public function markObsoleteAsReviewed(int $translationKeyId, TranslationActivity $translationActivity): void
     {
         $translationKey = TranslationKey::query()->find($translationKeyId);
 
@@ -1020,6 +1029,14 @@ class TranslationList extends Component
             ],
         );
 
+        $translationActivity->record(
+            event: 'translations.admin.key.obsolete_reviewed',
+            description: __('Obsolete translation key reviewed'),
+            subject: $translationKey,
+            before: ['workflow_status' => $oldWorkflowStatus],
+            after: ['workflow_status' => 'reviewed'],
+        );
+
         $this->focusedTranslationKeyId = $translationKey->id;
 
         Flux::toast(
@@ -1036,7 +1053,7 @@ class TranslationList extends Component
      * This state is intentionally stored directly on translation_keys and not in Usage-Audit decision
      * rows, so it remains independent from generated audit reports and usage-decision commands.
      */
-    public function markNeedsNewKeyManually(int $translationKeyId): void
+    public function markNeedsNewKeyManually(int $translationKeyId, TranslationActivity $translationActivity): void
     {
         $translationKey = TranslationKey::query()->find($translationKeyId);
 
@@ -1075,6 +1092,14 @@ class TranslationList extends Component
             ],
         );
 
+        $translationActivity->record(
+            event: 'translations.admin.key.needs_new_key_marked',
+            description: __('Translation key marked as needing a new key'),
+            subject: $translationKey,
+            before: ['needs_new_key' => false],
+            after: ['needs_new_key' => true],
+        );
+
         $this->focusedTranslationKeyId = $translationKey->id;
 
         Flux::toast(
@@ -1088,7 +1113,7 @@ class TranslationList extends Component
     /**
      * Resolve the manual Needs-New-Key marker without touching audit-generated follow-ups.
      */
-    public function clearNeedsNewKeyManually(int $translationKeyId): void
+    public function clearNeedsNewKeyManually(int $translationKeyId, TranslationActivity $translationActivity): void
     {
         $translationKey = TranslationKey::query()->find($translationKeyId);
 
@@ -1124,6 +1149,14 @@ class TranslationList extends Component
             ],
         );
 
+        $translationActivity->record(
+            event: 'translations.admin.key.needs_new_key_resolved',
+            description: __('Translation key no longer needs a new key'),
+            subject: $translationKey,
+            before: ['needs_new_key' => true],
+            after: ['needs_new_key' => false],
+        );
+
         $this->focusedTranslationKeyId = $translationKey->id;
 
         Flux::toast(
@@ -1137,7 +1170,7 @@ class TranslationList extends Component
     /**
      * Persist editable translation values and record audit events for changes.
      */
-    public function saveTranslationEdit(): void
+    public function saveTranslationEdit(TranslationActivity $translationActivity): void
     {
         if (! $this->editingTranslationKeyId) {
             return;
@@ -1164,6 +1197,9 @@ class TranslationList extends Component
                 ])
                 ->all()
         );
+
+        $activityBefore = [];
+        $activityAfter = [];
 
         foreach ($translationLanguages as $translationLanguage) {
             $locale = LocaleCode::normalize((string) ($translationLanguage->locale ?? ''));
@@ -1197,6 +1233,15 @@ class TranslationList extends Component
             );
 
             if ($oldValue !== $value || $oldStatus !== $newStatus) {
+                $activityBefore[$locale] = [
+                    'status' => $oldStatus,
+                    'has_value' => trim((string) $oldValue) !== '',
+                ];
+                $activityAfter[$locale] = [
+                    'status' => $newStatus,
+                    'has_value' => trim($value) !== '',
+                ];
+
                 $this->createTranslationValueAuditEvent(
                     translationKey: $translationKey,
                     locale: $locale,
@@ -1207,6 +1252,20 @@ class TranslationList extends Component
                     wasCreated: ! $existingTranslationValue,
                 );
             }
+        }
+
+        if ($activityAfter !== []) {
+            $translationActivity->record(
+                event: 'translations.admin.key.values_updated',
+                description: __('Translation values updated'),
+                subject: $translationKey,
+                before: $activityBefore,
+                after: $activityAfter,
+                properties: [
+                    'translation_key' => $translationKey->key,
+                    'changed_locales' => array_keys($activityAfter),
+                ],
+            );
         }
 
         $this->focusedTranslationKeyId = $translationKey->id;

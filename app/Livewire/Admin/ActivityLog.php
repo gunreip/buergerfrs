@@ -461,7 +461,7 @@ class ActivityLog extends Component
                 ->whereRaw("COALESCE(properties::text, '') NOT IN ('', '[]', '{}')")
                 ->count(),
             'with_changes' => (clone $filteredQuery)
-                ->whereRaw("COALESCE(attribute_changes::text, '') NOT IN ('', '[]', '{}')")
+                ->whereRaw("COALESCE(attribute_changes::text, '') NOT IN ('', '[]', '{}') OR (properties::jsonb ? 'before' AND properties::jsonb ? 'after')")
                 ->count(),
         ];
     }
@@ -875,6 +875,19 @@ class ActivityLog extends Component
     {
         $propertiesPayload = $this->decodeJsonValue($activityLog->properties ?? null);
         $attributeChangesPayload = $this->decodeJsonValue($activityLog->attribute_changes ?? null);
+
+        if (
+            $attributeChangesPayload === null
+            && is_array($propertiesPayload)
+            && is_array($propertiesPayload['before'] ?? null)
+            && is_array($propertiesPayload['after'] ?? null)
+        ) {
+            $attributeChangesPayload = [
+                'old' => $propertiesPayload['before'],
+                'new' => $propertiesPayload['after'],
+            ];
+        }
+
         $attributeChangeRows = $this->attributeChangeRows($attributeChangesPayload);
         $actor = is_array($propertiesPayload) && is_array($propertiesPayload['actor'] ?? null)
             ? $this->normalizeActivityActor($propertiesPayload['actor'])
@@ -893,7 +906,9 @@ class ActivityLog extends Component
             'created_at' => $activityLog->created_at ?? null,
             'updated_at' => $activityLog->updated_at ?? null,
             'properties_json' => $this->formatJsonValue($activityLog->properties ?? null),
-            'attribute_changes_json' => $this->formatJsonValue($activityLog->attribute_changes ?? null),
+            'attribute_changes_json' => $attributeChangesPayload !== null
+                ? json_encode($attributeChangesPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                : null,
             'properties_rows' => $this->payloadRows($propertiesPayload),
             'attribute_changes_rows' => $attributeChangeRows !== []
                 ? $attributeChangeRows

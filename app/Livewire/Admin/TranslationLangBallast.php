@@ -6,6 +6,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\TranslationLangBallastDecision;
 use App\Models\TranslationLanguage;
+use App\Support\Audit\TranslationActivity;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -118,8 +119,11 @@ class TranslationLangBallast extends Component
         $this->resetPage();
     }
 
-    public function setDecisionStatus(string $candidateHash, string $decisionStatus): void
-    {
+    public function setDecisionStatus(
+        string $candidateHash,
+        string $decisionStatus,
+        TranslationActivity $translationActivity,
+    ): void {
         $candidateHash = trim($candidateHash);
 
         if ($candidateHash === '') {
@@ -131,11 +135,16 @@ class TranslationLangBallast extends Component
         }
 
         $entry = collect($this->allActionEntries)
-            ->first(fn(array $actionEntry): bool => (string) ($actionEntry['candidate_hash'] ?? '') === $candidateHash);
+            ->first(fn (array $actionEntry): bool => (string) ($actionEntry['candidate_hash'] ?? '') === $candidateHash);
 
         if (! is_array($entry)) {
             return;
         }
+
+        $existingDecision = TranslationLangBallastDecision::query()
+            ->where('candidate_hash', $candidateHash)
+            ->first();
+        $beforeDecisionStatus = $existingDecision?->decision_status;
 
         $decision = TranslationLangBallastDecision::query()->updateOrCreate(
             [
@@ -163,6 +172,22 @@ class TranslationLangBallast extends Component
                 'reviewed_by_user_id' => Auth::id(),
             ],
         );
+
+        if ($beforeDecisionStatus !== $decisionStatus) {
+            $translationActivity->record(
+                event: 'translations.admin.lang_ballast.decision_changed',
+                description: __('Translation lang ballast decision changed'),
+                subject: $decision,
+                before: ['decision_status' => $beforeDecisionStatus],
+                after: ['decision_status' => $decisionStatus],
+                properties: [
+                    'candidate_hash' => $candidateHash,
+                    'locale' => $decision->locale,
+                    'key' => $decision->key,
+                    'action_candidate' => $decision->action_candidate,
+                ],
+            );
+        }
 
         $this->applyDecisionToLoadedEntries($candidateHash, $decision);
         $this->refreshDecisionSummaryFromLoadedEntries();
@@ -255,7 +280,7 @@ class TranslationLangBallast extends Component
         $this->addActionEntries = (array) data_get($actionPayload, 'actions.add_to_lang', []);
         $this->reviewActionEntries = (array) data_get($actionPayload, 'actions.review', []);
         $this->baseDuplicateEntries = collect((array) data_get($actionPayload, 'items.sub_language_base_duplicates', []))
-            ->map(fn(array $entry): array => [
+            ->map(fn (array $entry): array => [
                 ...$entry,
                 'action' => 'base_duplicate',
                 'action_candidate' => 'base_duplicate',
@@ -284,7 +309,7 @@ class TranslationLangBallast extends Component
     private function filteredActionFileRows(): array
     {
         return $this->filteredActionEntries()
-            ->groupBy(fn(array $entry): string => trim((string) ($entry['file'] ?? '')) ?: 'unknown')
+            ->groupBy(fn (array $entry): string => trim((string) ($entry['file'] ?? '')) ?: 'unknown')
             ->map(function (Collection $entries, string $file): array {
                 return [
                     'file' => $file,
@@ -332,7 +357,7 @@ class TranslationLangBallast extends Component
                         ->all(),
                     'decision_statuses' => $entries
                         ->pluck('decision_status')
-                        ->map(static fn(mixed $value): string => trim((string) $value) ?: 'open')
+                        ->map(static fn (mixed $value): string => trim((string) $value) ?: 'open')
                         ->countBy()
                         ->sortKeys()
                         ->all(),
@@ -351,7 +376,7 @@ class TranslationLangBallast extends Component
                         ->all(),
                 ];
             })
-            ->pipe(fn(Collection $rows): Collection => $this->sortActionFileRows($rows))
+            ->pipe(fn (Collection $rows): Collection => $this->sortActionFileRows($rows))
             ->values()
             ->all();
     }
@@ -371,25 +396,25 @@ class TranslationLangBallast extends Component
 
         if ($this->namespaceFilter !== 'all') {
             $entries = $entries->filter(
-                fn(array $entry): bool => (string) ($entry['namespace'] ?? '') === $this->namespaceFilter,
+                fn (array $entry): bool => (string) ($entry['namespace'] ?? '') === $this->namespaceFilter,
             );
         }
 
         if ($this->groupFilter !== 'all') {
             $entries = $entries->filter(
-                fn(array $entry): bool => (string) ($entry['group'] ?? '') === $this->groupFilter,
+                fn (array $entry): bool => (string) ($entry['group'] ?? '') === $this->groupFilter,
             );
         }
 
         if ($this->localeFilter !== 'all') {
             $entries = $entries->filter(
-                fn(array $entry): bool => (string) ($entry['locale'] ?? '') === $this->localeFilter,
+                fn (array $entry): bool => (string) ($entry['locale'] ?? '') === $this->localeFilter,
             );
         }
 
         if ($this->decisionFilter !== 'all') {
             $entries = $entries->filter(
-                fn(array $entry): bool => (string) ($entry['decision_status'] ?? 'open') === $this->decisionFilter,
+                fn (array $entry): bool => (string) ($entry['decision_status'] ?? 'open') === $this->decisionFilter,
             );
         }
 
@@ -420,8 +445,7 @@ class TranslationLangBallast extends Component
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $rows
-     *
+     * @param  Collection<int, array<string, mixed>>  $rows
      * @return Collection<int, array<string, mixed>>
      */
     private function sortActionFileRows(Collection $rows): Collection
@@ -443,8 +467,7 @@ class TranslationLangBallast extends Component
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $rows
-     *
+     * @param  Collection<int, array<string, mixed>>  $rows
      * @return Collection<int, array<string, mixed>>
      */
     private function sortActionEntries(Collection $rows): Collection
@@ -490,24 +513,24 @@ class TranslationLangBallast extends Component
     }
 
     /**
-     * @param array<int, mixed>|mixed $value
+     * @param  array<int, mixed>|mixed  $value
      */
     private function sortableListValue(mixed $value): string
     {
         return collect((array) $value)
-            ->map(static fn(mixed $item): string => mb_strtolower(trim((string) $item)))
+            ->map(static fn (mixed $item): string => mb_strtolower(trim((string) $item)))
             ->filter()
             ->sort()
             ->implode('|');
     }
 
     /**
-     * @param array<string, mixed> $decisionStatuses
+     * @param  array<string, mixed>  $decisionStatuses
      */
     private function sortableDecisionStatusValue(array $decisionStatuses): string
     {
         return collect(['open', 'reviewed', 'approved', 'ignored'])
-            ->map(static fn(string $status): string => str_pad(
+            ->map(static fn (string $status): string => str_pad(
                 (string) (int) ($decisionStatuses[$status] ?? 0),
                 8,
                 '0',
@@ -517,8 +540,7 @@ class TranslationLangBallast extends Component
     }
 
     /**
-     * @param array<int, array<string, mixed>> $entries
-     *
+     * @param  array<int, array<string, mixed>>  $entries
      * @return array<int, array<string, mixed>>
      */
     private function applyDecisionIndexToEntries(array $entries, Collection $decisionIndex): array
@@ -562,8 +584,7 @@ class TranslationLangBallast extends Component
     }
 
     /**
-     * @param array<int, array<string, mixed>> $entries
-     *
+     * @param  array<int, array<string, mixed>>  $entries
      * @return array<int, array<string, mixed>>
      */
     private function replaceDecisionInEntries(array $entries, string $candidateHash, TranslationLangBallastDecision $decision): array
@@ -581,8 +602,7 @@ class TranslationLangBallast extends Component
     }
 
     /**
-     * @param array<string, mixed> $entry
-     *
+     * @param  array<string, mixed>  $entry
      * @return array<string, mixed>
      */
     private function entryWithDecision(array $entry, TranslationLangBallastDecision $decision): array
@@ -602,7 +622,7 @@ class TranslationLangBallast extends Component
     {
         $candidateHashes = collect($this->allActionEntries)
             ->pluck('candidate_hash')
-            ->map(static fn(mixed $value): string => trim((string) $value))
+            ->map(static fn (mixed $value): string => trim((string) $value))
             ->filter()
             ->unique()
             ->values();
@@ -677,7 +697,7 @@ class TranslationLangBallast extends Component
             ...$this->baseDuplicateEntries,
         ])
             ->pluck($field)
-            ->map(static fn(mixed $value): string => trim((string) $value))
+            ->map(static fn (mixed $value): string => trim((string) $value))
             ->filter()
             ->unique()
             ->sort()
@@ -686,7 +706,7 @@ class TranslationLangBallast extends Component
     }
 
     /**
-     * @param array<int, array<string, mixed>> $rows
+     * @param  array<int, array<string, mixed>>  $rows
      */
     private function paginateRows(array $rows): LengthAwarePaginator
     {
@@ -714,7 +734,7 @@ class TranslationLangBallast extends Component
         $activeLocales = TranslationLanguage::query()
             ->where('is_enabled_for_translation', true)
             ->pluck('locale')
-            ->map(fn(string $locale): string => $this->normalizeLocale($locale))
+            ->map(fn (string $locale): string => $this->normalizeLocale($locale))
             ->filter()
             ->unique()
             ->sort()
@@ -722,18 +742,18 @@ class TranslationLangBallast extends Component
 
         $auditLocales = collect((array) data_get($this->summary, 'by_locale', []))
             ->keys()
-            ->map(fn(string $locale): string => $this->normalizeLocale($locale))
+            ->map(fn (string $locale): string => $this->normalizeLocale($locale))
             ->filter()
             ->unique()
             ->sort()
             ->values();
 
         $withTranslations = $activeLocales
-            ->filter(fn(string $locale): bool => $auditLocales->contains($locale))
+            ->filter(fn (string $locale): bool => $auditLocales->contains($locale))
             ->values();
 
         $withoutTranslations = $activeLocales
-            ->reject(fn(string $locale): bool => $auditLocales->contains($locale))
+            ->reject(fn (string $locale): bool => $auditLocales->contains($locale))
             ->values();
 
         return [

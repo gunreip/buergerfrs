@@ -3,9 +3,12 @@
 namespace App\Livewire\Admin;
 
 use App\Livewire\Concerns\InteractsWithUserSettings;
+use App\Models\User;
+use App\Support\Audit\AdminActivity;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -122,7 +125,7 @@ class FlagReferenceList extends Component
         $this->persistUiState();
     }
 
-    public function saveComment(string $code, string $value): void
+    public function saveComment(string $code, string $value, AdminActivity $adminActivity): void
     {
         $normalizedCode = trim($code);
 
@@ -131,6 +134,14 @@ class FlagReferenceList extends Component
         }
 
         $comment = trim($value);
+        $beforeComment = isset($this->comments[$normalizedCode])
+            ? trim((string) $this->comments[$normalizedCode])
+            : null;
+        $afterComment = $comment !== '' ? $comment : null;
+
+        if ($beforeComment === $afterComment) {
+            return;
+        }
 
         if ($comment === '') {
             unset($this->comments[$normalizedCode]);
@@ -139,6 +150,17 @@ class FlagReferenceList extends Component
         }
 
         $this->storeComments($this->comments);
+
+        $user = Auth::user();
+
+        if ($user instanceof User) {
+            $adminActivity->flagReferenceCommentChanged(
+                user: $user,
+                code: $normalizedCode,
+                before: $beforeComment,
+                after: $afterComment,
+            );
+        }
     }
 
     public function render(): View
@@ -205,7 +227,7 @@ class FlagReferenceList extends Component
     }
 
     /**
-     * @param array<string, mixed> $report
+     * @param  array<string, mixed>  $report
      * @return Collection<int, array<string, mixed>>
      */
     private function buildEntries(array $report): Collection
@@ -254,7 +276,7 @@ class FlagReferenceList extends Component
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $entries
+     * @param  Collection<int, array<string, mixed>>  $entries
      * @return Collection<int, array<string, mixed>>
      */
     private function applyFilters(Collection $entries): Collection
@@ -286,7 +308,7 @@ class FlagReferenceList extends Component
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $entries
+     * @param  Collection<int, array<string, mixed>>  $entries
      * @return Collection<int, array<string, mixed>>
      */
     private function applySorting(Collection $entries): Collection
@@ -308,7 +330,7 @@ class FlagReferenceList extends Component
             $primary = $sortValue($row, $field);
             $fallback = mb_strtolower(trim((string) ($row['code'] ?? '')));
 
-            return $primary . "\n" . $fallback;
+            return $primary."\n".$fallback;
         });
 
         if ($this->sortDirection === 'desc') {
@@ -352,7 +374,7 @@ class FlagReferenceList extends Component
     }
 
     /**
-     * @param array<string, string> $comments
+     * @param  array<string, string>  $comments
      */
     private function storeComments(array $comments): void
     {
@@ -378,7 +400,7 @@ class FlagReferenceList extends Component
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $rows
+     * @param  Collection<int, array<string, mixed>>  $rows
      */
     private function paginateCollection(Collection $rows): LengthAwarePaginator
     {

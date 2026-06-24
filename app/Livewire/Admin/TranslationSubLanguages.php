@@ -9,6 +9,7 @@ use App\Models\Locale;
 use App\Models\TranslationKey;
 use App\Models\TranslationValue;
 use App\Settings\AppGeneralSettings;
+use App\Support\Audit\TranslationActivity;
 use App\Support\Locale\LocaleCode;
 use Flux\Flux;
 use Illuminate\Contracts\View\View;
@@ -18,7 +19,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Throwable;
 
 /**
  * First-draft administration page for sub-language (locale variant) coverage.
@@ -31,8 +31,6 @@ class TranslationSubLanguages extends Component
     private const UI_STATE_SETTING_KEY = 'ui.pages.admin_translation_sub_languages';
 
     private const MAX_SELECTED_SUB_LANGUAGE_FILTERS = 3;
-
-    private const UI_STATE_ACTIVITY_EVENT = 'admin.translation_sub_languages.ui_state_updated';
 
     private const SORT_FIELDS = [
         'id',
@@ -264,7 +262,7 @@ class TranslationSubLanguages extends Component
             ->where('translation_key_id', $translationKey->id)
             ->whereIn(DB::raw("LOWER(REPLACE(locale, '_', '-'))"), $scopeLocales, 'and', false)
             ->get(['locale', 'value'])
-            ->mapWithKeys(static fn(TranslationValue $value): array => [
+            ->mapWithKeys(static fn (TranslationValue $value): array => [
                 LocaleCode::normalize((string) $value->locale) => (string) ($value->value ?? ''),
             ]);
 
@@ -274,7 +272,7 @@ class TranslationSubLanguages extends Component
         $this->editingTranslationKeyName = (string) ($translationKey->key ?? '');
         $this->editingTranslationLocales = $scopeLocales;
         $this->translationEntryEditValues = collect($scopeLocales)
-            ->mapWithKeys(static fn(string $locale): array => [$locale => (string) ($existingValues[$locale] ?? '')])
+            ->mapWithKeys(static fn (string $locale): array => [$locale => (string) ($existingValues[$locale] ?? '')])
             ->all();
         $this->translationEntryOriginalValues = $this->translationEntryEditValues;
 
@@ -311,15 +309,15 @@ class TranslationSubLanguages extends Component
         return false;
     }
 
-    public function saveTranslationEntryEdit(): void
+    public function saveTranslationEntryEdit(TranslationActivity $translationActivity): void
     {
         if ($this->editingTranslationKeyId === null) {
             return;
         }
 
         $rules = collect($this->editingTranslationLocales)
-            ->mapWithKeys(static fn(string $locale): array => [
-                'translationEntryEditValues.' . $locale => ['nullable', 'string', 'max:10000'],
+            ->mapWithKeys(static fn (string $locale): array => [
+                'translationEntryEditValues.'.$locale => ['nullable', 'string', 'max:10000'],
             ])
             ->all();
 
@@ -345,6 +343,8 @@ class TranslationSubLanguages extends Component
         }
 
         $hasChanges = false;
+        $before = [];
+        $after = [];
 
         foreach ($this->editingTranslationLocales as $locale) {
             $newValue = trim((string) ($this->translationEntryEditValues[$locale] ?? ''));
@@ -367,6 +367,14 @@ class TranslationSubLanguages extends Component
             }
 
             $hasChanges = true;
+            $before[$locale] = [
+                'status' => $oldStatus,
+                'has_value' => $oldValue !== '',
+            ];
+            $after[$locale] = [
+                'status' => $newStatus,
+                'has_value' => $newValue !== '',
+            ];
 
             TranslationValue::query()->updateOrCreate(
                 [
@@ -396,6 +404,18 @@ class TranslationSubLanguages extends Component
 
         $savedKey = (string) ($translationKey->key ?? $translationKey->id);
 
+        $translationActivity->record(
+            event: 'translations.admin.sub_languages.values_updated',
+            description: __('Translation sub-language values updated'),
+            subject: $translationKey,
+            before: $before,
+            after: $after,
+            properties: [
+                'translation_key' => $savedKey,
+                'changed_locales' => array_keys($after),
+            ],
+        );
+
         $this->closeTranslationEntryEditModal();
 
         Flux::toast(
@@ -422,7 +442,7 @@ class TranslationSubLanguages extends Component
 
         $translationIds = $this->resolveTranslationRows($scopeLocales)
             ->pluck('id')
-            ->map(static fn(mixed $id): int => (int) $id)
+            ->map(static fn (mixed $id): int => (int) $id)
             ->values();
 
         $currentIndex = $translationIds->search($this->editingTranslationKeyId);
@@ -447,8 +467,11 @@ class TranslationSubLanguages extends Component
         $this->openTranslationEntryEditModal($nextId);
     }
 
-    public function markSubLanguageAsDuplicate(int $translationKeyId, string $locale): void
-    {
+    public function markSubLanguageAsDuplicate(
+        int $translationKeyId,
+        string $locale,
+        TranslationActivity $translationActivity,
+    ): void {
         $normalizedLocale = LocaleCode::normalize($locale);
 
         if (! $this->isSelectedSubLanguageLocale($normalizedLocale)) {
@@ -475,6 +498,8 @@ class TranslationSubLanguages extends Component
             return;
         }
 
+        $beforeDuplicateState = (bool) $translationValue->is_base_duplicate;
+
         $translationValue->fill([
             'is_base_duplicate' => true,
             'source' => 'manual',
@@ -482,6 +507,20 @@ class TranslationSubLanguages extends Component
             'reviewed_by_user_id' => Auth::id(),
         ]);
         $translationValue->save();
+
+        if (! $beforeDuplicateState) {
+            $translationActivity->record(
+                event: 'translations.admin.sub_languages.duplicate_marked',
+                description: __('Translation sub-language marked as base duplicate'),
+                subject: $translationValue,
+                before: ['is_base_duplicate' => false],
+                after: ['is_base_duplicate' => true],
+                properties: [
+                    'translation_key_id' => $translationKeyId,
+                    'locale' => $normalizedLocale,
+                ],
+            );
+        }
 
         Flux::toast(
             heading: __('Marked as duplicate'),
@@ -493,8 +532,11 @@ class TranslationSubLanguages extends Component
         $this->dispatch('$refresh');
     }
 
-    public function keepSubLanguageAsOverride(int $translationKeyId, string $locale): void
-    {
+    public function keepSubLanguageAsOverride(
+        int $translationKeyId,
+        string $locale,
+        TranslationActivity $translationActivity,
+    ): void {
         $normalizedLocale = LocaleCode::normalize($locale);
 
         if (! $this->isSelectedSubLanguageLocale($normalizedLocale)) {
@@ -521,6 +563,8 @@ class TranslationSubLanguages extends Component
             return;
         }
 
+        $beforeDuplicateState = (bool) $translationValue->is_base_duplicate;
+
         $translationValue->fill([
             'is_base_duplicate' => false,
             'source' => 'manual',
@@ -528,6 +572,20 @@ class TranslationSubLanguages extends Component
             'reviewed_by_user_id' => Auth::id(),
         ]);
         $translationValue->save();
+
+        if ($beforeDuplicateState) {
+            $translationActivity->record(
+                event: 'translations.admin.sub_languages.override_kept',
+                description: __('Translation sub-language kept as override'),
+                subject: $translationValue,
+                before: ['is_base_duplicate' => true],
+                after: ['is_base_duplicate' => false],
+                properties: [
+                    'translation_key_id' => $translationKeyId,
+                    'locale' => $normalizedLocale,
+                ],
+            );
+        }
 
         Flux::toast(
             heading: __('Marked as override'),
@@ -601,21 +659,21 @@ class TranslationSubLanguages extends Component
         $availableSubLanguageOptions = $this->baseLocaleFilter === ''
             ? collect()
             : $allSubLocales
-            ->filter(fn(object $entry): bool => (string) ($entry->base_locale ?? '') === $this->baseLocaleFilter)
-            ->map(static function (object $entry): object {
-                return (object) [
-                    'locale' => (string) ($entry->locale ?? ''),
-                    'display_name' => (string) ($entry->display_name ?? ''),
-                ];
-            })
-            ->unique('locale')
-            ->sortBy('locale', SORT_NATURAL | SORT_FLAG_CASE)
-            ->values();
+                ->filter(fn (object $entry): bool => (string) ($entry->base_locale ?? '') === $this->baseLocaleFilter)
+                ->map(static function (object $entry): object {
+                    return (object) [
+                        'locale' => (string) ($entry->locale ?? ''),
+                        'display_name' => (string) ($entry->display_name ?? ''),
+                    ];
+                })
+                ->unique('locale')
+                ->sortBy('locale', SORT_NATURAL | SORT_FLAG_CASE)
+                ->values();
 
         $validSelectedSubLanguageLocales = collect($this->selectedSubLanguageLocales)
-            ->filter(fn(mixed $locale): bool => is_string($locale) && trim($locale) !== '')
-            ->map(fn(string $locale): string => LocaleCode::normalize($locale))
-            ->filter(fn(string $locale): bool => $locale !== '')
+            ->filter(fn (mixed $locale): bool => is_string($locale) && trim($locale) !== '')
+            ->map(fn (string $locale): string => LocaleCode::normalize($locale))
+            ->filter(fn (string $locale): bool => $locale !== '')
             ->intersect($availableSubLanguageOptions->pluck('locale'))
             ->values()
             ->all();
@@ -638,13 +696,13 @@ class TranslationSubLanguages extends Component
                 });
             })
             ->when($this->baseLocaleFilter !== '', function (Collection $rows): Collection {
-                return $rows->filter(fn(object $entry): bool => (string) ($entry->base_locale ?? '') === $this->baseLocaleFilter);
+                return $rows->filter(fn (object $entry): bool => (string) ($entry->base_locale ?? '') === $this->baseLocaleFilter);
             })
             ->when($this->onlyWithOverrides, function (Collection $rows): Collection {
-                return $rows->filter(fn(object $entry): bool => (int) ($entry->override_count ?? 0) > 0);
+                return $rows->filter(fn (object $entry): bool => (int) ($entry->override_count ?? 0) > 0);
             })
             ->when($this->selectedSubLanguageLocales !== [], function (Collection $rows): Collection {
-                return $rows->filter(fn(object $entry): bool => in_array((string) ($entry->locale ?? ''), $this->selectedSubLanguageLocales, true));
+                return $rows->filter(fn (object $entry): bool => in_array((string) ($entry->locale ?? ''), $this->selectedSubLanguageLocales, true));
             })
             ->sortBy(function (object $entry) {
                 $id = (int) ($entry->id ?? 0);
@@ -653,7 +711,7 @@ class TranslationSubLanguages extends Component
 
                 return match ($this->sortField) {
                     'id' => str_pad((string) $id, 12, '0', STR_PAD_LEFT),
-                    'base_locale' => $baseLocale . '|' . $locale,
+                    'base_locale' => $baseLocale.'|'.$locale,
                     default => $locale,
                 };
             }, SORT_NATURAL | SORT_FLAG_CASE, $this->sortDirection === 'desc')
@@ -664,7 +722,7 @@ class TranslationSubLanguages extends Component
         $activeSubLocalesTotal = $allSubLocales->count();
         $baseLocaleOptions = $this->resolveBaseLocaleOptions($allSubLocales);
 
-        if ($this->baseLocaleFilter !== '' && ! $baseLocaleOptions->contains(fn(object $opt): bool => $opt->locale === $this->baseLocaleFilter)) {
+        if ($this->baseLocaleFilter !== '' && ! $baseLocaleOptions->contains(fn (object $opt): bool => $opt->locale === $this->baseLocaleFilter)) {
             $this->baseLocaleFilter = '';
             $this->selectedSubLanguageLocales = [];
 
@@ -690,7 +748,7 @@ class TranslationSubLanguages extends Component
             if ($this->editingTranslationKeyId !== null) {
                 $rowIds = $resolvedTranslationRows
                     ->pluck('id')
-                    ->map(static fn(mixed $id): int => (int) $id)
+                    ->map(static fn (mixed $id): int => (int) $id)
                     ->values();
 
                 $currentIndex = $rowIds->search($this->editingTranslationKeyId);
@@ -740,7 +798,7 @@ class TranslationSubLanguages extends Component
     }
 
     /**
-     * @param array<int, string> $scopeLocales
+     * @param  array<int, string>  $scopeLocales
      */
     private function resolveTranslationRows(array $scopeLocales): Collection
     {
@@ -760,7 +818,7 @@ class TranslationSubLanguages extends Component
 
         return $this->translationEntryBaseQuery()
             ->with([
-                'values' => fn($query) => $query
+                'values' => fn ($query) => $query
                     ->whereIn(DB::raw("LOWER(REPLACE(locale, '_', '-'))"), $scopeLocales)
                     ->orderBy('locale', 'asc'),
             ])
@@ -769,13 +827,13 @@ class TranslationSubLanguages extends Component
             ->map(static function (TranslationKey $translationKey): object {
                 $valuesByLocale = $translationKey
                     ->values
-                    ->mapWithKeys(static fn(TranslationValue $value): array => [
+                    ->mapWithKeys(static fn (TranslationValue $value): array => [
                         LocaleCode::normalize((string) $value->locale) => (string) ($value->value ?? ''),
                     ]);
 
                 $valueMetaByLocale = $translationKey
                     ->values
-                    ->mapWithKeys(static fn(TranslationValue $value): array => [
+                    ->mapWithKeys(static fn (TranslationValue $value): array => [
                         LocaleCode::normalize((string) $value->locale) => [
                             'id' => (int) $value->id,
                             'is_base_duplicate' => $value->is_base_duplicate,
@@ -793,7 +851,7 @@ class TranslationSubLanguages extends Component
                 ];
             })
             ->sortBy(
-                fn(object $translationRow): string => $this->translationRowSortKey($translationRow, $normalizedTranslationRowsSortField),
+                fn (object $translationRow): string => $this->translationRowSortKey($translationRow, $normalizedTranslationRowsSortField),
                 SORT_NATURAL | SORT_FLAG_CASE,
                 $this->translationRowsSortDirection === 'desc'
             )
@@ -801,7 +859,7 @@ class TranslationSubLanguages extends Component
     }
 
     /**
-     * @param Collection<int, object> $translationRows
+     * @param  Collection<int, object>  $translationRows
      */
     private function paginateTranslationRows(Collection $translationRows): LengthAwarePaginator
     {
@@ -856,7 +914,7 @@ class TranslationSubLanguages extends Component
         $appGeneralSettings = app(AppGeneralSettings::class);
 
         $primaryLocaleCodes = collect($appGeneralSettings->availableLocales ?? [])
-            ->map(static fn(mixed $locale): string => is_string($locale) ? LocaleCode::normalize($locale) : '')
+            ->map(static fn (mixed $locale): string => is_string($locale) ? LocaleCode::normalize($locale) : '')
             ->filter(static function (string $locale): bool {
                 if ($locale === '') {
                     return false;
@@ -907,7 +965,7 @@ class TranslationSubLanguages extends Component
 
         return $allSubLocales
             ->pluck('base_locale')
-            ->filter(fn(mixed $locale): bool => is_string($locale) && $locale !== '')
+            ->filter(fn (mixed $locale): bool => is_string($locale) && $locale !== '')
             ->unique()
             ->sort()
             ->map(static function (string $locale) use ($languageByCode): object {
@@ -924,7 +982,7 @@ class TranslationSubLanguages extends Component
     }
 
     /**
-     * @param array<int, string> $locales
+     * @param  array<int, string>  $locales
      */
     private function translatedCountForLocales(array $locales): int
     {
@@ -940,8 +998,6 @@ class TranslationSubLanguages extends Component
     }
 
     /**
-     * @param mixed $locales
-     *
      * @return array<int, string>
      */
     private function normalizeSelectedSubLanguageLocales(mixed $locales): array
@@ -951,9 +1007,9 @@ class TranslationSubLanguages extends Component
         }
 
         return collect($locales)
-            ->filter(fn(mixed $locale): bool => is_string($locale) && trim($locale) !== '')
-            ->map(fn(string $locale): string => LocaleCode::normalize($locale))
-            ->filter(fn(string $locale): bool => $locale !== '')
+            ->filter(fn (mixed $locale): bool => is_string($locale) && trim($locale) !== '')
+            ->map(fn (string $locale): string => LocaleCode::normalize($locale))
+            ->filter(fn (string $locale): bool => $locale !== '')
             ->unique()
             ->take(self::MAX_SELECTED_SUB_LANGUAGE_FILTERS)
             ->values()
@@ -962,12 +1018,6 @@ class TranslationSubLanguages extends Component
 
     private function persistUiState(string $trigger = 'unknown'): void
     {
-        $before = $this->userSetting(self::UI_STATE_SETTING_KEY, []);
-
-        if (! is_array($before)) {
-            $before = [];
-        }
-
         $after = [
             'search' => $this->search,
             'baseLocaleFilter' => $this->baseLocaleFilter,
@@ -980,55 +1030,16 @@ class TranslationSubLanguages extends Component
             'translationRowsPerPage' => $this->translationRowsPerPage,
         ];
 
-        if ($before === $after) {
+        if ($this->userSetting(self::UI_STATE_SETTING_KEY, []) === $after) {
             return;
         }
 
         $this->setUserSetting(self::UI_STATE_SETTING_KEY, $after);
-
-        $changedKeys = collect(array_keys($after))
-            ->filter(fn(string $key): bool => ($before[$key] ?? null) !== ($after[$key] ?? null))
-            ->values()
-            ->all();
-
-        $this->logUiStateActivity($trigger, $before, $after, $changedKeys);
     }
 
     /**
-     * @param array<string, mixed> $before
-     * @param array<string, mixed> $after
-     * @param array<int, string> $changedKeys
-     */
-    private function logUiStateActivity(string $trigger, array $before, array $after, array $changedKeys): void
-    {
-        try {
-            $logger = activity('admin')
-                ->event(self::UI_STATE_ACTIVITY_EVENT)
-                ->withProperties([
-                    'trigger' => $trigger,
-                    'changed_keys' => $changedKeys,
-                    'before' => $before,
-                    'after' => $after,
-                    'source' => [
-                        'route' => request()?->route()?->getName(),
-                        'url' => request()?->fullUrl(),
-                        'component' => static::class,
-                    ],
-                ]);
-
-            if (Auth::check()) {
-                $logger->causedBy(Auth::user());
-            }
-
-            $logger->log('Translation sub-language UI state updated');
-        } catch (Throwable) {
-            // Logging darf den UI-State-Workflow nicht blockieren.
-        }
-    }
-
-    /**
-     * @param array<int, string> $baseLocales
-     * @param array<int, string> $variantLocales
+     * @param  array<int, string>  $baseLocales
+     * @param  array<int, string>  $variantLocales
      */
     private function effectiveTranslatedCount(array $baseLocales, array $variantLocales): int
     {
@@ -1054,8 +1065,8 @@ class TranslationSubLanguages extends Component
         $mainLocale = LocaleCode::normalize($this->baseLocaleFilter);
 
         return collect(array_merge(['en'], $mainLocale !== '' ? [$mainLocale] : [], $this->selectedSubLanguageLocales))
-            ->map(static fn(mixed $locale): string => is_string($locale) ? LocaleCode::normalize($locale) : '')
-            ->filter(static fn(string $locale): bool => $locale !== '')
+            ->map(static fn (mixed $locale): string => is_string($locale) ? LocaleCode::normalize($locale) : '')
+            ->filter(static fn (string $locale): bool => $locale !== '')
             ->unique()
             ->values()
             ->all();
@@ -1079,10 +1090,10 @@ class TranslationSubLanguages extends Component
             $locale = substr($sortField, strlen('value:'));
             $value = trim((string) (($translationRow->values[$locale] ?? '') ?: ''));
 
-            return mb_strtolower($value) . '|' . mb_strtolower($key) . '|' . str_pad((string) $id, 12, '0', STR_PAD_LEFT);
+            return mb_strtolower($value).'|'.mb_strtolower($key).'|'.str_pad((string) $id, 12, '0', STR_PAD_LEFT);
         }
 
-        return mb_strtolower($key) . '|' . str_pad((string) $id, 12, '0', STR_PAD_LEFT);
+        return mb_strtolower($key).'|'.str_pad((string) $id, 12, '0', STR_PAD_LEFT);
     }
 
     private function normalizeTranslationRowsPerPage(mixed $value = null): int
@@ -1095,7 +1106,7 @@ class TranslationSubLanguages extends Component
     }
 
     /**
-     * @param array<int, string> $scopeLocales
+     * @param  array<int, string>  $scopeLocales
      */
     private function normalizeTranslationRowsSortField(string $field, array $scopeLocales): string
     {
@@ -1109,7 +1120,7 @@ class TranslationSubLanguages extends Component
             $locale = LocaleCode::normalize(substr($normalizedField, strlen('value:')));
 
             if ($locale !== '' && in_array($locale, $scopeLocales, true)) {
-                return 'value:' . $locale;
+                return 'value:'.$locale;
             }
         }
 

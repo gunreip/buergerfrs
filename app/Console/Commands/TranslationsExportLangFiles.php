@@ -62,7 +62,6 @@ class TranslationsExportLangFiles extends Command
             if (! $localeDirectoryExisted) {
                 if (! $dryRun) {
                     File::ensureDirectoryExists($localeDirectory);
-                    $this->logDirectoryCreatedActivity($locale, $localeDirectory);
                 }
 
                 $createdDirectories++;
@@ -87,8 +86,6 @@ class TranslationsExportLangFiles extends Command
                     path: $path,
                     content: $content,
                     dryRun: $dryRun,
-                    locale: $locale,
-                    format: 'php',
                 );
 
                 $writtenFiles += $result['written'];
@@ -114,8 +111,6 @@ class TranslationsExportLangFiles extends Command
                     path: $jsonPath,
                     content: $jsonContent,
                     dryRun: $dryRun,
-                    locale: $locale,
-                    format: 'json',
                 );
 
                 $writtenFiles += $result['written'];
@@ -411,8 +406,6 @@ class TranslationsExportLangFiles extends Command
         string $path,
         string $content,
         bool $dryRun,
-        string $locale,
-        string $format,
     ): array {
         $exists = File::exists($path);
         $current = $exists ? (string) File::get($path) : null;
@@ -420,7 +413,6 @@ class TranslationsExportLangFiles extends Command
         if (! $exists) {
             if (! $dryRun) {
                 File::put($path, $content);
-                $this->logFileCreatedActivity($locale, $path, $format);
             }
 
             return [
@@ -444,7 +436,6 @@ class TranslationsExportLangFiles extends Command
 
         if (! $dryRun) {
             File::put($path, $content);
-            $this->logFileUpdatedActivity($locale, $path, $format);
         }
 
         return [
@@ -465,56 +456,6 @@ class TranslationsExportLangFiles extends Command
         }
 
         return str_replace('_', '-', $normalized);
-    }
-
-    private function logDirectoryCreatedActivity(string $locale, string $path): void
-    {
-        try {
-            activity('translations')
-                ->event('translations.lang.directory_created')
-                ->withProperties(ConsoleActivityContext::merge($this, [
-                    'locale' => $locale,
-                    'path' => $this->relativePath($path),
-                    'absolute_path' => $path,
-                ]))
-                ->log('Translation language directory created');
-        } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for locale "'.$locale.'": '.$exception->getMessage());
-        }
-    }
-
-    private function logFileCreatedActivity(string $locale, string $path, string $format): void
-    {
-        try {
-            activity('translations')
-                ->event('translations.lang.file_created')
-                ->withProperties(ConsoleActivityContext::merge($this, [
-                    'locale' => $locale,
-                    'format' => $format,
-                    'path' => $this->relativePath($path),
-                    'absolute_path' => $path,
-                ]))
-                ->log('Translation language file created');
-        } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for file "'.$this->relativePath($path).'": '.$exception->getMessage());
-        }
-    }
-
-    private function logFileUpdatedActivity(string $locale, string $path, string $format): void
-    {
-        try {
-            activity('translations')
-                ->event('translations.lang.file_updated')
-                ->withProperties(ConsoleActivityContext::merge($this, [
-                    'locale' => $locale,
-                    'format' => $format,
-                    'path' => $this->relativePath($path),
-                    'absolute_path' => $path,
-                ]))
-                ->log('Translation language file updated');
-        } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for file "'.$this->relativePath($path).'": '.$exception->getMessage());
-        }
     }
 
     private function logNoTargetLocalesActivity(bool $dryRun): void

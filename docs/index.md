@@ -10,6 +10,7 @@ This directory contains the maintained project documentation. Generated PHPDoc o
 | [Architecture](architecture.md) | Application structure, domains and major data flows |
 | [Operations](operations.md) | Development, deployment, scheduler, queues, backups and recovery |
 | [Artisan Commands](artisan-commands.md) | Project-specific command reference and activity-log conventions |
+| [Activity Logging](activity-logging.md) | Audit scope, event conventions, security rules and verification |
 
 ## Translation Domain
 

@@ -44,7 +44,7 @@ See [Translation History](translation-history.md) and [Translation Key Rules](ke
 
 ### Activity Logging
 
-User and command actions are recorded through Spatie Activitylog. Console commands should use the conventions in [Artisan Commands](artisan-commands.md), including domain-specific event names and diagnostic context.
+User and command actions are recorded through Spatie Activitylog. Console commands should use the conventions in [Artisan Commands](artisan-commands.md), including domain-specific event names and diagnostic context. The boundary between operational activities and domain history is defined in [Activity Logging](activity-logging.md).
 
 ## Important Data Flows
 

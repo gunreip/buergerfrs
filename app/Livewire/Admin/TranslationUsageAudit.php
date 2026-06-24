@@ -6,6 +6,8 @@ namespace App\Livewire\Admin;
 
 use App\Models\TranslationKey;
 use App\Models\TranslationUsageAuditDecision;
+use App\Support\Audit\TranslationActivity;
+use App\Support\Locale\LocaleCode;
 use Flux\Flux;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -304,7 +306,7 @@ class TranslationUsageAudit extends Component
         $this->resetErrorBag('createTranslationKeyInput');
     }
 
-    public function createTranslationKeyFromUsageAudit(): void
+    public function createTranslationKeyFromUsageAudit(TranslationActivity $translationActivity): void
     {
         if (! $this->selectedAuditType || ! $this->selectedNormalizedValue) {
             return;
@@ -337,7 +339,7 @@ class TranslationUsageAudit extends Component
 
         $translationKey = DB::transaction(function () use ($newTranslationKeyValue, $selectedItem): TranslationKey {
             return TranslationKey::query()->create([
-                'fingerprint' => 'usage-audit-created-' . md5($newTranslationKeyValue),
+                'fingerprint' => 'usage-audit-created-'.md5($newTranslationKeyValue),
                 'key' => $newTranslationKeyValue,
                 'namespace' => $this->namespaceFromTranslationKey($newTranslationKeyValue),
                 'group' => $this->groupFromTranslationKey($newTranslationKeyValue),
@@ -352,9 +354,24 @@ class TranslationUsageAudit extends Component
             ]);
         });
 
+        $translationActivity->record(
+            event: 'translations.admin.usage_audit.translation_key_created',
+            description: __('Translation key created from usage audit'),
+            subject: $translationKey,
+            after: [
+                'key' => $translationKey->key,
+                'status' => $translationKey->status,
+                'workflow_status' => $translationKey->workflow_status,
+            ],
+            properties: [
+                'audit_type' => $this->selectedAuditType,
+                'normalized_value_hash' => $this->selectedNormalizedValue,
+            ],
+        );
+
         $this->editTargetTranslationKeyOptions = collect($this->editTargetTranslationKeyOptions)
             ->push((string) $translationKey->key)
-            ->map(static fn(mixed $targetTranslationKey): string => trim((string) $targetTranslationKey))
+            ->map(static fn (mixed $targetTranslationKey): string => trim((string) $targetTranslationKey))
             ->filter()
             ->unique()
             ->sort(SORT_NATURAL | SORT_FLAG_CASE)
@@ -386,7 +403,7 @@ class TranslationUsageAudit extends Component
      * It does not modify source files; later console commands consume the saved rows for preview and
      * apply steps.
      */
-    public function saveUsageAuditDecision(): void
+    public function saveUsageAuditDecision(TranslationActivity $translationActivity): void
     {
         if (! $this->selectedAuditType || ! $this->selectedNormalizedValue) {
             return;
@@ -434,7 +451,17 @@ class TranslationUsageAudit extends Component
 
         $this->editDecisionStatus = $this->computedUsageAuditDecisionStatus();
 
-        DB::transaction(function () use ($selectedItem): void {
+        $existingDecision = TranslationUsageAuditDecision::query()
+            ->where('audit_type', $this->selectedAuditType)
+            ->where('normalized_value_hash', $this->selectedNormalizedValue)
+            ->first();
+        $before = $existingDecision === null ? [] : [
+            'decision_action' => $existingDecision->decision_action,
+            'decision_status' => $existingDecision->decision_status,
+            'target_translation_key' => $existingDecision->target_translation_key,
+        ];
+
+        $decision = DB::transaction(function () use ($selectedItem): TranslationUsageAuditDecision {
             $decision = TranslationUsageAuditDecision::query()->updateOrCreate(
                 [
                     'audit_type' => $this->selectedAuditType,
@@ -484,8 +511,27 @@ class TranslationUsageAudit extends Component
                 ]);
             }
 
-            $this->editDecisionId = $decision->id;
+            return $decision;
         });
+
+        $this->editDecisionId = $decision->id;
+
+        $translationActivity->record(
+            event: 'translations.admin.usage_audit.decision_saved',
+            description: __('Translation usage audit decision saved'),
+            subject: $decision,
+            before: $before,
+            after: [
+                'decision_action' => $decision->decision_action,
+                'decision_status' => $decision->decision_status,
+                'target_translation_key' => $decision->target_translation_key,
+            ],
+            properties: [
+                'audit_type' => $decision->audit_type,
+                'normalized_value_hash' => $decision->normalized_value_hash,
+                'usage_rows' => count($this->editUsageRows),
+            ],
+        );
     }
 
     public function updatedEditDecisionAction(): void
@@ -585,7 +631,7 @@ class TranslationUsageAudit extends Component
     private function hasUsageAuditTargetTranslationKeyOptions(): bool
     {
         return collect($this->editTargetTranslationKeyOptions)
-            ->filter(static fn(mixed $targetTranslationKey): bool => trim((string) $targetTranslationKey) !== '')
+            ->filter(static fn (mixed $targetTranslationKey): bool => trim((string) $targetTranslationKey) !== '')
             ->isNotEmpty();
     }
 
@@ -624,7 +670,7 @@ class TranslationUsageAudit extends Component
         }
 
         $includedUsageRows = collect($this->editUsageRows)
-            ->filter(static fn(array $usageRow): bool => (bool) ($usageRow['include_in_change'] ?? false));
+            ->filter(static fn (array $usageRow): bool => (bool) ($usageRow['include_in_change'] ?? false));
 
         if ($includedUsageRows->isEmpty()) {
             return 'draft';
@@ -730,7 +776,7 @@ class TranslationUsageAudit extends Component
         }
 
         return collect($this->editUsageRows)
-            ->contains(static fn(array $usageRow): bool => (bool) ($usageRow['include_in_change'] ?? false));
+            ->contains(static fn (array $usageRow): bool => (bool) ($usageRow['include_in_change'] ?? false));
     }
 
     public function clearFilters(): void
@@ -860,7 +906,7 @@ class TranslationUsageAudit extends Component
         $payload = $this->readJsonFile($path, []);
 
         return collect($payload)
-            ->filter(static fn(mixed $item): bool => is_array($item))
+            ->filter(static fn (mixed $item): bool => is_array($item))
             ->values();
     }
 
@@ -870,13 +916,13 @@ class TranslationUsageAudit extends Component
      * This is required when the Needs-Key decision focus combines duplicate, frequent and manual
      * sources in one table result.
      *
-     * @param Collection<int, array<string, mixed>> $items
+     * @param  Collection<int, array<string, mixed>>  $items
      * @return Collection<int, array<string, mixed>>
      */
     private function withUsageAuditType(Collection $items, string $auditType): Collection
     {
         return $items
-            ->map(static fn(array $item): array => [
+            ->map(static fn (array $item): array => [
                 ...$item,
                 'audit_type' => (string) ($item['audit_type'] ?? $auditType),
             ])
@@ -889,10 +935,10 @@ class TranslationUsageAudit extends Component
      * Needs-Key is a cross-source decision focus unless the user explicitly selects the manual source
      * tab. That makes Decision → Needs key show audit-generated and manually marked entries together.
      *
-     * @param Collection<int, array<string, mixed>> $duplicateItems
-     * @param Collection<int, array<string, mixed>> $frequentItems
-     * @param Collection<int, array<string, mixed>> $manualNeedsKeyItems
-     * @param Collection<int, array<string, mixed>> $allSourceItems
+     * @param  Collection<int, array<string, mixed>>  $duplicateItems
+     * @param  Collection<int, array<string, mixed>>  $frequentItems
+     * @param  Collection<int, array<string, mixed>>  $manualNeedsKeyItems
+     * @param  Collection<int, array<string, mixed>>  $allSourceItems
      * @return Collection<int, array<string, mixed>>
      */
     private function activeSourceItems(
@@ -924,8 +970,8 @@ class TranslationUsageAudit extends Component
     {
         $translationKeys = TranslationKey::query()
             ->with([
-                'values' => fn($query) => $query->orderBy('locale'),
-                'usages' => fn($query) => $query->orderBy('file')->orderBy('line')->orderBy('id'),
+                'values' => fn ($query) => $query->orderBy('locale'),
+                'usages' => fn ($query) => $query->orderBy('file')->orderBy('line')->orderBy('id'),
             ])
             ->whereNotNull('needs_new_key_marked_at')
             ->whereNull('needs_new_key_resolved_at')
@@ -944,33 +990,33 @@ class TranslationUsageAudit extends Component
                     'normalized_value' => $normalizedValue,
                 ];
             })
-            ->filter(static fn(array $row): bool => trim((string) ($row['normalized_value'] ?? '')) !== '')
-            ->groupBy(static fn(array $row): string => (string) $row['normalized_value'])
+            ->filter(static fn (array $row): bool => trim((string) ($row['normalized_value'] ?? '')) !== '')
+            ->groupBy(static fn (array $row): string => (string) $row['normalized_value'])
             ->map(function (Collection $rows, string $normalizedValue): array {
                 $keys = $rows
                     ->pluck('translation_key')
-                    ->filter(static fn(mixed $translationKey): bool => $translationKey instanceof TranslationKey)
+                    ->filter(static fn (mixed $translationKey): bool => $translationKey instanceof TranslationKey)
                     ->values();
 
                 $sourceValue = trim((string) ($rows->first()['source_value'] ?? $normalizedValue));
                 $uiKeys = $keys
                     ->pluck('key')
-                    ->map(static fn(mixed $key): string => trim((string) $key))
-                    ->filter(static fn(string $key): bool => str_starts_with($key, 'ui.'))
+                    ->map(static fn (mixed $key): string => trim((string) $key))
+                    ->filter(static fn (string $key): bool => str_starts_with($key, 'ui.'))
                     ->unique()
                     ->values();
 
                 $usageRows = $keys
-                    ->flatMap(fn(TranslationKey $translationKey): Collection => $translationKey->usages)
+                    ->flatMap(fn (TranslationKey $translationKey): Collection => $translationKey->usages)
                     ->values();
 
                 $staleUsageRows = $usageRows->filter(
-                    static fn($usage): bool => (string) ($usage->reason ?? '') === 'stale_audit_usage_not_seen_in_latest_sync',
+                    static fn ($usage): bool => (string) ($usage->reason ?? '') === 'stale_audit_usage_not_seen_in_latest_sync',
                 );
 
                 $suggestedUiKey = $keys
                     ->pluck('suggested_key')
-                    ->map(static fn(mixed $suggestedKey): string => trim((string) $suggestedKey))
+                    ->map(static fn (mixed $suggestedKey): string => trim((string) $suggestedKey))
                     ->filter()
                     ->first() ?? '';
 
@@ -989,11 +1035,11 @@ class TranslationUsageAudit extends Component
                     'suggested_ui_key' => $suggestedUiKey,
                     'non_ui_translation_key_count' => $keys
                         ->pluck('key')
-                        ->map(static fn(mixed $key): string => trim((string) $key))
-                        ->filter(static fn(string $key): bool => $key !== '' && ! str_starts_with($key, 'ui.'))
+                        ->map(static fn (mixed $key): string => trim((string) $key))
+                        ->filter(static fn (string $key): bool => $key !== '' && ! str_starts_with($key, 'ui.'))
                         ->count(),
                     'keys' => $keys
-                        ->map(fn(TranslationKey $translationKey): array => $this->manualNeedsKeyItemKeyPayload($translationKey))
+                        ->map(fn (TranslationKey $translationKey): array => $this->manualNeedsKeyItemKeyPayload($translationKey))
                         ->values()
                         ->all(),
                 ];
@@ -1011,7 +1057,7 @@ class TranslationUsageAudit extends Component
         }
 
         $englishValue = $translationKey->values
-            ->first(static fn($value): bool => \App\Support\Locale\LocaleCode::normalize((string) ($value->locale ?? '')) === 'en');
+            ->first(static fn ($value): bool => LocaleCode::normalize((string) ($value->locale ?? '')) === 'en');
 
         $englishText = trim((string) ($englishValue?->value ?? ''));
 
@@ -1027,7 +1073,7 @@ class TranslationUsageAudit extends Component
 
         $suggestedKey = trim((string) ($translationKey->suggested_key ?? ''));
 
-        return $suggestedKey !== '' ? $suggestedKey : '#' . $translationKey->id;
+        return $suggestedKey !== '' ? $suggestedKey : '#'.$translationKey->id;
     }
 
     private function normalizeManualNeedsKeyValue(string $value): string
@@ -1052,7 +1098,7 @@ class TranslationUsageAudit extends Component
             'key' => $translationKey->key,
             'classification' => $translationKey->classification,
             'values' => $translationKey->values
-                ->mapWithKeys(static fn($value): array => [
+                ->mapWithKeys(static fn ($value): array => [
                     (string) ($value->locale ?? '') => [
                         'locale' => $value->locale,
                         'value' => $value->value,
@@ -1063,7 +1109,7 @@ class TranslationUsageAudit extends Component
                 ])
                 ->all(),
             'usages' => $translationKey->usages
-                ->map(static fn($usage): array => [
+                ->map(static fn ($usage): array => [
                     'file' => $usage->file,
                     'line' => $usage->line,
                     'function' => $usage->function,
@@ -1078,7 +1124,7 @@ class TranslationUsageAudit extends Component
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $items
+     * @param  Collection<int, array<string, mixed>>  $items
      * @return Collection<int, array<string, mixed>>
      */
     private function filteredItems(Collection $items, ?Collection $usageAuditDecisionIndex = null): Collection
@@ -1149,7 +1195,7 @@ class TranslationUsageAudit extends Component
 
                 return (int) ($item['usage_count_current'] ?? 0) >= $this->minCurrentUsages;
             })
-            ->pipe(fn(Collection $items): Collection => $this->sortItems($items, $usageAuditDecisionIndex))
+            ->pipe(fn (Collection $items): Collection => $this->sortItems($items, $usageAuditDecisionIndex))
             ->values();
     }
 
@@ -1178,7 +1224,7 @@ class TranslationUsageAudit extends Component
     /**
      * Sort filtered usage audit items.
      *
-     * @param Collection<int, array<string, mixed>> $items
+     * @param  Collection<int, array<string, mixed>>  $items
      * @return Collection<int, array<string, mixed>>
      */
     private function sortItems(Collection $items, Collection $usageAuditDecisionIndex): Collection
@@ -1188,7 +1234,7 @@ class TranslationUsageAudit extends Component
 
         return $items
             ->sortBy(
-                fn(array $item): mixed => $this->sortValue($item, $field, $usageAuditDecisionIndex),
+                fn (array $item): mixed => $this->sortValue($item, $field, $usageAuditDecisionIndex),
                 SORT_NATURAL | SORT_FLAG_CASE,
                 $descending,
             )
@@ -1198,8 +1244,8 @@ class TranslationUsageAudit extends Component
     /**
      * Resolve comparable sort values from one audit item.
      *
-     * @param array<string, mixed> $item
-     * @param Collection<string, TranslationUsageAuditDecision> $usageAuditDecisionIndex
+     * @param  array<string, mixed>  $item
+     * @param  Collection<string, TranslationUsageAuditDecision>  $usageAuditDecisionIndex
      */
     private function sortValue(array $item, string $field, Collection $usageAuditDecisionIndex): mixed
     {
@@ -1220,7 +1266,7 @@ class TranslationUsageAudit extends Component
     /**
      * Resolve sortable decision state for one audit item.
      *
-     * @param array<string, mixed> $item
+     * @param  array<string, mixed>  $item
      */
     private function usageAuditDecisionSortValue(array $item, Collection $usageAuditDecisionIndex): string
     {
@@ -1248,14 +1294,14 @@ class TranslationUsageAudit extends Component
             'ready' => '2-ready',
             'draft' => '3-draft',
             'applied' => '4-applied',
-            default => '8-' . (string) $decision->decision_status,
+            default => '8-'.(string) $decision->decision_status,
         };
     }
 
     /**
      * Paginate the already filtered and sorted in-memory audit items.
      *
-     * @param Collection<int, array<string, mixed>> $items
+     * @param  Collection<int, array<string, mixed>>  $items
      * @return LengthAwarePaginator<int, array<string, mixed>>
      */
     private function paginateItems(Collection $items): LengthAwarePaginator
@@ -1282,7 +1328,7 @@ class TranslationUsageAudit extends Component
      *
      * Only the columns required for filtering, sorting and table badges are selected.
      *
-     * @param Collection<int, array<string, mixed>> $items
+     * @param  Collection<int, array<string, mixed>>  $items
      * @return Collection<string, TranslationUsageAuditDecision>
      */
     private function usageAuditDecisionIndexFor(Collection $items): Collection
@@ -1297,7 +1343,7 @@ class TranslationUsageAudit extends Component
                     'normalized_value_hash' => $normalizedValueHash,
                 ];
             })
-            ->filter(static fn(array $item): bool => $item['audit_type'] !== '' && $item['normalized_value_hash'] !== '')
+            ->filter(static fn (array $item): bool => $item['audit_type'] !== '' && $item['normalized_value_hash'] !== '')
             ->groupBy('audit_type');
 
         if ($itemsByAuditType->isEmpty()) {
@@ -1330,7 +1376,7 @@ class TranslationUsageAudit extends Component
                 }
             })
             ->get()
-            ->keyBy(fn(TranslationUsageAuditDecision $decision): string => $this->usageAuditDecisionIndexKey(
+            ->keyBy(fn (TranslationUsageAuditDecision $decision): string => $this->usageAuditDecisionIndexKey(
                 auditType: (string) $decision->audit_type,
                 normalizedValueHash: (string) $decision->normalized_value_hash,
             ));
@@ -1338,18 +1384,18 @@ class TranslationUsageAudit extends Component
 
     private function usageAuditDecisionIndexKey(string $auditType, string $normalizedValueHash): string
     {
-        return trim($auditType) . '|' . trim($normalizedValueHash);
+        return trim($auditType).'|'.trim($normalizedValueHash);
     }
 
     /**
-     * @param Collection<string, TranslationUsageAuditDecision> $usageAuditDecisionIndex
-     * @param Collection<int, array<string, mixed>> $items
+     * @param  Collection<string, TranslationUsageAuditDecision>  $usageAuditDecisionIndex
+     * @param  Collection<int, array<string, mixed>>  $items
      * @return Collection<string, TranslationUsageAuditDecision>
      */
     private function usageAuditDecisionPageIndexFor(Collection $usageAuditDecisionIndex, Collection $items): Collection
     {
         $pageDecisionKeys = $items
-            ->map(fn(array $item): string => $this->usageAuditDecisionIndexKey(
+            ->map(fn (array $item): string => $this->usageAuditDecisionIndexKey(
                 auditType: (string) ($item['audit_type'] ?? $this->activeTab),
                 normalizedValueHash: md5((string) ($item['normalized_value'] ?? '')),
             ))
@@ -1362,12 +1408,12 @@ class TranslationUsageAudit extends Component
         }
 
         return $usageAuditDecisionIndex
-            ->filter(static fn(TranslationUsageAuditDecision $decision, string $decisionKey): bool => $pageDecisionKeys->contains($decisionKey));
+            ->filter(static fn (TranslationUsageAuditDecision $decision, string $decisionKey): bool => $pageDecisionKeys->contains($decisionKey));
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $duplicateItems
-     * @param Collection<int, array<string, mixed>> $frequentItems
+     * @param  Collection<int, array<string, mixed>>  $duplicateItems
+     * @param  Collection<int, array<string, mixed>>  $frequentItems
      * @return array<string, mixed>|null
      */
     private function selectedUsageAuditItem(
@@ -1413,8 +1459,8 @@ class TranslationUsageAudit extends Component
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $duplicateItems
-     * @param Collection<int, array<string, mixed>> $frequentItems
+     * @param  Collection<int, array<string, mixed>>  $duplicateItems
+     * @param  Collection<int, array<string, mixed>>  $frequentItems
      * @return array<string, mixed>|null
      */
     private function selectedUsageAuditItemFromCollections(
@@ -1431,7 +1477,7 @@ class TranslationUsageAudit extends Component
         };
 
         $item = $items->first(
-            fn(array $item): bool => md5((string) ($item['normalized_value'] ?? '')) === $normalizedValueHash,
+            fn (array $item): bool => md5((string) ($item['normalized_value'] ?? '')) === $normalizedValueHash,
         );
 
         return is_array($item) ? $item : null;
@@ -1440,7 +1486,7 @@ class TranslationUsageAudit extends Component
     /**
      * Prepare all derived data used by the usage-audit review modal.
      *
-     * @param array<string, mixed>|null $selectedItem
+     * @param  array<string, mixed>|null  $selectedItem
      * @return array{
      *     selectedKeys: Collection<int, array<string, mixed>>,
      *     selectedUiKeys: Collection<int, mixed>,
@@ -1453,7 +1499,7 @@ class TranslationUsageAudit extends Component
     private function selectedUsageAuditModalData(?array $selectedItem): array
     {
         $selectedKeys = collect($selectedItem['keys'] ?? [])
-            ->filter(static fn(mixed $key): bool => is_array($key))
+            ->filter(static fn (mixed $key): bool => is_array($key))
             ->values();
 
         $selectedUiKeys = collect($selectedItem['ui_keys'] ?? [])
@@ -1496,7 +1542,7 @@ class TranslationUsageAudit extends Component
         $this->editReviewNote = $decision?->review_note ?? '';
 
         $existingUsages = collect($decision?->usages ?? [])
-            ->keyBy(fn($usage): string => $this->usageAuditDecisionUsageFingerprint([
+            ->keyBy(fn ($usage): string => $this->usageAuditDecisionUsageFingerprint([
                 'translation_key_id' => $usage->translation_key_id,
                 'file' => $usage->file,
                 'line' => $usage->line,
@@ -1504,7 +1550,7 @@ class TranslationUsageAudit extends Component
             ]));
 
         $selectedKeys = collect($selectedItem['keys'] ?? [])
-            ->filter(static fn(mixed $key): bool => is_array($key))
+            ->filter(static fn (mixed $key): bool => is_array($key))
             ->values();
 
         $this->editUsageRows = $this->selectedUsageAuditLocations($selectedKeys)
@@ -1580,13 +1626,13 @@ class TranslationUsageAudit extends Component
     }
 
     /**
-     * @param array<string, mixed> $selectedItem
+     * @param  array<string, mixed>  $selectedItem
      * @return array<int, string>
      */
     private function targetTranslationKeyOptionsFor(array $selectedItem): array
     {
         return collect($selectedItem['ui_keys'] ?? [])
-            ->map(static fn(mixed $uiKey): string => trim((string) $uiKey))
+            ->map(static fn (mixed $uiKey): string => trim((string) $uiKey))
             ->filter()
             ->unique()
             ->sort(SORT_NATURAL | SORT_FLAG_CASE)
@@ -1630,7 +1676,7 @@ class TranslationUsageAudit extends Component
     }
 
     /**
-     * @param array<string, mixed> $usage
+     * @param  array<string, mixed>  $usage
      */
     private function usageAuditDecisionUsageFingerprint(array $usage): string
     {
@@ -1645,7 +1691,7 @@ class TranslationUsageAudit extends Component
     /**
      * Flatten translation values from all selected keys.
      *
-     * @param Collection<int, array<string, mixed>> $selectedKeys
+     * @param  Collection<int, array<string, mixed>>  $selectedKeys
      * @return Collection<int, array<string, mixed>>
      */
     private function selectedUsageAuditValues(Collection $selectedKeys): Collection
@@ -1681,7 +1727,7 @@ class TranslationUsageAudit extends Component
     /**
      * Flatten and normalize usage locations from all selected keys.
      *
-     * @param Collection<int, array<string, mixed>> $selectedKeys
+     * @param  Collection<int, array<string, mixed>>  $selectedKeys
      * @return Collection<int, array<string, mixed>>
      */
     private function selectedUsageAuditLocations(Collection $selectedKeys): Collection
@@ -1695,7 +1741,7 @@ class TranslationUsageAudit extends Component
                 }
 
                 return collect($usages)
-                    ->filter(static fn(mixed $usage): bool => is_array($usage))
+                    ->filter(static fn (mixed $usage): bool => is_array($usage))
                     ->map(static function (array $usage) use ($key): array {
                         return [
                             'translation_key_id' => $key['translation_key_id'] ?? null,
@@ -1713,9 +1759,9 @@ class TranslationUsageAudit extends Component
                     ->all();
             })
             ->sortBy([
-                static fn(array $usage): string => (string) ($usage['view_path'] ?? ''),
-                static fn(array $usage): int => (int) ($usage['line'] ?? 0),
-                static fn(array $usage): int => (int) ($usage['translation_key_id'] ?? 0),
+                static fn (array $usage): string => (string) ($usage['view_path'] ?? ''),
+                static fn (array $usage): int => (int) ($usage['line'] ?? 0),
+                static fn (array $usage): int => (int) ($usage['translation_key_id'] ?? 0),
             ])
             ->values();
     }
@@ -1723,14 +1769,14 @@ class TranslationUsageAudit extends Component
     /**
      * Group selected values into source language, target main languages, and sub languages.
      *
-     * @param Collection<int, array<string, mixed>> $selectedValues
+     * @param  Collection<int, array<string, mixed>>  $selectedValues
      * @return Collection<int, array<string, mixed>>
      */
     private function selectedUsageAuditMainLanguageValueGroups(Collection $selectedValues): Collection
     {
         return $selectedValues
             ->map(static function (array $value): array {
-                $locale = \App\Support\Locale\LocaleCode::normalize((string) ($value['locale'] ?? ''));
+                $locale = LocaleCode::normalize((string) ($value['locale'] ?? ''));
 
                 $value['locale'] = $locale;
                 $value['is_source_locale'] = $locale === 'en';
@@ -1739,24 +1785,24 @@ class TranslationUsageAudit extends Component
 
                 return $value;
             })
-            ->groupBy(static fn(array $value): string => (string) ($value['translation_key_id'] ?? ''))
+            ->groupBy(static fn (array $value): string => (string) ($value['translation_key_id'] ?? ''))
             ->map(static function (Collection $values): array {
                 $sourceValue = $values->first(
-                    static fn(array $value): bool => (bool) ($value['is_source_locale'] ?? false),
+                    static fn (array $value): bool => (bool) ($value['is_source_locale'] ?? false),
                 );
 
                 $targetValues = $values
-                    ->filter(static fn(array $value): bool => (bool) ($value['is_main_language_locale'] ?? false))
+                    ->filter(static fn (array $value): bool => (bool) ($value['is_main_language_locale'] ?? false))
                     ->sortBy(
-                        static fn(array $value): string => (string) ($value['locale'] ?? ''),
+                        static fn (array $value): string => (string) ($value['locale'] ?? ''),
                         SORT_NATURAL | SORT_FLAG_CASE,
                     )
                     ->values();
 
                 $subLanguageValues = $values
-                    ->filter(static fn(array $value): bool => (bool) ($value['is_sub_language_locale'] ?? false))
+                    ->filter(static fn (array $value): bool => (bool) ($value['is_sub_language_locale'] ?? false))
                     ->sortBy(
-                        static fn(array $value): string => (string) ($value['locale'] ?? ''),
+                        static fn (array $value): string => (string) ($value['locale'] ?? ''),
                         SORT_NATURAL | SORT_FLAG_CASE,
                     )
                     ->values();

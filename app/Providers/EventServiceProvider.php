@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Listeners\LogLogin;
 use App\Listeners\LogLoginFailed;
 use App\Listeners\LogLogout;
+use App\Listeners\LogPasswordReset;
 use App\Listeners\LogRegistered;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -27,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'Illuminate\Auth\Events\Failed' => [
             LogLoginFailed::class,
+        ],
+        'Illuminate\Auth\Events\PasswordReset' => [
+            LogPasswordReset::class,
         ],
     ];
 

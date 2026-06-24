@@ -6,6 +6,8 @@ namespace App\Livewire\Admin;
 
 use App\Livewire\Concerns\InteractsWithUserSettings;
 use App\Models\FallbackReport;
+use App\Support\Audit\AdminActivity;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -142,24 +144,34 @@ class FallbackReportList extends Component
     /**
      * Mark a fallback report as reviewed.
      */
-    public function markReviewed(int $reportId): void
+    public function markReviewed(int $reportId, AdminActivity $adminActivity): void
     {
         $report = FallbackReport::query()->findOrFail($reportId);
+        $beforeReviewed = (bool) $report->reviewed;
 
         $report->markReviewed(
             userId: Auth::id(),
             note: 'Reviewed in fallback report list.',
         );
+
+        if (! $beforeReviewed) {
+            $adminActivity->fallbackReviewChanged($report, false, true);
+        }
     }
 
     /**
      * Mark a fallback report as open/unreviewed.
      */
-    public function markUnreviewed(int $reportId): void
+    public function markUnreviewed(int $reportId, AdminActivity $adminActivity): void
     {
         $report = FallbackReport::query()->findOrFail($reportId);
+        $beforeReviewed = (bool) $report->reviewed;
 
         $report->markUnreviewed();
+
+        if ($beforeReviewed) {
+            $adminActivity->fallbackReviewChanged($report, true, false);
+        }
     }
 
     /**
@@ -175,14 +187,14 @@ class FallbackReportList extends Component
     /**
      * Build filtered list and summary metrics for rendering.
      *
-     * @return \Illuminate\Contracts\View\View
+     * @return View
      */
     public function render()
     {
         $query = FallbackReport::query()
-            ->when($this->statusFilter === 'open', fn(Builder $query): Builder => $query->open())
-            ->when($this->statusFilter === 'reviewed', fn(Builder $query): Builder => $query->reviewed())
-            ->when(trim($this->search) !== '', fn(Builder $query): Builder => $this->applySearch($query));
+            ->when($this->statusFilter === 'open', fn (Builder $query): Builder => $query->open())
+            ->when($this->statusFilter === 'reviewed', fn (Builder $query): Builder => $query->reviewed())
+            ->when(trim($this->search) !== '', fn (Builder $query): Builder => $this->applySearch($query));
 
         $sortColumn = self::SORT_FIELDS[$this->sortField] ?? 'last_seen_at';
 
@@ -214,7 +226,7 @@ class FallbackReportList extends Component
                     ->orWhere('count', (int) $search);
             }
 
-            $like = '%' . str_replace(['%', '_'], ['\\%', '\\_'], $search) . '%';
+            $like = '%'.str_replace(['%', '_'], ['\\%', '\\_'], $search).'%';
 
             $query->orWhere('type', 'ILIKE', $like)
                 ->orWhere('key', 'ILIKE', $like)

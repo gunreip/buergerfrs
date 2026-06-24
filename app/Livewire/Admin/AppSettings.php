@@ -6,10 +6,10 @@ namespace App\Livewire\Admin;
 
 use App\Settings\AppDisplaySettings;
 use App\Settings\AppGeneralSettings;
+use App\Support\Audit\AdminActivity;
 use App\Support\Icons\IconRegistry;
 use App\Support\Locale\LocaleCode;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Livewire\Component;
@@ -1092,21 +1092,11 @@ class AppSettings extends Component
     private function logLocaleActivity(string $event, string $description, array $properties = []): void
     {
         try {
-            $logger = activity('admin')
-                ->event($event)
-                ->withProperties(array_merge($properties, [
-                    'source' => [
-                        'route' => request()?->route()?->getName(),
-                        'url' => request()?->fullUrl(),
-                        'component' => static::class,
-                    ],
-                ]));
-
-            if (Auth::check()) {
-                $logger->causedBy(Auth::user());
-            }
-
-            $logger->log($description);
+            app(AdminActivity::class)->record(
+                event: $event,
+                description: $description,
+                properties: $properties,
+            );
         } catch (Throwable) {
             // Logging darf den App-Settings-Workflow nicht blockieren.
         }

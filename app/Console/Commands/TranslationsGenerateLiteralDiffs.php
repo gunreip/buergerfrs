@@ -120,11 +120,6 @@ class TranslationsGenerateLiteralDiffs extends Command
                 'replacements' => $replacementsInFile,
             ];
 
-            $this->logPatchEntryCreatedActivity(
-                sourcePath: $relativePath,
-                patchPath: $patchPathForTable,
-                replacements: $replacementsInFile,
-            );
         }
 
         $combinedPatchPath = $outputDir.'/latest.patch';
@@ -472,22 +467,6 @@ class TranslationsGenerateLiteralDiffs extends Command
             'echo "Done."',
             '',
         ]);
-    }
-
-    private function logPatchEntryCreatedActivity(string $sourcePath, string $patchPath, int $replacements): void
-    {
-        try {
-            activity('translations')
-                ->event('translations.literals.diff.file_created')
-                ->withProperties(ConsoleActivityContext::merge($this, [
-                    'source_path' => $sourcePath,
-                    'patch_path' => $patchPath,
-                    'replacements' => $replacements,
-                ]))
-                ->log('Translation literal diff patch created');
-        } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for patch "'.$patchPath.'": '.$exception->getMessage());
-        }
     }
 
     /**
