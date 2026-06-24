@@ -1,0 +1,49 @@
+/* resources/css/inputs.css */
+
+/* Unser globaler CSS-Override auf
+[data-flux-options][popover]
+[data-flux-options][popover] [role='listbox']
+[data-flux-options][popover] [role='option']
+war zu breit angesetzt. Er hat zwar das alte Problem mit zu langen Option-Labels entschärft,
+aber gleichzeitig das native Flux-Popover-/Listbox-Layout gestört,
+insbesondere Höhe, Overflow und Scrollbar. */
+
+@layer components {
+
+    /*
+     * Flux select/dropdown options:
+     * Allow the dropdown to grow with its content, but keep it inside a sane viewport max width.
+     */
+    [data-flux-options][popover] {
+        width: max-content !important;
+        max-width: min(42rem, calc(100vw - 2rem)) !important;
+        overflow: hidden !important;
+    }
+
+    /*
+     * Flux listbox inside the options popover.
+     * Override Flux' internal max-w-[20rem] behavior and allow vertical scrolling.
+     */
+    [data-flux-options][popover] [role='listbox'] {
+        width: max-content !important;
+        min-width: 100% !important;
+        max-width: min(42rem, calc(100vw - 2rem)) !important;
+        max-height: min(18rem, calc(100vh - 8rem)) !important;
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+    }
+
+    /*
+     * Prevent option labels from being clipped too early.
+     */
+    [data-flux-options][popover] [role='option'] {
+        min-width: max-content;
+        white-space: nowrap;
+    }
+
+    [data-flux-options][popover] [role='option'] .truncate {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: nowrap;
+    }
+}

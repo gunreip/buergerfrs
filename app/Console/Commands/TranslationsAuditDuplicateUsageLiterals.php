@@ -42,6 +42,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -49,6 +50,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Throwable;
 
 /**
  * Audits duplicate source-language translation values that are assigned to multiple keys.
@@ -137,6 +139,8 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
             $this->line('');
             $this->warn('No duplicate usage literal candidates found.');
 
+            $this->logRunCompletedActivity($summary);
+
             return self::SUCCESS;
         }
 
@@ -145,7 +149,7 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
             ['Source', 'Source value', 'Keys', 'Usages', 'Current', 'Stale', 'UI candidate', 'Suggested UI key'],
             collect($candidates)
                 ->take(self::PREVIEW_LIMIT)
-                ->map(static fn(array $candidate): array => [
+                ->map(static fn (array $candidate): array => [
                     $candidate['locale'],
                     mb_strimwidth($candidate['value'], 0, 44, '...'),
                     $candidate['translation_key_count'],
@@ -160,7 +164,9 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
         );
 
         $this->line('');
-        $this->line('Audit files written to: ' . $this->relativePath($this->auditDirectory()));
+        $this->line('Audit files written to: '.$this->relativePath($this->auditDirectory()));
+
+        $this->logRunCompletedActivity($summary);
 
         return self::SUCCESS;
     }
@@ -174,7 +180,7 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
 
         if ($localesOption !== '') {
             return collect(explode(',', $localesOption))
-                ->map(static fn(string $locale): string => self::normalizeLocale($locale))
+                ->map(static fn (string $locale): string => self::normalizeLocale($locale))
                 ->filter()
                 ->unique()
                 ->sort()
@@ -188,7 +194,7 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
             ->selectRaw("LOWER(REPLACE(locale, '_', '-')) as normalized_locale")
             ->distinct()
             ->pluck('normalized_locale')
-            ->map(static fn(string $locale): string => self::normalizeLocale($locale))
+            ->map(static fn (string $locale): string => self::normalizeLocale($locale))
             ->filter()
             ->unique()
             ->sort()
@@ -240,15 +246,15 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
     }
 
     /**
-     * @param Collection<int, object> $sourceRows
-     * @param array<int, string> $locales
+     * @param  Collection<int, object>  $sourceRows
+     * @param  array<int, string>  $locales
      * @return array<int, array<string, array<string, mixed>>>
      */
     private function valueRowsByKeyId(Collection $sourceRows, array $locales): array
     {
         $translationKeyIds = $sourceRows
             ->pluck('translation_key_id')
-            ->map(static fn($id): int => (int) $id)
+            ->map(static fn ($id): int => (int) $id)
             ->unique()
             ->values();
 
@@ -280,7 +286,7 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
             ->groupBy('translation_key_id')
             ->map(static function (Collection $rows): array {
                 return $rows
-                    ->mapWithKeys(static fn(object $row): array => [
+                    ->mapWithKeys(static fn (object $row): array => [
                         (string) $row->normalized_locale => [
                             'locale' => (string) $row->normalized_locale,
                             'value' => $row->value,
@@ -295,7 +301,7 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
     }
 
     /**
-     * @param Collection<int, object> $sourceRows
+     * @param  Collection<int, object>  $sourceRows
      * @return array<string, array<string, mixed>>
      */
     private function candidateGroups(Collection $sourceRows, int $minKeys, int $minLength, bool $includeUi): array
@@ -320,7 +326,7 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
                 continue;
             }
 
-            $groupKey = $locale . '|' . $normalizedValue;
+            $groupKey = $locale.'|'.$normalizedValue;
             $translationKeyId = (int) $row->translation_key_id;
             $fullKey = $this->fullTranslationKey(
                 group: $row->group ?? null,
@@ -357,7 +363,7 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
             ->filter(function (array $group) use ($minKeys, $includeUi): bool {
                 $translationKeyCount = count($group['keys']);
                 $uiKeyCount = collect($group['keys'])
-                    ->filter(static fn(array $key): bool => (bool) $key['is_ui_key'])
+                    ->filter(static fn (array $key): bool => (bool) $key['is_ui_key'])
                     ->count();
 
                 if ($translationKeyCount < $minKeys) {
@@ -374,14 +380,14 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
     }
 
     /**
-     * @param array<string, array<string, mixed>> $candidateGroups
+     * @param  array<string, array<string, mixed>>  $candidateGroups
      * @return array<int, Collection<int, object>>
      */
     private function usageRowsByKeyId(array $candidateGroups): array
     {
         $translationKeyIds = collect($candidateGroups)
-            ->flatMap(static fn(array $group): array => array_keys($group['keys']))
-            ->map(static fn($id): int => (int) $id)
+            ->flatMap(static fn (array $group): array => array_keys($group['keys']))
+            ->map(static fn ($id): int => (int) $id)
             ->unique()
             ->values();
 
@@ -409,9 +415,9 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
     }
 
     /**
-     * @param array<string, array<string, mixed>> $candidateGroups
-     * @param array<int, Collection<int, object>> $usageRowsByKeyId
-     * @param array<int, array<string, array<string, mixed>>> $valueRowsByKeyId
+     * @param  array<string, array<string, mixed>>  $candidateGroups
+     * @param  array<int, Collection<int, object>>  $usageRowsByKeyId
+     * @param  array<int, array<string, array<string, mixed>>>  $valueRowsByKeyId
      * @return array<int, array<string, mixed>>
      */
     private function buildCandidates(array $candidateGroups, array $usageRowsByKeyId, array $valueRowsByKeyId): array
@@ -443,7 +449,7 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
 
                     $usageCountTotal = count($usages);
                     $usageCountStale = collect($usages)
-                        ->filter(static fn(array $usage): bool => (bool) $usage['is_stale'])
+                        ->filter(static fn (array $usage): bool => (bool) $usage['is_stale'])
                         ->count();
                     $usageCountCurrent = $usageCountTotal - $usageCountStale;
 
@@ -466,7 +472,7 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
                 ->all();
 
             $uiKeys = collect($keys)
-                ->filter(static fn(array $key): bool => (bool) $key['is_ui_key'])
+                ->filter(static fn (array $key): bool => (bool) $key['is_ui_key'])
                 ->pluck('full_key')
                 ->filter()
                 ->unique()
@@ -484,7 +490,7 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
                 'value_variants' => array_keys($group['value_variants']),
                 'translation_key_count' => count($keys),
                 'non_ui_translation_key_count' => collect($keys)
-                    ->filter(static fn(array $key): bool => ! (bool) $key['is_ui_key'])
+                    ->filter(static fn (array $key): bool => ! (bool) $key['is_ui_key'])
                     ->count(),
                 'usage_count' => $usageCountTotal,
                 'usage_count_total' => $usageCountTotal,
@@ -500,7 +506,7 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
 
         usort(
             $candidates,
-            static fn(array $a, array $b): int => [
+            static fn (array $a, array $b): int => [
                 -1 * $a['translation_key_count'],
                 -1 * $a['usage_count_total'],
                 $a['locale'],
@@ -521,8 +527,8 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
         File::ensureDirectoryExists($this->auditDirectory());
 
         File::put(
-            $this->auditDirectory() . '/' . $name . '.json',
-            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL,
+            $this->auditDirectory().'/'.$name.'.json',
+            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL,
         );
 
         $previewPayload = array_is_list($payload)
@@ -530,8 +536,8 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
             : $payload;
 
         File::put(
-            $this->auditDirectory() . '/' . $name . '.preview.json',
-            json_encode($previewPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL,
+            $this->auditDirectory().'/'.$name.'.preview.json',
+            json_encode($previewPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL,
         );
     }
 
@@ -569,11 +575,11 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
             return $key;
         }
 
-        if ($key === $group || str_starts_with($key, $group . '.')) {
+        if ($key === $group || str_starts_with($key, $group.'.')) {
             return $key;
         }
 
-        return $group . '.' . $key;
+        return $group.'.'.$key;
     }
 
     private function looksLikeFullTranslationKey(string $key): bool
@@ -606,11 +612,28 @@ class TranslationsAuditDuplicateUsageLiterals extends Command
             return null;
         }
 
-        return 'ui.' . $slug;
+        return 'ui.'.$slug;
     }
 
     private function relativePath(string $path): string
     {
-        return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+        return str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
+    }
+
+    /**
+     * @param  array<string, mixed>  $summary
+     */
+    private function logRunCompletedActivity(array $summary): void
+    {
+        try {
+            activity('translations')
+                ->event('translations.duplicate_usage_literals.audit.completed')
+                ->withProperties(ConsoleActivityContext::merge($this, [
+                    'summary' => $summary,
+                ]))
+                ->log('Translation duplicate usage literals audit completed');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: '.$exception->getMessage());
+        }
     }
 }

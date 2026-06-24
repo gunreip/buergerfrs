@@ -7,11 +7,13 @@
 namespace App\Console\Commands;
 
 use App\Models\TranslationUsageAuditDecision;
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Throwable;
 
 #[Signature('translations:usage-decisions:preview')]
 #[Description('Create preview files for ready translation usage audit decisions.')]
@@ -30,7 +32,7 @@ class PreviewTranslationUsageAuditDecisions extends Command
 
         TranslationUsageAuditDecision::query()
             ->with([
-                'usages' => fn($query) => $query
+                'usages' => fn ($query) => $query
                     ->where('include_in_change', true)
                     ->orderBy('file')
                     ->orderBy('line')
@@ -43,7 +45,7 @@ class PreviewTranslationUsageAuditDecisions extends Command
             ->chunkById(100, function (Collection $decisions) use (&$previewItems): void {
                 foreach ($decisions as $decision) {
                     $usageItems = $decision->usages
-                        ->filter(static fn($usage): bool => trim((string) $usage->target_translation_key) !== '')
+                        ->filter(static fn ($usage): bool => trim((string) $usage->target_translation_key) !== '')
                         ->map(function ($usage): array {
                             $replacementPreview = $this->buildReplacementPreview(
                                 raw: (string) $usage->raw,
@@ -126,39 +128,41 @@ class PreviewTranslationUsageAuditDecisions extends Command
         ];
 
         File::put(
-            $outputDirectory . '/preview.json',
-            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL,
+            $outputDirectory.'/preview.json',
+            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL,
         );
 
         File::put(
-            $outputDirectory . '/preview.sample.json',
-            json_encode($samplePayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL,
+            $outputDirectory.'/preview.sample.json',
+            json_encode($samplePayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL,
         );
 
         File::put(
-            $outputDirectory . '/preview.md',
+            $outputDirectory.'/preview.md',
             $this->renderMarkdownPreview($previewItems),
         );
 
         File::put(
-            $outputDirectory . '/preview.sample.md',
+            $outputDirectory.'/preview.sample.md',
             $this->renderMarkdownPreview($previewItems->take(20)),
         );
 
         File::put(
-            $outputDirectory . '/preview.diff.md',
+            $outputDirectory.'/preview.diff.md',
             $this->renderDiffPreview($previewItems),
         );
 
         File::put(
-            $outputDirectory . '/preview.diff.sample.md',
+            $outputDirectory.'/preview.diff.sample.md',
             $this->renderDiffPreview($previewItems->take(20)),
         );
 
         $this->info('Translation usage decision preview written.');
-        $this->line('Directory: ' . $outputDirectory);
-        $this->line('Decisions: ' . $previewItems->count());
-        $this->line('Usages: ' . $previewItems->sum('usage_count'));
+        $this->line('Directory: '.$outputDirectory);
+        $this->line('Decisions: '.$previewItems->count());
+        $this->line('Usages: '.$previewItems->sum('usage_count'));
+
+        $this->logRunCompletedActivity($payload['meta']);
 
         return self::SUCCESS;
     }
@@ -325,7 +329,7 @@ class PreviewTranslationUsageAuditDecisions extends Command
     /**
      * Render a readable diff-style markdown preview.
      *
-     * @param Collection<int, array<string, mixed>> $previewItems
+     * @param  Collection<int, array<string, mixed>>  $previewItems
      */
     private function renderDiffPreview(Collection $previewItems): string
     {
@@ -333,19 +337,19 @@ class PreviewTranslationUsageAuditDecisions extends Command
             '# Translation Usage Decision Diff Preview',
             '',
             '- Command: `translations:usage-decisions:preview`',
-            '- Decisions: ' . $previewItems->count(),
-            '- Usages: ' . $previewItems->sum('usage_count'),
+            '- Decisions: '.$previewItems->count(),
+            '- Usages: '.$previewItems->sum('usage_count'),
             '',
             '> Preview only. No files were changed.',
             '',
         ];
 
         foreach ($previewItems as $item) {
-            $lines[] = '## Decision #' . $item['decision_id'];
+            $lines[] = '## Decision #'.$item['decision_id'];
             $lines[] = '';
-            $lines[] = '- Source value: `' . ($item['source_value'] ?? '—') . '`';
-            $lines[] = '- Target key: `' . ($item['target_translation_key'] ?? '—') . '`';
-            $lines[] = '- Usage count: ' . (int) ($item['usage_count'] ?? 0);
+            $lines[] = '- Source value: `'.($item['source_value'] ?? '—').'`';
+            $lines[] = '- Target key: `'.($item['target_translation_key'] ?? '—').'`';
+            $lines[] = '- Usage count: '.(int) ($item['usage_count'] ?? 0);
             $lines[] = '';
 
             foreach ($item['usages'] ?? [] as $usage) {
@@ -359,41 +363,41 @@ class PreviewTranslationUsageAuditDecisions extends Command
                 $warning = trim((string) ($usage['replacement_warning'] ?? ''));
                 $verificationWarning = trim((string) ($usage['verification_warning'] ?? ''));
 
-                $lines[] = '### Usage #' . ($usage['usage_id'] ?? '—');
+                $lines[] = '### Usage #'.($usage['usage_id'] ?? '—');
                 $lines[] = '';
-                $lines[] = '- File: `' . ($file !== '' ? $file : '—') . '`';
-                $lines[] = '- Line: ' . ($line > 0 ? $line : '—');
-                $lines[] = '- Current key: `' . ($usage['current_translation_key'] ?? '—') . '`';
-                $lines[] = '- Target key: `' . ($usage['target_translation_key'] ?? '—') . '`';
-                $lines[] = '- Can replace: `' . ($canBuildReplacement ? 'yes' : 'no') . '`';
-                $lines[] = '- Line matches raw: `' . ($lineMatchesRaw ? 'yes' : 'no') . '`';
+                $lines[] = '- File: `'.($file !== '' ? $file : '—').'`';
+                $lines[] = '- Line: '.($line > 0 ? $line : '—');
+                $lines[] = '- Current key: `'.($usage['current_translation_key'] ?? '—').'`';
+                $lines[] = '- Target key: `'.($usage['target_translation_key'] ?? '—').'`';
+                $lines[] = '- Can replace: `'.($canBuildReplacement ? 'yes' : 'no').'`';
+                $lines[] = '- Line matches raw: `'.($lineMatchesRaw ? 'yes' : 'no').'`';
 
                 if ($lineContent !== '') {
-                    $lines[] = '- Current line: `' . $lineContent . '`';
+                    $lines[] = '- Current line: `'.$lineContent.'`';
                 }
 
                 if ($warning !== '') {
-                    $lines[] = '- Replacement warning: ' . $warning;
+                    $lines[] = '- Replacement warning: '.$warning;
                 }
 
                 if ($verificationWarning !== '') {
-                    $lines[] = '- Verification warning: ' . $verificationWarning;
+                    $lines[] = '- Verification warning: '.$verificationWarning;
                 }
 
                 $lines[] = '';
                 $lines[] = '```diff';
-                $lines[] = '--- ' . ($file !== '' ? $file : 'unknown');
-                $lines[] = '+++ ' . ($file !== '' ? $file : 'unknown');
-                $lines[] = '@@ Line ' . ($line > 0 ? $line : '?') . ' @@';
+                $lines[] = '--- '.($file !== '' ? $file : 'unknown');
+                $lines[] = '+++ '.($file !== '' ? $file : 'unknown');
+                $lines[] = '@@ Line '.($line > 0 ? $line : '?').' @@';
 
                 if ($canBuildReplacement && $lineMatchesRaw) {
-                    $lines[] = '- ' . $raw;
-                    $lines[] = '+ ' . $proposedRaw;
+                    $lines[] = '- '.$raw;
+                    $lines[] = '+ '.$proposedRaw;
                 } elseif ($canBuildReplacement) {
                     $lines[] = '! Replacement can be built, but the current file line does not match the stored raw usage.';
-                    $lines[] = '! ' . ($raw !== '' ? $raw : 'No raw usage available.');
+                    $lines[] = '! '.($raw !== '' ? $raw : 'No raw usage available.');
                 } else {
-                    $lines[] = '! ' . ($raw !== '' ? $raw : 'No raw usage available.');
+                    $lines[] = '! '.($raw !== '' ? $raw : 'No raw usage available.');
                 }
 
                 $lines[] = '```';
@@ -401,13 +405,13 @@ class PreviewTranslationUsageAuditDecisions extends Command
             }
         }
 
-        return implode(PHP_EOL, $lines) . PHP_EOL;
+        return implode(PHP_EOL, $lines).PHP_EOL;
     }
 
     /**
      * Render a readable markdown preview.
      *
-     * @param Collection<int, array<string, mixed>> $previewItems
+     * @param  Collection<int, array<string, mixed>>  $previewItems
      */
     private function renderMarkdownPreview(Collection $previewItems): string
     {
@@ -415,22 +419,22 @@ class PreviewTranslationUsageAuditDecisions extends Command
             '# Translation Usage Decision Preview',
             '',
             '- Command: `translations:usage-decisions:preview`',
-            '- Decisions: ' . $previewItems->count(),
-            '- Usages: ' . $previewItems->sum('usage_count'),
+            '- Decisions: '.$previewItems->count(),
+            '- Usages: '.$previewItems->sum('usage_count'),
             '',
         ];
 
         foreach ($previewItems as $item) {
-            $lines[] = '## Decision #' . $item['decision_id'];
+            $lines[] = '## Decision #'.$item['decision_id'];
             $lines[] = '';
-            $lines[] = '- Audit type: `' . ($item['audit_type'] ?? '—') . '`';
-            $lines[] = '- Source value: `' . ($item['source_value'] ?? '—') . '`';
-            $lines[] = '- Normalized value: `' . ($item['normalized_value'] ?? '—') . '`';
-            $lines[] = '- Target key: `' . ($item['target_translation_key'] ?? '—') . '`';
-            $lines[] = '- Usage count: ' . (int) ($item['usage_count'] ?? 0);
+            $lines[] = '- Audit type: `'.($item['audit_type'] ?? '—').'`';
+            $lines[] = '- Source value: `'.($item['source_value'] ?? '—').'`';
+            $lines[] = '- Normalized value: `'.($item['normalized_value'] ?? '—').'`';
+            $lines[] = '- Target key: `'.($item['target_translation_key'] ?? '—').'`';
+            $lines[] = '- Usage count: '.(int) ($item['usage_count'] ?? 0);
 
             if (trim((string) ($item['review_note'] ?? '')) !== '') {
-                $lines[] = '- Review note: ' . trim((string) $item['review_note']);
+                $lines[] = '- Review note: '.trim((string) $item['review_note']);
             }
 
             $lines[] = '';
@@ -453,13 +457,13 @@ class PreviewTranslationUsageAuditDecisions extends Command
 
                 if (trim((string) ($usage['replacement_warning'] ?? '')) !== '') {
                     $lines[] = '';
-                    $lines[] = '> Replacement warning for usage #' . ($usage['usage_id'] ?? '—') . ': ' . trim((string) $usage['replacement_warning']);
+                    $lines[] = '> Replacement warning for usage #'.($usage['usage_id'] ?? '—').': '.trim((string) $usage['replacement_warning']);
                     $lines[] = '';
                 }
 
                 if (trim((string) ($usage['verification_warning'] ?? '')) !== '') {
                     $lines[] = '';
-                    $lines[] = '> Verification warning for usage #' . ($usage['usage_id'] ?? '—') . ': ' . trim((string) $usage['verification_warning']);
+                    $lines[] = '> Verification warning for usage #'.($usage['usage_id'] ?? '—').': '.trim((string) $usage['verification_warning']);
                     $lines[] = '';
                 }
             }
@@ -467,6 +471,23 @@ class PreviewTranslationUsageAuditDecisions extends Command
             $lines[] = '';
         }
 
-        return implode(PHP_EOL, $lines) . PHP_EOL;
+        return implode(PHP_EOL, $lines).PHP_EOL;
+    }
+
+    /**
+     * @param  array<string, mixed>  $meta
+     */
+    private function logRunCompletedActivity(array $meta): void
+    {
+        try {
+            activity('translations')
+                ->event('translations.usage_decisions.preview.completed')
+                ->withProperties(ConsoleActivityContext::merge($this, [
+                    'summary' => $meta,
+                ]))
+                ->log('Translation usage decision preview command completed');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: '.$exception->getMessage());
+        }
     }
 }

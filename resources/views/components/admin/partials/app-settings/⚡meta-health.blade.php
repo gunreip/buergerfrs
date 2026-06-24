@@ -12,18 +12,12 @@
     <div class="grid grid-cols-2 gap-3">
         {{-- Roles without badge config --}}
         <flux:callout
-            class="col-span-2 md:col-span-1"
+            class="col-span-2 hyphens-auto md:col-span-1"
             :color="$summary['rolesWithoutBadge'] > 0 ? 'orange' : 'green'"
             icon="shield-alert"
+            heading="{{ __('admin.app_settings.meta_health.roles_without_badge_config') }}"
+            text="{{ __('admin.app_settings.meta_health.roles_that_exist_in_the_database_but_have_no_configured_badge_settings') }}"
         >
-            <flux:callout.heading>
-                {{ __('admin.app_settings.meta_health.roles_without_badge_config') }}
-            </flux:callout.heading>
-
-            <flux:callout.text class="font-extralight">
-                {{ __('admin.app_settings.meta_health.roles_that_exist_in_the_database_but_have_no_configured_badge_settings') }}
-            </flux:callout.text>
-
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                 {{ $summary['rolesWithoutBadge'] }}
             </flux:callout.text>
@@ -31,18 +25,12 @@
 
         {{-- Badge config entries that reference non-existent roles --}}
         <flux:callout
-            class="col-span-2 md:col-span-1"
+            class="col-span-2 hyphens-auto md:col-span-1"
             :color="$summary['badgeConfigsWithoutRole'] > 0 ? 'orange' : 'green'"
             icon="shield-alert"
+            heading="{{ __('admin.app_settings.meta_health.badge_configs_without_role') }}"
+            text="{{ __('admin.app_settings.meta_health.badge_settings_that_reference_roles_that_no_longer_exist') }}"
         >
-            <flux:callout.heading>
-                {{ __('admin.app_settings.meta_health.badge_configs_without_role') }}
-            </flux:callout.heading>
-
-            <flux:callout.text class="font-extralight">
-                {{ __('admin.app_settings.meta_health.badge_settings_that_reference_roles_that_no_longer_exist') }}
-            </flux:callout.text>
-
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                 {{ $summary['badgeConfigsWithoutRole'] }}
             </flux:callout.text>

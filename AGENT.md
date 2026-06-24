@@ -6,7 +6,7 @@
 - `Suggested Key` ist der einzige sichtbare Empfehlungskandidat in der Standard-UI. `Expected Key` gehört nicht in die Standard-UI.
 - Key-Pflege (`native`, `dynamic`, no-key) und Übersetzungsarbeit (gekeyte Einträge pro Sprache) nicht stillschweigend vermischen. Wenn unterschiedliche Arbeitsmodi nötig sind, diese explizit benennen statt implizit über Filterlogik zu vermengen.
 - `obsolete` ist Nebenworkflow für Review/Cleanup und darf den normalen Übersetzungsworkflow nicht dominieren.
-- Vor Änderungen an Query-Semantik, Counterlogik, Suggested-Key-Regeln oder Translation-Commands zuerst `docs/reports/key-rules-pattern.md` und die abgestimmten Workflow-Regeln prüfen; bei Abweichungen erneut fachlich abstimmen statt stillschweigend umbauen.
+- Vor Änderungen an Query-Semantik, Counterlogik, Suggested-Key-Regeln oder Translation-Commands zuerst `docs/key-rules-pattern.md` und die abgestimmten Workflow-Regeln prüfen; bei Abweichungen erneut fachlich abstimmen statt stillschweigend umbauen.
 
 # AGENT.md
 

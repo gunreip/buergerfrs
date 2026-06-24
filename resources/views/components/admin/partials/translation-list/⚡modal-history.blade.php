@@ -2,6 +2,7 @@
 
 <flux:modal
     class="w-full max-w-6xl"
+    name="translation-list-history"
     wire:model="translationHistoryModalOpen"
 >
     @if ($historyTranslationKey)
@@ -9,16 +10,27 @@
             <div class="flex shrink-0 items-start justify-between gap-4">
                 <x-ui.headers.card
                     :title="__('admin.translation_list.modal_history.translation_history')"
-                    :description="__('admin.translation_list.modal_history.audit_events_and_change_history_for_the_selected_translation_key')"
+                    :description="__(
+                        'admin.translation_list.modal_history.audit_events_and_change_history_for_the_selected_translation_key',
+                    )"
                 />
 
-                <flux:badge
-                    class="mr-8 mt-2"
-                    variant="subtle"
-                    color="zinc"
-                >
-                    #{{ $historyTranslationKey->id }}
-                </flux:badge>
+                <div class="mr-8 mt-2 flex items-center gap-2">
+                    {{-- Badge with translation key ID --}}
+                    <flux:badge
+                        variant="subtle"
+                        color="zinc"
+                    >
+                        #{{ $historyTranslationKey->id }}
+                    </flux:badge>
+
+                    @if ($nextHistoryTranslationKeyId !== null)
+                        <x-ui.button.next-edit
+                            wire:click="openNextTranslationHistoryFromList"
+                            :aria-label="__('Open next translation history entry')"
+                        />
+                    @endif
+                </div>
             </div>
 
             <flux:callout
@@ -50,164 +62,85 @@
                         </flux:callout.text>
                     </div>
 
-                    <flux:badge
-                        variant="subtle"
-                        color="zinc"
+                    <div class="flex flex-wrap items-center gap-2">
+                        @if (! $historyHasDiscoveredEvent || $historyHasBackfilledBaseline)
+                            <x-ui.tooltip.trigger
+                                :title="__('Incomplete history')"
+                                :text="$historyHasBackfilledBaseline
+                                    ? __(
+                                        'The beginning of this history was backfilled from the current translation record. Its timestamp is chronological, but historical field and usage details may be incomplete.',
+                                    )
+                                    : __(
+                                        'This translation has no discovered baseline event yet. Run the discovered-event backfill to complete the beginning of its history.',
+                                    )"
+                            >
+                                <flux:badge
+                                    variant="subtle"
+                                    color="amber"
+                                    icon="triangle-alert"
+                                >
+                                    {{ __('Incomplete history') }}
+                                </flux:badge>
+                            </x-ui.tooltip.trigger>
+                        @endif
+
+                        <flux:badge
+                            variant="subtle"
+                            color="zinc"
+                        >
+                            {{ $historyEvents->count() }} / {{ $historyEventTotal }}
+                        </flux:badge>
+                    </div>
+                </div>
+
+                <flux:tab.group>
+                    <flux:tabs
+                        class="px-4"
+                        {{-- variant="segmented" --}}
                     >
-                        {{ $historyEvents->count() }}
-                    </flux:badge>
-                </div>
+                        <flux:tab
+                            name="details"
+                            icon="list-chevrons-down-up"
+                        >
+                            {{ __('Details') }}
+                        </flux:tab>
 
-                <div class="max-h-104 space-y-3 overflow-y-auto pr-2">
-                    @forelse ($historyEvents as $historyEvent)
-                        @php
-                            $historyContext = $historyEvent->context ? json_decode($historyEvent->context, true) : [];
+                        <flux:tab
+                            name="timeline"
+                            icon="clock-arrow-right"
+                        >
+                            {{ __('Timeline') }}
+                        </flux:tab>
+                    </flux:tabs>
 
-                            $historyLocale = is_array($historyContext) ? $historyContext['locale'] ?? null : null;
+                    {{-- Panel Tab Details with list of history events --}}
+                    <flux:tab.panel name="details">
+                        <x-admin.partials.translation-list.modal-history.details :history-events="$historyEvents" />
+                    </flux:tab.panel>
 
-                            $eventColor = match ($historyEvent->event_type) {
-                                'created' => 'green',
-                                'value_changed' => 'cyan',
-                                'moved' => 'amber',
-                                'stale_marked' => 'red',
-                                'reactivated' => 'lime',
-                                default => 'zinc',
-                            };
-                        @endphp
+                    {{-- Panel Tab Timeline with list of history events in timeline view --}}
+                    <flux:tab.panel name="timeline">
+                        <x-admin.partials.translation-list.modal-history.timeline
+                            :history-events="$historyEvents"
+                            :history-usages="$historyTranslationKey->usages"
+                        />
+                    </flux:tab.panel>
+                </flux:tab.group>
 
-                        <div
-                            class="rounded-xl border border-zinc-200 bg-white/70 p-4 dark:border-zinc-700 dark:bg-zinc-950/30">
-                            <div class="flex flex-wrap items-start justify-between gap-3">
-                                <div class="space-y-1">
-                                    <div class="flex flex-wrap items-center gap-2">
-                                        <flux:badge
-                                            size="sm"
-                                            variant="subtle"
-                                            color="zinc"
-                                        >
-                                            {{ $historyEvent->entity_type }}
-                                        </flux:badge>
+                @if ($historyHasMoreEvents)
+                    <div class="mt-3 flex justify-center">
+                        <flux:button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            icon="history"
+                            wire:click="loadOlderTranslationHistoryEvents"
+                        >
+                            {{ __('Load older events') }}
+                        </flux:button>
+                    </div>
+                @endif
 
-                                        <flux:badge
-                                            size="sm"
-                                            variant="solid"
-                                            :color="$eventColor"
-                                        >
-                                            {{ $historyEvent->event_type }}
-                                        </flux:badge>
-
-                                        @if ($historyLocale)
-                                            <flux:badge
-                                                size="sm"
-                                                variant="subtle"
-                                                color="indigo"
-                                            >
-                                                {{ strtoupper($historyLocale) }}
-                                            </flux:badge>
-                                        @endif
-                                    </div>
-
-                                    <div class="text-xs text-zinc-500 dark:text-zinc-400">
-                                        {{ $historyEvent->created_at }}
-                                    </div>
-                                </div>
-                                <div class="text-right text-xs text-zinc-500 dark:text-zinc-400">
-                                    {{ __('admin.translation_list.modal_history.event') }} #{{ $historyEvent->id }}
-                                </div>
-                            </div>
-
-                            @if ($historyEvent->reason)
-                                <div class="mt-3 text-sm">
-                                    <span class="font-semibold">{{ __('admin.translation_list.modal_history.reason') }}:</span>
-                                    <span class="ml-2">{{ $historyEvent->reason }}</span>
-                                </div>
-                            @endif
-
-                            <div class="mt-3 grid gap-3 md:grid-cols-2">
-                                <div>
-                                    <div
-                                        class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                                        {{ __('admin.translation_list.modal_history.old_value') }}
-                                    </div>
-
-                                    <div
-                                        class="wrap-anywhere mt-1 rounded-lg bg-zinc-100 p-2 font-mono text-xs dark:bg-zinc-900">
-                                        {{ $historyEvent->old_value ?? '—' }}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div
-                                        class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                                        {{ __('admin.translation_list.modal_history.new_value') }}
-                                    </div>
-
-                                    <div
-                                        class="wrap-anywhere mt-1 rounded-lg bg-zinc-100 p-2 font-mono text-xs dark:bg-zinc-900">
-                                        {{ $historyEvent->new_value ?? '—' }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            @if ($historyEvent->old_status || $historyEvent->new_status)
-                                <div class="mt-3 flex flex-wrap gap-3 text-sm">
-                                    <div>
-                                        <span class="font-semibold">{{ __('admin.translation_list.modal_history.old_status') }}:</span>
-                                        <span class="ml-2 font-mono">{{ $historyEvent->old_status ?? '—' }}</span>
-                                    </div>
-
-                                    <div>
-                                        <span class="font-semibold">{{ __('admin.translation_list.modal_history.new_status') }}:</span>
-                                        <span class="ml-2 font-mono">{{ $historyEvent->new_status ?? '—' }}</span>
-                                    </div>
-                                </div>
-                            @endif
-
-                            @if ($historyEvent->old_file || $historyEvent->new_file || $historyEvent->old_line || $historyEvent->new_line)
-                                <div class="mt-3 grid gap-3 md:grid-cols-2">
-                                    <div>
-                                        <div
-                                            class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                                            {{ __('admin.translation_list.modal_history.old_location') }}
-                                        </div>
-
-                                        <code class="wrap-anywhere mt-1 block text-xs">
-                                            {{ $historyEvent->old_file ?: '—' }}:{{ $historyEvent->old_line ?: '—' }}
-                                        </code>
-                                    </div>
-
-                                    <div>
-                                        <div
-                                            class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                                            {{ __('admin.translation_list.modal_history.new_location') }}
-                                        </div>
-
-                                        <code class="wrap-anywhere mt-1 block text-xs">
-                                            {{ $historyEvent->new_file ?: '—' }}:{{ $historyEvent->new_line ?: '—' }}
-                                        </code>
-                                    </div>
-                                </div>
-                            @endif
-
-                            @if ($historyEvent->context)
-                                <details class="mt-3">
-                                    <summary
-                                        class="cursor-pointer text-sm font-semibold text-zinc-600 dark:text-zinc-300"
-                                    >
-                                        {{ __('admin.translation_list.modal_history.context') }}
-                                    </summary>
-
-                                    <pre class="wrap-anywhere mt-2 overflow-x-auto rounded-lg bg-zinc-100 p-3 text-xs dark:bg-zinc-900">{{ $historyEvent->context }}</pre>
-                                </details>
-                            @endif
-                        </div>
-                    @empty
-                        <div
-                            class="rounded-xl border border-dashed border-zinc-300 p-6 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
-                            {{ __('admin.translation_list.modal_history.no_history_events_available_for_this_translation_key') }}
-                        </div>
-                    @endforelse
-                </div>
             </flux:callout>
 
             <div class="flex shrink-0 justify-end">

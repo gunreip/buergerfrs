@@ -4,7 +4,8 @@
 <flux:card class="mt-6">
     <x-ui.headers.card
         :title="__('admin.client_list.filter.filtering')"
-        :description="__('admin.client_list.filter.refine_the_client_list_with_powerful_filters_search_by_name_legal_name_client_nu',
+        :description="__(
+            'admin.client_list.filter.refine_the_client_list_with_powerful_filters_search_by_name_legal_name_client_nu',
         )"
     />
 
@@ -13,7 +14,8 @@
             <flux:label for="client-list-search">
                 <x-ui.tooltip.trigger
                     :title="__('admin.client_list.filter.search_clients')"
-                    :text="__('admin.client_list.filter.enter_a_search_term_to_filter_clients_by_name_legal_name_client_number_or_descri',
+                    :text="__(
+                        'admin.client_list.filter.enter_a_search_term_to_filter_clients_by_name_legal_name_client_number_or_descri',
                     )"
                 >
                     {{ __('ui.actions.search') }}
@@ -56,6 +58,9 @@
                 <flux:select
                     id="client-list-type-filter"
                     name="client-list-type-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="typeFilter"
                 >
                     <flux:select.option value="">
@@ -89,6 +94,9 @@
                 <flux:select
                     id="client-list-status-filter"
                     name="client-list-status-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="statusFilter"
                 >
                     <flux:select.option value="">
@@ -122,6 +130,9 @@
                 <flux:select
                     id="client-list-people-filter"
                     name="client-list-people-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="peopleFilter"
                 >
                     <flux:select.option value="">

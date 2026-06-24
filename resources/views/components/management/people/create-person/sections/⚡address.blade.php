@@ -8,13 +8,13 @@
             {{-- Address country --}}
             <flux:field class="col-span-2">
                 <x-ui.tooltip.trigger
-                    title="{{ __('Country') }}"
+                    title="{{ __('management.people.create_person.sections.address.country') }}"
                     field="addressCountryId"
                     text="{{ __('Please select the country for the address. This is important for correctly formatting the address and for any country-specific validations.') }}"
                     :required="$this->isRequiredField('addressCountryId')"
                 >
                     <flux:label for="create-person-address-country">
-                        {{ __('Country') }}
+                        {{ __('management.people.create_person.sections.address.country') }}
                         <x-ui.tooltip.badge-required :required="$this->isRequiredField('addressCountryId')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>

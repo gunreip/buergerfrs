@@ -12,7 +12,8 @@
             <flux:label for="permission-list-search">
                 <x-ui.tooltip.trigger
                     :title="__('ui.actions.search')"
-                    :text="__('admin.permission_list.filter.enter_a_search_term_to_filter_permissions_by_name_guard_category_or_description_',
+                    :text="__(
+                        'admin.permission_list.filter.enter_a_search_term_to_filter_permissions_by_name_guard_category_or_description_',
                     )"
                 >
                     {{ __('ui.actions.search') }}
@@ -55,6 +56,9 @@
                 <flux:select
                     id="permission-list-guard-filter"
                     name="permission-list-guard-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="guardFilter"
                 >
                     <flux:select.option value="">
@@ -88,6 +92,9 @@
                 <flux:select
                     id="permission-list-category-filter"
                     name="permission-list-category-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="categoryFilter"
                 >
                     <flux:select.option value="">
@@ -121,6 +128,9 @@
                 <flux:select
                     id="permission-list-role-filter"
                     name="permission-list-role-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="roleFilter"
                 >
                     <flux:select.option value="">
@@ -151,7 +161,9 @@
             <flux:label for="permission-list-assignment-filter">
                 <x-ui.tooltip.trigger
                     :title="__('admin.permission_list.filter.filter_by_assignment')"
-                    :text="__('admin.permission_list.filter.select_an_assignment_status_to_filter_the_list_of_permissions')"
+                    :text="__(
+                        'admin.permission_list.filter.select_an_assignment_status_to_filter_the_list_of_permissions',
+                    )"
                 >
                     {{ __('admin.permissions.filters.assignment.label') }}
                 </x-ui.tooltip.trigger>
@@ -165,6 +177,9 @@
                 <flux:select
                     id="permission-list-assignment-filter"
                     name="permission-list-assignment-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="assignmentFilter"
                 >
                     <flux:select.option value="">
@@ -186,7 +201,9 @@
             <flux:label for="permission-list-system-filter">
                 <x-ui.tooltip.trigger
                     :title="__('admin.permission_list.filter.filter_by_system')"
-                    :text="__('admin.permission_list.filter.select_a_system_status_to_filter_the_list_of_permissions')"
+                    :text="__(
+                        'admin.permission_list.filter.select_a_system_status_to_filter_the_list_of_permissions',
+                    )"
                 >
                     {{ __('admin.permissions.filters.system.label') }}
                 </x-ui.tooltip.trigger>
@@ -200,6 +217,9 @@
                 <flux:select
                     id="permission-list-system-filter"
                     name="permission-list-system-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="systemFilter"
                 >
                     <flux:select.option value="">

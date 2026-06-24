@@ -22,9 +22,20 @@
 /storage/pail
 /vendor
 /tools/phpdoc/phpDocumentor.phar
+/.phpdoc/cache/
 /docs/phpdoc
 /public/docs/phpdoc
+/storage/audits/
+/database/dumps/
+/database/results/
+/.console-ausgabe.txt
+/check.txt
+/git.diff.txt
+/tinker-result.txt
+/📦tree-*
+*.blade copy.php
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+auth.json

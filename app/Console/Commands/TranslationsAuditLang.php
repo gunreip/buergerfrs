@@ -4,6 +4,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
@@ -79,10 +80,10 @@ class TranslationsAuditLang extends Command
             }
         }
 
-        usort($keys, fn(array $a, array $b): int => [$a['locale'], $a['full_key'], $a['file']] <=> [$b['locale'], $b['full_key'], $b['file']]);
+        usort($keys, fn (array $a, array $b): int => [$a['locale'], $a['full_key'], $a['file']] <=> [$b['locale'], $b['full_key'], $b['file']]);
 
         $locales = array_values($locales);
-        usort($locales, fn(array $a, array $b): int => $a['locale'] <=> $b['locale']);
+        usort($locales, fn (array $a, array $b): int => $a['locale'] <=> $b['locale']);
 
         $duplicates = $this->findDuplicateKeys($keys);
 
@@ -134,11 +135,11 @@ class TranslationsAuditLang extends Command
         }
 
         return collect(File::allFiles($langPath))
-            ->map(fn($file): ?string => $file->getRealPath() ?: null)
-            ->filter(fn(?string $path): bool => $path !== null && File::isFile($path))
-            ->filter(fn(string $path): bool => in_array(pathinfo($path, PATHINFO_EXTENSION), ['php', 'json'], true))
-            ->reject(fn(string $path): bool => str_contains($this->relativePath($path), 'lang/vendor/'))
-            ->reject(fn(string $path): bool => $this->isParkedFile($path))
+            ->map(fn ($file): ?string => $file->getRealPath() ?: null)
+            ->filter(fn (?string $path): bool => $path !== null && File::isFile($path))
+            ->filter(fn (string $path): bool => in_array(pathinfo($path, PATHINFO_EXTENSION), ['php', 'json'], true))
+            ->reject(fn (string $path): bool => str_contains($this->relativePath($path), 'lang/vendor/'))
+            ->reject(fn (string $path): bool => $this->isParkedFile($path))
             ->values();
     }
 
@@ -192,11 +193,11 @@ class TranslationsAuditLang extends Command
 
         return collect($flattened)
             ->keys()
-            ->map(fn(string $key): array => [
+            ->map(fn (string $key): array => [
                 'locale' => $locale,
                 'group' => $group,
                 'key' => $key,
-                'full_key' => $group . '.' . $key,
+                'full_key' => $group.'.'.$key,
             ])
             ->values()
             ->all();
@@ -223,7 +224,7 @@ class TranslationsAuditLang extends Command
 
         return collect($payload)
             ->keys()
-            ->map(fn(string $key): array => [
+            ->map(fn (string $key): array => [
                 'locale' => $locale,
                 'group' => null,
                 'key' => $key,
@@ -279,7 +280,7 @@ class TranslationsAuditLang extends Command
         $result = [];
 
         foreach ($items as $key => $value) {
-            $fullKey = $prefix === '' ? (string) $key : $prefix . '.' . $key;
+            $fullKey = $prefix === '' ? (string) $key : $prefix.'.'.$key;
 
             if (is_array($value)) {
                 $result += $this->flattenArray($value, $fullKey);
@@ -303,7 +304,7 @@ class TranslationsAuditLang extends Command
         $grouped = [];
 
         foreach ($keys as $key) {
-            $index = $key['locale'] . '|' . $key['full_key'];
+            $index = $key['locale'].'|'.$key['full_key'];
 
             $grouped[$index] ??= [
                 'locale' => $key['locale'],
@@ -317,7 +318,7 @@ class TranslationsAuditLang extends Command
         }
 
         return collect($grouped)
-            ->filter(fn(array $entry): bool => $entry['count'] > 1)
+            ->filter(fn (array $entry): bool => $entry['count'] > 1)
             ->map(function (array $entry): array {
                 $entry['files'] = array_values(array_unique($entry['files']));
 
@@ -336,15 +337,15 @@ class TranslationsAuditLang extends Command
 
         File::ensureDirectoryExists($directory);
 
-        $fullPath = $directory . DIRECTORY_SEPARATOR . $name . '.json';
-        $previewPath = $directory . DIRECTORY_SEPARATOR . $name . '.preview.json';
+        $fullPath = $directory.DIRECTORY_SEPARATOR.$name.'.json';
+        $previewPath = $directory.DIRECTORY_SEPARATOR.$name.'.preview.json';
         $fullPathExisted = File::exists($fullPath);
         $previewPathExisted = File::exists($previewPath);
         $fullPreviousContent = $fullPathExisted ? (string) File::get($fullPath) : null;
         $previewPreviousContent = $previewPathExisted ? (string) File::get($previewPath) : null;
 
-        $fullContent = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL;
-        $previewContent = json_encode($this->previewData($data), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL;
+        $fullContent = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL;
+        $previewContent = json_encode($this->previewData($data), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL;
 
         File::put($fullPath, $fullContent);
 
@@ -397,7 +398,7 @@ class TranslationsAuditLang extends Command
      */
     private function relativePath(string $path): string
     {
-        return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+        return str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
     }
 
     private function logCreatedFileActivity(string $event, string $path): void
@@ -405,14 +406,13 @@ class TranslationsAuditLang extends Command
         try {
             activity('translations')
                 ->event($event)
-                ->withProperties([
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'path' => $this->relativePath($path),
                     'absolute_path' => $path,
-                    'command' => $this->getName(),
-                ])
+                ]))
                 ->log('Translation audit file created');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for file "' . $this->relativePath($path) . '": ' . $exception->getMessage());
+            $this->warn('Activity log write failed for file "'.$this->relativePath($path).'": '.$exception->getMessage());
         }
     }
 
@@ -421,32 +421,30 @@ class TranslationsAuditLang extends Command
         try {
             activity('translations')
                 ->event($event)
-                ->withProperties([
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'path' => $this->relativePath($path),
                     'absolute_path' => $path,
-                    'command' => $this->getName(),
-                ])
+                ]))
                 ->log('Translation audit file updated');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for file "' . $this->relativePath($path) . '": ' . $exception->getMessage());
+            $this->warn('Activity log write failed for file "'.$this->relativePath($path).'": '.$exception->getMessage());
         }
     }
 
     /**
-     * @param array<string, mixed> $summary
+     * @param  array<string, mixed>  $summary
      */
     private function logRunCompletedActivity(array $summary): void
     {
         try {
             activity('translations')
                 ->event('translations.audit.lang.completed')
-                ->withProperties([
-                    'command' => $this->getName(),
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'summary' => $summary,
-                ])
+                ]))
                 ->log('Translation language-file audit completed');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for command run summary: ' . $exception->getMessage());
+            $this->warn('Activity log write failed for command run summary: '.$exception->getMessage());
         }
     }
 }

@@ -5,7 +5,9 @@
 namespace App\Console\Commands;
 
 use App\Models\TranslationLanguage;
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Throwable;
 
@@ -74,8 +76,8 @@ class TranslationsEnsureLangDirectories extends Command
         $this->table(['Locale', 'Status', 'Directory'], $rows);
 
         $this->line('');
-        $this->line('Created: ' . $created);
-        $this->line('Existing: ' . $existing);
+        $this->line('Created: '.$created);
+        $this->line('Existing: '.$existing);
 
         if ($dryRun) {
             $this->warn('Dry run only: no directories were created.');
@@ -102,7 +104,7 @@ class TranslationsEnsureLangDirectories extends Command
 
         if ($localesOption !== '') {
             return collect(explode(',', $localesOption))
-                ->map(static fn(string $locale): string => self::normalizeLocale($locale))
+                ->map(static fn (string $locale): string => self::normalizeLocale($locale))
                 ->filter()
                 ->unique()
                 ->sort()
@@ -113,20 +115,20 @@ class TranslationsEnsureLangDirectories extends Command
         $fromSettings = TranslationLanguage::query()
             ->where('is_enabled_for_translation', true)
             ->pluck('locale')
-            ->map(static fn(string $locale): string => self::normalizeLocale($locale))
+            ->map(static fn (string $locale): string => self::normalizeLocale($locale))
             ->filter()
             ->unique()
             ->sort()
             ->values()
             ->all();
 
-        $variantLocales = \Illuminate\Support\Facades\DB::table('translation_values')
+        $variantLocales = DB::table('translation_values')
             ->whereNotNull('locale')
             ->where('locale', '<>', '')
             ->whereRaw('locale like ?', ['%-%'])
             ->distinct()
             ->pluck('locale')
-            ->map(static fn(string $locale): string => self::normalizeLocale($locale))
+            ->map(static fn (string $locale): string => self::normalizeLocale($locale))
             ->filter()
             ->unique()
             ->sort()
@@ -155,7 +157,7 @@ class TranslationsEnsureLangDirectories extends Command
 
     private function relativePath(string $path): string
     {
-        return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+        return str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
     }
 
     private function logDirectoryCreatedActivity(string $locale, string $path): void
@@ -163,19 +165,18 @@ class TranslationsEnsureLangDirectories extends Command
         try {
             activity('translations')
                 ->event('translations.lang.directory_created')
-                ->withProperties([
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'locale' => $locale,
                     'path' => $this->relativePath($path),
                     'absolute_path' => $path,
-                    'command' => $this->getName(),
                     'options' => [
                         'locales' => (string) $this->option('locales'),
                         'dry_run' => (bool) $this->option('dry-run'),
                     ],
-                ])
+                ]))
                 ->log('Translation language directory created');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for locale "' . $locale . '": ' . $exception->getMessage());
+            $this->warn('Activity log write failed for locale "'.$locale.'": '.$exception->getMessage());
         }
     }
 
@@ -184,39 +185,37 @@ class TranslationsEnsureLangDirectories extends Command
         try {
             activity('translations')
                 ->event('translations.lang.directories.no_target_locales')
-                ->withProperties([
-                    'command' => $this->getName(),
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'options' => [
                         'locales' => (string) $this->option('locales'),
                         'dry_run' => $dryRun,
                     ],
-                ])
+                ]))
                 ->log('No target locales found for translation directory ensure run');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for no-target-locales event: ' . $exception->getMessage());
+            $this->warn('Activity log write failed for no-target-locales event: '.$exception->getMessage());
         }
     }
 
     /**
-     * @param array<int, string> $locales
+     * @param  array<int, string>  $locales
      */
     private function logRunCompletedActivity(array $locales, int $created, int $existing, bool $dryRun): void
     {
         try {
             activity('translations')
                 ->event('translations.lang.directories.completed')
-                ->withProperties([
-                    'command' => $this->getName(),
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'summary' => [
                         'locales' => $locales,
                         'created' => $created,
                         'existing' => $existing,
                         'dry_run' => $dryRun,
                     ],
-                ])
+                ]))
                 ->log('Translation language directories ensure run completed');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for command run summary: ' . $exception->getMessage());
+            $this->warn('Activity log write failed for command run summary: '.$exception->getMessage());
         }
     }
 }

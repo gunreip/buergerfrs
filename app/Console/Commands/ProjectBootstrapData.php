@@ -8,6 +8,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Throwable;
 
@@ -132,7 +133,7 @@ class ProjectBootstrapData extends Command
 
         foreach ($seeders as $seeder) {
             if (! $this->runStep(
-                'Seeder ausfuehren: ' . $seeder,
+                'Seeder ausfuehren: '.$seeder,
                 'db:seed',
                 ['--class' => $seeder, '--force' => true],
             )) {
@@ -148,7 +149,7 @@ class ProjectBootstrapData extends Command
      */
     private function runStep(string $description, string $command, array $arguments = []): bool
     {
-        $this->info('-> ' . $description);
+        $this->info('-> '.$description);
 
         $result = $this->call($command, $arguments);
 
@@ -156,7 +157,7 @@ class ProjectBootstrapData extends Command
             return true;
         }
 
-        $this->error('Schritt fehlgeschlagen: ' . $command);
+        $this->error('Schritt fehlgeschlagen: '.$command);
 
         return false;
     }
@@ -166,12 +167,10 @@ class ProjectBootstrapData extends Command
         try {
             activity('project')
                 ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 }

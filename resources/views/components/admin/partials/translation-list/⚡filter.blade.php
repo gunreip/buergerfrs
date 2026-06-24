@@ -176,6 +176,7 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
             </div>
 
             <div class="space-y-2">
+
                 {{-- Workflow filters --}}
                 <div class="flex flex-wrap items-center gap-2 rounded-md bg-zinc-50/50 px-3 py-2 dark:bg-zinc-800/50">
                     <span
@@ -550,6 +551,8 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                     <flux:select
                         id="translation-list-language-filter"
                         name="translation-list-language-filter"
+                        variant="listbox"
+                        searchable
                         wire:model.live="languageFilter"
                     >
                         @if (!$languageFilter)
@@ -558,15 +561,27 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                                 disabled
                                 selected
                             >
-                                {{ __('admin.translation_list.filter.select_target_language') }}
+                                <div class="flex items-center gap-2">
+                                    <flux:icon.language
+                                        class="text-zinc-400"
+                                        variant="mini"
+                                    />
+                                    {{ __('admin.translation_list.filter.select_target_language') }}
+                                </div>
                             </flux:select.option>
                         @endif
 
                         @foreach ($targetLanguages as $translationLanguage)
                             <flux:select.option value="{{ $translationLanguage->locale }}">
-                                {{ $translationLanguage->locale }}
-                                ·
-                                {{ $translationLanguage->native_name }}
+                                <div class="flex items-center gap-2">
+                                    <x-ui.locale.flag :locale="$translationLanguage->locale" />
+                                    <div>
+                                        <span
+                                            class="mr-2 text-center font-mono uppercase">{{ $translationLanguage->locale }}</span>
+                                        ·
+                                        <span class="ml-2">{{ $translationLanguage->native_name }}</span>
+                                    </div>
+                                </div>
                             </flux:select.option>
                         @endforeach
 
@@ -596,6 +611,8 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                     <flux:select
                         id="translation-list-namespace-filter"
                         name="translation-list-namespace-filter"
+                        variant="listbox"
+                        searchable
                         wire:model.live="namespaceFilter"
                     >
                         <flux:select.option value="">
@@ -633,6 +650,8 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                     <flux:select
                         id="translation-list-group-filter"
                         name="translation-list-group-filter"
+                        variant="listbox"
+                        searchable
                         wire:model.live="groupFilter"
                     >
                         <flux:select.option value="">
@@ -679,4 +698,5 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
             </flux:badge>
         @endif
     </div>
+
 </flux:card>

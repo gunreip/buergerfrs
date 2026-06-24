@@ -6,9 +6,11 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use SplFileInfo;
@@ -68,7 +70,7 @@ class SyncViewComponentTags extends Command
 
         $payload = [
             'generated_at' => now()->toIso8601String(),
-            'paths' => array_map(fn(string $path): string => $this->relativePath($path), $paths),
+            'paths' => array_map(fn (string $path): string => $this->relativePath($path), $paths),
             'files_scanned' => $files->count(),
             'counts' => [
                 'total' => count($allTags),
@@ -100,20 +102,20 @@ class SyncViewComponentTags extends Command
 
         File::put(
             storage_path('audits/html/view-component-tags.json'),
-            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL,
+            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL,
         );
 
         File::put(
             storage_path('audits/html/view-component-tags-preview.json'),
-            json_encode($previewPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL,
+            json_encode($previewPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL,
         );
 
         $this->line('View component tags synced.');
-        $this->line('Files scanned: ' . $files->count());
-        $this->line('Tags total: ' . $payload['counts']['total']);
-        $this->line('Flux tags: ' . $payload['counts']['flux']);
-        $this->line('Custom tags: ' . $payload['counts']['custom']);
-        $this->line('Livewire tags: ' . $payload['counts']['livewire']);
+        $this->line('Files scanned: '.$files->count());
+        $this->line('Tags total: '.$payload['counts']['total']);
+        $this->line('Flux tags: '.$payload['counts']['flux']);
+        $this->line('Custom tags: '.$payload['counts']['custom']);
+        $this->line('Livewire tags: '.$payload['counts']['livewire']);
         $this->line('Reference written: storage/audits/html/view-component-tags.json');
         $this->line('Preview written: storage/audits/html/view-component-tags-preview.json');
 
@@ -132,9 +134,9 @@ class SyncViewComponentTags extends Command
     private function configuredPaths(array $config): array
     {
         return collect($config['paths'] ?? [resource_path('views')])
-            ->filter(fn(mixed $path): bool => is_string($path) && $path !== '')
-            ->map(fn(string $path): string => $path)
-            ->filter(fn(string $path): bool => File::isDirectory($path))
+            ->filter(fn (mixed $path): bool => is_string($path) && $path !== '')
+            ->map(fn (string $path): string => $path)
+            ->filter(fn (string $path): bool => File::isDirectory($path))
             ->values()
             ->all();
     }
@@ -143,12 +145,12 @@ class SyncViewComponentTags extends Command
      * @param  array<int, string>  $paths
      * @param  array<string, mixed>  $config
      */
-    private function files(array $paths, array $config): \Illuminate\Support\Collection
+    private function files(array $paths, array $config): Collection
     {
         return collect($paths)
-            ->flatMap(fn(string $path): array => File::allFiles($path))
-            ->filter(fn(SplFileInfo $file): bool => Str::endsWith($file->getFilename(), '.blade.php'))
-            ->reject(fn(SplFileInfo $file): bool => $this->isExcluded($file, $config))
+            ->flatMap(fn (string $path): array => File::allFiles($path))
+            ->filter(fn (SplFileInfo $file): bool => Str::endsWith($file->getFilename(), '.blade.php'))
+            ->reject(fn (SplFileInfo $file): bool => $this->isExcluded($file, $config))
             ->values();
     }
 
@@ -190,8 +192,8 @@ class SyncViewComponentTags extends Command
         );
 
         return collect($matches[1] ?? [])
-            ->map(fn(string $tag): string => strtolower(trim($tag)))
-            ->filter(fn(string $tag): bool => $this->isIncludedComponentTag($tag, $config))
+            ->map(fn (string $tag): string => strtolower(trim($tag)))
+            ->filter(fn (string $tag): bool => $this->isIncludedComponentTag($tag, $config))
             ->unique()
             ->sort()
             ->values()
@@ -233,7 +235,7 @@ class SyncViewComponentTags extends Command
 
     private function lineForTag(string $content, string $tag): int
     {
-        preg_match('/<\s*\/?\s*' . preg_quote($tag, '/') . '(?=[\s>\/])/iu', $content, $match, PREG_OFFSET_CAPTURE);
+        preg_match('/<\s*\/?\s*'.preg_quote($tag, '/').'(?=[\s>\/])/iu', $content, $match, PREG_OFFSET_CAPTURE);
 
         if (! isset($match[0][1])) {
             return 1;
@@ -284,7 +286,7 @@ class SyncViewComponentTags extends Command
         ksort($usage, SORT_NATURAL);
 
         foreach ($usage as $tag => $items) {
-            usort($items, fn(array $a, array $b): int => [$a['file'], $a['line']] <=> [$b['file'], $b['line']]);
+            usort($items, fn (array $a, array $b): int => [$a['file'], $a['line']] <=> [$b['file'], $b['line']]);
             $usage[$tag] = $items;
         }
 
@@ -299,7 +301,7 @@ class SyncViewComponentTags extends Command
     {
         return collect($usage)
             ->take($previewLimit)
-            ->map(fn(array $items): array => array_slice($items, 0, $previewLimit))
+            ->map(fn (array $items): array => array_slice($items, 0, $previewLimit))
             ->all();
     }
 
@@ -312,7 +314,7 @@ class SyncViewComponentTags extends Command
 
     private function relativePath(string $path): string
     {
-        return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+        return str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
     }
 
     private function logRunActivity(string $event, string $description, array $properties = []): void
@@ -320,12 +322,10 @@ class SyncViewComponentTags extends Command
         try {
             activity('html')
                 ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 }

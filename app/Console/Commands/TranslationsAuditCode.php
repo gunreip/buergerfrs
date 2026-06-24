@@ -4,6 +4,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
@@ -119,7 +120,7 @@ class TranslationsAuditCode extends Command
             }
         }
 
-        usort($calls, fn(array $a, array $b): int => [$a['file'], $a['line']] <=> [$b['file'], $b['line']]);
+        usort($calls, fn (array $a, array $b): int => [$a['file'], $a['line']] <=> [$b['file'], $b['line']]);
 
         return $calls;
     }
@@ -142,9 +143,9 @@ class TranslationsAuditCode extends Command
             ->ignoreVCS(true);
 
         return collect(iterator_to_array($finder, false))
-            ->map(fn($file): ?string => $file->getRealPath() ?: null)
-            ->filter(fn(?string $path): bool => $path !== null && File::isFile($path))
-            ->reject(fn(string $path): bool => $this->isParkedFile($path))
+            ->map(fn ($file): ?string => $file->getRealPath() ?: null)
+            ->filter(fn (?string $path): bool => $path !== null && File::isFile($path))
+            ->reject(fn (string $path): bool => $this->isParkedFile($path))
             ->values();
     }
 
@@ -192,14 +193,14 @@ class TranslationsAuditCode extends Command
 
         foreach ($this->extractDynamicTranslationCalls($contents) as $dynamicCall) {
             $alreadyCaptured = collect($calls)
-                ->contains(fn(array $call): bool => $call['offset'] === $dynamicCall['offset']);
+                ->contains(fn (array $call): bool => $call['offset'] === $dynamicCall['offset']);
 
             if (! $alreadyCaptured) {
                 $calls[] = $dynamicCall;
             }
         }
 
-        usort($calls, fn(array $a, array $b): int => $a['offset'] <=> $b['offset']);
+        usort($calls, fn (array $a, array $b): int => $a['offset'] <=> $b['offset']);
 
         return $calls;
     }
@@ -368,7 +369,7 @@ class TranslationsAuditCode extends Command
             $slug = 'text';
         }
 
-        return $namespace . '.' . $slug;
+        return $namespace.'.'.$slug;
     }
 
     /**
@@ -434,15 +435,15 @@ class TranslationsAuditCode extends Command
 
         File::ensureDirectoryExists($directory);
 
-        $fullPath = $directory . DIRECTORY_SEPARATOR . $name . '.json';
-        $previewPath = $directory . DIRECTORY_SEPARATOR . $name . '.preview.json';
+        $fullPath = $directory.DIRECTORY_SEPARATOR.$name.'.json';
+        $previewPath = $directory.DIRECTORY_SEPARATOR.$name.'.preview.json';
         $fullPathExisted = File::exists($fullPath);
         $previewPathExisted = File::exists($previewPath);
         $fullPreviousContent = $fullPathExisted ? (string) File::get($fullPath) : null;
         $previewPreviousContent = $previewPathExisted ? (string) File::get($previewPath) : null;
 
-        $fullContent = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL;
-        $previewContent = json_encode($this->previewData($data), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL;
+        $fullContent = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL;
+        $previewContent = json_encode($this->previewData($data), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL;
 
         File::put($fullPath, $fullContent);
 
@@ -495,7 +496,7 @@ class TranslationsAuditCode extends Command
      */
     private function relativePath(string $path): string
     {
-        return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+        return str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
     }
 
     private function logCreatedFileActivity(string $event, string $path): void
@@ -503,14 +504,13 @@ class TranslationsAuditCode extends Command
         try {
             activity('translations')
                 ->event($event)
-                ->withProperties([
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'path' => $this->relativePath($path),
                     'absolute_path' => $path,
-                    'command' => $this->getName(),
-                ])
+                ]))
                 ->log('Translation audit file created');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for file "' . $this->relativePath($path) . '": ' . $exception->getMessage());
+            $this->warn('Activity log write failed for file "'.$this->relativePath($path).'": '.$exception->getMessage());
         }
     }
 
@@ -519,32 +519,30 @@ class TranslationsAuditCode extends Command
         try {
             activity('translations')
                 ->event($event)
-                ->withProperties([
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'path' => $this->relativePath($path),
                     'absolute_path' => $path,
-                    'command' => $this->getName(),
-                ])
+                ]))
                 ->log('Translation audit file updated');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for file "' . $this->relativePath($path) . '": ' . $exception->getMessage());
+            $this->warn('Activity log write failed for file "'.$this->relativePath($path).'": '.$exception->getMessage());
         }
     }
 
     /**
-     * @param array<string, mixed> $summary
+     * @param  array<string, mixed>  $summary
      */
     private function logRunCompletedActivity(array $summary): void
     {
         try {
             activity('translations')
                 ->event('translations.audit.code.completed')
-                ->withProperties([
-                    'command' => $this->getName(),
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'summary' => $summary,
-                ])
+                ]))
                 ->log('Translation code audit completed');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for command run summary: ' . $exception->getMessage());
+            $this->warn('Activity log write failed for command run summary: '.$exception->getMessage());
         }
     }
 }

@@ -35,7 +35,7 @@
         x-collapse
     >
         <div
-            class="-mr-3 mt-3 max-h-72 space-y-2 overflow-y-auto pr-2"
+            class="-mr-3 mt-3 max-h-72 space-y-2 overflow-y-scroll pr-2"
             {{-- x-show="showTranslationValues" --}}
             {{-- x-collapse --}}
         >

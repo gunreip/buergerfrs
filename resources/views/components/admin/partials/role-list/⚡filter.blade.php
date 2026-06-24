@@ -54,6 +54,9 @@
                 <flux:select
                     id="role-list-category-filter"
                     name="role-list-category-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="categoryFilter"
                 >
                     <flux:select.option value="">
@@ -87,6 +90,9 @@
                 <flux:select
                     id="role-list-assignable-filter"
                     name="role-list-assignable-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="assignableFilter"
                 >
                     <flux:select.option value="">
@@ -122,6 +128,9 @@
                 <flux:select
                     id="role-list-system-filter"
                     name="role-list-system-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="systemFilter"
                 >
                     <flux:select.option value="">

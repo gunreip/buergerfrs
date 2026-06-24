@@ -6,6 +6,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -27,8 +28,8 @@ class CheckViewHtmlStructure extends Command
     public function handle(): int
     {
         $files = collect(File::allFiles(resource_path('views')))
-            ->filter(fn(SplFileInfo $file): bool => Str::endsWith($file->getFilename(), '.blade.php'))
-            ->reject(fn(SplFileInfo $file): bool => str_contains($this->relativePath($file->getPathname()), '/xxx/')
+            ->filter(fn (SplFileInfo $file): bool => Str::endsWith($file->getFilename(), '.blade.php'))
+            ->reject(fn (SplFileInfo $file): bool => str_contains($this->relativePath($file->getPathname()), '/xxx/')
                 || str_contains($this->relativePath($file->getPathname()), '/yyy/')
                 || str_contains($this->relativePath($file->getPathname()), '/zzz/')
                 || str_contains($file->getFilename(), 'xxx')
@@ -111,34 +112,34 @@ class CheckViewHtmlStructure extends Command
 
         File::put(
             storage_path('audits/html/view-html-check.json'),
-            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL,
+            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL,
         );
 
         File::put(
             storage_path('audits/html/view-html-check-preview.json'),
-            json_encode($previewPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL,
+            json_encode($previewPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL,
         );
 
         $this->line('HTML / Blade structure check');
-        $this->line('Files scanned: ' . $files->count());
-        $this->line('Problems: ' . $problemCount);
-        $this->line('Native HTML reference: ' . $nativeReference['meta']['source']);
-        $this->line('Native normal tags: ' . $nativeReference['meta']['normal_count']);
-        $this->line('Native void tags ignored: ' . $nativeReference['meta']['void_count']);
+        $this->line('Files scanned: '.$files->count());
+        $this->line('Problems: '.$problemCount);
+        $this->line('Native HTML reference: '.$nativeReference['meta']['source']);
+        $this->line('Native normal tags: '.$nativeReference['meta']['normal_count']);
+        $this->line('Native void tags ignored: '.$nativeReference['meta']['void_count']);
 
-        $this->line('Component reference: ' . $componentReference['meta']['source']);
-        $this->line('Component tags: ' . $componentReference['meta']['tag_count']);
+        $this->line('Component reference: '.$componentReference['meta']['source']);
+        $this->line('Component tags: '.$componentReference['meta']['tag_count']);
 
         if ($nativeReference['meta']['fallback'] === true) {
             $this->warn('Native HTML reference fallback is active.');
-            $this->warn('Reason: ' . $nativeReference['meta']['fallback_reason']);
-            $this->warn('Hint: ' . $nativeReference['meta']['fallback_hint']);
+            $this->warn('Reason: '.$nativeReference['meta']['fallback_reason']);
+            $this->warn('Hint: '.$nativeReference['meta']['fallback_hint']);
         }
 
         if ($componentReference['meta']['fallback'] === true) {
             $this->warn('Component reference fallback is active.');
-            $this->warn('Reason: ' . $componentReference['meta']['fallback_reason']);
-            $this->warn('Hint: ' . $componentReference['meta']['fallback_hint']);
+            $this->warn('Reason: '.$componentReference['meta']['fallback_reason']);
+            $this->warn('Hint: '.$componentReference['meta']['fallback_hint']);
         }
 
         $this->warn('Note: This is a static Blade structure audit. Complex conditional Blade markup may produce false positives and should be reviewed manually.');
@@ -198,7 +199,7 @@ class CheckViewHtmlStructure extends Command
                     'opened_line' => null,
                     'closing_line' => $token['line'],
                     'expected_closing' => null,
-                    'actual_closing' => '</' . $token['tag'] . '>',
+                    'actual_closing' => '</'.$token['tag'].'>',
                 ];
 
                 continue;
@@ -213,8 +214,8 @@ class CheckViewHtmlStructure extends Command
                     'opened_line' => $last['line'],
                     'closing_tag' => $token['tag'],
                     'closing_line' => $token['line'],
-                    'expected_closing' => '</' . $last['tag'] . '>',
-                    'actual_closing' => '</' . $token['tag'] . '>',
+                    'expected_closing' => '</'.$last['tag'].'>',
+                    'actual_closing' => '</'.$token['tag'].'>',
                 ];
             }
         }
@@ -227,7 +228,7 @@ class CheckViewHtmlStructure extends Command
                 'tag' => $unclosed['tag'],
                 'opened_line' => $unclosed['line'],
                 'closing_line' => null,
-                'expected_closing' => '</' . $unclosed['tag'] . '>',
+                'expected_closing' => '</'.$unclosed['tag'].'>',
                 'actual_closing' => null,
             ];
         }
@@ -246,12 +247,12 @@ class CheckViewHtmlStructure extends Command
         }
 
         $tagsPattern = implode('|', array_map(
-            fn(string $tag): string => preg_quote($tag, '/'),
+            fn (string $tag): string => preg_quote($tag, '/'),
             $tagsToCheck,
         ));
 
         preg_match_all(
-            '/<\s*(\/?)\s*(' . $tagsPattern . ')(?=[\s>\/])(?:[^"\'<>]|"[^"]*"|\'[^\']*\')*(\/?)\s*>/iu',
+            '/<\s*(\/?)\s*('.$tagsPattern.')(?=[\s>\/])(?:[^"\'<>]|"[^"]*"|\'[^\']*\')*(\/?)\s*>/iu',
             $content,
             $matches,
             PREG_OFFSET_CAPTURE,
@@ -278,7 +279,7 @@ class CheckViewHtmlStructure extends Command
             ];
         }
 
-        usort($tokens, fn(array $a, array $b): int => $a['offset'] <=> $b['offset']);
+        usort($tokens, fn (array $a, array $b): int => $a['offset'] <=> $b['offset']);
 
         return $tokens;
     }
@@ -364,8 +365,8 @@ class CheckViewHtmlStructure extends Command
         $hint = 'Run php artisan html:sync-native-tags to refresh the WHATWG native HTML reference.';
 
         $this->warn('Native HTML reference fallback is active.');
-        $this->warn('Reason: ' . $reason);
-        $this->warn('Hint: ' . $hint);
+        $this->warn('Reason: '.$reason);
+        $this->warn('Hint: '.$hint);
 
         return [
             'tags' => [
@@ -455,8 +456,8 @@ class CheckViewHtmlStructure extends Command
         $hint = 'Run php artisan views:sync-component-tags to refresh the Blade component tag reference.';
 
         $this->warn('Component reference fallback is active.');
-        $this->warn('Reason: ' . $reason);
-        $this->warn('Hint: ' . $hint);
+        $this->warn('Reason: '.$reason);
+        $this->warn('Hint: '.$hint);
 
         return [
             'tags' => $fallbackTags,
@@ -482,8 +483,8 @@ class CheckViewHtmlStructure extends Command
     private function normalizeTagList(array $tags): array
     {
         return collect($tags)
-            ->filter(fn(mixed $tag): bool => is_string($tag) && $tag !== '')
-            ->map(fn(string $tag): string => strtolower(trim($tag)))
+            ->filter(fn (mixed $tag): bool => is_string($tag) && $tag !== '')
+            ->map(fn (string $tag): string => strtolower(trim($tag)))
             ->unique()
             ->sort()
             ->values()
@@ -497,9 +498,9 @@ class CheckViewHtmlStructure extends Command
     private function normalizeComponentTagList(array $tags): array
     {
         return collect($tags)
-            ->filter(fn(mixed $tag): bool => is_string($tag) && $tag !== '')
-            ->map(fn(string $tag): string => strtolower(trim($tag)))
-            ->reject(fn(string $tag): bool => $tag === 'x-slot' || Str::startsWith($tag, 'x-slot:'))
+            ->filter(fn (mixed $tag): bool => is_string($tag) && $tag !== '')
+            ->map(fn (string $tag): string => strtolower(trim($tag)))
+            ->reject(fn (string $tag): bool => $tag === 'x-slot' || Str::startsWith($tag, 'x-slot:'))
             ->unique()
             ->sort()
             ->values()
@@ -593,6 +594,7 @@ class CheckViewHtmlStructure extends Command
                     $problem['tag'],
                     $problem['expected_closing'],
                 ));
+
                 continue;
             }
 
@@ -609,6 +611,7 @@ class CheckViewHtmlStructure extends Command
                     $problem['opened_line'],
                     $problem['expected_closing'],
                 ));
+
                 continue;
             }
 
@@ -624,7 +627,7 @@ class CheckViewHtmlStructure extends Command
         }
 
         if (count($problems) > 20) {
-            $this->line('... ' . (count($problems) - 20) . ' more problem(s), see audit JSON.');
+            $this->line('... '.(count($problems) - 20).' more problem(s), see audit JSON.');
         }
 
         $this->newLine();
@@ -632,20 +635,20 @@ class CheckViewHtmlStructure extends Command
 
     private function relativePath(string $path): string
     {
-        return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+        return str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
     }
 
     private function logRunActivity(string $event, string $description, array $properties = []): void
     {
         try {
-            activity('html')
-                ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+            $activity = activity('html')
+                ->event($event);
+
+            $activity
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 }

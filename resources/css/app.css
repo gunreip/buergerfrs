@@ -134,6 +134,7 @@ option::checkmark {
 @import './table.css';
 @import './modal.css';
 @import './button.css';
+/* @import './inputs.css'; */
 @import './errors.css';
 @import './tooltip.css';
 @import './animations.css';

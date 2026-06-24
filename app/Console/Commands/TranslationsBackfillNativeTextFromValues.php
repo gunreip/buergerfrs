@@ -4,9 +4,11 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 /**
  * Backfills translation_keys.native_text using existing translation_values.
@@ -39,11 +41,20 @@ class TranslationsBackfillNativeTextFromValues extends Command
         }
 
         $targetIds = $query->pluck('id')
-            ->map(static fn($id): int => (int) $id)
+            ->map(static fn ($id): int => (int) $id)
             ->values();
 
         if ($targetIds->isEmpty()) {
             $this->warn('No translation keys with empty native_text found.');
+
+            $this->logRunCompletedActivity([
+                'dry_run' => $dryRun,
+                'limit' => $limit,
+                'preferred_locales' => $preferredLocales,
+                'target_keys' => 0,
+                'updated_keys' => 0,
+                'skipped_keys' => 0,
+            ]);
 
             return self::SUCCESS;
         }
@@ -78,6 +89,15 @@ class TranslationsBackfillNativeTextFromValues extends Command
         if ($updates === []) {
             $this->warn('No suitable translation values found for empty native_text keys.');
 
+            $this->logRunCompletedActivity([
+                'dry_run' => $dryRun,
+                'limit' => $limit,
+                'preferred_locales' => $preferredLocales,
+                'target_keys' => $targetIds->count(),
+                'updated_keys' => 0,
+                'skipped_keys' => $targetIds->count(),
+            ]);
+
             return self::SUCCESS;
         }
 
@@ -106,7 +126,7 @@ class TranslationsBackfillNativeTextFromValues extends Command
 
         $preview = collect($updates)
             ->take(20)
-            ->map(static fn(array $row): array => [
+            ->map(static fn (array $row): array => [
                 'key_id' => $row['id'],
                 'locale_used' => $row['locale'],
                 'native_text' => mb_strimwidth($row['native_text'], 0, 80, '...'),
@@ -123,6 +143,15 @@ class TranslationsBackfillNativeTextFromValues extends Command
             $this->warn('Dry run only: no database rows were updated.');
         }
 
+        $this->logRunCompletedActivity([
+            'dry_run' => $dryRun,
+            'limit' => $limit,
+            'preferred_locales' => $preferredLocales,
+            'target_keys' => $targetIds->count(),
+            'updated_keys' => $dryRun ? 0 : count($updates),
+            'skipped_keys' => $targetIds->count() - count($updates),
+        ]);
+
         return self::SUCCESS;
     }
 
@@ -138,15 +167,15 @@ class TranslationsBackfillNativeTextFromValues extends Command
         }
 
         return collect(explode(',', $raw))
-            ->map(fn(string $locale): string => $this->normalizeLocale($locale))
-            ->filter(fn(string $locale): bool => $locale !== '')
+            ->map(fn (string $locale): string => $this->normalizeLocale($locale))
+            ->filter(fn (string $locale): bool => $locale !== '')
             ->unique()
             ->values()
             ->all();
     }
 
     /**
-     * @param Collection<int, object{translation_key_id:int, normalized_locale:string, value:string, is_base_duplicate:bool|null}> $candidateRows
+     * @param  Collection<int, object{translation_key_id:int, normalized_locale:string, value:string, is_base_duplicate:bool|null}>  $candidateRows
      */
     private function selectPreferredValue(Collection $candidateRows, array $preferredLocales): ?object
     {
@@ -167,9 +196,9 @@ class TranslationsBackfillNativeTextFromValues extends Command
                     : (is_int($mainIndex) ? $mainIndex + 50 : 999);
 
                 return str_pad((string) $rank, 4, '0', STR_PAD_LEFT)
-                    . '|' . $duplicatePenalty
-                    . '|' . (str_contains($locale, '-') ? '1' : '0')
-                    . '|' . $locale;
+                    .'|'.$duplicatePenalty
+                    .'|'.(str_contains($locale, '-') ? '1' : '0')
+                    .'|'.$locale;
             }, SORT_NATURAL | SORT_FLAG_CASE)
             ->first();
     }
@@ -177,5 +206,22 @@ class TranslationsBackfillNativeTextFromValues extends Command
     private function normalizeLocale(string $locale): string
     {
         return strtolower(str_replace('_', '-', trim($locale)));
+    }
+
+    /**
+     * @param  array<string, mixed>  $summary
+     */
+    private function logRunCompletedActivity(array $summary): void
+    {
+        try {
+            activity('translations')
+                ->event('translations.native_text.backfill.completed')
+                ->withProperties(ConsoleActivityContext::merge($this, [
+                    'summary' => $summary,
+                ]))
+                ->log('Translation native_text backfill completed');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: '.$exception->getMessage());
+        }
     }
 }

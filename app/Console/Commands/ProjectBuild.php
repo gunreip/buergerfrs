@@ -8,6 +8,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -123,7 +124,7 @@ class ProjectBuild extends Command
 
             return self::SUCCESS;
         } catch (Throwable $exception) {
-            $this->error('❌ Projekt-Build fehlgeschlagen: ' . trim($exception->getMessage()));
+            $this->error('❌ Projekt-Build fehlgeschlagen: '.trim($exception->getMessage()));
 
             $this->logRunActivity('project.build.failed', 'Project build command failed.', [
                 'error' => trim($exception->getMessage()),
@@ -149,7 +150,7 @@ class ProjectBuild extends Command
         try {
             foreach ($criticalTables as $table) {
                 if (! Schema::hasTable($table)) {
-                    $this->error('❌ Build abgebrochen: Tabelle fehlt: ' . $table);
+                    $this->error('❌ Build abgebrochen: Tabelle fehlt: '.$table);
                     $this->warn('ℹ️ Führe zuerst Migrationen aus (z. B. php artisan migrate --seed).');
 
                     return false;
@@ -170,7 +171,7 @@ class ProjectBuild extends Command
             return true;
         }
 
-        $this->error('❌ Build abgebrochen: Kritische Tabellen sind leer: ' . implode(', ', $emptyTables));
+        $this->error('❌ Build abgebrochen: Kritische Tabellen sind leer: '.implode(', ', $emptyTables));
         $this->warn('ℹ️ Erwarteter Zustand? Dann mit --allow-empty-db starten.');
         $this->warn('ℹ️ Sonst Daten wiederherstellen/seeden (z. B. php artisan db:seed --class=DatabaseSeeder).');
 
@@ -179,18 +180,18 @@ class ProjectBuild extends Command
 
     private function runArtisanStep(string $description, string $command): void
     {
-        $this->info('➤ ' . $description);
+        $this->info('➤ '.$description);
 
         $exitCode = $this->call($command);
 
         if ($exitCode !== self::SUCCESS) {
-            throw new RuntimeException('Step failed: ' . $command . ' (exit code ' . $exitCode . ')');
+            throw new RuntimeException('Step failed: '.$command.' (exit code '.$exitCode.')');
         }
     }
 
     private function runProcess(array $command, string $description): void
     {
-        $this->info('➤ ' . $description);
+        $this->info('➤ '.$description);
 
         $process = new Process($command, base_path());
         $process->setTimeout(null);
@@ -200,7 +201,7 @@ class ProjectBuild extends Command
         });
 
         if (! $process->isSuccessful()) {
-            $this->error('❌ Fehler bei: ' . implode(' ', $command));
+            $this->error('❌ Fehler bei: '.implode(' ', $command));
 
             throw new RuntimeException($process->getErrorOutput() ?: $process->getOutput());
         }
@@ -208,18 +209,18 @@ class ProjectBuild extends Command
 
     private function runOptionalProcess(array $command, string $description): void
     {
-        $this->info('➤ ' . $description);
+        $this->info('➤ '.$description);
 
         $scriptPath = base_path($command[0]);
 
         if (! is_file($scriptPath)) {
-            $this->warn('⚠️ Übersprungen, Datei nicht gefunden: ' . $command[0]);
+            $this->warn('⚠️ Übersprungen, Datei nicht gefunden: '.$command[0]);
 
             return;
         }
 
         if (! is_executable($scriptPath)) {
-            $this->warn('⚠️ Übersprungen, Datei nicht ausführbar: ' . $command[0]);
+            $this->warn('⚠️ Übersprungen, Datei nicht ausführbar: '.$command[0]);
 
             return;
         }
@@ -232,7 +233,7 @@ class ProjectBuild extends Command
         });
 
         if (! $process->isSuccessful()) {
-            $this->warn('⚠️ Fehler bei optionalem Schritt: ' . implode(' ', $command));
+            $this->warn('⚠️ Fehler bei optionalem Schritt: '.implode(' ', $command));
             $this->warn(trim($process->getErrorOutput() ?: $process->getOutput()));
         }
     }
@@ -240,14 +241,14 @@ class ProjectBuild extends Command
     private function logRunActivity(string $event, string $description, array $properties = []): void
     {
         try {
-            activity('project')
-                ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+            $activity = activity('project')
+                ->event($event);
+
+            $activity
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 }

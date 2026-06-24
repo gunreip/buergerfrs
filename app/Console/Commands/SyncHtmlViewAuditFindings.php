@@ -5,6 +5,7 @@
 namespace App\Console\Commands;
 
 use App\Models\HtmlViewAuditFinding;
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -32,7 +33,7 @@ class SyncHtmlViewAuditFindings extends Command
             $this->line('Run php artisan html:check first.');
 
             $this->logRunActivity('html.view_audit_sync.failed', 'HTML view audit sync failed because source file is missing.', [
-                'path' => str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path),
+                'path' => str_replace(base_path().DIRECTORY_SEPARATOR, '', $path),
             ]);
 
             return self::FAILURE;
@@ -44,7 +45,7 @@ class SyncHtmlViewAuditFindings extends Command
             $this->error('HTML view audit file is not valid JSON: storage/audits/html/view-html-check.json');
 
             $this->logRunActivity('html.view_audit_sync.failed', 'HTML view audit sync failed because source JSON is invalid.', [
-                'path' => str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path),
+                'path' => str_replace(base_path().DIRECTORY_SEPARATOR, '', $path),
             ]);
 
             return self::FAILURE;
@@ -163,13 +164,13 @@ class SyncHtmlViewAuditFindings extends Command
         });
 
         $this->info('HTML view audit findings synced.');
-        $this->line('Current problems: ' . count($problems));
-        $this->line('Created: ' . $created);
-        $this->line('Updated: ' . $updated);
-        $this->line('Changed / moved: ' . $changed);
-        $this->line('Reopened: ' . $reopened);
-        $this->line('Resolved: ' . $resolved);
-        $this->line('Ignored but still seen: ' . $ignoredSeen);
+        $this->line('Current problems: '.count($problems));
+        $this->line('Created: '.$created);
+        $this->line('Updated: '.$updated);
+        $this->line('Changed / moved: '.$changed);
+        $this->line('Reopened: '.$reopened);
+        $this->line('Resolved: '.$resolved);
+        $this->line('Ignored but still seen: '.$ignoredSeen);
 
         $this->logRunActivity('html.view_audit_sync.completed', 'HTML view audit findings sync completed.', [
             'current_problems' => count($problems),
@@ -301,12 +302,10 @@ class SyncHtmlViewAuditFindings extends Command
         try {
             activity('html')
                 ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 }

@@ -76,10 +76,10 @@
         icon="languages"
         expandable
         :expanded="request()->routeIs('admin.translations')
-                                || request()->routeIs('admin.translation-statistics')
-                                || request()->routeIs('admin.translation-sub-languages')
-                                || request()->routeIs('admin.translation-usage')
-                                || request()->routeIs('admin.translation-lang-ballast')"
+                                                        || request()->routeIs('admin.translation-statistics')
+                                                        || request()->routeIs('admin.translation-sub-languages')
+                                                        || request()->routeIs('admin.translation-usage')
+                                                        || request()->routeIs('admin.translation-lang-ballast')"
     >
         {{-- Admin -> translations -> management --}}
         <flux:sidebar.item
@@ -141,6 +141,25 @@
     >
         {{ __('admin.app_settings.app_settings') }}
     </flux:sidebar.item>
+
+    {{-- Admin -> logs --}}
+    <flux:sidebar.group
+        class="grid"
+        :heading="__('Logs')"
+        icon="scroll-text"
+        expandable
+        :expanded="request()->routeIs('admin.logs.*')"
+    >
+        {{-- Admin -> logs -> activity log --}}
+        <flux:sidebar.item
+            icon="activity"
+            :href="route('admin.logs.activity-log')"
+            :current="request()->routeIs('admin.logs.activity-log')"
+            wire:navigate
+        >
+            {{ __('Activity Log') }}
+        </flux:sidebar.item>
+    </flux:sidebar.group>
 
     {{-- Admin -> reference --}}
     <flux:sidebar.group

@@ -5,12 +5,14 @@
 namespace App\Console\Commands;
 
 use App\Models\TranslationLangBallastDecision;
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Throwable;
 
 #[Signature('translations:audit-lang-ballast')]
 #[Description('Audit lang/* translation entries that no longer match the current translation database state.')]
@@ -34,7 +36,7 @@ class TranslationsAuditLangBallast extends Command
         $knownDbEntries = $this->collectKnownDbEntries();
 
         $langEntryIndex = $langEntries
-            ->keyBy(fn(array $entry): string => $this->exportableEntryKey(
+            ->keyBy(fn (array $entry): string => $this->exportableEntryKey(
                 locale: (string) $entry['locale'],
                 key: (string) $entry['key'],
             ));
@@ -55,19 +57,19 @@ class TranslationsAuditLangBallast extends Command
                     key: (string) $entry['key'],
                 ));
             })
-            ->map(fn(array $entry): array => $this->enrichBallastEntry($entry, $knownDbEntries))
+            ->map(fn (array $entry): array => $this->enrichBallastEntry($entry, $knownDbEntries))
             ->values();
 
         $missingFromLangEntries = $exportableEntries
-            ->reject(static fn(array $entry, string $entryKey): bool => $langEntryIndex->has($entryKey))
+            ->reject(static fn (array $entry, string $entryKey): bool => $langEntryIndex->has($entryKey))
             ->values();
 
         $ballastEntries = $ballastEntries
-            ->map(fn(array $entry): array => $this->withCandidateIdentity($entry))
+            ->map(fn (array $entry): array => $this->withCandidateIdentity($entry))
             ->values();
 
         $missingFromLangEntries = $missingFromLangEntries
-            ->map(fn(array $entry): array => $this->withCandidateIdentity($entry))
+            ->map(fn (array $entry): array => $this->withCandidateIdentity($entry))
             ->values();
 
         $decisionIndex = $this->collectDecisionIndex(
@@ -76,11 +78,11 @@ class TranslationsAuditLangBallast extends Command
         );
 
         $ballastEntries = $ballastEntries
-            ->map(fn(array $entry): array => $this->enrichDecisionState($entry, $decisionIndex))
+            ->map(fn (array $entry): array => $this->enrichDecisionState($entry, $decisionIndex))
             ->values();
 
         $missingFromLangEntries = $missingFromLangEntries
-            ->map(fn(array $entry): array => $this->enrichDecisionState($entry, $decisionIndex))
+            ->map(fn (array $entry): array => $this->enrichDecisionState($entry, $decisionIndex))
             ->values();
 
         $subLanguageBaseDuplicateEntries = $this->collectSubLanguageBaseDuplicateEntries();
@@ -185,14 +187,16 @@ class TranslationsAuditLangBallast extends Command
         $this->writeAuditFiles($payload);
 
         $this->info('Lang ballast audit finished');
-        $this->line('Lang entries: ' . $langEntries->count());
-        $this->line('Exportable entries: ' . $exportableEntries->count());
-        $this->line('Matched entries: ' . $matchedEntries->count());
-        $this->line('Ballast entries: ' . $ballastEntries->count());
-        $this->line('Missing from lang entries: ' . $missingFromLangEntries->count());
-        $this->line('Net file surplus entries: ' . $reconciliationSummary['net_file_surplus_entries']);
-        $this->line('Decision open entries: ' . $decisionSummary['open_entries']);
-        $this->line('Decision approved entries: ' . $decisionSummary['approved_entries']);
+        $this->line('Lang entries: '.$langEntries->count());
+        $this->line('Exportable entries: '.$exportableEntries->count());
+        $this->line('Matched entries: '.$matchedEntries->count());
+        $this->line('Ballast entries: '.$ballastEntries->count());
+        $this->line('Missing from lang entries: '.$missingFromLangEntries->count());
+        $this->line('Net file surplus entries: '.$reconciliationSummary['net_file_surplus_entries']);
+        $this->line('Decision open entries: '.$decisionSummary['open_entries']);
+        $this->line('Decision approved entries: '.$decisionSummary['approved_entries']);
+
+        $this->logRunCompletedActivity((array) $payload['summary']);
 
         return self::SUCCESS;
     }
@@ -246,7 +250,7 @@ class TranslationsAuditLangBallast extends Command
                 }
 
                 foreach ($this->flattenLangPayload($payload) as $fileKey => $value) {
-                    $key = $namespace . '.' . (string) $fileKey;
+                    $key = $namespace.'.'.(string) $fileKey;
 
                     $entries->push([
                         'type' => 'file_obsolete',
@@ -528,7 +532,7 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param array<string, mixed> $entry
+     * @param  array<string, mixed>  $entry
      */
     private function dbEntryShouldBeInLang(array $entry): bool
     {
@@ -544,7 +548,7 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param array<string, mixed> $entry
+     * @param  array<string, mixed>  $entry
      */
     private function dbStateReasonDetail(array $entry): string
     {
@@ -571,9 +575,8 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param array<string, mixed> $entry
-     * @param Collection<string, array<string, mixed>> $knownDbEntries
-     *
+     * @param  array<string, mixed>  $entry
+     * @param  Collection<string, array<string, mixed>>  $knownDbEntries
      * @return array<string, mixed>
      */
     private function enrichBallastEntry(array $entry, Collection $knownDbEntries): array
@@ -618,9 +621,8 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $ballastEntries
-     * @param Collection<int, array<string, mixed>> $missingFromLangEntries
-     *
+     * @param  Collection<int, array<string, mixed>>  $ballastEntries
+     * @param  Collection<int, array<string, mixed>>  $missingFromLangEntries
      * @return Collection<string, TranslationLangBallastDecision>
      */
     private function collectDecisionIndex(Collection $ballastEntries, Collection $missingFromLangEntries): Collection
@@ -628,7 +630,7 @@ class TranslationsAuditLangBallast extends Command
         $candidateHashes = $ballastEntries
             ->merge($missingFromLangEntries)
             ->pluck('candidate_hash')
-            ->map(static fn(mixed $value): string => trim((string) $value))
+            ->map(static fn (mixed $value): string => trim((string) $value))
             ->filter()
             ->unique()
             ->values();
@@ -644,8 +646,7 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param array<string, mixed> $entry
-     *
+     * @param  array<string, mixed>  $entry
      * @return array<string, mixed>
      */
     private function withCandidateIdentity(array $entry): array
@@ -676,9 +677,8 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param array<string, mixed> $entry
-     * @param Collection<string, TranslationLangBallastDecision> $decisionIndex
-     *
+     * @param  array<string, mixed>  $entry
+     * @param  Collection<string, TranslationLangBallastDecision>  $decisionIndex
      * @return array<string, mixed>
      */
     private function enrichDecisionState(array $entry, Collection $decisionIndex): array
@@ -710,9 +710,8 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $ballastEntries
-     * @param Collection<int, array<string, mixed>> $missingFromLangEntries
-     *
+     * @param  Collection<int, array<string, mixed>>  $ballastEntries
+     * @param  Collection<int, array<string, mixed>>  $missingFromLangEntries
      * @return array<string, int>
      */
     private function buildDecisionSummary(Collection $ballastEntries, Collection $missingFromLangEntries): array
@@ -745,7 +744,7 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param array<string, mixed> $entry
+     * @param  array<string, mixed>  $entry
      */
     private function normalizedActionCandidate(array $entry): string
     {
@@ -764,27 +763,26 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $ballastEntries
-     * @param Collection<int, array<string, mixed>> $missingFromLangEntries
-     *
+     * @param  Collection<int, array<string, mixed>>  $ballastEntries
+     * @param  Collection<int, array<string, mixed>>  $missingFromLangEntries
      * @return array<string, array<int, array<string, mixed>>>
      */
     private function buildActionEntries(Collection $ballastEntries, Collection $missingFromLangEntries): array
     {
         $removeFromLang = $ballastEntries
             ->where('lang_file_action_candidate', 'remove')
-            ->map(fn(array $entry): array => $this->actionEntryFromAuditEntry($entry))
+            ->map(fn (array $entry): array => $this->actionEntryFromAuditEntry($entry))
             ->values();
 
         $addToLang = $missingFromLangEntries
             ->where('lang_file_action_candidate', 'add')
-            ->map(fn(array $entry): array => $this->actionEntryFromAuditEntry($entry))
+            ->map(fn (array $entry): array => $this->actionEntryFromAuditEntry($entry))
             ->values();
 
         $review = $ballastEntries
             ->where('lang_file_action_candidate', 'review')
             ->merge($missingFromLangEntries->where('lang_file_action_candidate', 'review'))
-            ->map(fn(array $entry): array => $this->actionEntryFromAuditEntry($entry))
+            ->map(fn (array $entry): array => $this->actionEntryFromAuditEntry($entry))
             ->values();
 
         return [
@@ -795,8 +793,7 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param array<string, mixed> $entry
-     *
+     * @param  array<string, mixed>  $entry
      * @return array<string, mixed>
      */
     private function actionEntryFromAuditEntry(array $entry): array
@@ -835,8 +832,7 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param array<string, array<int, array<string, mixed>>> $actionEntries
-     *
+     * @param  array<string, array<int, array<string, mixed>>>  $actionEntries
      * @return array<string, array<int, array<string, mixed>>>
      */
     private function buildActionFileEntries(array $actionEntries): array
@@ -849,14 +845,13 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param array<int, array<string, mixed>> $actions
-     *
+     * @param  array<int, array<string, mixed>>  $actions
      * @return array<int, array<string, mixed>>
      */
     private function actionFileEntriesFromActions(array $actions): array
     {
         return collect($actions)
-            ->groupBy(fn(array $entry): string => trim((string) ($entry['file'] ?? '')) ?: 'unknown')
+            ->groupBy(fn (array $entry): string => trim((string) ($entry['file'] ?? '')) ?: 'unknown')
             ->map(function (Collection $entries, string $file): array {
                 return [
                     'file' => $file,
@@ -929,12 +924,11 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $langEntries
-     * @param Collection<string, array<string, mixed>> $exportableEntries
-     * @param Collection<int, array<string, mixed>> $matchedEntries
-     * @param Collection<int, array<string, mixed>> $ballastEntries
-     * @param Collection<int, array<string, mixed>> $missingFromLangEntries
-     *
+     * @param  Collection<int, array<string, mixed>>  $langEntries
+     * @param  Collection<string, array<string, mixed>>  $exportableEntries
+     * @param  Collection<int, array<string, mixed>>  $matchedEntries
+     * @param  Collection<int, array<string, mixed>>  $ballastEntries
+     * @param  Collection<int, array<string, mixed>>  $missingFromLangEntries
      * @return array<string, int>
      */
     private function buildReconciliationSummary(
@@ -956,9 +950,8 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param Collection<string, array<string, mixed>> $knownDbEntries
-     * @param Collection<string, array<string, mixed>> $exportableEntries
-     *
+     * @param  Collection<string, array<string, mixed>>  $knownDbEntries
+     * @param  Collection<string, array<string, mixed>>  $exportableEntries
      * @return array<string, mixed>
      */
     private function buildDatabaseSummary(Collection $knownDbEntries, Collection $exportableEntries): array
@@ -990,12 +983,11 @@ class TranslationsAuditLangBallast extends Command
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $langEntries
-     * @param Collection<string, array<string, mixed>> $exportableEntries
-     * @param Collection<int, array<string, mixed>> $matchedEntries
-     * @param Collection<int, array<string, mixed>> $ballastEntries
-     * @param Collection<int, array<string, mixed>> $missingFromLangEntries
-     *
+     * @param  Collection<int, array<string, mixed>>  $langEntries
+     * @param  Collection<string, array<string, mixed>>  $exportableEntries
+     * @param  Collection<int, array<string, mixed>>  $matchedEntries
+     * @param  Collection<int, array<string, mixed>>  $ballastEntries
+     * @param  Collection<int, array<string, mixed>>  $missingFromLangEntries
      * @return array<string, array<string, int>>
      */
     private function buildReconciliationByLocale(
@@ -1066,7 +1058,7 @@ class TranslationsAuditLangBallast extends Command
 
     private function exportableEntryKey(string $locale, string $key): string
     {
-        return $this->normalizeLocale($locale) . '|' . trim($key);
+        return $this->normalizeLocale($locale).'|'.trim($key);
     }
 
     private function normalizeLocale(string $locale): string
@@ -1102,7 +1094,7 @@ class TranslationsAuditLangBallast extends Command
         $key = trim($key);
         $namespace = trim($namespace);
 
-        if ($namespace !== '' && str_starts_with($key, $namespace . '.')) {
+        if ($namespace !== '' && str_starts_with($key, $namespace.'.')) {
             return substr($key, strlen($namespace) + 1);
         }
 
@@ -1119,10 +1111,10 @@ class TranslationsAuditLangBallast extends Command
         }
 
         if ($namespace === '' || $namespace === '*') {
-            return 'lang/' . $locale . '.json';
+            return 'lang/'.$locale.'.json';
         }
 
-        return 'lang/' . $locale . '/' . $namespace . '.php';
+        return 'lang/'.$locale.'/'.$namespace.'.php';
     }
 
     /**
@@ -1134,7 +1126,7 @@ class TranslationsAuditLangBallast extends Command
 
         foreach ($items as $key => $value) {
             $segment = (string) $key;
-            $fullKey = $prefix !== '' ? $prefix . '.' . $segment : $segment;
+            $fullKey = $prefix !== '' ? $prefix.'.'.$segment : $segment;
 
             if (is_array($value)) {
                 $result += $this->flattenLangPayload($value, $fullKey);
@@ -1161,13 +1153,13 @@ class TranslationsAuditLangBallast extends Command
     {
         $basePath = base_path();
 
-        return str_starts_with($path, $basePath . DIRECTORY_SEPARATOR)
+        return str_starts_with($path, $basePath.DIRECTORY_SEPARATOR)
             ? substr($path, strlen($basePath) + 1)
             : $path;
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     private function writeAuditFiles(array $payload): void
     {
@@ -1178,13 +1170,13 @@ class TranslationsAuditLangBallast extends Command
         $summary = $payload['summary'] ?? [];
 
         File::put(
-            $directory . '/summary.json',
-            json_encode($summary, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL,
+            $directory.'/summary.json',
+            json_encode($summary, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL,
         );
 
         File::put(
-            $directory . '/full.json',
-            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL,
+            $directory.'/full.json',
+            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL,
         );
 
         $items = is_array($payload['items'] ?? null)
@@ -1200,7 +1192,7 @@ class TranslationsAuditLangBallast extends Command
             : [];
 
         File::put(
-            $directory . '/preview.json',
+            $directory.'/preview.json',
             json_encode([
                 ...$payload,
                 'items' => [
@@ -1245,7 +1237,24 @@ class TranslationsAuditLangBallast extends Command
                         ->values()
                         ->all(),
                 ],
-            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL,
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL,
         );
+    }
+
+    /**
+     * @param  array<string, mixed>  $summary
+     */
+    private function logRunCompletedActivity(array $summary): void
+    {
+        try {
+            activity('translations')
+                ->event('translations.lang_ballast.audit.completed')
+                ->withProperties(ConsoleActivityContext::merge($this, [
+                    'summary' => $summary,
+                ]))
+                ->log('Translation lang ballast audit completed');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: '.$exception->getMessage());
+        }
     }
 }

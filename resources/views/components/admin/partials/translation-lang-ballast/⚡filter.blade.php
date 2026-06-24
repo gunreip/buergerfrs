@@ -190,7 +190,14 @@
                     <flux:icon.folder-pen stroke-width="1" />
                 </flux:input.group.prefix>
 
-                <flux:select wire:model.live="namespaceFilter">
+                <flux:select
+                    id="translation-lang-ballast-namespace"
+                    name="translation-lang-ballast-namespace"
+                    variant="listbox"
+                    searchable
+                    clearable
+                    wire:model.live="namespaceFilter"
+                >
                     <flux:select.option value="all">
                         {{ __('ui.states.all') }}
                     </flux:select.option>
@@ -212,7 +219,14 @@
                     <flux:icon.save-pen stroke-width="1" />
                 </flux:input.group.prefix>
 
-                <flux:select wire:model.live="groupFilter">
+                <flux:select
+                    id="translation-lang-ballast-group"
+                    name="translation-lang-ballast-group"
+                    variant="listbox"
+                    searchable
+                    clearable
+                    wire:model.live="groupFilter"
+                >
                     <flux:select.option value="all">
                         {{ __('ui.states.all') }}
                     </flux:select.option>
@@ -233,14 +247,25 @@
                 <flux:input.group.prefix>
                     <flux:icon.language stroke-width="1" />
                 </flux:input.group.prefix>
-                <flux:select wire:model.live="localeFilter">
+                <flux:select
+                    id="translation-lang-ballast-locale"
+                    name="translation-lang-ballast-locale"
+                    variant="listbox"
+                    searchable
+                    clearable
+                    wire:model.live="localeFilter"
+                >
                     <flux:select.option value="all">
                         {{ __('ui.states.all') }}
                     </flux:select.option>
 
                     @foreach ($localeOptions as $localeOption)
                         <flux:select.option value="{{ $localeOption }}">
-                            {{ $localeOption }}
+                            <div class="flex items-center gap-2">
+                                <x-ui.locale.flag :locale="$localeOption" />
+                                <span class="ml-2">{{ $localeOption }}</span>
+                            </div>
+                            {{-- {{ $localeOption }} --}}
                         </flux:select.option>
                     @endforeach
                 </flux:select>

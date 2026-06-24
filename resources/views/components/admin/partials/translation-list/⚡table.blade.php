@@ -9,7 +9,16 @@
         )"
     >
         @php
-            $appLanguages = $targetLanguages ?? collect();
+            $appLanguages = collect($targetLanguages ?? [])
+                ->sortBy(static function ($language): string {
+                    $locale = \App\Support\Locale\LocaleCode::normalize((string) ($language->locale ?? ''));
+
+                    return $locale !== ''
+                        ? $locale
+                        : mb_strtolower((string) ($language->native_name ?: $language->name ?: ''));
+                }, SORT_NATURAL | SORT_FLAG_CASE)
+                ->values();
+
             $activeTargetSubLanguages = collect($activeTargetSubLanguages ?? []);
         @endphp
 
@@ -382,7 +391,6 @@
                                     $key = trim((string) ($translationKey->key ?? ''));
                                     $suggestedKey = trim((string) ($translationKey->suggested_key ?? ''));
                                     $canEditTranslations = $key !== '';
-                                    $canOpenHistory = (int) ($translationKey->history_events_count ?? 0) > 0;
                                     $isObsoleteReviewed = ($translationKey->workflow_status ?? 'open') === 'reviewed';
 
                                     $namespace = trim((string) ($translationKey->namespace ?? ''));
@@ -901,9 +909,6 @@
                                         variant="primary"
                                         color="zinc"
                                         icon="history"
-                                        :disabled="!$canOpenHistory"
-                                        :title="$canOpenHistory ? __('admin.translation_list.table.open_history') : __(
-                                            'admin.translation_list.table.no_history_entries_available')"
                                         wire:click="openTranslationHistory({{ $translationKey->id }})"
                                     >
                                         {{ __('admin.translation_list.table.history') }}

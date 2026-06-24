@@ -44,12 +44,14 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Throwable;
 
 /**
  * Audits frequently used source-language translation values.
@@ -134,6 +136,8 @@ class TranslationsAuditFrequentUsageLiterals extends Command
             $this->line('');
             $this->warn('No frequent usage literals found.');
 
+            $this->logRunCompletedActivity($summary);
+
             return self::SUCCESS;
         }
 
@@ -142,7 +146,7 @@ class TranslationsAuditFrequentUsageLiterals extends Command
             ['Source', 'Source value', 'Keys', 'Usages', 'Current', 'Stale', 'UI candidate', 'UI keys'],
             collect($literals)
                 ->take(self::PREVIEW_LIMIT)
-                ->map(static fn(array $literal): array => [
+                ->map(static fn (array $literal): array => [
                     $literal['locale'],
                     mb_strimwidth($literal['value'], 0, 44, '...'),
                     $literal['translation_key_count'],
@@ -157,7 +161,9 @@ class TranslationsAuditFrequentUsageLiterals extends Command
         );
 
         $this->line('');
-        $this->line('Audit files written to: ' . $this->relativePath($this->auditDirectory()));
+        $this->line('Audit files written to: '.$this->relativePath($this->auditDirectory()));
+
+        $this->logRunCompletedActivity($summary);
 
         return self::SUCCESS;
     }
@@ -171,7 +177,7 @@ class TranslationsAuditFrequentUsageLiterals extends Command
 
         if ($localesOption !== '') {
             return collect(explode(',', $localesOption))
-                ->map(static fn(string $locale): string => self::normalizeLocale($locale))
+                ->map(static fn (string $locale): string => self::normalizeLocale($locale))
                 ->filter()
                 ->unique()
                 ->sort()
@@ -185,7 +191,7 @@ class TranslationsAuditFrequentUsageLiterals extends Command
             ->selectRaw("LOWER(REPLACE(locale, '_', '-')) as normalized_locale")
             ->distinct()
             ->pluck('normalized_locale')
-            ->map(static fn(string $locale): string => self::normalizeLocale($locale))
+            ->map(static fn (string $locale): string => self::normalizeLocale($locale))
             ->filter()
             ->unique()
             ->sort()
@@ -235,15 +241,15 @@ class TranslationsAuditFrequentUsageLiterals extends Command
     }
 
     /**
-     * @param Collection<int, object> $sourceRows
-     * @param array<int, string> $locales
+     * @param  Collection<int, object>  $sourceRows
+     * @param  array<int, string>  $locales
      * @return array<int, array<string, array<string, mixed>>>
      */
     private function valueRowsByKeyId(Collection $sourceRows, array $locales): array
     {
         $translationKeyIds = $sourceRows
             ->pluck('translation_key_id')
-            ->map(static fn($id): int => (int) $id)
+            ->map(static fn ($id): int => (int) $id)
             ->unique()
             ->values();
 
@@ -275,7 +281,7 @@ class TranslationsAuditFrequentUsageLiterals extends Command
             ->groupBy('translation_key_id')
             ->map(static function (Collection $rows): array {
                 return $rows
-                    ->mapWithKeys(static fn(object $row): array => [
+                    ->mapWithKeys(static fn (object $row): array => [
                         (string) $row->normalized_locale => [
                             'locale' => (string) $row->normalized_locale,
                             'value' => $row->value,
@@ -290,14 +296,14 @@ class TranslationsAuditFrequentUsageLiterals extends Command
     }
 
     /**
-     * @param Collection<int, object> $sourceRows
+     * @param  Collection<int, object>  $sourceRows
      * @return array<int, Collection<int, object>>
      */
     private function usageRowsByKeyId(Collection $sourceRows): array
     {
         $translationKeyIds = $sourceRows
             ->pluck('translation_key_id')
-            ->map(static fn($id): int => (int) $id)
+            ->map(static fn ($id): int => (int) $id)
             ->unique()
             ->values();
 
@@ -325,9 +331,9 @@ class TranslationsAuditFrequentUsageLiterals extends Command
     }
 
     /**
-     * @param Collection<int, object> $sourceRows
-     * @param array<int, Collection<int, object>> $usageRowsByKeyId
-     * @param array<int, array<string, array<string, mixed>>> $valueRowsByKeyId
+     * @param  Collection<int, object>  $sourceRows
+     * @param  array<int, Collection<int, object>>  $usageRowsByKeyId
+     * @param  array<int, array<string, array<string, mixed>>>  $valueRowsByKeyId
      * @return array<int, array<string, mixed>>
      */
     private function buildLiterals(
@@ -368,7 +374,7 @@ class TranslationsAuditFrequentUsageLiterals extends Command
                 key: $row->key ?? null,
             );
 
-            $groupKey = $locale . '|' . $normalizedValue;
+            $groupKey = $locale.'|'.$normalizedValue;
 
             $groups[$groupKey] ??= [
                 'locale' => $locale,
@@ -419,7 +425,7 @@ class TranslationsAuditFrequentUsageLiterals extends Command
 
                     $usageCountTotal = count($usages);
                     $usageCountStale = collect($usages)
-                        ->filter(static fn(array $usage): bool => (bool) $usage['is_stale'])
+                        ->filter(static fn (array $usage): bool => (bool) $usage['is_stale'])
                         ->count();
                     $usageCountCurrent = $usageCountTotal - $usageCountStale;
 
@@ -450,7 +456,7 @@ class TranslationsAuditFrequentUsageLiterals extends Command
             }
 
             $uiKeys = collect($keys)
-                ->filter(static fn(array $key): bool => (bool) $key['is_ui_key'])
+                ->filter(static fn (array $key): bool => (bool) $key['is_ui_key'])
                 ->pluck('full_key')
                 ->filter()
                 ->unique()
@@ -464,7 +470,7 @@ class TranslationsAuditFrequentUsageLiterals extends Command
                 'value_variants' => array_keys($group['value_variants']),
                 'translation_key_count' => count($keys),
                 'non_ui_translation_key_count' => collect($keys)
-                    ->filter(static fn(array $key): bool => ! (bool) $key['is_ui_key'])
+                    ->filter(static fn (array $key): bool => ! (bool) $key['is_ui_key'])
                     ->count(),
                 'usage_count' => $usageCountTotal,
                 'usage_count_total' => $usageCountTotal,
@@ -479,7 +485,7 @@ class TranslationsAuditFrequentUsageLiterals extends Command
 
         usort(
             $literals,
-            static fn(array $a, array $b): int => [
+            static fn (array $a, array $b): int => [
                 -1 * $a['usage_count_total'],
                 -1 * $a['translation_key_count'],
                 $a['locale'],
@@ -500,8 +506,8 @@ class TranslationsAuditFrequentUsageLiterals extends Command
         File::ensureDirectoryExists($this->auditDirectory());
 
         File::put(
-            $this->auditDirectory() . '/' . $name . '.json',
-            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL,
+            $this->auditDirectory().'/'.$name.'.json',
+            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL,
         );
 
         $previewPayload = array_is_list($payload)
@@ -509,8 +515,8 @@ class TranslationsAuditFrequentUsageLiterals extends Command
             : $payload;
 
         File::put(
-            $this->auditDirectory() . '/' . $name . '.preview.json',
-            json_encode($previewPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL,
+            $this->auditDirectory().'/'.$name.'.preview.json',
+            json_encode($previewPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL,
         );
     }
 
@@ -548,11 +554,11 @@ class TranslationsAuditFrequentUsageLiterals extends Command
             return $key;
         }
 
-        if ($key === $group || str_starts_with($key, $group . '.')) {
+        if ($key === $group || str_starts_with($key, $group.'.')) {
             return $key;
         }
 
-        return $group . '.' . $key;
+        return $group.'.'.$key;
     }
 
     private function looksLikeFullTranslationKey(string $key): bool
@@ -579,6 +585,23 @@ class TranslationsAuditFrequentUsageLiterals extends Command
 
     private function relativePath(string $path): string
     {
-        return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+        return str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
+    }
+
+    /**
+     * @param  array<string, mixed>  $summary
+     */
+    private function logRunCompletedActivity(array $summary): void
+    {
+        try {
+            activity('translations')
+                ->event('translations.frequent_usage_literals.audit.completed')
+                ->withProperties(ConsoleActivityContext::merge($this, [
+                    'summary' => $summary,
+                ]))
+                ->log('Translation frequent usage literals audit completed');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: '.$exception->getMessage());
+        }
     }
 }

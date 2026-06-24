@@ -37,17 +37,15 @@ Die wichtigste Trennung ist:
 
 `file_obsolete` ist bewusst kein automatischer Löschvorgang. Solche Einträge müssen zuerst reviewed/markiert werden und dürfen erst danach aus `lang/*` entfernt werden. Die DB bleibt dabei der dauerhafte History-/Statistik-Bestand.
 
-# Counter-Definitions
+## Counter Definitions
 
 | Source | Counter-Name | Resulting by | Comment |
 | --- | --- | --- | --- |
-| Code | ALL | Code | Translations in Code (Native-Text, valid Translation-Keys) |
-| Code | Native | Native Text in Code |  |
-| Code | Translation-Keys | Translation-Keys in Code |  |
-| Code | dynamic | Dynamic-Translation-Keys in Code |  |
-| DB | Over-ALL | DB | all Entries un DB |
-| File | ALL | lang/en/*  | Source-Language |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
+| Code | All | Code audit | All statically detected translation calls in application code. |
+| Code | Native | Code audit | Calls containing a literal/native source text instead of a stable translation key. |
+| Code | Translation Keys | Code audit | Calls containing a concrete translation key. |
+| Code | Dynamic | Code audit | Calls whose key or value cannot be resolved statically. |
+| Database | Overall | `translation_keys` | Persistent translation work items, including active and historical rows. |
+| Files | All | `lang/{locale}` | Entries currently present in the language-file source for a locale. |
+
+Counters shown together in the UI must be calculated from explicitly defined row sets. Table rows and counters for the same filter context must use equivalent query semantics.

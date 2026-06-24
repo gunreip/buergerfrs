@@ -73,12 +73,22 @@ Empfehlung fuer euren Teamprozess:
 | `system:versions` | Write OS/PHP/package versions to `VERSIONS.md`. |
 | `translations:audit-code` | Audit translation calls in code. |
 | `translations:audit-compare` | Compare code audit and language-file audit. |
+| `translations:audit-duplicate-usage-literals` | Find source-language literals used by multiple keys and identify centralization candidates. |
+| `translations:audit-frequent-usage-literals` | Report frequently used source-language literals and their centralization status. |
 | `translations:audit-lang` | Audit files under `lang/`. |
+| `translations:audit-lang-ballast` | Audit language-file entries that no longer match the database state. |
+| `translations:audit-sub-language-redundancy` | Mark sub-language values that duplicate their base locale. |
+| `translations:backfill-audit-discovered-events` | Create missing translation-history baseline events; supports `--dry-run`. |
+| `translations:backfill-native-text-from-values` | Fill missing native text from existing locale values. |
 | `translations:ensure-lang-directories` | Ensure `lang/{locale}` directories exist for translation locales. |
 | `translations:export-lang-files` | Export translation values from DB to `lang/{locale}/*.php` and `lang/{locale}.json`. |
 | `translations:generate-literal-diffs` | Generate runnable patch diffs for replacing literal translation calls with mapped translation keys. |
+| `translations:lang-ballast:apply` | Preview or apply approved language-ballast decisions. |
+| `translations:normalize-keyed-native-statuses` | Normalize legacy native-status rows that already have a concrete key. |
 | `translations:rewrite-literals` | Replace literal texts in translation calls with mapped translation keys from `translation_keys`. |
 | `translations:sync-audits` | Sync translation audit JSON into DB translation tables. |
+| `translations:usage-decisions:apply` | Apply ready translation-usage audit decisions to source files. |
+| `translations:usage-decisions:preview` | Generate previews for ready translation-usage audit decisions. |
 | `views:sync-component-tags` | Scan Blade views and write used component tags reference. |
 
 ## Typical Translation Workflow
@@ -89,11 +99,14 @@ php artisan translations:audit-code
 php artisan translations:audit-lang
 php artisan translations:audit-compare
 php artisan translations:sync-audits
+php artisan translations:backfill-audit-discovered-events --dry-run
 php artisan translations:generate-literal-diffs
-# optional apply step:
+# Optional apply step:
 bash storage/audits/translations/diffs/latest.apply.sh
 php artisan translations:export-lang-files
 ```
+
+The discovered-event backfill is normally a one-time compatibility step for existing databases. Omit it from routine runs after all translation keys have a baseline event.
 ## Activity Log Convention For Artisan Commands
 
 All project-specific commands should write activity log entries so command runs are traceable in production and local debugging.

@@ -9,6 +9,7 @@ namespace App\Console\Commands;
 
 use App\Models\Person;
 use App\Models\User;
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -48,7 +49,7 @@ class BackfillUserPersons extends Command
         $linked = 0;
         $skipped = 0;
 
-        $this->info(($dryRun ? '[DRY RUN] ' : '') . "Found {$users->count()} user(s) without person_id.");
+        $this->info(($dryRun ? '[DRY RUN] ' : '')."Found {$users->count()} user(s) without person_id.");
 
         foreach ($users as $user) {
             $nameParts = $this->splitUserName((string) $user->name);
@@ -148,14 +149,14 @@ class BackfillUserPersons extends Command
     private function logRunActivity(string $event, string $description, array $properties = []): void
     {
         try {
-            activity('project')
-                ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+            $activity = activity('project')
+                ->event($event);
+
+            $activity
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 }

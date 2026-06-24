@@ -7,37 +7,59 @@
     />
 
     <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-4">
-        <flux:badge
-            color="zinc"
-            variant="subtle"
-            size="lg"
-        >
-            {{ __('Total') }}: {{ number_format((int) ($summary['total'] ?? 0)) }}
-        </flux:badge>
 
-        <flux:badge
+        {{-- Callout Total Flags --}}
+        <flux:callout
+            class="hyphens-auto md:col-span-1"
+            color="blue"
+            icon="flag"
+            heading="{{ __('Total flags') }}"
+            text="{{ __('The flag reference data is sourced from the ISO 3166-1 standard, which defines country codes and related information.') }}"
+        >
+            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                {{ number_format((int) ($summary['total'] ?? 0)) }}
+            </flux:callout.text>
+        </flux:callout>
+
+        {{-- Callout Resolved Issues --}}
+        <flux:callout
+            class="hyphens-auto md:col-span-1"
             color="green"
-            variant="subtle"
-            size="lg"
+            icon="check-circle"
+            heading="{{ __('Resolved') }}"
+            text="{{ __('Number of fallback reports that have been resolved.') }}"
         >
-            {{ __('Resolved') }}: {{ number_format((int) ($summary['resolved'] ?? 0)) }}
-        </flux:badge>
+            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                {{ number_format((int) ($summary['resolved'] ?? 0)) }}
+            </flux:callout.text>
+        </flux:callout>
 
-        <flux:badge
-            color="amber"
-            variant="subtle"
-            size="lg"
+        {{-- Callout Needs Review --}}
+        <flux:callout
+            class="hyphens-auto md:col-span-1"
+            color="red"
+            icon="x-circle"
+            heading="{{ __('Needs review') }}"
+            text="{{ __('Number of fallback reports that need review.') }}"
         >
-            {{ __('Needs review') }}: {{ number_format((int) ($summary['needs_review'] ?? 0)) }}
-        </flux:badge>
+            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                {{ number_format((int) ($summary['needs_review'] ?? 0)) }}
+            </flux:callout.text>
+        </flux:callout>
 
-        <flux:badge
-            color="sky"
-            variant="subtle"
-            size="lg"
+        {{-- Callout Total Reports --}}
+        <flux:callout
+            class="hyphens-auto md:col-span-1"
+            color="yellow"
+            icon="file-stack"
+            heading="{{ __('Total reports') }}"
+            text="{{ __('Total number of fallback reports.') }}"
         >
-            {{ __('admin.translation_list.meta.filtered') }}: {{ number_format((int) ($summary['filtered'] ?? 0)) }}
-        </flux:badge>
+            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                {{ number_format((int) ($summary['total_reports'] ?? 0)) }}
+            </flux:callout.text>
+        </flux:callout>
+
     </div>
 
     @if ($reportPath)

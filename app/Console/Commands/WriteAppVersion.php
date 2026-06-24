@@ -4,6 +4,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -32,7 +33,7 @@ class WriteAppVersion extends Command
 
         $this->logRunActivity('app.write_app_version.completed', 'Application version file written.', [
             'version' => $version,
-            'path' => str_replace(base_path() . DIRECTORY_SEPARATOR, '', $file),
+            'path' => str_replace(base_path().DIRECTORY_SEPARATOR, '', $file),
         ]);
 
         return self::SUCCESS;
@@ -43,12 +44,10 @@ class WriteAppVersion extends Command
         try {
             activity('project')
                 ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 }

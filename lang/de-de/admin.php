@@ -25,13 +25,7 @@ return [
             'usage_locations' => 'Verwendung im Code',
         ],
 
-        'modal_history' => [
-            'event' => 'Ereignis',
-            'events' => 'Ereignisse',
-        ],
-
         'table' => [
-            'history' => 'Historie',
             'open_history' => 'Historie öffnen',
             'target_sub_language_values' => 'Werte für die Sprachvaritionen der Zielsprache',
         ],

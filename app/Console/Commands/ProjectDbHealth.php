@@ -4,6 +4,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -39,15 +40,15 @@ class ProjectDbHealth extends Command
         $optionalTables = ['locales'];
         $tableCounts = [];
 
-        $this->line('Datenbank-Healthcheck für Verbindung: ' . (string) config('database.default'));
-        $this->line('Ziel-DB: ' . (string) config('database.connections.' . config('database.default') . '.database'));
+        $this->line('Datenbank-Healthcheck für Verbindung: '.(string) config('database.default'));
+        $this->line('Ziel-DB: '.(string) config('database.connections.'.config('database.default').'.database'));
 
         $emptyCritical = [];
 
         try {
             foreach (array_merge($criticalTables, $optionalTables) as $table) {
                 if (! Schema::hasTable($table)) {
-                    $this->warn('⚠️ Tabelle fehlt: ' . $table);
+                    $this->warn('⚠️ Tabelle fehlt: '.$table);
 
                     continue;
                 }
@@ -61,7 +62,7 @@ class ProjectDbHealth extends Command
                 }
             }
         } catch (Throwable $exception) {
-            $this->error('❌ Healthcheck fehlgeschlagen: ' . trim($exception->getMessage()));
+            $this->error('❌ Healthcheck fehlgeschlagen: '.trim($exception->getMessage()));
 
             $this->logRunActivity('project.db_health.failed', 'Database health check failed.', [
                 'error' => trim($exception->getMessage()),
@@ -72,7 +73,7 @@ class ProjectDbHealth extends Command
         }
 
         if ($emptyCritical !== []) {
-            $this->warn('⚠️ Kritische Tabellen leer: ' . implode(', ', $emptyCritical));
+            $this->warn('⚠️ Kritische Tabellen leer: '.implode(', ', $emptyCritical));
 
             if ($this->option('fail-on-empty')) {
                 $this->logRunActivity('project.db_health.failed_empty', 'Database health check failed because critical tables are empty.', [
@@ -109,12 +110,10 @@ class ProjectDbHealth extends Command
         try {
             activity('project')
                 ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 }

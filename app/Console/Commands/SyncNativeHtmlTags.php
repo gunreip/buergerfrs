@@ -7,14 +7,15 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
-use DOMDocument;
-use DOMElement;
-use DOMXPath;
 use Throwable;
 
 #[Signature('html:sync-native-tags
@@ -36,7 +37,7 @@ class SyncNativeHtmlTags extends Command
 
         $this->line('Sync native HTML tags');
         $this->line('Source: WHATWG HTML Living Standard');
-        $this->line('URL: ' . $sourceUrl);
+        $this->line('URL: '.$sourceUrl);
         $this->newLine();
 
         $response = Http::timeout(20)
@@ -45,7 +46,7 @@ class SyncNativeHtmlTags extends Command
 
         if (! $response->successful()) {
             $this->error('Unable to fetch WHATWG HTML index.');
-            $this->line('HTTP status: ' . $response->status());
+            $this->line('HTTP status: '.$response->status());
 
             $this->logRunActivity('html.native_tags_sync.failed', 'Native HTML tags sync failed while fetching source.', [
                 'source_url' => $sourceUrl,
@@ -79,12 +80,12 @@ class SyncNativeHtmlTags extends Command
 
         $voidTags = array_values(array_filter(
             array_keys($elements),
-            fn(string $tag): bool => ($elements[$tag]['kind'] ?? null) === 'void',
+            fn (string $tag): bool => ($elements[$tag]['kind'] ?? null) === 'void',
         ));
 
         $normalTags = array_values(array_filter(
             array_keys($elements),
-            fn(string $tag): bool => ($elements[$tag]['kind'] ?? null) === 'normal',
+            fn (string $tag): bool => ($elements[$tag]['kind'] ?? null) === 'normal',
         ));
 
         sort($normalTags);
@@ -123,7 +124,7 @@ class SyncNativeHtmlTags extends Command
                 ->take(30)
                 ->all(),
             'categories' => collect($categories)
-                ->map(fn(array $tags): array => array_slice($tags, 0, 30))
+                ->map(fn (array $tags): array => array_slice($tags, 0, 30))
                 ->all(),
         ];
 
@@ -131,19 +132,19 @@ class SyncNativeHtmlTags extends Command
 
         File::put(
             storage_path('audits/html/native-html-tags.json'),
-            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL,
+            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL,
         );
 
         File::put(
             storage_path('audits/html/native-html-tags-preview.json'),
-            json_encode($previewPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL,
+            json_encode($previewPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL,
         );
 
         $this->info('Native HTML tag reference synced.');
-        $this->line('Normal tags: ' . count($normalTags));
-        $this->line('Void tags: ' . count($voidTags));
-        $this->line('Total tags: ' . (count($normalTags) + count($voidTags)));
-        $this->line('Categories: ' . count($categories));
+        $this->line('Normal tags: '.count($normalTags));
+        $this->line('Void tags: '.count($voidTags));
+        $this->line('Total tags: '.(count($normalTags) + count($voidTags)));
+        $this->line('Categories: '.count($categories));
         $this->newLine();
         $this->line('Reference written: storage/audits/html/native-html-tags.json');
         $this->line('Preview written: storage/audits/html/native-html-tags-preview.json');
@@ -173,14 +174,14 @@ class SyncNativeHtmlTags extends Command
         File::put(
             storage_path('audits/html/native-html-tags-raw-preview.txt'),
             implode(PHP_EOL, [
-                'Source URL: ' . $sourceUrl,
-                'HTTP status: ' . $status,
-                'Content-Type: ' . ($contentType !== '' ? $contentType : 'n/a'),
-                'Body bytes: ' . strlen($body),
-                'Preview chars: ' . mb_strlen($preview),
+                'Source URL: '.$sourceUrl,
+                'HTTP status: '.$status,
+                'Content-Type: '.($contentType !== '' ? $contentType : 'n/a'),
+                'Body bytes: '.strlen($body),
+                'Preview chars: '.mb_strlen($preview),
                 '',
                 $preview,
-            ]) . PHP_EOL,
+            ]).PHP_EOL,
         );
 
         $this->warn('RAW WHATWG response written for inspection.');
@@ -194,7 +195,7 @@ class SyncNativeHtmlTags extends Command
      */
     private function extractElements(string $html): array
     {
-        $document = new DOMDocument();
+        $document = new DOMDocument;
 
         libxml_use_internal_errors(true);
         $loaded = $document->loadHTML($html, LIBXML_NOWARNING | LIBXML_NOERROR);
@@ -308,9 +309,9 @@ class SyncNativeHtmlTags extends Command
         $categories = preg_split('/\s*;\s*|\s*,\s*/u', $text) ?: [];
 
         return collect($categories)
-            ->map(fn(string $category): string => trim($category))
-            ->filter(fn(string $category): bool => $category !== '')
-            ->map(fn(string $category): string => preg_replace('/\s+/u', ' ', $category) ?? $category)
+            ->map(fn (string $category): string => trim($category))
+            ->filter(fn (string $category): bool => $category !== '')
+            ->map(fn (string $category): string => preg_replace('/\s+/u', ' ', $category) ?? $category)
             ->unique()
             ->sort()
             ->values()
@@ -379,12 +380,10 @@ class SyncNativeHtmlTags extends Command
         try {
             activity('html')
                 ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 

@@ -4,9 +4,11 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 /**
  * Detects redundant sub-language translation values (same as base locale).
@@ -27,6 +29,17 @@ class TranslationsAuditSubLanguageRedundancy extends Command
         if ($targetLocales === []) {
             $this->warn('No sub-language locales found. Nothing to audit.');
 
+            $this->logRunCompletedActivity([
+                'dry_run' => $dryRun,
+                'target_sub_language_locales' => 0,
+                'checked_values' => 0,
+                'marked_duplicate' => 0,
+                'reset_duplicate_flag' => 0,
+                'locked_overrides' => 0,
+                'already_duplicate' => 0,
+                'unchanged' => 0,
+            ]);
+
             return self::SUCCESS;
         }
 
@@ -34,6 +47,17 @@ class TranslationsAuditSubLanguageRedundancy extends Command
 
         if ($subValues->isEmpty()) {
             $this->warn('No eligible sub-language translation values found.');
+
+            $this->logRunCompletedActivity([
+                'dry_run' => $dryRun,
+                'target_sub_language_locales' => count($targetLocales),
+                'checked_values' => 0,
+                'marked_duplicate' => 0,
+                'reset_duplicate_flag' => 0,
+                'locked_overrides' => 0,
+                'already_duplicate' => 0,
+                'unchanged' => 0,
+            ]);
 
             return self::SUCCESS;
         }
@@ -53,7 +77,7 @@ class TranslationsAuditSubLanguageRedundancy extends Command
                 continue;
             }
 
-            $mapKey = $row->translation_key_id . '|' . $baseLocale;
+            $mapKey = $row->translation_key_id.'|'.$baseLocale;
             $baseValue = $baseValues[$mapKey] ?? null;
             $isDuplicate = is_string($baseValue) && $row->value === $baseValue;
 
@@ -117,6 +141,17 @@ class TranslationsAuditSubLanguageRedundancy extends Command
             $this->warn('Dry run only: no database changes were written.');
         }
 
+        $this->logRunCompletedActivity([
+            'dry_run' => $dryRun,
+            'target_sub_language_locales' => count($targetLocales),
+            'checked_values' => $subValues->count(),
+            'marked_duplicate' => count($setTrueIds),
+            'reset_duplicate_flag' => count($resetToNullIds),
+            'locked_overrides' => $lockedFalseCount,
+            'already_duplicate' => $unchangedTrueCount,
+            'unchanged' => $unchangedNullCount,
+        ]);
+
         return self::SUCCESS;
     }
 
@@ -129,8 +164,8 @@ class TranslationsAuditSubLanguageRedundancy extends Command
 
         if ($localesOption !== '') {
             return collect(explode(',', $localesOption))
-                ->map(fn(string $locale): string => $this->normalizeLocale($locale))
-                ->filter(fn(string $locale): bool => str_contains($locale, '-'))
+                ->map(fn (string $locale): string => $this->normalizeLocale($locale))
+                ->filter(fn (string $locale): bool => str_contains($locale, '-'))
                 ->unique()
                 ->sort()
                 ->values()
@@ -143,8 +178,8 @@ class TranslationsAuditSubLanguageRedundancy extends Command
             ->whereRaw("LOWER(REPLACE(locale, '_', '-')) like ?", ['%-%'])
             ->distinct()
             ->pluck('locale')
-            ->map(fn(string $locale): string => $this->normalizeLocale($locale))
-            ->filter(fn(string $locale): bool => str_contains($locale, '-'))
+            ->map(fn (string $locale): string => $this->normalizeLocale($locale))
+            ->filter(fn (string $locale): bool => str_contains($locale, '-'))
             ->unique()
             ->sort()
             ->values()
@@ -152,7 +187,7 @@ class TranslationsAuditSubLanguageRedundancy extends Command
     }
 
     /**
-     * @param array<int, string> $targetLocales
+     * @param  array<int, string>  $targetLocales
      * @return Collection<int, object{id: int, translation_key_id: int, normalized_locale: string, value: string, is_base_duplicate: bool|null}>
      */
     private function subLanguageValues(array $targetLocales): Collection
@@ -169,7 +204,7 @@ class TranslationsAuditSubLanguageRedundancy extends Command
     }
 
     /**
-     * @param Collection<int, object{id: int, translation_key_id: int, normalized_locale: string, value: string, is_base_duplicate: bool|null}> $subValues
+     * @param  Collection<int, object{id: int, translation_key_id: int, normalized_locale: string, value: string, is_base_duplicate: bool|null}>  $subValues
      * @return array<string, string>
      */
     private function baseLocaleValueMap(Collection $subValues): array
@@ -182,7 +217,7 @@ class TranslationsAuditSubLanguageRedundancy extends Command
 
         $baseLocales = $subValues
             ->pluck('normalized_locale')
-            ->map(fn(string $locale): ?string => $this->baseLocaleFromSubLocale($locale))
+            ->map(fn (string $locale): ?string => $this->baseLocaleFromSubLocale($locale))
             ->filter()
             ->unique()
             ->values()
@@ -204,7 +239,7 @@ class TranslationsAuditSubLanguageRedundancy extends Command
         $map = [];
 
         foreach ($rows as $row) {
-            $map[$row->translation_key_id . '|' . $row->normalized_locale] = (string) $row->value;
+            $map[$row->translation_key_id.'|'.$row->normalized_locale] = (string) $row->value;
         }
 
         return $map;
@@ -224,5 +259,22 @@ class TranslationsAuditSubLanguageRedundancy extends Command
         }
 
         return explode('-', $normalized, 2)[0] ?: null;
+    }
+
+    /**
+     * @param  array<string, mixed>  $summary
+     */
+    private function logRunCompletedActivity(array $summary): void
+    {
+        try {
+            activity('translations')
+                ->event('translations.sub_language_redundancy.completed')
+                ->withProperties(ConsoleActivityContext::merge($this, [
+                    'summary' => $summary,
+                ]))
+                ->log('Translation sub-language redundancy audit completed');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: '.$exception->getMessage());
+        }
     }
 }

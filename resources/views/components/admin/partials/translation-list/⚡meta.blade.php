@@ -30,236 +30,159 @@
     >
         <div class="grid flex-1 gap-3 md:grid-cols-10">
             <flux:callout
-                class="col-span-2"
+                class="col-span-2 hyphens-auto"
                 color="sky"
                 icon="list-filter"
+                heading="{{ __('admin.translation_list.meta.matching_keys') }}"
+                text="{{ __('admin.translation_list.meta.translation_keys_matching_the_current_filters') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.meta.matching_keys') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ $filteredTotal }}
                 </flux:callout.text>
-
-                <flux:callout.text class="hyphens-auto font-extralight">
-                    {{ __('admin.translation_list.meta.translation_keys_matching_the_current_filters') }}
-                </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-2"
+                class="col-span-2 hyphens-auto"
                 color="orange"
                 icon="database"
+                heading="{{ __('admin.translation_list.meta.total_keys') }}"
+                text="{{ __('admin.translation_list.meta.translation_keys_currently_known_in_the_audit_table') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.meta.total_keys') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ $total }}
                 </flux:callout.text>
-
-                <flux:callout.text class="hyphens-auto font-extralight">
-                    {{ __('admin.translation_list.meta.translation_keys_currently_known_in_the_audit_table') }}
-                </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-2"
+                class="col-span-2 hyphens-auto"
                 color="{{ $problemCount > 0 ? 'amber' : 'green' }}"
                 icon="triangle-alert"
+                heading="{{ __('admin.translation_list.meta.problems') }}"
+                text="{{ __('admin.translation_list.meta.missing_and_dynamic_translation_entries_requiring_review') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.meta.problems') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ $problemCount }}
                 </flux:callout.text>
-
-                <flux:callout.text class="hyphens-auto font-extralight">
-                    {{ __('admin.translation_list.meta.missing_and_dynamic_translation_entries_requiring_review') }}
-                </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-2"
+                class="col-span-2 hyphens-auto"
                 color="green"
                 icon="check-circle"
+                heading="{{ __('admin.translation_list.meta.ok') }}"
+                text="{{ __('admin.translation_list.meta.translation_keys_currently_marked_as_ok') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.meta.ok') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ $statusCounts['ok'] ?? 0 }}
                 </flux:callout.text>
-
-                <flux:callout.text class="hyphens-auto font-extralight">
-                    {{ __('admin.translation_list.meta.translation_keys_currently_marked_as_ok') }}
-                </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-2"
+                class="col-span-2 hyphens-auto"
                 color="amber"
                 icon="shield-alert"
+                heading="{{ __('admin.app_settings.table_icon_registry.missing') }}"
+                text="{{ __('admin.translation_list.meta.translation_keys_with_missing_values_or_required_follow_up') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.app_settings.table_icon_registry.missing') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ $statusCounts['missing'] ?? 0 }}
                 </flux:callout.text>
-
-                <flux:callout.text class="hyphens-auto font-extralight">
-                    {{ __('admin.translation_list.meta.translation_keys_with_missing_values_or_required_follow_up') }}
-                </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-2"
+                class="col-span-2 hyphens-auto"
                 color="purple"
                 icon="package"
+                heading="{{ __('admin.translation_list.meta.vendor') }}"
+                text="{{ __('admin.translation_list.meta.translation_keys_imported_from_vendor_package_sources') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.meta.vendor') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ $classificationCounts['vendor'] ?? 0 }}
                 </flux:callout.text>
-
-                <flux:callout.text class="hyphens-auto font-extralight">
-                    {{ __('admin.translation_list.meta.translation_keys_imported_from_vendor_package_sources') }}
-                </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-2"
+                class="col-span-2 hyphens-auto"
                 color="sky"
                 icon="history"
+                heading="{{ __('admin.translation_list.meta.backfill') }}"
+                text="{{ __('admin.translation_list.meta.native_texts_reconstructed_from_existing_en_translation_values') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.meta.backfill') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ $classificationCounts['backfill_by_translation'] ?? 0 }}
                 </flux:callout.text>
-
-                <flux:callout.text class="hyphens-auto font-extralight">
-                    {{ __('admin.translation_list.meta.native_texts_reconstructed_from_existing_en_translation_values') }}
-                </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-2"
+                class="col-span-2 hyphens-auto"
                 color="rose"
                 icon="key-round"
+                heading="{{ __('admin.translation_list.table.key') }}"
+                text="{{ __('admin.translation_list.meta.regular_audit_keys_without_special_origin_classification') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.table.key') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ $classificationCounts['key'] ?? 0 }}
                 </flux:callout.text>
-
-                <flux:callout.text class="hyphens-auto font-extralight">
-                    {{ __('admin.translation_list.meta.regular_audit_keys_without_special_origin_classification') }}
-                </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-2"
+                class="col-span-2 hyphens-auto"
                 color="yellow"
                 icon="file-text"
+                heading="{{ __('admin.translation_list.meta.type_native') }}"
+                text="{{ __('admin.translation_list.meta.translation_keys_classified_as_native_source_entries') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.meta.type_native') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ $classificationCounts['native'] ?? 0 }}
                 </flux:callout.text>
-
-                <flux:callout.text class="hyphens-auto font-extralight">
-                    {{ __('admin.translation_list.meta.translation_keys_classified_as_native_source_entries') }}
-                </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-2"
+                class="col-span-2 hyphens-auto"
                 color="teal"
                 icon="braces"
+                heading="{{ __('admin.translation_list.meta.status_dynamic') }}"
+                text="{{ __('admin.translation_list.meta.translation_keys_currently_marked_with_dynamic_status') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.meta.status_dynamic') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ $statusCounts['dynamic'] ?? 0 }}
                 </flux:callout.text>
-
-                <flux:callout.text class="hyphens-auto font-extralight">
-                    {{ __('admin.translation_list.meta.translation_keys_currently_marked_with_dynamic_status') }}
-                </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-2"
+                class="col-span-2 hyphens-auto"
                 color="purple"
                 icon="square-dashed-text"
+                heading="{{ __('admin.translation_list.meta.status_native') }}"
+                text="{{ __('admin.translation_list.meta.translation_keys_currently_marked_with_native_status') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.meta.status_native') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ $statusCounts['native'] ?? 0 }}
                 </flux:callout.text>
-
-                <flux:callout.text class="hyphens-auto font-extralight">
-                    {{ __('admin.translation_list.meta.translation_keys_currently_marked_with_native_status') }}
-                </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-2"
+                class="col-span-2 hyphens-auto"
                 color="{{ $hasActiveFilters ? 'amber' : 'green' }}"
                 icon="{{ $hasActiveFilters ? 'funnel' : 'check-circle' }}"
+                heading="{{ __('admin.translation_list.meta.filter_state') }}"
+                :text="$hasActiveFilters ? __('admin.translation_list.meta.one_or_more_filters_are_currently_active') : __(
+                    'admin.translation_list.meta.no_filters_are_currently_active')"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.meta.filter_state') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold">
                     {{ $hasActiveFilters ? __('admin.translation_list.meta.filtered') : __('admin.translation_list.meta.unfiltered') }}
                 </flux:callout.text>
-
-                <flux:callout.text class="hyphens-auto font-extralight">
-                    {{ $hasActiveFilters ? __('admin.translation_list.meta.one_or_more_filters_are_currently_active') : __('admin.translation_list.meta.no_filters_are_currently_active') }}
-                </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-2"
+                class="col-span-2 hyphens-auto"
                 color="amber"
                 icon="archive"
+                heading="{{ __('admin.translation_list.meta.obsolete') }}"
+                text="{{ __('admin.translation_list.meta.translation_keys_currently_marked_as_obsolete') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.meta.obsolete') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ $statusCounts['obsolete'] ?? 0 }}
-                </flux:callout.text>
-
-                <flux:callout.text class="hyphens-auto font-extralight">
-                    {{ __('admin.translation_list.meta.translation_keys_currently_marked_as_obsolete') }}
                 </flux:callout.text>
             </flux:callout>
 
@@ -267,10 +190,8 @@
                 class="col-span-4"
                 color="purple"
                 icon="sliders-horizontal"
+                heading="{{ __('admin.translation_list.meta.active_filters') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.meta.active_filters') }}
-                </flux:callout.heading>
 
                 <flux:callout.text>
                     <div class="flex flex-wrap gap-2">

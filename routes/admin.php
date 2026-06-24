@@ -2,6 +2,7 @@
 
 // routes/admin.php
 
+use App\Livewire\Admin\ActivityLog;
 use App\Livewire\Admin\AppSettings;
 use App\Livewire\Admin\ClientList;
 use App\Livewire\Admin\CountryReferenceList;
@@ -48,6 +49,8 @@ Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
         Route::get('translation-sub-languages', TranslationSubLanguages::class)->name('translation-sub-languages');
 
         Route::get('app-settings', AppSettings::class)->name('app-settings');
+
+        Route::get('logs/activity-log', ActivityLog::class)->name('logs.activity-log');
 
         Route::get('country-references', CountryReferenceList::class)->name('country-references');
 

@@ -51,45 +51,33 @@
         x-collapse
     >
         <flux:callout
-            class="col-span-5"
+            class="col-span-5 hyphens-auto"
             color="emerald"
             icon="scan-search"
-            stroke-width="1"
+            heading="{{ __('Audit') }}"
         >
-            <flux:callout.heading>
-                {{ __('Audit') }}
-            </flux:callout.heading>
-
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                 {{ $activeTab === 'duplicate' ? 'duplicate' : 'frequent' }}
             </flux:callout.text>
         </flux:callout>
 
         <flux:callout
-            class="col-span-5"
+            class="col-span-5 hyphens-auto"
             color="purple"
             icon="globe"
-            stroke-width="1"
+            heading="{{ __('Source locale') }}"
         >
-            <flux:callout.heading>
-                {{ __('Source locale') }}
-            </flux:callout.heading>
-
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                 {{ $sourceLocale }}
             </flux:callout.text>
         </flux:callout>
 
         <flux:callout
-            class="col-span-5"
+            class="col-span-5 hyphens-auto"
             color="sky"
             icon="calendar"
-            stroke-width="1"
+            heading="{{ __('Generated at') }}"
         >
-            <flux:callout.heading>
-                {{ __('Generated at') }}
-            </flux:callout.heading>
-
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                 <div>
                     <span class="mr-2">
@@ -112,15 +100,12 @@
 
         @foreach ($summaryLabels as $summaryKey => $summaryLabel)
             <flux:callout
-                class="col-span-3"
+                class="col-span-3 hyphens-auto"
                 color="amber"
                 icon="chart-bar"
                 stroke-width="1"
+                :heading="$summaryLabel"
             >
-                <flux:callout.heading>
-                    {{ $summaryLabel }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ number_format((int) data_get($activeSummary, $summaryKey, 0)) }}
                 </flux:callout.text>

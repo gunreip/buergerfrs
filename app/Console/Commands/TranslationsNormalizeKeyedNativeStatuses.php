@@ -4,8 +4,10 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 /**
  * One-time normalization for manually keyed native entries.
@@ -39,6 +41,13 @@ class TranslationsNormalizeKeyedNativeStatuses extends Command
         if ($rows->isEmpty()) {
             $this->warn('No legacy keyed native rows found.');
 
+            $this->logRunCompletedActivity([
+                'dry_run' => $dryRun,
+                'limit' => $limit,
+                'matched_rows' => 0,
+                'updated_rows' => 0,
+            ]);
+
             return self::SUCCESS;
         }
 
@@ -69,7 +78,7 @@ class TranslationsNormalizeKeyedNativeStatuses extends Command
             ],
         );
 
-        $preview = $rows->take(20)->map(static fn(object $row): array => [
+        $preview = $rows->take(20)->map(static fn (object $row): array => [
             'id' => (int) $row->id,
             'key' => (string) $row->key,
             'old_status' => (string) $row->status,
@@ -88,6 +97,30 @@ class TranslationsNormalizeKeyedNativeStatuses extends Command
             $this->warn('Dry run only: no rows were updated.');
         }
 
+        $this->logRunCompletedActivity([
+            'dry_run' => $dryRun,
+            'limit' => $limit,
+            'matched_rows' => $rows->count(),
+            'updated_rows' => $dryRun ? 0 : $updated,
+        ]);
+
         return self::SUCCESS;
+    }
+
+    /**
+     * @param  array<string, mixed>  $summary
+     */
+    private function logRunCompletedActivity(array $summary): void
+    {
+        try {
+            activity('translations')
+                ->event('translations.keyed_native_statuses.normalize.completed')
+                ->withProperties(ConsoleActivityContext::merge($this, [
+                    'summary' => $summary,
+                ]))
+                ->log('Translation keyed native statuses normalization completed');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: '.$exception->getMessage());
+        }
     }
 }

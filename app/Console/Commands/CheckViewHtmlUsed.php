@@ -6,6 +6,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -81,18 +82,18 @@ class CheckViewHtmlUsed extends Command
 
         $this->line('');
         $this->info('View HTML usage audit written.');
-        $this->line('Native available:    ' . $native['counts']['available']);
-        $this->line('Native used:         ' . $native['counts']['used']);
-        $this->line('Native unused:       ' . $native['counts']['unused']);
-        $this->line('Native unknown:      ' . $native['counts']['unknown']);
-        $this->line('Flux available:      ' . $flux['counts']['available']);
-        $this->line('Flux used:           ' . $flux['counts']['used']);
-        $this->line('Flux unused:         ' . $flux['counts']['unused']);
-        $this->line('Flux used unknown:   ' . $flux['counts']['used_unknown']);
-        $this->line('Custom available:    ' . $custom['counts']['available']);
-        $this->line('Custom used:         ' . $custom['counts']['used']);
-        $this->line('Custom unused:       ' . $custom['counts']['unused']);
-        $this->line('Custom used unknown: ' . $custom['counts']['used_unknown']);
+        $this->line('Native available:    '.$native['counts']['available']);
+        $this->line('Native used:         '.$native['counts']['used']);
+        $this->line('Native unused:       '.$native['counts']['unused']);
+        $this->line('Native unknown:      '.$native['counts']['unknown']);
+        $this->line('Flux available:      '.$flux['counts']['available']);
+        $this->line('Flux used:           '.$flux['counts']['used']);
+        $this->line('Flux unused:         '.$flux['counts']['unused']);
+        $this->line('Flux used unknown:   '.$flux['counts']['used_unknown']);
+        $this->line('Custom available:    '.$custom['counts']['available']);
+        $this->line('Custom used:         '.$custom['counts']['used']);
+        $this->line('Custom unused:       '.$custom['counts']['unused']);
+        $this->line('Custom used unknown: '.$custom['counts']['used_unknown']);
         $this->logRunActivity('html.view_usage_check.completed', 'HTML view usage audit completed.', [
             'files_scanned' => $scanResult['files_scanned'],
             'native_counts' => $native['counts'],
@@ -101,12 +102,12 @@ class CheckViewHtmlUsed extends Command
             'includes_used' => count($scanResult['includes']),
             'livewire_used' => count($scanResult['livewire']),
         ]);
+
         return self::SUCCESS;
     }
 
     /**
-     * @param array<string, array<int, array<string, string>|string>> $componentPaths
-     *
+     * @param  array<string, array<int, array<string, string>|string>>  $componentPaths
      * @return array<string, array<string, array<int, array<string, string>>>>
      */
     private function componentPathStatus(array $componentPaths): array
@@ -162,8 +163,8 @@ class CheckViewHtmlUsed extends Command
         $void = $payload['tags']['void'] ?? [];
 
         return collect([...$normal, ...$void])
-            ->filter(fn(mixed $tag): bool => is_string($tag) && $tag !== '')
-            ->map(fn(string $tag): string => strtolower($tag))
+            ->filter(fn (mixed $tag): bool => is_string($tag) && $tag !== '')
+            ->map(fn (string $tag): string => strtolower($tag))
             ->unique()
             ->sort()
             ->values()
@@ -171,9 +172,8 @@ class CheckViewHtmlUsed extends Command
     }
 
     /**
-     * @param array<int, array<string, string>|string> $definitions
-     * @param array<string, mixed> $config
-     *
+     * @param  array<int, array<string, string>|string>  $definitions
+     * @param  array<string, mixed>  $config
      * @return array<string, array<string, string>>
      */
     private function availableComponents(array $definitions, array $config): array
@@ -223,7 +223,7 @@ class CheckViewHtmlUsed extends Command
     private function componentNameFromPath(string $basePath, string $filePath, string $prefix): ?string
     {
         $relative = Str::of($filePath)
-            ->after(rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR)
+            ->after(rtrim($basePath, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR)
             ->replace(DIRECTORY_SEPARATOR, '/')
             ->replaceEnd('.blade.php', '')
             ->toString();
@@ -242,13 +242,12 @@ class CheckViewHtmlUsed extends Command
             return null;
         }
 
-        return $prefix . $name;
+        return $prefix.$name;
     }
 
     /**
-     * @param array<int, string> $scanPaths
-     * @param array<string, mixed> $config
-     *
+     * @param  array<int, string>  $scanPaths
+     * @param  array<string, mixed>  $config
      * @return array<string, mixed>
      */
     private function scanViews(array $scanPaths, array $config): array
@@ -267,12 +266,12 @@ class CheckViewHtmlUsed extends Command
         $componentTagPrefixes = $config['component_tag_prefixes'] ?? [];
 
         $customTagPrefixes = collect($componentTagPrefixes['custom'] ?? ['x-ui.'])
-            ->filter(fn(mixed $prefix): bool => is_string($prefix) && $prefix !== '')
+            ->filter(fn (mixed $prefix): bool => is_string($prefix) && $prefix !== '')
             ->values()
             ->all();
 
         $fluxTagPrefixes = collect($componentTagPrefixes['flux'] ?? ['flux:'])
-            ->filter(fn(mixed $prefix): bool => is_string($prefix) && $prefix !== '')
+            ->filter(fn (mixed $prefix): bool => is_string($prefix) && $prefix !== '')
             ->values()
             ->all();
 
@@ -326,13 +325,12 @@ class CheckViewHtmlUsed extends Command
             '/<\s*\/?\s*([a-z][a-z0-9-]*)(?=[\s>\/])/iu',
             $contents,
             $path,
-            fn(string $tag): string => strtolower($tag),
+            fn (string $tag): string => strtolower($tag),
         );
     }
 
     /**
-     * @param array<int, string> $prefixes
-     *
+     * @param  array<int, string>  $prefixes
      * @return array<string, array<string, mixed>>
      */
     private function extractComponentTags(string $contents, string $path, array $prefixes): array
@@ -343,10 +341,10 @@ class CheckViewHtmlUsed extends Command
             $quotedPrefix = preg_quote($prefix, '/');
 
             $this->mergeOccurrences($components, $this->extractOccurrences(
-                '/<\s*\/?\s*(' . $quotedPrefix . '[a-z0-9._:-]+)\b/iu',
+                '/<\s*\/?\s*('.$quotedPrefix.'[a-z0-9._:-]+)\b/iu',
                 $contents,
                 $path,
-                fn(string $tag): string => strtolower($tag),
+                fn (string $tag): string => strtolower($tag),
             ));
         }
 
@@ -362,7 +360,7 @@ class CheckViewHtmlUsed extends Command
             '/@include(?:If|When|Unless|First)?\(\s*[\'"]([^\'"]+)[\'"]/u',
             $contents,
             $path,
-            fn(string $include): string => $include,
+            fn (string $include): string => $include,
         );
     }
 
@@ -377,22 +375,21 @@ class CheckViewHtmlUsed extends Command
             '/<\s*\/?\s*(livewire:[a-z0-9._:-]+)\b/iu',
             $contents,
             $path,
-            fn(string $tag): string => strtolower($tag),
+            fn (string $tag): string => strtolower($tag),
         ));
 
         $this->mergeOccurrences($references, $this->extractOccurrences(
             '/@livewire\(\s*[\'"]([^\'"]+)[\'"]/u',
             $contents,
             $path,
-            fn(string $component): string => $component,
+            fn (string $component): string => $component,
         ));
 
         return $references;
     }
 
     /**
-     * @param callable(string): string $normalizer
-     *
+     * @param  callable(string): string  $normalizer
      * @return array<string, array<string, mixed>>
      */
     private function extractOccurrences(string $pattern, string $contents, string $path, callable $normalizer): array
@@ -434,8 +431,8 @@ class CheckViewHtmlUsed extends Command
     }
 
     /**
-     * @param array<string, array<string, mixed>> $target
-     * @param array<string, array<string, mixed>> $source
+     * @param  array<string, array<string, mixed>>  $target
+     * @param  array<string, array<string, mixed>>  $source
      */
     private function mergeOccurrences(array &$target, array $source): void
     {
@@ -474,9 +471,8 @@ class CheckViewHtmlUsed extends Command
     }
 
     /**
-     * @param array<int, string> $available
-     * @param array<string, array<string, mixed>> $used
-     *
+     * @param  array<int, string>  $available
+     * @param  array<string, array<string, mixed>>  $used
      * @return array<string, mixed>
      */
     private function buildNativeSection(array $available, array $used): array
@@ -491,13 +487,13 @@ class CheckViewHtmlUsed extends Command
         $unknown = collect($usedNames)
             ->diff($available)
             ->values()
-            ->mapWithKeys(fn(string $tag): array => [$tag => $used[$tag]])
+            ->mapWithKeys(fn (string $tag): array => [$tag => $used[$tag]])
             ->all();
 
         $usedKnown = collect($usedNames)
             ->intersect($available)
             ->values()
-            ->mapWithKeys(fn(string $tag): array => [$tag => $used[$tag]])
+            ->mapWithKeys(fn (string $tag): array => [$tag => $used[$tag]])
             ->all();
 
         return [
@@ -515,9 +511,8 @@ class CheckViewHtmlUsed extends Command
     }
 
     /**
-     * @param array<string, array<string, string>> $available
-     * @param array<string, array<string, mixed>> $used
-     *
+     * @param  array<string, array<string, string>>  $available
+     * @param  array<string, array<string, mixed>>  $used
      * @return array<string, mixed>
      */
     private function buildComponentSection(array $available, array $used): array
@@ -531,19 +526,19 @@ class CheckViewHtmlUsed extends Command
             ->all();
 
         $unused = collect($unusedNames)
-            ->mapWithKeys(fn(string $name): array => [$name => $available[$name]])
+            ->mapWithKeys(fn (string $name): array => [$name => $available[$name]])
             ->all();
 
         $usedKnown = collect($usedNames)
             ->intersect($availableNames)
             ->values()
-            ->mapWithKeys(fn(string $name): array => [$name => $used[$name]])
+            ->mapWithKeys(fn (string $name): array => [$name => $used[$name]])
             ->all();
 
         $usedUnknown = collect($usedNames)
             ->diff($availableNames)
             ->values()
-            ->mapWithKeys(fn(string $name): array => [$name => $used[$name]])
+            ->mapWithKeys(fn (string $name): array => [$name => $used[$name]])
             ->all();
 
         return [
@@ -561,8 +556,7 @@ class CheckViewHtmlUsed extends Command
     }
 
     /**
-     * @param array<string, mixed> $payload
-     *
+     * @param  array<string, mixed>  $payload
      * @return array<string, mixed>
      */
     private function previewPayload(array $payload, int $limit): array
@@ -601,14 +595,13 @@ class CheckViewHtmlUsed extends Command
     }
 
     /**
-     * @param array<string, array<string, mixed>> $used
-     *
+     * @param  array<string, array<string, mixed>>  $used
      * @return array<string, array<string, mixed>>
      */
     private function topUsed(array $used, int $limit): array
     {
         uasort($used, function (array $left, array $right): int {
-            return ((int) ($right['count'] ?? 0) <=> (int) ($left['count'] ?? 0));
+            return (int) ($right['count'] ?? 0) <=> (int) ($left['count'] ?? 0);
         });
 
         return array_slice($used, 0, $limit, true);
@@ -634,7 +627,7 @@ class CheckViewHtmlUsed extends Command
     }
 
     /**
-     * @param array<string, mixed> $config
+     * @param  array<string, mixed>  $config
      */
     private function isExcluded(string $path, string $fileName, array $config): bool
     {
@@ -664,19 +657,18 @@ class CheckViewHtmlUsed extends Command
 
         file_put_contents(
             $path,
-            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL,
+            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL,
         );
     }
 
     /**
-     * @param array<int, string> $paths
-     *
+     * @param  array<int, string>  $paths
      * @return array<int, string>
      */
     private function normalizeConfiguredPaths(array $paths): array
     {
         return collect($paths)
-            ->map(fn(string $path): string => $this->relativePath($path))
+            ->map(fn (string $path): string => $this->relativePath($path))
             ->values()
             ->all();
     }
@@ -685,21 +677,21 @@ class CheckViewHtmlUsed extends Command
     {
         return Str::of($path)
             ->replace('\\', '/')
-            ->replace(Str::of(base_path())->replace('\\', '/')->toString() . '/', '')
+            ->replace(Str::of(base_path())->replace('\\', '/')->toString().'/', '')
             ->toString();
     }
 
     private function logRunActivity(string $event, string $description, array $properties = []): void
     {
         try {
-            activity('html')
-                ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+            $activity = activity('html')
+                ->event($event);
+
+            $activity
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 }

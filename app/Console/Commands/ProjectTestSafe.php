@@ -4,6 +4,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use RuntimeException;
@@ -44,12 +45,12 @@ class ProjectTestSafe extends Command
      */
     public function handle(): int
     {
-        $connection = config('database.connections.' . config('database.default'));
+        $connection = config('database.connections.'.config('database.default'));
         $driver = (string) ($connection['driver'] ?? '');
 
         if ($driver !== 'pgsql') {
             $this->error('❌ project:test-safe unterstützt aktuell nur PostgreSQL als aktive DB-Verbindung.');
-            $this->warn('ℹ️ Aktiver Driver: ' . $driver);
+            $this->warn('ℹ️ Aktiver Driver: '.$driver);
 
             $this->logRunActivity('project.test_safe.failed', 'Test-safe run failed due to unsupported database driver.', [
                 'driver' => $driver,
@@ -87,7 +88,7 @@ class ProjectTestSafe extends Command
 
             $testExit = $this->runProcess($this->buildTestCommand());
         } catch (Throwable $exception) {
-            $this->error('❌ Unerwarteter Fehler während des Testlaufs: ' . trim($exception->getMessage()));
+            $this->error('❌ Unerwarteter Fehler während des Testlaufs: '.trim($exception->getMessage()));
 
             $testExit = self::FAILURE;
         } finally {
@@ -177,19 +178,19 @@ class ProjectTestSafe extends Command
             now()->format('Ymd_His')
         );
 
-        $snapshotFile = $snapshotDir . DIRECTORY_SEPARATOR . $fileName;
+        $snapshotFile = $snapshotDir.DIRECTORY_SEPARATOR.$fileName;
 
         $exitCode = $this->runProcess(
             [
                 'pg_dump',
-                '--host=' . (string) ($connection['host'] ?? '127.0.0.1'),
-                '--port=' . (string) ($connection['port'] ?? '5432'),
-                '--username=' . (string) ($connection['username'] ?? ''),
-                '--dbname=' . (string) ($connection['database'] ?? ''),
+                '--host='.(string) ($connection['host'] ?? '127.0.0.1'),
+                '--port='.(string) ($connection['port'] ?? '5432'),
+                '--username='.(string) ($connection['username'] ?? ''),
+                '--dbname='.(string) ($connection['database'] ?? ''),
                 '--format=custom',
                 '--no-owner',
                 '--no-privileges',
-                '--file=' . $snapshotFile,
+                '--file='.$snapshotFile,
             ],
             [
                 'PGPASSWORD' => (string) ($connection['password'] ?? ''),
@@ -200,7 +201,7 @@ class ProjectTestSafe extends Command
             throw new RuntimeException('Snapshot-Erstellung fehlgeschlagen.');
         }
 
-        $this->line('Snapshot: ' . $snapshotFile);
+        $this->line('Snapshot: '.$snapshotFile);
 
         return $snapshotFile;
     }
@@ -219,16 +220,16 @@ class ProjectTestSafe extends Command
         }
 
         $this->restoreStarted = true;
-        $this->line('➤ DB-Restore starten (' . $source . ')');
+        $this->line('➤ DB-Restore starten ('.$source.')');
 
         try {
             $resetExitCode = $this->runProcess(
                 [
                     'psql',
-                    '--host=' . (string) ($connection['host'] ?? '127.0.0.1'),
-                    '--port=' . (string) ($connection['port'] ?? '5432'),
-                    '--username=' . (string) ($connection['username'] ?? ''),
-                    '--dbname=' . (string) ($connection['database'] ?? ''),
+                    '--host='.(string) ($connection['host'] ?? '127.0.0.1'),
+                    '--port='.(string) ($connection['port'] ?? '5432'),
+                    '--username='.(string) ($connection['username'] ?? ''),
+                    '--dbname='.(string) ($connection['database'] ?? ''),
                     '--set=ON_ERROR_STOP=1',
                     '--command=DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public;',
                 ],
@@ -238,16 +239,16 @@ class ProjectTestSafe extends Command
             );
 
             if ($resetExitCode !== self::SUCCESS) {
-                throw new RuntimeException('Schema-Reset vor Restore fehlgeschlagen (Exit-Code: ' . $resetExitCode . ').');
+                throw new RuntimeException('Schema-Reset vor Restore fehlgeschlagen (Exit-Code: '.$resetExitCode.').');
             }
 
             $exitCode = $this->runProcess(
                 [
                     'pg_restore',
-                    '--host=' . (string) ($connection['host'] ?? '127.0.0.1'),
-                    '--port=' . (string) ($connection['port'] ?? '5432'),
-                    '--username=' . (string) ($connection['username'] ?? ''),
-                    '--dbname=' . (string) ($connection['database'] ?? ''),
+                    '--host='.(string) ($connection['host'] ?? '127.0.0.1'),
+                    '--port='.(string) ($connection['port'] ?? '5432'),
+                    '--username='.(string) ($connection['username'] ?? ''),
+                    '--dbname='.(string) ($connection['database'] ?? ''),
                     '--no-owner',
                     '--no-privileges',
                     '--exit-on-error',
@@ -259,13 +260,13 @@ class ProjectTestSafe extends Command
             );
 
             if ($exitCode !== self::SUCCESS) {
-                throw new RuntimeException('Restore fehlgeschlagen (Exit-Code: ' . $exitCode . ').');
+                throw new RuntimeException('Restore fehlgeschlagen (Exit-Code: '.$exitCode.').');
             }
 
             $this->restoreFinished = true;
             $this->info('✅ DB-Restore erfolgreich.');
         } catch (Throwable $exception) {
-            $this->error('❌ DB-Restore fehlgeschlagen: ' . trim($exception->getMessage()));
+            $this->error('❌ DB-Restore fehlgeschlagen: '.trim($exception->getMessage()));
         }
     }
 
@@ -283,13 +284,13 @@ class ProjectTestSafe extends Command
         $filter = (string) ($this->option('filter') ?? '');
 
         if ($filter !== '') {
-            $command[] = '--filter=' . $filter;
+            $command[] = '--filter='.$filter;
         }
 
         $testsuite = (string) ($this->option('testsuite') ?? '');
 
         if ($testsuite !== '') {
-            $command[] = '--testsuite=' . $testsuite;
+            $command[] = '--testsuite='.$testsuite;
         }
 
         return $command;
@@ -300,7 +301,7 @@ class ProjectTestSafe extends Command
         $exitCode = $this->runProcess(['which', $command], [], false);
 
         if ($exitCode !== self::SUCCESS) {
-            throw new RuntimeException('Benötigtes Kommando nicht gefunden: ' . $command);
+            throw new RuntimeException('Benötigtes Kommando nicht gefunden: '.$command);
         }
     }
 
@@ -331,12 +332,10 @@ class ProjectTestSafe extends Command
         try {
             activity('project')
                 ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 }

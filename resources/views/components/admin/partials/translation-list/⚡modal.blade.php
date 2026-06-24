@@ -3,13 +3,14 @@
 {{-- Modal (Review) --}}
 <flux:modal
     class="w-full max-w-7xl"
+    name="translation-list-review"
     wire:model="translationKeyModalOpen"
 >
     @if ($selectedTranslationKey)
         <div class="flex max-h-[calc(100vh-8rem)] flex-col gap-6 overflow-hidden">
             <div class="flex shrink-0 items-start justify-between gap-4">
 
-                {{-- Card Header with ID badge --}}
+                {{-- Card Header with ID badge and next button --}}
                 <x-ui.headers.card
                     :title="__('admin.translation_list.modal.translation_key_review')"
                     :description="__(
@@ -20,6 +21,7 @@
                 <div class="mr-8 mt-2 flex flex-col items-end gap-2">
                     {{-- Badge with translation key ID --}}
                     <flux:badge
+                        class="tabular-nums"
                         variant="subtle"
                         color="zinc"
                     >
@@ -27,21 +29,12 @@
                     </flux:badge>
 
                     @if ($nextReviewTranslationKeyId !== null)
-                        <flux:button
-                            class="h-8 w-8 shrink-0 p-0"
-                            type="button"
-                            size="sm"
-                            variant="ghost"
+                        {{-- Button Open Next Review Entry --}}
+                        <x-ui.button.next-edit
                             :loading="true"
-                            :title="__('admin.translation_list.modal.open_next_review_entry')"
-                            :aria-label="__('admin.translation_list.modal.open_next_review_entry')"
                             wire:click="openNextTranslationKeyFromList"
-                        >
-                            <flux:icon.arrow-big-right
-                                class="size-5"
-                                stroke-width="1"
-                            />
-                        </flux:button>
+                            :aria-label="__('admin.translation_list.modal.open_next_review_entry')"
+                        />
                     @endif
                 </div>
             </div>
@@ -751,21 +744,12 @@
 
                 @if ($nextReviewTranslationKeyId !== null)
                     {{-- Button Open Next Review Entry --}}
-                    <flux:button
-                        class="h-8 w-8 shrink-0 p-0"
-                        type="button"
-                        {{-- size="sm" --}}
-                        variant="ghost"
+                    <x-ui.button.next-edit
+                        class="h-10 w-10"
                         :loading="true"
-                        :title="__('admin.translation_list.modal.open_next_review_entry')"
-                        :aria-label="__('admin.translation_list.modal.open_next_review_entry')"
                         wire:click="openNextTranslationKeyFromList"
-                    >
-                        <flux:icon.arrow-big-right
-                            class="size-5"
-                            stroke-width="1"
-                        />
-                    </flux:button>
+                        :aria-label="__('admin.translation_list.modal.open_next_review_entry')"
+                    />
                 @endif
             </div>
         </div>

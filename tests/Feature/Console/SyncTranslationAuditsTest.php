@@ -1,13 +1,14 @@
 <?php
 
 use App\Models\TranslationKey;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 beforeEach(function (): void {
     $this->originalStoragePath = $this->app->storagePath();
 
-    $this->testStoragePath = base_path('storage/framework/testing/sync-translation-audits-' . Str::uuid());
+    $this->testStoragePath = base_path('storage/framework/testing/sync-translation-audits-'.Str::uuid());
 
     $this->app->useStoragePath($this->testStoragePath);
 
@@ -46,6 +47,16 @@ afterEach(function (): void {
 });
 
 it('does not include partials in newly suggested native keys from component partial paths', function (): void {
+    $fixtureDirectory = resource_path('views/components/admin/partials/sync-translation-audits-test');
+    $fixturePath = $fixtureDirectory.'/⚡modal.blade.php';
+
+    File::ensureDirectoryExists($fixtureDirectory);
+    File::put($fixturePath, "{{ __('Change Role') }}\n");
+
+    $this->beforeApplicationDestroyed(static function () use ($fixtureDirectory): void {
+        File::deleteDirectory($fixtureDirectory);
+    });
+
     $this->artisan('translations:audit-code')
         ->assertSuccessful();
 
@@ -54,12 +65,12 @@ it('does not include partials in newly suggested native keys from component part
     expect($nativeEntries)->toBeArray();
 
     $changeRoleEntry = collect($nativeEntries)->first(function (array $entry): bool {
-        return ($entry['file'] ?? null) === 'resources/views/components/admin/partials/user-list/⚡modal.blade.php'
+        return ($entry['file'] ?? null) === 'resources/views/components/admin/partials/sync-translation-audits-test/⚡modal.blade.php'
             && ($entry['value'] ?? null) === 'Change Role';
     });
 
     expect($changeRoleEntry)->not->toBeNull()
-        ->and($changeRoleEntry['suggested_key'] ?? null)->toBe('admin.user_list.modal.change_role');
+        ->and($changeRoleEntry['suggested_key'] ?? null)->toBe('admin.sync_translation_audits_test.modal.change_role');
 });
 
 it('normalizes legacy non-key obsolete rows but still marks stale key rows as obsolete', function (): void {
@@ -111,4 +122,40 @@ it('normalizes legacy non-key obsolete rows but still marks stale key rows as ob
         ->where('status', 'obsolete')
         ->where('classification', 'native')
         ->count())->toBe(0);
+});
+
+it('backfills discovered events idempotently and preserves the first seen timestamp', function (): void {
+    $translationKey = TranslationKey::query()->create([
+        'fingerprint' => hash('sha256', 'baseline-key'),
+        'status' => 'native',
+        'workflow_status' => 'open',
+        'classification' => 'native',
+        'source' => 'audit',
+        'native_text' => 'Baseline text',
+        'first_seen_at' => now()->subDays(3)->startOfSecond(),
+        'last_seen_at' => now(),
+    ]);
+
+    $this->artisan('translations:backfill-audit-discovered-events --dry-run')
+        ->assertSuccessful();
+
+    expect(DB::table('translation_audit_events')->where('translation_key_id', $translationKey->id)->count())
+        ->toBe(0);
+
+    $this->artisan('translations:backfill-audit-discovered-events')
+        ->assertSuccessful();
+    $this->artisan('translations:backfill-audit-discovered-events')
+        ->assertSuccessful();
+
+    $event = DB::table('translation_audit_events')
+        ->where('translation_key_id', $translationKey->id)
+        ->where('event_type', 'discovered')
+        ->sole();
+    $context = json_decode($event->context, true);
+
+    expect(DB::table('translation_audit_events')->where('translation_key_id', $translationKey->id)->count())
+        ->toBe(1)
+        ->and($event->created_at)->toBe($translationKey->first_seen_at->toDateTimeString())
+        ->and($context['backfilled'] ?? null)->toBeTrue()
+        ->and($context['affected_usages_snapshot_complete'] ?? null)->toBeFalse();
 });

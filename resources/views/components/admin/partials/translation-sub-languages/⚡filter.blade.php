@@ -40,6 +40,9 @@
                 <flux:select
                     id="translation-sub-language-base-filter"
                     name="translation-sub-language-base-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="baseLocaleFilter"
                 >
                     <flux:select.option value="">{{ __('All main languages') }}</flux:select.option>
@@ -152,7 +155,8 @@
             color="sky"
             variant="subtle"
         >
-            {{ __('admin.translation_list.filter.showing') }} {{ number_format($subLocales->count()) }} {{ __('admin.translation_list.filter.of') }}
+            {{ __('admin.translation_list.filter.showing') }} {{ number_format($subLocales->count()) }}
+            {{ __('admin.translation_list.filter.of') }}
             {{ number_format($activeSubLocalesTotal) }}
         </flux:badge>
 

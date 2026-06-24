@@ -39,21 +39,81 @@
                         </flux:table.column>
 
                         <flux:table.column
-                            class="w-32"
-                            align="end"
+                            {{-- class="w-32" --}}
+                            align="center"
                         >
                             <x-ui.tooltip.trigger
-                                class="mr-3"
-                                :title="__('Total Keys')"
-                                :text="__('Total translation keys used as reference for this row.')"
+                                class="ml-3"
+                                :title="__('admin.client_list.table.type')"
+                                :text="__(
+                                    'Shows whether this locale is a main language or a sub-language variant.',
+                                )"
                             >
-                                {{ __('Total Keys') }}
+                                {{ __('admin.client_list.table.type') }}
                             </x-ui.tooltip.trigger>
                         </flux:table.column>
 
                         <flux:table.column
-                            class="w-32"
-                            align="end"
+                            class="w-36"
+                            align="center"
+                        >
+                            <x-ui.tooltip.trigger
+                                class="ml-3"
+                                :title="__('Sub-Languages')"
+                                :text="__(
+                                    'Shows activated sub-languages compared to possible sub-languages for this main language.',
+                                )"
+                            >
+                                {{ __('Sub-Languages') }}
+                            </x-ui.tooltip.trigger>
+                        </flux:table.column>
+
+                        <flux:table.column
+                            class="w-44"
+                            align="center"
+                        >
+                            <x-ui.tooltip.trigger
+                                class="ml-3"
+                                :title="__('Active / State')"
+                                :text="__(
+                                    'Shows whether this language is active, current, or the source language.',
+                                )"
+                            >
+                                {{ __('Active / State') }}
+                            </x-ui.tooltip.trigger>
+                        </flux:table.column>
+
+                        <flux:table.column
+                            {{-- class="w-32" --}}
+                            align="center"
+                        >
+                            <x-ui.tooltip.trigger
+                                class="mr-3"
+                                :title="__('Reference')"
+                                :text="__(
+                                    'Reference entries from the translation key audit table used as denominator for this row.',
+                                )"
+                            >
+                                {{ __('Reference') }}
+                            </x-ui.tooltip.trigger>
+                        </flux:table.column>
+
+                        <flux:table.column
+                            {{-- class="w-32" --}}
+                            align="center"
+                        >
+                            <x-ui.tooltip.trigger
+                                class="mr-3"
+                                :title="__('admin.translation_list.modal_edit.translation_values')"
+                                :text="__('Existing translation_values rows for this locale.')"
+                            >
+                                {{ __('admin.translation_list.modal.values') }}
+                            </x-ui.tooltip.trigger>
+                        </flux:table.column>
+
+                        <flux:table.column
+                            {{-- class="w-32" --}}
+                            align="center"
                         >
                             <x-ui.tooltip.trigger
                                 class="mr-3"
@@ -65,8 +125,8 @@
                         </flux:table.column>
 
                         <flux:table.column
-                            class="w-32"
-                            align="end"
+                            {{-- class="w-32" --}}
+                            align="center"
                         >
                             <x-ui.tooltip.trigger
                                 class="mr-3"
@@ -78,7 +138,7 @@
                         </flux:table.column>
 
                         <flux:table.column
-                            class="w-32"
+                            {{-- class="w-32" --}}
                             align="end"
                         >
                             <x-ui.tooltip.trigger
@@ -90,7 +150,10 @@
                             </x-ui.tooltip.trigger>
                         </flux:table.column>
 
-                        <flux:table.column class="w-56">
+                        <flux:table.column
+                            class="w-56"
+                            align="center"
+                        >
                             <x-ui.tooltip.trigger
                                 class="ml-3"
                                 :title="__('Coverage')"
@@ -104,33 +167,112 @@
                     <flux:table.rows>
                         @foreach ($languageStats as $stat)
                             @php
-                                $coverageColor = $stat->coverage_pct >= 90
-                                    ? 'text-green-600 dark:text-green-400'
-                                    : ($stat->coverage_pct >= 60 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400');
+                                $coverageColor =
+                                    $stat->coverage_pct >= 90
+                                        ? 'text-green-600 dark:text-green-400'
+                                        : ($stat->coverage_pct >= 60
+                                            ? 'text-amber-600 dark:text-amber-400'
+                                            : 'text-red-600 dark:text-red-400');
 
-                                $barColor = $stat->coverage_pct >= 90
-                                    ? 'bg-green-500'
-                                    : ($stat->coverage_pct >= 60 ? 'bg-amber-500' : 'bg-red-500');
+                                $barColor =
+                                    $stat->coverage_pct >= 90
+                                        ? 'bg-green-500'
+                                        : ($stat->coverage_pct >= 60
+                                            ? 'bg-amber-500'
+                                            : 'bg-red-500');
                             @endphp
 
                             <flux:table.row wire:key="language-stat-{{ $stat->locale }}">
                                 <flux:table.cell class="align-top">
-                                    <span class="inline-flex items-center gap-2">
+                                    <span class="ml-3 inline-flex items-center gap-2">
                                         <x-ui.locale.flag
                                             :locale="$stat->locale"
                                             size="lg"
                                         />
 
                                         <span>
-                                            <span class="font-mono font-semibold uppercase text-zinc-800 dark:text-zinc-200">
+                                            <span
+                                                class="font-mono font-semibold uppercase text-zinc-800 dark:text-zinc-200"
+                                            >
                                                 {{ $stat->locale }}
                                             </span>
 
-                                            <span class="ml-1 text-xs text-zinc-500 dark:text-zinc-400">
+                                            <span class="ml-1 font-mono text-sm text-zinc-500 dark:text-zinc-400">
                                                 {{ $stat->native_name }}
                                             </span>
                                         </span>
                                     </span>
+                                </flux:table.cell>
+
+                                <flux:table.cell class="align-top">
+                                    <div class="ml-3 flex flex-wrap items-center gap-1">
+                                        <flux:badge
+                                            size="sm"
+                                            variant="subtle"
+                                            color="{{ $stat->is_sub_language ? 'purple' : 'blue' }}"
+                                        >
+                                            {{ $stat->is_sub_language ? __('Sub') : __('Main') }}
+                                        </flux:badge>
+                                    </div>
+                                </flux:table.cell>
+
+                                <flux:table.cell
+                                    class="align-top"
+                                    align="center"
+                                >
+                                    <div class="flex justify-center">
+                                        <x-ui.tooltip.trigger
+                                            :title="__('Sub-Languages')"
+                                            :text="__(
+                                                'Activated sub-languages selected in Sub-Language administration / possible sub-languages for this main language.',
+                                            )"
+                                        >
+                                            <flux:badge
+                                                size="sm"
+                                                variant="subtle"
+                                                color="{{ (int) $stat->sub_language_active_count > 0 ? 'purple' : 'zinc' }}"
+                                            >
+                                                <span class="tabular-nums">
+                                                    {{ (int) $stat->sub_language_active_count }}/{{ (int) $stat->sub_language_possible_count }}
+                                                </span>
+                                            </flux:badge>
+                                        </x-ui.tooltip.trigger>
+                                    </div>
+                                </flux:table.cell>
+
+                                <flux:table.cell class="align-top">
+                                    <div class="ml-3 flex flex-wrap items-center gap-1">
+                                        {{-- Active Badge --}}
+                                        @if ($stat->is_active)
+                                            <flux:badge
+                                                size="sm"
+                                                variant="subtle"
+                                                color="lime"
+                                            >
+                                                {{ __('admin.country_reference_list.filter.active') }}
+                                            </flux:badge>
+                                        @endif
+                                        {{-- Source Badge --}}
+                                        @if ($stat->is_source)
+                                            <flux:badge
+                                                size="sm"
+                                                variant="subtle"
+                                                color="sky"
+                                            >
+                                                {{ __('admin.translation_list.modal.source') }}
+                                            </flux:badge>
+                                        @endif
+                                        {{-- Current Badge --}}
+                                        @if ($stat->is_current)
+                                            <flux:badge
+                                                size="sm"
+                                                variant="subtle"
+                                                color="emerald"
+                                            >
+                                                {{ __('admin.app_settings.locale.current') }}
+                                            </flux:badge>
+                                        @endif
+                                    </div>
                                 </flux:table.cell>
 
                                 <flux:table.cell
@@ -141,6 +283,13 @@
                                 </flux:table.cell>
 
                                 <flux:table.cell
+                                    class="text-right tabular-nums text-zinc-700 dark:text-zinc-300"
+                                    align="end"
+                                >
+                                    {{ number_format($stat->row_count) }}
+                                </flux:table.cell>
+
+                                <flux:table.cell
                                     class="text-right tabular-nums text-green-700 dark:text-green-400"
                                     align="end"
                                 >
@@ -148,7 +297,7 @@
                                 </flux:table.cell>
 
                                 <flux:table.cell
-                                    class="text-right tabular-nums {{ $stat->missing_count > 0 ? 'text-amber-700 dark:text-amber-400' : 'text-zinc-400' }}"
+                                    class="{{ $stat->missing_count > 0 ? 'text-amber-700 dark:text-amber-400' : 'text-zinc-400' }} text-right tabular-nums"
                                     align="end"
                                 >
                                     {{ number_format($stat->missing_count) }}
@@ -174,7 +323,9 @@
                                             ></div>
                                         </div>
 
-                                        <span class="{{ $coverageColor }} min-w-12 text-right text-sm font-semibold tabular-nums">
+                                        <span
+                                            class="{{ $coverageColor }} min-w-12 text-right text-sm font-semibold tabular-nums"
+                                        >
                                             {{ $stat->coverage_pct }}%
                                         </span>
                                     </div>

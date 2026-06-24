@@ -8,10 +8,10 @@ use App\Settings\AppDisplaySettings;
 use App\Settings\AppGeneralSettings;
 use App\Support\Icons\IconRegistry;
 use App\Support\Locale\LocaleCode;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Collection;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Throwable;
@@ -88,9 +88,22 @@ class AppSettings extends Component
      */
     public array $availableLocales = [];
 
+    /**
+     * @var array<int, string>
+     */
+    public array $addedPrimaryLocales = [];
+
     public string $selectedPrimaryLanguageCode = '';
 
     public string $primaryLanguageScope = 'all';
+
+    public bool $addPrimaryLanguageModalOpen = false;
+
+    public bool $deactivatePrimaryLanguageModalOpen = false;
+
+    public int $primaryLanguageSelectRenderKey = 0;
+
+    public string $newPrimaryLanguageCode = '';
 
     public ?string $pendingLocaleDeactivationCode = null;
 
@@ -106,6 +119,7 @@ class AppSettings extends Component
     {
         $this->locale = $appGeneralSettings->locale;
         $this->availableLocales = $this->normaliseAvailableLocales($appGeneralSettings->availableLocales);
+        $this->addedPrimaryLocales = $this->normaliseAddedPrimaryLocales($appGeneralSettings->addedPrimaryLocales ?? []);
         $this->primaryLanguageScope = $this->configuredDefaultPrimaryLanguageScope();
     }
 
@@ -128,6 +142,77 @@ class AppSettings extends Component
     {
         $scope = is_string($value) ? strtolower(trim($value)) : 'all';
         $this->primaryLanguageScope = $this->normalizePrimaryLanguageScope($scope);
+    }
+
+    public function openAddPrimaryLanguageModal(): void
+    {
+        $this->newPrimaryLanguageCode = '';
+        $this->addPrimaryLanguageModalOpen = true;
+    }
+
+    public function closeAddPrimaryLanguageModal(): void
+    {
+        $this->newPrimaryLanguageCode = '';
+        $this->addPrimaryLanguageModalOpen = false;
+    }
+
+    public function updatedNewPrimaryLanguageCode(mixed $value): void
+    {
+        $this->newPrimaryLanguageCode = is_string($value)
+            ? LocaleCode::normalize($value)
+            : '';
+    }
+
+    public function addNewPrimaryLanguage(AppGeneralSettings $appGeneralSettings): void
+    {
+        $locale = LocaleCode::normalize($this->newPrimaryLanguageCode);
+
+        if ($locale === '') {
+            $this->dispatch('toast', type: 'error', message: __('admin.app_settings.invalid_application_language'));
+
+            return;
+        }
+
+        if (! in_array($locale, $this->selectablePrimaryLocaleCodes(), true)) {
+            $this->dispatch('toast', type: 'error', message: __('admin.app_settings.invalid_application_language'));
+
+            return;
+        }
+
+        $availableLocales = $this->normaliseAvailableLocales($appGeneralSettings->availableLocales);
+        $addedPrimaryLocales = $this->normaliseAddedPrimaryLocales($appGeneralSettings->addedPrimaryLocales ?? []);
+
+        if (! in_array($locale, $availableLocales, true) && ! in_array($locale, $addedPrimaryLocales, true)) {
+            $beforeAddedPrimaryLocales = $addedPrimaryLocales;
+
+            $addedPrimaryLocales[] = $locale;
+            $addedPrimaryLocales = $this->normaliseAddedPrimaryLocales($addedPrimaryLocales);
+
+            $appGeneralSettings->addedPrimaryLocales = $addedPrimaryLocales;
+            $appGeneralSettings->save();
+
+            $this->addedPrimaryLocales = $addedPrimaryLocales;
+
+            $this->logLocaleActivity(
+                event: 'admin.app_settings.locale.primary_locale_added',
+                description: __('Primary language added to selection.'),
+                properties: [
+                    'target_locale' => $locale,
+                    'before' => [
+                        'added_primary_locales' => $beforeAddedPrimaryLocales,
+                    ],
+                    'after' => [
+                        'added_primary_locales' => $addedPrimaryLocales,
+                    ],
+                ],
+            );
+        }
+
+        $this->selectedPrimaryLanguageCode = $locale;
+        $this->selectedSubLocaleCodes = [];
+        $this->closeAddPrimaryLanguageModal();
+
+        $this->dispatch('toast', type: 'success', message: __('Primary language added.'));
     }
 
     /**
@@ -168,7 +253,7 @@ class AppSettings extends Component
     {
         $subLocaleCodes = $this->subLocaleCodesForSelectedPrimaryLanguage();
         $selectedSubLocaleCodes = collect($this->selectedSubLocaleCodes)
-            ->map(static fn(mixed $code): string => is_string($code) ? LocaleCode::normalize($code) : '')
+            ->map(static fn (mixed $code): string => is_string($code) ? LocaleCode::normalize($code) : '')
             ->filter()
             ->values()
             ->all();
@@ -290,6 +375,63 @@ class AppSettings extends Component
         }
 
         $this->pendingLocaleDeactivationCode = $locale;
+    }
+
+    public function preparePrimaryLocaleDeactivation(string $locale, AppGeneralSettings $appGeneralSettings): void
+    {
+        $locale = LocaleCode::normalize($locale);
+
+        if ($locale === '') {
+            return;
+        }
+
+        $this->selectedPrimaryLanguageCode = $locale;
+        $this->syncSelectedSubLocaleCodesFromDatabase();
+        $this->armLocaleDeactivation($locale, $appGeneralSettings);
+        $this->primaryLanguageSelectRenderKey++;
+    }
+
+    public function openDeactivatePrimaryLanguageModal(): void
+    {
+        if ($this->pendingLocaleDeactivationCode === null) {
+            return;
+        }
+
+        $this->deactivatePrimaryLanguageModalOpen = true;
+    }
+
+    public function closeDeactivatePrimaryLanguageModal(): void
+    {
+        $this->deactivatePrimaryLanguageModalOpen = false;
+        $this->pendingLocaleDeactivationCode = null;
+        $this->primaryLanguageSelectRenderKey++;
+    }
+
+    public function confirmDeactivatePrimaryLanguage(AppGeneralSettings $appGeneralSettings): void
+    {
+        $locale = LocaleCode::normalize((string) $this->pendingLocaleDeactivationCode);
+
+        if ($locale === '') {
+            $this->closeDeactivatePrimaryLanguageModal();
+
+            return;
+        }
+
+        $addedPrimaryLocales = $this->normaliseAddedPrimaryLocales($appGeneralSettings->addedPrimaryLocales ?? []);
+
+        if (! in_array($locale, $addedPrimaryLocales, true)) {
+            $addedPrimaryLocales[] = $locale;
+            $addedPrimaryLocales = $this->normaliseAddedPrimaryLocales($addedPrimaryLocales);
+
+            $appGeneralSettings->addedPrimaryLocales = $addedPrimaryLocales;
+            $this->addedPrimaryLocales = $addedPrimaryLocales;
+        }
+
+        $this->deactivateAvailableLocale($locale, $appGeneralSettings);
+
+        $this->selectedPrimaryLanguageCode = LocaleCode::normalize($this->locale);
+        $this->syncSelectedSubLocaleCodesFromDatabase();
+        $this->closeDeactivatePrimaryLanguageModal();
     }
 
     /**
@@ -548,11 +690,11 @@ class AppSettings extends Component
             ->all();
 
         $rolesWithoutBadge = $roles
-            ->reject(fn(Role $role): bool => array_key_exists($role->name, $roleBadges))
+            ->reject(fn (Role $role): bool => array_key_exists($role->name, $roleBadges))
             ->values();
 
         $badgeConfigsWithoutRole = collect($roleBadgeRows)
-            ->filter(fn(array $row): bool => ! $row['roleExists'] && ! $row['isPseudoRoleBadgeKey'])
+            ->filter(fn (array $row): bool => ! $row['roleExists'] && ! $row['isPseudoRoleBadgeKey'])
             ->values()
             ->all();
 
@@ -594,32 +736,42 @@ class AppSettings extends Component
                 DB::raw('COALESCE(iso639_1, iso639_3) as normalized_code'),
                 DB::raw('language.name as display_name'),
                 DB::raw('language.native_name as native_display_name'),
+                DB::raw('language_name_ui.name as active_display_name'),
+                DB::raw('language_name_en.name as intl_display_name'),
                 DB::raw('COALESCE(language_name_ui.name, language_name_en.name, language.name, language.native_name) as localized_display_name'),
                 DB::raw('false as is_default'),
                 'language.sort_order',
             ]);
 
         $primaryLocaleRows = $this->filterPrimaryLocaleRows($localeRows);
+        $addPrimaryLanguageRows = $this->addPrimaryLanguageRows($localeRows);
         $primaryLanguageScopeOptions = $this->primaryLanguageScopeOptions();
 
         $selectedPrimaryLanguageCode = LocaleCode::normalize($this->selectedPrimaryLanguageCode);
+        $isSelectedPrimaryLanguageActive = $selectedPrimaryLanguageCode !== ''
+            && in_array($selectedPrimaryLanguageCode, $this->availableLocales, true);
+        $canDeactivateSelectedPrimaryLanguage = $isSelectedPrimaryLanguageActive
+            && ! in_array($selectedPrimaryLanguageCode, self::MANDATORY_AVAILABLE_LOCALES, true)
+            && $selectedPrimaryLanguageCode !== LocaleCode::normalize($this->locale);
+        $isSelectedPrimaryLanguagePendingDeactivation = $canDeactivateSelectedPrimaryLanguage
+            && $this->pendingLocaleDeactivationCode === $selectedPrimaryLanguageCode;
 
         $selectedPrimaryLanguageId = $this->selectedPrimaryLanguageId();
 
-        $subLocaleRows = $selectedPrimaryLanguageId
+        $subLocaleRows = $selectedPrimaryLanguageId && $isSelectedPrimaryLanguageActive
             ? DB::table('locales')
-            ->where('language_id', $selectedPrimaryLanguageId)
-            ->where('code', '<>', $selectedPrimaryLanguageCode)
-            ->orderBy('sort_order')
-            ->orderBy('code')
-            ->get([
-                'code',
-                'normalized_code',
-                'display_name',
-                'native_display_name',
-                'is_active',
-                'sort_order',
-            ])
+                ->where('language_id', $selectedPrimaryLanguageId)
+                ->where('code', '<>', $selectedPrimaryLanguageCode)
+                ->orderBy('sort_order')
+                ->orderBy('code')
+                ->get([
+                    'code',
+                    'normalized_code',
+                    'display_name',
+                    'native_display_name',
+                    'is_active',
+                    'sort_order',
+                ])
             : collect();
 
         $subLocaleStatsByPrimary = DB::table('languages as language')
@@ -676,12 +828,46 @@ class AppSettings extends Component
             'availableLocales' => $this->availableLocales,
             'localeRows' => $localeRows,
             'primaryLocaleRows' => $primaryLocaleRows,
+            'addPrimaryLanguageRows' => $addPrimaryLanguageRows,
             'primaryLanguageScopeOptions' => $primaryLanguageScopeOptions,
             'subLocaleStatsByPrimary' => $subLocaleStatsByPrimary,
             'selectedPrimaryLanguageCode' => $selectedPrimaryLanguageCode,
+            'primaryLanguageSelectRenderKey' => $this->primaryLanguageSelectRenderKey,
+            'isSelectedPrimaryLanguageActive' => $isSelectedPrimaryLanguageActive,
+            'canDeactivateSelectedPrimaryLanguage' => $canDeactivateSelectedPrimaryLanguage,
+            'isSelectedPrimaryLanguagePendingDeactivation' => $isSelectedPrimaryLanguagePendingDeactivation,
             'selectedSubLocaleCodes' => $this->selectedSubLocaleCodes,
             'subLocaleRows' => $subLocaleRows,
         ]);
+    }
+
+    /**
+     * @param  Collection<int, object>  $localeRows
+     * @return Collection<int, object>
+     */
+    private function addPrimaryLanguageRows(Collection $localeRows): Collection
+    {
+        $availableLocales = collect($this->availableLocales)
+            ->map(static fn (string $locale): string => LocaleCode::normalize($locale))
+            ->filter()
+            ->values()
+            ->all();
+
+        $addedPrimaryLocales = collect($this->addedPrimaryLocales)
+            ->map(static fn (string $locale): string => LocaleCode::normalize($locale))
+            ->filter()
+            ->values()
+            ->all();
+
+        return $localeRows
+            ->reject(static function (object $localeRow) use ($addedPrimaryLocales, $availableLocales): bool {
+                $code = LocaleCode::normalize((string) ($localeRow->code ?? ''));
+
+                return $code === ''
+                    || in_array($code, $availableLocales, true)
+                    || in_array($code, $addedPrimaryLocales, true);
+            })
+            ->values();
     }
 
     /**
@@ -697,7 +883,7 @@ class AppSettings extends Component
             ->orderByRaw('COALESCE(iso639_1, iso639_3)')
             ->selectRaw('COALESCE(iso639_1, iso639_3) as code')
             ->pluck('code')
-            ->map(static fn(string $locale): string => LocaleCode::normalize($locale))
+            ->map(static fn (string $locale): string => LocaleCode::normalize($locale))
             ->filter()
             ->values()
             ->all();
@@ -721,7 +907,7 @@ class AppSettings extends Component
             ->orderBy('sort_order')
             ->orderBy('code')
             ->pluck('code')
-            ->map(static fn(string $code): string => LocaleCode::normalize($code))
+            ->map(static fn (string $code): string => LocaleCode::normalize($code))
             ->filter()
             ->values()
             ->all();
@@ -775,7 +961,7 @@ class AppSettings extends Component
             ->orderBy('sort_order')
             ->orderBy('code')
             ->pluck('code')
-            ->map(static fn(string $code): string => LocaleCode::normalize($code))
+            ->map(static fn (string $code): string => LocaleCode::normalize($code))
             ->filter()
             ->values()
             ->all();
@@ -838,13 +1024,13 @@ class AppSettings extends Component
             ->orderBy('sort_order')
             ->orderBy('code')
             ->pluck('code')
-            ->map(static fn(string $code): string => LocaleCode::normalize($code))
+            ->map(static fn (string $code): string => LocaleCode::normalize($code))
             ->filter()
             ->values()
             ->all();
 
         $selectedSubLocaleCodes = collect($this->selectedSubLocaleCodes)
-            ->map(static fn(mixed $code): string => is_string($code) ? LocaleCode::normalize($code) : '')
+            ->map(static fn (mixed $code): string => is_string($code) ? LocaleCode::normalize($code) : '')
             ->filter()
             ->unique()
             ->values()
@@ -852,10 +1038,10 @@ class AppSettings extends Component
 
         $selectedSubLocaleIds = array_values(array_filter(
             array_map(
-                static fn(string $code): ?int => $availableSubLocaleIdsByCode[$code] ?? null,
+                static fn (string $code): ?int => $availableSubLocaleIdsByCode[$code] ?? null,
                 $selectedSubLocaleCodes,
             ),
-            static fn(?int $id): bool => $id !== null,
+            static fn (?int $id): bool => $id !== null,
         ));
 
         DB::transaction(static function () use ($allSubLocaleIds, $selectedSubLocaleIds): void {
@@ -951,33 +1137,40 @@ class AppSettings extends Component
     {
         $scopeCodes = $this->primaryLanguageScopeCodes();
 
-        if ($scopeCodes === []) {
-            return $localeRows;
-        }
+        $filteredLocaleRows = $scopeCodes === []
+            ? $localeRows
+            : $localeRows
+                ->filter(static function (object $localeRow) use ($scopeCodes): bool {
+                    $code = LocaleCode::normalize((string) ($localeRow->normalized_code ?? $localeRow->code ?? ''));
 
-        $filteredLocaleRows = $localeRows
-            ->filter(static function (object $localeRow) use ($scopeCodes): bool {
-                $code = LocaleCode::normalize((string) ($localeRow->normalized_code ?? $localeRow->code ?? ''));
-
-                return in_array($code, $scopeCodes, true);
-            })
-            ->values();
+                    return in_array($code, $scopeCodes, true);
+                })
+                ->values();
 
         $selectedCode = LocaleCode::normalize($this->selectedPrimaryLanguageCode);
 
-        if ($selectedCode === '' || $filteredLocaleRows->contains(static fn(object $row): bool => LocaleCode::normalize((string) $row->code) === $selectedCode)) {
-            return $filteredLocaleRows;
-        }
+        $alwaysVisibleCodes = collect([
+            ...$this->availableLocales,
+            ...$this->addedPrimaryLocales,
+            $selectedCode,
+        ])
+            ->map(static fn (mixed $locale): string => is_string($locale) ? LocaleCode::normalize($locale) : '')
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
 
-        $selectedRow = $localeRows->first(static fn(object $row): bool => LocaleCode::normalize((string) $row->code) === $selectedCode);
+        $alwaysVisibleRows = $localeRows
+            ->filter(static function (object $localeRow) use ($alwaysVisibleCodes): bool {
+                $code = LocaleCode::normalize((string) ($localeRow->normalized_code ?? $localeRow->code ?? ''));
 
-        if ($selectedRow === null) {
-            return $filteredLocaleRows;
-        }
+                return $code !== '' && in_array($code, $alwaysVisibleCodes, true);
+            })
+            ->values();
 
         return $filteredLocaleRows
-            ->prepend($selectedRow)
-            ->unique(static fn(object $row): string => LocaleCode::normalize((string) $row->code))
+            ->merge($alwaysVisibleRows)
+            ->unique(static fn (object $row): string => LocaleCode::normalize((string) $row->code))
             ->values();
     }
 
@@ -1066,10 +1259,10 @@ class AppSettings extends Component
 
             $normalizedCodes = array_values(array_unique(array_filter(
                 array_map(
-                    static fn(mixed $code): string => is_string($code) ? LocaleCode::normalize($code) : '',
+                    static fn (mixed $code): string => is_string($code) ? LocaleCode::normalize($code) : '',
                     $codes,
                 ),
-                static fn(string $code): bool => $code !== ''
+                static fn (string $code): bool => $code !== ''
             )));
 
             if ($normalizedCodes === []) {
@@ -1165,18 +1358,32 @@ class AppSettings extends Component
     }
 
     /**
+     * @param  array<int, mixed>  $locales
+     * @return array<int, string>
+     */
+    private function normaliseAddedPrimaryLocales(array $locales): array
+    {
+        return array_values(array_unique(array_filter(
+            array_map(
+                static fn (mixed $locale): string => is_string($locale) ? LocaleCode::normalize($locale) : '',
+                $locales,
+            ),
+            static fn (string $locale): bool => $locale !== ''
+        )));
+    }
+
+    /**
      * @param  array<int, mixed>  $availableLocales
-     *
      * @return array<int, string>
      */
     private function normaliseAvailableLocales(array $availableLocales): array
     {
         $locales = array_values(array_unique(array_filter(
             array_map(
-                static fn(mixed $locale): string => is_string($locale) ? LocaleCode::normalize($locale) : '',
+                static fn (mixed $locale): string => is_string($locale) ? LocaleCode::normalize($locale) : '',
                 $availableLocales,
             ),
-            static fn(string $locale): bool => $locale !== ''
+            static fn (string $locale): bool => $locale !== ''
         )));
 
         foreach (self::MANDATORY_AVAILABLE_LOCALES as $mandatoryLocale) {

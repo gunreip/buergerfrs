@@ -7,6 +7,7 @@ namespace App\Console\Commands;
 use App\Models\TranslationKey;
 use App\Models\TranslationLanguage;
 use App\Models\TranslationValue;
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use SplFileInfo;
@@ -93,7 +94,7 @@ class TranslationsGenerateLiteralDiffs extends Command
             $patch = $this->buildPatchForFile($relativePath, $original, $rewritten);
 
             if ($patch === null) {
-                $this->warn('Could not generate patch for: ' . $relativePath);
+                $this->warn('Could not generate patch for: '.$relativePath);
 
                 continue;
             }
@@ -104,14 +105,14 @@ class TranslationsGenerateLiteralDiffs extends Command
             $patchPathForTable = '-';
 
             if ($writePerFilePatches) {
-                $patchFile = $outputDir . '/files/' . $this->safePatchName($relativePath) . '.patch';
+                $patchFile = $outputDir.'/files/'.$this->safePatchName($relativePath).'.patch';
                 File::ensureDirectoryExists(dirname($patchFile));
                 File::put($patchFile, $patch);
                 $patchPathForTable = $this->relativePath($patchFile);
             }
 
             // $combinedPatch .= ($combinedPatch === '' ? '' : "\n") . rtrim($patch) . "\n";
-            $combinedPatch .= ($combinedPatch === '' ? '' : "\n") . $this->normalizePatchEnding($patch);
+            $combinedPatch .= ($combinedPatch === '' ? '' : "\n").$this->normalizePatchEnding($patch);
             $rows[] = [$relativePath, $replacementsInFile, $patchPathForTable];
 
             $index[] = [
@@ -126,9 +127,9 @@ class TranslationsGenerateLiteralDiffs extends Command
             );
         }
 
-        $combinedPatchPath = $outputDir . '/latest.patch';
-        $applyScriptPath = $outputDir . '/latest.apply.sh';
-        $indexPath = $outputDir . '/latest.index.json';
+        $combinedPatchPath = $outputDir.'/latest.patch';
+        $applyScriptPath = $outputDir.'/latest.apply.sh';
+        $indexPath = $outputDir.'/latest.index.json';
 
         if ($combinedPatch !== '') {
             File::put($combinedPatchPath, $combinedPatch);
@@ -153,16 +154,16 @@ class TranslationsGenerateLiteralDiffs extends Command
         }
 
         $this->line('');
-        $this->line('Files scanned: ' . $filesScanned);
-        $this->line('Files with diff: ' . $filesWithDiff);
-        $this->line('Replacements: ' . $replacements);
-        $this->line('Patch output dir: ' . $this->relativePath($outputDir));
+        $this->line('Files scanned: '.$filesScanned);
+        $this->line('Files with diff: '.$filesWithDiff);
+        $this->line('Replacements: '.$replacements);
+        $this->line('Patch output dir: '.$this->relativePath($outputDir));
 
         if ($combinedPatch !== '') {
-            $this->line('Combined patch: ' . $this->relativePath($combinedPatchPath));
-            $this->line('Apply script: ' . $this->relativePath($applyScriptPath));
-            $this->line('Index file: ' . $this->relativePath($indexPath));
-            $this->line('Run: bash ' . $this->relativePath($applyScriptPath));
+            $this->line('Combined patch: '.$this->relativePath($combinedPatchPath));
+            $this->line('Apply script: '.$this->relativePath($applyScriptPath));
+            $this->line('Index file: '.$this->relativePath($indexPath));
+            $this->line('Run: bash '.$this->relativePath($applyScriptPath));
         }
 
         $this->logCompletedActivity(
@@ -193,14 +194,14 @@ class TranslationsGenerateLiteralDiffs extends Command
 
         if (! $process->isSuccessful()) {
             throw new \RuntimeException(
-                'Generated patch is invalid: ' . trim($process->getErrorOutput() ?: $process->getOutput())
+                'Generated patch is invalid: '.trim($process->getErrorOutput() ?: $process->getOutput())
             );
         }
     }
 
     private function normalizePatchEnding(string $patch): string
     {
-        return str_ends_with($patch, "\n") ? $patch : $patch . "\n";
+        return str_ends_with($patch, "\n") ? $patch : $patch."\n";
     }
 
     /**
@@ -215,7 +216,7 @@ class TranslationsGenerateLiteralDiffs extends Command
         }
 
         return collect(explode(',', $pathsOption))
-            ->map(fn(string $path): string => trim($path))
+            ->map(fn (string $path): string => trim($path))
             ->filter()
             ->unique()
             ->values()
@@ -245,13 +246,13 @@ class TranslationsGenerateLiteralDiffs extends Command
             ->orderBy('sort_order', 'asc')
             ->orderBy('locale', 'asc')
             ->pluck('locale')
-            ->filter(fn(?string $locale): bool => $locale !== null && $locale !== '')
+            ->filter(fn (?string $locale): bool => $locale !== null && $locale !== '')
             ->values()
             ->all();
     }
 
     /**
-     * @param array<int, string> $enabledLocales
+     * @param  array<int, string>  $enabledLocales
      * @return array<string, string>
      */
     private function literalToKeyMap(bool $allowSuggested, bool $requireCompleteValues, array $enabledLocales): array
@@ -289,7 +290,7 @@ class TranslationsGenerateLiteralDiffs extends Command
     }
 
     /**
-     * @param array<int, string> $enabledLocales
+     * @param  array<int, string>  $enabledLocales
      */
     private function hasCompleteValues(int $translationKeyId, array $enabledLocales): bool
     {
@@ -302,8 +303,8 @@ class TranslationsGenerateLiteralDiffs extends Command
             ->get(['locale', 'value']);
 
         $existingLocales = $values
-            ->filter(fn(TranslationValue $value): bool => in_array((string) $value->locale, $enabledLocales, true))
-            ->filter(fn(TranslationValue $value): bool => trim((string) $value->value) !== '')
+            ->filter(fn (TranslationValue $value): bool => in_array((string) $value->locale, $enabledLocales, true))
+            ->filter(fn (TranslationValue $value): bool => trim((string) $value->value) !== '')
             ->pluck('locale')
             ->unique()
             ->values()
@@ -313,14 +314,14 @@ class TranslationsGenerateLiteralDiffs extends Command
     }
 
     /**
-     * @param array<int, string> $paths
+     * @param  array<int, string>  $paths
      * @return iterable<int, SplFileInfo>
      */
     private function scannableFiles(array $paths): iterable
     {
         $directories = collect($paths)
-            ->map(fn(string $path): string => base_path($path))
-            ->filter(fn(string $path): bool => File::isDirectory($path))
+            ->map(fn (string $path): string => base_path($path))
+            ->filter(fn (string $path): bool => File::isDirectory($path))
             ->values()
             ->all();
 
@@ -338,7 +339,7 @@ class TranslationsGenerateLiteralDiffs extends Command
     }
 
     /**
-     * @param array<string, string> $literalToKeyMap
+     * @param  array<string, string>  $literalToKeyMap
      * @return array{0: string, 1: int}
      */
     private function rewriteContent(string $contents, array $literalToKeyMap): array
@@ -364,7 +365,7 @@ class TranslationsGenerateLiteralDiffs extends Command
                 $escapedKey = addcslashes($key, "\\{$quote}");
                 $replacements++;
 
-                return $match['function'] . '(' . $quote . $escapedKey . $quote;
+                return $match['function'].'('.$quote.$escapedKey.$quote;
             },
             $contents,
         );
@@ -385,11 +386,11 @@ class TranslationsGenerateLiteralDiffs extends Command
 
     private function buildPatchForFile(string $relativePath, string $original, string $rewritten): ?string
     {
-        $tmpBase = storage_path('app/tmp/translations-diff-' . bin2hex(random_bytes(6)));
+        $tmpBase = storage_path('app/tmp/translations-diff-'.bin2hex(random_bytes(6)));
         File::ensureDirectoryExists($tmpBase);
 
-        $oldFile = $tmpBase . '/old.tmp';
-        $newFile = $tmpBase . '/new.tmp';
+        $oldFile = $tmpBase.'/old.tmp';
+        $newFile = $tmpBase.'/new.tmp';
 
         File::put($oldFile, $original);
         File::put($newFile, $rewritten);
@@ -410,7 +411,7 @@ class TranslationsGenerateLiteralDiffs extends Command
         File::deleteDirectory($tmpBase);
 
         if ($exitCode !== 0 && $exitCode !== 1) {
-            $this->warn('diff failed for ' . $relativePath . ': ' . trim($errorOutput));
+            $this->warn('diff failed for '.$relativePath.': '.trim($errorOutput));
 
             return null;
         }
@@ -422,11 +423,11 @@ class TranslationsGenerateLiteralDiffs extends Command
         $lines = preg_split('/\R/', $output) ?: [];
 
         if (count($lines) >= 2) {
-            $lines[0] = '--- a/' . $relativePath;
-            $lines[1] = '+++ b/' . $relativePath;
+            $lines[0] = '--- a/'.$relativePath;
+            $lines[1] = '+++ b/'.$relativePath;
         }
 
-        return implode("\n", $lines) . "\n";
+        return implode("\n", $lines)."\n";
     }
 
     private function safePatchName(string $relativePath): string
@@ -436,26 +437,26 @@ class TranslationsGenerateLiteralDiffs extends Command
 
     private function relativePath(string $path): string
     {
-        return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+        return str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
     }
 
     private function cleanupOldPatches(string $outputDir): void
     {
-        $files = File::glob($outputDir . '/*.patch') ?: [];
+        $files = File::glob($outputDir.'/*.patch') ?: [];
 
         foreach ($files as $file) {
             File::delete($file);
         }
 
-        $perFilePatches = File::glob($outputDir . '/files/*.patch') ?: [];
+        $perFilePatches = File::glob($outputDir.'/files/*.patch') ?: [];
 
         foreach ($perFilePatches as $file) {
             File::delete($file);
         }
 
-        File::delete($outputDir . '/latest.apply.sh');
-        File::delete($outputDir . '/latest.index.json');
-        File::delete($outputDir . '/apply-all.sh');
+        File::delete($outputDir.'/latest.apply.sh');
+        File::delete($outputDir.'/latest.index.json');
+        File::delete($outputDir.'/apply-all.sh');
     }
 
     private function applyScriptContent(string $relativeCombinedPatchPath): string
@@ -465,9 +466,9 @@ class TranslationsGenerateLiteralDiffs extends Command
             'set -euo pipefail',
             '',
             'echo "Checking patch..."',
-            'git apply --check ' . escapeshellarg($relativeCombinedPatchPath),
+            'git apply --check '.escapeshellarg($relativeCombinedPatchPath),
             'echo "Applying patch..."',
-            'git apply ' . escapeshellarg($relativeCombinedPatchPath),
+            'git apply '.escapeshellarg($relativeCombinedPatchPath),
             'echo "Done."',
             '',
         ]);
@@ -478,21 +479,20 @@ class TranslationsGenerateLiteralDiffs extends Command
         try {
             activity('translations')
                 ->event('translations.literals.diff.file_created')
-                ->withProperties([
-                    'command' => $this->getName(),
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'source_path' => $sourcePath,
                     'patch_path' => $patchPath,
                     'replacements' => $replacements,
-                ])
+                ]))
                 ->log('Translation literal diff patch created');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for patch "' . $patchPath . '": ' . $exception->getMessage());
+            $this->warn('Activity log write failed for patch "'.$patchPath.'": '.$exception->getMessage());
         }
     }
 
     /**
-     * @param array<int, string> $paths
-     * @param array<int, string> $enabledLocales
+     * @param  array<int, string>  $paths
+     * @param  array<int, string>  $enabledLocales
      */
     private function logCompletedActivity(
         array $paths,
@@ -508,8 +508,7 @@ class TranslationsGenerateLiteralDiffs extends Command
         try {
             activity('translations')
                 ->event('translations.literals.diff.completed')
-                ->withProperties([
-                    'command' => $this->getName(),
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'options' => [
                         'paths' => $paths,
                         'output_dir' => $this->relativePath($outputDir),
@@ -523,10 +522,10 @@ class TranslationsGenerateLiteralDiffs extends Command
                         'replacements' => $replacements,
                         'mapping_count' => $mappingCount,
                     ],
-                ])
+                ]))
                 ->log('Translation literal diff generation completed');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for diff command summary: ' . $exception->getMessage());
+            $this->warn('Activity log write failed for diff command summary: '.$exception->getMessage());
         }
     }
 }

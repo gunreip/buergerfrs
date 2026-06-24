@@ -4,6 +4,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use App\Support\Locale\LocaleReferenceImporter;
 use Illuminate\Console\Command;
 use Throwable;
@@ -34,7 +35,7 @@ class ImportLocaleReferenceData extends Command
     public function handle(LocaleReferenceImporter $importer): int
     {
         $displayLocales = collect(explode(',', (string) $this->option('locales')))
-            ->map(fn(string $locale): string => trim($locale))
+            ->map(fn (string $locale): string => trim($locale))
             ->filter()
             ->unique()
             ->values()
@@ -83,14 +84,14 @@ class ImportLocaleReferenceData extends Command
     private function logRunActivity(string $event, string $description, array $properties = []): void
     {
         try {
-            activity('reference')
-                ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+            $activity = activity('reference')
+                ->event($event);
+
+            $activity
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 }

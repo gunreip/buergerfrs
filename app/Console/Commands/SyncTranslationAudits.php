@@ -7,6 +7,7 @@ namespace App\Console\Commands;
 use App\Models\TranslationKey;
 use App\Models\TranslationUsage;
 use App\Models\TranslationValue;
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -55,7 +56,7 @@ class SyncTranslationAudits extends Command
 
         foreach ($this->readList('compare', 'ok') as $entry) {
             $key = $this->syncKeyEntry(
-                fingerprint: $this->fingerprint('key:' . $entry['full_key']),
+                fingerprint: $this->fingerprint('key:'.$entry['full_key']),
                 key: $entry['full_key'],
                 status: 'ok',
                 classification: 'key',
@@ -86,7 +87,7 @@ class SyncTranslationAudits extends Command
 
         foreach ($this->readList('compare', 'missing') as $entry) {
             $key = $this->syncKeyEntry(
-                fingerprint: $this->fingerprint('key:' . $entry['full_key']),
+                fingerprint: $this->fingerprint('key:'.$entry['full_key']),
                 key: $entry['full_key'],
                 status: 'missing',
                 classification: 'key',
@@ -117,7 +118,7 @@ class SyncTranslationAudits extends Command
 
         foreach ($this->readList('compare', 'obsolete') as $entry) {
             $key = $this->syncKeyEntry(
-                fingerprint: $this->fingerprint('key:' . $entry['full_key']),
+                fingerprint: $this->fingerprint('key:'.$entry['full_key']),
                 key: $entry['full_key'],
                 status: 'obsolete',
                 classification: 'key',
@@ -342,6 +343,26 @@ class SyncTranslationAudits extends Command
 
         if ($resolvedClassification === 'key' && $resolvedKey !== null && trim($resolvedKey) !== '') {
             $translationKey = $this->mergeDuplicateKeyRows($translationKey, $resolvedKey, $now);
+        }
+
+        if (! $wasExisting) {
+            $this->createAuditEvent([
+                'translation_key_id' => $translationKey->id,
+                'entity_type' => 'translation_key',
+                'event_type' => 'discovered',
+                'new_fingerprint' => $translationKey->fingerprint,
+                'new_key' => $translationKey->key,
+                'new_value' => $translationKey->native_text,
+                'new_status' => $translationKey->status,
+                'reason' => 'translation_key_discovered_during_audit_sync',
+                'context' => [
+                    'classification' => $translationKey->classification,
+                    'workflow_status' => $translationKey->workflow_status ?? 'open',
+                    'suggested_key' => $translationKey->suggested_key,
+                    'source' => $translationKey->source,
+                    'first_seen_at' => $translationKey->first_seen_at?->toDateTimeString(),
+                ],
+            ]);
         }
 
         if ($wasExisting && $oldStatus === 'obsolete' && $resolvedStatus !== 'obsolete') {
@@ -1033,6 +1054,36 @@ class SyncTranslationAudits extends Command
 
     private function createAuditEvent(array $payload): void
     {
+        $context = is_array($payload['context'] ?? null) ? $payload['context'] : [];
+
+        if (($payload['event_type'] ?? null) === 'discovered') {
+            $context['affected_usages_snapshot_complete'] ??= false;
+        } else {
+            $usageQuery = TranslationUsage::query()
+                ->where('translation_key_id', $payload['translation_key_id'] ?? 0);
+
+            if (! empty($payload['translation_usage_id'])) {
+                $usageQuery->whereKey($payload['translation_usage_id']);
+            }
+
+            $context['affected_usages'] = $usageQuery
+                ->orderBy('file')
+                ->orderBy('line')
+                ->orderBy('id')
+                ->get(['id', 'file', 'line', 'function', 'classification', 'raw', 'original_raw'])
+                ->map(static fn (TranslationUsage $usage): array => [
+                    'id' => $usage->id,
+                    'file' => $usage->file,
+                    'line' => $usage->line,
+                    'function' => $usage->function,
+                    'classification' => $usage->classification,
+                    'raw' => $usage->raw,
+                    'original_raw' => $usage->original_raw,
+                ])
+                ->all();
+            $context['affected_usages_snapshot_complete'] = true;
+        }
+
         DB::table('translation_audit_events')->insert([
             'translation_key_id' => $payload['translation_key_id'] ?? null,
             'translation_usage_id' => $payload['translation_usage_id'] ?? null,
@@ -1051,8 +1102,8 @@ class SyncTranslationAudits extends Command
             'old_status' => $payload['old_status'] ?? null,
             'new_status' => $payload['new_status'] ?? null,
             'reason' => $payload['reason'] ?? null,
-            'context' => isset($payload['context'])
-                ? json_encode($payload['context'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+            'context' => $context !== []
+                ? json_encode($context, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
                 : null,
             'created_at' => now(),
             'updated_at' => now(),
@@ -1064,7 +1115,7 @@ class SyncTranslationAudits extends Command
      */
     private function readList(string $section, string $name): array
     {
-        $path = storage_path('audits/translations/' . $section . '/' . $name . '.json');
+        $path = storage_path('audits/translations/'.$section.'/'.$name.'.json');
 
         if (! File::isFile($path)) {
             return [];
@@ -1234,26 +1285,25 @@ class SyncTranslationAudits extends Command
     }
 
     /**
-     * @param array<string, int> $counters
-     * @param array<int, string> $locales
+     * @param  array<string, int>  $counters
+     * @param  array<int, string>  $locales
      */
     private function logRunCompletedActivity(array $counters, int $staleUsageCount, int $staleCount, array $locales): void
     {
         try {
             activity('translations')
                 ->event('translations.audit.sync.completed')
-                ->withProperties([
-                    'command' => $this->getName(),
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'summary' => [
                         'locales' => $locales,
                         'counters' => $counters,
                         'stale_usage_marked' => $staleUsageCount,
                         'stale_keys_marked' => $staleCount,
                     ],
-                ])
+                ]))
                 ->log('Translation audit sync completed');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for command run summary: ' . $exception->getMessage());
+            $this->warn('Activity log write failed for command run summary: '.$exception->getMessage());
         }
     }
 }

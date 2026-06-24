@@ -30,6 +30,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use RuntimeException;
@@ -180,7 +181,7 @@ class ProjectTranslations extends Command
 
             return self::SUCCESS;
         } catch (Throwable $exception) {
-            $this->error('❌ Translation-Workflow fehlgeschlagen: ' . trim($exception->getMessage()));
+            $this->error('❌ Translation-Workflow fehlgeschlagen: '.trim($exception->getMessage()));
 
             $this->logRunActivity('project.translations.failed', 'Project translations workflow failed.', [
                 'error' => trim($exception->getMessage()),
@@ -199,16 +200,16 @@ class ProjectTranslations extends Command
     }
 
     /**
-     * @param array<string, string> $arguments
+     * @param  array<string, string>  $arguments
      */
     private function runArtisanStep(string $description, string $command, array $arguments = []): void
     {
-        $this->info('➤ ' . $description);
+        $this->info('➤ '.$description);
 
         $exitCode = $this->call($command, $arguments);
 
         if ($exitCode !== self::SUCCESS) {
-            throw new RuntimeException('Step failed: ' . $command . ' (exit code ' . $exitCode . ')');
+            throw new RuntimeException('Step failed: '.$command.' (exit code '.$exitCode.')');
         }
     }
 
@@ -232,7 +233,7 @@ class ProjectTranslations extends Command
     }
 
     /**
-     * @param array<int, string> $command
+     * @param  array<int, string>  $command
      */
     private function runProcess(array $command): void
     {
@@ -253,12 +254,10 @@ class ProjectTranslations extends Command
         try {
             activity('project')
                 ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 }

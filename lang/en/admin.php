@@ -471,7 +471,7 @@ return [
             'select_a_target_language_to_filter_the_list_of_translations' => 'Select a target language to filter the list of translations.',
             'select_a_translation_group_within_the_current_namespace_and_filter_context' => 'Select a translation group within the current namespace and filter context.',
             'select_a_translation_namespace_to_narrow_the_list_to_the_corresponding_translati' => 'Select a translation namespace to narrow the list to the corresponding translation context.',
-            'select_target_language' => '— Select target language —',
+            'select_target_language' => 'Select target language',
             'showing' => 'Showing',
             'status_all' => 'Status: All',
             'status_dynamic' => 'Status: Dynamic',

@@ -5,6 +5,7 @@
 namespace App\Console\Commands;
 
 use App\Models\TranslationKey;
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use SplFileInfo;
@@ -83,9 +84,9 @@ class TranslationsRewriteLiterals extends Command
         }
 
         $this->line('');
-        $this->line('Files scanned: ' . $filesScanned);
-        $this->line('Files changed: ' . $filesChanged);
-        $this->line('Replacements: ' . $replacementsTotal);
+        $this->line('Files scanned: '.$filesScanned);
+        $this->line('Files changed: '.$filesChanged);
+        $this->line('Replacements: '.$replacementsTotal);
 
         if ($dryRun) {
             $this->warn('Dry run only: no files were written.');
@@ -112,7 +113,7 @@ class TranslationsRewriteLiterals extends Command
         }
 
         return collect(explode(',', $pathsOption))
-            ->map(fn(string $path): string => trim($path))
+            ->map(fn (string $path): string => trim($path))
             ->filter()
             ->unique()
             ->values()
@@ -151,14 +152,14 @@ class TranslationsRewriteLiterals extends Command
     }
 
     /**
-     * @param array<int, string> $paths
+     * @param  array<int, string>  $paths
      * @return iterable<int, SplFileInfo>
      */
     private function scannableFiles(array $paths): iterable
     {
         $directories = collect($paths)
-            ->map(fn(string $path): string => base_path($path))
-            ->filter(fn(string $path): bool => File::isDirectory($path))
+            ->map(fn (string $path): string => base_path($path))
+            ->filter(fn (string $path): bool => File::isDirectory($path))
             ->values()
             ->all();
 
@@ -176,7 +177,7 @@ class TranslationsRewriteLiterals extends Command
     }
 
     /**
-     * @param array<string, string> $literalToKeyMap
+     * @param  array<string, string>  $literalToKeyMap
      * @return array{0: string, 1: int}
      */
     private function rewriteContent(string $contents, array $literalToKeyMap): array
@@ -203,7 +204,7 @@ class TranslationsRewriteLiterals extends Command
                 $escapedKey = addcslashes($key, "\\{$quote}");
                 $replacements++;
 
-                return $match['function'] . '(' . $quote . $escapedKey . $quote;
+                return $match['function'].'('.$quote.$escapedKey.$quote;
             },
             $contents,
         );
@@ -224,7 +225,7 @@ class TranslationsRewriteLiterals extends Command
 
     private function relativePath(string $path): string
     {
-        return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+        return str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
     }
 
     private function logFileRewrittenActivity(string $path, int $replacements): void
@@ -232,19 +233,18 @@ class TranslationsRewriteLiterals extends Command
         try {
             activity('translations')
                 ->event('translations.literals.file_rewritten')
-                ->withProperties([
-                    'command' => $this->getName(),
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'path' => $path,
                     'replacements' => $replacements,
-                ])
+                ]))
                 ->log('Translation literal calls rewritten in file');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for file "' . $path . '": ' . $exception->getMessage());
+            $this->warn('Activity log write failed for file "'.$path.'": '.$exception->getMessage());
         }
     }
 
     /**
-     * @param array<int, string> $paths
+     * @param  array<int, string>  $paths
      */
     private function logRunCompletedActivity(
         bool $dryRun,
@@ -257,8 +257,7 @@ class TranslationsRewriteLiterals extends Command
         try {
             activity('translations')
                 ->event('translations.literals.rewrite.completed')
-                ->withProperties([
-                    'command' => $this->getName(),
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'options' => [
                         'dry_run' => $dryRun,
                         'paths' => $paths,
@@ -269,10 +268,10 @@ class TranslationsRewriteLiterals extends Command
                         'replacements' => $replacements,
                         'mapping_count' => $mappingCount,
                     ],
-                ])
+                ]))
                 ->log('Translation literal rewrite completed');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for command run summary: ' . $exception->getMessage());
+            $this->warn('Activity log write failed for command run summary: '.$exception->getMessage());
         }
     }
 }

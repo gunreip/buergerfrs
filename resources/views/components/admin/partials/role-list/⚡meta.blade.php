@@ -1,81 +1,80 @@
 {{-- resources/views/components/admin/partials/role-list/⚡meta.blade.php --}}
 
 {{-- Metablock: Overview --}}
-<flux:card class="mt-6">
-    <x-ui.headers.card
-        :title="__('admin.permissions.overview.title')"
-        :description="__(
-            'Get a quick snapshot of role statistics, including total roles, assignable roles, system roles, and user assignments.',
-        )"
-    />
+<flux:card
+    class="mt-6"
+    x-data="{ showMeta: true }"
+>
+    <div class="flex w-full items-center justify-between gap-3">
+        <div class="min-w-0">
+            <x-ui.headers.card
+                :title="__('admin.permissions.overview.title')"
+                :description="__(
+                    'Get a quick snapshot of role statistics, including total roles, assignable roles, system roles, and user assignments.',
+                )"
+            />
+        </div>
 
-    <div class="grid gap-3 md:grid-cols-4">
-        <flux:callout
-            color="sky"
-            icon="shield-check"
-        >
-            <flux:callout.heading>
-                {{ __('Total roles') }}
-            </flux:callout.heading>
+        <div class="ml-auto flex shrink-0 items-center gap-3">
+            <x-ui.button.show-hide
+                size="xs"
+                state="showMeta"
+            />
+        </div>
+    </div>
 
-            <flux:callout.text class="font-extralight">
-                {{ __('The total number of roles currently registered.') }}
-            </flux:callout.text>
+    <div
+        x-show="showMeta"
+        x-collapse
+    >
+        <div class="grid gap-3 md:grid-cols-4">
+            <flux:callout
+                class="hyphens-auto md:col-span-1"
+                color="sky"
+                icon="shield-check"
+                heading="{{ __('Total roles') }}"
+                text="{{ __('The total number of roles currently registered.') }}"
+            >
+                <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                    {{ $roles->count() }}
+                </flux:callout.text>
+            </flux:callout>
 
-            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
-                {{ $roles->count() }}
-            </flux:callout.text>
-        </flux:callout>
+            <flux:callout
+                class="hyphens-auto md:col-span-1"
+                color="green"
+                icon="check-circle"
+                heading="{{ __('admin.user_list.meta.assignable_roles') }}"
+                text="{{ __('Roles that can be assigned to users through the UI.') }}"
+            >
+                <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                    {{ $roles->where('is_assignable', true)->count() }}
+                </flux:callout.text>
+            </flux:callout>
 
-        <flux:callout
-            color="green"
-            icon="check-circle"
-        >
-            <flux:callout.heading>
-                {{ __('admin.user_list.meta.assignable_roles') }}
-            </flux:callout.heading>
+            <flux:callout
+                class="hyphens-auto md:col-span-1"
+                color="purple"
+                icon="crown"
+                heading="{{ __('System roles') }}"
+                text="{{ __('Roles marked as system-level roles.') }}"
+            >
+                <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                    {{ $roles->where('is_system', true)->count() }}
+                </flux:callout.text>
+            </flux:callout>
 
-            <flux:callout.text class="font-extralight">
-                {{ __('Roles that can be assigned to users through the UI.') }}
-            </flux:callout.text>
-
-            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
-                {{ $roles->where('is_assignable', true)->count() }}
-            </flux:callout.text>
-        </flux:callout>
-
-        <flux:callout
-            color="purple"
-            icon="crown"
-        >
-            <flux:callout.heading>
-                {{ __('System roles') }}
-            </flux:callout.heading>
-
-            <flux:callout.text class="font-extralight">
-                {{ __('Roles marked as system-level roles.') }}
-            </flux:callout.text>
-
-            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
-                {{ $roles->where('is_system', true)->count() }}
-            </flux:callout.text>
-        </flux:callout>
-
-        <flux:callout
-            color="orange"
-            icon="users"
-        >
-            <flux:callout.heading>
-                {{ __('admin.roles.labels.assigned_users') }}
-            </flux:callout.heading>
-
-            <flux:callout.text class="font-extralight">
-                {{ __('Distinct users currently assigned to at least one role.') }}
-            </flux:callout.text>
-
-            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
-                {{ $roles->sum('users_count') }}
-            </flux:callout.text>
-        </flux:callout>
+            <flux:callout
+                class="hyphens-auto md:col-span-1"
+                color="orange"
+                icon="users"
+                heading="{{ __('admin.roles.labels.assigned_users') }}"
+                text="{{ __('Distinct users currently assigned to at least one role.') }}"
+            >
+                <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                    {{ $roles->sum('users_count') }}
+                </flux:callout.text>
+            </flux:callout>
+        </div>
     </div>
 </flux:card>

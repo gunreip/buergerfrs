@@ -5,6 +5,7 @@
 namespace App\Console\Commands;
 
 use App\Models\TranslationLanguage;
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -70,7 +71,7 @@ class TranslationsExportLangFiles extends Command
             $values = $this->translationValuesForLocale($locale);
 
             $grouped = $values
-                ->filter(fn(array $entry): bool => $entry['group'] !== null)
+                ->filter(fn (array $entry): bool => $entry['group'] !== null)
                 ->groupBy('group');
 
             foreach ($grouped as $group => $entries) {
@@ -80,7 +81,7 @@ class TranslationsExportLangFiles extends Command
 
                 $payload = $this->buildPhpGroupPayload($group, $entries);
                 $content = $this->renderPhpTranslationArray($payload);
-                $path = $localeDirectory . DIRECTORY_SEPARATOR . $group . '.php';
+                $path = $localeDirectory.DIRECTORY_SEPARATOR.$group.'.php';
 
                 $result = $this->writeTranslationFile(
                     path: $path,
@@ -99,15 +100,15 @@ class TranslationsExportLangFiles extends Command
             }
 
             $jsonEntries = $values
-                ->filter(fn(array $entry): bool => $entry['group'] === null && trim($entry['key']) !== '')
-                ->mapWithKeys(fn(array $entry): array => [$entry['key'] => $entry['value']])
+                ->filter(fn (array $entry): bool => $entry['group'] === null && trim($entry['key']) !== '')
+                ->mapWithKeys(fn (array $entry): array => [$entry['key'] => $entry['value']])
                 ->all();
 
             if ($jsonEntries !== []) {
                 ksort($jsonEntries);
 
-                $jsonContent = json_encode($jsonEntries, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL;
-                $jsonPath = lang_path($locale . '.json');
+                $jsonContent = json_encode($jsonEntries, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL;
+                $jsonPath = lang_path($locale.'.json');
 
                 $result = $this->writeTranslationFile(
                     path: $jsonPath,
@@ -135,10 +136,10 @@ class TranslationsExportLangFiles extends Command
         }
 
         $this->line('');
-        $this->line('Directories created: ' . $createdDirectories);
-        $this->line('Files created: ' . $createdFiles);
-        $this->line('Files updated: ' . $updatedFiles);
-        $this->line('Files unchanged: ' . $unchangedFiles);
+        $this->line('Directories created: '.$createdDirectories);
+        $this->line('Files created: '.$createdFiles);
+        $this->line('Files updated: '.$updatedFiles);
+        $this->line('Files unchanged: '.$unchangedFiles);
 
         if ($dryRun) {
             $this->warn('Dry run only: no files were written.');
@@ -167,7 +168,7 @@ class TranslationsExportLangFiles extends Command
 
         if ($localesOption !== '') {
             return collect(explode(',', $localesOption))
-                ->map(static fn(string $locale): string => self::normalizeLocale($locale))
+                ->map(static fn (string $locale): string => self::normalizeLocale($locale))
                 ->filter()
                 ->unique()
                 ->sort()
@@ -178,7 +179,7 @@ class TranslationsExportLangFiles extends Command
         $fromSettings = TranslationLanguage::query()
             ->where('is_enabled_for_translation', true)
             ->pluck('locale')
-            ->map(static fn(string $locale): string => self::normalizeLocale($locale))
+            ->map(static fn (string $locale): string => self::normalizeLocale($locale))
             ->filter()
             ->unique()
             ->sort()
@@ -191,7 +192,7 @@ class TranslationsExportLangFiles extends Command
             ->whereRaw('locale like ?', ['%-%'])
             ->distinct()
             ->pluck('locale')
-            ->map(static fn(string $locale): string => self::normalizeLocale($locale))
+            ->map(static fn (string $locale): string => self::normalizeLocale($locale))
             ->filter()
             ->unique()
             ->sort()
@@ -273,7 +274,7 @@ class TranslationsExportLangFiles extends Command
     }
 
     /**
-     * @param Collection<int, array{group: string|null, key: string, value: string}> $entries
+     * @param  Collection<int, array{group: string|null, key: string, value: string}>  $entries
      * @return array<string, mixed>
      */
     private function buildPhpGroupPayload(string $group, Collection $entries): array
@@ -304,7 +305,7 @@ class TranslationsExportLangFiles extends Command
             return $normalizedKey;
         }
 
-        $prefix = $normalizedGroup . '.';
+        $prefix = $normalizedGroup.'.';
 
         if (str_starts_with($normalizedKey, $prefix)) {
             return substr($normalizedKey, strlen($prefix));
@@ -314,11 +315,11 @@ class TranslationsExportLangFiles extends Command
     }
 
     /**
-     * @param array<string, mixed> $target
+     * @param  array<string, mixed>  $target
      */
     private function setNestedArrayValue(array &$target, string $dotKey, string $value): void
     {
-        $segments = array_values(array_filter(explode('.', $dotKey), static fn(string $segment): bool => $segment !== ''));
+        $segments = array_values(array_filter(explode('.', $dotKey), static fn (string $segment): bool => $segment !== ''));
 
         if ($segments === []) {
             return;
@@ -344,7 +345,7 @@ class TranslationsExportLangFiles extends Command
     }
 
     /**
-     * @param array<string, mixed> $array
+     * @param  array<string, mixed>  $array
      */
     private function sortRecursive(array &$array): void
     {
@@ -358,15 +359,15 @@ class TranslationsExportLangFiles extends Command
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     private function renderPhpTranslationArray(array $payload): string
     {
-        return "<?php\n\nreturn " . $this->exportArray($payload, 0) . ";\n";
+        return "<?php\n\nreturn ".$this->exportArray($payload, 0).";\n";
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     private function exportArray(array $payload, int $indentLevel): string
     {
@@ -389,10 +390,10 @@ class TranslationsExportLangFiles extends Command
                 $exportedValue = var_export($value, true);
             }
 
-            $line = $childIndent . $exportedKey . ' => ' . $exportedValue . ',';
+            $line = $childIndent.$exportedKey.' => '.$exportedValue.',';
 
             if ($isArrayValue && $lines !== []) {
-                $line = "" . PHP_EOL . $line;
+                $line = ''.PHP_EOL.$line;
             }
 
             $lines[] = $line;
@@ -400,7 +401,7 @@ class TranslationsExportLangFiles extends Command
             $previousWasArray = $isArrayValue;
         }
 
-        return "[\n" . implode("\n", $lines) . "\n" . $indent . ']';
+        return "[\n".implode("\n", $lines)."\n".$indent.']';
     }
 
     /**
@@ -471,15 +472,14 @@ class TranslationsExportLangFiles extends Command
         try {
             activity('translations')
                 ->event('translations.lang.directory_created')
-                ->withProperties([
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'locale' => $locale,
                     'path' => $this->relativePath($path),
                     'absolute_path' => $path,
-                    'command' => $this->getName(),
-                ])
+                ]))
                 ->log('Translation language directory created');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for locale "' . $locale . '": ' . $exception->getMessage());
+            $this->warn('Activity log write failed for locale "'.$locale.'": '.$exception->getMessage());
         }
     }
 
@@ -488,16 +488,15 @@ class TranslationsExportLangFiles extends Command
         try {
             activity('translations')
                 ->event('translations.lang.file_created')
-                ->withProperties([
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'locale' => $locale,
                     'format' => $format,
                     'path' => $this->relativePath($path),
                     'absolute_path' => $path,
-                    'command' => $this->getName(),
-                ])
+                ]))
                 ->log('Translation language file created');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for file "' . $this->relativePath($path) . '": ' . $exception->getMessage());
+            $this->warn('Activity log write failed for file "'.$this->relativePath($path).'": '.$exception->getMessage());
         }
     }
 
@@ -506,16 +505,15 @@ class TranslationsExportLangFiles extends Command
         try {
             activity('translations')
                 ->event('translations.lang.file_updated')
-                ->withProperties([
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'locale' => $locale,
                     'format' => $format,
                     'path' => $this->relativePath($path),
                     'absolute_path' => $path,
-                    'command' => $this->getName(),
-                ])
+                ]))
                 ->log('Translation language file updated');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for file "' . $this->relativePath($path) . '": ' . $exception->getMessage());
+            $this->warn('Activity log write failed for file "'.$this->relativePath($path).'": '.$exception->getMessage());
         }
     }
 
@@ -524,21 +522,20 @@ class TranslationsExportLangFiles extends Command
         try {
             activity('translations')
                 ->event('translations.lang.export.no_target_locales')
-                ->withProperties([
-                    'command' => $this->getName(),
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'options' => [
                         'locales' => (string) $this->option('locales'),
                         'dry_run' => $dryRun,
                     ],
-                ])
+                ]))
                 ->log('No target locales found for translation export run');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for no-target-locales event: ' . $exception->getMessage());
+            $this->warn('Activity log write failed for no-target-locales event: '.$exception->getMessage());
         }
     }
 
     /**
-     * @param array<int, string> $locales
+     * @param  array<int, string>  $locales
      */
     private function logRunCompletedActivity(
         array $locales,
@@ -553,8 +550,7 @@ class TranslationsExportLangFiles extends Command
         try {
             activity('translations')
                 ->event('translations.lang.export.completed')
-                ->withProperties([
-                    'command' => $this->getName(),
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'summary' => [
                         'locales' => $locales,
                         'created_directories' => $createdDirectories,
@@ -565,15 +561,15 @@ class TranslationsExportLangFiles extends Command
                         'dry_run' => $dryRun,
                         'had_export_rows' => $hadRows,
                     ],
-                ])
+                ]))
                 ->log('Translation export run completed');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for command run summary: ' . $exception->getMessage());
+            $this->warn('Activity log write failed for command run summary: '.$exception->getMessage());
         }
     }
 
     private function relativePath(string $path): string
     {
-        return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+        return str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
     }
 }

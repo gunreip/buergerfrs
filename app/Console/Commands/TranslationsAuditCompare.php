@@ -4,6 +4,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -260,7 +261,7 @@ class TranslationsAuditCompare extends Command
                 continue;
             }
 
-            $scopedKey = $locale . '::' . $fullKey;
+            $scopedKey = $locale.'::'.$fullKey;
 
             $definitions[$scopedKey] ??= [
                 'locale' => $locale,
@@ -342,7 +343,7 @@ class TranslationsAuditCompare extends Command
             }
 
             $normalizedKey = $this->normalizeFullKeyForExport($group, $key);
-            $scopedKey = $locale . '::' . $normalizedKey;
+            $scopedKey = $locale.'::'.$normalizedKey;
 
             $definitions[$scopedKey] = [
                 'locale' => $locale,
@@ -374,13 +375,13 @@ class TranslationsAuditCompare extends Command
             }
         }
 
-        $prefix = $normalizedGroup . '.';
+        $prefix = $normalizedGroup.'.';
 
         if (str_starts_with($normalizedKey, $prefix)) {
             return $normalizedKey;
         }
 
-        return $prefix . $normalizedKey;
+        return $prefix.$normalizedKey;
     }
 
     /**
@@ -390,7 +391,7 @@ class TranslationsAuditCompare extends Command
      */
     private function readAuditList(string $section, string $name): array
     {
-        $path = storage_path('audits/translations/' . $section . '/' . $name . '.json');
+        $path = storage_path('audits/translations/'.$section.'/'.$name.'.json');
 
         if (! File::isFile($path)) {
             return [];
@@ -414,15 +415,15 @@ class TranslationsAuditCompare extends Command
 
         File::ensureDirectoryExists($directory);
 
-        $fullPath = $directory . DIRECTORY_SEPARATOR . $name . '.json';
-        $previewPath = $directory . DIRECTORY_SEPARATOR . $name . '.preview.json';
+        $fullPath = $directory.DIRECTORY_SEPARATOR.$name.'.json';
+        $previewPath = $directory.DIRECTORY_SEPARATOR.$name.'.preview.json';
         $fullPathExisted = File::exists($fullPath);
         $previewPathExisted = File::exists($previewPath);
         $fullPreviousContent = $fullPathExisted ? (string) File::get($fullPath) : null;
         $previewPreviousContent = $previewPathExisted ? (string) File::get($previewPath) : null;
 
-        $fullContent = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL;
-        $previewContent = json_encode($this->previewData($data), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL;
+        $fullContent = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL;
+        $previewContent = json_encode($this->previewData($data), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL;
 
         File::put($fullPath, $fullContent);
 
@@ -467,14 +468,13 @@ class TranslationsAuditCompare extends Command
         try {
             activity('translations')
                 ->event($event)
-                ->withProperties([
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'path' => $this->relativePath($path),
                     'absolute_path' => $path,
-                    'command' => $this->getName(),
-                ])
+                ]))
                 ->log('Translation audit file created');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for file "' . $this->relativePath($path) . '": ' . $exception->getMessage());
+            $this->warn('Activity log write failed for file "'.$this->relativePath($path).'": '.$exception->getMessage());
         }
     }
 
@@ -483,37 +483,35 @@ class TranslationsAuditCompare extends Command
         try {
             activity('translations')
                 ->event($event)
-                ->withProperties([
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'path' => $this->relativePath($path),
                     'absolute_path' => $path,
-                    'command' => $this->getName(),
-                ])
+                ]))
                 ->log('Translation audit file updated');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for file "' . $this->relativePath($path) . '": ' . $exception->getMessage());
+            $this->warn('Activity log write failed for file "'.$this->relativePath($path).'": '.$exception->getMessage());
         }
     }
 
     /**
-     * @param array<string, mixed> $summary
+     * @param  array<string, mixed>  $summary
      */
     private function logRunCompletedActivity(array $summary): void
     {
         try {
             activity('translations')
                 ->event('translations.audit.compare.completed')
-                ->withProperties([
-                    'command' => $this->getName(),
+                ->withProperties(ConsoleActivityContext::merge($this, [
                     'summary' => $summary,
-                ])
+                ]))
                 ->log('Translation compare audit completed');
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed for command run summary: ' . $exception->getMessage());
+            $this->warn('Activity log write failed for command run summary: '.$exception->getMessage());
         }
     }
 
     private function relativePath(string $path): string
     {
-        return str_replace(base_path() . DIRECTORY_SEPARATOR, '', $path);
+        return str_replace(base_path().DIRECTORY_SEPARATOR, '', $path);
     }
 }

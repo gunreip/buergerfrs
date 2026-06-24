@@ -5,11 +5,13 @@
 namespace App\Console\Commands;
 
 use App\Models\TranslationLangBallastDecision;
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Throwable;
 
 #[Signature('translations:lang-ballast:apply {--write : Actually modify lang files. Without --write only preview files are generated.}')]
 #[Description('Preview or apply approved lang ballast decisions to lang/* files.')]
@@ -33,10 +35,15 @@ class TranslationsApplyLangBallastDecisions extends Command
             $this->warn('Write mode enabled for approved remove_from_lang candidates only. add_to_lang stays preview-only.');
         }
 
-        $payload = $this->readJsonFile(storage_path(self::OUTPUT_DIR . '/full.json'));
+        $payload = $this->readJsonFile(storage_path(self::OUTPUT_DIR.'/full.json'));
 
         if ($payload === []) {
             $this->error('Missing or invalid lang ballast full.json. Run php artisan translations:audit-lang-ballast first.');
+
+            $this->logRunFailedActivity('missing_or_invalid_lang_ballast_full_json', [
+                'source' => 'storage/audits/translations/lang-ballast/full.json',
+                'write_requested' => $writeRequested,
+            ]);
 
             return self::FAILURE;
         }
@@ -129,29 +136,30 @@ class TranslationsApplyLangBallastDecisions extends Command
         $this->writeApplyFiles($applyPayload);
 
         $this->info('Lang ballast apply preview finished');
-        $this->line('Approved remove candidates: ' . $approvedRemoveCandidates->count());
-        $this->line('Approved add candidates: ' . $approvedAddCandidates->count());
-        $this->line('Write-ready remove candidates: ' . $summary['write_ready_remove_entries']);
-        $this->line('Write-ready add candidates: ' . $summary['write_ready_add_entries']);
-        $this->line('Write-blocked remove candidates: ' . $summary['write_blocked_remove_entries']);
-        $this->line('Write-blocked add candidates: ' . $summary['write_blocked_add_entries']);
-        $this->line('Written remove candidates: ' . $summary['written_remove_entries']);
-        $this->line('Write-failed remove candidates: ' . $summary['write_failed_remove_entries']);
-        $this->line('Skipped not approved candidates: ' . $summary['skipped_not_approved_entries']);
+        $this->line('Approved remove candidates: '.$approvedRemoveCandidates->count());
+        $this->line('Approved add candidates: '.$approvedAddCandidates->count());
+        $this->line('Write-ready remove candidates: '.$summary['write_ready_remove_entries']);
+        $this->line('Write-ready add candidates: '.$summary['write_ready_add_entries']);
+        $this->line('Write-blocked remove candidates: '.$summary['write_blocked_remove_entries']);
+        $this->line('Write-blocked add candidates: '.$summary['write_blocked_add_entries']);
+        $this->line('Written remove candidates: '.$summary['written_remove_entries']);
+        $this->line('Write-failed remove candidates: '.$summary['write_failed_remove_entries']);
+        $this->line('Skipped not approved candidates: '.$summary['skipped_not_approved_entries']);
+
+        $this->logRunCompletedActivity($summary);
 
         return self::SUCCESS;
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $entries
-     *
+     * @param  Collection<int, array<string, mixed>>  $entries
      * @return Collection<int, array<string, mixed>>
      */
     private function approvedActionEntries(Collection $entries, string $expectedActionCandidate): Collection
     {
         $candidateHashes = $entries
             ->pluck('candidate_hash')
-            ->map(static fn(mixed $value): string => trim((string) $value))
+            ->map(static fn (mixed $value): string => trim((string) $value))
             ->filter()
             ->unique()
             ->values();
@@ -196,8 +204,7 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $entries
-     *
+     * @param  Collection<int, array<string, mixed>>  $entries
      * @return array{ready: Collection<int, array<string, mixed>>, blocked: Collection<int, array<string, mixed>>}
      */
     private function evaluateRemoveCandidates(Collection $entries): array
@@ -275,8 +282,7 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $entries
-     *
+     * @param  Collection<int, array<string, mixed>>  $entries
      * @return array{ready: Collection<int, array<string, mixed>>, blocked: Collection<int, array<string, mixed>>}
      */
     private function evaluateAddCandidates(Collection $entries): array
@@ -352,8 +358,7 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $entries
-     *
+     * @param  Collection<int, array<string, mixed>>  $entries
      * @return array{written: Collection<int, array<string, mixed>>, failed: Collection<int, array<string, mixed>>}
      */
     private function writeRemoveCandidates(Collection $entries): array
@@ -361,13 +366,13 @@ class TranslationsApplyLangBallastDecisions extends Command
         $written = collect();
         $failed = collect();
 
-        foreach ($entries->groupBy(fn(array $entry): string => trim((string) ($entry['file'] ?? ''))) as $file => $fileEntries) {
+        foreach ($entries->groupBy(fn (array $entry): string => trim((string) ($entry['file'] ?? ''))) as $file => $fileEntries) {
             $firstEntry = $fileEntries->first();
             $path = is_array($firstEntry) ? $this->langFilePath($firstEntry) : null;
 
             if ($path === null) {
                 $failed = $failed->merge(
-                    $fileEntries->map(fn(array $entry): array => $this->writeFailedEntry($entry, 'invalid_lang_file_path')),
+                    $fileEntries->map(fn (array $entry): array => $this->writeFailedEntry($entry, 'invalid_lang_file_path')),
                 );
 
                 continue;
@@ -377,7 +382,7 @@ class TranslationsApplyLangBallastDecisions extends Command
 
             if ($payload === null) {
                 $failed = $failed->merge(
-                    $fileEntries->map(fn(array $entry): array => $this->writeFailedEntry($entry, 'lang_file_missing_or_invalid')),
+                    $fileEntries->map(fn (array $entry): array => $this->writeFailedEntry($entry, 'lang_file_missing_or_invalid')),
                 );
 
                 continue;
@@ -417,9 +422,9 @@ class TranslationsApplyLangBallastDecisions extends Command
 
             try {
                 $this->writeLangFilePayload($path, $payload);
-            } catch (\Throwable $exception) {
+            } catch (Throwable $exception) {
                 $failed = $failed->merge(
-                    $fileWritten->map(fn(array $entry): array => $this->writeFailedEntry($entry, 'lang_file_write_failed', [
+                    $fileWritten->map(fn (array $entry): array => $this->writeFailedEntry($entry, 'lang_file_write_failed', [
                         'write_error' => $exception->getMessage(),
                     ])),
                 );
@@ -437,9 +442,8 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param array<string, mixed> $entry
-     * @param array<string, mixed> $extra
-     *
+     * @param  array<string, mixed>  $entry
+     * @param  array<string, mixed>  $extra
      * @return array<string, mixed>
      */
     private function writtenEntry(array $entry, array $extra = []): array
@@ -453,9 +457,8 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param array<string, mixed> $entry
-     * @param array<string, mixed> $extra
-     *
+     * @param  array<string, mixed>  $entry
+     * @param  array<string, mixed>  $extra
      * @return array<string, mixed>
      */
     private function writeFailedEntry(array $entry, string $reason, array $extra = []): array
@@ -469,9 +472,8 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param array<string, mixed> $entry
-     * @param array<string, mixed> $extra
-     *
+     * @param  array<string, mixed>  $entry
+     * @param  array<string, mixed>  $extra
      * @return array<string, mixed>
      */
     private function readyEntry(array $entry, array $extra = []): array
@@ -485,9 +487,8 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param array<string, mixed> $entry
-     * @param array<string, mixed> $extra
-     *
+     * @param  array<string, mixed>  $entry
+     * @param  array<string, mixed>  $extra
      * @return array<string, mixed>
      */
     private function blockedEntry(array $entry, string $reason, array $extra = []): array
@@ -501,7 +502,7 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param array<string, mixed> $entry
+     * @param  array<string, mixed>  $entry
      */
     private function langFilePath(array $entry): ?string
     {
@@ -539,7 +540,7 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     private function langFileKeyExists(array $payload, string $fileKey, string $path): bool
     {
@@ -561,7 +562,7 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     private function langFileValue(array $payload, string $fileKey, string $path): mixed
     {
@@ -583,7 +584,7 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     private function forgetLangFileKey(array &$payload, string $fileKey, string $path): bool
     {
@@ -601,8 +602,8 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param array<string, mixed> $payload
-     * @param array<int, string> $segments
+     * @param  array<string, mixed>  $payload
+     * @param  array<int, string>  $segments
      */
     private function forgetNestedLangFileKey(array &$payload, array $segments): bool
     {
@@ -632,14 +633,14 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     private function writeLangFilePayload(string $path, array $payload): void
     {
         if (pathinfo($path, PATHINFO_EXTENSION) === 'json') {
             File::put(
                 $path,
-                json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL,
+                json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL,
             );
 
             return;
@@ -649,15 +650,15 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     private function exportPhpLangPayload(array $payload): string
     {
-        return "<?php\n\nreturn " . $this->exportPhpArray($payload) . ";\n";
+        return "<?php\n\nreturn ".$this->exportPhpArray($payload).";\n";
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     private function exportPhpArray(array $payload, int $level = 0): string
     {
@@ -678,10 +679,10 @@ class TranslationsApplyLangBallastDecisions extends Command
                 ? $this->exportPhpArray($value, $level + 1)
                 : var_export($value, true);
 
-            $lines[] = $childIndent . $exportedKey . ' => ' . $exportedValue . ',';
+            $lines[] = $childIndent.$exportedKey.' => '.$exportedValue.',';
         }
 
-        $lines[] = $indent . ']';
+        $lines[] = $indent.']';
 
         return implode(PHP_EOL, $lines);
     }
@@ -701,7 +702,7 @@ class TranslationsApplyLangBallastDecisions extends Command
     }
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     private function writeApplyFiles(array $payload): void
     {
@@ -730,17 +731,17 @@ class TranslationsApplyLangBallastDecisions extends Command
             : [];
 
         File::put(
-            $directory . '/apply-summary.json',
-            json_encode($summary, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL,
+            $directory.'/apply-summary.json',
+            json_encode($summary, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL,
         );
 
         File::put(
-            $directory . '/apply-full.json',
-            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL,
+            $directory.'/apply-full.json',
+            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL,
         );
 
         File::put(
-            $directory . '/apply-preview.json',
+            $directory.'/apply-preview.json',
             json_encode([
                 ...$payload,
                 'actions' => [
@@ -783,7 +784,42 @@ class TranslationsApplyLangBallastDecisions extends Command
                         ->values()
                         ->all(),
                 ],
-            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL,
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL,
         );
+    }
+
+    /**
+     * @param  array<string, mixed>  $summary
+     */
+    private function logRunCompletedActivity(array $summary): void
+    {
+        try {
+            activity('translations')
+                ->event('translations.lang_ballast.apply.completed')
+                ->withProperties(ConsoleActivityContext::merge($this, [
+                    'summary' => $summary,
+                ]))
+                ->log('Translation lang ballast apply command completed');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: '.$exception->getMessage());
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $properties
+     */
+    private function logRunFailedActivity(string $reason, array $properties = []): void
+    {
+        try {
+            activity('translations')
+                ->event('translations.lang_ballast.apply.failed')
+                ->withProperties(ConsoleActivityContext::merge($this, [
+                    'reason' => $reason,
+                    ...$properties,
+                ]))
+                ->log('Translation lang ballast apply command failed');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: '.$exception->getMessage());
+        }
     }
 }

@@ -153,45 +153,33 @@
     >
         <div class="grid flex-1 gap-3 md:grid-cols-3">
             <flux:callout
-                class="col-span-1"
+                class="col-span-1 hyphens-auto"
                 color="emerald"
                 icon="archive-x"
-                stroke-width="1"
+                heading="{{ __('Audit') }}"
             >
-                <flux:callout.heading>
-                    {{ __('Audit') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ __('Language Ballast') }}
                 </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-1"
+                class="col-span-1 hyphens-auto"
                 color="purple"
                 icon="folder-search"
-                stroke-width="1"
+                heading="{{ __('admin.translation_list.modal.source') }}"
             >
-                <flux:callout.heading>
-                    {{ __('admin.translation_list.modal.source') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-mono font-semibold">
                     {{ __('lang/{ll}|{ll-CC}/*') }}
                 </flux:callout.text>
             </flux:callout>
 
             <flux:callout
-                class="col-span-1"
+                class="col-span-1 hyphens-auto"
                 color="sky"
                 icon="calendar"
-                stroke-width="1"
+                heading="{{ __('Generated at') }}"
             >
-                <flux:callout.heading>
-                    {{ __('Generated at') }}
-                </flux:callout.heading>
-
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     @if ($generatedAt)
                         <span class="mr-2">
@@ -209,7 +197,7 @@
                             />
                         </span>
                     @else
-                        —
+                        <x-ui.badge.no-value />
                     @endif
                 </flux:callout.text>
             </flux:callout>
@@ -219,15 +207,11 @@
 
             @foreach ($metaCards as $metaCard)
                 <flux:callout
-                    {{-- class="col-span-1" --}}
+                    class="col-span-1 hyphens-auto"
                     color="{{ $metaCard['color'] }}"
                     icon="{{ $metaCard['icon'] }}"
-                    stroke-width="1"
+                    :heading="$metaCard['label']"
                 >
-                    <flux:callout.heading>
-                        {{ $metaCard['label'] }}
-                    </flux:callout.heading>
-
                     <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                         {{ number_format((int) $metaCard['value']) }}
                     </flux:callout.text>
@@ -238,15 +222,11 @@
         <div class="mt-3 grid flex-1 gap-3 md:grid-cols-5">
             @foreach ($databaseCards as $databaseCard)
                 <flux:callout
-                    class="col-span-1"
+                    class="col-span-1 hyphens-auto"
                     color="{{ $databaseCard['color'] }}"
                     icon="{{ $databaseCard['icon'] }}"
-                    stroke-width="1"
+                    :heading="$databaseCard['label']"
                 >
-                    <flux:callout.heading>
-                        {{ $databaseCard['label'] }}
-                    </flux:callout.heading>
-
                     <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                         {{ number_format((int) $databaseCard['value']) }}
                     </flux:callout.text>

@@ -4,6 +4,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Throwable;
 
@@ -36,14 +37,14 @@ class WriteVersions extends Command
         $content .= "| Composer   | $composer |\n";
         $content .= "| Node.js    | $node |\n";
         $content .= "| npm        | $npm |\n";
-        $content .= "\n**Stand:** " . date('Y-m-d H:i:s') . "\n";
+        $content .= "\n**Stand:** ".date('Y-m-d H:i:s')."\n";
 
         // Composer-Pakete (nur direkte Abhängigkeiten)
         $composerPackagesPath = base_path('composer_packages.json');
         if (file_exists($composerPackagesPath)) {
             $json = json_decode(file_get_contents($composerPackagesPath), true);
             $locked = $json['locked'] ?? [];
-            $direct = array_filter($locked, fn($pkg) => ($pkg['direct-dependency'] ?? false) === true);
+            $direct = array_filter($locked, fn ($pkg) => ($pkg['direct-dependency'] ?? false) === true);
             if (count($direct) > 0) {
                 $content .= "\n## Wichtige Composer-Packages (direkte Abhängigkeiten)\n\n";
                 $content .= "| Package | Version | Beschreibung |\n";
@@ -121,12 +122,10 @@ class WriteVersions extends Command
         try {
             activity('project')
                 ->event($event)
-                ->withProperties(array_merge([
-                    'command' => $this->getName(),
-                ], $properties))
+                ->withProperties(ConsoleActivityContext::merge($this, $properties))
                 ->log($description);
         } catch (Throwable $exception) {
-            $this->warn('Activity log write failed: ' . $exception->getMessage());
+            $this->warn('Activity log write failed: '.$exception->getMessage());
         }
     }
 }

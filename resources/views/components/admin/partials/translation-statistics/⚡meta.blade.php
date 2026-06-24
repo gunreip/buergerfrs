@@ -1,88 +1,91 @@
 {{-- resources/views/components/admin/partials/translation-statistics/⚡meta.blade.php --}}
 
 {{-- Key Health: summary callouts --}}
-<flux:card class="mt-6">
+<flux:card
+    class="mt-6"
+    x-data="{ showMeta: true }"
+>
 
-    <x-ui.headers.card
-        :title="__('Key Health')"
-        :description="__('Overview of translation key states across the audit table.')"
+    <div class="flex w-full items-center justify-between gap-3">
+        <div class="min-w-0">
+            <x-ui.headers.card
+                name="translation-statistics-meta"
+                :title="__('Key Health')"
+                :description="__('Overview of translation key states across the audit table.')"
+            />
+        </div>
+
+        <div class="ml-auto flex shrink-0 items-center gap-3">
+            <x-ui.button.show-hide
+                size="xs"
+                state="showMeta"
+            />
+        </div>
+    </div>
+
+    <div
+        x-show="showMeta"
+        x-collapse
     >
-        @if ($recentlySyncedAt)
-            <span class="text-xs text-zinc-400 dark:text-zinc-500">
-                {{ __('Last update') }}: {{ \Carbon\Carbon::parse($recentlySyncedAt)->diffForHumans() }}
-            </span>
-        @endif
-    </x-ui.headers.card>
+        <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
 
-    <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {{-- Total Keys --}}
+            <flux:callout
+                class="hyphens-auto"
+                color="orange"
+                icon="database"
+                heading="{{ __('Audit entries') }}"
+                text="{{ __('Rows in the translation key audit table.') }}"
+            >
+                <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                    {{ number_format($totalKeys) }}
+                </flux:callout.text>
+            </flux:callout>
 
-        <flux:callout
-            color="orange"
-            icon="database"
-        >
-            <flux:callout.heading>
-                {{ __('Total Keys') }}
-            </flux:callout.heading>
+            {{-- Marked as OK --}}
+            <flux:callout
+                class="hyphens-auto"
+                color="{{ ($keysByStatus['ok'] ?? 0) > 0 ? 'green' : 'zinc' }}"
+                icon="check-circle"
+                heading="{{ __('admin.translation_list.meta.ok') }}"
+                text="{{ __('Keys marked as OK.') }}"
+            >
+                <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                    {{ number_format($keysByStatus['ok'] ?? 0) }}
+                </flux:callout.text>
+            </flux:callout>
 
-            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
-                {{ number_format($totalKeys) }}
-            </flux:callout.text>
+            {{-- Missing Values --}}
+            <flux:callout
+                class="hyphens-auto"
+                color="{{ ($keysByStatus['missing'] ?? 0) > 0 ? 'amber' : 'green' }}"
+                icon="shield-alert"
+                heading="{{ __('admin.app_settings.table_icon_registry.missing') }}"
+                text="{{ __('Keys with missing values.') }}"
+            >
+                <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                    {{ number_format($keysByStatus['missing'] ?? 0) }}
+                </flux:callout.text>
+            </flux:callout>
 
-            <flux:callout.text class="font-extralight">
-                {{ __('Translation keys in the audit table.') }}
-            </flux:callout.text>
-        </flux:callout>
+            {{-- Marked as Obsolete --}}
+            <flux:callout
+                class="hyphens-auto"
+                color="{{ ($keysByStatus['obsolete'] ?? 0) > 0 ? 'amber' : 'green' }}"
+                icon="archive"
+                heading="{{ __('admin.translation_list.meta.obsolete') }}"
+                text="{{ __('Keys marked as obsolete.') }}"
+            >
+                <flux:callout.text class="text-2xl! font-semibold tabular-nums">
+                    {{ number_format($keysByStatus['obsolete'] ?? 0) }}
+                </flux:callout.text>
+            </flux:callout>
 
-        <flux:callout
-            color="{{ ($keysByStatus['ok'] ?? 0) > 0 ? 'green' : 'zinc' }}"
-            icon="check-circle"
-        >
-            <flux:callout.heading>
-                {{ __('admin.translation_list.meta.ok') }}
-            </flux:callout.heading>
+        </div>
 
-            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
-                {{ number_format($keysByStatus['ok'] ?? 0) }}
-            </flux:callout.text>
-
-            <flux:callout.text class="font-extralight">
-                {{ __('Keys marked as OK.') }}
-            </flux:callout.text>
-        </flux:callout>
-
-        <flux:callout
-            color="{{ ($keysByStatus['missing'] ?? 0) > 0 ? 'amber' : 'green' }}"
-            icon="shield-alert"
-        >
-            <flux:callout.heading>
-                {{ __('admin.app_settings.table_icon_registry.missing') }}
-            </flux:callout.heading>
-
-            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
-                {{ number_format($keysByStatus['missing'] ?? 0) }}
-            </flux:callout.text>
-
-            <flux:callout.text class="font-extralight">
-                {{ __('Keys with missing values.') }}
-            </flux:callout.text>
-        </flux:callout>
-
-        <flux:callout
-            color="{{ ($keysByStatus['obsolete'] ?? 0) > 0 ? 'amber' : 'green' }}"
-            icon="archive"
-        >
-            <flux:callout.heading>
-                {{ __('admin.translation_list.meta.obsolete') }}
-            </flux:callout.heading>
-
-            <flux:callout.text class="text-2xl! font-semibold tabular-nums">
-                {{ number_format($keysByStatus['obsolete'] ?? 0) }}
-            </flux:callout.text>
-
-            <flux:callout.text class="font-extralight">
-                {{ __('Keys marked as obsolete.') }}
-            </flux:callout.text>
-        </flux:callout>
+        <div class="-mb-4 ml-auto mt-3 flex shrink-0 items-center justify-end gap-3">
+            <x-ui.info.last-update :value="$recentlySyncedAt" />
+        </div>
 
     </div>
 </flux:card>

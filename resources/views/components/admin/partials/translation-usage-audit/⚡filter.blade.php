@@ -7,6 +7,7 @@
     >
         @php
             $manualNeedsKeyItems = $manualNeedsKeyItems ?? collect();
+            $minCurrentUsageOptions = range(0, 12);
 
             $auditTypeTotal = $duplicateItems->count() + $frequentItems->count() + $manualNeedsKeyItems->count();
 
@@ -413,12 +414,23 @@
                     <flux:icon.arrow-down-0-1 stroke-width="1" />
                 </flux:input.group.prefix>
 
-                <flux:input
+                <flux:select
+                    class="w-24!"
                     id="translation-usage-audit-min-current-usages"
-                    type="number"
-                    min="0"
-                    wire:model.live.debounce.300ms="minCurrentUsages"
-                />
+                    name="translation-usage-audit-min-current-usages"
+                    variant="listbox"
+                    wire:model.live="minCurrentUsages"
+                >
+                    @foreach ($minCurrentUsageOptions as $minCurrentUsageOption)
+                        <flux:select.option
+                            class="tabular-nums"
+                            value="{{ $minCurrentUsageOption }}"
+                            wire:key="translation-usage-audit-min-current-usages-option-{{ $minCurrentUsageOption }}"
+                        >
+                            {{ $minCurrentUsageOption }}
+                        </flux:select.option>
+                    @endforeach
+                </flux:select>
             </flux:input.group>
 
         </div>

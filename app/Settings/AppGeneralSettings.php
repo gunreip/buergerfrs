@@ -24,6 +24,14 @@ class AppGeneralSettings extends Settings
     public array $availableLocales;
 
     /**
+     * Primary locales that were explicitly added to the selection pool,
+     * but are not necessarily active for the app UI.
+     *
+     * @var array<int, string>
+     */
+    public array $addedPrimaryLocales;
+
+    /**
      * Settings group identifier.
      */
     public static function group(): string

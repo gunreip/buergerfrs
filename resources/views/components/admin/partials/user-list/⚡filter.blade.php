@@ -55,19 +55,40 @@
                 <flux:select
                     id="user-list-role-filter"
                     name="user-list-role-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="roleFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('admin.permissions.filters.roles.all') }}
+                        <div class="flex items-center gap-2">
+                            <flux:icon.user-round-key
+                                class="text-zinc-400"
+                                variant="mini"
+                            />
+                            {{ __('admin.permissions.filters.roles.all') }}
+                        </div>
                     </flux:select.option>
 
                     <flux:select.option value="__none__">
-                        {{ __('admin.user_list.filter.without_role') }}
+                        <div class="flex items-center gap-2">
+                            <flux:icon.user-round-key
+                                class="text-zinc-400"
+                                variant="mini"
+                            />
+                            {{ __('admin.user_list.filter.without_role') }}
+                        </div>
                     </flux:select.option>
 
                     @foreach ($roles as $role)
                         <flux:select.option value="{{ $role }}">
-                            {{ $role }}
+                            <div class="flex items-center gap-2">
+                                <flux:icon.user-round-key
+                                    class="text-zinc-400"
+                                    variant="mini"
+                                />
+                                {{ $role }}
+                            </div>
                         </flux:select.option>
                     @endforeach
                 </flux:select>

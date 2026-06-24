@@ -5,11 +5,13 @@
 namespace App\Console\Commands;
 
 use App\Models\TranslationUsageAuditDecision;
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
+use Throwable;
 
 #[Signature('translations:usage-decisions:apply {--write : Write changes to files. Defaults to dry-run.} {--sample=20 : Maximum number of items written to sample report files.}')]
 #[Description('Apply ready translation usage audit decisions to source files.')]
@@ -30,7 +32,7 @@ class ApplyTranslationUsageAuditDecisions extends Command
 
         TranslationUsageAuditDecision::query()
             ->with([
-                'usages' => fn($query) => $query
+                'usages' => fn ($query) => $query
                     ->where('include_in_change', true)
                     ->orderBy('file')
                     ->orderBy('line')
@@ -137,22 +139,22 @@ class ApplyTranslationUsageAuditDecisions extends Command
         ];
 
         File::put(
-            $outputDirectory . '/apply.json',
-            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL,
+            $outputDirectory.'/apply.json',
+            json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL,
         );
 
         File::put(
-            $outputDirectory . '/apply.sample.json',
-            json_encode($samplePayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL,
+            $outputDirectory.'/apply.sample.json',
+            json_encode($samplePayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).PHP_EOL,
         );
 
         File::put(
-            $outputDirectory . '/apply.md',
+            $outputDirectory.'/apply.md',
             $this->renderApplyMarkdown($applyItems, ! $write),
         );
 
         File::put(
-            $outputDirectory . '/apply.sample.md',
+            $outputDirectory.'/apply.sample.md',
             $this->renderApplyMarkdown($applyItems->take($sampleLimit), ! $write),
         );
 
@@ -162,12 +164,14 @@ class ApplyTranslationUsageAuditDecisions extends Command
                 : 'Translation usage decision apply dry-run written.'
         );
 
-        $this->line('Directory: ' . $outputDirectory);
-        $this->line('Dry-run: ' . (! $write ? 'yes' : 'no'));
-        $this->line('Items: ' . $applyItems->count());
-        $this->line('Can apply: ' . $applyItems->where('can_apply', true)->count());
-        $this->line('Applied: ' . $applyItems->where('applied', true)->count());
-        $this->line('Skipped: ' . $applyItems->where('skipped', true)->count());
+        $this->line('Directory: '.$outputDirectory);
+        $this->line('Dry-run: '.(! $write ? 'yes' : 'no'));
+        $this->line('Items: '.$applyItems->count());
+        $this->line('Can apply: '.$applyItems->where('can_apply', true)->count());
+        $this->line('Applied: '.$applyItems->where('applied', true)->count());
+        $this->line('Skipped: '.$applyItems->where('skipped', true)->count());
+
+        $this->logRunCompletedActivity($payload['meta']);
 
         return self::SUCCESS;
     }
@@ -175,7 +179,7 @@ class ApplyTranslationUsageAuditDecisions extends Command
     /**
      * Write eligible apply items to files.
      *
-     * @param Collection<int, array<string, mixed>> $applyItems
+     * @param  Collection<int, array<string, mixed>>  $applyItems
      * @return Collection<int, array<string, mixed>>
      */
     private function writeApplyItems(Collection $applyItems): Collection
@@ -184,7 +188,7 @@ class ApplyTranslationUsageAuditDecisions extends Command
 
         $items
             ->where('can_apply', true)
-            ->groupBy(static fn(array $item): string => (string) ($item['file'] ?? ''))
+            ->groupBy(static fn (array $item): string => (string) ($item['file'] ?? ''))
             ->each(function (Collection $fileItems, string $file) use (&$items): void {
                 $file = trim($file);
 
@@ -221,7 +225,7 @@ class ApplyTranslationUsageAuditDecisions extends Command
                     $raw = (string) ($fileItem['raw'] ?? '');
                     $proposedRaw = (string) ($fileItem['proposed_raw'] ?? '');
 
-                    $itemIndex = $items->search(static fn(array $item): bool => (int) ($item['usage_id'] ?? 0) === $usageId);
+                    $itemIndex = $items->search(static fn (array $item): bool => (int) ($item['usage_id'] ?? 0) === $usageId);
 
                     if ($itemIndex === false) {
                         continue;
@@ -297,8 +301,8 @@ class ApplyTranslationUsageAuditDecisions extends Command
     /**
      * Update one apply item inside the collection.
      *
-     * @param Collection<int, array<string, mixed>> $items
-     * @param array<string, mixed> $values
+     * @param  Collection<int, array<string, mixed>>  $items
+     * @param  array<string, mixed>  $values
      * @return Collection<int, array<string, mixed>>
      */
     private function updateApplyItem(Collection $items, int|string $itemIndex, array $values): Collection
@@ -320,14 +324,14 @@ class ApplyTranslationUsageAuditDecisions extends Command
     /**
      * Mark all successfully applied usage rows and decisions.
      *
-     * @param Collection<int, array<string, mixed>> $applyItems
+     * @param  Collection<int, array<string, mixed>>  $applyItems
      */
     private function markAppliedItems(Collection $applyItems): void
     {
         $appliedUsageIds = $applyItems
             ->where('applied', true)
             ->pluck('usage_id')
-            ->map(static fn(mixed $usageId): int => (int) $usageId)
+            ->map(static fn (mixed $usageId): int => (int) $usageId)
             ->filter()
             ->unique()
             ->values();
@@ -337,7 +341,7 @@ class ApplyTranslationUsageAuditDecisions extends Command
         }
 
         TranslationUsageAuditDecision::query()
-            ->whereHas('usages', fn($query) => $query->whereIn('id', $appliedUsageIds->all()))
+            ->whereHas('usages', fn ($query) => $query->whereIn('id', $appliedUsageIds->all()))
             ->with('usages')
             ->get()
             ->each(function (TranslationUsageAuditDecision $decision) use ($appliedUsageIds): void {
@@ -350,8 +354,8 @@ class ApplyTranslationUsageAuditDecisions extends Command
                 }
 
                 $hasOpenIncludedUsages = $decision->usages
-                    ->filter(static fn($usage): bool => (bool) $usage->include_in_change)
-                    ->contains(static fn($usage): bool => $usage->change_status !== 'applied');
+                    ->filter(static fn ($usage): bool => (bool) $usage->include_in_change)
+                    ->contains(static fn ($usage): bool => $usage->change_status !== 'applied');
 
                 if (! $hasOpenIncludedUsages) {
                     $decision->forceFill([
@@ -364,15 +368,15 @@ class ApplyTranslationUsageAuditDecisions extends Command
     /**
      * Mark a whole file group as skipped.
      *
-     * @param Collection<int, array<string, mixed>> $items
-     * @param Collection<int, array<string, mixed>> $fileItems
+     * @param  Collection<int, array<string, mixed>>  $items
+     * @param  Collection<int, array<string, mixed>>  $fileItems
      * @return Collection<int, array<string, mixed>>
      */
     private function markFileGroupSkipped(Collection $items, Collection $fileItems, string $reason): Collection
     {
         $usageIds = $fileItems
             ->pluck('usage_id')
-            ->map(static fn(mixed $usageId): int => (int) $usageId)
+            ->map(static fn (mixed $usageId): int => (int) $usageId)
             ->filter()
             ->all();
 
@@ -392,8 +396,8 @@ class ApplyTranslationUsageAuditDecisions extends Command
     /**
      * Resolve why an item cannot be applied.
      *
-     * @param array<string, mixed> $replacementPreview
-     * @param array<string, mixed> $fileVerification
+     * @param  array<string, mixed>  $replacementPreview
+     * @param  array<string, mixed>  $fileVerification
      */
     private function applySkipReason(array $replacementPreview, array $fileVerification): ?string
     {
@@ -575,7 +579,7 @@ class ApplyTranslationUsageAuditDecisions extends Command
     /**
      * Render a readable markdown apply report.
      *
-     * @param Collection<int, array<string, mixed>> $applyItems
+     * @param  Collection<int, array<string, mixed>>  $applyItems
      */
     private function renderApplyMarkdown(Collection $applyItems, bool $dryRun): string
     {
@@ -583,11 +587,11 @@ class ApplyTranslationUsageAuditDecisions extends Command
             '# Translation Usage Decision Apply Report',
             '',
             '- Command: `translations:usage-decisions:apply`',
-            '- Dry-run: `' . ($dryRun ? 'yes' : 'no') . '`',
-            '- Items: ' . $applyItems->count(),
-            '- Can apply: ' . $applyItems->where('can_apply', true)->count(),
-            '- Applied: ' . $applyItems->where('applied', true)->count(),
-            '- Skipped: ' . $applyItems->where('skipped', true)->count(),
+            '- Dry-run: `'.($dryRun ? 'yes' : 'no').'`',
+            '- Items: '.$applyItems->count(),
+            '- Can apply: '.$applyItems->where('can_apply', true)->count(),
+            '- Applied: '.$applyItems->where('applied', true)->count(),
+            '- Skipped: '.$applyItems->where('skipped', true)->count(),
             '',
         ];
 
@@ -597,46 +601,46 @@ class ApplyTranslationUsageAuditDecisions extends Command
         }
 
         foreach ($applyItems as $item) {
-            $lines[] = '## Usage #' . ($item['usage_id'] ?? '—');
+            $lines[] = '## Usage #'.($item['usage_id'] ?? '—');
             $lines[] = '';
-            $lines[] = '- Decision: #' . ($item['decision_id'] ?? '—');
-            $lines[] = '- File: `' . ($item['file'] ?? '—') . '`';
-            $lines[] = '- Line: ' . ((int) ($item['line'] ?? 0) > 0 ? (int) $item['line'] : '—');
-            $lines[] = '- Current key: `' . ($item['current_translation_key'] ?? '—') . '`';
-            $lines[] = '- Target key: `' . ($item['target_translation_key'] ?? '—') . '`';
-            $lines[] = '- Can apply: `' . ((bool) ($item['can_apply'] ?? false) ? 'yes' : 'no') . '`';
-            $lines[] = '- Applied: `' . ((bool) ($item['applied'] ?? false) ? 'yes' : 'no') . '`';
+            $lines[] = '- Decision: #'.($item['decision_id'] ?? '—');
+            $lines[] = '- File: `'.($item['file'] ?? '—').'`';
+            $lines[] = '- Line: '.((int) ($item['line'] ?? 0) > 0 ? (int) $item['line'] : '—');
+            $lines[] = '- Current key: `'.($item['current_translation_key'] ?? '—').'`';
+            $lines[] = '- Target key: `'.($item['target_translation_key'] ?? '—').'`';
+            $lines[] = '- Can apply: `'.((bool) ($item['can_apply'] ?? false) ? 'yes' : 'no').'`';
+            $lines[] = '- Applied: `'.((bool) ($item['applied'] ?? false) ? 'yes' : 'no').'`';
 
             if (trim((string) ($item['skip_reason'] ?? '')) !== '') {
-                $lines[] = '- Skip reason: ' . trim((string) $item['skip_reason']);
+                $lines[] = '- Skip reason: '.trim((string) $item['skip_reason']);
             }
 
             if (trim((string) ($item['line_content_before'] ?? '')) !== '') {
-                $lines[] = '- Line before: `' . $item['line_content_before'] . '`';
+                $lines[] = '- Line before: `'.$item['line_content_before'].'`';
             }
 
             if (trim((string) ($item['line_content_after'] ?? '')) !== '') {
-                $lines[] = '- Line after: `' . $item['line_content_after'] . '`';
+                $lines[] = '- Line after: `'.$item['line_content_after'].'`';
             }
 
             $lines[] = '';
             $lines[] = '```diff';
-            $lines[] = '--- ' . ((string) ($item['file'] ?? '') !== '' ? (string) $item['file'] : 'unknown');
-            $lines[] = '+++ ' . ((string) ($item['file'] ?? '') !== '' ? (string) $item['file'] : 'unknown');
-            $lines[] = '@@ Line ' . ((int) ($item['line'] ?? 0) > 0 ? (int) $item['line'] : '?') . ' @@';
+            $lines[] = '--- '.((string) ($item['file'] ?? '') !== '' ? (string) $item['file'] : 'unknown');
+            $lines[] = '+++ '.((string) ($item['file'] ?? '') !== '' ? (string) $item['file'] : 'unknown');
+            $lines[] = '@@ Line '.((int) ($item['line'] ?? 0) > 0 ? (int) $item['line'] : '?').' @@';
 
             if ((bool) ($item['can_apply'] ?? false)) {
-                $lines[] = '- ' . (string) ($item['raw'] ?? '');
-                $lines[] = '+ ' . (string) ($item['proposed_raw'] ?? '');
+                $lines[] = '- '.(string) ($item['raw'] ?? '');
+                $lines[] = '+ '.(string) ($item['proposed_raw'] ?? '');
             } else {
-                $lines[] = '! ' . ((string) ($item['raw'] ?? '') !== '' ? (string) $item['raw'] : 'No raw usage available.');
+                $lines[] = '! '.((string) ($item['raw'] ?? '') !== '' ? (string) $item['raw'] : 'No raw usage available.');
             }
 
             $lines[] = '```';
             $lines[] = '';
         }
 
-        return implode(PHP_EOL, $lines) . PHP_EOL;
+        return implode(PHP_EOL, $lines).PHP_EOL;
     }
 
     /**
@@ -673,7 +677,26 @@ class ApplyTranslationUsageAuditDecisions extends Command
         }
 
         return substr($subject, 0, $position)
-            . $replace
-            . substr($subject, $position + strlen($search));
+            .$replace
+            .substr($subject, $position + strlen($search));
+    }
+
+    /**
+     * @param  array<string, mixed>  $meta
+     */
+    private function logRunCompletedActivity(array $meta): void
+    {
+        try {
+            $activity = activity('translations')
+                ->event('translations.usage_decisions.apply.completed');
+
+            $activity
+                ->withProperties(ConsoleActivityContext::merge($this, [
+                    'summary' => $meta,
+                ]))
+                ->log('Translation usage decision apply command completed');
+        } catch (Throwable $exception) {
+            $this->warn('Activity log write failed: '.$exception->getMessage());
+        }
     }
 }

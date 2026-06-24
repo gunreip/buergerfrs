@@ -60,7 +60,33 @@ tr[data-flux-row]:hover>td[data-flux-cell]:last-child::before {
 
 .app-table {
     /* width: 100%; */
-    @apply w-full;
+    @apply w-full max-h-280 mb-3 pb-2;
+    @apply border-b border-zinc-200 dark:border-zinc-700;
+}
+
+/*
+|--------------------------------------------------------------------------
+| App Table Scrollbar
+|--------------------------------------------------------------------------
+|
+| Moves the vertical scrollbar of Flux table scroll containers to the
+| inline-end side so it does not visually overlap the table content.
+|
+| Use together with .app-table on the Flux table container.
+|
+*/
+
+.app-table-scrollbar {
+    scrollbar-gutter: stable;
+    @apply box-content w-full pr-2 -mr-3 overflow-y-scroll;
+}
+
+/*
+| Some table wrappers use overflow-hidden for rounded corners.
+| This would clip the scrollbar when .app-table-scrollbar moves it outward.
+*/
+.overflow-hidden:has(> .app-table-scrollbar) {
+    @apply overflow-visible;
 }
 
 .app-table--fixed {

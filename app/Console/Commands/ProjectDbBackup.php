@@ -8,10 +8,10 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Spatie\Backup\BackupDestination\Backup;
 use Spatie\Backup\BackupDestination\BackupDestinationFactory;
 use Spatie\Backup\Config\Config;
@@ -76,15 +76,15 @@ class ProjectDbBackup extends Command
 
         foreach ($destinations as $destination) {
             if (! $destination->isReachable()) {
-                $this->warn('⚠️ Backup-Disk nicht erreichbar: ' . $destination->diskName());
+                $this->warn('⚠️ Backup-Disk nicht erreichbar: '.$destination->diskName());
 
                 continue;
             }
 
             /** @var Collection<int, Backup> $backups */
             $backups = $destination->fresh()->backups()
-                ->filter(fn(Backup $backup): bool => $backup->exists())
-                ->sortByDesc(fn(Backup $backup): int => $backup->date()->timestamp)
+                ->filter(fn (Backup $backup): bool => $backup->exists())
+                ->sortByDesc(fn (Backup $backup): int => $backup->date()->timestamp)
                 ->values();
 
             if ($backups->isEmpty()) {
@@ -121,7 +121,7 @@ class ProjectDbBackup extends Command
             ],
         );
 
-        $this->info('✅ Backup-Policy abgeschlossen. Behalten: ' . $keptCount . ', gelöscht: ' . $deletedCount);
+        $this->info('✅ Backup-Policy abgeschlossen. Behalten: '.$keptCount.', gelöscht: '.$deletedCount);
 
         return self::SUCCESS;
     }
@@ -143,8 +143,8 @@ class ProjectDbBackup extends Command
             }
 
             $pathsByDisk[$destination->diskName()] = $destination->fresh()->backups()
-                ->filter(fn(Backup $backup): bool => $backup->exists())
-                ->map(fn(Backup $backup): string => $backup->path())
+                ->filter(fn (Backup $backup): bool => $backup->exists())
+                ->map(fn (Backup $backup): string => $backup->path())
                 ->values()
                 ->all();
         }
@@ -170,10 +170,10 @@ class ProjectDbBackup extends Command
 
             $before = collect($beforePathsByDisk[$destination->diskName()] ?? []);
             $after = $destination->fresh()->backups()
-                ->filter(fn(Backup $backup): bool => $backup->exists())
+                ->filter(fn (Backup $backup): bool => $backup->exists())
                 ->values();
 
-            $created = $after->filter(fn(Backup $backup): bool => ! $before->contains($backup->path()));
+            $created = $after->filter(fn (Backup $backup): bool => ! $before->contains($backup->path()));
 
             foreach ($created as $backup) {
                 $this->logActivity(
@@ -200,20 +200,15 @@ class ProjectDbBackup extends Command
     private function logActivity(string $event, string $description, array $properties = []): void
     {
         try {
-            $logger = activity('backup')
+            activity('backup')
                 ->event($event)
-                ->withProperties(array_merge($properties, [
+                ->withProperties(ConsoleActivityContext::merge($this, array_merge($properties, [
                     'source' => [
                         'command' => $this->getName(),
                         'class' => static::class,
                     ],
-                ]));
-
-            if (Auth::check()) {
-                $logger->causedBy(Auth::user());
-            }
-
-            $logger->log($description);
+                ])))
+                ->log($description);
         } catch (Throwable) {
             // Activity-Logging darf den Backup-Lauf nicht blockieren.
         }

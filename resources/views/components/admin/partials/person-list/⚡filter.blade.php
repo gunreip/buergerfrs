@@ -56,6 +56,9 @@
                 <flux:select
                     id="person-list-user-filter"
                     name="person-list-user-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="userFilter"
                 >
                     <flux:select.option value="">
@@ -91,6 +94,9 @@
                 <flux:select
                     id="person-list-client-filter"
                     name="person-list-client-filter"
+                    variant="listbox"
+                    searchable
+                    clearable
                     wire:model.live="clientFilter"
                 >
                     <flux:select.option value="">
