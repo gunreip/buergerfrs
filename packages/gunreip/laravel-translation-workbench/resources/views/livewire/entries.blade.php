@@ -161,4 +161,9 @@
 
     {{-- Table of Findings --}}
     @include('translation-workbench::livewire.entries.findings-table')
+
+    {{-- Finding Workflow Modals --}}
+    @include('translation-workbench::livewire.entries.modal-review')
+    @include('translation-workbench::livewire.entries.modal-edit')
+    @include('translation-workbench::livewire.entries.modal-timeline')
 </div>

@@ -38,10 +38,27 @@ class TranslationWorkbenchEntries extends Component
 
     public string $findingSortDirection = 'desc';
 
+    public bool $reviewModalOpen = false;
+
+    public bool $editModalOpen = false;
+
+    public bool $timelineModalOpen = false;
+
+    public ?int $reviewFindingId = null;
+
+    public ?int $editFindingId = null;
+
+    public ?int $timelineFindingId = null;
+
     public function render(): View
     {
         return view('translation-workbench::livewire.entries', [
             'findings' => $this->findings(),
+            'reviewFinding' => $this->selectedFinding($this->reviewFindingId),
+            'editFinding' => $this->selectedFinding($this->editFindingId),
+            'timelineFinding' => $this->selectedFinding($this->timelineFindingId),
+            'previousReviewFindingId' => $this->reviewAdjacentFindingId('previous'),
+            'nextReviewFindingId' => $this->reviewAdjacentFindingId('next'),
             'findingStatusOptions' => $this->distinctOptions('translation_workbench_findings', 'status'),
             'findingKindOptions' => $this->distinctOptions('translation_workbench_findings', 'kind'),
             'findingCandidateTypeOptions' => $this->distinctOptions('translation_workbench_findings', 'candidate_type'),
@@ -121,6 +138,60 @@ class TranslationWorkbenchEntries extends Component
         $this->resetPage();
     }
 
+    public function openReviewModal(int $findingId): void
+    {
+        $this->reviewFindingId = $findingId;
+        $this->reviewModalOpen = true;
+    }
+
+    public function openPreviousReviewFinding(): void
+    {
+        $previousFindingId = $this->reviewAdjacentFindingId('previous');
+
+        if ($previousFindingId !== null) {
+            $this->openReviewModal($previousFindingId);
+        }
+    }
+
+    public function openNextReviewFinding(): void
+    {
+        $nextFindingId = $this->reviewAdjacentFindingId('next');
+
+        if ($nextFindingId !== null) {
+            $this->openReviewModal($nextFindingId);
+        }
+    }
+
+    public function openEditModal(int $findingId): void
+    {
+        $this->editFindingId = $findingId;
+        $this->editModalOpen = true;
+    }
+
+    public function openTimelineModal(int $findingId): void
+    {
+        $this->timelineFindingId = $findingId;
+        $this->timelineModalOpen = true;
+    }
+
+    public function closeReviewModal(): void
+    {
+        $this->reviewModalOpen = false;
+        $this->reviewFindingId = null;
+    }
+
+    public function closeEditModal(): void
+    {
+        $this->editModalOpen = false;
+        $this->editFindingId = null;
+    }
+
+    public function closeTimelineModal(): void
+    {
+        $this->timelineModalOpen = false;
+        $this->timelineFindingId = null;
+    }
+
     private function findings(): LengthAwarePaginator
     {
         if (! $this->hasTables([
@@ -190,6 +261,128 @@ class TranslationWorkbenchEntries extends Component
         $this->applyFindingSort($query);
 
         return $query->paginate($this->normalizedPerPage());
+    }
+
+    private function reviewAdjacentFindingId(string $direction): ?int
+    {
+        if ($this->reviewFindingId === null || ! $this->reviewModalOpen) {
+            return null;
+        }
+
+        $findingIds = $this->filteredFindingIds();
+
+        if ($findingIds === []) {
+            return null;
+        }
+
+        $currentIndex = array_search($this->reviewFindingId, $findingIds, true);
+
+        if ($currentIndex === false) {
+            return $direction === 'previous'
+                ? $findingIds[array_key_last($findingIds)]
+                : $findingIds[0];
+        }
+
+        if (count($findingIds) < 2) {
+            return null;
+        }
+
+        if ($direction === 'previous') {
+            return $findingIds[$currentIndex - 1] ?? $findingIds[array_key_last($findingIds)];
+        }
+
+        return $findingIds[$currentIndex + 1] ?? $findingIds[0];
+    }
+
+    /**
+     * @return array<int, int>
+     */
+    private function filteredFindingIds(): array
+    {
+        if (! $this->hasTables([
+            'translation_workbench_findings',
+            'translation_workbench_source_files',
+            'translation_workbench_key_findings',
+            'translation_workbench_keys',
+            'translation_workbench_lang_values',
+        ])) {
+            return [];
+        }
+
+        $sourceLocale = $this->sourceMainLocale();
+        $keyLinks = DB::table('translation_workbench_key_findings')
+            ->selectRaw('finding_id, MIN(key_id) as key_id')
+            ->where('status', 'active')
+            ->groupBy('finding_id');
+
+        $query = DB::table('translation_workbench_findings as findings')
+            ->join('translation_workbench_source_files as source_files', 'source_files.id', '=', 'findings.source_file_id')
+            ->leftJoinSub($keyLinks, 'key_links', function ($join): void {
+                $join->on('key_links.finding_id', '=', 'findings.id');
+            })
+            ->leftJoin('translation_workbench_keys as keys', 'keys.id', '=', 'key_links.key_id')
+            ->select('findings.id');
+
+        $this->applyFindingFilters($query, $sourceLocale);
+        $this->applyFindingSort($query);
+
+        return $query
+            ->pluck('findings.id')
+            ->map(static fn($id): int => (int) $id)
+            ->values()
+            ->all();
+    }
+
+    private function selectedFinding(?int $findingId): ?object
+    {
+        if ($findingId === null || ! $this->hasTables([
+            'translation_workbench_findings',
+            'translation_workbench_source_files',
+            'translation_workbench_key_findings',
+            'translation_workbench_keys',
+        ])) {
+            return null;
+        }
+
+        $keyLinks = DB::table('translation_workbench_key_findings')
+            ->selectRaw('finding_id, MIN(key_id) as key_id')
+            ->where('status', 'active')
+            ->groupBy('finding_id');
+
+        return DB::table('translation_workbench_findings as findings')
+            ->join('translation_workbench_source_files as source_files', 'source_files.id', '=', 'findings.source_file_id')
+            ->leftJoinSub($keyLinks, 'key_links', function ($join): void {
+                $join->on('key_links.finding_id', '=', 'findings.id');
+            })
+            ->leftJoin('translation_workbench_keys as keys', 'keys.id', '=', 'key_links.key_id')
+            ->where('findings.id', $findingId)
+            ->select([
+                'findings.id',
+                'findings.source_line',
+                'findings.kind',
+                DB::raw("NULLIF(findings.function_name, '-') as function_name"),
+                'findings.raw_expression',
+                'findings.literal_text',
+                'findings.literal_text_suggested',
+                'findings.found_translation_key',
+                'findings.existing_key',
+                'findings.suggested_key',
+                'findings.candidate_type',
+                'findings.candidate_reason',
+                'findings.status',
+                'findings.first_seen_at',
+                'findings.last_seen_at',
+                'source_files.path as source_path',
+                'keys.id as key_id',
+                'keys.translation_key',
+                'keys.suggested_key as key_suggested_key',
+                'keys.review_status',
+                'keys.key_type',
+                'keys.is_ui_key',
+                'keys.is_dynamic_key',
+                'keys.is_dynamic_multi',
+            ])
+            ->first();
     }
 
     private function applyFindingFilters($query, string $sourceLocale): void

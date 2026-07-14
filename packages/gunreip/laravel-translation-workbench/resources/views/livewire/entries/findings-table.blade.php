@@ -372,6 +372,10 @@
             <flux:table.column>
                 {{ __('State') }}
             </flux:table.column>
+            {{-- Table Findings Header Column Actions --}}
+            <flux:table.column>
+                {{ __('Actions') }}
+            </flux:table.column>
         </flux:table.columns>
 
         {{-- Table Findings Body Rows --}}
@@ -609,10 +613,41 @@
                             @endif
                         </div>
                     </flux:table.cell>
+                    {{-- Table Findings Cell Actions --}}
+                    <flux:table.cell>
+                        <div class="flex items-center gap-1.5">
+                            <flux:button
+                                type="button"
+                                size="xs"
+                                variant="ghost"
+                                icon="badge-check"
+                                :aria-label="__('Review finding')"
+                                wire:click="openReviewModal({{ $finding->id }})"
+                            />
+
+                            <flux:button
+                                type="button"
+                                size="xs"
+                                variant="ghost"
+                                icon="square-pen"
+                                :aria-label="__('Edit translation values')"
+                                wire:click="openEditModal({{ $finding->id }})"
+                            />
+
+                            <flux:button
+                                type="button"
+                                size="xs"
+                                variant="ghost"
+                                icon="activity"
+                                :aria-label="__('Show timeline')"
+                                wire:click="openTimelineModal({{ $finding->id }})"
+                            />
+                        </div>
+                    </flux:table.cell>
                 </flux:table.row>
             @empty
                 <flux:table.row>
-                    <flux:table.cell colspan="8">
+                    <flux:table.cell colspan="9">
                         <flux:text class="text-sm text-zinc-500">
                             {{ __('No findings for the current filters.') }}
                         </flux:text>
