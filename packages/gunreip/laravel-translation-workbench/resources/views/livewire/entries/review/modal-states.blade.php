@@ -1,8 +1,49 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-states.blade.php --}}
 
-<div class="grid gap-3 xl:grid-cols-12">
+@php
+    $reviewFindingSuggestedKey = trim((string) ($reviewFinding->suggested_key ?? ''));
+    $reviewKeySuggestedKey = trim((string) ($reviewFinding->key_suggested_key ?? ''));
+    $reviewTranslationKey = trim((string) ($reviewFinding->translation_key ?? ''));
+    $reviewEffectiveSuggestedKey = $reviewKeySuggestedKey !== '' ? $reviewKeySuggestedKey : $reviewFindingSuggestedKey;
+    $reviewKeyState = match (true) {
+        $reviewTranslationKey === '' => [
+            'label' => __('Translation key missing'),
+            'color' => 'amber',
+        ],
+        $reviewEffectiveSuggestedKey !== '' && $reviewTranslationKey === $reviewEffectiveSuggestedKey => [
+            'label' => __('Translation key equal'),
+            'color' => 'green',
+        ],
+        $reviewEffectiveSuggestedKey !== '' && $reviewTranslationKey !== $reviewEffectiveSuggestedKey => [
+            'label' => __('Translation key different'),
+            'color' => 'sky',
+        ],
+        default => [
+            'label' => __('Translation key set'),
+            'color' => 'green',
+        ],
+    };
+    $reviewFirstSeenAt = $reviewFinding->first_seen_at
+        ? \Illuminate\Support\Carbon::parse($reviewFinding->first_seen_at)
+        : null;
+    $reviewLastSeenAt = $reviewFinding->last_seen_at
+        ? \Illuminate\Support\Carbon::parse($reviewFinding->last_seen_at)
+        : null;
+    $reviewSeenAtSameTime = $reviewFirstSeenAt && $reviewLastSeenAt && $reviewFirstSeenAt->equalTo($reviewLastSeenAt);
+    $reviewLastSeenAgeSeconds = $reviewLastSeenAt ? $reviewLastSeenAt->diffInSeconds(now()) : null;
+    $reviewLastSeenAgeColor = match (true) {
+        $reviewLastSeenAgeSeconds === null => 'zinc',
+        $reviewLastSeenAgeSeconds <= 3600 => 'green',
+        $reviewLastSeenAgeSeconds <= 86400 => 'sky',
+        $reviewLastSeenAgeSeconds <= 604800 => 'amber',
+        $reviewLastSeenAgeSeconds <= 2592000 => 'orange',
+        default => 'red',
+    };
+@endphp
+
+<div class="grid gap-3 xl:grid-cols-4">
     <flux:callout
-        class="xl:col-span-3"
+        class="xl:col-span-1"
         color="sky"
         icon="scan-search"
     >
@@ -15,6 +56,15 @@
                 >
                     {{ __('Kind') }}: {{ $reviewFinding->kind }}
                 </flux:badge>
+
+                @if ($reviewFinding->entry_type)
+                    <flux:badge
+                        size="sm"
+                        variant="subtle"
+                    >
+                        {{ __('Entry') }}: {{ $reviewFinding->entry_type }}
+                    </flux:badge>
+                @endif
 
                 @if ($reviewFinding->function_name)
                     <flux:badge
@@ -36,7 +86,7 @@
     </flux:callout>
 
     <flux:callout
-        class="xl:col-span-3"
+        class="xl:col-span-1"
         color="indigo"
         icon="key-round"
     >
@@ -52,10 +102,19 @@
 
                 <flux:badge
                     size="sm"
-                    color="{{ $reviewFinding->translation_key ? 'green' : 'amber' }}"
+                    color="{{ $reviewKeyState['color'] }}"
                 >
-                    {{ $reviewFinding->translation_key ? __('Translation key') : __('Translation key missing') }}
+                    {{ $reviewKeyState['label'] }}
                 </flux:badge>
+
+                @if ($reviewFinding->key_status)
+                    <flux:badge
+                        size="sm"
+                        variant="subtle"
+                    >
+                        {{ __('Key') }}: {{ $reviewFinding->key_status }}
+                    </flux:badge>
+                @endif
 
                 @if ($reviewFinding->review_status)
                     <flux:badge
@@ -70,7 +129,7 @@
     </flux:callout>
 
     <flux:callout
-        class="xl:col-span-3"
+        class="xl:col-span-1"
         color="violet"
         icon="tag"
     >
@@ -80,7 +139,7 @@
                 @if ($reviewFinding->candidate_type)
                     <flux:badge
                         size="sm"
-                        color="violet"
+                        color="amber"
                     >
                         {{ __('Candidate') }}: {{ $reviewFinding->candidate_type }}
                     </flux:badge>
@@ -96,9 +155,9 @@
                 @if ($reviewFinding->is_ui_key)
                     <flux:badge
                         size="sm"
-                        color="sky"
+                        color="green"
                     >
-                        {{ __('UI') }}
+                        {{ __('Is UI') }}
                     </flux:badge>
                 @endif
 
@@ -107,7 +166,7 @@
                         size="sm"
                         color="teal"
                     >
-                        {{ __('Dynamic') }}
+                        {{ __('Is dynamic') }}
                     </flux:badge>
                 @endif
 
@@ -116,7 +175,16 @@
                         size="sm"
                         color="cyan"
                     >
-                        {{ __('Multi') }}
+                        {{ __('Dynamic multi') }}
+                    </flux:badge>
+                @endif
+
+                @if ($reviewFinding->dynamic_scope)
+                    <flux:badge
+                        size="sm"
+                        variant="subtle"
+                    >
+                        {{ __('Scope') }}: {{ $reviewFinding->dynamic_scope }}
                     </flux:badge>
                 @endif
             </div>
@@ -130,7 +198,7 @@
     </flux:callout>
 
     <flux:callout
-        class="xl:col-span-3"
+        class="xl:col-span-1"
         color="zinc"
         icon="clock-check"
     >
@@ -140,22 +208,32 @@
                 @if ($reviewFinding->first_seen_at)
                     <flux:badge
                         size="sm"
-                        variant="subtle"
+                        color="green"
                     >
-                        {{ __('First seen') }}
+                        {{ __('First') }}:
+                        {{ $reviewFirstSeenAt?->format('D, d.M.Y H:i') ?? $reviewFinding->first_seen_at }}
                     </flux:badge>
                 @endif
 
                 @if ($reviewFinding->last_seen_at)
                     <flux:badge
                         size="sm"
-                        color="green"
+                        color="{{ $reviewSeenAtSameTime ? 'green' : 'orange' }}"
                     >
-                        {{ __('Last seen') }}
+                        {{ __('Last') }}:
+                        {{ $reviewLastSeenAt?->format('D, d.M.Y H:i') ?? $reviewFinding->last_seen_at }}
+                    </flux:badge>
+                @endif
+
+                @if ($reviewLastSeenAt)
+                    <flux:badge
+                        size="sm"
+                        color="{{ $reviewLastSeenAgeColor }}"
+                    >
+                        {{ __('Ago') }}: {{ $reviewLastSeenAt->diffForHumans() }}
                     </flux:badge>
                 @endif
             </div>
         </flux:callout.text>
     </flux:callout>
 </div>
-

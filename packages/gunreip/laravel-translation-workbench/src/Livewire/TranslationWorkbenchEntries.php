@@ -4,8 +4,14 @@
 
 namespace Gunreip\TranslationWorkbench\Livewire;
 
+use Flux\Flux;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchTimelineRecorder;
+use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchFinding;
+use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchKey;
+use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchReview;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
@@ -172,6 +178,110 @@ class TranslationWorkbenchEntries extends Component
     {
         $this->timelineFindingId = $findingId;
         $this->timelineModalOpen = true;
+    }
+
+    public function acceptSuggestedTranslationKey(int $findingId): void
+    {
+        $selectedFinding = $this->selectedFinding($findingId);
+
+        if (! $selectedFinding || ! $selectedFinding->key_id) {
+            Flux::toast(
+                heading: __('No linked key'),
+                text: __('This finding needs a key relation before the suggested key can be accepted.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $suggestedKey = trim((string) ($selectedFinding->key_suggested_key ?: $selectedFinding->suggested_key));
+
+        if ($suggestedKey === '') {
+            Flux::toast(
+                heading: __('No suggested key'),
+                text: __('There is no suggested key available for this finding.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $key = TranslationWorkbenchKey::query()->find($selectedFinding->key_id);
+        $finding = TranslationWorkbenchFinding::query()->find($findingId);
+
+        if (! $key || ! $finding) {
+            Flux::toast(
+                heading: __('Review failed'),
+                text: __('The selected finding or key no longer exists.'),
+                variant: 'danger',
+            );
+
+            return;
+        }
+
+        if (trim((string) $key->translation_key) === $suggestedKey && $key->review_status === 'reviewed') {
+            Flux::toast(
+                heading: __('No change'),
+                text: __('The suggested key is already accepted.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        DB::transaction(function () use ($key, $finding, $suggestedKey): void {
+            $oldValues = $key->only([
+                'translation_key',
+                'review_status',
+                'reviewed_at',
+                'reviewed_by_user_id',
+            ]);
+
+            $key->forceFill([
+                'translation_key' => $suggestedKey,
+                'review_status' => 'reviewed',
+                'reviewed_at' => now(),
+                'reviewed_by_user_id' => Auth::id(),
+            ])->save();
+
+            $newValues = $key->only([
+                'translation_key',
+                'review_status',
+                'reviewed_at',
+                'reviewed_by_user_id',
+            ]);
+
+            $review = TranslationWorkbenchReview::query()->create([
+                'key_id' => $key->id,
+                'finding_id' => $finding->id,
+                'review_type' => 'translation_key',
+                'decision' => 'suggested_key_accepted',
+                'old_values' => $oldValues,
+                'new_values' => $newValues,
+                'meta' => [
+                    'source' => 'translation-workbench:review-modal',
+                    'suggested_key' => $suggestedKey,
+                ],
+                'reviewed_by_user_id' => Auth::id(),
+                'reviewed_at' => now(),
+            ]);
+
+            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
+                review: $review,
+                eventType: 'suggested_key_accepted',
+                oldValues: $oldValues,
+                newValues: $newValues,
+                context: [
+                    'source' => 'translation-workbench:review-modal',
+                ],
+            );
+        });
+
+        Flux::toast(
+            heading: __('Suggested key accepted'),
+            text: __('The suggested key has been saved as translation key.'),
+            variant: 'success',
+        );
     }
 
     public function closeReviewModal(): void
@@ -367,6 +477,12 @@ class TranslationWorkbenchEntries extends Component
                 'findings.found_translation_key',
                 'findings.existing_key',
                 'findings.suggested_key',
+                'findings.namespace',
+                'findings.group',
+                'findings.path_key',
+                'findings.scope',
+                'findings.dynamic_scope',
+                'findings.entry_type',
                 'findings.candidate_type',
                 'findings.candidate_reason',
                 'findings.status',
@@ -376,6 +492,11 @@ class TranslationWorkbenchEntries extends Component
                 'keys.id as key_id',
                 'keys.translation_key',
                 'keys.suggested_key as key_suggested_key',
+                'keys.namespace as key_namespace',
+                'keys.group as key_group',
+                'keys.path_key as key_path_key',
+                'keys.scope as key_scope',
+                'keys.status as key_status',
                 'keys.review_status',
                 'keys.key_type',
                 'keys.is_ui_key',

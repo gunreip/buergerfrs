@@ -221,7 +221,7 @@ class TranslationWorkbenchRawData extends Component
 
     public ?string $timelineEventsTimeSpan = '02:00';
 
-    public function setActiveTable(string $table): void
+    public function setActiveTable(string $table, string $scroll = 'nearest'): void
     {
         $this->activeTable = in_array($table, $this->tables, true)
             ? $table
@@ -229,6 +229,7 @@ class TranslationWorkbenchRawData extends Component
 
         $this->resetSortForTable();
         $this->resetPage();
+        $this->dispatchActiveTableTabChanged($scroll);
     }
 
     public function updatedActiveTable(): void
@@ -236,6 +237,42 @@ class TranslationWorkbenchRawData extends Component
         $this->activeTable = $this->normalizedActiveTable();
         $this->resetSortForTable();
         $this->resetPage();
+        $this->dispatchActiveTableTabChanged();
+    }
+
+    public function openFirstTableTab(): void
+    {
+        $this->setActiveTable($this->tables[0] ?? $this->normalizedActiveTable(), 'first');
+    }
+
+    public function openPreviousTableTab(): void
+    {
+        $index = $this->activeTableIndex();
+
+        if ($index <= 0) {
+            return;
+        }
+
+        $this->setActiveTable($this->tables[$index - 1]);
+    }
+
+    public function openNextTableTab(): void
+    {
+        $index = $this->activeTableIndex();
+        $lastIndex = count($this->tables) - 1;
+
+        if ($index >= $lastIndex) {
+            return;
+        }
+
+        $this->setActiveTable($this->tables[$index + 1]);
+    }
+
+    public function openLastTableTab(): void
+    {
+        $lastTable = $this->tables[array_key_last($this->tables)] ?? $this->normalizedActiveTable();
+
+        $this->setActiveTable($lastTable, 'last');
     }
 
     public function sortBy(string $column): void
@@ -934,6 +971,8 @@ class TranslationWorkbenchRawData extends Component
         return view('translation-workbench::livewire.raw-data', [
             'table' => $table,
             'tables' => $this->tables,
+            'activeTableIndex' => $this->activeTableIndex(),
+            'lastTableIndex' => count($this->tables) - 1,
             'columns' => $columns,
             'columnMetadata' => $this->columnMetadata($table, $columns),
             'columnPresentation' => RawDataColumnPresentation::forTable($table, $columns),
@@ -3360,6 +3399,22 @@ class TranslationWorkbenchRawData extends Component
         return in_array($this->activeTable, $this->tables, true)
             ? $this->activeTable
             : $this->tables[0];
+    }
+
+    private function activeTableIndex(): int
+    {
+        $index = array_search($this->normalizedActiveTable(), $this->tables, true);
+
+        return $index === false ? 0 : (int) $index;
+    }
+
+    private function dispatchActiveTableTabChanged(string $scroll = 'nearest'): void
+    {
+        $this->dispatch(
+            'translation-workbench:raw-data-table-tab-changed',
+            table: $this->normalizedActiveTable(),
+            scroll: in_array($scroll, ['first', 'last', 'nearest'], true) ? $scroll : 'nearest',
+        );
     }
 
     private function normalizedPerPage(): int
