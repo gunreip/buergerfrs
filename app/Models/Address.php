@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'country_id',
+    'postal_code_id',
+    'locality_id',
+    'street_id',
     'postal_code',
     'city',
     'street',
@@ -46,6 +49,30 @@ class Address extends Model
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
+    }
+
+    /**
+     * Get the normalized postal code reference assigned to this address.
+     */
+    public function postalCode(): BelongsTo
+    {
+        return $this->belongsTo(AddressPostalCode::class, 'postal_code_id');
+    }
+
+    /**
+     * Get the normalized locality reference assigned to this address.
+     */
+    public function locality(): BelongsTo
+    {
+        return $this->belongsTo(AddressLocality::class, 'locality_id');
+    }
+
+    /**
+     * Get the normalized street reference assigned to this address.
+     */
+    public function streetReference(): BelongsTo
+    {
+        return $this->belongsTo(AddressStreet::class, 'street_id');
     }
 
     /**

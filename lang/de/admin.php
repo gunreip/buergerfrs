@@ -212,6 +212,14 @@ return [
         ],
     ],
 
+    'pages' => [
+        'settings' => [
+            'two_factor_setup_modal' => [
+                'two_factor_authentication_is_now_enabled_scan_the_qr_code_or_enter_the_setup_key_in_y' => 'Die Zwei-Faktor-Authentifizierung ist nun aktiviert. Scannen Sie den QR-Code oder geben Sie den Einrichtungsschlüssel in Ihrer Authentifizierungs-App ein.',
+            ],
+        ],
+    ],
+
     'permission_list' => [
         'filter' => [
             'enter_a_search_term_to_filter_permissions_by_name_guard_category_or_description_' => 'Geben Sie einen Suchbegriff ein, um Berechtigungen nach Name, Wächter, Kategorie oder Beschreibung zu filtern. Bei der Suche wird die Groß-/Kleinschreibung beachtet.',

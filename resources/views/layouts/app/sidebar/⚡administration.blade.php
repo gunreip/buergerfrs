@@ -132,6 +132,55 @@
         </flux:sidebar.item>
     </flux:sidebar.group>
 
+    {{-- Admin -> translation workbench (group) --}}
+    <flux:sidebar.group
+        class="grid"
+        :heading="__('Translation Workbench')"
+        icon="flask-conical"
+        expandable
+        :expanded="request()->routeIs('admin.translation-workbench*')"
+    >
+        {{-- Admin -> translation workbench -> entries --}}
+        <flux:sidebar.item
+            icon="table-cells"
+            :href="route('admin.translation-workbench')"
+            :current="request()->routeIs('admin.translation-workbench')"
+            wire:navigate
+        >
+            {{ __('Translation Workbench') }}
+        </flux:sidebar.item>
+
+        {{-- Admin -> translation workbench -> old --}}
+        <flux:sidebar.item
+            icon="archive"
+            :href="route('admin.translation-workbench.old')"
+            :current="request()->routeIs('admin.translation-workbench.old')"
+            wire:navigate
+        >
+            {{ __('Old Workbench') }}
+        </flux:sidebar.item>
+
+        {{-- Admin -> translation workbench -> raw data --}}
+        <flux:sidebar.item
+            icon="database"
+            :href="route('admin.translation-workbench.raw-data')"
+            :current="request()->routeIs('admin.translation-workbench.raw-data')"
+            wire:navigate
+        >
+            {{ __('Raw-Data') }}
+        </flux:sidebar.item>
+
+        {{-- Admin -> translation workbench -> raw data new --}}
+        <flux:sidebar.item
+            icon="database"
+            :href="route('admin.translation-workbench.raw-data-new')"
+            :current="request()->routeIs('admin.translation-workbench.raw-data-new')"
+            wire:navigate
+        >
+            {{ __('Raw-Data New') }}
+        </flux:sidebar.item>
+    </flux:sidebar.group>
+
     {{-- Admin -> app settings --}}
     <flux:sidebar.item
         icon="settings"

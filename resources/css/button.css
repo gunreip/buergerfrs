@@ -13,6 +13,18 @@
     @apply dark:bg-zinc-800/40;
 }
 
+[data-buergerfrs-field-edit-suffix][data-buergerfrs-field-edit-suffix-changed] {
+    background-color: var(--color-green-600) !important;
+    border-color: var(--color-green-600) !important;
+    color: var(--color-white) !important;
+}
+
+.dark [data-buergerfrs-field-edit-suffix][data-buergerfrs-field-edit-suffix-changed] {
+    background-color: var(--color-green-600) !important;
+    border-color: var(--color-green-500) !important;
+    color: var(--color-white) !important;
+}
+
 [data-flux-radio-segmented] {
     @apply dark:hover:bg-zinc-400/50;
 }

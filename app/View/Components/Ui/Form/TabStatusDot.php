@@ -31,12 +31,32 @@ class TabStatusDot extends Component
 
     public function total(): int
     {
-        return (int) ($this->meta['total'] ?? 0);
+        return $this->fieldTotal();
     }
 
     public function filled(): int
     {
-        return (int) ($this->meta['filled'] ?? 0);
+        return $this->fieldFilled();
+    }
+
+    public function fieldTotal(): int
+    {
+        return (int) ($this->meta['field_total'] ?? $this->meta['total'] ?? 0);
+    }
+
+    public function fieldFilled(): int
+    {
+        return (int) ($this->meta['field_filled'] ?? $this->meta['filled'] ?? 0);
+    }
+
+    public function optionalTotal(): int
+    {
+        return (int) ($this->meta['optional_total'] ?? 0);
+    }
+
+    public function optionalFilled(): int
+    {
+        return (int) ($this->meta['optional_filled'] ?? 0);
     }
 
     public function requiredTotal(): int

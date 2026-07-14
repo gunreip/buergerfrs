@@ -190,7 +190,9 @@
                                 'admin.translation_list.table.original_text_in_the_source_language_useful_for_identification_and_reference',
                             )"
                         >
-                            {{ __('admin.translation_list.table.source_language_value_en_native_text') }}
+                            <div class="flex flex-wrap items-center gap-2">
+                                {{ __('admin.translation_list.table.source_language_value_en_native_text') }}
+                            </div>
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -202,9 +204,9 @@
                                 'admin.translation_list.table.translated_values_for_the_key_across_different_main_languages_and_their_respecti',
                             )"
                         >
-                            {{-- <div class="flex flex-wrap items-center gap-2"> --}}
-                            <span>{{ __('admin.translation_list.table.target_language_values') }}</span>
-                            {{-- </div> --}}
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span>{{ __('admin.translation_list.table.target_language_values') }}</span>
+                            </div>
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -312,6 +314,7 @@
                                     $focusedTranslationKeyId === $translationKey->id,
                             ])
                         >
+                            {{-- Sequence Number Cell Values --}}
                             <flux:table.cell
                                 class="align-top tabular-nums text-zinc-500 dark:text-zinc-400"
                                 align="end"
@@ -319,7 +322,7 @@
                                 {{ $translationKeys->firstItem() + $loop->index }}
                             </flux:table.cell>
 
-                            {{-- Cell ID --}}
+                            {{-- ID Cell Values --}}
                             <flux:table.cell
                                 class="w-32 align-top tabular-nums text-zinc-500 dark:text-zinc-400"
                                 align="end"
@@ -327,7 +330,7 @@
                                 #{{ $translationKey->id }}
                             </flux:table.cell>
 
-                            {{-- Cell Status --}}
+                            {{-- Status Cell Values --}}
                             <flux:table.cell
                                 class="w-px whitespace-nowrap align-top"
                                 align="center"
@@ -339,13 +342,19 @@
 
                                     $translationKeyNeedsNewKeyFromAudit =
                                         (int) ($translationKey->needs_key_usage_audit_follow_up_count ?? 0) > 0;
+
+                                    $translationKeyStatusBadgeValue =
+                                        ($translationKey->status ?? '') === 'dynamic' &&
+                                        (bool) ($translationKey->is_dynamic_multi ?? false)
+                                            ? 'dynamic-multi'
+                                            : (string) ($translationKey->status ?? '');
                                 @endphp
 
                                 <div class="flex flex-col items-center gap-1.5 space-y-2">
                                     <x-ui.badge.context
                                         context="translation.key.status"
-                                        :value="$translationKey->status"
-                                        :label="str($translationKey->status)->headline()"
+                                        :value="$translationKeyStatusBadgeValue"
+                                        :label="str($translationKeyStatusBadgeValue)->replace('-', ' ')->headline()"
                                         size="sm"
                                     />
 
@@ -385,7 +394,7 @@
                                 </div>
                             </flux:table.cell>
 
-                            {{-- Cell Key / Suggested Key --}}
+                            {{-- Key / Suggested Key Cell Values --}}
                             <flux:table.cell class="align-top">
                                 @php
                                     $key = trim((string) ($translationKey->key ?? ''));
@@ -496,7 +505,7 @@
                                                 :current-key="$key"
                                                 :reference-key="($translationKey->status ?? '') === 'obsolete' ? $expectedKey : $suggestedKey"
                                                 :highlight-differences="($translationKey->status ?? '') === 'obsolete'"
-                                                base-class="wrap-anywhere whitespace-normal font-mono text-zinc-900 dark:text-zinc-100"
+                                                base-class="hyphens-auto wrap-anywhere whitespace-normal font-mono text-zinc-900 dark:text-zinc-100"
                                             />
                                         @else
                                             <div class="text-zinc-400">
@@ -517,7 +526,7 @@
                                                 :reference-key="$key"
                                                 :highlight-differences="($translationKey->status ?? '') === 'obsolete'"
                                                 :highlight-all-when-no-difference="($translationKey->status ?? '') === 'obsolete'"
-                                                base-class="wrap-anywhere whitespace-normal font-mono text-amber-700 dark:text-amber-300"
+                                                base-class="hyphens-auto wrap-anywhere whitespace-normal font-mono text-amber-700 dark:text-amber-300"
                                                 diff-class="underline decoration-wavy underline-offset-2 decoration-amber-500 dark:decoration-amber-400"
                                             />
                                         @else
@@ -647,7 +656,7 @@
                                 }
                             @endphp
 
-                            {{-- Cell Source Language (EN) / Native Text --}}
+                            {{-- Source Language (EN) / Native Text Cell Values --}}
                             <flux:table.cell class="align-top">
                                 <div class="space-y-2">
                                     <div
@@ -706,7 +715,7 @@
                                 </div>
                             </flux:table.cell>
 
-                            {{-- Cell Values --}}
+                            {{-- Target Language Cell Values --}}
                             <flux:table.cell class="pr-1 align-top">
 
                                 <div class="max-h-42 space-y-2 overflow-y-auto pr-4">

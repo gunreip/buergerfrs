@@ -111,9 +111,11 @@ class TranslationsAuditCode extends Command
                     'value' => $match['value'],
                     'raw' => $match['raw'],
                     'reason' => $match['reason'],
-                    'suggested_key' => $classification === 'native'
-                        ? $this->suggestKey($match['value'], $relativePath)
-                        : null,
+                    'suggested_key' => match ($classification) {
+                        'native' => $this->suggestKey($match['value'], $relativePath),
+                        'dynamic' => $this->suggestDynamicKey($match['value'], $relativePath, $contents, $match['offset']),
+                        default => null,
+                    },
                     'file' => $relativePath,
                     'line' => $line,
                 ];
@@ -213,9 +215,9 @@ class TranslationsAuditCode extends Command
     private function extractDynamicTranslationCalls(string $contents): array
     {
         $patterns = [
-            '/(?P<function>__|trans)\(\s*(?P<argument>[^\'"\s][^)]*)\)/su',
-            '/(?P<function>@lang)\(\s*(?P<argument>[^\'"\s][^)]*)\)/su',
-            '/(?P<function>Lang::get)\(\s*(?P<argument>[^\'"\s][^)]*)\)/su',
+            '/(?P<function>__|trans)\(\s*(?P<argument>[^\'"\s)][^)]*)\)/su',
+            '/(?P<function>@lang)\(\s*(?P<argument>[^\'"\s)][^)]*)\)/su',
+            '/(?P<function>Lang::get)\(\s*(?P<argument>[^\'"\s)][^)]*)\)/su',
         ];
 
         $calls = [];
@@ -224,13 +226,19 @@ class TranslationsAuditCode extends Command
             preg_match_all($pattern, $contents, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
 
             foreach ($matches as $match) {
+                $offset = (int) $match[0][1];
+
+                if ($this->isInsideBladeJsCall($contents, $offset)) {
+                    continue;
+                }
+
                 $argument = trim($match['argument'][0]);
 
                 $calls[] = [
                     'function' => $match['function'][0],
                     'value' => $argument,
-                    'raw' => $this->extractCallSnippet($contents, $match[0][1]),
-                    'offset' => $match[0][1],
+                    'raw' => $this->extractCallSnippet($contents, $offset),
+                    'offset' => $offset,
                     'dynamic' => true,
                     'reason' => 'non_literal_first_argument',
                 ];
@@ -238,6 +246,20 @@ class TranslationsAuditCode extends Command
         }
 
         return $calls;
+    }
+
+    private function isInsideBladeJsCall(string $contents, int $offset): bool
+    {
+        $prefix = substr($contents, 0, $offset);
+        $jsOffset = strrpos($prefix, '@js(');
+
+        if ($jsOffset === false) {
+            return false;
+        }
+
+        $between = substr($contents, $jsOffset, $offset - $jsOffset);
+
+        return substr_count($between, '(') > substr_count($between, ')');
     }
 
     /**
@@ -370,6 +392,85 @@ class TranslationsAuditCode extends Command
         }
 
         return $namespace.'.'.$slug;
+    }
+
+    private function suggestDynamicKey(string $argument, string $relativePath, string $contents, int $offset): string
+    {
+        $namespace = $this->namespaceFromPath($relativePath);
+        $context = $this->dynamicContextFromArgument($argument, $contents, $offset);
+
+        return 'dynamic.'.$namespace.'.'.$context;
+    }
+
+    private function dynamicContextFromArgument(string $argument, string $contents, int $offset): string
+    {
+        $argument = trim($argument);
+
+        if ($argument === '$label') {
+            $foreachContext = $this->nearestForeachLabelSource($contents, $offset);
+
+            if ($foreachContext !== null) {
+                return $this->slugSegment($foreachContext);
+            }
+        }
+
+        if (preg_match('/\\$([A-Za-z_][A-Za-z0-9_]*)Options/u', $argument, $match) === 1) {
+            return $this->slugSegment((string) $match[1].'_options');
+        }
+
+        if (preg_match('/\\$([A-Za-z_][A-Za-z0-9_]*)->([A-Za-z_][A-Za-z0-9_]*)/u', $argument, $match) === 1) {
+            return $this->slugSegment((string) $match[1].'_'.(string) $match[2]);
+        }
+
+        if (preg_match('/\\$([A-Za-z_][A-Za-z0-9_]*)/u', $argument, $match) === 1) {
+            return $this->slugSegment((string) $match[1]);
+        }
+
+        $withoutPhpNoise = str($argument)
+            ->replaceMatches('/\\b(str|Str|headline|toString|__|trans|lang|get)\\b/u', ' ')
+            ->toString();
+
+        return $this->slugSegment($withoutPhpNoise);
+    }
+
+    private function nearestForeachLabelSource(string $contents, int $offset): ?string
+    {
+        $start = max(0, $offset - 2000);
+        $window = substr($contents, $start, $offset - $start);
+
+        preg_match_all(
+            '/@foreach\s*\(\s*\$(?P<source>[A-Za-z_][A-Za-z0-9_]*)\s+as\s+(?:(?:\$?[A-Za-z_][A-Za-z0-9_]*|[^=]+)\s*=>\s*)?\$(?P<label>[A-Za-z_][A-Za-z0-9_]*)\s*\)/u',
+            $window,
+            $matches,
+            PREG_SET_ORDER,
+        );
+
+        if ($matches === []) {
+            return null;
+        }
+
+        $match = $matches[array_key_last($matches)];
+
+        if (($match['label'] ?? null) !== 'label') {
+            return null;
+        }
+
+        $source = trim((string) ($match['source'] ?? ''));
+
+        return $source !== '' ? $source : null;
+    }
+
+    private function slugSegment(string $value): string
+    {
+        $slug = str($value)
+            ->snake()
+            ->lower()
+            ->replaceMatches('/[^a-z0-9]+/', '_')
+            ->trim('_')
+            ->limit(80, '')
+            ->toString();
+
+        return $slug !== '' ? $slug : 'value';
     }
 
     /**

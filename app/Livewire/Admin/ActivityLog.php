@@ -461,7 +461,7 @@ class ActivityLog extends Component
                 ->whereRaw("COALESCE(properties::text, '') NOT IN ('', '[]', '{}')")
                 ->count(),
             'with_changes' => (clone $filteredQuery)
-                ->whereRaw("COALESCE(attribute_changes::text, '') NOT IN ('', '[]', '{}') OR (properties::jsonb ? 'before' AND properties::jsonb ? 'after')")
+                ->whereRaw("COALESCE(attribute_changes::text, '') NOT IN ('', '[]', '{}') OR (jsonb_exists(properties::jsonb, 'before') AND jsonb_exists(properties::jsonb, 'after'))")
                 ->count(),
         ];
     }

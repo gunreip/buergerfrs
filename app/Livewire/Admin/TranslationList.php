@@ -82,6 +82,7 @@ class TranslationList extends Component
         'status',
         'workflowStatus',
         'classification',
+        'dynamicFilter',
         'showArchived',
         'onlyProblems',
         'onlyBaseDuplicates',
@@ -118,6 +119,8 @@ class TranslationList extends Component
 
     public string $classification = 'all';
 
+    public string $dynamicFilter = 'none';
+
     public bool $showArchived = false;
 
     public bool $onlyProblems = false;
@@ -143,6 +146,8 @@ class TranslationList extends Component
     public ?int $selectedTranslationKeyId = null;
 
     public bool $translationKeyModalOpen = false;
+
+    public bool $selectedTranslationKeyDynamicMulti = false;
 
     public ?int $editingTranslationKeyId = null;
 
@@ -172,7 +177,6 @@ class TranslationList extends Component
         'ok',
         'missing',
         'native',
-        'dynamic',
         'obsolete',
         'invalid',
     ];
@@ -195,7 +199,18 @@ class TranslationList extends Component
         'vendor',
         'backfill_by_translation',
         'native',
-        'dynamic',
+    ];
+
+    /**
+     * @var array<int, string>
+     */
+    public array $dynamicFilterOptions = [
+        'none',
+        'all',
+        'candidate',
+        'multi',
+        'without_suggested_key',
+        'reactivated_stale',
     ];
 
     /**
@@ -222,10 +237,19 @@ class TranslationList extends Component
             return;
         }
 
+        $rawStatus = $state['status'] ?? $this->status;
+        $rawClassification = $state['classification'] ?? $this->classification;
+
         $this->search = trim((string) ($state['search'] ?? $this->search));
-        $this->status = $this->normalizeStatusFilter($state['status'] ?? $this->status);
+        $this->status = $this->normalizeStatusFilter($rawStatus);
         $this->workflowStatus = $this->normalizeWorkflowStatusFilter($state['workflowStatus'] ?? $this->workflowStatus);
-        $this->classification = $this->normalizeClassificationFilter($state['classification'] ?? $this->classification);
+        $this->classification = $this->normalizeClassificationFilter($rawClassification);
+        $this->dynamicFilter = $this->normalizeDynamicFilter($state['dynamicFilter'] ?? $this->dynamicFilter);
+
+        if ($this->dynamicFilter === 'none' && ($rawStatus === 'dynamic' || $rawClassification === 'dynamic')) {
+            $this->dynamicFilter = 'all';
+        }
+
         $this->showArchived = (bool) ($state['showArchived'] ?? $this->showArchived);
         $this->onlyProblems = (bool) ($state['onlyProblems'] ?? $this->onlyProblems);
         $this->onlyBaseDuplicates = (bool) ($state['onlyBaseDuplicates'] ?? $this->onlyBaseDuplicates);
@@ -284,6 +308,17 @@ class TranslationList extends Component
     public function updatedPerPage(): void
     {
         $this->perPage = $this->normalizedPerPage($this->perPage);
+        $this->setPage(1);
+        $this->persistUiState();
+    }
+
+    /**
+     * Explicitly set page size from segmented controls that do not reliably hydrate wire:model.
+     */
+    public function setPerPage(int $perPage): void
+    {
+        $this->perPage = $this->normalizedPerPage($perPage);
+        $this->setPage(1);
         $this->persistUiState();
     }
 
@@ -315,6 +350,7 @@ class TranslationList extends Component
         }
 
         $this->status = $status;
+        $this->dynamicFilter = 'none';
         $this->resetPage();
         $this->persistUiState();
     }
@@ -342,6 +378,7 @@ class TranslationList extends Component
         $this->showArchived = false;
         $this->workflowStatus = 'all';
         $this->status = 'all';
+        $this->dynamicFilter = 'none';
         $this->onlyProblems = false;
         $this->onlyBaseDuplicates = false;
         $this->resetPage();
@@ -356,6 +393,7 @@ class TranslationList extends Component
         $this->showArchived = false;
         $this->workflowStatus = 'all';
         $this->status = 'ok';
+        $this->dynamicFilter = 'none';
         $this->onlyProblems = false;
         $this->onlyBaseDuplicates = false;
         $this->resetPage();
@@ -370,6 +408,7 @@ class TranslationList extends Component
         $this->showArchived = true;
         $this->workflowStatus = 'reviewed';
         $this->status = 'all';
+        $this->dynamicFilter = 'none';
         $this->onlyProblems = false;
         $this->onlyBaseDuplicates = false;
         $this->resetPage();
@@ -386,6 +425,24 @@ class TranslationList extends Component
         }
 
         $this->classification = $classification;
+        $this->dynamicFilter = 'none';
+        $this->resetPage();
+        $this->persistUiState();
+    }
+
+    /**
+     * Focus the list on dynamic translation work without mixing it into status/type filters.
+     */
+    public function setDynamicFilter(string $dynamicFilter): void
+    {
+        $this->dynamicFilter = $this->normalizeDynamicFilter($dynamicFilter);
+        $this->showArchived = false;
+        $this->workflowStatus = 'all';
+        $this->status = 'all';
+        $this->classification = 'all';
+        $this->onlyProblems = false;
+        $this->onlyBaseDuplicates = false;
+        $this->onlyNeedsKey = false;
         $this->resetPage();
         $this->persistUiState();
     }
@@ -401,7 +458,15 @@ class TranslationList extends Component
 
         $this->showArchived = false;
         $this->workflowStatus = 'all';
+        $this->status = 'all';
         $this->classification = $classification;
+        $this->dynamicFilter = 'none';
+        $this->onlyProblems = false;
+        $this->onlyBaseDuplicates = false;
+        $this->onlyNeedsKey = false;
+        $this->search = '';
+        $this->namespaceFilter = '';
+        $this->groupFilter = '';
         $this->resetPage();
         $this->persistUiState();
     }
@@ -415,6 +480,7 @@ class TranslationList extends Component
         $this->workflowStatus = 'all';
         $this->status = 'all';
         $this->classification = 'all';
+        $this->dynamicFilter = 'none';
         $this->onlyProblems = false;
         $this->onlyBaseDuplicates = false;
         $this->resetPage();
@@ -464,6 +530,7 @@ class TranslationList extends Component
         $this->status = 'all';
         $this->workflowStatus = 'open';
         $this->classification = 'all';
+        $this->dynamicFilter = 'none';
         $this->showArchived = false;
         $this->onlyProblems = false;
         $this->onlyBaseDuplicates = false;
@@ -486,6 +553,9 @@ class TranslationList extends Component
     {
         $this->focusedTranslationKeyId = $translationKeyId;
         $this->selectedTranslationKeyId = $translationKeyId;
+        $this->selectedTranslationKeyDynamicMulti = (bool) TranslationKey::query()
+            ->whereKey($translationKeyId)
+            ->value('is_dynamic_multi');
         $this->translationKeyModalOpen = true;
     }
 
@@ -493,6 +563,7 @@ class TranslationList extends Component
     {
         $this->translationKeyModalOpen = false;
         $this->selectedTranslationKeyId = null;
+        $this->selectedTranslationKeyDynamicMulti = false;
     }
 
     /**
@@ -899,6 +970,111 @@ class TranslationList extends Component
         $this->openTranslationEdit($translationKeyId);
     }
 
+    public function updatedSelectedTranslationKeyDynamicMulti(mixed $value): void
+    {
+        if (! $this->selectedTranslationKeyId) {
+            return;
+        }
+
+        $this->setDynamicMulti(
+            translationKeyId: $this->selectedTranslationKeyId,
+            isDynamicMulti: filter_var($value, FILTER_VALIDATE_BOOLEAN),
+            translationActivity: app(TranslationActivity::class),
+        );
+    }
+
+    public function setDynamicMulti(
+        int $translationKeyId,
+        bool $isDynamicMulti,
+        TranslationActivity $translationActivity,
+    ): void
+    {
+        $translationKey = TranslationKey::query()->find($translationKeyId);
+
+        if (! $translationKey) {
+            $this->selectedTranslationKeyDynamicMulti = false;
+
+            return;
+        }
+
+        $wasDynamicMulti = (bool) ($translationKey->is_dynamic_multi ?? false);
+        $this->selectedTranslationKeyDynamicMulti = $wasDynamicMulti;
+
+        if (($translationKey->classification ?? null) !== 'dynamic') {
+            Flux::toast(
+                heading: __('Dynamic multi not applicable'),
+                text: __('Only dynamic translation candidates can be marked as dynamic multi.'),
+                variant: 'warning',
+                duration: 5000,
+            );
+
+            return;
+        }
+
+        $currentKey = trim((string) ($translationKey->key ?? ''));
+
+        if ($currentKey === '') {
+            Flux::toast(
+                heading: __('Translation key missing'),
+                text: __('Set a translation key before changing the dynamic multi workflow state.'),
+                variant: 'warning',
+                duration: 5000,
+            );
+
+            return;
+        }
+
+        if ($wasDynamicMulti === $isDynamicMulti) {
+            return;
+        }
+
+        $translationKey->forceFill([
+            'is_dynamic_multi' => $isDynamicMulti,
+            'namespace' => $this->namespaceFromTranslationKey($currentKey),
+            'group' => $this->groupFromTranslationKey($currentKey),
+            'classification' => 'dynamic',
+            'status' => 'dynamic',
+            'source' => 'dynamic_audit',
+        ])->save();
+
+        $this->selectedTranslationKeyDynamicMulti = $isDynamicMulti;
+
+        $this->createTranslationWorkflowAuditEvent(
+            translationKey: $translationKey,
+            oldWorkflowStatus: (string) ($translationKey->workflow_status ?? 'open'),
+            newWorkflowStatus: (string) ($translationKey->workflow_status ?? 'open'),
+            reason: $isDynamicMulti
+                ? 'dynamic_candidate_marked_as_multi'
+                : 'dynamic_candidate_unmarked_as_multi',
+            context: [
+                'source' => 'translation_review_modal',
+                'was_dynamic_multi' => $wasDynamicMulti,
+                'is_dynamic_multi' => $isDynamicMulti,
+            ],
+        );
+
+        $translationActivity->record(
+            event: 'translations.admin.key.dynamic_multi_toggled',
+            description: $isDynamicMulti
+                ? __('Dynamic translation candidate marked as multi')
+                : __('Dynamic translation candidate removed from multi workflow'),
+            subject: $translationKey,
+            before: ['is_dynamic_multi' => $wasDynamicMulti],
+            after: ['is_dynamic_multi' => $isDynamicMulti],
+        );
+
+        $this->focusedTranslationKeyId = $translationKey->id;
+
+        Flux::toast(
+            heading: $isDynamicMulti ? __('Dynamic multi marked') : __('Dynamic multi removed'),
+            text: $isDynamicMulti
+                ? __('The translation candidate now uses the dynamic multi workflow.')
+                : __('The translation candidate no longer uses the dynamic multi workflow.'),
+            variant: 'success',
+            duration: 5000,
+        );
+    }
+
     /**
      * Apply the suggested key as the active translation key from the review modal.
      */
@@ -936,15 +1112,21 @@ class TranslationList extends Component
         }
 
         $currentStatus = trim((string) ($translationKey->status ?? ''));
-        $resolvedStatus = in_array($currentStatus, ['ok', 'missing', 'obsolete'], true)
+        $isDynamicTranslationKey =
+            ($translationKey->classification ?? null) === 'dynamic'
+            || str_starts_with($suggestedKey, 'dynamic.');
+
+        $resolvedStatus = $isDynamicTranslationKey
+            ? ($currentStatus !== '' ? $currentStatus : 'dynamic')
+            : (in_array($currentStatus, ['ok', 'missing', 'obsolete'], true)
             ? $currentStatus
-            : 'missing';
+            : 'missing');
 
         $translationKey->forceFill([
             'key' => $suggestedKey,
             'namespace' => $this->namespaceFromTranslationKey($suggestedKey),
             'group' => $this->groupFromTranslationKey($suggestedKey),
-            'classification' => 'key',
+            'classification' => $isDynamicTranslationKey ? 'dynamic' : 'key',
             'status' => $resolvedStatus,
         ])->save();
 
@@ -1061,6 +1243,17 @@ class TranslationList extends Component
             return;
         }
 
+        if (trim((string) ($translationKey->key ?? '')) === '') {
+            Flux::toast(
+                heading: __('Translation key missing'),
+                text: __('Set a translation key before marking this entry as needing a new key.'),
+                variant: 'warning',
+                duration: 5000,
+            );
+
+            return;
+        }
+
         $wasActive = $translationKey->needs_new_key_marked_at !== null
             && $translationKey->needs_new_key_resolved_at === null;
 
@@ -1118,6 +1311,17 @@ class TranslationList extends Component
         $translationKey = TranslationKey::query()->find($translationKeyId);
 
         if (! $translationKey) {
+            return;
+        }
+
+        if (trim((string) ($translationKey->key ?? '')) === '') {
+            Flux::toast(
+                heading: __('Translation key missing'),
+                text: __('Set a translation key before resolving the Needs-New-Key marker.'),
+                variant: 'warning',
+                duration: 5000,
+            );
+
             return;
         }
 
@@ -1287,6 +1491,7 @@ class TranslationList extends Component
             || $this->status !== 'all'
             || $this->workflowStatus !== 'open'
             || $this->classification !== 'all'
+            || $this->dynamicFilter !== 'none'
             || $this->showArchived
             || $this->onlyProblems
             || $this->onlyBaseDuplicates
@@ -1425,6 +1630,7 @@ class TranslationList extends Component
             'workflowStatus',
             'status',
             'classification',
+            'dynamicFilter',
             'onlyProblems',
             'onlyBaseDuplicates',
             'search',
@@ -1450,12 +1656,6 @@ class TranslationList extends Component
             ])
             ->withCount('usages')
             ->selectSub(
-                DB::table('translation_audit_events')
-                    ->selectRaw('count(*)')
-                    ->whereColumn('translation_audit_events.translation_key_id', 'translation_keys.id'),
-                'history_events_count'
-            )
-            ->selectSub(
                 $this->needsKeyUsageAuditFollowUpCountQuery(),
                 'needs_key_usage_audit_follow_up_count',
             );
@@ -1478,14 +1678,22 @@ class TranslationList extends Component
             $query = $query->where('workflow_status', $this->workflowStatus);
         }
 
+        if (! in_array('obsoleteStatus', $exceptFilters, true) && $this->status !== 'obsolete') {
+            $query = $this->excludeObsoleteStatus($query);
+        }
+
         return $query
             ->when(
                 ! in_array('status', $exceptFilters, true) && $this->status !== 'all',
-                fn (Builder $query): Builder => $query->where('status', $this->status),
+                fn (Builder $query): Builder => $this->applyStatusFilter($query, $this->status),
             )
             ->when(
                 ! in_array('classification', $exceptFilters, true) && $this->classification !== 'all',
                 fn (Builder $query): Builder => $query->where('classification', $this->classification),
+            )
+            ->when(
+                ! in_array('dynamicFilter', $exceptFilters, true) && $this->dynamicFilter !== 'none',
+                fn (Builder $query): Builder => $this->applyDynamicFilter($query, $this->dynamicFilter),
             )
             ->when(
                 ! in_array('onlyProblems', $exceptFilters, true) && $this->onlyProblems,
@@ -1532,6 +1740,61 @@ class TranslationList extends Component
                     });
                 },
             );
+    }
+
+    private function applyStatusFilter(Builder $query, string $status): Builder
+    {
+        if ($status !== 'dynamic') {
+            return $query->where('status', $status);
+        }
+
+        return $query->where(function (Builder $query): void {
+            $query
+                ->where('status', 'dynamic')
+                ->orWhere('is_dynamic_multi', true);
+        });
+    }
+
+    private function applyDynamicFilter(Builder $query, string $dynamicFilter): Builder
+    {
+        return match ($dynamicFilter) {
+            'all' => $this->applyDynamicTranslationScope($query),
+            'candidate' => $this->applyDynamicTranslationScope($query)
+                ->where('is_dynamic_multi', false),
+            'multi' => $query->where('is_dynamic_multi', true),
+            'without_suggested_key' => $this->applyDynamicTranslationScope($query)
+                ->where('is_dynamic_multi', false)
+                ->where(function (Builder $query): void {
+                    $query
+                        ->whereNull('suggested_key')
+                        ->orWhere('suggested_key', '');
+                }),
+            'reactivated_stale' => $this->applyDynamicTranslationScope($query)
+                ->whereHas('auditEvents', function (Builder $query): void {
+                    $query
+                        ->where('entity_type', 'translation_key')
+                        ->where('event_type', 'legacy_dynamic_stale_reactivated');
+                }),
+            default => $query,
+        };
+    }
+
+    private function applyDynamicTranslationScope(Builder $query): Builder
+    {
+        return $query->where(function (Builder $query): void {
+            $query
+                ->where('classification', 'dynamic')
+                ->orWhere('is_dynamic_multi', true);
+        });
+    }
+
+    private function excludeObsoleteStatus(Builder $query): Builder
+    {
+        return $query->where(function (Builder $query): void {
+            $query
+                ->whereNull('status')
+                ->orWhere('status', '!=', 'obsolete');
+        });
     }
 
     /**
@@ -1641,24 +1904,39 @@ class TranslationList extends Component
 
     private function applyActiveRelevanceScope(Builder $query): Builder
     {
-        return $query->whereHas('usages', function (Builder $query): void {
-            $query->where(function (Builder $query): void {
-                $query
-                    ->whereNull('reason')
-                    ->orWhere('reason', '!=', self::STALE_AUDIT_USAGE_REASON);
-            });
+        return $query->where(function (Builder $query): void {
+            $query
+                ->where('source', 'dynamic_audit')
+                ->orWhere('is_dynamic_multi', true)
+                ->orWhereHas('usages', function (Builder $query): void {
+                    $query->where(function (Builder $query): void {
+                        $query
+                            ->whereNull('reason')
+                            ->orWhere('reason', '!=', self::STALE_AUDIT_USAGE_REASON);
+                    });
+                });
         });
     }
 
     private function applyArchivedRelevanceScope(Builder $query): Builder
     {
-        return $query->whereDoesntHave('usages', function (Builder $query): void {
-            $query->where(function (Builder $query): void {
+        return $query
+            ->where(function (Builder $query): void {
                 $query
-                    ->whereNull('reason')
-                    ->orWhere('reason', '!=', self::STALE_AUDIT_USAGE_REASON);
+                    ->where(function (Builder $query): void {
+                        $query
+                            ->whereNull('source')
+                            ->orWhere('source', '!=', 'dynamic_audit');
+                    })
+                    ->where('is_dynamic_multi', false);
+            })
+            ->whereDoesntHave('usages', function (Builder $query): void {
+                $query->where(function (Builder $query): void {
+                    $query
+                        ->whereNull('reason')
+                        ->orWhere('reason', '!=', self::STALE_AUDIT_USAGE_REASON);
+                });
             });
-        });
     }
 
     /**
@@ -1671,26 +1949,22 @@ class TranslationList extends Component
      */
     public function render(): View
     {
-        $workflowStatusCounts = $this->filteredTranslationKeyQuery(['workflowStatus'])
+        $workflowCounterBaseQuery = $this->queryForRelevanceScope(false, ['workflowStatus', 'status', 'classification', 'dynamicFilter', 'onlyProblems', 'onlyBaseDuplicates', 'onlyNeedsKey']);
+
+        $workflowCounterCounts = (clone $workflowCounterBaseQuery)
             ->selectRaw('workflow_status, count(*) as total')
             ->groupBy('workflow_status')
             ->pluck('total', 'workflow_status')
             ->map(fn ($value) => (int) $value)
             ->all();
 
-        $workflowCounterBaseQuery = $this->queryForRelevanceScope(false, ['workflowStatus', 'status', 'classification', 'onlyProblems', 'onlyBaseDuplicates', 'onlyNeedsKey']);
+        $workflowRelevantTotal = array_sum($workflowCounterCounts);
 
-        $workflowRelevantTotal = (clone $workflowCounterBaseQuery)->count();
+        $workflowOpenTotal = $workflowCounterCounts['open'] ?? 0;
 
-        $workflowOpenTotal = (clone $workflowCounterBaseQuery)
-            ->where('workflow_status', 'open')
-            ->count();
+        $workflowReviewedTotal = $workflowCounterCounts['reviewed'] ?? 0;
 
-        $workflowReviewedTotal = (clone $workflowCounterBaseQuery)
-            ->where('workflow_status', 'reviewed')
-            ->count();
-
-        $workflowHistoryTotal = (int) $this->filteredTranslationKeyQuery(['workflowStatus', 'status', 'classification', 'onlyProblems', 'onlyBaseDuplicates', 'onlyNeedsKey', 'relevanceScope'])
+        $workflowHistoryTotal = (int) $this->filteredTranslationKeyQuery(['workflowStatus', 'status', 'classification', 'dynamicFilter', 'onlyProblems', 'onlyBaseDuplicates', 'onlyNeedsKey', 'relevanceScope'])
             ->where('workflow_status', 'reviewed')
             ->count();
 
@@ -1698,12 +1972,25 @@ class TranslationList extends Component
             ->where('status', 'ok')
             ->count();
 
-        $statusCounts = $this->filteredTranslationKeyQuery(['status'])
+        $statusCounts = $this->filteredTranslationKeyQuery(['status', 'obsoleteStatus'])
             ->selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status')
             ->map(fn ($value) => (int) $value)
             ->all();
+
+        $dynamicMultiStatusRepairCount = (int) $this->filteredTranslationKeyQuery(['status'])
+            ->where('is_dynamic_multi', true)
+            ->where(function (Builder $query): void {
+                $query
+                    ->whereNull('status')
+                    ->orWhere('status', '!=', 'dynamic');
+            })
+            ->count();
+
+        if ($dynamicMultiStatusRepairCount > 0) {
+            $statusCounts['dynamic'] = ($statusCounts['dynamic'] ?? 0) + $dynamicMultiStatusRepairCount;
+        }
 
         $classificationCounts = $this->filteredTranslationKeyQuery(['classification'])
             ->selectRaw('classification, count(*) as total')
@@ -1712,18 +1999,57 @@ class TranslationList extends Component
             ->mapWithKeys(fn ($value, $key): array => [(string) $key => (int) $value])
             ->all();
 
-        $activeClassificationCounts = $this->queryForRelevanceScope(false, ['workflowStatus', 'classification', 'status', 'onlyProblems', 'onlyBaseDuplicates', 'onlyNeedsKey'])
+        $activeClassificationCounts = $this->queryForRelevanceScope(false, [
+            'workflowStatus',
+            'classification',
+            'status',
+            'dynamicFilter',
+            'onlyProblems',
+            'onlyBaseDuplicates',
+            'onlyNeedsKey',
+            'search',
+            'namespaceFilter',
+            'groupFilter',
+        ])
             ->selectRaw('classification, count(*) as total')
             ->groupBy('classification')
             ->pluck('total', 'classification')
             ->mapWithKeys(fn ($value, $key): array => [(string) $key => (int) $value])
             ->all();
 
+        $dynamicFilterBaseQuery = $this->queryForRelevanceScope(false, [
+            'workflowStatus',
+            'status',
+            'classification',
+            'dynamicFilter',
+            'onlyProblems',
+            'onlyBaseDuplicates',
+            'onlyNeedsKey',
+        ]);
+
+        $dynamicAggregateCounts = $this->applyDynamicTranslationScope((clone $dynamicFilterBaseQuery))
+            ->selectRaw('
+                COUNT(*) as all_count,
+                SUM(CASE WHEN is_dynamic_multi = false THEN 1 ELSE 0 END) as candidate_count,
+                SUM(CASE WHEN is_dynamic_multi = true THEN 1 ELSE 0 END) as multi_count,
+                SUM(CASE WHEN is_dynamic_multi = false AND (suggested_key IS NULL OR suggested_key = \'\') THEN 1 ELSE 0 END) as without_suggested_key_count
+            ')
+            ->first();
+
+        $dynamicFilterCounts = [
+            'none' => (int) (clone $dynamicFilterBaseQuery)->count(),
+            'all' => (int) ($dynamicAggregateCounts?->all_count ?? 0),
+            'candidate' => (int) ($dynamicAggregateCounts?->candidate_count ?? 0),
+            'multi' => (int) ($dynamicAggregateCounts?->multi_count ?? 0),
+            'without_suggested_key' => (int) ($dynamicAggregateCounts?->without_suggested_key_count ?? 0),
+            'reactivated_stale' => (int) $this->applyDynamicFilter((clone $dynamicFilterBaseQuery), 'reactivated_stale')->count(),
+        ];
+
         $total = array_sum($statusCounts);
 
         $activeTypeTotal = array_sum($activeClassificationCounts);
 
-        $archiveCount = (int) $this->queryForRelevanceScope(true, ['workflowStatus', 'classification', 'status', 'onlyProblems', 'onlyBaseDuplicates', 'onlyNeedsKey'])
+        $archiveCount = (int) $this->queryForRelevanceScope(true, ['workflowStatus', 'classification', 'status', 'dynamicFilter', 'onlyProblems', 'onlyBaseDuplicates', 'onlyNeedsKey'])
             ->count();
 
         $problemCount = (int) $this->filteredTranslationKeyQuery(['onlyProblems'])
@@ -1741,6 +2067,7 @@ class TranslationList extends Component
                 'workflowStatus',
                 'status',
                 'classification',
+                'dynamicFilter',
                 'onlyProblems',
                 'onlyBaseDuplicates',
                 'onlyNeedsKey',
@@ -1752,9 +2079,9 @@ class TranslationList extends Component
 
         $query = $this->translationKeyQuery();
 
-        $filteredTotal = (clone $query)->count();
-
         $translationKeys = (clone $query)->paginate($this->normalizedPerPage());
+
+        $filteredTotal = $translationKeys->total();
 
         $nextReviewTranslationKeyId = $this->resolveNextReviewTranslationKeyId(
             query: $query,
@@ -1879,7 +2206,6 @@ class TranslationList extends Component
 
         return view('components.admin.⚡translation-list', [
             'translationKeys' => $translationKeys,
-            'workflowStatusCounts' => $workflowStatusCounts,
             'workflowRelevantTotal' => $workflowRelevantTotal,
             'workflowOpenTotal' => $workflowOpenTotal,
             'workflowReviewedTotal' => $workflowReviewedTotal,
@@ -1888,6 +2214,7 @@ class TranslationList extends Component
             'statusCounts' => $statusCounts,
             'classificationCounts' => $classificationCounts,
             'activeClassificationCounts' => $activeClassificationCounts,
+            'dynamicFilterCounts' => $dynamicFilterCounts,
             'total' => $total,
             'activeTypeTotal' => $activeTypeTotal,
             'archiveCount' => $archiveCount,
@@ -2322,6 +2649,13 @@ class TranslationList extends Component
         return in_array($classification, $this->classificationOptions, true) ? $classification : 'all';
     }
 
+    private function normalizeDynamicFilter(mixed $value): string
+    {
+        $dynamicFilter = trim((string) $value);
+
+        return in_array($dynamicFilter, $this->dynamicFilterOptions, true) ? $dynamicFilter : 'none';
+    }
+
     private function persistUiState(): void
     {
         $this->setUserSetting(self::UI_STATE_SETTING_KEY, [
@@ -2329,6 +2663,7 @@ class TranslationList extends Component
             'status' => $this->status,
             'workflowStatus' => $this->workflowStatus,
             'classification' => $this->classification,
+            'dynamicFilter' => $this->dynamicFilter,
             'showArchived' => $this->showArchived,
             'onlyProblems' => $this->onlyProblems,
             'onlyBaseDuplicates' => $this->onlyBaseDuplicates,

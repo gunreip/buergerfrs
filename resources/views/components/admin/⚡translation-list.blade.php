@@ -26,15 +26,23 @@
     @include('components.admin.partials.translation-list.⚡table')
 
     {{-- Translation key review modal --}}
-    @include('components.admin.partials.translation-list.⚡modal', [
+    @include('components.admin.partials.translation-list.⚡modal-review', [
         'selectedTranslationKey' => $selectedTranslationKey,
     ])
 
-    {{-- Translation values edit modal --}}
-    @include('components.admin.partials.translation-list.⚡modal-edit', [
-        'editingTranslationKey' => $editingTranslationKey,
-        'nextEditTranslationKeyId' => $nextEditTranslationKeyId,
-    ])
+    @if (($editingTranslationKey?->is_dynamic_multi ?? false) === true)
+        {{-- Dynamic multi translation values edit modal --}}
+        @include('components.admin.partials.translation-list.⚡modal-edit-dynamic', [
+            'editingTranslationKey' => $editingTranslationKey,
+            'nextEditTranslationKeyId' => $nextEditTranslationKeyId,
+        ])
+    @else
+        {{-- Translation values edit modal --}}
+        @include('components.admin.partials.translation-list.⚡modal-edit', [
+            'editingTranslationKey' => $editingTranslationKey,
+            'nextEditTranslationKeyId' => $nextEditTranslationKeyId,
+        ])
+    @endif
 
     {{-- Translation history modal --}}
     @include('components.admin.partials.translation-list.⚡modal-history', [

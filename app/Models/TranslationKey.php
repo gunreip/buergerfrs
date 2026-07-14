@@ -17,6 +17,7 @@ class TranslationKey extends Model
         'status',
         'workflow_status',
         'classification',
+        'is_dynamic_multi',
         'source',
         'suggested_key',
         'native_text',
@@ -37,6 +38,7 @@ class TranslationKey extends Model
         'last_seen_at' => 'datetime',
         'obsolete_at' => 'datetime',
         'reviewed_at' => 'datetime',
+        'is_dynamic_multi' => 'boolean',
         'needs_new_key_marked_at' => 'datetime',
         'needs_new_key_resolved_at' => 'datetime',
     ];
@@ -49,5 +51,10 @@ class TranslationKey extends Model
     public function usages(): HasMany
     {
         return $this->hasMany(TranslationUsage::class);
+    }
+
+    public function auditEvents(): HasMany
+    {
+        return $this->hasMany(TranslationAuditEvent::class);
     }
 }

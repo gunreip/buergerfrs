@@ -13,40 +13,42 @@ thead[data-flux-columns] th[data-flux-column]:not(:last-child) {
     @apply border-r border-zinc-500/40;
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| Flux Table Sticky Columns
+|--------------------------------------------------------------------------
+|
+| Flux setzt sticky columns über first:sticky/last:sticky. Sticky cells brauchen
+| einen opaken Hintergrund, dürfen aber keine eigene position-Regel bekommen,
+| weil sonst das Flux sticky-Verhalten überschrieben wird.
+| Desweiteren bg-Klassen auf sticky cells werden von Flux sticky columns überschrieben, und
+| explizit in der table selbst definiert werden.
+*/
+
+th[data-flux-column][class~="first:sticky"]:not([class*="bg-"]),
+td[data-flux-cell][class~="first:sticky"]:not([class*="bg-"]),
+th[data-flux-column][class~="last:sticky"]:not([class*="bg-"]),
+td[data-flux-cell][class~="last:sticky"]:not([class*="bg-"]) {
+    @apply bg-white dark:bg-zinc-700;
+}
+
 /*
 |--------------------------------------------------------------------------
 | Flux Table Row Hover
 |--------------------------------------------------------------------------
 |
-| Hover-state für Flux-Tabellenzeilen.
-| Der sichtbare Hintergrund liegt auf td::before, damit der Hover nicht die
-| komplette Row-Höhe füllt und trotzdem runde Ecken möglich sind.
+| Schlichter Hover-state ohne pseudo elements. So bleiben Flux sticky columns
+| intakt und eigene bg-Klassen auf Zellen werden nicht übersteuert.
 |
 */
 
 tr[data-flux-row]>td[data-flux-cell] {
-    @apply relative transition-colors duration-200 ease-out;
+    @apply transition-colors duration-150 ease-out;
 }
 
-tr[data-flux-row]>td[data-flux-cell]>* {
-    @apply relative z-10;
-}
-
-tr[data-flux-row]>td[data-flux-cell]::before {
-    content: '';
-    @apply pointer-events-none absolute inset-x-0 inset-y-1 bg-transparent transition-colors duration-200 ease-out;
-}
-
-tr[data-flux-row]:hover>td[data-flux-cell]::before {
-    @apply bg-sky-900/15;
-}
-
-tr[data-flux-row]:hover>td[data-flux-cell]:first-child::before {
-    @apply rounded-l-lg;
-}
-
-tr[data-flux-row]:hover>td[data-flux-cell]:last-child::before {
-    @apply rounded-r-lg;
+tr[data-flux-row]:hover>td[data-flux-cell]:not([class*="bg-"]) {
+    @apply bg-sky-900/10 dark:bg-sky-400/10;
 }
 
 /*
@@ -108,7 +110,7 @@ tr[data-flux-row]:hover>td[data-flux-cell]:last-child::before {
 .app-table-col--actions {
     width: 1%;
     white-space: nowrap;
-    @apply: scrollbar-gutter-auto overflow-auto;
+    @apply overflow-auto;
 }
 
 .app-table--translation-list {

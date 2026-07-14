@@ -20,7 +20,7 @@
 @if ($historyEvent->reason)
     <div class="mt-3 text-sm">
         <span class="font-semibold">
-            {{ __('Reason') }}:
+            {{ __('admin.translation_list.modal_history.reason') }}:
         </span>
 
         <span class="ml-2">
@@ -33,7 +33,7 @@
     <div class="mt-3 grid gap-3 md:grid-cols-2">
         <div>
             <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                {{ __('Old value') }}
+                {{ __('admin.translation_list.modal_history.old_value') }}
             </div>
 
             <div class="wrap-anywhere mt-1 rounded-lg bg-zinc-100 p-2 font-mono text-xs dark:bg-zinc-900">
@@ -43,7 +43,7 @@
 
         <div>
             <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                {{ __('New value') }}
+                {{ __('admin.translation_list.modal_history.new_value') }}
             </div>
 
             <div class="wrap-anywhere mt-1 rounded-lg bg-zinc-100 p-2 font-mono text-xs dark:bg-zinc-900">
@@ -57,7 +57,7 @@
     <div class="mt-3 flex flex-wrap gap-3 text-sm">
         <div>
             <span class="font-semibold">
-                {{ __('Old status') }}:
+                {{ __('admin.translation_list.modal_history.old_status') }}:
             </span>
 
             <span class="ml-2 font-mono">
@@ -67,7 +67,7 @@
 
         <div>
             <span class="font-semibold">
-                {{ __('New status') }}:
+                {{ __('admin.translation_list.modal_history.new_status') }}:
             </span>
 
             <span class="ml-2 font-mono">
@@ -81,7 +81,7 @@
     <div class="mt-3 grid gap-3 md:grid-cols-2">
         <div>
             <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                {{ __('Old location') }}
+                {{ __('admin.translation_list.modal_history.old_location') }}
             </div>
 
             <code class="wrap-anywhere mt-1 block text-xs">
@@ -91,7 +91,7 @@
 
         <div>
             <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                {{ __('New location') }}
+                {{ __('admin.translation_list.modal_history.new_location') }}
             </div>
 
             <code class="wrap-anywhere mt-1 block text-xs">

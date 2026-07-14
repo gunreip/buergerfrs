@@ -214,6 +214,15 @@ return [
         ],
     ],
 
+    'pages' => [
+        'settings' => [
+            'two_factor_setup_modal' => [
+                'or_enter_the_code_manually' => 'or, enter the code manually',
+                'two_factor_authentication_is_now_enabled_scan_the_qr_code_or_enter_the_setup_key_in_y' => 'Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.',
+            ],
+        ],
+    ],
+
     'permission_list' => [
         'filter' => [
             'enter_a_search_term_to_filter_permissions_by_name_guard_category_or_description_' => 'Enter a search term to filter permissions by name, guard, category, or description. The search is case-sensitive.',

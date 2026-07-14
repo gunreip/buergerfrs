@@ -1,386 +1,239 @@
 {{-- resources/views/components/management/people/create-person/⚡form-person.blade.php --}}
 
-<div
-    class="space-y-6"
-    x-data="{ activeSection: 'person' }"
->
-    {{-- Full-width section tabs --}}
-    <div
-        class="w-full overflow-x-auto rounded-2xl border border-zinc-200 bg-white/60 p-2 dark:border-zinc-700 dark:bg-zinc-900/40">
-        <div class="grid min-w-max grid-cols-8 gap-2 xl:min-w-0">
-            <flux:button
-                class="w-full justify-center whitespace-nowrap"
-                type="button"
-                size="sm"
-                icon="circle-user-round"
-                variant="ghost"
-                x-bind:class="activeSection === 'person' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
-                x-on:click="activeSection = 'person'"
-            >
-                <span class="inline-flex items-center gap-2">
-                    {{ __('Person') }}
-                    <x-ui.form.tab-status-dot
-                        :meta="$this->formTabStatus('person')"
-                        :label="__('Person')"
-                        icon="circle-user-round"
-                    />
-                </span>
-            </flux:button>
+@php
+    $formTabs = [
+        [
+            'name' => 'person',
+            'label' => __('Person'),
+            'icon' => 'circle-user-round',
+        ],
+        [
+            'name' => 'address',
+            'label' => __('admin.country_reference_list.table.address'),
+            'icon' => 'map-pin-house',
+        ],
+        [
+            'name' => 'contact',
+            'label' => __('Contact'),
+            'icon' => 'contact-round',
+        ],
+        [
+            'name' => 'international',
+            'label' => __('International'),
+            'icon' => 'globe',
+        ],
+        [
+            'name' => 'identification',
+            'label' => __('Identification'),
+            'icon' => 'id-card',
+        ],
+        [
+            'name' => 'health-insurance',
+            'label' => __('Health insurance'),
+            'icon' => 'heart-pulse',
+        ],
+        [
+            'name' => 'documents',
+            'label' => __('Documents'),
+            'icon' => 'scroll-text',
+        ],
+        [
+            'name' => 'emergency-contact',
+            'label' => __('Emergency contact'),
+            'icon' => 'siren',
+        ],
+    ];
+@endphp
 
-            <flux:button
-                class="w-full justify-center whitespace-nowrap"
-                type="button"
-                size="sm"
-                icon="contact-round"
-                variant="ghost"
-                x-bind:class="activeSection === 'contact' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
-                x-on:click="activeSection = 'contact'"
+<div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_24rem]">
+    <flux:card class="min-w-0">
+        <flux:tab.group>
+            <flux:tabs
+                class="min-h-0"
+                wire:model.live="activeFormTab"
             >
-                <span class="inline-flex items-center gap-2">
-                    {{ __('Contact') }}
-                    <x-ui.form.tab-status-dot
-                        :meta="$this->formTabStatus('contact')"
-                        :label="__('Contact')"
-                        icon="contact-round"
-                    />
-                </span>
-            </flux:button>
-
-            <flux:button
-                class="w-full justify-center whitespace-nowrap"
-                type="button"
-                size="sm"
-                icon="map-pin-house"
-                variant="ghost"
-                x-bind:class="activeSection === 'address' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
-                x-on:click="activeSection = 'address'"
-            >
-                <span class="inline-flex items-center gap-2">
-                    {{ __('admin.country_reference_list.table.address') }}
-                    <x-ui.form.tab-status-dot
-                        :meta="$this->formTabStatus('address')"
-                        :label="__('admin.country_reference_list.table.address')"
-                        icon="map-pin-house"
-                    />
-                </span>
-            </flux:button>
-
-            <flux:button
-                class="w-full justify-center whitespace-nowrap"
-                type="button"
-                size="sm"
-                icon="globe"
-                variant="ghost"
-                x-bind:class="activeSection === 'international' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
-                x-on:click="activeSection = 'international'"
-            >
-                <span class="inline-flex items-center gap-2">
-                    {{ __('International') }}
-                    <x-ui.form.tab-status-dot
-                        :meta="$this->formTabStatus('international')"
-                        :label="__('International')"
-                        icon="globe"
-                    />
-                </span>
-            </flux:button>
-
-            <flux:button
-                class="w-full justify-center whitespace-nowrap"
-                type="button"
-                size="sm"
-                icon="id-card"
-                variant="ghost"
-                x-bind:class="activeSection === 'identification' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
-                x-on:click="activeSection = 'identification'"
-            >
-                <span class="inline-flex items-center gap-2">
-                    {{ __('Identification') }}
-                    <x-ui.form.tab-status-dot
-                        :meta="$this->formTabStatus('identification')"
-                        :label="__('Identification')"
-                        icon="id-card"
-                    />
-                </span>
-            </flux:button>
-
-            <flux:button
-                class="w-full justify-center whitespace-nowrap"
-                type="button"
-                size="sm"
-                icon="heart-pulse"
-                variant="ghost"
-                x-bind:class="activeSection === 'health-insurance' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' :
-                    ''"
-                x-on:click="activeSection = 'health-insurance'"
-            >
-                <span class="inline-flex items-center gap-2">
-                    {{ __('Health insurance') }}
-                    <x-ui.form.tab-status-dot
-                        :meta="$this->formTabStatus('health-insurance')"
-                        :label="__('Health insurance')"
-                        icon="heart-pulse"
-                    />
-                </span>
-            </flux:button>
-
-            <flux:button
-                class="w-full justify-center whitespace-nowrap"
-                type="button"
-                size="sm"
-                icon="scroll-text"
-                variant="ghost"
-                x-bind:class="activeSection === 'documents' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
-                x-on:click="activeSection = 'documents'"
-            >
-                <span class="inline-flex items-center gap-2">
-                    {{ __('Documents') }}
-                    <x-ui.form.tab-status-dot
-                        :meta="$this->formTabStatus('documents')"
-                        :label="__('Documents')"
-                        icon="scroll-text"
-                    />
-                </span>
-            </flux:button>
-
-            <flux:button
-                class="w-full justify-center whitespace-nowrap"
-                type="button"
-                size="sm"
-                icon="siren"
-                variant="ghost"
-                x-bind:class="activeSection === 'emergency' ? '!bg-zinc-900 !text-white dark:!bg-white dark:!text-zinc-900' : ''"
-                x-on:click="activeSection = 'emergency'"
-            >
-                <span class="inline-flex items-center gap-2">
-                    {{ __('management.people.create_person.form_person.emergency') }}
-                    <x-ui.form.tab-status-dot
-                        :meta="$this->formTabStatus('emergency')"
-                        :label="__('management.people.create_person.form_person.emergency')"
-                        icon="siren"
-                    />
-                </span>
-            </flux:button>
-        </div>
-    </div>
-
-    {{-- Main 2/3 + sidebar 1/3 layout --}}
-    <div class="grid grid-cols-1 gap-6 xl:grid-cols-12">
-        {{-- Main form area --}}
-        <div class="space-y-6 xl:col-span-9">
-            <div
-                x-show="activeSection === 'person'"
-                x-cloak
-            >
-                <flux:card class="mb-6 space-y-4">
-                    <x-ui.headers.card
-                        title="{{ __('Person') }}"
-                        description="{{ __('Core person data will be placed here.') }}"
+                @foreach ($formTabs as $formTab)
+                    <flux:tab
+                        class="px-4 hover:cursor-pointer"
+                        name="{{ $formTab['name'] }}"
+                        data-form-tab-trigger="{{ $formTab['name'] }}"
+                        icon="{{ $formTab['icon'] }}"
                     >
-                        <flux:icon.circle-user-round
-                            class="size-12"
-                            stroke-width="1"
-                        />
-                    </x-ui.headers.card>
+                        {{ $formTab['label'] }}
+                    </flux:tab>
+                @endforeach
+            </flux:tabs>
 
-                    {{-- Person core data fields --}}
-                    @include('components.management.people.create-person.sections.⚡person-core')
-                </flux:card>
-
-                <flux:card class="space-y-4">
-                    <x-ui.headers.card
-                        :title="__('Avatar / Passphoto')"
-                        :description="__('Upload a passphoto or profile image for this person.')"
-                    >
-                        <flux:icon.camera
-                            class="size-12"
-                            stroke-width="1"
-                        />
-                    </x-ui.headers.card>
-                    @include('components.management.people.create-person.sections.⚡avatar')
-                </flux:card>
-            </div>
-
-            <div
-                x-show="activeSection === 'contact'"
-                x-cloak
+            <flux:tab.panel
+                class="space-y-6"
+                name="person"
             >
-                <flux:card class="space-y-4">
-                    <x-ui.headers.card
-                        title="{{ __('Contact') }}"
-                        description="{{ __('Contact fields will be placed here.') }}"
-                    >
-                        <flux:icon.contact-round
-                            class="size-12"
-                            stroke-width="1"
-                        />
-                    </x-ui.headers.card>
-                    @include('components.management.people.create-person.sections.⚡contact')
-                </flux:card>
-            </div>
+                @include('components.management.people.create-person.sections.⚡person-core')
+                @include('components.management.people.create-person.sections.⚡avatar')
+            </flux:tab.panel>
 
-            <div
-                x-show="activeSection === 'address'"
-                x-cloak
+            <flux:tab.panel
+                class="space-y-6"
+                name="address"
             >
-                <flux:card class="space-y-4">
-                    <x-ui.headers.card
-                        title="{{ __('admin.country_reference_list.table.address') }}"
-                        description="{{ __('Address fields will be placed here.') }}"
-                    >
-                        <flux:icon.map-pin-house
-                            class="size-12"
-                            stroke-width="1"
-                        />
-                    </x-ui.headers.card>
-                    @include('components.management.people.create-person.sections.⚡address')
-                </flux:card>
-            </div>
+                @include('components.management.people.create-person.sections.⚡address')
+            </flux:tab.panel>
 
-            <div
-                x-show="activeSection === 'international'"
-                x-cloak
+            <flux:tab.panel
+                class="space-y-6"
+                name="contact"
             >
-                <flux:card class="space-y-4">
-                    <x-ui.headers.card
-                        title="{{ __('International') }}"
-                        description="{{ __('Nationality and language fields will be placed here.') }}"
-                    >
-                        <flux:icon.globe
-                            class="size-12"
-                            stroke-width="1"
-                        />
-                    </x-ui.headers.card>
-                    @include('components.management.people.create-person.sections.⚡international')
-                </flux:card>
-            </div>
+                @include('components.management.people.create-person.sections.⚡contact')
+            </flux:tab.panel>
 
-            <div
-                x-show="activeSection === 'identification'"
-                x-cloak
+            <flux:tab.panel
+                class="space-y-6"
+                name="international"
             >
-                <flux:card class="space-y-4">
-                    <x-ui.headers.card
-                        title="{{ __('Identification') }}"
-                        description="{{ __('Identifier fields will be placed here.') }}"
-                    >
-                        <flux:icon.id-card
-                            class="size-12"
-                            stroke-width="1"
-                        />
-                    </x-ui.headers.card>
-                    @include('components.management.people.create-person.sections.⚡identification')
-                </flux:card>
-            </div>
+                @include('components.management.people.create-person.sections.⚡international')
+            </flux:tab.panel>
 
-            <div
-                x-show="activeSection === 'health-insurance'"
-                x-cloak
+            <flux:tab.panel
+                class="space-y-6"
+                name="identification"
             >
-                <flux:card class="space-y-4">
-                    <x-ui.headers.card
-                        title="{{ __('Health insurance') }}"
-                        description="{{ __('Health insurance fields will be placed here.') }}"
-                    >
-                        <flux:icon.heart-pulse
-                            class="size-12"
-                            stroke-width="1"
-                        />
-                    </x-ui.headers.card>
-                    @include('components.management.people.create-person.sections.⚡health-insurance')
-                </flux:card>
-            </div>
+                @include('components.management.people.create-person.sections.⚡identification')
+            </flux:tab.panel>
 
-            <div
-                x-show="activeSection === 'documents'"
-                x-cloak
+            <flux:tab.panel
+                class="space-y-6"
+                name="health-insurance"
             >
-                <flux:card class="space-y-4">
-                    <x-ui.headers.card
-                        title="{{ __('Documents') }}"
-                        description="{{ __('Document metadata and upload fields will be placed here.') }}"
-                    >
-                        <flux:icon.scroll-text
-                            class="size-12"
-                            stroke-width="1"
-                        />
-                    </x-ui.headers.card>
-                    @include('components.management.people.create-person.sections.⚡documents')
-                </flux:card>
-            </div>
+                @include('components.management.people.create-person.sections.⚡health-insurance')
+            </flux:tab.panel>
 
-            <div
-                x-show="activeSection === 'emergency'"
-                x-cloak
+            <flux:tab.panel
+                class="space-y-6"
+                name="documents"
             >
-                <flux:card class="space-y-4">
-                    <x-ui.headers.card
-                        title="{{ __('Emergency contact') }}"
-                        description="{{ __('Emergency contact fields will be placed here.') }}"
-                    >
-                        <flux:icon.siren
-                            class="size-12"
-                            stroke-width="1"
-                        />
-                    </x-ui.headers.card>
-                    @include('components.management.people.create-person.sections.⚡emergency-contact')
-                </flux:card>
-            </div>
-        </div>
+                @include('components.management.people.create-person.sections.⚡documents')
+            </flux:tab.panel>
 
-        {{-- Right sidebar --}}
-        <aside class="space-y-6 xl:col-span-3">
-            <flux:card>
-                <x-ui.headers.card
-                    title="{{ __('Person number') }}"
-                    description="{{ __('Person number field will be filled automatically.') }}"
-                >
-                    <flux:icon.fingerprint-pattern
-                        class="size-12"
-                        stroke-width="1"
+            <flux:tab.panel
+                class="space-y-6"
+                name="emergency-contact"
+            >
+                @include('components.management.people.create-person.sections.⚡emergency-contact')
+            </flux:tab.panel>
+        </flux:tab.group>
+    </flux:card>
+
+    <aside class="space-y-6">
+        <flux:card>
+            <x-ui.headers.card
+                title="{{ __('Person number') }}"
+                description="{{ __('Person number field will be filled automatically.') }}"
+            >
+                <flux:icon.fingerprint-pattern
+                    class="size-12"
+                    stroke-width="1"
+                />
+            </x-ui.headers.card>
+
+            <flux:field>
+                <flux:input.group>
+                    <flux:input.group.prefix>
+                        <flux:icon.fingerprint-pattern />
+                    </flux:input.group.prefix>
+
+                    <flux:input
+                        class="tabular-nums tracking-wide"
+                        id="create-person-person-number"
+                        type="text"
+                        value="{{ $createdPersonNumber !== '' ? $createdPersonNumber : '' }}"
+                        placeholder="{{ __('Will be filled automatically') }}"
+                        autocomplete="new-password"
+                        readonly
+                        copyable
                     />
-                </x-ui.headers.card>
+                </flux:input.group>
+            </flux:field>
+        </flux:card>
 
-                <flux:field>
+        @include('components.management.people.create-person.⚡form-login')
 
-                    <flux:input.group>
-                        <flux:input.group.prefix>
-                            <flux:icon.fingerprint-pattern />
-                        </flux:input.group.prefix>
+        <flux:card class="space-y-4">
+            <x-ui.headers.card
+                :title="__('Document summary')"
+                :description="__('Uploaded or prepared documents will be summarized here.')"
+            >
+                <flux:icon.table-of-contents
+                    class="size-12"
+                    stroke-width="1"
+                />
+            </x-ui.headers.card>
 
-                        <flux:input
-                            class="tabular-nums tracking-wide"
-                            id="create-person-person-number"
-                            type="text"
-                            value="{{ $createdPersonNumber !== '' ? $createdPersonNumber : '' }}"
-                            placeholder="{{ __('Will be filled automatically') }}"
-                            autocomplete="new-password"
-                            readonly
-                            copyable
-                        />
-                    </flux:input.group>
-                </flux:field>
+            @if (collect($documentUpload)->isNotEmpty())
+                <div class="space-y-3 rounded-xl border border-zinc-200 p-4 text-sm dark:border-zinc-700">
+                    <div class="space-y-2">
+                        @foreach ($documentUpload as $uploadedDocument)
+                            @if ($uploadedDocument instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile)
+                                <div class="flex items-start gap-3">
+                                    <flux:icon.document-text
+                                        class="mt-0.5 size-5 shrink-0 text-emerald-600 dark:text-emerald-400"
+                                    />
 
-            </flux:card>
+                                    <div class="min-w-0 space-y-1">
+                                        <div class="truncate font-medium text-zinc-900 dark:text-zinc-100">
+                                            {{ $uploadedDocument->getClientOriginalName() }}
+                                        </div>
 
-            {{-- Partial: Login form --}}
-            @include('components.management.people.create-person.⚡form-login')
+                                        <div class="text-xs text-zinc-500 dark:text-zinc-400">
+                                            {{ number_format($uploadedDocument->getSize() / 1024, 1) }} KB
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
 
-            <flux:card class="space-y-4">
-                <x-ui.headers.card
-                    :title="__('Document summary')"
-                    :description="__('Uploaded or prepared documents will be summarized here.')"
-                >
-                    <flux:icon.table-of-contents
-                        class="size-12"
-                        stroke-width="1"
-                    />
-                </x-ui.headers.card>
+                    @if ($documentTitle !== '' || $documentType !== '')
+                        <flux:separator />
 
+                        <dl class="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-2 text-xs">
+                            @if ($documentType !== '')
+                                <dt class="text-zinc-500 dark:text-zinc-400">{{ __('admin.client_list.table.type') }}
+                                </dt>
+                                <dd class="truncate text-zinc-700 dark:text-zinc-300">
+                                    {{ __($documentTypeOptions[$documentType] ?? $documentType) }}
+                                </dd>
+                            @endif
+
+                            @if ($documentTitle !== '')
+                                <dt class="text-zinc-500 dark:text-zinc-400">{{ __('Title') }}</dt>
+                                <dd class="truncate text-zinc-700 dark:text-zinc-300">{{ $documentTitle }}</dd>
+                            @endif
+                        </dl>
+                    @endif
+                </div>
+            @elseif ($documentUpload instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile)
+                <div class="space-y-3 rounded-xl border border-zinc-200 p-4 text-sm dark:border-zinc-700">
+                    <div class="flex items-start gap-3">
+                        <flux:icon.document-text
+                            class="mt-0.5 size-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+
+                        <div class="min-w-0 space-y-1">
+                            <div class="truncate font-medium text-zinc-900 dark:text-zinc-100">
+                                {{ $documentUpload->getClientOriginalName() }}
+                            </div>
+
+                            <div class="text-xs text-zinc-500 dark:text-zinc-400">
+                                {{ number_format($documentUpload->getSize() / 1024, 1) }} KB
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @else
                 <div
                     class="rounded-xl border border-dashed border-zinc-300 p-4 text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
                     {{ __('No documents uploaded yet.') }}
                 </div>
-            </flux:card>
-        </aside>
-    </div>
+            @endif
+        </flux:card>
+    </aside>
 </div>

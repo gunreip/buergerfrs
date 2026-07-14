@@ -25,7 +25,6 @@
                     wire:model.blur="email"
                     autocomplete="off"
                     clearable
-                    {{-- :required="$requiredFields['email'] ?? false" --}}
                 />
             </flux:input.group>
 

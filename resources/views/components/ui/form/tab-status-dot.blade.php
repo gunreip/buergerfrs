@@ -1,26 +1,17 @@
 {{-- resources/views/components/ui/form/tab-status-dot.blade.php --}}
 
 {{--
-TODO: toggleable tooltips for form tab status dots are currently fragile due to click event conflicts with the tab button. If toggleable behavior is needed later, implement it explicitly for form tab status dots, similar to resources/js/components/ui/global-tooltip.js, but with support for structured HTML/legend content.
---}}
-
-{{--
     Keep this tooltip hover/focus based for now.
 
     Flux toggleable tooltips are fragile here because this component is rendered
-    inside the tab button. A click-toggle on the dot competes with the tab button
-    click handling and can close immediately or fail to open.
-
-    If delayed or click-toggle behavior is required later, implement it explicitly
-    for form tab status dots, similar to resources/js/components/ui/global-tooltip.js,
-    but with support for structured HTML/legend content.
+    inside tab/section buttons. A click-toggle on the dot competes with the
+    parent button click handling and can close immediately or fail to open.
 --}}
 
 <flux:tooltip
     position="bottom"
     align="center"
 >
-
     <span
         aria-label="{{ __('ui.form.tab_status_dot.form_tab_status_status', ['status' => $statusLabel()]) }}"
         {{ $attributes->class([
@@ -38,7 +29,7 @@ TODO: toggleable tooltips for form tab status dots are currently fragile due to 
                         <x-ui.flux-icon
                             class="size-4 shrink-0 text-zinc-300"
                             :name="$icon"
-                            stroke-widt="1"
+                            stroke-width="1"
                         />
                     @endif
 

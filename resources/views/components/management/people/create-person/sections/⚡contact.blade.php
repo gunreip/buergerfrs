@@ -5,6 +5,23 @@
 
         <div class="grid gap-4 md:grid-cols-2">
 
+            <flux:field class="col-span-2 mb-3">
+                <div class="flex items-start justify-between gap-4">
+                    <flux:heading size="lg">
+                        <span class="border-b-1 border-zinc-800/10 pb-2 pr-4 dark:border-white/20">
+                            <flux:icon.phone class="mr-2 inline-block" />
+                            {{ __('Person Contact Information') }}
+                        </span>
+                    </flux:heading>
+
+                    <div class="flex flex-wrap items-center justify-end gap-2">
+                        <x-ui.badge.created-password :password="$generatedPassword" />
+
+                        <x-ui.badge.test-data :show="$isTestData" />
+                    </div>
+                </div>
+            </flux:field>
+
             {{-- Phone --}}
             <flux:field>
                 <x-ui.tooltip.trigger
@@ -27,7 +44,7 @@
                     <flux:input
                         id="create-person-phone"
                         type="tel"
-                        wire:model.blur="phone"
+                        wire:model.live.debounce.500ms="phone"
                         autocomplete="new-password"
                         copyable
                         clearable
@@ -59,7 +76,7 @@
                     <flux:input
                         id="create-person-mobile"
                         type="tel"
-                        wire:model.blur="mobile"
+                        wire:model.live.debounce.500ms="mobile"
                         autocomplete="new-password"
                         copyable
                         clearable
@@ -94,7 +111,7 @@
                     <flux:input
                         id="create-person-email-private"
                         type="email"
-                        wire:model.blur="emailPrivate"
+                        wire:model.live.debounce.500ms="emailPrivate"
                         autocomplete="new-password"
                         copyable
                         clearable
@@ -126,7 +143,7 @@
                     <flux:input
                         id="create-person-email-work"
                         type="email"
-                        wire:model.blur="emailWork"
+                        wire:model.live.debounce.500ms="emailWork"
                         autocomplete="new-password"
                         copyable
                         clearable

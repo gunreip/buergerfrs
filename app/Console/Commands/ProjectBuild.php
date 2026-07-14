@@ -70,10 +70,25 @@ class ProjectBuild extends Command
                 $this->runArtisanStep($step['desc'], $step['cmd']);
             }
 
+            $this->runArtisanStep(
+                'BuergerFRS-Formular-Konfiguration synchronisieren',
+                'buergerfrs:forms:sync',
+                ['--write' => true],
+            );
+
             $this->runArtisanStep('Lang-Locale-Verzeichnisse sicherstellen', 'translations:ensure-lang-directories');
 
             $this->runArtisanStep('Translation-Code-Audit schreiben', 'translations:audit-code');
             $this->runArtisanStep('Translation-Audits in Datenbank synchronisieren', 'translations:sync-audits');
+            $this->runArtisanStep(
+                'Dynamic-Translation-Keys synchronisieren',
+                'translations:sync-dynamic-keys',
+                ['--paths' => 'resources/views'],
+            );
+            $this->runArtisanStep(
+                'Legacy stale Dynamic-Translation-Keys prüfen',
+                'translations:cleanup-stale-dynamic-keys',
+            );
             $this->runArtisanStep('Sub-Language-Redundanz prüfen', 'translations:audit-sub-language-redundancy');
             $this->runArtisanStep('Translation-Dateien nach lang exportieren', 'translations:export-lang-files');
 
@@ -178,11 +193,11 @@ class ProjectBuild extends Command
         return false;
     }
 
-    private function runArtisanStep(string $description, string $command): void
+    private function runArtisanStep(string $description, string $command, array $arguments = []): void
     {
         $this->info('➤ '.$description);
 
-        $exitCode = $this->call($command);
+        $exitCode = $this->call($command, $arguments);
 
         if ($exitCode !== self::SUCCESS) {
             throw new RuntimeException('Step failed: '.$command.' (exit code '.$exitCode.')');

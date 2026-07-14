@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable([
     'person_number',
+    'is_test_data',
     'salutation',
     'name_title',
     'gender',
@@ -43,6 +44,7 @@ class Person extends Model
     {
         return [
             'date_of_birth' => 'date',
+            'is_test_data' => 'boolean',
         ];
     }
 
@@ -102,6 +104,9 @@ class Person extends Model
                 'is_native',
                 'is_primary',
                 'preferred_for_communication',
+                'can_speak',
+                'can_read',
+                'can_write',
                 'starts_at',
                 'ends_at',
                 'verified_at',
@@ -169,6 +174,14 @@ class Person extends Model
     public function documentRows(): HasMany
     {
         return $this->hasMany(PersonDocument::class);
+    }
+
+    /**
+     * Get the correspondence rows owned by this person.
+     */
+    public function correspondenceRows(): HasMany
+    {
+        return $this->hasMany(PersonCorrespondence::class);
     }
 
     /**

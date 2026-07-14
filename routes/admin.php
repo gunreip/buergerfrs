@@ -18,6 +18,10 @@ use App\Livewire\Admin\TranslationStatistics;
 use App\Livewire\Admin\TranslationSubLanguages;
 use App\Livewire\Admin\TranslationUsageAudit;
 use App\Livewire\Admin\UserList;
+use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchEntries;
+use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchOldEntries;
+use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawData;
+use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawDataNew;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
@@ -39,6 +43,14 @@ Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
         Route::get('permissions', PermissionList::class)->name('permissions');
 
         Route::get('translations', TranslationList::class)->name('translations');
+
+        Route::get('translation-workbench', TranslationWorkbenchEntries::class)->name('translation-workbench');
+
+        Route::get('translation-workbench/old', TranslationWorkbenchOldEntries::class)->name('translation-workbench.old');
+
+        Route::get('translation-workbench/raw-data', TranslationWorkbenchRawData::class)->name('translation-workbench.raw-data');
+
+        Route::get('translation-workbench/raw-data-new', TranslationWorkbenchRawDataNew::class)->name('translation-workbench.raw-data-new');
 
         Route::get('translations/usage', TranslationUsageAudit::class)->name('translation-usage');
 

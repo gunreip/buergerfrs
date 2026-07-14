@@ -5,6 +5,23 @@
 
         <div class="grid gap-4 md:grid-cols-5">
 
+            <flux:field class="col-span-5 mb-3">
+                <div class="flex items-start justify-between gap-4">
+                    <flux:heading size="lg">
+                        <span class="border-b-1 border-zinc-800/10 pb-2 pr-4 dark:border-white/20">
+                            <flux:icon.map-pin-house class="mr-2 inline-block" />
+                            {{ __('Person Address Information') }}
+                        </span>
+                    </flux:heading>
+
+                    <div class="flex flex-wrap items-center justify-end gap-2">
+                        <x-ui.badge.created-password :password="$generatedPassword" />
+
+                        <x-ui.badge.test-data :show="$isTestData" />
+                    </div>
+                </div>
+            </flux:field>
+
             {{-- Address country --}}
             <flux:field class="col-span-2">
                 <x-ui.tooltip.trigger
@@ -26,11 +43,21 @@
 
                     <flux:select
                         id="create-person-address-country"
-                        wire:model.blur="addressCountryId"
+                        name="addressCountryId"
+                        variant="listbox"
                         placeholder="{{ __('Please select') }}"
+                        searchable
+                        copyable
+                        clearable
+                        wire:model.live="addressCountryId"
                     >
                         @foreach ($addressCountryOptions as $country)
                             <flux:select.option :value="$country->id">
+                                <x-ui.country.flag
+                                    class="mr-2"
+                                    size="lg"
+                                    :country="$country->iso2"
+                                />
                                 {{ $country->native_name ?: $country->name }} ({{ $country->iso2 }})
                             </flux:select.option>
                         @endforeach
@@ -59,14 +86,31 @@
                         <flux:icon.map-pin />
                     </flux:input.group.prefix>
 
-                    <flux:input
+                    <flux:select
+                        class="tabular-nums"
                         id="create-person-address-postal-code"
-                        type="text"
-                        wire:model.blur="addressPostalCode"
+                        name="addressPostalCode"
+                        variant="listbox"
                         autocomplete="new-password"
                         copyable
                         clearable
-                    />
+                        searchable
+                        :disabled="$this->addressCountryId === null"
+                        wire:model.live="addressPostalCode"
+                    >
+                        @foreach ($addressPostalCodeOptions as $postalCode)
+                            <flux:select.option :value="$postalCode">
+                                {{ $postalCode }}
+                            </flux:select.option>
+                        @endforeach
+
+                        <flux:select.option.create
+                            min-length="1"
+                            x-on:click="$wire.useCreatedAddressPostalCode($el.closest('ui-select')?.querySelector('[data-flux-select-search] input')?.value ?? '')"
+                        >
+                            {{ __('Use entered postal code') }}
+                        </flux:select.option.create>
+                    </flux:select>
                 </flux:input.group>
 
                 <flux:error name="addressPostalCode" />
@@ -91,14 +135,31 @@
                         <flux:icon.building-office-2 />
                     </flux:input.group.prefix>
 
-                    <flux:input
+                    <flux:select
                         id="create-person-address-city"
-                        type="text"
-                        wire:model.blur="addressCity"
+                        name="addressCity"
+                        variant="listbox"
+                        placeholder="{{ __('Please select') }}"
                         autocomplete="new-password"
                         copyable
                         clearable
-                    />
+                        searchable
+                        :disabled="$this->addressCountryId === null"
+                        wire:model.live="addressCity"
+                    >
+                        @foreach ($addressCityOptions as $city)
+                            <flux:select.option :value="$city">
+                                {{ $city }}
+                            </flux:select.option>
+                        @endforeach
+
+                        <flux:select.option.create
+                            min-length="1"
+                            x-on:click="$wire.useCreatedAddressCity($el.closest('ui-select')?.querySelector('[data-flux-select-search] input')?.value ?? '')"
+                        >
+                            {{ __('Use entered city') }}
+                        </flux:select.option.create>
+                    </flux:select>
                 </flux:input.group>
 
                 <flux:error name="addressCity" />
@@ -126,14 +187,30 @@
                         <flux:icon.map />
                     </flux:input.group.prefix>
 
-                    <flux:input
+                    <flux:select
                         id="create-person-address-street"
-                        type="text"
-                        wire:model.blur="addressStreet"
+                        name="addressStreet"
+                        variant="listbox"
                         autocomplete="new-password"
                         copyable
                         clearable
-                    />
+                        searchable
+                        :disabled="$this->addressCountryId === null || $this->addressCity === ''"
+                        wire:model.live="addressStreet"
+                    >
+                        @foreach ($addressStreetOptions as $street)
+                            <flux:select.option :value="$street">
+                                {{ $street }}
+                            </flux:select.option>
+                        @endforeach
+
+                        <flux:select.option.create
+                            min-length="1"
+                            x-on:click="$wire.useCreatedAddressStreet($el.closest('ui-select')?.querySelector('[data-flux-select-search] input')?.value ?? '')"
+                        >
+                            {{ __('Use entered street') }}
+                        </flux:select.option.create>
+                    </flux:select>
                 </flux:input.group>
 
                 <flux:error name="addressStreet" />
@@ -160,8 +237,9 @@
 
                     <flux:input
                         id="create-person-address-house-number"
+                        name="addressHouseNumber"
                         type="text"
-                        wire:model.blur="addressHouseNumber"
+                        wire:model.live.debounce.500ms="addressHouseNumber"
                         autocomplete="new-password"
                         copyable
                         clearable
@@ -192,8 +270,9 @@
 
                     <flux:input
                         id="create-person-address-line-2"
+                        name="addressLine2"
                         type="text"
-                        wire:model.blur="addressLine2"
+                        wire:model.live.debounce.500ms="addressLine2"
                         autocomplete="new-password"
                         copyable
                         clearable

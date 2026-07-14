@@ -5,6 +5,23 @@
 
         <div class="grid gap-4 md:grid-cols-2">
 
+            <flux:field class="col-span-2 mb-3">
+                <div class="flex items-start justify-between gap-4">
+                    <flux:heading size="lg">
+                        <span class="border-b-1 border-zinc-800/10 pb-2 pr-4 dark:border-white/20">
+                            <flux:icon.siren class="mr-2 inline-block" />
+                            {{ __('Person Emergency Contact Information') }}
+                        </span>
+                    </flux:heading>
+
+                    <div class="flex flex-wrap items-center justify-end gap-2">
+                        <x-ui.badge.created-password :password="$generatedPassword" />
+
+                        <x-ui.badge.test-data :show="$isTestData" />
+                    </div>
+                </div>
+            </flux:field>
+
             {{-- Emergency contact name --}}
             <flux:field>
                 <x-ui.tooltip.trigger
@@ -26,8 +43,9 @@
 
                     <flux:input
                         id="create-person-emergency-contact-name"
+                        name="emergencyContactName"
                         type="text"
-                        wire:model.blur="emergencyContactName"
+                        wire:model.live.debounce.500ms="emergencyContactName"
                         autocomplete="new-password"
                         copyable
                         clearable
@@ -58,8 +76,13 @@
 
                     <flux:select
                         id="create-person-emergency-contact-relationship"
-                        wire:model.blur="emergencyContactRelationship"
+                        name="emergencyContactRelationship"
                         placeholder="{{ __('Please select') }}"
+                        variant="listbox"
+                        searchable
+                        copyable
+                        clearable
+                        wire:model.live="emergencyContactRelationship"
                     >
                         @foreach ($emergencyContactRelationshipOptions as $value => $label)
                             <flux:select.option :value="$value">
@@ -96,8 +119,9 @@
 
                     <flux:input
                         id="create-person-emergency-contact-phone"
+                        name="emergencyContactPhone"
                         type="tel"
-                        wire:model.blur="emergencyContactPhone"
+                        wire:model.live.debounce.500ms="emergencyContactPhone"
                         autocomplete="new-password"
                         copyable
                         clearable
@@ -128,8 +152,9 @@
 
                     <flux:input
                         id="create-person-emergency-contact-email"
+                        name="emergencyContactEmail"
                         type="email"
-                        wire:model.blur="emergencyContactEmail"
+                        wire:model.live.debounce.500ms="emergencyContactEmail"
                         autocomplete="new-password"
                         copyable
                         clearable

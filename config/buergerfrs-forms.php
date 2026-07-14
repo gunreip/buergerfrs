@@ -2,306 +2,197 @@
 
 // config/buergerfrs-forms.php
 
-/*
-|--------------------------------------------------------------------------
-| BuergerFRS Form Metadata
-|--------------------------------------------------------------------------
-|
-| This file contains technical form metadata.
-|
-| The stable key is the Livewire / validation field name, e.g.:
-| - salutation
-| - firstName
-| - birthCountryId
-|
-| This config intentionally does not contain labels, tooltip texts or
-| translation keys. Translations remain a separate concern.
-|
-| required:
-| - true  => field is required for validation and UI required markers
-| - false => field is optional
-|
-| status_relevant:
-| - true  => field is included in form/tab completion indicators
-| - false => field is ignored for completion indicators
-|
-*/
-
 return [
-    'people.create' => [
-        'fields' => [
-            // form-person.person.
-            'salutation' => [
-                'tab' => 'person',
-                'required' => true,
-                'status_relevant' => true,
+  'management' => 
+  [
+    'people' => 
+    [
+      'create-person' => 
+      [
+        'sections' => 
+        [
+          'person' => 
+          [
+            'path' => 'resources/views/components/management/people/create-person/sections/⚡person-core.blade.php',
+            'fields' => 
+            [
+              'salutation' => true,
+              'nameTitle' => false,
+              'gender' => true,
+              'firstName' => true,
+              'middleName' => false,
+              'preferredName' => false,
+              'lastName' => true,
+              'maritalStatus' => true,
+              'birthName' => false,
+              'birthCountryId' => true,
+              'birthPlaceText' => true,
+              'dateOfBirth' => true,
+              'isTestData' => false,
             ],
-
-            'nameTitle' => [
-                'tab' => 'person',
-                'required' => false,
-                'status_relevant' => true,
+          ],
+          'avatar' => 
+          [
+            'path' => 'resources/views/components/management/people/create-person/sections/⚡avatar.blade.php',
+            'fields' => 
+            [
+              'avatarUpload' => false,
             ],
-
-            'gender' => [
-                'tab' => 'person',
-                'required' => true,
-                'status_relevant' => true,
+          ],
+          'contact' => 
+          [
+            'path' => 'resources/views/components/management/people/create-person/sections/⚡contact.blade.php',
+            'fields' => 
+            [
+              'phone' => false,
+              'mobile' => false,
+              'emailPrivate' => false,
+              'emailWork' => false,
             ],
-
-            'firstName' => [
-                'tab' => 'person',
-                'required' => true,
-                'status_relevant' => true,
+          ],
+          'address' => 
+          [
+            'path' => 'resources/views/components/management/people/create-person/sections/⚡address.blade.php',
+            'fields' => 
+            [
+              'addressCountryId' => true,
+              'addressPostalCode' => true,
+              'addressCity' => true,
+              'addressStreet' => true,
+              'addressHouseNumber' => true,
+              'addressLine2' => false,
             ],
-
-            'middleName' => [
-                'tab' => 'person',
-                'required' => false,
-                'status_relevant' => true,
+          ],
+          'international' => 
+          [
+            'path' => 'resources/views/components/management/people/create-person/sections/⚡international.blade.php',
+            'fields' => 
+            [
+              'primaryNationalityCountryId' => true,
+              'primaryLanguageId' => true,
             ],
-
-            'preferredName' => [
-                'tab' => 'person',
-                'required' => false,
-                'status_relevant' => true,
+          ],
+          'identification' => 
+          [
+            'path' => 'resources/views/components/management/people/create-person/sections/⚡identification.blade.php',
+            'fields' => 
+            [
+              'nationalIdNumber' => true,
+              'nationalIdIssuingAuthority' => false,
+              'taxId' => false,
+              'socialSecurityNumber' => false,
+              'pensionInsuranceNumber' => false,
+              'residencePermitNumber' => false,
             ],
-
-            'lastName' => [
-                'tab' => 'person',
-                'required' => true,
-                'status_relevant' => true,
+          ],
+          'health-insurance' => 
+          [
+            'path' => 'resources/views/components/management/people/create-person/sections/⚡health-insurance.blade.php',
+            'fields' => 
+            [
+              'healthInsuranceProviderId' => false,
+              'healthInsuranceNumber' => false,
             ],
-
-            'maritalStatus' => [
-                'tab' => 'person',
-                'required' => false,
-                'status_relevant' => true,
+          ],
+          'documents' => 
+          [
+            'path' => 'resources/views/components/management/people/create-person/sections/⚡documents.blade.php',
+            'fields' => 
+            [
+              'documentType' => false,
+              'documentTitle' => false,
+              'documentNumber' => false,
+              'documentIssuingAuthority' => false,
+              'documentIssuedAt' => false,
+              'documentExpiresAt' => false,
+              'documentUpload' => false,
             ],
-
-            'birthName' => [
-                'tab' => 'person',
-                'required' => false,
-                'status_relevant' => true,
+          ],
+          'emergency-contact' => 
+          [
+            'path' => 'resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php',
+            'fields' => 
+            [
+              'emergencyContactName' => false,
+              'emergencyContactRelationship' => false,
+              'emergencyContactPhone' => false,
+              'emergencyContactEmail' => false,
             ],
-
-            'birthCountryId' => [
-                'tab' => 'person',
-                'required' => true,
-                'status_relevant' => true,
-            ],
-
-            'birthPlaceText' => [
-                'tab' => 'person',
-                'required' => true,
-                'status_relevant' => true,
-            ],
-
-            'dateOfBirth' => [
-                'tab' => 'person',
-                'required' => true,
-                'status_relevant' => true,
-            ],
-
-            // form-person.avatar.
-            'avatarUpload' => [
-                'tab' => 'person',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            // form-person.contact.
-            'phone' => [
-                'tab' => 'contact',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'mobile' => [
-                'tab' => 'contact',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'emailPrivate' => [
-                'tab' => 'contact',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'emailWork' => [
-                'tab' => 'contact',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            // form-person.address.
-            'addressCountryId' => [
-                'tab' => 'address',
-                'required' => true,
-                'status_relevant' => true,
-            ],
-
-            'addressPostalCode' => [
-                'tab' => 'address',
-                'required' => true,
-                'status_relevant' => true,
-            ],
-
-            'addressCity' => [
-                'tab' => 'address',
-                'required' => true,
-                'status_relevant' => true,
-            ],
-
-            'addressStreet' => [
-                'tab' => 'address',
-                'required' => true,
-                'status_relevant' => true,
-            ],
-
-            'addressHouseNumber' => [
-                'tab' => 'address',
-                'required' => true,
-                'status_relevant' => true,
-            ],
-
-            'addressLine2' => [
-                'tab' => 'address',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            // form-person.international.
-            'primaryNationalityCountryId' => [
-                'tab' => 'international',
-                'required' => true,
-                'status_relevant' => true,
-            ],
-
-            'primaryLanguageId' => [
-                'tab' => 'international',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            // form-person.identification.
-            'nationalIdNumber' => [
-                'tab' => 'identification',
-                'required' => true,
-                'status_relevant' => true,
-            ],
-
-            'nationalIdIssuingAuthority' => [
-                'tab' => 'identification',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'taxId' => [
-                'tab' => 'identification',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'socialSecurityNumber' => [
-                'tab' => 'identification',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'pensionInsuranceNumber' => [
-                'tab' => 'identification',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'residencePermitNumber' => [
-                'tab' => 'identification',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            // form-person.health-insurance.
-            'healthInsuranceProviderId' => [
-                'tab' => 'health-insurance',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'healthInsuranceNumber' => [
-                'tab' => 'health-insurance',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            // form-person.documents.
-            'documentType' => [
-                'tab' => 'documents',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'documentTitle' => [
-                'tab' => 'documents',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'documentNumber' => [
-                'tab' => 'documents',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'documentIssuingAuthority' => [
-                'tab' => 'documents',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'documentIssuedAt' => [
-                'tab' => 'documents',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'documentExpiresAt' => [
-                'tab' => 'documents',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'documentUpload' => [
-                'tab' => 'documents',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            // form-person.emergency-contact.
-            'emergencyContactName' => [
-                'tab' => 'emergency-contact',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'emergencyContactRelationship' => [
-                'tab' => 'emergency-contact',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'emergencyContactPhone' => [
-                'tab' => 'emergency-contact',
-                'required' => false,
-                'status_relevant' => true,
-            ],
-
-            'emergencyContactEmail' => [
-                'tab' => 'emergency-contact',
-                'required' => false,
-                'status_relevant' => true,
-            ],
+          ],
         ],
+        'form-login' => 
+        [
+          'path' => 'resources/views/components/management/people/create-person/⚡form-login.blade.php',
+          'fields' => 
+          [
+            'email' => 
+            [
+              'required' => true,
+              'status_relevant' => false,
+            ],
+          ],
+        ],
+      ],
+      'edit-person' => 
+      [
+        'sections' => 
+        [
+          'documents' => 
+          [
+            'add-modal' => 
+            [
+              'path' => 'resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php',
+              'fields' => 
+              [
+                'newDocumentType' => true,
+                'newDocumentCategory' => false,
+                'newDocumentTitle' => true,
+                'newDocumentNumber' => false,
+                'newDocumentIssuingAuthority' => false,
+                'newDocumentIssuedAt' => true,
+                'newDocumentExpiresAt' => false,
+                'newDocumentUpload' => true,
+              ],
+            ],
+            'archive-modal' => 
+            [
+              'path' => 'resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php',
+              'fields' => 
+              [
+              ],
+            ],
+          ],
+        ],
+      ],
+      'person-overview' => 
+      [
+        'filter' => 
+        [
+          'path' => 'resources/views/components/management/people/person-overview/⚡filter.blade.php',
+          'fields' => 
+          [
+            'birthCountryFilter' => false,
+            'clientFilter' => false,
+            'search' => false,
+            'testDataFilter' => false,
+            'userFilter' => false,
+          ],
+        ],
+        'meta' => 
+        [
+          'path' => 'resources/views/components/management/people/person-overview/⚡meta.blade.php',
+          'fields' => 
+          [
+          ],
+        ],
+        'table' => 
+        [
+          'path' => 'resources/views/components/management/people/person-overview/⚡table.blade.php',
+          'fields' => 
+          [
+          ],
+        ],
+      ],
     ],
+  ],
 ];

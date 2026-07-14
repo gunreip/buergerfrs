@@ -21,9 +21,6 @@
         </div>
     </x-ui.headers.page>
 
-    {{-- Partial: Generated password --}}
-    @include('components.management.people.create-person.⚡generated-password')
-
     <form
         class="mt-6"
         id="create-person-form"

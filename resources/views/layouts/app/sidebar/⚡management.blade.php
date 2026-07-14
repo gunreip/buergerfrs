@@ -15,6 +15,16 @@
         expandable
         :expanded="request()->routeIs('management.people.*')"
     >
+        {{-- Management -> person -> overview --}}
+        <flux:sidebar.item
+            icon="view-columns"
+            :href="route('management.people.index')"
+            :current="request()->routeIs('management.people.index')"
+            wire:navigate
+        >
+            {{ __('admin.permissions.overview.title') }}
+        </flux:sidebar.item>
+
         {{-- Management -> person -> create --}}
         <flux:sidebar.item
             icon="id-card-lanyard"

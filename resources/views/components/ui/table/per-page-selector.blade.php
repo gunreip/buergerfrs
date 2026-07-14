@@ -5,6 +5,7 @@
     'name' => 'per-page',
     'label' => __('ui.table.per_page_selector.per_page'),
     'model' => 'perPage',
+    'action' => null,
     'options' => [10, 25, 50, 100],
 ])
 
@@ -26,9 +27,18 @@
         wire:model.live="{{ $model }}"
     >
         @foreach ($options as $option)
-            <flux:radio value="{{ (string) $option }}">
-                {{ $option }}
-            </flux:radio>
+            @if ($action)
+                <flux:radio
+                    value="{{ (string) $option }}"
+                    wire:click="{{ $action }}({{ (int) $option }})"
+                >
+                    {{ $option }}
+                </flux:radio>
+            @else
+                <flux:radio value="{{ (string) $option }}">
+                    {{ $option }}
+                </flux:radio>
+            @endif
         @endforeach
     </flux:radio.group>
 </flux:field>

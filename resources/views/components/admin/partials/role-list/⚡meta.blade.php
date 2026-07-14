@@ -19,6 +19,8 @@
             <x-ui.button.show-hide
                 size="xs"
                 state="showMeta"
+                show-label="{{ __('Show overview') }}"
+                hide-label="{{ __('Hide overview') }}"
             />
         </div>
     </div>

@@ -1,21 +1,24 @@
 {{-- resources/views/components/management/people/create-person/⚡actions.blade.php --}}
 
 <div class="mt-6 flex justify-end gap-3">
-    {{--
-    TODO: x-ui.button.cancel noch implementieren
-    --}}
-    <x-ui.button.reset
+    <flux:button
         type="button"
-        :label="__('ui.button.reset.reset')"
+        variant="ghost"
+        icon="rotate-ccw"
         wire:click="resetForm"
         wire:target="resetForm,create"
         wire:loading.attr="disabled"
-    />
+    >
+        {{ __('ui.button.reset.reset') }}
+    </flux:button>
 
-    <x-ui.button.save
+    <flux:button
         type="submit"
-        :label="__('Create person')"
+        variant="primary"
+        icon="user-plus"
         wire:target="create"
         wire:loading.attr="disabled"
-    />
+    >
+        {{ __('Create person') }}
+    </flux:button>
 </div>

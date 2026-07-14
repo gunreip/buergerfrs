@@ -13,7 +13,16 @@ class FormFieldRegistry
 
     public function form(string $form): array
     {
-        return $this->forms()[$form] ?? [];
+        $node = data_get($this->forms(), $form);
+
+        if (! is_array($node)) {
+            return [];
+        }
+
+        return [
+            ...$node,
+            'fields' => $this->collectFields($node, $form),
+        ];
     }
 
     public function fields(string $form): array
@@ -97,5 +106,67 @@ class FormFieldRegistry
         }
 
         return $tabs;
+    }
+
+    private function collectFields(array $node, string $form): array
+    {
+        $fields = [];
+        $this->collectFieldsFromNode($node, $form, $fields);
+
+        return $fields;
+    }
+
+    private function collectFieldsFromNode(array $node, string $namespace, array &$fields): void
+    {
+        foreach ($node['fields'] ?? [] as $field => $meta) {
+            $fields[$field] = $this->normalizeFieldMeta($meta, $namespace);
+        }
+
+        foreach ($node as $key => $child) {
+            if (in_array($key, ['scope', 'fields'], true) || ! is_array($child)) {
+                continue;
+            }
+
+            $this->collectFieldsFromNode($child, "{$namespace}.{$key}", $fields);
+        }
+    }
+
+    private function normalizeFieldMeta(mixed $meta, string $namespace): array
+    {
+        if (is_bool($meta)) {
+            return [
+                'required' => $meta,
+                'status_relevant' => true,
+                'tab' => $this->tabFromNamespace($namespace),
+            ];
+        }
+
+        if (! is_array($meta)) {
+            return [
+                'required' => false,
+                'status_relevant' => true,
+                'tab' => $this->tabFromNamespace($namespace),
+            ];
+        }
+
+        return [
+            'required' => (bool) ($meta['required'] ?? false),
+            'status_relevant' => (bool) ($meta['status_relevant'] ?? true),
+            'tab' => $meta['tab'] ?? $this->tabFromNamespace($namespace),
+        ];
+    }
+
+    private function tabFromNamespace(string $namespace): ?string
+    {
+        $parts = explode('.', $namespace);
+        $sectionsIndex = array_search('sections', $parts, true);
+
+        if ($sectionsIndex === false) {
+            return null;
+        }
+
+        $tab = $parts[$sectionsIndex + 1] ?? null;
+
+        return is_string($tab) && $tab !== '' ? $tab : null;
     }
 }

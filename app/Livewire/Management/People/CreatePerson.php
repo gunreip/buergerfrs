@@ -5,6 +5,9 @@
 namespace App\Livewire\Management\People;
 
 use App\Models\Address;
+use App\Models\AddressLocality;
+use App\Models\AddressPostalCode;
+use App\Models\AddressStreet;
 use App\Models\Country;
 use App\Models\InsuranceProvider;
 use App\Models\Language;
@@ -12,6 +15,7 @@ use App\Models\Person;
 use App\Models\PersonAddress;
 use App\Models\PersonContact;
 use App\Models\PersonDocument;
+use App\Models\PersonDocumentType;
 use App\Models\PersonHealthInsurance;
 use App\Models\PersonIdentifier;
 use App\Models\PersonLanguage;
@@ -20,6 +24,7 @@ use App\Models\User;
 use App\Support\Audit\ManagementActivity;
 use App\Support\Auth\GeneratedPasswordLogger;
 use App\Support\Avatar\AvatarPath;
+use App\Support\Documents\PersonDocumentPath;
 use App\Support\Forms\FormFieldRegistry;
 use Flux\Flux;
 use Illuminate\Support\Facades\DB;
@@ -40,9 +45,11 @@ class CreatePerson extends Component
 {
     use WithFileUploads;
 
-    private const FORM_KEY = 'people.create';
+    private const FORM_KEY = 'management.people.create-person';
 
     private const PERSON_NUMBER_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    private const DEFAULT_DATE_OF_BIRTH_YEARS_AGO = 30;
 
     public string $salutation = '';
 
@@ -90,9 +97,11 @@ class CreatePerson extends Component
 
     public string $addressLine2 = '';
 
-    public ?int $primaryNationalityCountryId = null;
+    public array $primaryNationalityCountryId = [];
 
-    public ?int $primaryLanguageId = null;
+    public array $primaryLanguageId = [];
+
+    public array $languageAbilities = [];
 
     public string $nationalIdNumber = '';
 
@@ -122,7 +131,7 @@ class CreatePerson extends Component
 
     public ?string $documentExpiresAt = null;
 
-    public $documentUpload = null;
+    public array $documentUpload = [];
 
     public string $emergencyContactName = '';
 
@@ -134,6 +143,8 @@ class CreatePerson extends Component
 
     public string $email = '';
 
+    public string $activeFormTab = 'person';
+
     public ?int $createdPersonId = null;
 
     public ?int $createdUserId = null;
@@ -143,6 +154,8 @@ class CreatePerson extends Component
     public string $generatedPassword = '';
 
     public string $createdPersonNumber = '';
+
+    public bool $isTestData = false;
 
     public array $salutationOptions = [
         'mr' => 'Mr.',
@@ -179,14 +192,237 @@ class CreatePerson extends Component
         'unknown' => 'Unknown',
     ];
 
-    public array $documentTypeOptions = [
-        PersonDocument::TYPE_ID_CARD_COPY => 'ID card copy',
-        PersonDocument::TYPE_PASSPORT_COPY => 'Passport copy',
-        PersonDocument::TYPE_RESIDENCE_PERMIT_COPY => 'Residence permit copy',
-        PersonDocument::TYPE_HEALTH_INSURANCE_PROOF => 'Health insurance proof',
-        PersonDocument::TYPE_TAX_DOCUMENT => 'Tax document',
-        PersonDocument::TYPE_OTHER => 'Other',
-    ];
+    public array $documentTypeOptions = [];
+
+    public function mount(): void
+    {
+        $this->refreshDocumentTypeOptions();
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function documentTypeOptionKeys(): array
+    {
+        if ($this->documentTypeOptions === []) {
+            $this->refreshDocumentTypeOptions();
+        }
+
+        return array_keys($this->documentTypeOptions);
+    }
+
+    private function refreshDocumentTypeOptions(): void
+    {
+        $this->documentTypeOptions = PersonDocumentType::options();
+    }
+
+    public function dateOfBirthOpenTo(): string
+    {
+        return now()->subYears(self::DEFAULT_DATE_OF_BIRTH_YEARS_AGO)->toDateString();
+    }
+
+    public function dateOfBirthPlaceholder(): string
+    {
+        return match (app()->getLocale()) {
+            'de' => 'tt.mm.jjjj',
+            default => 'yyyy-mm-dd',
+        };
+    }
+
+    public function updated(string $propertyName): void
+    {
+        $field = $this->validationFieldForProperty($propertyName);
+
+        if ($field === null) {
+            return;
+        }
+
+        $this->validateFieldIfItHasError($field);
+    }
+
+    public function updatedIsTestData(mixed $value): void
+    {
+        $this->isTestData = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+
+        if (! $this->isTestData) {
+            return;
+        }
+
+        $this->fillTestDataFields();
+    }
+
+    public function updatedAddressCountryId(): void
+    {
+        $this->addressPostalCode = '';
+        $this->addressCity = '';
+        $this->addressStreet = '';
+    }
+
+    public function updatedBirthCountryId(): void
+    {
+        $this->birthPlaceText = '';
+        $this->resetValidation('birthPlaceText');
+    }
+
+    public function updatedAddressPostalCode(mixed $value): void
+    {
+        $this->addressPostalCode = trim((string) $value);
+        $this->addressCity = '';
+        $this->addressStreet = '';
+    }
+
+    public function updatedAddressCity(mixed $value): void
+    {
+        $this->addressCity = trim((string) $value);
+        $this->addressStreet = '';
+    }
+
+    public function updatedAddressStreet(mixed $value): void
+    {
+        $this->addressStreet = trim((string) $value);
+    }
+
+    public function updatedBirthPlaceText(mixed $value): void
+    {
+        $this->birthPlaceText = trim((string) $value);
+    }
+
+    public function updatedDocumentIssuingAuthority(mixed $value): void
+    {
+        $this->documentIssuingAuthority = trim((string) $value);
+    }
+
+    public function useCreatedAddressPostalCode(mixed $value): void
+    {
+        $this->updatedAddressPostalCode($value);
+    }
+
+    public function useCreatedAddressCity(mixed $value): void
+    {
+        $this->updatedAddressCity($value);
+    }
+
+    public function useCreatedAddressStreet(mixed $value): void
+    {
+        $this->updatedAddressStreet($value);
+    }
+
+    public function useCreatedBirthPlaceText(mixed $value): void
+    {
+        if ($this->birthCountryId === null) {
+            $this->birthPlaceText = '';
+
+            return;
+        }
+
+        $this->updatedBirthPlaceText($value);
+        $this->validateFieldIfItHasError('birthPlaceText');
+    }
+
+    public function useCreatedDocumentIssuingAuthority(mixed $value): void
+    {
+        $this->updatedDocumentIssuingAuthority($value);
+    }
+
+    public function removeDocumentUpload(int $index): void
+    {
+        unset($this->documentUpload[$index]);
+
+        $this->documentUpload = array_values($this->documentUpload);
+    }
+
+    public function removeAvatarUpload(): void
+    {
+        $this->avatarUpload = null;
+    }
+
+    public function updatedPrimaryNationalityCountryId(mixed $value): void
+    {
+        $this->primaryNationalityCountryId = $this->normalizeSelectedIds($value);
+    }
+
+    public function updatedPrimaryLanguageId(mixed $value): void
+    {
+        $this->primaryLanguageId = $this->normalizeSelectedIds($value);
+        $this->syncLanguageAbilities();
+    }
+
+    public function fillTestDataFields(): void
+    {
+        $faker = fake('de_DE');
+        $country = $this->testDataCountry();
+        $language = $this->testDataLanguage();
+
+        if ($country === null || $language === null) {
+            Flux::toast(
+                heading: __('Test data could not be filled'),
+                text: __('Please seed countries and languages before generating form test data.'),
+                variant: 'warning',
+                duration: 5000,
+            );
+
+            return;
+        }
+
+        $gender = $faker->randomElement(array_keys($this->genderOptions));
+        $firstName = match ($gender) {
+            'female' => $faker->firstNameFemale(),
+            'male' => $faker->firstNameMale(),
+            default => $faker->firstName(),
+        };
+        $lastName = $faker->lastName();
+        $addressReference = $this->testDataAddressReference($country);
+        $birthPlace = $this->testDataBirthPlace($country) ?: ($addressReference['city'] ?? $faker->city());
+        $emailToken = Str::lower(Str::random(10));
+
+        $this->isTestData = true;
+        $this->salutation = match ($gender) {
+            'female' => 'mrs',
+            'male' => 'mr',
+            default => 'mx',
+        };
+        $this->gender = $gender;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->maritalStatus = $faker->randomElement(array_keys($this->maritalStatusOptions));
+        $this->birthCountryId = $country->id;
+        $this->birthPlaceText = $birthPlace;
+        $this->dateOfBirth = $faker->dateTimeBetween('-82 years', '-18 years')->format('Y-m-d');
+        $this->email = "test.manual.{$emailToken}@example.test";
+
+        $this->addressCountryId = $country->id;
+        $this->addressPostalCode = $addressReference['postal_code'] ?? $faker->postcode();
+        $this->addressCity = $addressReference['city'] ?? $faker->city();
+        $this->addressStreet = $addressReference['street'] ?? $faker->streetName();
+        $this->addressHouseNumber = (string) $faker->numberBetween(1, 220);
+
+        $this->primaryNationalityCountryId = [$country->id];
+        $this->primaryLanguageId = [$language->id];
+        $this->syncLanguageAbilities();
+
+        $this->nationalIdNumber = 'TEST-ID-'.Str::upper(Str::random(10));
+
+        $this->nameTitle = $faker->boolean(12) ? 'Dr.' : '';
+        $this->middleName = $faker->boolean(35) ? $faker->firstName() : '';
+        $this->preferredName = $faker->boolean(25) ? $firstName : '';
+        $this->birthName = $faker->boolean(20) ? $faker->lastName() : '';
+        $this->phone = $faker->boolean(55) ? $faker->phoneNumber() : '';
+        $this->mobile = $faker->boolean(75) ? $faker->phoneNumber() : '';
+        $this->emailPrivate = $faker->boolean(65) ? "private.{$emailToken}@example.test" : '';
+        $this->emailWork = $faker->boolean(35) ? "work.{$emailToken}@example.test" : '';
+        $this->addressLine2 = $faker->boolean(20) ? __('Test address note') : '';
+        $this->nationalIdIssuingAuthority = $faker->boolean(60) ? __('Test authority') : '';
+        $this->taxId = $faker->boolean(35) ? 'TEST-TAX-'.Str::upper(Str::random(8)) : '';
+        $this->socialSecurityNumber = $faker->boolean(35) ? 'TEST-SSN-'.Str::upper(Str::random(8)) : '';
+        $this->pensionInsuranceNumber = $faker->boolean(25) ? 'TEST-PEN-'.Str::upper(Str::random(8)) : '';
+        $this->residencePermitNumber = $faker->boolean(20) ? 'TEST-RP-'.Str::upper(Str::random(8)) : '';
+
+        $this->fillOptionalHealthInsuranceTestData($emailToken);
+        $this->fillOptionalDocumentTestData();
+        $this->fillOptionalEmergencyContactTestData($faker);
+
+        $this->resetValidation();
+    }
 
     private function validationFieldMeta(): array
     {
@@ -194,6 +430,10 @@ class CreatePerson extends Component
             'salutation' => [
                 'label' => __('Salutation'),
                 'input_id' => 'create-person-salutation',
+            ],
+            'isTestData' => [
+                'label' => __('Test data'),
+                'input_id' => 'create-person-is-test-data',
             ],
             'nameTitle' => [
                 'label' => __('Title'),
@@ -389,6 +629,7 @@ class CreatePerson extends Component
         $result = DB::transaction(function () use ($validated, $plainPassword, $userName): array {
             $person = Person::query()->create([
                 'person_number' => $this->buildUniquePersonNumber(),
+                'is_test_data' => (bool) ($validated['isTestData'] ?? false),
                 'salutation' => $validated['salutation'] ?: null,
                 'name_title' => $validated['nameTitle'] ?: null,
                 'gender' => $validated['gender'] ?: null,
@@ -435,11 +676,11 @@ class CreatePerson extends Component
                 $this->createInitialAddress($person, $validated);
             }
 
-            if (filled($validated['primaryNationalityCountryId'] ?? null)) {
+            if (filled($validated['primaryNationalityCountryId'] ?? [])) {
                 $this->createInitialNationality($person, $validated);
             }
 
-            if (filled($validated['primaryLanguageId'] ?? null)) {
+            if (filled($validated['primaryLanguageId'] ?? [])) {
                 $this->createInitialLanguage($person, $validated);
             }
 
@@ -482,7 +723,7 @@ class CreatePerson extends Component
         $this->generatedPassword = $plainPassword;
         $this->createdPersonNumber = (string) $person->person_number;
 
-        $this->resetFormState();
+        $this->resetValidation();
 
         Flux::toast(
             heading: __('Person created'),
@@ -504,6 +745,8 @@ class CreatePerson extends Component
 
     private function resetFormState(): void
     {
+        $this->activeFormTab = 'person';
+        $this->isTestData = false;
         $this->salutation = '';
         $this->nameTitle = '';
         $this->gender = '';
@@ -527,8 +770,9 @@ class CreatePerson extends Component
         $this->addressStreet = '';
         $this->addressHouseNumber = '';
         $this->addressLine2 = '';
-        $this->primaryNationalityCountryId = null;
-        $this->primaryLanguageId = null;
+        $this->primaryNationalityCountryId = [];
+        $this->primaryLanguageId = [];
+        $this->languageAbilities = [];
         $this->nationalIdNumber = '';
         $this->nationalIdIssuingAuthority = '';
         $this->taxId = '';
@@ -543,7 +787,7 @@ class CreatePerson extends Component
         $this->documentIssuingAuthority = '';
         $this->documentIssuedAt = null;
         $this->documentExpiresAt = null;
-        $this->documentUpload = null;
+        $this->documentUpload = [];
         $this->emergencyContactName = '';
         $this->emergencyContactRelationship = '';
         $this->emergencyContactPhone = '';
@@ -570,7 +814,7 @@ class CreatePerson extends Component
     /**
      * Compute completion/error status for a form tab based on configured fields.
      *
-     * @return array{total:int, filled:int, required_total:int, required_filled:int, has_errors:bool, status:string}
+     * @return array{total:int, filled:int, field_total:int, field_filled:int, optional_total:int, optional_filled:int, required_total:int, required_filled:int, has_errors:bool, status:string}
      */
     public function formTabStatus(string $tab): array
     {
@@ -579,6 +823,8 @@ class CreatePerson extends Component
 
         $total = count($fields);
         $filled = 0;
+        $optionalTotal = 0;
+        $optionalFilled = 0;
         $requiredTotal = 0;
         $requiredFilled = 0;
         $hasErrors = false;
@@ -597,6 +843,12 @@ class CreatePerson extends Component
                 if ($isFilled) {
                     $requiredFilled++;
                 }
+            } else {
+                $optionalTotal++;
+
+                if ($isFilled) {
+                    $optionalFilled++;
+                }
             }
 
             if ($this->getErrorBag()->has($field)) {
@@ -607,6 +859,10 @@ class CreatePerson extends Component
         return [
             'total' => $total,
             'filled' => $filled,
+            'field_total' => $total,
+            'field_filled' => $filled,
+            'optional_total' => $optionalTotal,
+            'optional_filled' => $optionalFilled,
             'required_total' => $requiredTotal,
             'required_filled' => $requiredFilled,
             'has_errors' => $hasErrors,
@@ -635,7 +891,7 @@ class CreatePerson extends Component
             return 'missing-required';
         }
 
-        if ($total > 0 && $filled >= $total) {
+        if ($total > 0 && $filled === $total) {
             return 'complete';
         }
 
@@ -676,7 +932,13 @@ class CreatePerson extends Component
             return;
         }
 
-        $this->dispatch('buergerfrs:focus-field', inputId: $meta['input_id']);
+        $tab = $this->formTabForField($field);
+
+        if ($tab !== null) {
+            $this->activeFormTab = $tab;
+        }
+
+        $this->dispatch('buergerfrs:focus-field', inputId: $meta['input_id'], tab: $tab);
     }
 
     /**
@@ -691,10 +953,14 @@ class CreatePerson extends Component
                 ->active()
                 ->ordered()
                 ->get(['id', 'iso2', 'name', 'native_name']),
+            'birthPlaceOptions' => $this->birthPlaceOptions(),
             'addressCountryOptions' => Country::query()
                 ->active()
                 ->ordered()
                 ->get(['id', 'iso2', 'name', 'native_name']),
+            'addressPostalCodeOptions' => $this->addressPostalCodeOptions(),
+            'addressCityOptions' => $this->addressCityOptions(),
+            'addressStreetOptions' => $this->addressStreetOptions(),
             'nationalityCountryOptions' => Country::query()
                 ->active()
                 ->ordered()
@@ -703,12 +969,334 @@ class CreatePerson extends Component
                 ->active()
                 ->ordered()
                 ->get(['id', 'iso639_1', 'iso639_3', 'name', 'native_name']),
+            'selectedNationalityOptions' => $this->selectedNationalityOptions(),
+            'selectedLanguageOptions' => $this->selectedLanguageOptions(),
+            'documentIssuingAuthorityOptions' => $this->documentIssuingAuthorityOptions(),
             'healthInsuranceProviderOptions' => InsuranceProvider::query()
                 ->active()
                 ->where('type', InsuranceProvider::TYPE_HEALTH)
                 ->ordered()
                 ->get(['id', 'name', 'short_name', 'code']),
         ]);
+    }
+
+    private function birthPlaceOptions()
+    {
+        if ($this->birthCountryId === null) {
+            return collect();
+        }
+
+        $options = AddressLocality::query()
+            ->where('country_id', $this->birthCountryId)
+            ->ordered()
+            ->limit(100)
+            ->pluck('name')
+            ->unique()
+            ->values();
+
+        return $this->includeCurrentAddressOption($options, $this->birthPlaceText);
+    }
+
+    private function testDataCountry(): ?Country
+    {
+        return Country::query()
+            ->active()
+            ->where('iso2', 'DE')
+            ->first()
+            ?: Country::query()->active()->ordered()->first();
+    }
+
+    private function testDataLanguage(): ?Language
+    {
+        return Language::query()
+            ->active()
+            ->where('iso639_1', 'de')
+            ->first()
+            ?: Language::query()->active()->ordered()->first();
+    }
+
+    /**
+     * @return array{postal_code: string, city: string, street: string}|array{}
+     */
+    private function testDataAddressReference(Country $country): array
+    {
+        $street = AddressStreet::query()
+            ->with(['postalCode:id,postal_code', 'locality:id,name'])
+            ->where('country_id', $country->id)
+            ->inRandomOrder()
+            ->first();
+
+        if ($street !== null && $street->postalCode !== null && $street->locality !== null) {
+            return [
+                'postal_code' => $street->postalCode->postal_code,
+                'city' => $street->locality->name,
+                'street' => $street->name,
+            ];
+        }
+
+        $locality = AddressLocality::query()
+            ->with('postalCode:id,postal_code')
+            ->where('country_id', $country->id)
+            ->inRandomOrder()
+            ->first();
+
+        if ($locality !== null) {
+            return [
+                'postal_code' => $locality->postalCode?->postal_code ?? fake('de_DE')->postcode(),
+                'city' => $locality->name,
+                'street' => fake('de_DE')->streetName(),
+            ];
+        }
+
+        return [];
+    }
+
+    private function testDataBirthPlace(Country $country): ?string
+    {
+        return AddressLocality::query()
+            ->where('country_id', $country->id)
+            ->inRandomOrder()
+            ->value('name');
+    }
+
+    private function fillOptionalHealthInsuranceTestData(string $token): void
+    {
+        $provider = InsuranceProvider::query()
+            ->active()
+            ->where('type', InsuranceProvider::TYPE_HEALTH)
+            ->inRandomOrder()
+            ->first();
+
+        if ($provider !== null && fake('de_DE')->boolean(35)) {
+            $this->healthInsuranceProviderId = $provider->id;
+            $this->healthInsuranceNumber = 'TEST-HI-'.Str::upper(Str::substr($token, 0, 8));
+
+            return;
+        }
+
+        $this->healthInsuranceProviderId = null;
+        $this->healthInsuranceNumber = '';
+    }
+
+    private function fillOptionalDocumentTestData(): void
+    {
+        if (! fake('de_DE')->boolean(40)) {
+            $this->documentType = '';
+            $this->documentTitle = '';
+            $this->documentNumber = '';
+            $this->documentIssuingAuthority = '';
+            $this->documentIssuedAt = null;
+            $this->documentExpiresAt = null;
+
+            return;
+        }
+
+        $issuedAt = now()->subDays(fake('de_DE')->numberBetween(30, 2500));
+
+        $this->documentType = fake('de_DE')->randomElement($this->documentTypeOptionKeys());
+        $this->documentTitle = __('Test document');
+        $this->documentNumber = 'TEST-DOC-'.Str::upper(Str::random(8));
+        $this->documentIssuingAuthority = __('Test authority');
+        $this->documentIssuedAt = $issuedAt->toDateString();
+        $this->documentExpiresAt = $issuedAt->copy()->addYears(fake('de_DE')->numberBetween(2, 10))->toDateString();
+    }
+
+    private function fillOptionalEmergencyContactTestData(\Faker\Generator $faker): void
+    {
+        if (! $faker->boolean(45)) {
+            $this->emergencyContactName = '';
+            $this->emergencyContactRelationship = '';
+            $this->emergencyContactPhone = '';
+            $this->emergencyContactEmail = '';
+
+            return;
+        }
+
+        $this->emergencyContactName = $faker->name();
+        $this->emergencyContactRelationship = $faker->randomElement(array_keys($this->emergencyContactRelationshipOptions));
+        $this->emergencyContactPhone = $faker->phoneNumber();
+        $this->emergencyContactEmail = 'emergency.'.Str::lower(Str::random(10)).'@example.test';
+    }
+
+    private function addressPostalCodeOptions()
+    {
+        if ($this->addressCountryId === null) {
+            return collect();
+        }
+
+        $options = AddressPostalCode::query()
+            ->where('country_id', $this->addressCountryId)
+            ->ordered()
+            ->limit(100)
+            ->pluck('postal_code');
+
+        return $this->includeCurrentAddressOption($options, $this->addressPostalCode);
+    }
+
+    private function addressCityOptions()
+    {
+        if ($this->addressCountryId === null) {
+            return collect();
+        }
+
+        $postalCode = $this->addressPostalCodeReference($this->addressPostalCode);
+
+        if ($this->addressPostalCode !== '' && $postalCode === null) {
+            return $this->includeCurrentAddressOption(collect(), $this->addressCity);
+        }
+
+        $options = AddressLocality::query()
+            ->where('country_id', $this->addressCountryId)
+            ->when($postalCode !== null, function ($query) use ($postalCode): void {
+                $query->where('postal_code_id', $postalCode->id);
+            })
+            ->ordered()
+            ->limit(100)
+            ->pluck('name');
+
+        return $this->includeCurrentAddressOption($options, $this->addressCity);
+    }
+
+    private function addressStreetOptions()
+    {
+        if ($this->addressCountryId === null || $this->addressCity === '') {
+            return collect();
+        }
+
+        $postalCode = $this->addressPostalCodeReference($this->addressPostalCode);
+        $locality = $this->addressLocalityReference($this->addressCity, $postalCode);
+
+        if (($this->addressPostalCode !== '' && $postalCode === null) || $locality === null) {
+            return $this->includeCurrentAddressOption(collect(), $this->addressStreet);
+        }
+
+        $options = AddressStreet::query()
+            ->where('country_id', $this->addressCountryId)
+            ->when($postalCode !== null, function ($query) use ($postalCode): void {
+                $query->where('postal_code_id', $postalCode->id);
+            })
+            ->when($locality !== null, function ($query) use ($locality): void {
+                $query->where('locality_id', $locality->id);
+            })
+            ->ordered()
+            ->limit(100)
+            ->pluck('name');
+
+        return $this->includeCurrentAddressOption($options, $this->addressStreet);
+    }
+
+    private function addressPostalCodeReference(string $postalCode): ?AddressPostalCode
+    {
+        if ($this->addressCountryId === null || trim($postalCode) === '') {
+            return null;
+        }
+
+        return AddressPostalCode::query()
+            ->where('country_id', $this->addressCountryId)
+            ->where('normalized_postal_code', $this->normalizeAddressReferenceValue($postalCode))
+            ->first();
+    }
+
+    private function addressLocalityReference(string $city, ?AddressPostalCode $postalCode = null): ?AddressLocality
+    {
+        if ($this->addressCountryId === null || trim($city) === '') {
+            return null;
+        }
+
+        return AddressLocality::query()
+            ->where('country_id', $this->addressCountryId)
+            ->when($postalCode !== null, function ($query) use ($postalCode): void {
+                $query->where('postal_code_id', $postalCode->id);
+            })
+            ->where('normalized_name', $this->normalizeAddressReferenceValue($city))
+            ->first();
+    }
+
+    private function includeCurrentAddressOption($options, string $current)
+    {
+        $current = trim($current);
+
+        if ($current === '' || $options->containsStrict($current)) {
+            return $options;
+        }
+
+        return $options
+            ->prepend($current)
+            ->unique()
+            ->values();
+    }
+
+    private function documentIssuingAuthorityOptions()
+    {
+        $options = PersonDocument::query()
+            ->whereNotNull('issuing_authority')
+            ->where('issuing_authority', '!=', '')
+            ->distinct()
+            ->orderBy('issuing_authority')
+            ->limit(100)
+            ->pluck('issuing_authority');
+
+        return $this->includeCurrentAddressOption($options, $this->documentIssuingAuthority);
+    }
+
+    private function normalizeSelectedIds(mixed $value): array
+    {
+        return collect(is_array($value) ? $value : [$value])
+            ->filter(fn(mixed $id): bool => filled($id))
+            ->map(fn(mixed $id): int => (int) $id)
+            ->filter(fn(int $id): bool => $id > 0)
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    private function syncLanguageAbilities(): void
+    {
+        $selectedLanguageIds = $this->normalizeSelectedIds($this->primaryLanguageId);
+
+        $this->languageAbilities = collect($selectedLanguageIds)
+            ->mapWithKeys(function (int $languageId): array {
+                $current = $this->languageAbilities[$languageId] ?? [];
+
+                return [
+                    $languageId => [
+                        'speaking' => (bool) ($current['speaking'] ?? true),
+                        'reading' => (bool) ($current['reading'] ?? false),
+                        'writing' => (bool) ($current['writing'] ?? false),
+                    ],
+                ];
+            })
+            ->all();
+    }
+
+    private function selectedNationalityOptions()
+    {
+        $selectedIds = $this->normalizeSelectedIds($this->primaryNationalityCountryId);
+
+        if ($selectedIds === []) {
+            return collect();
+        }
+
+        return Country::query()
+            ->whereIn('id', $selectedIds)
+            ->get(['id', 'iso2', 'name', 'native_name'])
+            ->sortBy(fn(Country $country): int => array_search($country->id, $selectedIds, true))
+            ->values();
+    }
+
+    private function selectedLanguageOptions()
+    {
+        $selectedIds = $this->normalizeSelectedIds($this->primaryLanguageId);
+
+        if ($selectedIds === []) {
+            return collect();
+        }
+
+        return Language::query()
+            ->whereIn('id', $selectedIds)
+            ->get(['id', 'iso639_1', 'iso639_3', 'name', 'native_name'])
+            ->sortBy(fn(Language $language): int => array_search($language->id, $selectedIds, true))
+            ->values();
     }
 
     /**
@@ -764,7 +1352,7 @@ class CreatePerson extends Component
      *     documentIssuingAuthority: string|null,
      *     documentIssuedAt: string|null,
      *     documentExpiresAt: string|null,
-     *     documentUpload: mixed,
+     *     documentUpload: array<int, mixed>,
      *     emergencyContactName: string|null,
      *     emergencyContactRelationship: string|null,
      *     emergencyContactPhone: string|null,
@@ -813,7 +1401,13 @@ class CreatePerson extends Component
     {
         $errors = $exception->validator->errors();
         $fieldMeta = $this->validationFieldMeta();
-        $fieldKeys = collect($errors->keys())->unique()->values();
+        $fieldKeys = $this->orderedValidationErrorFields($errors->keys());
+
+        $firstErrorTab = $this->formTabForField((string) $fieldKeys->first());
+
+        if ($firstErrorTab !== null) {
+            $this->activeFormTab = $firstErrorTab;
+        }
 
         $validationErrors = $fieldKeys
             ->map(function (string $field) use ($errors, $fieldMeta): array {
@@ -821,11 +1415,13 @@ class CreatePerson extends Component
                     'label' => $field,
                     'input_id' => null,
                 ];
+                $tab = $this->formTabForField($field);
 
                 return [
                     'field' => $field,
                     'label' => $meta['label'],
                     'inputId' => $meta['input_id'],
+                    'tab' => $tab,
                     'messages' => collect($errors->get($field))->unique()->values()->all(),
                 ];
             })
@@ -834,60 +1430,120 @@ class CreatePerson extends Component
         $this->dispatch('buergerfrs:validation-errors', errors: $validationErrors->all());
     }
 
+    /**
+     * @param  array<int, string>  $fields
+     * @return \Illuminate\Support\Collection<int, string>
+     */
+    private function orderedValidationErrorFields(array $fields)
+    {
+        $fieldOrder = array_flip(array_keys(app(FormFieldRegistry::class)->fields(self::FORM_KEY)));
+
+        return collect($fields)
+            ->unique()
+            ->sortBy(function (string $field) use ($fieldOrder): int {
+                $rootField = Str::before($field, '.');
+
+                return $fieldOrder[$rootField] ?? PHP_INT_MAX;
+            })
+            ->values();
+    }
+
+    private function formTabForField(string $field): ?string
+    {
+        return app(FormFieldRegistry::class)->tab(self::FORM_KEY, $field);
+    }
+
+    private function validationFieldForProperty(string $propertyName): ?string
+    {
+        $rules = $this->validationRules();
+
+        if (array_key_exists($propertyName, $rules)) {
+            return $propertyName;
+        }
+
+        $rootPropertyName = Str::before($propertyName, '.');
+
+        if (array_key_exists($rootPropertyName, $rules)) {
+            return $rootPropertyName;
+        }
+
+        return null;
+    }
+
+    private function validateFieldIfItHasError(string $field): void
+    {
+        if (! $this->getErrorBag()->has($field)) {
+            return;
+        }
+
+        try {
+            $this->validateOnly($field, $this->validationRules());
+        } catch (ValidationException) {
+            // Keep the existing field error until the changed value is valid.
+        }
+    }
+
     private function validationRules(): array
     {
         return [
-            'salutation' => [$this->requiredRule('salutation'), 'string', Rule::in(array_keys($this->salutationOptions))],
-            'nameTitle' => [$this->requiredRule('nameTitle'), 'string', 'max:255'],
-            'gender' => [$this->requiredRule('gender'), 'string', Rule::in(array_keys($this->genderOptions))],
-            'maritalStatus' => [$this->requiredRule('maritalStatus'), 'string', Rule::in(array_keys($this->maritalStatusOptions))],
-            'firstName' => [$this->requiredRule('firstName'), 'string', 'max:255'],
-            'middleName' => [$this->requiredRule('middleName'), 'string', 'max:255'],
-            'preferredName' => [$this->requiredRule('preferredName'), 'string', 'max:255'],
-            'lastName' => [$this->requiredRule('lastName'), 'string', 'max:255'],
-            'birthName' => [$this->requiredRule('birthName'), 'string', 'max:255'],
-            'dateOfBirth' => [$this->requiredRule('dateOfBirth'), 'date'],
-            'avatarUpload' => [$this->requiredRule('avatarUpload'), 'file', 'image', 'max:4096', 'mimes:jpg,jpeg,png,webp'],
-            'birthCountryId' => [$this->requiredRule('birthCountryId'), 'integer', Rule::exists('countries', 'id')],
-            'birthPlaceText' => [$this->requiredRule('birthPlaceText'), 'string', 'max:255'],
-            'phone' => [$this->requiredRule('phone'), 'string', 'max:255'],
-            'mobile' => [$this->requiredRule('mobile'), 'string', 'max:255'],
-            'emailPrivate' => [$this->requiredRule('emailPrivate'), 'email', 'max:255'],
-            'emailWork' => [$this->requiredRule('emailWork'), 'email', 'max:255'],
-            'email' => [$this->requiredRule('email'), 'email', 'max:255', Rule::unique('users', 'email')],
-            'addressCountryId' => [$this->requiredRule('addressCountryId'), 'integer', Rule::exists('countries', 'id')],
-            'addressPostalCode' => [$this->requiredRule('addressPostalCode'), 'string', 'max:255'],
-            'addressCity' => [$this->requiredRule('addressCity'), 'string', 'max:255'],
-            'addressStreet' => [$this->requiredRule('addressStreet'), 'string', 'max:255'],
-            'addressHouseNumber' => [$this->requiredRule('addressHouseNumber'), 'string', 'max:255'],
-            'addressLine2' => [$this->requiredRule('addressLine2'), 'string', 'max:255'],
-            'primaryNationalityCountryId' => [$this->requiredRule('primaryNationalityCountryId'), 'integer', Rule::exists('countries', 'id')],
-            'primaryLanguageId' => [$this->requiredRule('primaryLanguageId'), 'integer', Rule::exists('languages', 'id')],
-            'nationalIdNumber' => [$this->requiredRule('nationalIdNumber'), 'string', 'max:255'],
-            'nationalIdIssuingAuthority' => [$this->requiredRule('nationalIdIssuingAuthority'), 'string', 'max:255'],
-            'taxId' => [$this->requiredRule('taxId'), 'string', 'max:255'],
-            'socialSecurityNumber' => [$this->requiredRule('socialSecurityNumber'), 'string', 'max:255'],
-            'pensionInsuranceNumber' => [$this->requiredRule('pensionInsuranceNumber'), 'string', 'max:255'],
-            'healthInsuranceNumber' => [$this->requiredRule('healthInsuranceNumber'), 'string', 'max:255'],
-            'healthInsuranceProviderId' => [
-                $this->requiredRule('healthInsuranceProviderId'),
+            'salutation' => $this->validationRulesFor('salutation', ['string', Rule::in(array_keys($this->salutationOptions))]),
+            'isTestData' => ['boolean'],
+            'nameTitle' => $this->validationRulesFor('nameTitle', ['string', 'max:255']),
+            'gender' => $this->validationRulesFor('gender', ['string', Rule::in(array_keys($this->genderOptions))]),
+            'maritalStatus' => $this->validationRulesFor('maritalStatus', ['string', Rule::in(array_keys($this->maritalStatusOptions))]),
+            'firstName' => $this->validationRulesFor('firstName', ['string', 'max:255']),
+            'middleName' => $this->validationRulesFor('middleName', ['string', 'max:255']),
+            'preferredName' => $this->validationRulesFor('preferredName', ['string', 'max:255']),
+            'lastName' => $this->validationRulesFor('lastName', ['string', 'max:255']),
+            'birthName' => $this->validationRulesFor('birthName', ['string', 'max:255']),
+            'dateOfBirth' => $this->validationRulesFor('dateOfBirth', ['date']),
+            'avatarUpload' => $this->validationRulesFor('avatarUpload', ['file', 'image', 'max:4096', 'mimes:jpg,jpeg,png,webp']),
+            'birthCountryId' => $this->validationRulesFor('birthCountryId', ['integer', Rule::exists('countries', 'id')]),
+            'birthPlaceText' => $this->validationRulesFor('birthPlaceText', ['string', 'max:255']),
+            'phone' => $this->validationRulesFor('phone', ['string', 'max:255']),
+            'mobile' => $this->validationRulesFor('mobile', ['string', 'max:255']),
+            'emailPrivate' => $this->validationRulesFor('emailPrivate', ['email', 'max:255']),
+            'emailWork' => $this->validationRulesFor('emailWork', ['email', 'max:255']),
+            'email' => $this->validationRulesFor('email', ['email', 'max:255', Rule::unique('users', 'email')]),
+            'addressCountryId' => $this->validationRulesFor('addressCountryId', ['integer', Rule::exists('countries', 'id')]),
+            'addressPostalCode' => $this->validationRulesFor('addressPostalCode', ['string', 'max:255']),
+            'addressCity' => $this->validationRulesFor('addressCity', ['string', 'max:255']),
+            'addressStreet' => $this->validationRulesFor('addressStreet', ['string', 'max:255']),
+            'addressHouseNumber' => $this->validationRulesFor('addressHouseNumber', ['string', 'max:255']),
+            'addressLine2' => $this->validationRulesFor('addressLine2', ['string', 'max:255']),
+            'primaryNationalityCountryId' => $this->validationRulesFor('primaryNationalityCountryId', ['array']),
+            'primaryNationalityCountryId.*' => ['integer', Rule::exists('countries', 'id')],
+            'primaryLanguageId' => $this->validationRulesFor('primaryLanguageId', ['array']),
+            'primaryLanguageId.*' => ['integer', Rule::exists('languages', 'id')],
+            'languageAbilities' => ['array'],
+            'languageAbilities.*.speaking' => ['boolean'],
+            'languageAbilities.*.reading' => ['boolean'],
+            'languageAbilities.*.writing' => ['boolean'],
+            'nationalIdNumber' => $this->validationRulesFor('nationalIdNumber', ['string', 'max:255']),
+            'nationalIdIssuingAuthority' => $this->validationRulesFor('nationalIdIssuingAuthority', ['string', 'max:255']),
+            'taxId' => $this->validationRulesFor('taxId', ['string', 'max:255']),
+            'socialSecurityNumber' => $this->validationRulesFor('socialSecurityNumber', ['string', 'max:255']),
+            'pensionInsuranceNumber' => $this->validationRulesFor('pensionInsuranceNumber', ['string', 'max:255']),
+            'healthInsuranceNumber' => $this->validationRulesFor('healthInsuranceNumber', ['string', 'max:255']),
+            'healthInsuranceProviderId' => $this->validationRulesFor('healthInsuranceProviderId', [
                 'integer',
                 Rule::exists('insurance_providers', 'id')
                     ->where('type', InsuranceProvider::TYPE_HEALTH)
                     ->where('is_active', true),
-            ],
-            'residencePermitNumber' => [$this->requiredRule('residencePermitNumber'), 'string', 'max:255'],
-            'documentType' => [$this->requiredRule('documentType'), 'string', Rule::in(array_keys($this->documentTypeOptions))],
-            'documentTitle' => [$this->requiredRule('documentTitle'), 'string', 'max:255'],
-            'documentNumber' => [$this->requiredRule('documentNumber'), 'string', 'max:255'],
-            'documentIssuingAuthority' => [$this->requiredRule('documentIssuingAuthority'), 'string', 'max:255'],
-            'documentIssuedAt' => [$this->requiredRule('documentIssuedAt'), 'date'],
-            'documentExpiresAt' => [$this->requiredRule('documentExpiresAt'), 'date', 'after_or_equal:documentIssuedAt'],
-            'documentUpload' => [$this->requiredRule('documentUpload'), 'file', 'max:10240', 'mimes:pdf,jpg,jpeg,png,webp'],
-            'emergencyContactName' => [$this->requiredRule('emergencyContactName'), 'string', 'max:255'],
-            'emergencyContactRelationship' => [$this->requiredRule('emergencyContactRelationship'), 'string', Rule::in(array_keys($this->emergencyContactRelationshipOptions))],
-            'emergencyContactPhone' => [$this->requiredRule('emergencyContactPhone'), 'string', 'max:255'],
-            'emergencyContactEmail' => [$this->requiredRule('emergencyContactEmail'), 'email', 'max:255'],
+            ]),
+            'residencePermitNumber' => $this->validationRulesFor('residencePermitNumber', ['string', 'max:255']),
+            'documentType' => $this->validationRulesFor('documentType', ['string', Rule::in($this->documentTypeOptionKeys())]),
+            'documentTitle' => $this->validationRulesFor('documentTitle', ['string', 'max:255']),
+            'documentNumber' => $this->validationRulesFor('documentNumber', ['string', 'max:255']),
+            'documentIssuingAuthority' => $this->validationRulesFor('documentIssuingAuthority', ['string', 'max:255']),
+            'documentIssuedAt' => $this->validationRulesFor('documentIssuedAt', ['date']),
+            'documentExpiresAt' => $this->validationRulesFor('documentExpiresAt', ['date', 'after_or_equal:documentIssuedAt']),
+            'documentUpload' => $this->validationRulesFor('documentUpload', ['array']),
+            'documentUpload.*' => ['file', 'max:10240', 'mimes:pdf,jpg,jpeg,png,webp'],
+            'emergencyContactName' => $this->validationRulesFor('emergencyContactName', ['string', 'max:255']),
+            'emergencyContactRelationship' => $this->validationRulesFor('emergencyContactRelationship', ['string', Rule::in(array_keys($this->emergencyContactRelationshipOptions))]),
+            'emergencyContactPhone' => $this->validationRulesFor('emergencyContactPhone', ['string', 'max:255']),
+            'emergencyContactEmail' => $this->validationRulesFor('emergencyContactEmail', ['email', 'max:255']),
         ];
     }
 
@@ -909,11 +1565,23 @@ class CreatePerson extends Component
      */
     private function createInitialAddress(Person $person, array $validated): void
     {
-        $address = Address::query()->create([
-            'country_id' => $validated['addressCountryId'] ?: null,
-            'postal_code' => $validated['addressPostalCode'] ?: null,
-            'city' => $validated['addressCity'] ?: null,
-            'street' => $validated['addressStreet'] ?: null,
+        $countryId = $validated['addressCountryId'] ?: null;
+        $postalCodeValue = $validated['addressPostalCode'] ?: null;
+        $cityValue = $validated['addressCity'] ?: null;
+        $streetValue = $validated['addressStreet'] ?: null;
+
+        $postalCode = $this->firstOrCreateAddressPostalCode($countryId, $postalCodeValue);
+        $locality = $this->firstOrCreateAddressLocality($countryId, $postalCode, $cityValue);
+        $street = $this->firstOrCreateAddressStreet($countryId, $postalCode, $locality, $streetValue);
+
+        $address = Address::query()->firstOrCreate([
+            'country_id' => $countryId,
+            'postal_code_id' => $postalCode?->id,
+            'locality_id' => $locality?->id,
+            'street_id' => $street?->id,
+            'postal_code' => $postalCodeValue,
+            'city' => $cityValue,
+            'street' => $streetValue,
             'house_number' => $validated['addressHouseNumber'] ?: null,
             'address_line_2' => $validated['addressLine2'] ?: null,
         ]);
@@ -926,16 +1594,91 @@ class CreatePerson extends Component
         ]);
     }
 
+    private function firstOrCreateAddressPostalCode(?int $countryId, ?string $postalCode): ?AddressPostalCode
+    {
+        $postalCode = $this->normalizeNullableAddressInput($postalCode);
+
+        if ($countryId === null || $postalCode === null) {
+            return null;
+        }
+
+        return AddressPostalCode::query()->firstOrCreate([
+            'country_id' => $countryId,
+            'normalized_postal_code' => $this->normalizeAddressReferenceValue($postalCode),
+        ], [
+            'postal_code' => $postalCode,
+            'is_verified' => false,
+            'source' => 'manual',
+        ]);
+    }
+
+    private function firstOrCreateAddressLocality(?int $countryId, ?AddressPostalCode $postalCode, ?string $city): ?AddressLocality
+    {
+        $city = $this->normalizeNullableAddressInput($city);
+
+        if ($countryId === null || $city === null) {
+            return null;
+        }
+
+        return AddressLocality::query()->firstOrCreate([
+            'country_id' => $countryId,
+            'postal_code_id' => $postalCode?->id,
+            'normalized_name' => $this->normalizeAddressReferenceValue($city),
+        ], [
+            'name' => $city,
+            'is_verified' => false,
+            'source' => 'manual',
+        ]);
+    }
+
+    private function firstOrCreateAddressStreet(
+        ?int $countryId,
+        ?AddressPostalCode $postalCode,
+        ?AddressLocality $locality,
+        ?string $street
+    ): ?AddressStreet {
+        $street = $this->normalizeNullableAddressInput($street);
+
+        if ($countryId === null || $street === null) {
+            return null;
+        }
+
+        return AddressStreet::query()->firstOrCreate([
+            'country_id' => $countryId,
+            'postal_code_id' => $postalCode?->id,
+            'locality_id' => $locality?->id,
+            'normalized_name' => $this->normalizeAddressReferenceValue($street),
+        ], [
+            'name' => $street,
+            'is_verified' => false,
+            'source' => 'manual',
+        ]);
+    }
+
+    private function normalizeNullableAddressInput(?string $value): ?string
+    {
+        $value = trim((string) $value);
+
+        return $value === '' ? null : $value;
+    }
+
+    private function normalizeAddressReferenceValue(string $value): string
+    {
+        return Str::lower((string) preg_replace('/\s+/u', ' ', trim($value)));
+    }
+
     /**
      * @param  array<string, mixed>  $validated
      */
     private function createInitialNationality(Person $person, array $validated): void
     {
-        PersonNationality::query()->create([
-            'person_id' => $person->id,
-            'country_id' => $validated['primaryNationalityCountryId'],
-            'is_primary' => true,
-        ]);
+        foreach ($this->normalizeSelectedIds($validated['primaryNationalityCountryId'] ?? []) as $index => $countryId) {
+            PersonNationality::query()->create([
+                'person_id' => $person->id,
+                'country_id' => $countryId,
+                'is_primary' => $index === 0,
+            ]);
+        }
     }
 
     /**
@@ -943,14 +1686,21 @@ class CreatePerson extends Component
      */
     private function createInitialLanguage(Person $person, array $validated): void
     {
-        PersonLanguage::query()->create([
-            'person_id' => $person->id,
-            'language_id' => $validated['primaryLanguageId'],
-            'proficiency' => PersonLanguage::PROFICIENCY_UNKNOWN,
-            'is_native' => false,
-            'is_primary' => true,
-            'preferred_for_communication' => true,
-        ]);
+        foreach ($this->normalizeSelectedIds($validated['primaryLanguageId'] ?? []) as $index => $languageId) {
+            $abilities = $validated['languageAbilities'][$languageId] ?? [];
+
+            PersonLanguage::query()->create([
+                'person_id' => $person->id,
+                'language_id' => $languageId,
+                'proficiency' => PersonLanguage::PROFICIENCY_UNKNOWN,
+                'is_native' => false,
+                'is_primary' => $index === 0,
+                'preferred_for_communication' => (bool) ($abilities['speaking'] ?? false),
+                'can_speak' => (bool) ($abilities['speaking'] ?? false),
+                'can_read' => (bool) ($abilities['reading'] ?? false),
+                'can_write' => (bool) ($abilities['writing'] ?? false),
+            ]);
+        }
     }
 
     /**
@@ -1054,24 +1804,63 @@ class CreatePerson extends Component
             return;
         }
 
-        $uploadAttributes = $this->storeInitialDocumentUpload(
-            person: $person,
-            upload: $validated['documentUpload'] ?? null,
-        );
+        $uploads = collect($validated['documentUpload'] ?? [])
+            ->filter(fn(mixed $upload): bool => $upload instanceof TemporaryUploadedFile)
+            ->values();
 
-        $document = PersonDocument::query()->create(array_merge([
+        $baseAttributes = [
             'person_id' => $person->id,
             'type' => $validated['documentType'] ?: PersonDocument::TYPE_OTHER,
+            'status' => PersonDocument::STATUS_ACTIVE,
+            'category' => $this->documentCategoryForType($validated['documentType'] ?: PersonDocument::TYPE_OTHER),
+            'source' => $uploads->isEmpty() ? PersonDocument::SOURCE_MANUAL : PersonDocument::SOURCE_UPLOAD,
+            'direction' => PersonDocument::DIRECTION_NONE,
             'title' => $validated['documentTitle'] ?: null,
             'document_number' => $validated['documentNumber'] ?: null,
             'issuing_authority' => $validated['documentIssuingAuthority'] ?: null,
             'issued_at' => $validated['documentIssuedAt'] ?: null,
             'expires_at' => $validated['documentExpiresAt'] ?: null,
-        ], $uploadAttributes));
+            'valid_from' => $validated['documentIssuedAt'] ?: null,
+            'valid_until' => $validated['documentExpiresAt'] ?: null,
+            'is_current' => true,
+        ];
 
-        if (filled($document->file_path)) {
-            $this->createdDocumentId = $document->id;
+        if ($uploads->isEmpty()) {
+            PersonDocument::query()->create($baseAttributes);
+
+            return;
         }
+
+        $uploads->each(function (TemporaryUploadedFile $upload, int $index) use ($person, $baseAttributes): void {
+            $uploadAttributes = $this->storeInitialDocumentUpload(
+                person: $person,
+                upload: $upload,
+            );
+
+            $document = PersonDocument::query()->create(array_merge($baseAttributes, [
+                'title' => $index === 0
+                    ? $baseAttributes['title']
+                    : $this->documentTitleForAdditionalUpload($baseAttributes['title'], $upload, $index),
+            ], $uploadAttributes));
+
+            if ($index === 0 && filled($document->file_path)) {
+                $this->createdDocumentId = $document->id;
+            }
+        });
+    }
+
+    private function documentTitleForAdditionalUpload(?string $baseTitle, TemporaryUploadedFile $upload, int $index): ?string
+    {
+        if (filled($baseTitle)) {
+            return "{$baseTitle} #" . ($index + 1);
+        }
+
+        return $upload->getClientOriginalName();
+    }
+
+    private function documentCategoryForType(string $type): string
+    {
+        return PersonDocumentType::categoryFor($type);
     }
 
     /**
@@ -1093,11 +1882,16 @@ class CreatePerson extends Component
         $originalFilename = $upload->getClientOriginalName();
         $mimeType = $upload->getMimeType();
         $fileSize = $upload->getSize();
+        $uuid = (string) Str::uuid();
 
-        $storedFilename = (string) Str::uuid() . ($extension !== '' ? ".{$extension}" : '');
-        $directory = "person-documents/{$person->id}";
+        if ($extension === '') {
+            $extension = $upload->extension();
+        }
 
-        $path = $upload->storeAs($directory, $storedFilename, 'local');
+        PersonDocumentPath::ensureLocalDiskDirectoryExists($uuid);
+
+        $relativePath = PersonDocumentPath::relativePath($uuid, $extension);
+        $path = $upload->storeAs(dirname($relativePath), basename($relativePath), 'local');
 
         return [
             'file_disk' => 'local',
@@ -1165,9 +1959,27 @@ class CreatePerson extends Component
         return trim((string) $value);
     }
 
-    private function requiredRule(string $field): string
+    /**
+     * Build validation rules from form metadata.
+     *
+     * Required fields always receive their domain rules. Optional fields only
+     * receive those rules once the user has actually entered a value, so empty
+     * optional fields do not fail rules like email/date/integer/file.
+     *
+     * @param  array<int, mixed>  $rules
+     * @return array<int, mixed>
+     */
+    private function validationRulesFor(string $field, array $rules): array
     {
-        return $this->isRequiredField($field) ? 'required' : 'nullable';
+        if ($this->isRequiredField($field)) {
+            return array_merge(['required'], $rules);
+        }
+
+        if (! $this->isFormFieldFilled($field)) {
+            return ['nullable'];
+        }
+
+        return array_merge(['nullable'], $rules);
     }
 
     private function buildUserName(string $firstName, string $lastName): string

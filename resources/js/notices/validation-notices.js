@@ -48,7 +48,11 @@ const validationNoticeFieldLimit = 3;
 window.addEventListener('buergerfrs:validation-errors', (event) => {
     const errors = event.detail?.errors ?? [];
 
-    if (!Array.isArray(errors) || errors.length === 0) {
+    if (!Array.isArray(errors)) {
+        return;
+    }
+
+    if (errors.length === 0) {
         return;
     }
 
@@ -85,6 +89,7 @@ function normalizeValidationErrorNotice(error) {
     const field = error.field ?? 'unknown';
     const label = error.label ?? field;
     const inputId = error.inputId ?? null;
+    const tab = error.tab ?? null;
     const messages = Array.isArray(error.messages)
         ? error.messages.filter((message) => typeof message === 'string' && message.trim() !== '')
         : [];
@@ -97,6 +102,7 @@ function normalizeValidationErrorNotice(error) {
         field,
         label,
         inputId,
+        tab,
         title: `Please check ${label}`,
         messages,
         actions: inputId
@@ -105,6 +111,7 @@ function normalizeValidationErrorNotice(error) {
                     type: 'focus-field',
                     label: 'Go to field',
                     inputId,
+                    tab,
                 },
             ]
             : [],
@@ -144,6 +151,7 @@ function renderValidationNotices(notices) {
                         type: 'focus-field',
                         label: 'Go to first field',
                         inputId: firstNotice.inputId,
+                        tab: firstNotice.tab ?? null,
                     },
                 ]
                 : [],

@@ -50,7 +50,7 @@
                     };
 
                     $eventTitle = match ($historyEvent->event_type) {
-                        'created' => __('Created'),
+                        'created' => __('admin.client_list.table.created'),
                         'value_changed' => __('Value changed'),
                         'key_changed' => __('Key changed'),
                         'moved' => __('Moved'),
@@ -146,13 +146,13 @@
 
                     $eventTechnicalTooltip = collect([
                         $historyEvent->id
-                            ? __('Event') . ' #' . $historyEvent->id
+                            ? __('admin.translation_list.modal_history.event') . ' #' . $historyEvent->id
                             : __('Derived baseline'),
                         __('Entity') . ': ' . $historyEvent->entity_type,
-                        __('Type') . ': ' . $historyEvent->event_type,
+                        __('admin.client_list.table.type') . ': ' . $historyEvent->event_type,
                         __('Renderer') . ': ' . ($usesTimelineFallback ? __('Fallback') : __('Specific component')),
                         $historyLocale ? __('Locale') . ': ' . strtoupper($historyLocale) : null,
-                        $historyEvent->reason ? __('Reason') . ': ' . $historyEvent->reason : null,
+                        $historyEvent->reason ? __('admin.translation_list.modal_history.reason') . ': ' . $historyEvent->reason : null,
                     ])
                         ->filter()
                         ->implode(' · ');
@@ -263,7 +263,7 @@
 
                                 <div class="col-span-2 text-right text-sm text-zinc-500 dark:text-zinc-400">
                                     @if ($historyEvent->id)
-                                        {{ __('ID') }}
+                                        {{ __('admin.user_list.table.id') }}
                                         #{{ $historyEvent->id }}
                                     @else
                                         {{ __('Derived') }}

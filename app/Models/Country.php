@@ -129,6 +129,30 @@ class Country extends Model
     }
 
     /**
+     * Get postal code references assigned to this country.
+     */
+    public function addressPostalCodes(): HasMany
+    {
+        return $this->hasMany(AddressPostalCode::class);
+    }
+
+    /**
+     * Get locality references assigned to this country.
+     */
+    public function addressLocalities(): HasMany
+    {
+        return $this->hasMany(AddressLocality::class);
+    }
+
+    /**
+     * Get street references assigned to this country.
+     */
+    public function addressStreets(): HasMany
+    {
+        return $this->hasMany(AddressStreet::class);
+    }
+
+    /**
      * Get insurance providers assigned to this country.
      */
     public function insuranceProviders(): HasMany

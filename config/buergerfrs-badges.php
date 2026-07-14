@@ -29,6 +29,10 @@ return [
                 'color' => 'purple',
                 'variant' => 'subtle',
             ],
+            'dynamic-multi' => [
+                'color' => 'orange',
+                'variant' => 'subtle',
+            ],
         ],
 
         'translation.value.status' => [
@@ -57,6 +61,10 @@ return [
             ],
             'dynamic' => [
                 'color' => 'purple',
+                'variant' => 'subtle',
+            ],
+            'dynamic-multi' => [
+                'color' => 'orange',
                 'variant' => 'subtle',
             ],
         ],

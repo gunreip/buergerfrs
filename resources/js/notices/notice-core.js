@@ -144,6 +144,7 @@ export function renderNotice(notice) {
                 window.dispatchEvent(new CustomEvent('buergerfrs:focus-field', {
                     detail: {
                         inputId: action.inputId,
+                        tab: action.tab ?? null,
                     },
                 }));
 

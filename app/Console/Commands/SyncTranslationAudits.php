@@ -309,6 +309,13 @@ class SyncTranslationAudits extends Command
             resolvedKey: $resolvedKey,
         );
 
+        $isDynamicMulti = (bool) ($translationKey->is_dynamic_multi ?? false);
+
+        if ($isDynamicMulti) {
+            $resolvedStatus = 'dynamic';
+            $resolvedClassification = 'dynamic';
+        }
+
         $resolvedObsoleteAt = $resolvedStatus === 'obsolete'
             ? ($translationKey->obsolete_at ?? $now)
             : null;
@@ -320,7 +327,7 @@ class SyncTranslationAudits extends Command
             'group' => $this->groupFromKey($resolvedKey ?? $suggestedKey),
             'status' => $resolvedStatus,
             'classification' => $resolvedClassification,
-            'source' => 'audit',
+            'source' => $isDynamicMulti ? 'dynamic_audit' : 'audit',
             'suggested_key' => $suggestedKey,
             'last_seen_at' => $now,
             'obsolete_at' => $resolvedObsoleteAt,

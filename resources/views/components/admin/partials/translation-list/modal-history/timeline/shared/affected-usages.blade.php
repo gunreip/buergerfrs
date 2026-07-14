@@ -83,7 +83,7 @@
                         </code>
 
                         <code class="flex w-20 shrink-0 items-baseline justify-end gap-1 whitespace-nowrap text-xs">
-                            <span>{{ __('Line') }}</span>
+                            <span>{{ __('admin.translation_list.modal.line') }}</span>
                             <span class="w-8 tabular-nums">
                                 {{ $affectedUsage->line ?: '—' }}
                             </span>

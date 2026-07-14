@@ -42,7 +42,7 @@
     <div class="mt-3 grid gap-3 md:grid-cols-4">
         <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             <flux:icon.package class="inset mr-1 inline h-4 w-4 min-w-0" />
-            {{ __('Reason') }}
+            {{ __('admin.translation_list.modal_history.reason') }}
         </div>
 
         <div class="wrap-anywhere col-span-3 text-sm">
@@ -104,7 +104,7 @@
     <div class="mt-2 grid items-center gap-3 md:grid-cols-4">
         <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             <flux:icon.circle-user-round class="inset mr-1 inline h-4 w-4 min-w-0" />
-            {{ __('Reviewed') }}
+            {{ __('admin.translation_list.modal_edit.reviewed') }}
         </div>
 
         <div class="col-span-3 flex flex-wrap items-center gap-2">
@@ -126,7 +126,7 @@
                     variant="subtle"
                     color="zinc"
                 >
-                    {{ __('User') }} #{{ $reviewedByUserId }}
+                    {{ __('admin.user_list.meta.user') }} #{{ $reviewedByUserId }}
                 </flux:badge>
             @endif
         </div>

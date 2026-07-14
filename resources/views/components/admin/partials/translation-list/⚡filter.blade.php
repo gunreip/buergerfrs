@@ -154,6 +154,50 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                     'color' => 'pink',
                 ],
             ];
+            $dynamicTooltips = [
+                'none' => [
+                    'title' => __('All entries'),
+                    'text' => __(
+                        'Show all current translation entries without a dynamic focus filter.',
+                    ),
+                    'color' => 'sky',
+                ],
+                'all' => [
+                    'title' => __('All dynamic'),
+                    'text' => __(
+                        'Show all dynamic translation entries including dynamic multi entries.',
+                    ),
+                    'color' => 'orange',
+                ],
+                'candidate' => [
+                    'title' => __('Candidates'),
+                    'text' => __(
+                        'Show dynamic translation candidates that are not marked as dynamic multi.',
+                    ),
+                    'color' => 'amber',
+                ],
+                'multi' => [
+                    'title' => __('Dynamic multi'),
+                    'text' => __(
+                        'Show translation keys marked as dynamic multi.',
+                    ),
+                    'color' => 'emerald',
+                ],
+                'without_suggested_key' => [
+                    'title' => __('Without suggested key'),
+                    'text' => __(
+                        'Show dynamic translation candidates that do not have a suggested key yet.',
+                    ),
+                    'color' => 'rose',
+                ],
+                'reactivated_stale' => [
+                    'title' => __('Reactivated stale'),
+                    'text' => __(
+                        'Show legacy dynamic entries that were reactivated from stale audit state.',
+                    ),
+                    'color' => 'violet',
+                ],
+            ];
         @endphp
 
         <div class="mb-6 grid gap-2 xl:grid-cols-[5rem_1fr_auto]">
@@ -360,6 +404,50 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                                 {{ str($option)->headline() }}
                                 <span class="ml-1 opacity-70">
                                     {{ $displayCount }}
+                                </span>
+                            </flux:button>
+                        </x-ui.tooltip.trigger>
+                    @endforeach
+                </div>
+
+                {{-- Dynamic filters --}}
+                <div class="flex flex-wrap items-center gap-2 rounded-md bg-zinc-50/50 px-3 py-2 dark:bg-zinc-800/50">
+                    <span
+                        class="mr-2 w-36 shrink-0 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
+                    >
+                        {{ __('Dynamic') }}
+                    </span>
+
+                    @foreach ($dynamicFilterOptions as $option)
+                        @php
+                            $count = $dynamicFilterCounts[$option] ?? 0;
+                            $label = match ($option) {
+                                'none' => __('All entries'),
+                                'all' => __('All dynamic'),
+                                'candidate' => __('Candidates'),
+                                'multi' => __('Dynamic multi'),
+                                'without_suggested_key' => __('Without suggested key'),
+                                'reactivated_stale' => __('Reactivated stale'),
+                                default => str($option)->headline(),
+                            };
+                            $dynamicTooltip = $dynamicTooltips[$option] ?? $dynamicTooltips['none'];
+                            $isActiveDynamicFilter = $dynamicFilter === $option;
+                        @endphp
+
+                        <x-ui.tooltip.trigger
+                            :title="$dynamicTooltip['title']"
+                            :text="$dynamicTooltip['text']"
+                        >
+                            <flux:button
+                                type="button"
+                                size="sm"
+                                :variant="$isActiveDynamicFilter ? 'primary' : 'ghost'"
+                                :color="$isActiveDynamicFilter ? ($dynamicTooltip['color'] ?? null) : null"
+                                wire:click="setDynamicFilter('{{ $option }}')"
+                            >
+                                {{ $label }}
+                                <span class="ml-1 opacity-70">
+                                    {{ $count }}
                                 </span>
                             </flux:button>
                         </x-ui.tooltip.trigger>
@@ -672,6 +760,7 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
             <x-ui.table.per-page-selector
                 id="translation-list-per-page"
                 name="translation-list-per-page"
+                action="setPerPage"
             />
         </div>
 

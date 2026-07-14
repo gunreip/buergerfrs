@@ -23,7 +23,7 @@
 <div class="mt-3 grid gap-3 md:grid-cols-4">
     <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
         <flux:icon.key class="inset mr-1 inline h-4 w-4 min-w-0" />
-        {{ __('Translation key') }}
+        {{ __('admin.translation_list.modal_edit.translation_key') }}
     </div>
 
     <code class="wrap-anywhere col-span-3 text-xs">

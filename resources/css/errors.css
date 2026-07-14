@@ -10,4 +10,8 @@
     #create-person-form [data-flux-error] {
         @apply hidden;
     }
+
+    #create-person-form [data-flux-radio-group-segmented][invalid] {
+        @apply outline outline-1 outline-red-500 dark:outline-red-400;
+    }
 }

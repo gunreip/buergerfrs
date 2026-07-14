@@ -5,6 +5,23 @@
 
         <div class="grid gap-4 md:grid-cols-3">
 
+            <flux:field class="col-span-3 mb-3">
+                <div class="flex items-start justify-between gap-4">
+                    <flux:heading size="lg">
+                        <span class="border-b-1 border-zinc-800/10 pb-2 pr-4 dark:border-white/20">
+                            <flux:icon.id-card class="mr-2 inline-block" />
+                            {{ __('Person Identification Information') }}
+                        </span>
+                    </flux:heading>
+
+                    <div class="flex flex-wrap items-center justify-end gap-2">
+                        <x-ui.badge.created-password :password="$generatedPassword" />
+
+                        <x-ui.badge.test-data :show="$isTestData" />
+                    </div>
+                </div>
+            </flux:field>
+
             {{-- National ID number --}}
             <flux:field>
                 <x-ui.tooltip.trigger
@@ -27,7 +44,7 @@
                     <flux:input
                         id="create-person-national-id-number"
                         type="text"
-                        wire:model.blur="nationalIdNumber"
+                        wire:model.live.debounce.500ms="nationalIdNumber"
                         autocomplete="new-password"
                         copyable
                         clearable
@@ -59,7 +76,7 @@
                     <flux:input
                         id="create-person-national-id-issuing-authority"
                         type="text"
-                        wire:model.blur="nationalIdIssuingAuthority"
+                        wire:model.live.debounce.500ms="nationalIdIssuingAuthority"
                         autocomplete="new-password"
                         copyable
                         clearable
@@ -91,7 +108,7 @@
                     <flux:input
                         id="create-person-tax-id"
                         type="text"
-                        wire:model.blur="taxId"
+                        wire:model.live.debounce.500ms="taxId"
                         autocomplete="new-password"
                         copyable
                         clearable
@@ -126,7 +143,7 @@
                     <flux:input
                         id="create-person-social-security-number"
                         type="text"
-                        wire:model.blur="socialSecurityNumber"
+                        wire:model.live.debounce.500ms="socialSecurityNumber"
                         autocomplete="new-password"
                         copyable
                         clearable
@@ -158,7 +175,7 @@
                     <flux:input
                         id="create-person-pension-insurance-number"
                         type="text"
-                        wire:model.blur="pensionInsuranceNumber"
+                        wire:model.live.debounce.500ms="pensionInsuranceNumber"
                         autocomplete="new-password"
                         copyable
                         clearable
@@ -190,7 +207,7 @@
                     <flux:input
                         id="create-person-residence-permit-number"
                         type="text"
-                        wire:model.blur="residencePermitNumber"
+                        wire:model.live.debounce.500ms="residencePermitNumber"
                         autocomplete="new-password"
                         copyable
                         clearable

@@ -75,6 +75,20 @@ return [
         'roles' => 'Rollen',
     ],
 
+    'laravel_translation_workbench' => [
+        'resources' => [
+            'views' => [
+                'livewire' => [
+                    'entries' => [
+                        'table_entries' => [
+                            'show_entries' => 'Einträge anzeigen',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+
     'messages' => [
         'no_description_available' => 'Keine Beschreibung verfügbar.',
     ],
@@ -119,5 +133,9 @@ return [
     'user_avatar' => [
         'avatar_for_name' => 'Avatar für: Name',
         'user_avatar' => 'Benutzer-Avatar',
+    ],
+
+    'welcome' => [
+        'welcome' => 'Willkommen',
     ],
 ];
