@@ -29,6 +29,23 @@
     @apply dark:hover:bg-zinc-400/50;
 }
 
+.buergerfrs-checkbox-cards-compact [data-flux-checkbox],
+.buergerfrs-checkbox-cards-compact [data-flux-radio] {
+    min-height: 2rem !important;
+    padding-block: 0.25rem !important;
+    padding-inline: 0.5rem !important;
+}
+
+.buergerfrs-checkbox-cards-compact [data-flux-checkbox] [data-flux-heading],
+.buergerfrs-checkbox-cards-compact [data-flux-radio] [data-flux-heading] {
+    @apply text-xs leading-4;
+}
+
+.buergerfrs-checkbox-cards-compact [data-flux-checkbox-indicator],
+.buergerfrs-checkbox-cards-compact [data-flux-radio-indicator] {
+    @apply size-4;
+}
+
 .dark #create-person-form [data-flux-input-group] [data-flux-input-file] [x-ref="name"] {
     background-color: transparent !important;
     border-color: transparent !important;

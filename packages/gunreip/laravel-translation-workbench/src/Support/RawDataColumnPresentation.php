@@ -58,6 +58,7 @@ class RawDataColumnPresentation
             'translation_workbench_findings' => self::findings(),
             'translation_workbench_keys' => self::keys(),
             'translation_workbench_key_findings' => self::keyFindings(),
+            'translation_workbench_dynamic_sources' => self::dynamicSources(),
             default => [],
         };
     }
@@ -170,6 +171,24 @@ class RawDataColumnPresentation
                 'cell_class' => 'min-w-96',
                 'content_class' => 'max-w-96 wrap-anywhere text-wrap font-mono text-xs',
             ],
+        ];
+    }
+
+    /**
+     * @return array<string, array<string, string>>
+     */
+    private static function dynamicSources(): array
+    {
+        return [
+            'source_path' => [
+                'header_class' => 'min-w-[28rem]',
+                'cell_class' => 'min-w-[28rem]',
+                'content_class' => 'max-w-3xl wrap-anywhere text-wrap font-mono text-xs',
+                'source_path_wrapper_class' => 'flex max-w-3xl items-start gap-2',
+            ],
+            'source_expression' => ['content_class' => 'min-w-96 max-w-2xl wrap-anywhere text-wrap font-mono text-xs'],
+            'source_reference' => ['content_class' => 'min-w-72 max-w-xl wrap-anywhere text-wrap font-mono text-xs'],
+            'fingerprint' => ['content_class' => 'min-w-72 max-w-xl wrap-anywhere text-wrap font-mono text-xs'],
         ];
     }
 }

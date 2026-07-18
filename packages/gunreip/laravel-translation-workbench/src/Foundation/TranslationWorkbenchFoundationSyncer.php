@@ -13,6 +13,7 @@ use Gunreip\TranslationWorkbench\Support\SourcePathSegmentFactory;
 use Gunreip\TranslationWorkbench\Support\TranslationKeySegmentFactory;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class TranslationWorkbenchFoundationSyncer
 {
@@ -200,6 +201,7 @@ class TranslationWorkbenchFoundationSyncer
             'path_key' => $keyParts['path_key'],
             'scope' => $keyParts['scope'],
             'dynamic_scope' => $this->dynamicScope($item),
+            'dynamic_data_state' => $this->dynamicDataState($item),
             'entry_type' => $item->entryType,
             'candidate_type' => $item->candidateType,
             'candidate_reason' => $item->candidateReason,
@@ -207,6 +209,10 @@ class TranslationWorkbenchFoundationSyncer
             'last_seen_at' => $now,
             'meta' => $item->meta,
         ];
+
+        if (! $this->hasFindingDynamicDataStateColumn()) {
+            unset($attributes['dynamic_data_state']);
+        }
 
         $finding = TranslationWorkbenchFinding::query()
             ->where('fingerprint', $item->fingerprint)
@@ -241,6 +247,7 @@ class TranslationWorkbenchFoundationSyncer
                     'path_key',
                     'scope',
                     'dynamic_scope',
+                    'dynamic_data_state',
                     'entry_type',
                     'candidate_type',
                     'candidate_reason',
@@ -257,6 +264,14 @@ class TranslationWorkbenchFoundationSyncer
                 'finding' => $finding,
                 'timeline_events_created' => 1,
             ];
+        }
+
+        if (
+            array_key_exists('dynamic_data_state', $attributes)
+            && $finding->dynamic_data_state === 'structured'
+            && $attributes['dynamic_data_state'] !== 'structured'
+        ) {
+            $attributes['dynamic_data_state'] = 'structured';
         }
 
         $oldValues = $finding->only(array_keys($attributes));
@@ -315,12 +330,17 @@ class TranslationWorkbenchFoundationSyncer
             'scope' => $keyParts['scope'],
             ...$keySegments,
             'key_type' => str_starts_with($item->kind, 'dynamic') ? 'dynamic_candidate' : 'static_candidate',
+            'dynamic_data_state' => $this->dynamicDataState($item),
             'meta' => [
                 'source' => 'foundation_sync',
                 'candidate_type' => $item->candidateType,
                 'candidate_reason' => $item->candidateReason,
             ],
         ];
+
+        if (! $this->hasKeyDynamicDataStateColumn()) {
+            unset($attributes['dynamic_data_state']);
+        }
 
         $key = TranslationWorkbenchKey::query()
             ->where('fingerprint', $fingerprint)
@@ -352,6 +372,7 @@ class TranslationWorkbenchFoundationSyncer
                     'key_segment_extra',
                     'key_segment_name',
                     'key_type',
+                    'dynamic_data_state',
                     'status',
                     'review_status',
                 ]),
@@ -367,6 +388,22 @@ class TranslationWorkbenchFoundationSyncer
                 'key' => $key,
                 'timeline_events_created' => 1,
             ];
+        }
+
+        if (
+            array_key_exists('dynamic_data_state', $attributes)
+            && $key->dynamic_data_state === 'structured'
+            && $attributes['dynamic_data_state'] !== 'structured'
+        ) {
+            $attributes['dynamic_data_state'] = 'structured';
+        }
+
+        if (
+            array_key_exists('dynamic_data_state', $attributes)
+            && $attributes['dynamic_data_state'] === null
+            && ((bool) $key->is_dynamic_key || (bool) $key->is_dynamic_multi)
+        ) {
+            $attributes['dynamic_data_state'] = 'unstructured';
         }
 
         $oldValues = $key->only(array_keys($attributes));
@@ -525,6 +562,30 @@ class TranslationWorkbenchFoundationSyncer
         return is_string($scope) && trim($scope) !== ''
             ? trim($scope)
             : null;
+    }
+
+    private function dynamicDataState(DiscoveredTranslation $item): ?string
+    {
+        $isDynamic = $item->candidateType === 'dynamic'
+            || $item->entryType === 'dynamic'
+            || str_starts_with($item->kind, 'dynamic')
+            || $this->dynamicScope($item) !== null;
+
+        return $isDynamic ? 'unstructured' : null;
+    }
+
+    private function hasFindingDynamicDataStateColumn(): bool
+    {
+        static $hasColumn = null;
+
+        return $hasColumn ??= Schema::hasColumn('translation_workbench_findings', 'dynamic_data_state');
+    }
+
+    private function hasKeyDynamicDataStateColumn(): bool
+    {
+        static $hasColumn = null;
+
+        return $hasColumn ??= Schema::hasColumn('translation_workbench_keys', 'dynamic_data_state');
     }
 
     /**

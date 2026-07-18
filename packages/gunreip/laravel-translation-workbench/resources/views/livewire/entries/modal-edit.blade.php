@@ -1,37 +1,390 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/modal-edit.blade.php --}}
 
+{{-- Modal Translation Edit --}}
 <flux:modal
-    class="w-full max-w-5xl"
+    class="w-full max-w-[calc(100vw-2rem)] lg:max-w-[calc(100vw-4rem)]"
     name="translation-workbench-finding-edit"
     wire:model="editModalOpen"
 >
     <div class="space-y-4">
-        <div class="flex items-start justify-between gap-4">
-            <x-ui.headers.card
-                :title="__('Edit translation values')"
-                :description="__('Edit static translation values for the selected finding key.')"
-            />
+        <div class="mr-10 flex items-start gap-3">
+            <div class="min-w-0 space-y-1">
+                <div class="flex min-w-0 flex-wrap items-center gap-2">
+                    <flux:heading
+                        size="xl"
+                        level="3"
+                    >
+                        {{ __('Edit translation values') }}
+                    </flux:heading>
 
-            @if ($editFinding)
-                <flux:badge
-                    class="mr-8 tabular-nums"
-                    variant="subtle"
-                >
-                    #{{ $editFinding->id }}
-                </flux:badge>
-            @endif
+                    @if ($editFinding)
+                        <flux:badge
+                            color="{{ $editFinding->translation_key ? 'green' : 'red' }}"
+                            size="sm"
+                        >
+                            {{ $editFinding->translation_key ? __('Translation key') : __('Missing key') }}
+                        </flux:badge>
+
+                        <flux:badge
+                            color="{{ $editFinding->review_status === 'reviewed' ? 'green' : 'red' }}"
+                            size="sm"
+                        >
+                            {{ str((string) $editFinding->review_status)->headline() }}
+                        </flux:badge>
+                    @endif
+                </div>
+
+                <flux:text class="-mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                    {{ __('Edit static translation values for the reviewed translation key.') }}
+                </flux:text>
+            </div>
+
+            <div class="mr-8 ms-auto flex shrink-0 items-center gap-2">
+                @if ($editFinding)
+                    <flux:badge
+                        class="h-6 tabular-nums"
+                        variant="subtle"
+                    >
+                        #{{ $editFinding->id }}
+                    </flux:badge>
+
+                    <flux:button
+                        type="button"
+                        size="xs"
+                        variant="primary"
+                        icon="save"
+                        wire:click="saveTranslationValue"
+                    >
+                        {{ __('Save') }}
+                    </flux:button>
+                @endif
+            </div>
         </div>
 
         @if ($editFinding)
-            <flux:callout
-                color="{{ $editFinding->translation_key ? 'green' : 'amber' }}"
-                icon="square-pen"
-            >
-                <flux:callout.heading>{{ __('Edit workflow shell') }}</flux:callout.heading>
-                <flux:callout.text>
-                    {{ $editFinding->translation_key ? __('Ready for translation value editing.') : __('Set or link a translation key in Review before editing values.') }}
-                </flux:callout.text>
-            </flux:callout>
+            @php
+                $editLocales = $editLocales ?? [
+                    'source' => 'en',
+                    'active' => app()->getLocale(),
+                    'sub' => [],
+                ];
+                $editValues = $editValues ?? [
+                    'source' => null,
+                    'target' => null,
+                    'source_exists' => false,
+                    'target_exists' => false,
+                    'source_origin' => 'missing',
+                ];
+                $sourceLocale = (string) ($editLocales['source'] ?? 'en');
+                $activeLocale = (string) ($editLocales['active'] ?? app()->getLocale());
+                $subLocales = collect((array) ($editLocales['sub'] ?? []))
+                    ->filter(static fn(mixed $locale): bool => is_string($locale) && trim($locale) !== '')
+                    ->values();
+                $selectedTargetSubLocales = collect($selectedTargetSubLocales ?? [])
+                    ->filter(static fn(mixed $locale): bool => is_string($locale) && trim($locale) !== '')
+                    ->values();
+                $visibleSubLocales = $subLocales
+                    ->filter(static fn(string $locale): bool => $selectedTargetSubLocales->contains($locale))
+                    ->values();
+                $sourceOrigin = (string) ($editValues['source_origin'] ?? 'missing');
+                $sourceBadge = match ($sourceOrigin) {
+                    'translation_value' => [
+                        'label' => __('Translation exists'),
+                        'color' => 'green',
+                    ],
+                    'literal_text' => [
+                        'label' => __('Scanned literal'),
+                        'color' => 'amber',
+                    ],
+                    'literal_text_suggested' => [
+                        'label' => __('Suggested literal'),
+                        'color' => 'amber',
+                    ],
+                    default => [
+                        'label' => __('Source missing'),
+                        'color' => 'red',
+                    ],
+                };
+                $editWarnings = [];
+
+                if (blank($editFinding->translation_key)) {
+                    $editWarnings[] = [
+                        'label' => __('Translation key missing'),
+                        'text' => __('Review this finding and set a translation key before editing values.'),
+                        'color' => 'red',
+                    ];
+                }
+
+                if (blank($sourceTranslationValue)) {
+                    $editWarnings[] = [
+                        'label' => __('Source empty'),
+                        'text' => __('No source-language value is available yet.'),
+                        'color' => 'amber',
+                    ];
+                }
+
+                if (blank($targetTranslationValue)) {
+                    $editWarnings[] = [
+                        'label' => __('Target empty'),
+                        'text' => __('The main target-language value is still empty.'),
+                        'color' => 'amber',
+                    ];
+                }
+
+                if (
+                    filled($sourceTranslationValue) &&
+                    filled($targetTranslationValue) &&
+                    trim((string) $sourceTranslationValue) === trim((string) $targetTranslationValue)
+                ) {
+                    $editWarnings[] = [
+                        'label' => __('Source equals target'),
+                        'text' => __('The target value is currently identical to the source value.'),
+                        'color' => 'sky',
+                    ];
+                }
+            @endphp
+
+            {{-- Card Translation Key --}}
+            <flux:card>
+                <x-ui.headers.card
+                    :title="__('Translation key')"
+                    :description="$editFinding->translation_key ?: __('No translation key set.')"
+                >
+                    <div class="flex items-center gap-2">
+                        <x-ui.tooltip.trigger
+                            :title="__('Source language')"
+                            :text="strtoupper($sourceLocale)"
+                        >
+                            <span
+                                class="inline-flex items-center gap-1 rounded border border-zinc-300 px-1.5 py-1 dark:border-zinc-600"
+                            >
+                                <x-ui.locale.flag
+                                    :locale="$sourceLocale"
+                                    size="md"
+                                    :title="strtoupper($sourceLocale)"
+                                />
+                                <span class="font-mono text-xs uppercase">{{ $sourceLocale }}</span>
+                            </span>
+                        </x-ui.tooltip.trigger>
+
+                        <x-ui.tooltip.trigger
+                            :title="__('Target language')"
+                            :text="strtoupper($activeLocale)"
+                        >
+                            <span
+                                class="inline-flex items-center gap-1 rounded border border-zinc-300 px-1.5 py-1 dark:border-zinc-600"
+                            >
+                                <x-ui.locale.flag
+                                    :locale="$activeLocale"
+                                    size="md"
+                                    :title="strtoupper($activeLocale)"
+                                />
+                                <span class="font-mono text-xs uppercase">{{ $activeLocale }}</span>
+                            </span>
+                        </x-ui.tooltip.trigger>
+
+                        @if ($subLocales->isNotEmpty())
+                            <span
+                                class="inline-flex flex-wrap items-center gap-1 rounded border border-zinc-300 px-1.5 py-1 dark:border-zinc-600"
+                            >
+                                @foreach ($subLocales as $subLocale)
+                                    <span class="inline-flex items-center gap-1">
+                                        <x-ui.locale.flag
+                                            :locale="$subLocale"
+                                            size="md"
+                                            :title="strtoupper((string) $subLocale)"
+                                        />
+                                        <span class="mr-1 font-mono text-xs uppercase">{{ $subLocale }}</span>
+                                    </span>
+                                @endforeach
+                            </span>
+                        @endif
+                    </div>
+                </x-ui.headers.card>
+
+                @if ($editWarnings !== [])
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        @foreach ($editWarnings as $warning)
+                            <x-ui.tooltip.trigger
+                                :title="$warning['label']"
+                                :text="$warning['text']"
+                            >
+                                <flux:badge
+                                    size="sm"
+                                    color="{{ $warning['color'] }}"
+                                >
+                                    {{ $warning['label'] }}
+                                </flux:badge>
+                            </x-ui.tooltip.trigger>
+                        @endforeach
+                    </div>
+                @endif
+            </flux:card>
+
+            <flux:card>
+                <x-ui.headers.card
+                    :title="__('Translation values')"
+                    :description="__(
+                        'Source value is read-only by default; use the edit button if the source-language value must be corrected explicitly.',
+                    )"
+                />
+
+                <div class="mt-4 grid gap-4 lg:grid-cols-2">
+                    <flux:field>
+                        <flux:label>
+                            <span class="flex w-full items-center gap-2">
+                                <span class="inline-flex items-center gap-2">
+                                    <x-ui.locale.flag
+                                        class="mb-1"
+                                        :locale="$sourceLocale"
+                                        size="lg"
+                                        :title="strtoupper($sourceLocale)"
+                                    />
+                                    <span class="mb-1">{{ __('Source language') }}</span>
+                                    <span class="font-mono text-sm uppercase text-zinc-500 dark:text-zinc-400">
+                                        {{ $sourceLocale }}
+                                    </span>
+                                    <flux:badge
+                                        size="sm"
+                                        color="{{ $sourceBadge['color'] }}"
+                                    >
+                                        {{ $sourceBadge['label'] }}
+                                    </flux:badge>
+                                </span>
+
+                                <flux:button
+                                    class="ms-auto h-6 w-6 shrink-0"
+                                    type="button"
+                                    size="xs"
+                                    variant="ghost"
+                                    icon="pencil"
+                                    :aria-label="__('Edit source value')"
+                                    wire:click="editSourceTranslationValue"
+                                />
+
+                                <flux:button
+                                    class="h-6 w-6 shrink-0"
+                                    type="button"
+                                    size="xs"
+                                    variant="ghost"
+                                    icon="copy"
+                                    :disabled="blank($sourceTranslationValue)"
+                                    :aria-label="__('Copy source to target')"
+                                    wire:click="copySourceToTargetValue"
+                                />
+                            </span>
+                        </flux:label>
+
+                        <flux:textarea
+                            id="translation-workbench-source-translation-value"
+                            rows="2"
+                            :readonly="!$sourceTranslationEditable"
+                            wire:model="sourceTranslationValue"
+                        />
+                    </flux:field>
+
+                    <flux:field>
+                        <flux:label>
+                            <span class="flex items-center justify-between gap-2">
+                                <span class="inline-flex items-center gap-2">
+                                    <x-ui.locale.flag
+                                        class="mb-1"
+                                        :locale="$activeLocale"
+                                        size="lg"
+                                        :title="strtoupper($activeLocale)"
+                                    />
+                                    <span class="mb-1">{{ __('Target language') }}</span>
+                                    <span class="font-mono text-sm uppercase text-zinc-500 dark:text-zinc-400">
+                                        {{ $activeLocale }}
+                                    </span>
+                                </span>
+
+                                <flux:badge
+                                    size="sm"
+                                    color="{{ $editValues['target_exists'] ?? false ? 'green' : 'amber' }}"
+                                >
+                                    {{ $editValues['target_exists'] ?? false ? __('Translation exists') : __('Translation missing') }}
+                                </flux:badge>
+                            </span>
+                        </flux:label>
+
+                        <flux:textarea
+                            id="translation-workbench-target-translation-value"
+                            rows="2"
+                            wire:model="targetTranslationValue"
+                        />
+                    </flux:field>
+                </div>
+
+                @if ($subLocales->isNotEmpty())
+                    <flux:separator
+                        class="my-4"
+                        text="{{ __('Sub-languages') }}"
+                    />
+
+                    <div class="flex flex-wrap items-center gap-2">
+                        @foreach ($subLocales as $subLocale)
+                            @php
+                                $isSelectedSubLocale = $selectedTargetSubLocales->contains($subLocale);
+                            @endphp
+
+                            <x-ui.tooltip.trigger
+                                :title="__('Target sub-language')"
+                                :text="strtoupper((string) $subLocale)"
+                            >
+                                <flux:button
+                                    type="button"
+                                    size="xs"
+                                    variant="subtle"
+                                    wire:click="toggleTargetSubLocale('{{ $subLocale }}')"
+                                    :aria-label="__('Toggle target sub-language').
+                                    ' '.strtoupper((string) $subLocale)"
+                                    @class([
+                                        'h-8 min-w-16 items-center gap-1.5 border px-2',
+                                        'border-sky-500 bg-sky-500/10 text-sky-700 dark:border-sky-400 dark:bg-sky-400/10 dark:text-sky-200' => $isSelectedSubLocale,
+                                        'border-zinc-200 text-zinc-500 dark:border-zinc-700 dark:text-zinc-400' => !$isSelectedSubLocale,
+                                    ])
+                                >
+                                    <x-ui.locale.flag
+                                        :locale="$subLocale"
+                                        size="md"
+                                        :title="strtoupper((string) $subLocale)"
+                                    />
+                                    <span class="ml-2 font-mono text-sm uppercase">{{ $subLocale }}</span>
+                                </flux:button>
+                            </x-ui.tooltip.trigger>
+                        @endforeach
+                    </div>
+
+                    @if ($visibleSubLocales->isNotEmpty())
+                        <div class="mt-4 grid gap-4 lg:grid-cols-2">
+                            @foreach ($visibleSubLocales as $subLocale)
+                                <flux:field>
+                                    <flux:label>
+                                        <span class="inline-flex items-center gap-2">
+                                            <x-ui.locale.flag
+                                                :locale="$subLocale"
+                                                size="lg"
+                                                :title="strtoupper((string) $subLocale)"
+                                            />
+                                            <span>{{ __('Target sub-language') }}</span>
+                                            <span class="font-mono text-sm uppercase text-zinc-500 dark:text-zinc-400">
+                                                {{ $subLocale }}
+                                            </span>
+                                        </span>
+                                    </flux:label>
+
+                                    <flux:textarea
+                                        id="translation-workbench-target-sub-{{ str_replace('-', '_', (string) $subLocale) }}"
+                                        rows="2"
+                                        wire:model="targetSubTranslationValues.{{ $subLocale }}"
+                                    />
+                                </flux:field>
+                            @endforeach
+                        </div>
+                    @endif
+                @endif
+            </flux:card>
         @else
             <flux:text class="text-sm text-zinc-500">
                 {{ __('No finding selected.') }}
@@ -39,4 +392,3 @@
         @endif
     </div>
 </flux:modal>
-

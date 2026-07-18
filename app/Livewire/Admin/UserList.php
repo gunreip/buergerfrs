@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Support\Audit\AdminActivity;
 use App\Support\Settings\RoleBadgeResolver;
 use Flux\Flux;
+use Gunreip\TranslationWorkbench\Foundation\RuntimeDynamicTranslationCollector;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
@@ -473,6 +474,8 @@ class UserList extends Component
             ->map(fn($group) => $group->values())
             ->all();
 
+        $this->collectRuntimeDynamicOptions(array_keys($roleGroups));
+
         $roleBadges = collect($roles)
             ->mapWithKeys(fn(string $role): array => [
                 $role => $roleBadgeResolver->forRole($role),
@@ -487,5 +490,28 @@ class UserList extends Component
             'withoutRoleBadge' => $roleBadgeResolver->withoutRole(),
             'summary' => $summary,
         ]);
+    }
+
+    /**
+     * @param  array<int, string>  $roleCategories
+     */
+    private function collectRuntimeDynamicOptions(array $roleCategories): void
+    {
+        if (! class_exists(RuntimeDynamicTranslationCollector::class)) {
+            return;
+        }
+
+        app(RuntimeDynamicTranslationCollector::class)->options(
+            key: 'admin.partials.user_list.modal.role_categories',
+            scope: 'role_categories',
+            values: collect($roleCategories)
+                ->mapWithKeys(static fn(string $category): array => [
+                    $category => str($category)->headline()->toString(),
+                ])
+                ->all(),
+            source: self::class . '::roleGroups',
+            origin: 'db',
+            sourceType: 'runtime_db_options',
+        );
     }
 }

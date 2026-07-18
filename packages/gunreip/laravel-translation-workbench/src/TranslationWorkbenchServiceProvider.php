@@ -4,11 +4,15 @@ namespace Gunreip\TranslationWorkbench;
 
 use Gunreip\TranslationWorkbench\Console\ImportExistingTranslations;
 use Gunreip\TranslationWorkbench\Console\ImportTranslationWorkbenchLangValues;
+use Gunreip\TranslationWorkbench\Console\ClassifyDynamicValues;
 use Gunreip\TranslationWorkbench\Console\DiscoverDynamicOptions;
+use Gunreip\TranslationWorkbench\Console\DiscoverDynamicSourceCandidates;
 use Gunreip\TranslationWorkbench\Console\DetectDuplicateCandidates;
+use Gunreip\TranslationWorkbench\Console\ResolveUnknownDynamicSources;
 use Gunreip\TranslationWorkbench\Console\RunTranslationWorkbench;
 use Gunreip\TranslationWorkbench\Console\ScanTranslationWorkbench;
 use Gunreip\TranslationWorkbench\Console\SyncTranslationWorkbenchFoundation;
+use Gunreip\TranslationWorkbench\Foundation\RuntimeDynamicTranslationCollector;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchEntries;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchOldEntries;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawData;
@@ -24,6 +28,8 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
             __DIR__ . '/../config/translation-workbench.php',
             'translation-workbench',
         );
+
+        $this->app->singleton(RuntimeDynamicTranslationCollector::class);
     }
 
     public function boot(): void
@@ -38,10 +44,13 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
+                ClassifyDynamicValues::class,
                 DetectDuplicateCandidates::class,
                 DiscoverDynamicOptions::class,
+                DiscoverDynamicSourceCandidates::class,
                 ImportExistingTranslations::class,
                 ImportTranslationWorkbenchLangValues::class,
+                ResolveUnknownDynamicSources::class,
                 RunTranslationWorkbench::class,
                 ScanTranslationWorkbench::class,
                 SyncTranslationWorkbenchFoundation::class,

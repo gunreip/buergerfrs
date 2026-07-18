@@ -29,7 +29,10 @@ use Throwable;
     {--skip-lang-values : Skip importing existing lang file values into the separate lang values table.}
     {--skip-import : Skip importing existing source language values.}
     {--skip-dynamic-options : Skip discovering dynamic option values.}
-    {--skip-duplicates : Skip duplicate candidate detection.}')]
+    {--skip-duplicates : Skip duplicate candidate detection.}
+    {--skip-dynamic-classification : Skip classifying dynamic value sources.}
+    {--skip-dynamic-resolution : Skip resolving unknown dynamic sources from option discoveries.}
+    {--skip-dynamic-source-candidates : Skip discovering reviewable dynamic source candidates.}')]
 #[Description('Run the full Translation Workbench scan/import/discovery/diagnostics pipeline.')]
 class RunTranslationWorkbench extends Command
 {
@@ -116,6 +119,36 @@ class RunTranslationWorkbench extends Command
             $steps[] = [
                 'label' => 'Detect duplicate candidates',
                 'command' => 'translation-workbench:detect-duplicates',
+                'arguments' => array_filter([
+                    '--dry-run' => $dryRun,
+                ], static fn(mixed $value): bool => $value !== null && $value !== false),
+            ];
+        }
+
+        if (! (bool) $this->option('skip-dynamic-classification')) {
+            $steps[] = [
+                'label' => 'Classify dynamic value sources',
+                'command' => 'translation-workbench:classify-dynamic-values',
+                'arguments' => array_filter([
+                    '--dry-run' => $dryRun,
+                ], static fn(mixed $value): bool => $value !== null && $value !== false),
+            ];
+        }
+
+        if (! (bool) $this->option('skip-dynamic-resolution')) {
+            $steps[] = [
+                'label' => 'Resolve unknown dynamic sources',
+                'command' => 'translation-workbench:resolve-unknown-dynamic-sources',
+                'arguments' => array_filter([
+                    '--dry-run' => $dryRun,
+                ], static fn(mixed $value): bool => $value !== null && $value !== false),
+            ];
+        }
+
+        if (! (bool) $this->option('skip-dynamic-source-candidates')) {
+            $steps[] = [
+                'label' => 'Discover dynamic source candidates',
+                'command' => 'translation-workbench:discover-dynamic-source-candidates',
                 'arguments' => array_filter([
                     '--dry-run' => $dryRun,
                 ], static fn(mixed $value): bool => $value !== null && $value !== false),

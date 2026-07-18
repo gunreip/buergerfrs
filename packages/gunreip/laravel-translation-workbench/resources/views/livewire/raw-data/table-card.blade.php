@@ -171,8 +171,10 @@
                                 : $displayValue;
                             $jsonPreview = $isJsonValue ? str($displayValue)->limit(80)->toString() : null;
                             $isSourceFilePath =
-                                $table === 'translation_workbench_source_files' &&
-                                $column === 'path' &&
+                                (
+                                    ($table === 'translation_workbench_source_files' && $column === 'path') ||
+                                    ($table === 'translation_workbench_dynamic_sources' && $column === 'source_path')
+                                ) &&
                                 is_string($value) &&
                                 trim($value) !== '';
                             $isFindingSourceFileId =
@@ -200,11 +202,13 @@
                             if ($isSourceFilePath) {
                                 $sourceAbsolutePath = str_replace('\\', '/', base_path($value));
                                 $sourceEditorPath = str_replace('%2F', '/', rawurlencode($sourceAbsolutePath));
+                                $sourceEditorLine =
+                                    isset($row->source_line) && $row->source_line ? ':' . $row->source_line : ':1';
                                 $sourceEditorUrl =
                                     'vscode://vscode-remote/wsl+' .
                                     rawurlencode((string) config('translation-workbench.editor.vscode_wsl_distro')) .
                                     $sourceEditorPath .
-                                    ':1';
+                                    $sourceEditorLine;
                             }
 
                             if ($isFindingSourceFileId) {

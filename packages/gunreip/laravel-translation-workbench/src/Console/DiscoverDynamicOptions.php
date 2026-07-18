@@ -50,7 +50,8 @@ class DiscoverDynamicOptions extends Command
     public function handle(): int
     {
         $sync = (bool) $this->option('sync') && ! (bool) $this->option('dry-run');
-        $phpArrayOptions = $this->hardcodedPublicArrayOptions();
+        $phpArrayOptions = $this->hardcodedPublicArrayOptions()
+            ->merge($this->providerMethodOptions());
         $discoveries = $this->discoveries($phpArrayOptions);
         $summary = [
             'discoveries' => $discoveries->count(),
@@ -284,6 +285,171 @@ class DiscoverDynamicOptions extends Command
                         ->reduce(static fn(array $carry, array $options): array => [...$carry, ...$options], []),
                 ];
             });
+    }
+
+    /**
+     * Discover simple view option payloads passed from Livewire render methods.
+     *
+     * Example:
+     * return view(..., [
+     *     'roleBadgeVariantOptions' => $iconRegistry->roleUserManagementBadgeVariants(),
+     * ]);
+     *
+     * If the render parameter is type-hinted and the provider method has no required
+     * parameters, we can evaluate it and use the returned key => label array for
+     * dynamic option discovery.
+     *
+     * @return Collection<string, array{source_file: string, options: array<string, string>}>
+     */
+    private function providerMethodOptions(): Collection
+    {
+        $files = collect(File::allFiles(app_path('Livewire')))
+            ->filter(static fn(\SplFileInfo $file): bool => $file->getExtension() === 'php');
+
+        return $files
+            ->flatMap(function (\SplFileInfo $file): array {
+                $contents = File::get($file->getPathname());
+                $relativePath = str_replace('\\', '/', Str::after($file->getPathname(), base_path() . DIRECTORY_SEPARATOR));
+                $renderParameterTypes = $this->renderParameterTypes($contents);
+
+                if ($renderParameterTypes === []) {
+                    return [];
+                }
+
+                $options = [];
+                $pattern = '/[\'"](?<name>[A-Za-z_][A-Za-z0-9_]*)[\'"]\s*=>\s*\$(?<provider>[A-Za-z_][A-Za-z0-9_]*)->(?<method>[A-Za-z_][A-Za-z0-9_]*)\(\s*\)/u';
+
+                if (preg_match_all($pattern, $contents, $matches, PREG_SET_ORDER) === 0) {
+                    return [];
+                }
+
+                foreach ($matches as $match) {
+                    $name = (string) $match['name'];
+                    $provider = (string) $match['provider'];
+                    $method = (string) $match['method'];
+                    $class = $renderParameterTypes[$provider] ?? null;
+
+                    if (! $class || ! class_exists($class) || ! method_exists($class, $method)) {
+                        continue;
+                    }
+
+                    try {
+                        $reflection = new \ReflectionMethod($class, $method);
+
+                        if ($reflection->getNumberOfRequiredParameters() > 0) {
+                            continue;
+                        }
+
+                        $rawOptions = app($class)->{$method}();
+                    } catch (Throwable) {
+                        continue;
+                    }
+
+                    $normalizedOptions = $this->normalizeOptionPayload($rawOptions);
+
+                    if ($normalizedOptions === []) {
+                        continue;
+                    }
+
+                    $options[] = [
+                        'name' => $name,
+                        'source_file' => $relativePath . ':' . $method,
+                        'options' => $normalizedOptions,
+                    ];
+                }
+
+                return $options;
+            })
+            ->groupBy('name')
+            ->map(function (Collection $matches): array {
+                return [
+                    'source_file' => $matches
+                        ->pluck('source_file')
+                        ->unique()
+                        ->implode(', '),
+                    'options' => $matches
+                        ->pluck('options')
+                        ->reduce(static fn(array $carry, array $options): array => [...$carry, ...$options], []),
+                ];
+            });
+    }
+
+    /**
+     * @return array<string, class-string>
+     */
+    private function renderParameterTypes(string $contents): array
+    {
+        if (preg_match('/function\s+render\s*\((?<params>[^)]*)\)/su', $contents, $match) !== 1) {
+            return [];
+        }
+
+        $uses = $this->importedClasses($contents);
+        $params = (string) $match['params'];
+        $types = [];
+
+        if (preg_match_all('/(?<type>\\\\?[A-Za-z_][A-Za-z0-9_\\\\]*)\s+\$(?<name>[A-Za-z_][A-Za-z0-9_]*)/u', $params, $matches, PREG_SET_ORDER) === 0) {
+            return [];
+        }
+
+        foreach ($matches as $param) {
+            $type = ltrim((string) $param['type'], '\\');
+            $shortType = Str::afterLast($type, '\\');
+            $class = str_contains($type, '\\') ? $type : ($uses[$shortType] ?? null);
+
+            if ($class && class_exists($class)) {
+                $types[(string) $param['name']] = $class;
+            }
+        }
+
+        return $types;
+    }
+
+    /**
+     * @return array<string, class-string>
+     */
+    private function importedClasses(string $contents): array
+    {
+        $uses = [];
+
+        if (preg_match_all('/^use\s+(?<class>[^;]+);/mu', $contents, $matches, PREG_SET_ORDER) === 0) {
+            return [];
+        }
+
+        foreach ($matches as $match) {
+            $class = trim((string) $match['class']);
+            $alias = Str::afterLast($class, '\\');
+            $uses[$alias] = $class;
+        }
+
+        return $uses;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function normalizeOptionPayload(mixed $payload): array
+    {
+        if ($payload instanceof Collection) {
+            $payload = $payload->all();
+        }
+
+        if (! is_array($payload)) {
+            return [];
+        }
+
+        return collect($payload)
+            ->mapWithKeys(function (mixed $value, mixed $key): array {
+                $label = match (true) {
+                    is_string($value) => $value,
+                    is_array($value) && is_string($value['label'] ?? null) => (string) $value['label'],
+                    default => null,
+                };
+
+                return $label !== null && trim((string) $key) !== '' && trim($label) !== ''
+                    ? [(string) $key => $label]
+                    : [];
+            })
+            ->all();
     }
 
     /**

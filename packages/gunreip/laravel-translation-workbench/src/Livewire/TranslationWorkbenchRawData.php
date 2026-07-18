@@ -2851,6 +2851,47 @@ class TranslationWorkbenchRawData extends Component
                     'foreign_columns' => ['id'],
                 ],
             ],
+            'translation_workbench_dynamic_sources' => [
+                'key_id' => [
+                    'name' => 'translation_workbench_dynamic_sources_key_id_foreign',
+                    'foreign_table' => 'translation_workbench_keys',
+                    'foreign_columns' => ['id'],
+                ],
+                'finding_id' => [
+                    'name' => 'translation_workbench_dynamic_sources_finding_id_foreign',
+                    'foreign_table' => 'translation_workbench_findings',
+                    'foreign_columns' => ['id'],
+                ],
+                'option_discovery_id' => [
+                    'name' => 'translation_workbench_dynamic_sources_option_discovery_id_foreign',
+                    'foreign_table' => 'translation_workbench_option_discoveries',
+                    'foreign_columns' => ['id'],
+                ],
+            ],
+            'translation_workbench_dynamic_source_candidates' => [
+                'dynamic_source_id' => [
+                    'name' => 'translation_workbench_dynamic_source_candidates_dynamic_source_id_foreign',
+                    'foreign_table' => 'translation_workbench_dynamic_sources',
+                    'foreign_columns' => ['id'],
+                ],
+                'key_id' => [
+                    'name' => 'translation_workbench_dynamic_source_candidates_key_id_foreign',
+                    'foreign_table' => 'translation_workbench_keys',
+                    'foreign_columns' => ['id'],
+                ],
+                'finding_id' => [
+                    'name' => 'translation_workbench_dynamic_source_candidates_finding_id_foreign',
+                    'foreign_table' => 'translation_workbench_findings',
+                    'foreign_columns' => ['id'],
+                ],
+            ],
+            'translation_workbench_dynamic_source_values' => [
+                'dynamic_source_id' => [
+                    'name' => 'translation_workbench_dynamic_source_values_dynamic_source_id_foreign',
+                    'foreign_table' => 'translation_workbench_dynamic_sources',
+                    'foreign_columns' => ['id'],
+                ],
+            ],
             'translation_workbench_reviews' => [
                 'key_id' => [
                     'name' => 'translation_workbench_reviews_key_id_foreign',

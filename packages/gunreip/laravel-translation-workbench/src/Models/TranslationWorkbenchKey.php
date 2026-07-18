@@ -16,8 +16,13 @@ class TranslationWorkbenchKey extends Model
     protected $casts = [
         'meta' => 'array',
         'is_ui_key' => 'boolean',
+        'is_ui_candidate_rejected' => 'boolean',
         'is_dynamic_key' => 'boolean',
+        'is_dynamic_candidate_rejected' => 'boolean',
         'is_dynamic_multi' => 'boolean',
+        'reviewed_is_ui_candidate' => 'boolean',
+        'reviewed_is_dynamic_candidate' => 'boolean',
+        'reviewed_is_dynamic_multi' => 'boolean',
         'reviewed_at' => 'datetime',
     ];
 

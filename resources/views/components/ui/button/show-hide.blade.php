@@ -35,8 +35,10 @@
         <flux:separator vertical />
 
         <span
-            @class([$width])
+            @class(['inline-block whitespace-nowrap', $width])
             x-text="{{ $state }} ? @js(__($hideLabel)) : @js(__($showLabel))"
-        ></span>
+        >
+            {{ __($showLabel) }}
+        </span>
     </span>
 </flux:button>

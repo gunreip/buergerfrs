@@ -10,6 +10,7 @@ use App\Support\Audit\AdminActivity;
 use App\Support\Icons\IconRegistry;
 use App\Support\Settings\RoleBadgeResolver;
 use Flux\Flux;
+use Gunreip\TranslationWorkbench\Foundation\RuntimeDynamicTranslationCollector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -594,6 +595,7 @@ class RoleList extends Component
             ->orderBy('category')
             ->pluck('category')
             ->all();
+        $this->collectRuntimeDynamicOptions($iconRegistry, $roleCategories);
 
         return view('components.admin.⚡role-list', [
             'roles' => $roles,
@@ -603,5 +605,59 @@ class RoleList extends Component
             'roleBadgeIconOptions' => $iconRegistry->roleUserManagementOptions(),
             'roleCategories' => $roleCategories,
         ]);
+    }
+
+    /**
+     * @param  array<int, string>  $roleCategories
+     */
+    private function collectRuntimeDynamicOptions(IconRegistry $iconRegistry, array $roleCategories): void
+    {
+        if (! class_exists(RuntimeDynamicTranslationCollector::class)) {
+            return;
+        }
+
+        $collector = app(RuntimeDynamicTranslationCollector::class);
+
+        foreach (['modal_create', 'modal_edit'] as $modalScope) {
+            $collector->options(
+                key: "admin.partials.role_list.{$modalScope}.role_badge_color_options",
+                scope: 'role_badge_color_options',
+                values: $iconRegistry->roleUserManagementBadgeColors(),
+                source: self::class . '::roleBadgeColorOptions',
+                origin: 'runtime',
+                sourceType: 'runtime_options',
+            );
+
+            $collector->options(
+                key: "admin.partials.role_list.{$modalScope}.role_badge_variant_options",
+                scope: 'role_badge_variant_options',
+                values: $iconRegistry->roleUserManagementBadgeVariants(),
+                source: self::class . '::roleBadgeVariantOptions',
+                origin: 'runtime',
+                sourceType: 'runtime_options',
+            );
+
+            $collector->options(
+                key: "admin.partials.role_list.{$modalScope}.role_badge_icon_options",
+                scope: 'role_badge_icon_options',
+                values: $iconRegistry->roleUserManagementOptions(),
+                source: self::class . '::roleBadgeIconOptions',
+                origin: 'runtime',
+                sourceType: 'runtime_options',
+            );
+        }
+
+        $collector->options(
+            key: 'admin.partials.role_list.role_categories',
+            scope: 'role_categories',
+            values: collect($roleCategories)
+                ->mapWithKeys(static fn(string $category): array => [
+                    $category => str($category)->headline()->toString(),
+                ])
+                ->all(),
+            source: self::class . '::roleCategories',
+            origin: 'db',
+            sourceType: 'runtime_db_options',
+        );
     }
 }

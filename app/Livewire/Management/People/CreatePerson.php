@@ -27,6 +27,7 @@ use App\Support\Avatar\AvatarPath;
 use App\Support\Documents\PersonDocumentPath;
 use App\Support\Forms\FormFieldRegistry;
 use Flux\Flux;
+use Gunreip\TranslationWorkbench\Foundation\RuntimeDynamicTranslationCollector;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -214,6 +215,60 @@ class CreatePerson extends Component
     private function refreshDocumentTypeOptions(): void
     {
         $this->documentTypeOptions = PersonDocumentType::options();
+    }
+
+    private function collectRuntimeDynamicOptions(): void
+    {
+        if (! class_exists(RuntimeDynamicTranslationCollector::class)) {
+            return;
+        }
+
+        $collector = app(RuntimeDynamicTranslationCollector::class);
+
+        $collector->options(
+            key: 'management.people.create_person.sections.person_core.salutation_options',
+            scope: 'salutation_options',
+            values: $this->salutationOptions,
+            source: self::class . '::salutationOptions',
+            origin: 'runtime',
+            sourceType: 'runtime_options',
+        );
+
+        $collector->options(
+            key: 'management.people.create_person.sections.person_core.gender_options',
+            scope: 'gender_options',
+            values: $this->genderOptions,
+            source: self::class . '::genderOptions',
+            origin: 'runtime',
+            sourceType: 'runtime_options',
+        );
+
+        $collector->options(
+            key: 'management.people.create_person.sections.person_core.marital_status_options',
+            scope: 'marital_status_options',
+            values: $this->maritalStatusOptions,
+            source: self::class . '::maritalStatusOptions',
+            origin: 'runtime',
+            sourceType: 'runtime_options',
+        );
+
+        $collector->options(
+            key: 'management.people.create_person.sections.documents.document_type_options',
+            scope: 'document_type_options',
+            values: $this->documentTypeOptions,
+            source: self::class . '::documentTypeOptions',
+            origin: 'db',
+            sourceType: 'runtime_db_options',
+        );
+
+        $collector->options(
+            key: 'management.people.create_person.sections.emergency_contact.emergency_contact_relationship_options',
+            scope: 'emergency_contact_relationship_options',
+            values: $this->emergencyContactRelationshipOptions,
+            source: self::class . '::emergencyContactRelationshipOptions',
+            origin: 'runtime',
+            sourceType: 'runtime_options',
+        );
     }
 
     public function dateOfBirthOpenTo(): string
@@ -948,6 +1003,8 @@ class CreatePerson extends Component
      */
     public function render()
     {
+        $this->collectRuntimeDynamicOptions();
+
         return view('components.management.people.⚡create-person', [
             'birthCountryOptions' => Country::query()
                 ->active()

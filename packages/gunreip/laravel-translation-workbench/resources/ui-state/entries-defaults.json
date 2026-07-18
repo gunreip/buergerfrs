@@ -1,0 +1,14 @@
+{
+    "findingSearch": "",
+    "findingStatus": "all",
+    "findingKind": "all",
+    "findingCandidateType": "all",
+    "findingNamespace": "all",
+    "findingGroup": "all",
+    "findingKeyRelation": "all",
+    "findingSourceValue": "all",
+    "perPage": 25,
+    "findingSortField": "last_seen",
+    "findingSortDirection": "desc",
+    "showOverviewTabs": true
+}

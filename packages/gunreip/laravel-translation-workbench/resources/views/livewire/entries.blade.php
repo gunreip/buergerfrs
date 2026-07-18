@@ -7,12 +7,6 @@
         :description="__('Foundation overview based on the new Translation Workbench data model.')"
     />
 
-    @php
-        $showHideState = [
-            'showOverviewTabs' => true,
-        ];
-    @endphp
-
     {{-- Card DEV-Playground --}}
     <flux:card class="mt-6">
         <x-ui.headers.card
@@ -24,19 +18,18 @@
     {{-- Card Overview Tabs --}}
     <flux:card
         id="translation-workbench-overview"
-        x-data="{ showOverviewTabs: {{ $showHideState['showOverviewTabs'] ? 'true' : 'false' }} }"
+        x-data="{ showOverviewTabs: {{ $showOverviewTabs ? 'true' : 'false' }} }"
+        x-on:buergerfrs:refresh-show-hide-layout.window="$wire.set('showOverviewTabs', showOverviewTabs)"
     >
         <x-ui.headers.card
             :title="__('Overview')"
-            :description="__(
-                'Compact read-only foundation dashboard for scanner data, keys, lang files and coverage.',
-            )"
+            :description="__('Compact read-only foundation dashboard for scanner data, keys, lang files and coverage.')"
         >
-            <div class="flex flex-col items-end gap-2">
+            <div class="flex flex-col items-stretch gap-2">
                 <flux:button
                     icon="database"
                     variant="primary"
-                    size="sm"
+                    size="xs"
                     :href="route('admin.translation-workbench.raw-data-new')"
                     wire:navigate
                 >
@@ -48,6 +41,7 @@
                     state="showOverviewTabs"
                     show-label="{{ __('Show overview') }}"
                     hide-label="{{ __('Hide overview') }}"
+                    width="min-w-28 text-left"
                 />
             </div>
         </x-ui.headers.card>
@@ -164,6 +158,11 @@
 
     {{-- Finding Workflow Modals --}}
     @include('translation-workbench::livewire.entries.modal-review')
+    @include('translation-workbench::livewire.entries.review.modal-edit-translation-key')
+    @include('translation-workbench::livewire.entries.modal-dynamic-review')
+    @include('translation-workbench::livewire.entries.modal-dynamic-source-link-confirm')
     @include('translation-workbench::livewire.entries.modal-edit')
+    @include('translation-workbench::livewire.entries.modal-edit-dynamic')
+    @include('translation-workbench::livewire.entries.modal-edit-dynamic-multi')
     @include('translation-workbench::livewire.entries.modal-timeline')
 </div>

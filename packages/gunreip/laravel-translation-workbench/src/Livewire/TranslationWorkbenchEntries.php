@@ -4,11 +4,18 @@
 
 namespace Gunreip\TranslationWorkbench\Livewire;
 
+use App\Livewire\Concerns\InteractsWithUserSettings;
+use App\Models\Locale;
+use App\Settings\AppGeneralSettings;
+use App\Support\Locale\LocaleCode;
 use Flux\Flux;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchTimelineRecorder;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchFinding;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchKey;
+use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchLangValue;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchReview;
+use Gunreip\TranslationWorkbench\Scanner\TranslationKeyPartsFactory;
+use Gunreip\TranslationWorkbench\Support\TranslationKeySegmentFactory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -20,11 +27,34 @@ use Livewire\WithPagination;
 
 class TranslationWorkbenchEntries extends Component
 {
+    use InteractsWithUserSettings;
     use WithPagination;
+
+    /**
+     * User-facing page state that is safe to persist.
+     *
+     * Modal state and editable translation values intentionally stay transient.
+     *
+     * @var array<int, string>
+     */
+    private const PERSISTED_STATE_PROPERTIES = [
+        'findingSearch',
+        'findingStatus',
+        'findingKind',
+        'findingCandidateType',
+        'findingNamespace',
+        'findingGroup',
+        'findingKeyRelation',
+        'findingSourceValue',
+        'perPage',
+        'findingSortField',
+        'findingSortDirection',
+        'showOverviewTabs',
+    ];
 
     public string $findingSearch = '';
 
-    public string $findingStatus = 'active';
+    public string $findingStatus = 'all';
 
     public string $findingKind = 'all';
 
@@ -44,30 +74,109 @@ class TranslationWorkbenchEntries extends Component
 
     public string $findingSortDirection = 'desc';
 
+    public bool $showOverviewTabs = true;
+
     public bool $reviewModalOpen = false;
 
     public bool $editModalOpen = false;
 
+    public bool $dynamicEditModalOpen = false;
+
+    public bool $dynamicMultiEditModalOpen = false;
+
+    public bool $dynamicReviewModalOpen = false;
+
+    public bool $dynamicSourceLinkConfirmModalOpen = false;
+
     public bool $timelineModalOpen = false;
+
+    public bool $translationKeyModalOpen = false;
 
     public ?int $reviewFindingId = null;
 
     public ?int $editFindingId = null;
 
+    public ?int $dynamicReviewFindingId = null;
+
+    public ?int $dynamicSourceLinkRelatedSourceId = null;
+
     public ?int $timelineFindingId = null;
+
+    public ?int $translationKeyFindingId = null;
+
+    public ?string $translationKeyValue = null;
+
+    public ?string $translationKeySegmentBaseValue = null;
+
+    public ?string $targetTranslationValue = null;
+
+    public ?string $sourceTranslationValue = null;
+
+    public bool $sourceTranslationEditable = false;
+
+    /**
+     * @var array<int, string>
+     */
+    public array $selectedTargetSubLocales = [];
+
+    /**
+     * @var array<string, ?string>
+     */
+    public array $targetSubTranslationValues = [];
+
+    /**
+     * @var array<string, ?string>
+     */
+    public array $dynamicMultiTargetValues = [];
+
+    /**
+     * @var array<string, string>
+     */
+    public array $dynamicMultiValueKeyMap = [];
+
+    /**
+     * @var array<string, bool>
+     */
+    public array $dynamicMultiSourceEqualsTargetOverrides = [];
+
+    /**
+     * @var array<string, bool>
+     */
+    public array $dynamicMultiEditableTargetFields = [];
+
+    /**
+     * @var array<int, string>
+     */
+    public array $translationKeyDeletedSegments = [];
 
     public function render(): View
     {
+        $editFinding = $this->selectedFinding($this->editFindingId);
+        $dynamicReviewFinding = $this->selectedFinding($this->dynamicReviewFindingId);
+        $editLocales = $this->editLocales();
+
         return view('translation-workbench::livewire.entries', [
             'findings' => $this->findings(),
             'reviewFinding' => $this->selectedFinding($this->reviewFindingId),
-            'editFinding' => $this->selectedFinding($this->editFindingId),
+            'editFinding' => $editFinding,
+            'dynamicReviewFinding' => $dynamicReviewFinding,
+            'dynamicReviewReady' => $dynamicReviewFinding ? $this->isDynamicReviewReady($dynamicReviewFinding) : false,
+            'dynamicReviewSources' => $this->dynamicReviewSources($this->dynamicReviewFindingId),
+            'dynamicSourceLinkPreview' => $this->dynamicSourceLinkPreview(),
+            'dynamicEditFinding' => $this->selectedFinding($this->editFindingId),
+            'dynamicMultiEditFinding' => $this->selectedFinding($this->editFindingId),
+            'editLocales' => $editLocales,
+            'editValues' => $this->editValues($editFinding, $editLocales),
+            'dynamicMultiRows' => $this->dynamicMultiRows($this->editFindingId, $editLocales),
             'timelineFinding' => $this->selectedFinding($this->timelineFindingId),
+            'translationKeyFinding' => $this->selectedFinding($this->translationKeyFindingId),
+            'translationKeySegmentStats' => $this->translationKeySegmentStats($this->translationKeyFindingId),
+            'translationKeySegmentControls' => $this->translationKeySegmentControls(),
             'previousReviewFindingId' => $this->reviewAdjacentFindingId('previous'),
             'nextReviewFindingId' => $this->reviewAdjacentFindingId('next'),
             'findingStatusOptions' => $this->distinctOptions('translation_workbench_findings', 'status'),
             'findingKindOptions' => $this->distinctOptions('translation_workbench_findings', 'kind'),
-            'findingCandidateTypeOptions' => $this->distinctOptions('translation_workbench_findings', 'candidate_type'),
+            'findingCandidateTypeOptions' => $this->findingCandidateTypeOptions(),
             'findingNamespaceOptions' => $this->distinctOptions('translation_workbench_findings', 'namespace'),
             'findingGroupOptions' => $this->findingGroupOptions(),
             'databaseTableCallouts' => $this->databaseTableCallouts(),
@@ -81,12 +190,39 @@ class TranslationWorkbenchEntries extends Component
             'timelineHealthCallouts' => $this->timelineHealthCallouts(),
             'dynamicValuesHealthCallouts' => $this->dynamicValuesHealthCallouts(),
             'sourceMainLocale' => $this->sourceMainLocale(),
+            'targetMainLocale' => (string) ($editLocales['active'] ?? app()->getLocale()),
             'findingKindCounts' => $this->distribution('translation_workbench_findings', 'kind'),
             'keyTypeCounts' => $this->distribution('translation_workbench_keys', 'key_type'),
             'localeRoleCounts' => $this->distribution('translation_workbench_lang_values', 'locale_role'),
             'localeCounts' => $this->distribution('translation_workbench_lang_values', 'locale'),
             'timelineEventCounts' => $this->distribution('translation_workbench_timeline_events', 'event_type'),
+            'findingFiltersActive' => $this->findingFiltersActive(),
         ]);
+    }
+
+    public function mount(): void
+    {
+        $defaults = $this->uiStateDefaults();
+        $state = $this->userSetting($this->uiStateSettingKey(), []);
+
+        if (! is_array($state)) {
+            $state = [];
+        }
+
+        $this->findingSearch = trim((string) ($state['findingSearch'] ?? $defaults['findingSearch'] ?? $this->findingSearch));
+        $this->findingStatus = $this->normalizeOptionState($state['findingStatus'] ?? $defaults['findingStatus'] ?? $this->findingStatus);
+        $this->findingKind = $this->normalizeOptionState($state['findingKind'] ?? $defaults['findingKind'] ?? $this->findingKind);
+        $this->findingCandidateType = $this->normalizeOptionState($state['findingCandidateType'] ?? $defaults['findingCandidateType'] ?? $this->findingCandidateType);
+        $this->findingNamespace = $this->normalizeOptionState($state['findingNamespace'] ?? $defaults['findingNamespace'] ?? $this->findingNamespace);
+        $this->findingGroup = $this->normalizeOptionState($state['findingGroup'] ?? $defaults['findingGroup'] ?? $this->findingGroup);
+        $this->findingKeyRelation = $this->normalizeOptionState($state['findingKeyRelation'] ?? $defaults['findingKeyRelation'] ?? $this->findingKeyRelation);
+        $this->findingSourceValue = $this->normalizeOptionState($state['findingSourceValue'] ?? $defaults['findingSourceValue'] ?? $this->findingSourceValue);
+        $this->perPage = $this->normalizedPerPage($state['perPage'] ?? $defaults['perPage'] ?? $this->perPage);
+        $this->findingSortField = $this->normalizeFindingSortField($state['findingSortField'] ?? $defaults['findingSortField'] ?? $this->findingSortField);
+        $this->findingSortDirection = $this->normalizeSortDirection($state['findingSortDirection'] ?? $defaults['findingSortDirection'] ?? $this->findingSortDirection);
+        $this->showOverviewTabs = (bool) ($state['showOverviewTabs'] ?? $defaults['showOverviewTabs'] ?? $this->showOverviewTabs);
+
+        $this->setPage(1);
     }
 
     public function updated(string $property): void
@@ -105,19 +241,43 @@ class TranslationWorkbenchEntries extends Component
             $this->perPage = $this->normalizedPerPage();
             $this->resetPage();
         }
+
+        if (in_array($property, self::PERSISTED_STATE_PROPERTIES, true)) {
+            $this->persistUiState();
+        }
     }
 
     public function updatedFindingNamespace(): void
     {
         if ($this->findingGroup !== 'all' && ! in_array($this->findingGroup, $this->findingGroupOptions(), true)) {
             $this->findingGroup = 'all';
+            $this->persistUiState();
+        }
+    }
+
+    public function updatedDynamicMultiTargetValues(mixed $value, string $fieldKey): void
+    {
+        $row = collect($this->dynamicMultiRows($this->editFindingId, $this->editLocales()))
+            ->firstWhere('field_key', $fieldKey);
+
+        if (! is_array($row)) {
+            unset($this->dynamicMultiSourceEqualsTargetOverrides[$fieldKey]);
+
+            return;
+        }
+
+        $sourceValue = $this->nullableString($row['source'] ?? $row['native_label'] ?? null);
+        $targetValue = $this->nullableString($value);
+
+        if ($sourceValue === null || $targetValue === null || $sourceValue !== $targetValue) {
+            $this->dynamicMultiSourceEqualsTargetOverrides[$fieldKey] = false;
         }
     }
 
     public function resetFindingFilters(): void
     {
         $this->findingSearch = '';
-        $this->findingStatus = 'active';
+        $this->findingStatus = 'all';
         $this->findingKind = 'all';
         $this->findingCandidateType = 'all';
         $this->findingNamespace = 'all';
@@ -126,6 +286,7 @@ class TranslationWorkbenchEntries extends Component
         $this->findingSourceValue = 'all';
 
         $this->resetPage();
+        $this->persistUiState();
     }
 
     public function sortFindingsBy(string $field): void
@@ -142,6 +303,18 @@ class TranslationWorkbenchEntries extends Component
         }
 
         $this->resetPage();
+        $this->persistUiState();
+    }
+
+    public function toggleOverviewTabs(): void
+    {
+        $this->showOverviewTabs = ! $this->showOverviewTabs;
+        $this->persistUiState();
+    }
+
+    public function updatedShowOverviewTabs(): void
+    {
+        $this->persistUiState();
     }
 
     public function openReviewModal(int $findingId): void
@@ -170,14 +343,1065 @@ class TranslationWorkbenchEntries extends Component
 
     public function openEditModal(int $findingId): void
     {
-        $this->editFindingId = $findingId;
+        $selectedFinding = $this->selectedFinding($findingId);
+
+        if ($selectedFinding && $this->isDynamicFinding($selectedFinding)) {
+            $this->openDynamicReviewModal($findingId);
+
+            return;
+        }
+
+        if (! $selectedFinding || ! $selectedFinding->key_id) {
+            Flux::toast(
+                heading: __('Translation key missing'),
+                text: __('Review this finding and link a translation key before editing translation values.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        if (blank($selectedFinding->translation_key) || $selectedFinding->review_status !== 'reviewed') {
+            Flux::toast(
+                heading: __('Review incomplete'),
+                text: __('Complete the review and set a translation key before editing translation values.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->bootstrapEditState($selectedFinding);
+        $this->reviewModalOpen = false;
+        $this->editModalOpen = false;
+        $this->dynamicEditModalOpen = false;
+        $this->dynamicMultiEditModalOpen = false;
+        $this->dynamicReviewModalOpen = false;
+
+        if ($this->isDynamicMultiFinding($selectedFinding)) {
+            $this->dynamicMultiEditModalOpen = true;
+
+            return;
+        }
+
+        if ($this->isDynamicFinding($selectedFinding)) {
+            $this->dynamicEditModalOpen = true;
+
+            return;
+        }
+
         $this->editModalOpen = true;
+    }
+
+    public function openDynamicReviewModal(int $findingId): void
+    {
+        $selectedFinding = $this->selectedFinding($findingId);
+
+        if (! $selectedFinding) {
+            return;
+        }
+
+        $this->dynamicReviewFindingId = $findingId;
+        $this->reviewModalOpen = false;
+        $this->editModalOpen = false;
+        $this->dynamicEditModalOpen = false;
+        $this->dynamicMultiEditModalOpen = false;
+        $this->dynamicReviewModalOpen = true;
+    }
+
+    public function continueDynamicEdit(): void
+    {
+        $selectedFinding = $this->selectedFinding($this->dynamicReviewFindingId);
+
+        if (! $selectedFinding) {
+            return;
+        }
+
+        if (! $this->isDynamicReviewReady($selectedFinding)) {
+            Flux::toast(
+                heading: __('Dynamic review incomplete'),
+                text: __('Resolve the dynamic source classification before editing dynamic translation values.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        if (! $selectedFinding->key_id || blank($selectedFinding->translation_key) || $selectedFinding->review_status !== 'reviewed') {
+            Flux::toast(
+                heading: __('Review incomplete'),
+                text: __('Complete the review and set a translation key before editing translation values.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->bootstrapEditState($selectedFinding);
+        $this->editFindingId = (int) $selectedFinding->id;
+        $this->dynamicReviewModalOpen = false;
+        $this->editModalOpen = false;
+        $this->dynamicEditModalOpen = false;
+        $this->dynamicMultiEditModalOpen = false;
+
+        if ($this->isDynamicMultiFinding($selectedFinding)) {
+            $this->dynamicMultiEditModalOpen = true;
+
+            return;
+        }
+
+        $this->dynamicEditModalOpen = true;
+    }
+
+    public function setDynamicReviewMode(int $findingId, string $mode): void
+    {
+        if (! in_array($mode, ['single', 'multi'], true)) {
+            return;
+        }
+
+        $context = $this->reviewContext($findingId);
+
+        if (! $context) {
+            return;
+        }
+
+        [$key, $finding, $selectedFinding] = $context;
+        $isMulti = $mode === 'multi';
+
+        $this->saveKeyReviewDecision(
+            key: $key,
+            finding: $finding,
+            selectedFinding: $selectedFinding,
+            attributes: [
+                'reviewed_is_dynamic_candidate' => true,
+                'reviewed_is_ui_candidate' => false,
+                'reviewed_is_dynamic_multi' => $isMulti,
+                'is_dynamic_key' => true,
+                'is_dynamic_candidate_rejected' => false,
+                'is_dynamic_multi' => $isMulti,
+                'is_ui_key' => false,
+                'is_ui_candidate_rejected' => false,
+                ...$this->dynamicDataStateAttributes(true),
+                'key_type' => 'dynamic',
+            ],
+            reviewType: 'dynamic_classification',
+            decision: $isMulti ? 'dynamic_multi_confirmed' : 'dynamic_single_confirmed',
+            toastHeading: __('Dynamic classification updated'),
+            toastText: $isMulti
+                ? __('This finding is now treated as a dynamic option list.')
+                : __('This finding is now treated as a single dynamic translation.'),
+        );
+    }
+
+    public function openDynamicSourceLinkConfirm(int $relatedSourceId): void
+    {
+        $sources = collect($this->dynamicReviewSources($this->dynamicReviewFindingId));
+        $relatedSource = $sources->firstWhere('id', $relatedSourceId);
+
+        if (! $relatedSource || (bool) ($relatedSource['is_runtime_options'] ?? false)) {
+            Flux::toast(
+                heading: __('Link unavailable'),
+                text: __('Select a related dynamic finding that should be linked to the runtime options.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        if ($sources->where('is_runtime_options', true)->isEmpty()) {
+            Flux::toast(
+                heading: __('Runtime options missing'),
+                text: __('There are no runtime option rows available for this finding.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->dynamicSourceLinkRelatedSourceId = $relatedSourceId;
+        $this->dynamicSourceLinkConfirmModalOpen = true;
+    }
+
+    public function closeDynamicSourceLinkConfirm(): void
+    {
+        $this->dynamicSourceLinkConfirmModalOpen = false;
+        $this->dynamicSourceLinkRelatedSourceId = null;
+    }
+
+    public function confirmDynamicSourceLink(): void
+    {
+        if (! $this->hasTables([
+            'translation_workbench_dynamic_source_candidates',
+            'translation_workbench_dynamic_sources',
+            'translation_workbench_keys',
+            'translation_workbench_findings',
+        ])) {
+            Flux::toast(
+                heading: __('Migration missing'),
+                text: __('Run the Translation Workbench migrations before saving dynamic source links.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $selectedFinding = $this->selectedFinding($this->dynamicReviewFindingId);
+        $preview = $this->dynamicSourceLinkPreview();
+
+        if (! $selectedFinding || ! $preview) {
+            Flux::toast(
+                heading: __('Link unavailable'),
+                text: __('The dynamic source link context is no longer available.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $runtimeSources = collect($preview['runtime_sources'] ?? []);
+        $relatedSource = $preview['related_source'] ?? null;
+
+        if ($runtimeSources->isEmpty() || ! is_array($relatedSource)) {
+            Flux::toast(
+                heading: __('Link incomplete'),
+                text: __('Runtime options and related dynamic finding must both be present.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $key = $selectedFinding->key_id
+            ? TranslationWorkbenchKey::query()->find($selectedFinding->key_id)
+            : null;
+        $finding = TranslationWorkbenchFinding::query()->find($selectedFinding->id);
+
+        $createdOrUpdated = [];
+        $oldValues = [];
+
+        DB::transaction(function () use ($runtimeSources, $relatedSource, $selectedFinding, $key, $finding, &$createdOrUpdated, &$oldValues): void {
+            foreach ($runtimeSources as $runtimeSource) {
+                $candidateReference = 'dynamic_source:' . $relatedSource['id'];
+                $candidateValues = collect($relatedSource['values'] ?? [])
+                    ->mapWithKeys(static fn(array $value): array => [
+                        $value['value_key'] => $value['native_label'],
+                    ])
+                    ->all();
+                $attributes = [
+                    'key_id' => $runtimeSource['key_id'] ?? $selectedFinding->key_id,
+                    'finding_id' => $relatedSource['finding_id'] ?? $selectedFinding->id,
+                    'suggested_key' => $relatedSource['suggested_key'] ?? $selectedFinding->suggested_key,
+                    'dynamic_scope' => $relatedSource['dynamic_scope'] ?? $selectedFinding->dynamic_scope,
+                    'source_expression' => $relatedSource['source_expression'] ?? null,
+                    'candidate_source_type' => 'related_dynamic_source',
+                    'candidate_reference' => $candidateReference,
+                    'candidate_values_count' => (int) ($relatedSource['values_count'] ?? 0),
+                    'candidate_values' => json_encode($candidateValues, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                    'confidence' => 'manual',
+                    'review_status' => 'confirmed',
+                    'status' => 'active',
+                    'meta' => json_encode([
+                        'source' => 'translation-workbench:dynamic-review-modal',
+                        'runtime_source_id' => $runtimeSource['id'],
+                        'runtime_suggested_key' => $runtimeSource['suggested_key'] ?? null,
+                        'related_source_id' => $relatedSource['id'],
+                        'related_suggested_key' => $relatedSource['suggested_key'] ?? null,
+                        'review_finding_id' => $selectedFinding->id,
+                    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                ];
+
+                $existing = DB::table('translation_workbench_dynamic_source_candidates')
+                    ->where('dynamic_source_id', $runtimeSource['id'])
+                    ->where('candidate_source_type', 'related_dynamic_source')
+                    ->where('candidate_reference', $candidateReference)
+                    ->first();
+
+                if (! $existing) {
+                    $candidateId = DB::table('translation_workbench_dynamic_source_candidates')->insertGetId([
+                        'dynamic_source_id' => $runtimeSource['id'],
+                        ...$attributes,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+
+                    $createdOrUpdated[] = [
+                        'id' => $candidateId,
+                        'runtime_source_id' => $runtimeSource['id'],
+                        'related_source_id' => $relatedSource['id'],
+                        'review_status' => 'confirmed',
+                    ];
+
+                    continue;
+                }
+
+                $oldValues[] = [
+                    'id' => $existing->id,
+                    'review_status' => $existing->review_status,
+                    'status' => $existing->status,
+                    'candidate_reference' => $existing->candidate_reference,
+                ];
+
+                DB::table('translation_workbench_dynamic_source_candidates')
+                    ->where('id', $existing->id)
+                    ->update([
+                        ...$attributes,
+                        'updated_at' => now(),
+                    ]);
+
+                $createdOrUpdated[] = [
+                    'id' => (int) $existing->id,
+                    'runtime_source_id' => $runtimeSource['id'],
+                    'related_source_id' => $relatedSource['id'],
+                    'review_status' => 'confirmed',
+                ];
+            }
+
+            $review = TranslationWorkbenchReview::query()->create([
+                'key_id' => $key?->id,
+                'finding_id' => $finding?->id,
+                'review_type' => 'dynamic_source_link',
+                'decision' => 'runtime_options_link_confirmed',
+                'old_values' => $oldValues,
+                'new_values' => $createdOrUpdated,
+                'meta' => [
+                    'source' => 'translation-workbench:dynamic-review-modal',
+                    'runtime_source_count' => $runtimeSources->count(),
+                    'related_source_id' => $relatedSource['id'],
+                ],
+                'reviewed_by_user_id' => Auth::id(),
+                'reviewed_at' => now(),
+            ]);
+
+            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
+                review: $review,
+                eventType: 'dynamic_source_link_confirmed',
+                oldValues: $oldValues,
+                newValues: $createdOrUpdated,
+                context: [
+                    'source' => 'translation-workbench:dynamic-review-modal',
+                    'runtime_source_count' => $runtimeSources->count(),
+                    'related_source_id' => $relatedSource['id'],
+                ],
+            );
+        });
+
+        $this->closeDynamicSourceLinkConfirm();
+
+        Flux::toast(
+            heading: __('Dynamic source link confirmed'),
+            text: __('The runtime options have been linked to the related dynamic finding.'),
+            variant: 'success',
+        );
+    }
+
+    public function unlinkDynamicSourceLink(): void
+    {
+        if (! $this->hasTables([
+            'translation_workbench_dynamic_source_candidates',
+            'translation_workbench_dynamic_sources',
+            'translation_workbench_keys',
+            'translation_workbench_findings',
+        ])) {
+            Flux::toast(
+                heading: __('Migration missing'),
+                text: __('Run the Translation Workbench migrations before changing dynamic source links.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $selectedFinding = $this->selectedFinding($this->dynamicReviewFindingId);
+        $preview = $this->dynamicSourceLinkPreview();
+
+        if (! $selectedFinding || ! $preview) {
+            Flux::toast(
+                heading: __('Link unavailable'),
+                text: __('The dynamic source link context is no longer available.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $runtimeSources = collect($preview['runtime_sources'] ?? []);
+        $relatedSource = $preview['related_source'] ?? null;
+
+        if ($runtimeSources->isEmpty() || ! is_array($relatedSource)) {
+            Flux::toast(
+                heading: __('Link incomplete'),
+                text: __('Runtime options and related dynamic finding must both be present.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $key = $selectedFinding->key_id
+            ? TranslationWorkbenchKey::query()->find($selectedFinding->key_id)
+            : null;
+        $finding = TranslationWorkbenchFinding::query()->find($selectedFinding->id);
+        $candidateReference = 'dynamic_source:' . $relatedSource['id'];
+        $runtimeSourceIds = $runtimeSources
+            ->pluck('id')
+            ->map(static fn(mixed $id): int => (int) $id)
+            ->all();
+        $oldValues = [];
+        $newValues = [];
+
+        DB::transaction(function () use ($runtimeSourceIds, $candidateReference, $relatedSource, $runtimeSources, $key, $finding, &$oldValues, &$newValues): void {
+            $candidates = DB::table('translation_workbench_dynamic_source_candidates')
+                ->whereIn('dynamic_source_id', $runtimeSourceIds)
+                ->where('candidate_source_type', 'related_dynamic_source')
+                ->where('candidate_reference', $candidateReference)
+                ->where('status', 'active')
+                ->get();
+
+            if ($candidates->isEmpty()) {
+                return;
+            }
+
+            $oldValues = $candidates
+                ->map(static fn(object $candidate): array => [
+                    'id' => (int) $candidate->id,
+                    'runtime_source_id' => (int) $candidate->dynamic_source_id,
+                    'related_source_id' => (int) $relatedSource['id'],
+                    'review_status' => (string) $candidate->review_status,
+                    'status' => (string) $candidate->status,
+                ])
+                ->all();
+
+            DB::table('translation_workbench_dynamic_source_candidates')
+                ->whereIn('id', $candidates->pluck('id')->all())
+                ->update([
+                    'review_status' => 'unlinked',
+                    'status' => 'inactive',
+                    'updated_at' => now(),
+                ]);
+
+            $newValues = $candidates
+                ->map(static fn(object $candidate): array => [
+                    'id' => (int) $candidate->id,
+                    'runtime_source_id' => (int) $candidate->dynamic_source_id,
+                    'related_source_id' => (int) $relatedSource['id'],
+                    'review_status' => 'unlinked',
+                    'status' => 'inactive',
+                ])
+                ->all();
+
+            $review = TranslationWorkbenchReview::query()->create([
+                'key_id' => $key?->id,
+                'finding_id' => $finding?->id,
+                'review_type' => 'dynamic_source_link',
+                'decision' => 'runtime_options_link_unlinked',
+                'old_values' => $oldValues,
+                'new_values' => $newValues,
+                'meta' => [
+                    'source' => 'translation-workbench:dynamic-review-modal',
+                    'runtime_source_count' => $runtimeSources->count(),
+                    'related_source_id' => $relatedSource['id'],
+                ],
+                'reviewed_by_user_id' => Auth::id(),
+                'reviewed_at' => now(),
+            ]);
+
+            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
+                review: $review,
+                eventType: 'dynamic_source_link_unlinked',
+                oldValues: $oldValues,
+                newValues: $newValues,
+                context: [
+                    'source' => 'translation-workbench:dynamic-review-modal',
+                    'runtime_source_count' => $runtimeSources->count(),
+                    'related_source_id' => $relatedSource['id'],
+                ],
+            );
+        });
+
+        if ($newValues === []) {
+            Flux::toast(
+                heading: __('No active link'),
+                text: __('There is no active link to remove.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->closeDynamicSourceLinkConfirm();
+
+        Flux::toast(
+            heading: __('Dynamic source link removed'),
+            text: __('The runtime options are no longer linked to the related dynamic finding.'),
+            variant: 'success',
+        );
+    }
+
+    public function saveDynamicTranslationValue(): void
+    {
+        $this->saveTranslationValue();
+    }
+
+    public function saveDynamicMultiTranslationValues(): void
+    {
+        if (! Schema::hasTable('translation_workbench_dynamic_key_values')) {
+            Flux::toast(
+                heading: __('Migration missing'),
+                text: __('Run the Translation Workbench migrations before saving dynamic option translations.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $selectedFinding = $this->selectedFinding($this->editFindingId);
+
+        if (! $selectedFinding || ! $selectedFinding->key_id) {
+            return;
+        }
+
+        $key = TranslationWorkbenchKey::query()->find($selectedFinding->key_id);
+        $finding = TranslationWorkbenchFinding::query()->find($selectedFinding->id);
+
+        if (! $key || ! $finding) {
+            return;
+        }
+
+        $editLocales = $this->editLocales();
+        $sourceLocale = LocaleCode::normalize((string) ($editLocales['source'] ?? $this->sourceMainLocale()));
+        $targetLocale = LocaleCode::normalize((string) ($editLocales['active'] ?? app()->getLocale()));
+        $rows = collect($this->dynamicMultiRows((int) $selectedFinding->id, $editLocales));
+        $changes = [];
+
+        DB::transaction(function () use ($selectedFinding, $rows, $sourceLocale, $targetLocale, &$changes): void {
+            foreach ($rows as $row) {
+                $valueKey = (string) $row['value_key'];
+                $fieldKey = (string) $row['field_key'];
+                $sourceValue = $this->nullableString($row['source'] ?? $row['native_label'] ?? null);
+
+                if ($sourceValue !== null) {
+                    $sourceChange = $this->saveDynamicKeyValueForLocale(
+                        selectedFinding: $selectedFinding,
+                        valueKey: $valueKey,
+                        locale: $sourceLocale,
+                        value: $sourceValue,
+                        nativeLabel: $this->nullableString($row['native_label'] ?? $sourceValue),
+                        source: 'runtime_source',
+                    );
+
+                    if ($sourceChange !== null) {
+                        $changes[] = $sourceChange;
+                    }
+                }
+
+                $targetChange = $this->saveDynamicKeyValueForLocale(
+                    selectedFinding: $selectedFinding,
+                    valueKey: $valueKey,
+                    locale: $targetLocale,
+                    value: $this->dynamicMultiTargetValues[$fieldKey] ?? null,
+                    nativeLabel: $this->nullableString($row['native_label'] ?? $sourceValue),
+                    source: 'translation_workbench_modal',
+                );
+
+                if ($targetChange !== null) {
+                    $changes[] = $targetChange;
+                }
+            }
+        });
+
+        if ($changes === []) {
+            Flux::toast(
+                heading: __('No changes'),
+                text: __('The dynamic option translations have not changed.'),
+                variant: 'info',
+            );
+
+            return;
+        }
+
+        $this->bootstrapDynamicMultiEditState($selectedFinding, $editLocales);
+
+        app(TranslationWorkbenchTimelineRecorder::class)->recordKeyFindingEvent(
+            key: $key,
+            finding: $finding,
+            eventType: 'dynamic_multi_values_saved',
+            oldValues: ['values' => collect($changes)->mapWithKeys(static fn(array $change): array => [
+                $change['value_key'] . ':' . $change['locale'] => $change['old'],
+            ])->all()],
+            newValues: ['values' => collect($changes)->mapWithKeys(static fn(array $change): array => [
+                $change['value_key'] . ':' . $change['locale'] => $change['new'],
+            ])->all()],
+            context: [
+                'source' => 'translation-workbench:modal-edit-dynamic-multi',
+                'locales' => collect($changes)->pluck('locale')->unique()->values()->all(),
+                'value_keys' => collect($changes)->pluck('value_key')->unique()->values()->all(),
+            ],
+        );
+
+        Flux::toast(
+            heading: __('Dynamic options saved'),
+            text: __('The dynamic option translations have been saved.'),
+            variant: 'success',
+        );
+    }
+
+    public function saveTranslationValue(): void
+    {
+        $selectedFinding = $this->selectedFinding($this->editFindingId);
+
+        if (! $selectedFinding || ! $selectedFinding->key_id) {
+            return;
+        }
+
+        $translationKey = $this->nullableString($selectedFinding->translation_key);
+
+        if ($translationKey === null) {
+            Flux::toast(
+                heading: __('Translation key missing'),
+                text: __('Review this finding and set a translation key before editing translation values.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $key = TranslationWorkbenchKey::query()->find($selectedFinding->key_id);
+        $finding = TranslationWorkbenchFinding::query()->find($selectedFinding->id);
+
+        if (! $key || ! $finding) {
+            return;
+        }
+
+        $editLocales = $this->editLocales();
+        $sourceLocale = (string) ($editLocales['source'] ?? $this->sourceMainLocale());
+        $targetLocale = (string) ($editLocales['active'] ?? app()->getLocale());
+        $editValues = $this->editValues($selectedFinding, $editLocales);
+        $changes = [];
+
+        DB::transaction(function () use ($selectedFinding, $translationKey, $sourceLocale, $targetLocale, $editValues, &$changes): void {
+            $sourceChange = $this->saveTranslationValueForLocale(
+                selectedFinding: $selectedFinding,
+                translationKey: $translationKey,
+                locale: $sourceLocale,
+                value: $this->sourceTranslationValue,
+            );
+
+            if ($sourceChange !== null) {
+                $changes[] = $sourceChange;
+            }
+
+            $targetChange = $this->saveTranslationValueForLocale(
+                selectedFinding: $selectedFinding,
+                translationKey: $translationKey,
+                locale: $targetLocale,
+                value: $this->targetTranslationValue,
+            );
+
+            if ($targetChange !== null) {
+                $changes[] = $targetChange;
+            }
+
+            $availableSubLocales = collect((array) ($this->editLocales()['sub'] ?? []))
+                ->filter(static fn(mixed $locale): bool => is_string($locale) && trim($locale) !== '')
+                ->map(static fn(string $locale): string => LocaleCode::normalize($locale))
+                ->values();
+
+            foreach ($this->selectedTargetSubLocales as $subLocale) {
+                $subLocale = LocaleCode::normalize((string) $subLocale);
+
+                if (! $availableSubLocales->contains($subLocale)) {
+                    continue;
+                }
+
+                $subChange = $this->saveTranslationValueForLocale(
+                    selectedFinding: $selectedFinding,
+                    translationKey: $translationKey,
+                    locale: $subLocale,
+                    value: $this->targetSubTranslationValues[$subLocale] ?? null,
+                );
+
+                if ($subChange !== null) {
+                    $changes[] = $subChange;
+                }
+            }
+        });
+
+        if ($changes === []) {
+            Flux::toast(
+                heading: __('No changes'),
+                text: __('The translation values have not changed.'),
+                variant: 'info',
+            );
+
+            return;
+        }
+
+        app(TranslationWorkbenchTimelineRecorder::class)->recordKeyFindingEvent(
+            key: $key,
+            finding: $finding,
+            eventType: 'translation_values_saved',
+            oldValues: ['values' => collect($changes)->pluck('old', 'locale')->all()],
+            newValues: ['values' => collect($changes)->pluck('new', 'locale')->all()],
+            context: [
+                'source' => 'translation-workbench:modal-edit',
+                'locales' => collect($changes)->pluck('locale')->values()->all(),
+            ],
+        );
+
+        Flux::toast(
+            heading: __('Translations saved'),
+            text: __('The translation values have been saved.'),
+            variant: 'success',
+        );
+    }
+
+    public function toggleTargetSubLocale(string $locale): void
+    {
+        $locale = LocaleCode::normalize($locale);
+
+        if ($locale === '') {
+            return;
+        }
+
+        $availableSubLocales = collect((array) ($this->editLocales()['sub'] ?? []))
+            ->filter(static fn(mixed $subLocale): bool => is_string($subLocale) && trim($subLocale) !== '')
+            ->map(static fn(string $subLocale): string => LocaleCode::normalize($subLocale));
+
+        if (! $availableSubLocales->contains($locale)) {
+            return;
+        }
+
+        if (in_array($locale, $this->selectedTargetSubLocales, true)) {
+            $this->selectedTargetSubLocales = array_values(array_filter(
+                $this->selectedTargetSubLocales,
+                static fn(string $selectedLocale): bool => $selectedLocale !== $locale,
+            ));
+
+            return;
+        }
+
+        $this->selectedTargetSubLocales[] = $locale;
+        $this->selectedTargetSubLocales = array_values(array_unique($this->selectedTargetSubLocales));
+        $this->targetSubTranslationValues[$locale] ??= $this->targetSubTranslationValues(
+            $this->selectedFinding($this->editFindingId),
+            $this->editLocales(),
+        )[$locale] ?? null;
+    }
+
+    public function copySourceToTargetValue(): void
+    {
+        $selectedFinding = $this->selectedFinding($this->editFindingId);
+
+        if (! $selectedFinding) {
+            return;
+        }
+
+        $sourceValue = $this->nullableString($this->sourceTranslationValue);
+
+        if ($sourceValue === null) {
+            Flux::toast(
+                heading: __('No source value'),
+                text: __('There is no source value to copy.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->targetTranslationValue = $sourceValue;
+
+        $this->dispatch('buergerfrs:focus-field-and-select', inputId: 'translation-workbench-target-translation-value');
+    }
+
+    public function copyDynamicMultiSourceToTarget(string $fieldKey): void
+    {
+        $row = collect($this->dynamicMultiRows($this->editFindingId, $this->editLocales()))
+            ->firstWhere('field_key', $fieldKey);
+
+        if (! is_array($row)) {
+            return;
+        }
+
+        $sourceValue = $this->nullableString($row['source'] ?? $row['native_label'] ?? null);
+
+        if ($sourceValue === null) {
+            Flux::toast(
+                heading: __('No source value'),
+                text: __('There is no source value to copy for this option.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->dynamicMultiTargetValues[$fieldKey] = $sourceValue;
+        $this->dynamicMultiSourceEqualsTargetOverrides[$fieldKey] = false;
+        $this->dynamicMultiEditableTargetFields[$fieldKey] = true;
+
+        $this->dispatch(
+            'buergerfrs:focus-field-and-select',
+            inputId: 'translation-workbench-dynamic-multi-target-' . $fieldKey,
+        );
+    }
+
+    public function copyAllDynamicMultiSourceToTarget(): void
+    {
+        $copied = 0;
+        $skippedExistingTargets = 0;
+
+        foreach ($this->dynamicMultiRows($this->editFindingId, $this->editLocales()) as $row) {
+            $fieldKey = (string) ($row['field_key'] ?? '');
+            $sourceValue = $this->nullableString($row['source'] ?? $row['native_label'] ?? null);
+
+            if ($fieldKey === '' || $sourceValue === null) {
+                continue;
+            }
+
+            if ($this->nullableString($this->dynamicMultiTargetValues[$fieldKey] ?? $row['target'] ?? null) !== null) {
+                $skippedExistingTargets++;
+
+                continue;
+            }
+
+            $this->dynamicMultiTargetValues[$fieldKey] = $sourceValue;
+            $this->dynamicMultiSourceEqualsTargetOverrides[$fieldKey] = false;
+            $this->dynamicMultiEditableTargetFields[$fieldKey] = true;
+            $copied++;
+        }
+
+        if ($copied === 0) {
+            if ($skippedExistingTargets > 0) {
+                Flux::toast(
+                    heading: __('No empty target values'),
+                    text: __('Existing target translations were kept unchanged.'),
+                    variant: 'info',
+                );
+
+                return;
+            }
+
+            Flux::toast(
+                heading: __('No source values'),
+                text: __('There are no source values to copy into the target language.'),
+                variant: 'warning',
+            );
+        }
+    }
+
+    public function overrideDynamicMultiSourceEqualsTarget(string $fieldKey): void
+    {
+        if (! array_key_exists($fieldKey, $this->dynamicMultiTargetValues)) {
+            return;
+        }
+
+        $this->dynamicMultiSourceEqualsTargetOverrides[$fieldKey] = true;
+    }
+
+    public function editDynamicMultiTargetValue(string $fieldKey): void
+    {
+        if (! array_key_exists($fieldKey, $this->dynamicMultiTargetValues)) {
+            return;
+        }
+
+        $this->dynamicMultiEditableTargetFields[$fieldKey] = true;
+
+        $this->dispatch(
+            'buergerfrs:focus-field-and-select',
+            inputId: 'translation-workbench-dynamic-multi-target-' . $fieldKey,
+        );
+    }
+
+    public function editSourceTranslationValue(): void
+    {
+        $selectedFinding = $this->selectedFinding($this->editFindingId);
+
+        if (! $selectedFinding) {
+            return;
+        }
+
+        $this->sourceTranslationValue ??= $this->editValues($selectedFinding, $this->editLocales())['source'];
+        $this->sourceTranslationEditable = true;
+
+        $this->dispatch('buergerfrs:focus-field-and-select', inputId: 'translation-workbench-source-translation-value');
     }
 
     public function openTimelineModal(int $findingId): void
     {
         $this->timelineFindingId = $findingId;
         $this->timelineModalOpen = true;
+    }
+
+    public function openTranslationKeyModal(int $findingId): void
+    {
+        $selectedFinding = $this->selectedFinding($findingId);
+
+        if (! $selectedFinding || ! $selectedFinding->key_id) {
+            Flux::toast(
+                heading: __('No linked key'),
+                text: __('This finding needs a key relation before its translation key can be edited.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->translationKeyFindingId = $findingId;
+        $this->translationKeyValue = $this->nullableString($selectedFinding->translation_key);
+        $this->translationKeySegmentBaseValue = $this->translationKeyValue;
+        $this->translationKeyDeletedSegments = [];
+        $this->translationKeyModalOpen = true;
+    }
+
+    public function copySuggestedKeyToTranslationKeyModal(): void
+    {
+        $selectedFinding = $this->selectedFinding($this->translationKeyFindingId);
+
+        if (! $selectedFinding) {
+            return;
+        }
+
+        $suggestedKey = $this->nullableString($selectedFinding->key_suggested_key ?: $selectedFinding->suggested_key);
+
+        if ($suggestedKey === null) {
+            Flux::toast(
+                heading: __('No suggested key'),
+                text: __('There is no suggested key available for this finding.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->translationKeyValue = $suggestedKey;
+        $this->translationKeySegmentBaseValue = $suggestedKey;
+        $this->translationKeyDeletedSegments = [];
+    }
+
+    public function transformSuggestedKeyToUiTranslationKeyModal(): void
+    {
+        $selectedFinding = $this->selectedFinding($this->translationKeyFindingId);
+
+        if (! $selectedFinding) {
+            return;
+        }
+
+        $suggestedKey = $this->nullableString($selectedFinding->key_suggested_key ?: $selectedFinding->suggested_key);
+
+        if ($suggestedKey === null) {
+            Flux::toast(
+                heading: __('No suggested key'),
+                text: __('There is no suggested key available for this finding.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $segments = $this->translationKeySegments($suggestedKey);
+        $lastSegment = array_pop($segments);
+
+        if ($lastSegment === null) {
+            return;
+        }
+
+        $this->translationKeyValue = 'ui.'.str_replace('_', '-', $lastSegment);
+        $this->translationKeySegmentBaseValue = $suggestedKey;
+        $this->translationKeyDeletedSegments = $segments;
+    }
+
+    public function deleteFirstTranslationKeySegmentModal(): void
+    {
+        if ($this->translationKeySegmentControls()['disable_segment_buttons']) {
+            return;
+        }
+
+        $segments = $this->translationKeySegments($this->translationKeyValue);
+
+        if (count($segments) <= 1) {
+            return;
+        }
+
+        $deletedSegment = array_shift($segments);
+
+        if ($deletedSegment === null) {
+            return;
+        }
+
+        $this->translationKeyDeletedSegments[] = $deletedSegment;
+        $this->translationKeyValue = $segments !== [] ? implode('.', $segments) : null;
+    }
+
+    public function restoreFirstTranslationKeySegmentModal(): void
+    {
+        if ($this->translationKeySegmentControls()['disable_segment_buttons']) {
+            return;
+        }
+
+        $restoredSegment = array_pop($this->translationKeyDeletedSegments);
+
+        if ($restoredSegment === null) {
+            return;
+        }
+
+        $segments = $this->translationKeySegments($this->translationKeyValue);
+        array_unshift($segments, $restoredSegment);
+
+        $this->translationKeyValue = implode('.', $segments);
+    }
+
+    public function saveTranslationKeyModal(): void
+    {
+        $selectedFinding = $this->selectedFinding($this->translationKeyFindingId);
+
+        if (! $selectedFinding || ! $selectedFinding->key_id) {
+            Flux::toast(
+                heading: __('No linked key'),
+                text: __('This finding needs a key relation before its translation key can be saved.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $key = TranslationWorkbenchKey::query()->find($selectedFinding->key_id);
+        $finding = TranslationWorkbenchFinding::query()->find($selectedFinding->id);
+
+        if (! $key || ! $finding) {
+            Flux::toast(
+                heading: __('Review failed'),
+                text: __('The selected finding or key no longer exists.'),
+                variant: 'danger',
+            );
+
+            return;
+        }
+
+        $this->translationKeyValue = $this->nullableString($this->translationKeyValue);
+
+        $this->validate([
+            'translationKeyValue' => ['nullable', 'string'],
+        ]);
+
+        $translationKey = $this->nullableString($this->translationKeyValue);
+
+        $saved = $this->saveKeyReviewDecision(
+            key: $key,
+            finding: $finding,
+            selectedFinding: $selectedFinding,
+            attributes: $this->keyStructureFromTranslationKey($translationKey),
+            reviewType: 'translation_key',
+            decision: $translationKey === null ? 'translation_key_cleared' : 'translation_key_updated',
+            toastHeading: __('Translation key saved'),
+            toastText: __('The translation key has been updated.'),
+        );
+
+        $this->translationKeyValue = $translationKey;
+        $this->reviewFindingId = $finding->id;
+        $this->reviewModalOpen = true;
+
+        if ($saved) {
+            $this->closeTranslationKeyModal();
+        }
     }
 
     public function acceptSuggestedTranslationKey(int $findingId): void
@@ -284,6 +1508,312 @@ class TranslationWorkbenchEntries extends Component
         );
     }
 
+    public function setUiKeyReview(int $findingId, bool $checked): void
+    {
+        $context = $this->reviewContext($findingId);
+
+        if (! $context) {
+            return;
+        }
+
+        [$key, $finding, $selectedFinding] = $context;
+
+        if ($checked && blank($key->translation_key)) {
+            Flux::toast(
+                heading: __('Translation key missing'),
+                text: __('Set or accept a translation key before confirming this entry as UI.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $translationKey = $checked
+            ? $this->withTranslationKeyNamespace($key->translation_key, 'ui', ['dynamic'])
+            : $this->withoutTranslationKeyNamespace($key->translation_key, 'ui');
+
+        $attributes = [
+            'is_ui_key' => $checked,
+            'is_ui_candidate_rejected' => false,
+            'is_dynamic_key' => false,
+            'is_dynamic_candidate_rejected' => false,
+            'is_dynamic_multi' => false,
+            ...$this->dynamicDataStateAttributes(false),
+            'key_type' => $checked ? 'ui' : 'static',
+            ...$this->keyStructureFromTranslationKey($translationKey),
+        ];
+
+        $this->saveKeyReviewDecision(
+            key: $key,
+            finding: $finding,
+            selectedFinding: $selectedFinding,
+            attributes: $attributes,
+            reviewType: 'classification',
+            decision: $checked ? 'ui_key_confirmed' : 'ui_key_unconfirmed',
+            toastHeading: __('UI review updated'),
+            toastText: $checked
+                ? __('This key has been confirmed as UI translation.')
+                : __('The explicit UI marker has been removed.'),
+        );
+    }
+
+    public function setUiKeyRejected(int $findingId, bool $checked): void
+    {
+        $context = $this->reviewContext($findingId);
+
+        if (! $context) {
+            return;
+        }
+
+        [$key, $finding, $selectedFinding] = $context;
+        $translationKey = $checked
+            ? $this->withoutTranslationKeyNamespace($key->translation_key, 'ui')
+            : $key->translation_key;
+
+        $attributes = [
+            'is_ui_key' => false,
+            'is_ui_candidate_rejected' => $checked,
+            'is_dynamic_key' => false,
+            'is_dynamic_multi' => false,
+            ...$this->dynamicDataStateAttributes(false),
+            'key_type' => $checked ? 'static' : $key->key_type,
+            ...$this->keyStructureFromTranslationKey($translationKey),
+        ];
+
+        $this->saveKeyReviewDecision(
+            key: $key,
+            finding: $finding,
+            selectedFinding: $selectedFinding,
+            attributes: $attributes,
+            reviewType: 'classification',
+            decision: $checked ? 'ui_candidate_rejected' : 'ui_candidate_rejection_removed',
+            toastHeading: __('UI candidate updated'),
+            toastText: $checked
+                ? __('This UI candidate has been explicitly rejected.')
+                : __('The explicit UI rejection has been removed.'),
+        );
+    }
+
+    public function setUiCandidateClassification(int $findingId, bool $isCandidate): void
+    {
+        $context = $this->reviewContext($findingId);
+
+        if (! $context) {
+            return;
+        }
+
+        [$key, $finding, $selectedFinding] = $context;
+
+        if ($isCandidate && blank($key->translation_key)) {
+            Flux::toast(
+                heading: __('Translation key missing'),
+                text: __('Set a translation key before confirming this entry as UI.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->saveKeyReviewDecision(
+            key: $key,
+            finding: $finding,
+            selectedFinding: $selectedFinding,
+            attributes: [
+                'reviewed_is_ui_candidate' => $isCandidate,
+                'reviewed_is_dynamic_candidate' => $isCandidate ? false : $key->reviewed_is_dynamic_candidate,
+                'reviewed_is_dynamic_multi' => $isCandidate ? false : $key->reviewed_is_dynamic_multi,
+                'is_ui_key' => $isCandidate,
+                'is_ui_candidate_rejected' => false,
+                'is_dynamic_key' => $isCandidate ? false : (bool) $key->is_dynamic_key,
+                'is_dynamic_multi' => $isCandidate ? false : (bool) $key->is_dynamic_multi,
+                ...$this->dynamicDataStateAttributes(! $isCandidate && ((bool) $key->is_dynamic_key || (bool) $key->is_dynamic_multi)),
+                'key_type' => $isCandidate
+                    ? 'ui'
+                    : ((bool) $key->is_dynamic_key ? 'dynamic' : 'static'),
+            ],
+            reviewType: 'classification',
+            decision: $isCandidate ? 'ui_key_confirmed' : 'ui_key_unconfirmed',
+            toastHeading: __('UI candidate updated'),
+            toastText: $isCandidate
+                ? __('This key has been confirmed as UI translation.')
+                : __('The explicit UI marker has been removed.'),
+        );
+    }
+
+    public function setDynamicKeyReview(int $findingId, bool $checked): void
+    {
+        $context = $this->reviewContext($findingId);
+
+        if (! $context) {
+            return;
+        }
+
+        [$key, $finding, $selectedFinding] = $context;
+
+        if ($checked && blank($key->translation_key)) {
+            Flux::toast(
+                heading: __('Translation key missing'),
+                text: __('Set or accept a translation key before confirming this entry as dynamic.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $translationKey = $checked
+            ? $this->withTranslationKeyNamespace($key->translation_key, 'dynamic', ['ui'])
+            : $this->withoutTranslationKeyNamespace($key->translation_key, 'dynamic');
+
+        $attributes = [
+            'is_ui_key' => false,
+            'is_ui_candidate_rejected' => false,
+            'is_dynamic_key' => $checked,
+            'is_dynamic_candidate_rejected' => false,
+            'is_dynamic_multi' => $checked ? (bool) $key->is_dynamic_multi : false,
+            ...$this->dynamicDataStateAttributes($checked),
+            'key_type' => $checked ? 'dynamic' : 'static',
+            ...$this->keyStructureFromTranslationKey($translationKey),
+        ];
+
+        $this->saveKeyReviewDecision(
+            key: $key,
+            finding: $finding,
+            selectedFinding: $selectedFinding,
+            attributes: $attributes,
+            reviewType: 'classification',
+            decision: $checked ? 'dynamic_key_confirmed' : 'dynamic_key_unconfirmed',
+            toastHeading: __('Dynamic review updated'),
+            toastText: $checked
+                ? __('This key has been confirmed as dynamic translation.')
+                : __('The explicit dynamic marker has been removed.'),
+        );
+    }
+
+    public function setDynamicKeyRejected(int $findingId, bool $checked): void
+    {
+        $context = $this->reviewContext($findingId);
+
+        if (! $context) {
+            return;
+        }
+
+        [$key, $finding, $selectedFinding] = $context;
+        $translationKey = $checked
+            ? $this->withoutTranslationKeyNamespace($key->translation_key, 'dynamic')
+            : $key->translation_key;
+
+        $attributes = [
+            'is_dynamic_key' => false,
+            'is_dynamic_candidate_rejected' => $checked,
+            'is_dynamic_multi' => false,
+            'is_ui_key' => false,
+            ...$this->dynamicDataStateAttributes(false),
+            'key_type' => $checked ? 'static' : $key->key_type,
+            ...$this->keyStructureFromTranslationKey($translationKey),
+        ];
+
+        $this->saveKeyReviewDecision(
+            key: $key,
+            finding: $finding,
+            selectedFinding: $selectedFinding,
+            attributes: $attributes,
+            reviewType: 'classification',
+            decision: $checked ? 'dynamic_candidate_rejected' : 'dynamic_candidate_rejection_removed',
+            toastHeading: __('Dynamic candidate updated'),
+            toastText: $checked
+                ? __('This dynamic candidate has been explicitly rejected.')
+                : __('The explicit dynamic rejection has been removed.'),
+        );
+    }
+
+    public function setDynamicCandidateClassification(int $findingId, bool $isCandidate): void
+    {
+        $context = $this->reviewContext($findingId);
+
+        if (! $context) {
+            return;
+        }
+
+        [$key, $finding, $selectedFinding] = $context;
+
+        if ($isCandidate && blank($key->translation_key)) {
+            Flux::toast(
+                heading: __('Translation key missing'),
+                text: __('Set a translation key before confirming this entry as dynamic.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->saveKeyReviewDecision(
+            key: $key,
+            finding: $finding,
+            selectedFinding: $selectedFinding,
+            attributes: [
+                'reviewed_is_dynamic_candidate' => $isCandidate,
+                'reviewed_is_ui_candidate' => $isCandidate ? false : $key->reviewed_is_ui_candidate,
+                'reviewed_is_dynamic_multi' => $isCandidate ? (bool) $key->reviewed_is_dynamic_multi : false,
+                'is_dynamic_key' => $isCandidate,
+                'is_dynamic_candidate_rejected' => false,
+                'is_dynamic_multi' => $isCandidate ? (bool) $key->reviewed_is_dynamic_multi : false,
+                'is_ui_key' => $isCandidate ? false : (bool) $key->is_ui_key,
+                ...$this->dynamicDataStateAttributes($isCandidate),
+                'key_type' => $isCandidate
+                    ? 'dynamic'
+                    : ((bool) $key->is_ui_key ? 'ui' : 'static'),
+            ],
+            reviewType: 'classification',
+            decision: $isCandidate ? 'dynamic_key_confirmed' : 'dynamic_key_unconfirmed',
+            toastHeading: __('Dynamic candidate updated'),
+            toastText: $isCandidate
+                ? __('This key has been confirmed as dynamic translation.')
+                : __('The explicit dynamic marker has been removed.'),
+        );
+    }
+
+    public function setDynamicMultiKeyReview(int $findingId, bool $checked): void
+    {
+        $context = $this->reviewContext($findingId);
+
+        if (! $context) {
+            return;
+        }
+
+        [$key, $finding, $selectedFinding] = $context;
+
+        $scannerDynamicCandidate = $selectedFinding->candidate_type === 'dynamic'
+            || $selectedFinding->entry_type === 'dynamic'
+            || $selectedFinding->kind === 'dynamic_multi';
+        $isDynamicCandidate = $key->reviewed_is_dynamic_candidate ?? $scannerDynamicCandidate;
+
+        if ($checked && ! (bool) $isDynamicCandidate) {
+            Flux::toast(
+                heading: __('Dynamic missing'),
+                text: __('Confirm this entry as dynamic candidate before marking it as dynamic multi.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->saveKeyReviewDecision(
+            key: $key,
+            finding: $finding,
+            selectedFinding: $selectedFinding,
+            attributes: [
+                'reviewed_is_dynamic_multi' => $checked,
+                ...$this->dynamicDataStateAttributes($checked || (bool) $key->is_dynamic_key),
+            ],
+            reviewType: 'candidate_classification',
+            decision: $checked ? 'dynamic_multi_confirmed' : 'dynamic_multi_unconfirmed',
+            toastHeading: __('Dynamic multi updated'),
+            toastText: $checked
+                ? __('This key has been marked as dynamic multi.')
+                : __('The explicit dynamic multi marker has been removed.'),
+        );
+    }
+
     public function closeReviewModal(): void
     {
         $this->reviewModalOpen = false;
@@ -296,10 +1826,25 @@ class TranslationWorkbenchEntries extends Component
         $this->editFindingId = null;
     }
 
+    public function closeDynamicReviewModal(): void
+    {
+        $this->dynamicReviewModalOpen = false;
+        $this->dynamicReviewFindingId = null;
+    }
+
     public function closeTimelineModal(): void
     {
         $this->timelineModalOpen = false;
         $this->timelineFindingId = null;
+    }
+
+    public function closeTranslationKeyModal(): void
+    {
+        $this->translationKeyModalOpen = false;
+        $this->translationKeyFindingId = null;
+        $this->translationKeyValue = null;
+        $this->translationKeySegmentBaseValue = null;
+        $this->translationKeyDeletedSegments = [];
     }
 
     private function findings(): LengthAwarePaginator
@@ -315,6 +1860,7 @@ class TranslationWorkbenchEntries extends Component
         }
 
         $sourceLocale = $this->sourceMainLocale();
+        $targetLocale = (string) ($this->editLocales()['active'] ?? app()->getLocale());
         $keyLinks = DB::table('translation_workbench_key_findings')
             ->selectRaw('finding_id, MIN(key_id) as key_id')
             ->where('status', 'active')
@@ -338,6 +1884,7 @@ class TranslationWorkbenchEntries extends Component
                 'findings.suggested_key',
                 'findings.candidate_type',
                 'findings.candidate_reason',
+                'findings.dynamic_scope',
                 'findings.status',
                 'findings.last_seen_at',
                 'source_files.path as source_path',
@@ -349,6 +1896,14 @@ class TranslationWorkbenchEntries extends Component
                 'keys.is_ui_key',
                 'keys.is_dynamic_key',
                 'keys.is_dynamic_multi',
+            ])
+            ->addSelect([
+                Schema::hasColumn('translation_workbench_findings', 'dynamic_data_state')
+                    ? 'findings.dynamic_data_state'
+                    : DB::raw('null as dynamic_data_state'),
+                Schema::hasColumn('translation_workbench_keys', 'dynamic_data_state')
+                    ? 'keys.dynamic_data_state as key_dynamic_data_state'
+                    : DB::raw('null as key_dynamic_data_state'),
             ])
             ->selectRaw(
                 'CASE WHEN EXISTS (
@@ -364,7 +1919,44 @@ class TranslationWorkbenchEntries extends Component
                         )
                 ) THEN 1 ELSE 0 END as has_source_value',
                 [$sourceLocale, 'active'],
+            )
+            ->selectRaw(
+                'CASE WHEN EXISTS (
+                    SELECT 1
+                    FROM translation_workbench_lang_values as target_values
+                    WHERE target_values.locale = ?
+                        AND target_values.status = ?
+                        AND (
+                            target_values.translation_key = keys.translation_key
+                            OR target_values.translation_key = keys.suggested_key
+                            OR target_values.translation_key = findings.suggested_key
+                            OR target_values.translation_key = findings.found_translation_key
+                        )
+                ) THEN 1 ELSE 0 END as has_target_value',
+                [$targetLocale, 'active'],
+            )
+            ->selectRaw(
+                'CASE WHEN EXISTS (
+                    SELECT 1
+                    FROM translation_workbench_lang_values as source_values
+                    WHERE source_values.locale = ?
+                        AND source_values.status = ?
+                        AND (
+                            source_values.translation_key = keys.translation_key
+                            OR source_values.translation_key = keys.suggested_key
+                            OR source_values.translation_key = findings.suggested_key
+                            OR source_values.translation_key = findings.found_translation_key
+                        )
+                        AND NULLIF(BTRIM(source_values.value), ?) IS NOT NULL
+                        AND NULLIF(BTRIM(COALESCE(findings.literal_text, findings.literal_text_suggested, ?)), ?) IS NOT NULL
+                        AND BTRIM(source_values.value) <> BTRIM(COALESCE(findings.literal_text, findings.literal_text_suggested, ?))
+                ) THEN 1 ELSE 0 END as source_value_differs',
+                [$sourceLocale, 'active', '', '', '', ''],
             );
+        $this->addKeyCandidateReviewSelects($query);
+        $this->addFindingHistorySelect($query);
+        $this->addFindingDynamicContextSelect($query, $targetLocale);
+        $this->addFindingDynamicSourceSelects($query);
 
         $this->applyFindingFilters($query, $sourceLocale);
 
@@ -459,7 +2051,7 @@ class TranslationWorkbenchEntries extends Component
             ->where('status', 'active')
             ->groupBy('finding_id');
 
-        return DB::table('translation_workbench_findings as findings')
+        $query = DB::table('translation_workbench_findings as findings')
             ->join('translation_workbench_source_files as source_files', 'source_files.id', '=', 'findings.source_file_id')
             ->leftJoinSub($keyLinks, 'key_links', function ($join): void {
                 $join->on('key_links.finding_id', '=', 'findings.id');
@@ -502,8 +2094,1299 @@ class TranslationWorkbenchEntries extends Component
                 'keys.is_ui_key',
                 'keys.is_dynamic_key',
                 'keys.is_dynamic_multi',
-            ])
+            ]);
+        $query->addSelect([
+            Schema::hasColumn('translation_workbench_findings', 'dynamic_data_state')
+                ? 'findings.dynamic_data_state'
+                : DB::raw('null as dynamic_data_state'),
+            Schema::hasColumn('translation_workbench_keys', 'dynamic_data_state')
+                ? 'keys.dynamic_data_state as key_dynamic_data_state'
+                : DB::raw('null as key_dynamic_data_state'),
+        ]);
+        $this->addKeyCandidateReviewSelects($query);
+        $this->addFindingDynamicSourceSelects($query);
+
+        return $query
             ->first();
+    }
+
+    /**
+     * @return array<int, array{label: string, key: string, segment: string, distinct_full_key_count: int, translation_key_count: int, suggested_key_count: int, existing_key_count: int}>
+     */
+    private function translationKeySegmentStats(?int $findingId): array
+    {
+        if ($findingId === null || ! $this->hasTables([
+            'translation_workbench_findings',
+            'translation_workbench_keys',
+        ])) {
+            return [];
+        }
+
+        $selectedFinding = $this->selectedFinding($findingId);
+
+        if (! $selectedFinding) {
+            return [];
+        }
+
+        $keys = [
+            'current' => [
+                'label' => __('Current key'),
+                'key' => $this->nullableString($selectedFinding->translation_key),
+            ],
+            'existing' => [
+                'label' => __('Existing key'),
+                'key' => $this->nullableString($selectedFinding->existing_key),
+            ],
+            'suggested' => [
+                'label' => __('Suggested key'),
+                'key' => $this->nullableString($selectedFinding->key_suggested_key ?: $selectedFinding->suggested_key),
+            ],
+        ];
+
+        return collect($keys)
+            ->map(function (array $keyContext): ?array {
+                $key = $keyContext['key'];
+                $segment = $this->lastTranslationKeySegment($key);
+
+                if ($key === null || $segment === null) {
+                    return null;
+                }
+
+                $translationKeys = $this->distinctKeySegmentMatches('translation_workbench_keys', 'translation_key', $segment);
+                $suggestedKeys = $this->distinctKeySegmentMatches('translation_workbench_keys', 'suggested_key', $segment)
+                    ->merge($this->distinctKeySegmentMatches('translation_workbench_findings', 'suggested_key', $segment))
+                    ->unique()
+                    ->values();
+                $existingKeys = $this->distinctKeySegmentMatches('translation_workbench_findings', 'existing_key', $segment);
+                $distinctFullKeys = $translationKeys
+                    ->merge($suggestedKeys)
+                    ->merge($existingKeys)
+                    ->unique()
+                    ->values();
+
+                return [
+                    'label' => $keyContext['label'],
+                    'key' => $key,
+                    'segment' => $segment,
+                    'distinct_full_key_count' => $distinctFullKeys->count(),
+                    'translation_key_count' => $translationKeys->count(),
+                    'suggested_key_count' => $suggestedKeys->count(),
+                    'existing_key_count' => $existingKeys->count(),
+                ];
+            })
+            ->filter()
+            ->unique(static fn(array $row): string => $row['label'] . ':' . $row['key'])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array{disable_segment_buttons: bool, can_delete: bool, can_restore: bool, next_delete_segment: ?string, next_restore_segment: ?string}
+     */
+    private function translationKeySegmentControls(): array
+    {
+        $segments = $this->translationKeySegments($this->translationKeyValue);
+        $expectedValue = $this->translationKeyValueAfterDeletedSegments();
+        $currentValue = $this->nullableString($this->translationKeyValue);
+        $disableSegmentButtons = $expectedValue !== $currentValue;
+
+        return [
+            'disable_segment_buttons' => $disableSegmentButtons,
+            'can_delete' => ! $disableSegmentButtons && count($segments) > 1,
+            'can_restore' => ! $disableSegmentButtons && $this->translationKeyDeletedSegments !== [],
+            'next_delete_segment' => count($segments) > 1 ? $segments[0] : null,
+            'next_restore_segment' => $this->translationKeyDeletedSegments[array_key_last($this->translationKeyDeletedSegments)] ?? null,
+        ];
+    }
+
+    private function translationKeyValueAfterDeletedSegments(): ?string
+    {
+        $segments = $this->translationKeySegments($this->translationKeySegmentBaseValue);
+
+        foreach ($this->translationKeyDeletedSegments as $deletedSegment) {
+            if (($segments[0] ?? null) !== $deletedSegment) {
+                return $this->nullableString($this->translationKeyValue);
+            }
+
+            array_shift($segments);
+        }
+
+        return $segments !== [] ? implode('.', $segments) : null;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function translationKeySegments(?string $translationKey): array
+    {
+        return collect(explode('.', trim((string) $translationKey, '.')))
+            ->map(static fn(string $segment): string => trim($segment))
+            ->filter(static fn(string $segment): bool => $segment !== '')
+            ->values()
+            ->all();
+    }
+
+    private function lastTranslationKeySegment(?string $translationKey): ?string
+    {
+        $translationKey = $this->nullableString($translationKey);
+
+        if ($translationKey === null) {
+            return null;
+        }
+
+        $segments = collect(explode('.', trim($translationKey, '.')))
+            ->map(static fn(string $segment): string => trim($segment))
+            ->filter(static fn(string $segment): bool => $segment !== '')
+            ->values();
+
+        return $segments->last();
+    }
+
+    private function distinctKeySegmentMatches(string $table, string $column, string $segment): \Illuminate\Support\Collection
+    {
+        $segmentPattern = '(^|\\.)'.preg_quote($segment, '/').'$';
+
+        return DB::table($table)
+            ->distinct()
+            ->whereNotNull($column)
+            ->whereRaw(
+                sprintf('(%s = ? OR %s ~ ?)', $column, $column),
+                [$segment, $segmentPattern],
+            )
+            ->pluck($column)
+            ->map(static fn(mixed $key): string => trim((string) $key))
+            ->filter(static fn(string $key): bool => $key !== '')
+            ->unique()
+            ->values();
+    }
+
+    /**
+     * @return array{source: string, active: string, sub: array<int, string>}
+     */
+    private function editLocales(): array
+    {
+        $configuredLocale = LocaleCode::normalize((string) (app(AppGeneralSettings::class)->locale ?? app()->getLocale()));
+        $configuredLocale = $configuredLocale !== '' ? $configuredLocale : 'de';
+        $activeLanguage = (string) (LocaleCode::parts($configuredLocale)['language'] ?? $configuredLocale);
+        $activeLocale = $activeLanguage !== '' ? $activeLanguage : $configuredLocale;
+        $activeSubLocales = Locale::query()
+            ->where('is_active', true)
+            ->ordered()
+            ->get(['code', 'normalized_code'])
+            ->map(static fn(Locale $locale): string => LocaleCode::normalize((string) ($locale->normalized_code ?: $locale->code)))
+            ->filter(static fn(string $locale): bool => $locale !== '')
+            ->filter(static function (string $locale) use ($activeLanguage): bool {
+                return (string) (LocaleCode::parts($locale)['language'] ?? '') === $activeLanguage
+                    && $locale !== $activeLanguage;
+            })
+            ->unique()
+            ->values()
+            ->all();
+
+        return [
+            'source' => $this->sourceMainLocale(),
+            'active' => $activeLocale,
+            'sub' => $activeSubLocales,
+        ];
+    }
+
+    /**
+     * @param  array{source: string, active: string, sub: array<int, string>}  $editLocales
+     * @return array{source: ?string, target: ?string, source_exists: bool, target_exists: bool, source_origin: string}
+     */
+    private function editValues(?object $selectedFinding, array $editLocales): array
+    {
+        if (! $selectedFinding) {
+            return [
+                'source' => null,
+                'target' => null,
+                'source_exists' => false,
+                'target_exists' => false,
+                'source_origin' => 'missing',
+            ];
+        }
+
+        $sourceLocale = (string) ($editLocales['source'] ?? $this->sourceMainLocale());
+        $activeLocale = (string) ($editLocales['active'] ?? app()->getLocale());
+        $translationKey = $this->nullableString($selectedFinding->translation_key);
+        $sourceTranslationValue = $translationKey !== null
+            ? $this->translationValueForKeyAndLocale($translationKey, $sourceLocale)
+            : null;
+        $targetTranslationValue = $translationKey !== null
+            ? $this->translationValueForKeyAndLocale($translationKey, $activeLocale)
+            : null;
+        $literalText = $this->nullableString($selectedFinding->literal_text);
+        $literalTextSuggested = $this->nullableString($selectedFinding->literal_text_suggested);
+        $sourceOrigin = match (true) {
+            $sourceTranslationValue !== null => 'translation_value',
+            $literalText !== null => 'literal_text',
+            $literalTextSuggested !== null => 'literal_text_suggested',
+            default => 'missing',
+        };
+
+        return [
+            'source' => $sourceTranslationValue ?? $literalText ?? $literalTextSuggested,
+            'target' => $targetTranslationValue,
+            'source_exists' => $sourceTranslationValue !== null,
+            'target_exists' => $targetTranslationValue !== null,
+            'source_origin' => $sourceOrigin,
+        ];
+    }
+
+    /**
+     * @param  array{source: string, active: string, sub: array<int, string>}  $editLocales
+     * @return array<string, ?string>
+     */
+    private function targetSubTranslationValues(?object $selectedFinding, array $editLocales): array
+    {
+        $subLocales = collect((array) ($editLocales['sub'] ?? []))
+            ->filter(static fn(mixed $locale): bool => is_string($locale) && trim($locale) !== '')
+            ->map(static fn(string $locale): string => LocaleCode::normalize($locale))
+            ->filter(static fn(string $locale): bool => $locale !== '')
+            ->unique()
+            ->values();
+
+        if (! $selectedFinding) {
+            return $subLocales
+                ->mapWithKeys(static fn(string $locale): array => [$locale => null])
+                ->all();
+        }
+
+        $translationKey = $this->nullableString($selectedFinding->translation_key);
+
+        return $subLocales
+            ->mapWithKeys(function (string $locale) use ($translationKey): array {
+                return [
+                    $locale => $translationKey !== null
+                        ? $this->translationValueForKeyAndLocale($translationKey, $locale)
+                        : null,
+                ];
+            })
+            ->all();
+    }
+
+    private function bootstrapEditState(object $selectedFinding): void
+    {
+        $editLocales = $this->editLocales();
+        $editValues = $this->editValues($selectedFinding, $editLocales);
+        $this->editFindingId = (int) $selectedFinding->id;
+        $this->sourceTranslationValue = $editValues['source'];
+        $this->targetTranslationValue = $editValues['target'];
+        $this->targetSubTranslationValues = $this->targetSubTranslationValues($selectedFinding, $editLocales);
+        $this->selectedTargetSubLocales = collect($this->targetSubTranslationValues)
+            ->filter(fn(mixed $value): bool => $this->nullableString($value) !== null)
+            ->keys()
+            ->values()
+            ->all();
+        $this->bootstrapDynamicMultiEditState($selectedFinding, $editLocales);
+        $this->sourceTranslationEditable = false;
+    }
+
+    /**
+     * @param  array{source: string, active: string, sub: array<int, string>}  $editLocales
+     */
+    private function bootstrapDynamicMultiEditState(object $selectedFinding, array $editLocales): void
+    {
+        $rows = collect($this->dynamicMultiRows((int) $selectedFinding->id, $editLocales));
+
+        $this->dynamicMultiValueKeyMap = $rows
+            ->mapWithKeys(static fn(array $row): array => [
+                $row['field_key'] => $row['value_key'],
+            ])
+            ->all();
+
+        $this->dynamicMultiTargetValues = $rows
+            ->mapWithKeys(static fn(array $row): array => [
+                $row['field_key'] => $row['target'],
+            ])
+            ->all();
+
+        $this->dynamicMultiSourceEqualsTargetOverrides = $rows
+            ->mapWithKeys(function (array $row): array {
+                $sourceValue = $this->nullableString($row['source'] ?? $row['native_label'] ?? null);
+                $targetValue = $this->nullableString($row['target'] ?? null);
+
+                return [
+                    $row['field_key'] => $sourceValue !== null && $targetValue !== null && $sourceValue === $targetValue,
+                ];
+            })
+            ->all();
+
+        $this->dynamicMultiEditableTargetFields = $rows
+            ->mapWithKeys(function (array $row): array {
+                return [
+                    $row['field_key'] => $this->nullableString($row['target'] ?? null) === null,
+                ];
+            })
+            ->all();
+    }
+
+    /**
+     * @param  array{source: string, active: string, sub: array<int, string>}  $editLocales
+     * @return array<int, array{field_key: string, value_key: string, source: ?string, target: ?string, native_label: ?string, status: ?string}>
+     */
+    private function dynamicMultiRows(?int $findingId, array $editLocales): array
+    {
+        $selectedFinding = $this->selectedFinding($findingId);
+
+        if (! $selectedFinding || ! $selectedFinding->key_id) {
+            return [];
+        }
+
+        $sourceLocale = LocaleCode::normalize((string) ($editLocales['source'] ?? $this->sourceMainLocale()));
+        $targetLocale = LocaleCode::normalize((string) ($editLocales['active'] ?? app()->getLocale()));
+        $keyExists = TranslationWorkbenchKey::query()
+            ->whereKey($selectedFinding->key_id)
+            ->exists();
+
+        if (! $keyExists) {
+            return [];
+        }
+
+        if (Schema::hasTable('translation_workbench_dynamic_key_values')) {
+            $values = DB::table('translation_workbench_dynamic_key_values')
+                ->where('key_id', $selectedFinding->key_id)
+                ->whereIn('locale', [$sourceLocale, $targetLocale])
+                ->orderBy('value_key')
+                ->get(['value_key', 'locale', 'value', 'native_label', 'status'])
+                ->groupBy('value_key');
+
+            if ($values->isNotEmpty()) {
+                return $values
+                    ->map(function ($localeRows, string $valueKey) use ($sourceLocale, $targetLocale): array {
+                        $sourceRow = $localeRows->firstWhere('locale', $sourceLocale);
+                        $targetRow = $localeRows->firstWhere('locale', $targetLocale);
+
+                        return [
+                            'field_key' => $this->dynamicMultiFieldKey($valueKey),
+                            'value_key' => $valueKey,
+                            'source' => $this->nullableString($sourceRow?->value),
+                            'target' => $this->nullableString($targetRow?->value),
+                            'native_label' => $this->nullableString($sourceRow?->native_label ?? $targetRow?->native_label),
+                            'status' => $this->nullableString($targetRow?->status ?? $sourceRow?->status),
+                        ];
+                    })
+                    ->values()
+                    ->all();
+            }
+        }
+
+        if (! $this->hasTables([
+            'translation_workbench_dynamic_sources',
+            'translation_workbench_dynamic_source_values',
+        ])) {
+            return [];
+        }
+
+        return DB::table('translation_workbench_dynamic_source_values as source_values')
+            ->join('translation_workbench_dynamic_sources as sources', 'sources.id', '=', 'source_values.dynamic_source_id')
+            ->where('sources.status', '<>', 'obsolete')
+            ->where('source_values.status', 'active')
+            ->where(function ($query) use ($selectedFinding): void {
+                $query->where('sources.finding_id', $selectedFinding->id)
+                    ->orWhere('sources.key_id', $selectedFinding->key_id);
+            })
+            ->orderBy('source_values.value_key')
+            ->get(['source_values.value_key', 'source_values.native_label', 'source_values.status'])
+            ->map(fn(object $value): array => [
+                'field_key' => $this->dynamicMultiFieldKey((string) $value->value_key),
+                'value_key' => (string) $value->value_key,
+                'source' => $this->nullableString($value->native_label),
+                'target' => null,
+                'native_label' => $this->nullableString($value->native_label),
+                'status' => $this->nullableString($value->status),
+            ])
+            ->values()
+            ->all();
+    }
+
+    private function dynamicMultiFieldKey(string $valueKey): string
+    {
+        return 'v_' . sha1($valueKey);
+    }
+
+    private function translationValueForKeyAndLocale(string $translationKey, string $locale): ?string
+    {
+        if (! Schema::hasTable('translation_workbench_lang_values')) {
+            return null;
+        }
+
+        return $this->nullableString(
+            TranslationWorkbenchLangValue::query()
+                ->where('translation_key', $translationKey)
+                ->where('locale', LocaleCode::normalize($locale))
+                ->where('status', 'active')
+                ->value('value'),
+        );
+    }
+
+    /**
+     * @return array{value_key: string, locale: string, old: ?string, new: ?string}|null
+     */
+    private function saveDynamicKeyValueForLocale(
+        object $selectedFinding,
+        string $valueKey,
+        string $locale,
+        mixed $value,
+        ?string $nativeLabel,
+        string $source,
+    ): ?array {
+        if (! Schema::hasTable('translation_workbench_dynamic_key_values') || ! $selectedFinding->key_id) {
+            return null;
+        }
+
+        $locale = LocaleCode::normalize($locale);
+        $valueKey = trim($valueKey);
+
+        if ($locale === '' || $valueKey === '') {
+            return null;
+        }
+
+        $newValue = $this->nullableString($value);
+        $dynamicValue = DB::table('translation_workbench_dynamic_key_values')
+            ->where('key_id', $selectedFinding->key_id)
+            ->where('value_key', $valueKey)
+            ->where('locale', $locale)
+            ->first();
+        $oldValue = $this->nullableString($dynamicValue?->value);
+
+        if (! $dynamicValue && $newValue === null && $source !== 'runtime_source') {
+            return null;
+        }
+
+        if ($oldValue === $newValue && $this->nullableString($dynamicValue?->native_label) === $nativeLabel) {
+            return null;
+        }
+
+        $attributes = [
+            'value' => $newValue,
+            'native_label' => $nativeLabel,
+            'status' => $newValue !== null ? 'active' : 'missing',
+            'source' => $source,
+            'reviewed_at' => now(),
+            'reviewed_by_user_id' => Auth::id(),
+            'meta' => json_encode([
+                'source' => 'translation-workbench:modal-edit-dynamic-multi',
+                'finding_id' => $selectedFinding->id,
+                'key_id' => $selectedFinding->key_id,
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            'updated_at' => now(),
+        ];
+
+        if ($dynamicValue) {
+            DB::table('translation_workbench_dynamic_key_values')
+                ->where('id', $dynamicValue->id)
+                ->update($attributes);
+        } else {
+            DB::table('translation_workbench_dynamic_key_values')
+                ->insert([
+                    'key_id' => $selectedFinding->key_id,
+                    'value_key' => $valueKey,
+                    'locale' => $locale,
+                    ...$attributes,
+                    'created_at' => now(),
+                ]);
+        }
+
+        return [
+            'value_key' => $valueKey,
+            'locale' => $locale,
+            'old' => $oldValue,
+            'new' => $newValue,
+        ];
+    }
+
+    /**
+     * @return array{locale: string, old: ?string, new: ?string}|null
+     */
+    private function saveTranslationValueForLocale(
+        object $selectedFinding,
+        string $translationKey,
+        string $locale,
+        mixed $value,
+    ): ?array {
+        if (! Schema::hasTable('translation_workbench_lang_values')) {
+            return null;
+        }
+
+        $locale = LocaleCode::normalize($locale);
+
+        if ($locale === '') {
+            return null;
+        }
+
+        $newValue = $this->nullableString($value);
+        $keyParts = $this->translationKeyLangParts($translationKey);
+        $langValue = TranslationWorkbenchLangValue::query()
+            ->where('locale', $locale)
+            ->where('namespace', $keyParts['namespace'])
+            ->where('lang_key', $keyParts['lang_key'])
+            ->first();
+        $oldValue = $this->nullableString($langValue?->value);
+
+        if ($oldValue === $newValue || (! $langValue && $newValue === null)) {
+            return null;
+        }
+
+        $now = now();
+        $localeAttributes = $this->langValueLocaleAttributes($locale);
+        $attributes = [
+            ...$localeAttributes,
+            'translation_key' => $translationKey,
+            'value' => $newValue,
+            'value_type' => 'string',
+            'source_path' => 'lang/' . $locale . '/' . $keyParts['namespace'] . '.php',
+            'source_hash' => $newValue !== null ? sha1($newValue) : null,
+            'status' => $newValue !== null ? 'active' : 'missing',
+            'last_seen_at' => $now,
+            'meta' => [
+                'source' => 'translation-workbench:modal-edit',
+                'finding_id' => $selectedFinding->id,
+                'key_id' => $selectedFinding->key_id,
+            ],
+        ];
+
+        if ($langValue) {
+            $langValue->forceFill($attributes)->save();
+        } else {
+            TranslationWorkbenchLangValue::query()->create([
+                'locale' => $locale,
+                'namespace' => $keyParts['namespace'],
+                'lang_key' => $keyParts['lang_key'],
+                ...$attributes,
+                'first_seen_at' => $now,
+                'scan_count' => 0,
+            ]);
+        }
+
+        return [
+            'locale' => $locale,
+            'old' => $oldValue,
+            'new' => $newValue,
+        ];
+    }
+
+    /**
+     * @return array{namespace: string, lang_key: string}
+     */
+    private function translationKeyLangParts(string $translationKey): array
+    {
+        $segments = collect(explode('.', $translationKey))
+            ->map(static fn(string $segment): string => trim($segment))
+            ->filter(static fn(string $segment): bool => $segment !== '')
+            ->values();
+        $namespace = (string) ($segments->first() ?: 'messages');
+        $langKey = $segments->count() > 1
+            ? $segments->slice(1)->implode('.')
+            : $namespace;
+
+        return [
+            'namespace' => $namespace,
+            'lang_key' => $langKey,
+        ];
+    }
+
+    /**
+     * @return array{is_source_locale: bool, locale_role: string, main_locale: string, parent_locale: ?string}
+     */
+    private function langValueLocaleAttributes(string $locale): array
+    {
+        $mainLocale = (string) (LocaleCode::parts($locale)['language'] ?? $locale);
+        $isSourceLocale = $locale === $this->sourceMainLocale();
+        $isSubLocale = str_contains($locale, '-');
+
+        return [
+            'is_source_locale' => $isSourceLocale,
+            'locale_role' => $isSourceLocale ? 'source_main' : ($isSubLocale ? 'target_sub' : 'target_main'),
+            'main_locale' => $isSourceLocale ? $this->sourceMainLocale() : $mainLocale,
+            'parent_locale' => $isSubLocale ? $mainLocale : null,
+        ];
+    }
+
+    /**
+     * @return array{0: TranslationWorkbenchKey, 1: TranslationWorkbenchFinding, 2: object}|null
+     */
+    private function reviewContext(int $findingId): ?array
+    {
+        if (! $this->hasKeyCandidateReviewColumns()) {
+            Flux::toast(
+                heading: __('Migration missing'),
+                text: __('Run the Translation Workbench migrations before saving UI or dynamic review decisions.'),
+                variant: 'warning',
+            );
+
+            return null;
+        }
+
+        $selectedFinding = $this->selectedFinding($findingId);
+
+        if (! $selectedFinding || ! $selectedFinding->key_id) {
+            Flux::toast(
+                heading: __('No linked key'),
+                text: __('This finding needs a key relation before it can be reviewed as UI or dynamic.'),
+                variant: 'warning',
+            );
+
+            return null;
+        }
+
+        $key = TranslationWorkbenchKey::query()->find($selectedFinding->key_id);
+        $finding = TranslationWorkbenchFinding::query()->find($findingId);
+
+        if (! $key || ! $finding) {
+            Flux::toast(
+                heading: __('Review failed'),
+                text: __('The selected finding or key no longer exists.'),
+                variant: 'danger',
+            );
+
+            return null;
+        }
+
+        return [$key, $finding, $selectedFinding];
+    }
+
+    private function addKeyCandidateReviewSelects($query): void
+    {
+        $query->addSelect([
+            Schema::hasColumn('translation_workbench_keys', 'is_ui_candidate_rejected')
+                ? 'keys.is_ui_candidate_rejected'
+                : DB::raw('false as is_ui_candidate_rejected'),
+            Schema::hasColumn('translation_workbench_keys', 'is_dynamic_candidate_rejected')
+                ? 'keys.is_dynamic_candidate_rejected'
+                : DB::raw('false as is_dynamic_candidate_rejected'),
+            Schema::hasColumn('translation_workbench_keys', 'reviewed_is_ui_candidate')
+                ? 'keys.reviewed_is_ui_candidate'
+                : DB::raw('null as reviewed_is_ui_candidate'),
+            Schema::hasColumn('translation_workbench_keys', 'reviewed_is_dynamic_candidate')
+                ? 'keys.reviewed_is_dynamic_candidate'
+                : DB::raw('null as reviewed_is_dynamic_candidate'),
+            Schema::hasColumn('translation_workbench_keys', 'reviewed_is_dynamic_multi')
+                ? 'keys.reviewed_is_dynamic_multi'
+                : DB::raw('null as reviewed_is_dynamic_multi'),
+        ]);
+    }
+
+    private function addFindingHistorySelect($query): void
+    {
+        $historyChecks = [];
+
+        if (Schema::hasTable('translation_workbench_timeline_events')) {
+            $historyChecks[] = 'EXISTS (
+                SELECT 1
+                FROM translation_workbench_timeline_events as timeline_events
+                WHERE timeline_events.finding_id = findings.id
+                    OR (
+                        keys.id IS NOT NULL
+                        AND timeline_events.key_id = keys.id
+                    )
+            )';
+        }
+
+        if (Schema::hasTable('translation_workbench_reviews')) {
+            $historyChecks[] = 'EXISTS (
+                SELECT 1
+                FROM translation_workbench_reviews as reviews
+                WHERE reviews.finding_id = findings.id
+                    OR (
+                        keys.id IS NOT NULL
+                        AND reviews.key_id = keys.id
+                    )
+            )';
+        }
+
+        if ($historyChecks === []) {
+            $query->addSelect(DB::raw('0 as has_history'));
+
+            return;
+        }
+
+        $query->selectRaw(
+            'CASE WHEN ' . implode(' OR ', $historyChecks) . ' THEN 1 ELSE 0 END as has_history',
+        );
+    }
+
+    private function addFindingDynamicContextSelect($query, string $targetLocale): void
+    {
+        if (Schema::hasTable('translation_workbench_dynamic_key_values')) {
+            $query
+                ->selectRaw(
+                    '(
+                        SELECT COUNT(DISTINCT dynamic_values.value_key)
+                        FROM translation_workbench_dynamic_key_values as dynamic_values
+                        WHERE dynamic_values.key_id = keys.id
+                    ) as dynamic_value_count',
+                )
+                ->selectRaw(
+                    '(
+                        SELECT COUNT(DISTINCT dynamic_values.value_key)
+                        FROM translation_workbench_dynamic_key_values as dynamic_values
+                        WHERE dynamic_values.key_id = keys.id
+                            AND dynamic_values.locale = ?
+                            AND dynamic_values.status = ?
+                            AND NULLIF(BTRIM(dynamic_values.value), ?) IS NOT NULL
+                    ) as dynamic_target_value_count',
+                    [$targetLocale, 'active', ''],
+                );
+        } else {
+            $query->addSelect([
+                DB::raw('0 as dynamic_value_count'),
+                DB::raw('0 as dynamic_target_value_count'),
+            ]);
+        }
+
+        if (Schema::hasTable('translation_workbench_option_discoveries')) {
+            $query
+                ->selectRaw(
+                    '(
+                        SELECT COUNT(*)
+                        FROM translation_workbench_option_discoveries as option_discoveries
+                        WHERE option_discoveries.status <> ?
+                            AND (
+                                option_discoveries.suggested_key = keys.translation_key
+                                OR option_discoveries.suggested_key = keys.suggested_key
+                                OR option_discoveries.suggested_key = findings.suggested_key
+                                OR option_discoveries.workbench_suggested_key = keys.translation_key
+                                OR option_discoveries.workbench_suggested_key = keys.suggested_key
+                                OR option_discoveries.workbench_suggested_key = findings.suggested_key
+                                OR option_discoveries.suggested_dynamic_key = keys.translation_key
+                                OR option_discoveries.suggested_dynamic_key = keys.suggested_key
+                                OR option_discoveries.suggested_dynamic_key = findings.suggested_key
+                                OR (
+                                    option_discoveries.source_path = source_files.path
+                                    AND option_discoveries.source_line = findings.source_line
+                                )
+                            )
+                    ) as dynamic_discovery_count',
+                    ['obsolete'],
+                )
+                ->selectRaw(
+                    '(
+                        SELECT MAX(option_discoveries.options_count)
+                        FROM translation_workbench_option_discoveries as option_discoveries
+                        WHERE option_discoveries.status <> ?
+                            AND (
+                                option_discoveries.suggested_key = keys.translation_key
+                                OR option_discoveries.suggested_key = keys.suggested_key
+                                OR option_discoveries.suggested_key = findings.suggested_key
+                                OR option_discoveries.workbench_suggested_key = keys.translation_key
+                                OR option_discoveries.workbench_suggested_key = keys.suggested_key
+                                OR option_discoveries.workbench_suggested_key = findings.suggested_key
+                                OR option_discoveries.suggested_dynamic_key = keys.translation_key
+                                OR option_discoveries.suggested_dynamic_key = keys.suggested_key
+                                OR option_discoveries.suggested_dynamic_key = findings.suggested_key
+                                OR (
+                                    option_discoveries.source_path = source_files.path
+                                    AND option_discoveries.source_line = findings.source_line
+                                )
+                            )
+                    ) as dynamic_options_count',
+                    ['obsolete'],
+                )
+                ->selectRaw(
+                    '(
+                        SELECT STRING_AGG(DISTINCT option_discoveries.source_type, \', \')
+                        FROM translation_workbench_option_discoveries as option_discoveries
+                        WHERE option_discoveries.status <> ?
+                            AND option_discoveries.source_type IS NOT NULL
+                            AND option_discoveries.source_type <> ?
+                            AND (
+                                option_discoveries.suggested_key = keys.translation_key
+                                OR option_discoveries.suggested_key = keys.suggested_key
+                                OR option_discoveries.suggested_key = findings.suggested_key
+                                OR option_discoveries.workbench_suggested_key = keys.translation_key
+                                OR option_discoveries.workbench_suggested_key = keys.suggested_key
+                                OR option_discoveries.workbench_suggested_key = findings.suggested_key
+                                OR option_discoveries.suggested_dynamic_key = keys.translation_key
+                                OR option_discoveries.suggested_dynamic_key = keys.suggested_key
+                                OR option_discoveries.suggested_dynamic_key = findings.suggested_key
+                                OR (
+                                    option_discoveries.source_path = source_files.path
+                                    AND option_discoveries.source_line = findings.source_line
+                                )
+                            )
+                    ) as dynamic_source_types',
+                    ['obsolete', ''],
+                );
+        } else {
+            $query->addSelect([
+                DB::raw('0 as dynamic_discovery_count'),
+                DB::raw('null as dynamic_options_count'),
+                DB::raw('null as dynamic_source_types'),
+            ]);
+        }
+    }
+
+    private function addFindingDynamicSourceSelects($query): void
+    {
+        if (! Schema::hasTable('translation_workbench_dynamic_sources')) {
+            $query->addSelect([
+                DB::raw('0 as dynamic_source_count'),
+                DB::raw('0 as dynamic_multi_source_count'),
+                DB::raw('0 as dynamic_source_value_count'),
+                DB::raw('0 as dynamic_unresolved_source_count'),
+            ]);
+
+            return;
+        }
+
+        $sourceMatch = '(
+            dynamic_sources.finding_id = findings.id
+            OR (
+                keys.id IS NOT NULL
+                AND dynamic_sources.key_id = keys.id
+            )
+        )';
+
+        $query
+            ->selectRaw(
+                "(
+                    SELECT COUNT(*)
+                    FROM translation_workbench_dynamic_sources as dynamic_sources
+                    WHERE dynamic_sources.status <> ?
+                        AND {$sourceMatch}
+                ) as dynamic_source_count",
+                ['obsolete'],
+            )
+            ->selectRaw(
+                "(
+                    SELECT COUNT(*)
+                    FROM translation_workbench_dynamic_sources as dynamic_sources
+                    WHERE dynamic_sources.status <> ?
+                        AND {$sourceMatch}
+                        AND (
+                            dynamic_sources.cardinality = ?
+                            OR dynamic_sources.classification LIKE ?
+                            OR dynamic_sources.values_count > 1
+                        )
+                ) as dynamic_multi_source_count",
+                ['obsolete', 'multi', 'multi_%'],
+            )
+            ->selectRaw(
+                "(
+                    SELECT COALESCE(SUM(dynamic_sources.values_count), 0)
+                    FROM translation_workbench_dynamic_sources as dynamic_sources
+                    WHERE dynamic_sources.status <> ?
+                        AND {$sourceMatch}
+                ) as dynamic_source_value_count",
+                ['obsolete'],
+            )
+            ->selectRaw(
+                "(
+                    SELECT COUNT(*)
+                    FROM translation_workbench_dynamic_sources as dynamic_sources
+                    WHERE dynamic_sources.status <> ?
+                        AND {$sourceMatch}
+                        AND (
+                            dynamic_sources.status IN (?, ?)
+                            OR dynamic_sources.classification = ?
+                            OR dynamic_sources.cardinality = ?
+                            OR dynamic_sources.origin = ?
+                        )
+                ) as dynamic_unresolved_source_count",
+                ['obsolete', 'needs_review', 'unresolved', 'unknown', 'unknown', 'unknown'],
+            );
+    }
+
+    /**
+     * @return array<int, array{id: int, key_id: int|null, finding_id: int|null, suggested_key: ?string, dynamic_scope: ?string, classification: string, cardinality: string, origin: string, source_type: ?string, source_reference: ?string, source_path: ?string, source_line: ?int, source_expression: ?string, values_count: int, confidence: string, status: string, link_review_status: ?string, is_runtime_options: bool, values: array<int, array{value_key: string, native_label: ?string, status: string}>}>
+     */
+    private function dynamicReviewSources(?int $findingId): array
+    {
+        $selectedFinding = $this->selectedFinding($findingId);
+
+        if (! $selectedFinding || ! $this->hasTables([
+            'translation_workbench_dynamic_sources',
+            'translation_workbench_dynamic_source_values',
+        ])) {
+            return [];
+        }
+
+        $sources = DB::table('translation_workbench_dynamic_sources as sources')
+            ->leftJoin('translation_workbench_keys as keys', 'keys.id', '=', 'sources.key_id')
+            ->where('sources.status', '<>', 'obsolete')
+            ->where(function ($query) use ($selectedFinding): void {
+                $query->where('sources.finding_id', $selectedFinding->id);
+
+                if ($selectedFinding->key_id) {
+                    $query->orWhere('sources.key_id', $selectedFinding->key_id);
+                }
+            })
+            ->orderByRaw("CASE WHEN sources.source_type IN ('runtime_options', 'runtime_db_options') THEN 0 ELSE 1 END")
+            ->orderBy('keys.suggested_key')
+            ->orderBy('sources.classification')
+            ->orderBy('sources.id')
+            ->get([
+                'sources.id',
+                'sources.key_id',
+                'sources.finding_id',
+                'keys.suggested_key',
+                'sources.dynamic_scope',
+                'sources.classification',
+                'sources.cardinality',
+                'sources.origin',
+                'sources.source_type',
+                'sources.source_reference',
+                'sources.source_path',
+                'sources.source_line',
+                'sources.source_expression',
+                'sources.values_count',
+                'sources.confidence',
+                'sources.status',
+            ]);
+
+        if ($sources->isEmpty()) {
+            return [];
+        }
+
+        $values = DB::table('translation_workbench_dynamic_source_values')
+            ->whereIn('dynamic_source_id', $sources->pluck('id')->all())
+            ->where('status', '<>', 'obsolete')
+            ->orderBy('value_key')
+            ->get(['dynamic_source_id', 'value_key', 'native_label', 'status'])
+            ->groupBy('dynamic_source_id');
+
+        $runtimeSourceIds = $sources
+            ->filter(static fn(object $source): bool => in_array($source->source_type, ['runtime_options', 'runtime_db_options'], true))
+            ->pluck('id')
+            ->all();
+        $linkStatuses = collect();
+
+        if ($runtimeSourceIds !== [] && $this->hasTables(['translation_workbench_dynamic_source_candidates'])) {
+            $linkStatuses = DB::table('translation_workbench_dynamic_source_candidates')
+                ->whereIn('dynamic_source_id', $runtimeSourceIds)
+                ->where('candidate_source_type', 'related_dynamic_source')
+                ->where('status', 'active')
+                ->get(['candidate_reference', 'review_status'])
+                ->groupBy(function (object $candidate): int {
+                    return (int) str($candidate->candidate_reference)->after('dynamic_source:')->toString();
+                })
+                ->map(static fn($candidates): string => (string) $candidates->first()->review_status);
+        }
+
+        return $sources
+            ->map(fn(object $source): array => [
+                'id' => (int) $source->id,
+                'key_id' => $source->key_id !== null ? (int) $source->key_id : null,
+                'finding_id' => $source->finding_id !== null ? (int) $source->finding_id : null,
+                'suggested_key' => $this->nullableString($source->suggested_key),
+                'dynamic_scope' => $this->nullableString($source->dynamic_scope),
+                'classification' => (string) $source->classification,
+                'cardinality' => (string) $source->cardinality,
+                'origin' => (string) $source->origin,
+                'source_type' => $this->nullableString($source->source_type),
+                'source_reference' => $this->nullableString($source->source_reference),
+                'source_path' => $this->nullableString($source->source_path),
+                'source_line' => $source->source_line !== null ? (int) $source->source_line : null,
+                'source_expression' => $this->nullableString($source->source_expression),
+                'values_count' => (int) $source->values_count,
+                'confidence' => (string) $source->confidence,
+                'status' => (string) $source->status,
+                'link_review_status' => $this->nullableString($linkStatuses->get((int) $source->id)),
+                'is_runtime_options' => in_array($source->source_type, ['runtime_options', 'runtime_db_options'], true),
+                'values' => $values
+                    ->get($source->id, collect())
+                    ->map(fn(object $value): array => [
+                        'value_key' => (string) $value->value_key,
+                        'native_label' => $this->nullableString($value->native_label),
+                        'status' => (string) $value->status,
+                    ])
+                    ->values()
+                    ->all(),
+            ])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array{finding: object, runtime_sources: array<int, array<string, mixed>>, related_source: array<string, mixed>}|null
+     */
+    private function dynamicSourceLinkPreview(): ?array
+    {
+        if ($this->dynamicReviewFindingId === null || $this->dynamicSourceLinkRelatedSourceId === null) {
+            return null;
+        }
+
+        $selectedFinding = $this->selectedFinding($this->dynamicReviewFindingId);
+
+        if (! $selectedFinding) {
+            return null;
+        }
+
+        $sources = collect($this->dynamicReviewSources($this->dynamicReviewFindingId));
+        $runtimeSources = $sources
+            ->filter(static fn(array $source): bool => (bool) ($source['is_runtime_options'] ?? false))
+            ->values();
+        $relatedSource = $sources
+            ->firstWhere('id', $this->dynamicSourceLinkRelatedSourceId);
+
+        if ($runtimeSources->isEmpty() || ! is_array($relatedSource)) {
+            return null;
+        }
+
+        return [
+            'finding' => $selectedFinding,
+            'runtime_sources' => $runtimeSources->all(),
+            'related_source' => $relatedSource,
+        ];
+    }
+
+    private function isDynamicReviewReady(object $selectedFinding): bool
+    {
+        if (! $this->isDynamicFinding($selectedFinding)) {
+            return false;
+        }
+
+        if ((int) ($selectedFinding->dynamic_value_count ?? 0) > 0) {
+            return true;
+        }
+
+        if ($this->hasConfirmedDynamicSourceLink($selectedFinding)) {
+            return true;
+        }
+
+        return (int) ($selectedFinding->dynamic_source_count ?? 0) > 0
+            && (int) ($selectedFinding->dynamic_unresolved_source_count ?? 0) === 0;
+    }
+
+    private function hasConfirmedDynamicSourceLink(object $selectedFinding): bool
+    {
+        if (! $this->hasTables([
+            'translation_workbench_dynamic_sources',
+            'translation_workbench_dynamic_source_candidates',
+        ])) {
+            return false;
+        }
+
+        return DB::table('translation_workbench_dynamic_source_candidates as candidates')
+            ->join('translation_workbench_dynamic_sources as runtime_sources', 'runtime_sources.id', '=', 'candidates.dynamic_source_id')
+            ->where('candidates.candidate_source_type', 'related_dynamic_source')
+            ->where('candidates.review_status', 'confirmed')
+            ->where('candidates.status', 'active')
+            ->where('runtime_sources.status', '<>', 'obsolete')
+            ->whereIn('runtime_sources.source_type', ['runtime_options', 'runtime_db_options'])
+            ->where(function ($query) use ($selectedFinding): void {
+                $query->where('runtime_sources.finding_id', $selectedFinding->id);
+
+                if ($selectedFinding->key_id) {
+                    $query->orWhere('runtime_sources.key_id', $selectedFinding->key_id);
+                }
+            })
+            ->exists();
+    }
+
+    private function isDynamicFinding(object $selectedFinding): bool
+    {
+        $dataState = $this->nullableString(
+            $selectedFinding->key_dynamic_data_state ?? $selectedFinding->dynamic_data_state ?? null,
+        );
+        $candidateType = $this->nullableString($selectedFinding->candidate_type ?? null);
+        $entryType = $this->nullableString($selectedFinding->entry_type ?? null);
+        $kind = $this->nullableString($selectedFinding->kind ?? null);
+
+        return $this->isDynamicMultiFinding($selectedFinding)
+            || (bool) ($selectedFinding->is_dynamic_key ?? false)
+            || (bool) ($selectedFinding->reviewed_is_dynamic_candidate ?? false)
+            || $dataState !== null
+            || (int) ($selectedFinding->dynamic_source_count ?? 0) > 0
+            || $candidateType === 'dynamic'
+            || $entryType === 'dynamic'
+            || ($kind !== null && str_starts_with($kind, 'dynamic'));
+    }
+
+    private function isDynamicMultiFinding(object $selectedFinding): bool
+    {
+        return (bool) ($selectedFinding->is_dynamic_multi ?? false)
+            || (bool) ($selectedFinding->reviewed_is_dynamic_multi ?? false)
+            || (int) ($selectedFinding->dynamic_multi_source_count ?? 0) > 0
+            || (int) ($selectedFinding->dynamic_value_count ?? 0) > 1;
+    }
+
+    private function hasKeyCandidateReviewColumns(): bool
+    {
+        return Schema::hasColumn('translation_workbench_keys', 'is_ui_candidate_rejected')
+            && Schema::hasColumn('translation_workbench_keys', 'is_dynamic_candidate_rejected')
+            && Schema::hasColumn('translation_workbench_keys', 'reviewed_is_ui_candidate')
+            && Schema::hasColumn('translation_workbench_keys', 'reviewed_is_dynamic_candidate')
+            && Schema::hasColumn('translation_workbench_keys', 'reviewed_is_dynamic_multi');
+    }
+
+    private function hasDynamicDataStateColumns(): bool
+    {
+        return Schema::hasColumn('translation_workbench_findings', 'dynamic_data_state')
+            && Schema::hasColumn('translation_workbench_keys', 'dynamic_data_state');
+    }
+
+    /**
+     * @return array<string, string|null>
+     */
+    private function dynamicDataStateAttributes(bool $isDynamic): array
+    {
+        if (! Schema::hasColumn('translation_workbench_keys', 'dynamic_data_state')) {
+            return [];
+        }
+
+        return [
+            'dynamic_data_state' => $isDynamic ? 'unstructured' : null,
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $attributes
+     */
+    private function saveKeyReviewDecision(
+        TranslationWorkbenchKey $key,
+        TranslationWorkbenchFinding $finding,
+        object $selectedFinding,
+        array $attributes,
+        string $reviewType,
+        string $decision,
+        string $toastHeading,
+        string $toastText,
+    ): bool {
+        $trackedAttributes = array_values(array_unique([
+            ...array_keys($attributes),
+            'review_status',
+            'reviewed_at',
+            'reviewed_by_user_id',
+        ]));
+
+        $oldValues = $key->only($trackedAttributes);
+
+        $attributes = [
+            ...$attributes,
+            'review_status' => 'reviewed',
+            'reviewed_at' => now(),
+            'reviewed_by_user_id' => Auth::id(),
+        ];
+
+        $changedValues = collect($attributes)
+            ->filter(static fn(mixed $value, string $attribute): bool => ($oldValues[$attribute] ?? null) != $value)
+            ->all();
+
+        if ($changedValues === []) {
+            Flux::toast(
+                heading: __('No change'),
+                text: __('The review decision was already set.'),
+                variant: 'warning',
+            );
+
+            return false;
+        }
+
+        DB::transaction(function () use ($key, $finding, $selectedFinding, $oldValues, $changedValues, $reviewType, $decision): void {
+            $key->forceFill($changedValues)->save();
+
+            $review = TranslationWorkbenchReview::query()->create([
+                'key_id' => $key->id,
+                'finding_id' => $finding->id,
+                'review_type' => $reviewType,
+                'decision' => $decision,
+                'old_values' => collect($oldValues)->only(array_keys($changedValues))->all(),
+                'new_values' => $changedValues,
+                'meta' => [
+                    'source' => 'translation-workbench:review-modal',
+                    'candidate_type' => $selectedFinding->candidate_type,
+                    'candidate_reason' => $selectedFinding->candidate_reason,
+                    'finding_kind' => $selectedFinding->kind,
+                    'finding_entry_type' => $selectedFinding->entry_type,
+                ],
+                'reviewed_by_user_id' => Auth::id(),
+                'reviewed_at' => now(),
+            ]);
+
+            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
+                review: $review,
+                eventType: $decision,
+                oldValues: collect($oldValues)->only(array_keys($changedValues))->all(),
+                newValues: $changedValues,
+                context: [
+                    'source' => 'translation-workbench:review-modal',
+                    'candidate_type' => $selectedFinding->candidate_type,
+                    'candidate_reason' => $selectedFinding->candidate_reason,
+                ],
+            );
+        });
+
+        Flux::toast(
+            heading: $toastHeading,
+            text: $toastText,
+            variant: 'success',
+        );
+
+        return true;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function keyStructureFromTranslationKey(?string $translationKey): array
+    {
+        $translationKey = $this->nullableString($translationKey);
+
+        if ($translationKey === null) {
+            return [
+                'translation_key' => null,
+                'namespace' => null,
+                'group' => null,
+                'path_key' => null,
+                'scope' => null,
+                'key_segment_domain' => null,
+                'key_segment_section' => null,
+                'key_segment_context' => null,
+                'key_segment_extra' => null,
+                'key_segment_name' => null,
+            ];
+        }
+
+        return [
+            'translation_key' => $translationKey,
+            ...app(TranslationKeyPartsFactory::class)->fromKey($translationKey),
+            ...app(TranslationKeySegmentFactory::class)->fromKey($translationKey),
+        ];
+    }
+
+    private function withTranslationKeyNamespace(?string $translationKey, string $namespace, array $removeNamespaces = []): ?string
+    {
+        $translationKey = $this->nullableString($translationKey);
+
+        if ($translationKey === null) {
+            return null;
+        }
+
+        foreach (array_unique([$namespace, ...$removeNamespaces]) as $removeNamespace) {
+            $translationKey = $this->withoutTranslationKeyNamespace($translationKey, $removeNamespace);
+        }
+
+        return $namespace . '.' . trim((string) $translationKey, '.');
+    }
+
+    private function withoutTranslationKeyNamespace(?string $translationKey, string $namespace): ?string
+    {
+        $translationKey = $this->nullableString($translationKey);
+
+        if ($translationKey === null) {
+            return null;
+        }
+
+        $segments = collect(explode('.', trim($translationKey, '.')))
+            ->filter(static fn(string $segment): bool => $segment !== '')
+            ->values();
+
+        if ($segments->first() === $namespace) {
+            $segments = $segments->slice(1)->values();
+        }
+
+        $key = $segments->implode('.');
+
+        return $key !== '' ? $key : null;
+    }
+
+    private function nullableString(mixed $value): ?string
+    {
+        $value = trim((string) $value);
+
+        return $value === '' ? null : $value;
     }
 
     private function applyFindingFilters($query, string $sourceLocale): void
@@ -517,11 +3400,22 @@ class TranslationWorkbenchEntries extends Component
         }
 
         if ($this->findingCandidateType !== 'all') {
-            if ($this->findingCandidateType === 'NULL') {
-                $query->whereNull('findings.candidate_type');
-            } else {
-                $query->where('findings.candidate_type', $this->findingCandidateType);
-            }
+            match ($this->findingCandidateType) {
+                'NULL' => $query->whereNull('findings.candidate_type'),
+                'is_ui' => $query->where('keys.is_ui_key', true),
+                'is_dynamic' => $query
+                    ->where('keys.is_dynamic_key', true)
+                    ->where('keys.is_dynamic_multi', false),
+                'dynamic_multi' => $query->where('keys.is_dynamic_multi', true),
+                'dynamic_unstructured' => $this->hasDynamicDataStateColumns()
+                    ? $query->where(function ($query): void {
+                        $query
+                            ->where('keys.dynamic_data_state', 'unstructured')
+                            ->orWhere('findings.dynamic_data_state', 'unstructured');
+                    })
+                    : $query->whereRaw('1 = 0'),
+                default => $query->where('findings.candidate_type', $this->findingCandidateType),
+            };
         }
 
         if ($this->findingNamespace !== 'all') {
@@ -724,6 +3618,46 @@ class TranslationWorkbenchEntries extends Component
     }
 
     /**
+     * @return array<int, array{value: string, label: string}>
+     */
+    private function findingCandidateTypeOptions(): array
+    {
+        $scannerOptions = collect($this->distinctOptions('translation_workbench_findings', 'candidate_type'))
+            ->map(static fn(string $option): array => [
+                'value' => $option,
+                'label' => match ($option) {
+                    'NULL' => __('No scanner candidate'),
+                    'ui' => __('UI candidate'),
+                    'dynamic' => __('Dynamic candidate'),
+                    default => __('Scanner candidate: :type', ['type' => $option]),
+                },
+            ]);
+
+        return $scannerOptions
+            ->merge([
+                [
+                    'value' => 'is_ui',
+                    'label' => __('UI translation'),
+                ],
+                [
+                    'value' => 'is_dynamic',
+                    'label' => __('Dynamic translation'),
+                ],
+                [
+                    'value' => 'dynamic_multi',
+                    'label' => __('Dynamic option list'),
+                ],
+                [
+                    'value' => 'dynamic_unstructured',
+                    'label' => __('Dynamic data unstructured'),
+                ],
+            ])
+            ->unique('value')
+            ->values()
+            ->all();
+    }
+
+    /**
      * @return array<int, string>
      */
     private function findingGroupOptions(): array
@@ -751,11 +3685,134 @@ class TranslationWorkbenchEntries extends Component
             ->all();
     }
 
-    private function normalizedPerPage(): int
+    private function normalizedPerPage(mixed $value = null): int
     {
-        return in_array($this->perPage, [10, 25, 50, 100], true)
-            ? $this->perPage
+        $value = (int) ($value ?? $this->perPage);
+
+        return in_array($value, [10, 25, 50, 100], true)
+            ? $value
             : 25;
+    }
+
+    private function normalizeOptionState(mixed $value, string $default = 'all'): string
+    {
+        $value = trim((string) $value);
+
+        return $value !== '' ? $value : $default;
+    }
+
+    private function normalizeFindingSortField(mixed $value): string
+    {
+        $value = trim((string) $value);
+
+        return in_array($value, ['last_seen', 'source', 'literal', 'keys'], true) ? $value : 'last_seen';
+    }
+
+    private function normalizeSortDirection(mixed $value): string
+    {
+        return trim((string) $value) === 'asc' ? 'asc' : 'desc';
+    }
+
+    private function findingFiltersActive(): bool
+    {
+        return $this->findingSearch !== ''
+            || $this->findingStatus !== 'all'
+            || $this->findingKind !== 'all'
+            || $this->findingCandidateType !== 'all'
+            || $this->findingNamespace !== 'all'
+            || $this->findingGroup !== 'all'
+            || $this->findingKeyRelation !== 'all'
+            || $this->findingSourceValue !== 'all';
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function uiStateDefaults(): array
+    {
+        $configDefaults = (array) config('translation-workbench.ui_state.defaults', []);
+        $fileDefaults = $this->uiStateFileDefaults();
+
+        return [
+            ...$fileDefaults,
+            ...$configDefaults,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function uiStateFileDefaults(): array
+    {
+        $path = base_path((string) config(
+            'translation-workbench.ui_state.defaults_file',
+            'packages/gunreip/laravel-translation-workbench/resources/ui-state/entries-defaults.json',
+        ));
+
+        if (! File::exists($path)) {
+            return [];
+        }
+
+        $decoded = json_decode((string) File::get($path), true);
+
+        return is_array($decoded) ? $decoded : [];
+    }
+
+    private function uiStateSettingKey(): string
+    {
+        return (string) config('translation-workbench.ui_state.setting_key', 'ui.pages.translation_workbench.entries');
+    }
+
+    private function persistUiState(): void
+    {
+        $state = $this->currentUiState();
+
+        $this->setUserSetting($this->uiStateSettingKey(), $state);
+        $this->persistUiStateFile($state);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function currentUiState(): array
+    {
+        return [
+            'findingSearch' => $this->findingSearch,
+            'findingStatus' => $this->findingStatus,
+            'findingKind' => $this->findingKind,
+            'findingCandidateType' => $this->findingCandidateType,
+            'findingNamespace' => $this->findingNamespace,
+            'findingGroup' => $this->findingGroup,
+            'findingKeyRelation' => $this->findingKeyRelation,
+            'findingSourceValue' => $this->findingSourceValue,
+            'perPage' => $this->perPage,
+            'findingSortField' => $this->findingSortField,
+            'findingSortDirection' => $this->findingSortDirection,
+            'showOverviewTabs' => $this->showOverviewTabs,
+        ];
+    }
+
+    /**
+     * Store the most recent non-user-specific workbench UI state as an inspectable file.
+     *
+     * This is intentionally separate from the user-specific database setting. The file can be
+     * reviewed, copied into package defaults, or shared as a starting point for community setups.
+     *
+     * @param  array<string, mixed>  $state
+     */
+    private function persistUiStateFile(array $state): void
+    {
+        $path = storage_path((string) config(
+            'translation-workbench.ui_state.export_file',
+            'app/translation-workbench/ui-state/entries.json',
+        ));
+
+        File::ensureDirectoryExists(dirname($path));
+        File::put($path, json_encode([
+            'page' => 'translation-workbench.entries',
+            'updated_at' => now()->toISOString(),
+            'state' => $state,
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL);
     }
 
     /**

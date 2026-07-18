@@ -22,6 +22,7 @@ use App\Support\Audit\ManagementActivity;
 use App\Support\Documents\PersonDocumentPath;
 use App\Support\Forms\FormFieldRegistry;
 use Flux\Flux;
+use Gunreip\TranslationWorkbench\Foundation\RuntimeDynamicTranslationCollector;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -657,6 +658,8 @@ class EditPerson extends Component
 
     public function render()
     {
+        $this->collectRuntimeDynamicOptions();
+
         return view('components.management.people.⚡edit-person', [
             'birthCountryOptions' => Country::query()
                 ->active()
@@ -893,6 +896,123 @@ class EditPerson extends Component
             ->mapWithKeys(fn(string $category): array => [$category => Str::of($category)->replace('_', ' ')->headline()->toString()]);
 
         $this->documentCategoryOptions = $defaultOptions
+            ->merge($existingOptions)
+            ->all();
+    }
+
+    private function collectRuntimeDynamicOptions(): void
+    {
+        if (! class_exists(RuntimeDynamicTranslationCollector::class)) {
+            return;
+        }
+
+        $collector = app(RuntimeDynamicTranslationCollector::class);
+
+        $collector->options(
+            key: 'management.people.edit_person.sections.person_core.salutation_options',
+            scope: 'salutation_options',
+            values: $this->salutationOptions,
+            source: self::class . '::salutationOptions',
+            origin: 'runtime',
+            sourceType: 'runtime_options',
+        );
+
+        $collector->options(
+            key: 'management.people.edit_person.sections.person_core.gender_options',
+            scope: 'gender_options',
+            values: $this->genderOptions,
+            source: self::class . '::genderOptions',
+            origin: 'runtime',
+            sourceType: 'runtime_options',
+        );
+
+        $collector->options(
+            key: 'management.people.edit_person.sections.person_core.marital_status_options',
+            scope: 'marital_status_options',
+            values: $this->maritalStatusOptions,
+            source: self::class . '::maritalStatusOptions',
+            origin: 'runtime',
+            sourceType: 'runtime_options',
+        );
+
+        $collector->options(
+            key: 'management.people.edit_person.sections.documents.document_type_options',
+            scope: 'document_type_options',
+            values: $this->documentTypeOptions,
+            source: self::class . '::documentTypeOptions',
+            origin: 'db',
+            sourceType: 'runtime_db_options',
+        );
+
+        $collector->options(
+            key: 'management.people.edit_person.sections.documents.document_category_options',
+            scope: 'document_category_options',
+            values: $this->documentCategoryOptions,
+            source: self::class . '::documentCategoryOptions',
+            origin: 'db',
+            sourceType: 'runtime_db_options',
+        );
+
+        $collector->options(
+            key: 'management.people.edit_person.sections.documents.archive.status_options',
+            scope: 'document_archive_status_options',
+            values: $this->documentArchiveValueOptions('status', PersonDocument::STATUSES),
+            source: self::class . '::documentArchiveStatusOptions',
+            origin: 'db',
+            sourceType: 'runtime_db_options',
+        );
+
+        $collector->options(
+            key: 'management.people.edit_person.sections.documents.archive.category_options',
+            scope: 'document_archive_category_options',
+            values: $this->documentArchiveValueOptions('category', PersonDocument::CATEGORIES),
+            source: self::class . '::documentArchiveCategoryOptions',
+            origin: 'db',
+            sourceType: 'runtime_db_options',
+        );
+
+        $collector->options(
+            key: 'management.people.edit_person.sections.documents.archive.source_options',
+            scope: 'document_archive_source_options',
+            values: $this->documentArchiveValueOptions('source', PersonDocument::SOURCES),
+            source: self::class . '::documentArchiveSourceOptions',
+            origin: 'db',
+            sourceType: 'runtime_db_options',
+        );
+
+        $collector->options(
+            key: 'management.people.edit_person.sections.emergency_contact.emergency_contact_relationship_options',
+            scope: 'emergency_contact_relationship_options',
+            values: $this->emergencyContactRelationshipOptions,
+            source: self::class . '::emergencyContactRelationshipOptions',
+            origin: 'runtime',
+            sourceType: 'runtime_options',
+        );
+    }
+
+    /**
+     * @param  array<int, string>  $defaults
+     * @return array<string, string>
+     */
+    private function documentArchiveValueOptions(string $column, array $defaults): array
+    {
+        $defaultOptions = collect($defaults)
+            ->mapWithKeys(static fn(string $value): array => [
+                $value => Str::of($value)->replace('_', ' ')->headline()->toString(),
+            ]);
+
+        $existingOptions = $this->person
+            ->documentRows()
+            ->whereNotNull($column)
+            ->where($column, '!=', '')
+            ->distinct()
+            ->orderBy($column)
+            ->pluck($column)
+            ->mapWithKeys(static fn(string $value): array => [
+                $value => Str::of($value)->replace('_', ' ')->headline()->toString(),
+            ]);
+
+        return $defaultOptions
             ->merge($existingOptions)
             ->all();
     }
