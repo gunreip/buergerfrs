@@ -9,7 +9,6 @@ return [
         'available_application_languages_updated' => 'Available application languages updated.',
         'global_app_locale_changed' => 'Global app locale changed',
         'invalid_application_language' => 'Invalid application language.',
-
         'locale' => [
             'application_languages' => 'Application languages',
             'configure_which_languages_are_available_for_the_app_ui_and_choose_the_global_def' => 'Configure which languages are available for the App/UI and choose the global default language.',
@@ -36,7 +35,6 @@ return [
             'toggle_the_availability_of_this_sub_language_for_the_app_ui' => 'Toggle the availability of this sub-language for the App/UI.',
             'top_languages' => 'Top languages',
         ],
-
         'meta_health' => [
             'badge_configs_without_role' => 'Badge configs without role',
             'badge_settings_that_reference_roles_that_no_longer_exist' => 'Badge settings that reference roles that no longer exist.',
@@ -44,7 +42,6 @@ return [
             'roles_without_badge_config' => 'Roles without badge config',
             'settings_health' => 'Settings Health',
         ],
-
         'meta_overview' => [
             'allowed_role_user_management_icons_registered_in_config' => 'Allowed role/user-management icons registered in config.',
             'app_language' => 'App language',
@@ -61,7 +58,6 @@ return [
         'primary_locale_availability_updated' => 'Primary locale availability updated',
         'review_global_application_settings_role_badge_configuration_and_icon_registry_he' => 'Review global application settings, role badge configuration, and icon registry health.',
         'sub_locales_updated' => 'Sub locales updated',
-
         'table_icon_registry' => [
             'available' => 'Available',
             'icon' => 'Icon',
@@ -72,7 +68,6 @@ return [
             'text' => '#',
             'view' => 'View',
         ],
-
         'table_role_badges' => [
             'color' => 'Color',
             'icon' => 'Icon',
@@ -95,10 +90,8 @@ return [
         'this_application_language_is_mandatory_and_cannot_be_disabled' => 'This application language is mandatory and cannot be disabled.',
         'without_role' => 'Without role',
     ],
-
     'client_list' => [
         'client_management' => 'Client Management',
-
         'filter' => [
             'all_statuses' => 'All statuses',
             'all_types' => 'All types',
@@ -116,7 +109,6 @@ return [
             'with_people' => 'With people',
             'without_people' => 'Without people',
         ],
-
         'meta' => [
             'active_clients' => 'Active clients',
             'clients_assigned_to_at_least_one_person' => 'Clients assigned to at least one person.',
@@ -131,7 +123,6 @@ return [
             'without_people' => 'Without people',
         ],
         'review_organizations_client_status_and_assigned_people' => 'Review organizations, client status, and assigned people.',
-
         'table' => [
             'browse_and_manage_clients_with_ease_view_client_details_sort_by_name_number_type' => 'Browse and manage clients with ease: view client details, sort by name, number, type, status, people count, and creation date.',
             'client_list' => 'Client List',
@@ -151,10 +142,8 @@ return [
             'unique_number_assigned_to_the_client_useful_for_tracking_and_reference' => 'Unique number assigned to the client, useful for tracking and reference.',
         ],
     ],
-
     'country_reference_list' => [
         'audit_imported_country_reference_data_address_formats_and_available_subdivisions' => 'Audit imported country reference data, address formats and available subdivisions.',
-
         'filter' => [
             'active' => 'Active',
             'data_quality' => 'Data quality',
@@ -180,7 +169,6 @@ return [
             'with_subdivisions' => 'With subdivisions',
             'without_subdivisions' => 'Without subdivisions',
         ],
-
         'meta' => [
             'active' => 'Active',
             'address_formats' => 'Address formats',
@@ -191,7 +179,6 @@ return [
             'summary_of_imported_country_reference_data_address_formats_and_available_subdivi' => 'Summary of imported country reference data, address formats and available subdivisions.',
         ],
         'reference_countries' => 'Reference Countries',
-
         'table' => [
             'active' => 'Active',
             'active_status_of_the_country_useful_for_identification_and_reference' => 'Active status of the country, useful for identification and reference.',
@@ -213,7 +200,6 @@ return [
             'unique_identifier_of_the_country_useful_for_tracking_and_reference' => 'Unique identifier of the country, useful for tracking and reference.',
         ],
     ],
-
     'pages' => [
         'settings' => [
             'two_factor_setup_modal' => [
@@ -222,8 +208,41 @@ return [
             ],
         ],
     ],
-
+    'partials' => [
+        'country_reference_list' => [
+            'table' => [
+                'address_format_available' => 'Address format available',
+            ],
+        ],
+        'html_view_audit' => [
+            'table' => [
+                'show_finding_details' => 'Show finding details',
+            ],
+        ],
+        'person_list' => [
+            'filter' => [
+                'filter_by_client' => 'Filter by client',
+            ],
+        ],
+        'translation_list' => [
+            'modal_history' => [
+                'timeline' => [
+                    'shared' => [
+                        'affected_usages' => [
+                            'show_usage_locations' => 'Show usage locations',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        'user_list' => [
+            'table' => [
+                'overview_of_all_users_in_the_system_their_email_addresses_and_assigned_roles' => 'Overview of all users in the system, their email addresses and assigned roles.',
+            ],
+        ],
+    ],
     'permission_list' => [
+        'edit_role_permissions' => 'edit role permissions',
         'filter' => [
             'enter_a_search_term_to_filter_permissions_by_name_guard_category_or_description_' => 'Enter a search term to filter permissions by name, guard, category, or description. The search is case-sensitive.',
             'filter_by_assignment' => 'Filter by assignment',
@@ -238,7 +257,6 @@ return [
             'select_a_system_status_to_filter_the_list_of_permissions' => 'Select a system status to filter the list of permissions.',
             'select_an_assignment_status_to_filter_the_list_of_permissions' => 'Select an assignment status to filter the list of permissions.',
         ],
-
         'table_permissions' => [
             'actions_available_for_the_permission_useful_for_identification_and_reference' => 'Actions available for the permission, useful for identification and reference.',
             'category_of_the_permission_useful_for_identification_and_reference' => 'Category of the permission, useful for identification and reference.',
@@ -253,64 +271,52 @@ return [
             'sort_order_of_the_permission_useful_for_identification_and_reference' => 'Sort order of the permission, useful for identification and reference.',
         ],
     ],
-
     'permissions' => [
         'actions' => [
             'edit_role_permissions' => 'Edit Role Management',
         ],
         'description' => 'Review registered permissions, guards, and role assignments.',
-
         'filters' => [
             'assignment' => [
                 'label' => 'Assignment',
             ],
-
             'categories' => [
                 'all' => 'All categories',
             ],
             'description' => 'Refine the list of permissions by name, guard, category, role assignment, and system status.',
-
             'guards' => [
                 'all' => 'All guards',
             ],
-
             'roles' => [
                 'all' => 'All roles',
             ],
-
             'search' => [
                 'placeholder' => 'Search by permission name',
             ],
-
             'system' => [
                 'label' => 'System',
             ],
             'title' => 'Filtering',
         ],
-
         'labels' => [
             'assigned_roles' => 'Assigned roles',
             'sort_order' => 'Sort order',
             'system_permission' => 'System permission',
         ],
-
         'messages' => [
             'no_changes' => [
                 'heading' => 'No changes',
                 'role_permissions_unchanged' => 'The permissions for :role have not changed.',
             ],
-
             'permission_saved' => [
                 'heading' => 'Permission saved',
                 'text' => 'Permission metadata for :permission has been updated.',
             ],
-
             'role_permissions_saved' => [
                 'heading' => 'Role permissions saved',
                 'text' => 'Permissions for :role have been updated.',
             ],
         ],
-
         'modals' => [
             'edit' => [
                 'category_placeholder' => 'e.g. users, settings, system',
@@ -322,7 +328,6 @@ return [
                 'metadata_section' => 'Permission Metadata',
                 'title' => 'Edit Permission',
             ],
-
             'roles' => [
                 'changes' => 'Changes',
                 'current_permissions' => 'Current permissions',
@@ -335,31 +340,26 @@ return [
                 'title' => 'Manage Role Permissions',
             ],
         ],
-
         'overview' => [
             'assigned' => [
                 'heading' => 'Assigned permissions',
                 'text' => 'Permissions assigned to at least one role.',
             ],
             'description' => 'Summary of permissions, guards, and role assignments.',
-
             'guards' => [
                 'heading' => 'Guards',
                 'text' => 'Distinct guards used by registered permissions.',
             ],
             'title' => 'Overview',
-
             'total' => [
                 'heading' => 'Total permissions',
                 'text' => 'The total number of registered permissions.',
             ],
-
             'unassigned' => [
                 'heading' => 'Unassigned permissions',
                 'text' => 'Permissions not currently assigned to any role.',
             ],
         ],
-
         'table' => [
             'columns' => [
                 'assigned_roles' => 'Assigned roles',
@@ -372,18 +372,15 @@ return [
         ],
         'title' => 'Permission Management',
     ],
-
     'person_list' => [
         'filter' => [
             'filter_by_client' => 'Filter by client',
         ],
     ],
-
     'roles' => [
         'actions' => [
             'create' => 'Create',
         ],
-
         'badge' => [
             'color' => 'Color',
             'icon' => 'Icon',
@@ -391,56 +388,47 @@ return [
             'variant' => 'Variant',
         ],
         'description' => 'Manage role metadata, assignment visibility, and role badge display settings.',
-
         'labels' => [
             'assignable_through_ui' => 'Assignable through UI',
             'assigned_users' => 'Assigned users',
             'sort_order' => 'Sort order',
             'system_role' => 'System role',
         ],
-
         'messages' => [
             'not_allowed' => [
                 'heading' => 'Not allowed',
                 'only_super_admins_may_create_roles' => 'Only Super-Admins may create roles.',
             ],
-
             'role_created' => [
                 'heading' => 'Role created',
                 'text' => 'Role :role has been created.',
             ],
-
             'role_saved' => [
                 'heading' => 'Role saved',
                 'text' => 'Role metadata and badge settings for :role have been updated.',
             ],
         ],
-
         'modals' => [
             'create' => [
                 'description' => 'Create a new assignable role for user and role management.',
                 'name_placeholder' => 'Support Manager',
                 'title' => 'Create Role',
             ],
-
             'edit' => [
                 'title' => 'Edit Role',
             ],
         ],
-
         'preview' => [
             'new_role' => 'New role',
         ],
         'title' => 'Role Management',
     ],
-
     'translation_list' => [
         'all_visible_language_variation_values_have_been_cleared' => 'All visible language variation values have been cleared.',
         'already_reviewed' => 'Already reviewed',
         'changes_discarded' => 'Changes discarded',
         'cleared' => 'Cleared',
         'copied' => 'Copied',
-
         'filter' => [
             'all_currently_code_relevant_translation_entries_this_number_changes_when_the_cur' => 'All currently code-relevant translation entries. This number changes when the current code introduces or removes translation spots.',
             'all_currently_code_relevant_translation_entry_types_that_belong_to_the_active_wo' => 'All currently code-relevant translation entry types that belong to the active work set.',
@@ -505,7 +493,6 @@ return [
             'workflow_open' => 'Workflow: Open',
             'workflow_reviewed' => 'Workflow: Reviewed',
         ],
-
         'meta' => [
             'active_filters' => 'Active filters',
             'backfill' => 'Backfill',
@@ -546,7 +533,6 @@ return [
             'vendor' => 'Vendor',
             'workflow' => 'Workflow',
         ],
-
         'modal' => [
             'copy_to_translation_key' => 'Copy to translation key',
             'current_raw' => 'Current raw',
@@ -588,7 +574,6 @@ return [
             'values' => 'Values',
             'wavy_underline_marks_only_the_differing_key_block' => 'Wavy underline marks only the differing key block.',
         ],
-
         'modal_edit' => [
             'below_are_the_translation_values_for_each_language_you_can_edit_the_values_and_s' => 'Below are the translation values for each language. You can edit the values and save your changes.',
             'clear_all_language_variations' => 'Clear all language variations',
@@ -610,7 +595,6 @@ return [
             'translation_values_edit' => 'Translation values edit',
             'usage_locations' => 'Usage locations',
         ],
-
         'modal_history' => [
             'audit_events_and_change_history_for_the_selected_translation_key' => 'Audit events and change history for the selected translation key.',
             'context' => 'Context',
@@ -634,7 +618,6 @@ return [
         'review_translation_keys_missing_values_native_strings_dynamic_calls_and_audit_st' => 'Review translation keys, missing values, native strings, dynamic calls, and audit states.',
         'suggested_key_already_applied' => 'Suggested key already applied',
         'suggested_key_applied' => 'Suggested key applied',
-
         'table' => [
             'current_status_of_the_translation_key_useful_for_identification_and_reference' => 'Current status of the translation key, useful for identification and reference.',
             'differs_from_suggested_key' => 'Differs from suggested key',
@@ -674,17 +657,16 @@ return [
         'the_translation_values_have_been_saved_successfully' => 'The translation values have been saved successfully.',
         'there_is_no_suggested_key_to_apply_for_this_entry' => 'There is no suggested key to apply for this entry.',
         'this_obsolete_entry_is_already_marked_as_reviewed' => 'This obsolete entry is already marked as reviewed.',
+        'translation_key_missing' => 'Translation key missing',
         'translation_management' => 'Translation Management',
         'translation_values_saved' => 'Translation values saved',
         'unsaved_translation_value_changes_have_been_discarded' => 'Unsaved translation value changes have been discarded.',
     ],
-
     'user_list' => [
         'filter' => [
             'without_role' => 'Without role',
         ],
         'manage_your_system_s_users_assign_roles_and_manage_permissions' => 'Manage your system\'s users, assign roles, and manage permissions',
-
         'meta' => [
             'assignable_roles' => 'Assignable roles',
             'assignable_roles_grouped_by_role_category' => 'Assignable roles grouped by role category.',
@@ -705,7 +687,6 @@ return [
             'users_grouped_by_assigned_role_category' => 'Users grouped by assigned role category.',
             'users_without_roles' => 'Users without roles',
         ],
-
         'modal' => [
             'change_assigned_roles_for' => 'Change assigned roles for',
             'change_assigned_roles_for_the_selected_user' => 'Change assigned roles for the selected user.',
@@ -716,7 +697,6 @@ return [
         ],
         'please_select_a_role' => 'Please select a role.',
         'please_select_a_valid_role' => 'Please select a valid role.',
-
         'table' => [
             'actions' => 'Actions',
             'e_mail' => 'E-Mail',

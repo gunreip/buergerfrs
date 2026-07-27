@@ -20,7 +20,7 @@
         wire:submit="addDocument"
     >
         <x-ui.headers.card
-            :title="__('Add document')"
+            :title="__('ui.add-document')"
             :description="__('Upload one or more documents or images for this person.')"
         />
 
@@ -342,7 +342,7 @@
                     wire:loading.attr="disabled"
                     wire:target="addDocument,newDocumentUpload"
                 >
-                    {{ __('Add document') }}
+                    {{ __('ui.add-document') }}
                 </flux:button>
             </div>
         </div>

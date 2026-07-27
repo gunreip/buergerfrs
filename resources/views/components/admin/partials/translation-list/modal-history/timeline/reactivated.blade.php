@@ -31,7 +31,7 @@
     };
 
     $stateBefore = $isUsageEvent ? __('Marked stale') : $historyEvent->old_status;
-    $stateAfter = $isUsageEvent ? __('admin.country_reference_list.filter.active') : $historyEvent->new_status;
+    $stateAfter = $isUsageEvent ? __('ui.active') : $historyEvent->new_status;
 
     $affectedUsages = $isUsageEvent
         ? collect($historyUsages)

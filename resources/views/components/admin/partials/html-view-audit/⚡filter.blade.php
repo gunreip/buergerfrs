@@ -61,7 +61,7 @@
                     <flux:select.option value="changed">{{ __('Changed / moved') }}</flux:select.option>
                     <flux:select.option value="resolved">{{ __('Resolved') }}</flux:select.option>
                     <flux:select.option value="ignored">{{ __('Ignored') }}</flux:select.option>
-                    <flux:select.option value="all">{{ __('admin.client_list.filter.all_statuses') }}</flux:select.option>
+                    <flux:select.option value="all">{{ __('ui.all-statuses') }}</flux:select.option>
                 </flux:select>
             </flux:input.group>
         </div>
@@ -86,7 +86,7 @@
                     name="html-view-audit-filter-section"
                     wire:model.live="sectionFilter"
                 >
-                    <flux:select.option value="all">{{ __('All sections') }}</flux:select.option>
+                    <flux:select.option value="all">{{ __('ui.filters.all-sections') }}</flux:select.option>
                     <flux:select.option value="native_html">{{ __('Native HTML') }}</flux:select.option>
                     <flux:select.option value="custom_components">{{ __('Custom components') }}</flux:select.option>
                 </flux:select>
@@ -112,7 +112,7 @@
                     name="html-view-audit-filter-type"
                     wire:model.live="typeFilter"
                 >
-                    <flux:select.option value="all">{{ __('admin.client_list.filter.all_types') }}</flux:select.option>
+                    <flux:select.option value="all">{{ __('ui.all-types') }}</flux:select.option>
                     <flux:select.option value="unclosed">{{ __('Unclosed') }}</flux:select.option>
                     <flux:select.option value="mismatched">{{ __('Mismatched') }}</flux:select.option>
                     <flux:select.option value="unexpected_closing">{{ __('Unexpected closing') }}</flux:select.option>

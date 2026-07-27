@@ -15,8 +15,7 @@
         >
             <x-ui.input.select-option
                 value="all"
-                icon="asterisk"
-                icon-class="text-sky-400"
+                icon="type"
             >
                 {{ __('All value types') }}
             </x-ui.input.select-option>

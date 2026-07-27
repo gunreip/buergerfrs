@@ -18,7 +18,7 @@
                 value="all"
                 icon="component"
             >
-                {{ __('All groups') }}
+                {{ __('ui.filters.all-groups') }}
             </x-ui.input.select-option>
 
             @foreach ($findingOptions['groups'] ?? [] as $group)

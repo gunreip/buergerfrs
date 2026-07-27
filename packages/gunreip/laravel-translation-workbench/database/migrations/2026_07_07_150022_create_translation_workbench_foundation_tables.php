@@ -44,7 +44,7 @@ return new class extends Migration
             $table->foreignId('source_file_id')
                 ->constrained('translation_workbench_source_files')
                 ->cascadeOnDelete();
-            $table->string('fingerprint', 64)->unique();
+            $table->string('fingerprint', 64)->index();
             $table->string('source_signature', 64)->unique();
             $table->string('source_fingerprint', 64)->nullable()->index();
             $table->string('expression_fingerprint', 64)->nullable()->index();

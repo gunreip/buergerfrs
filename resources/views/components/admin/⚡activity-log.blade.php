@@ -2,7 +2,7 @@
 
 <flux:card>
     <x-ui.headers.page
-        :title="__('Activity Log')"
+        :title="__('ui.activity-log')"
         :description="__(
             'Review application activity_log entries. Detailed properties and change payloads will be opened in a modal in a later step.',
         )"

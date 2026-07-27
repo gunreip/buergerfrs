@@ -1,0 +1,86 @@
+<?php
+
+// packages/gunreip/laravel-translation-workbench/src/Console/ExportTranslationWorkbenchLangFiles.php
+
+// php artisan translation-workbench:export-lang-files
+// php artisan translation-workbench:export-lang-files --locale=de --namespace=ui
+// php artisan translation-workbench:export-lang-files --write
+// php artisan translation-workbench:export-lang-files --locale=de --namespace=ui --write
+
+namespace Gunreip\TranslationWorkbench\Console;
+
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchLangFileExporter;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
+
+#[Signature('translation-workbench:export-lang-files
+    {--locale=* : Locale(s) to export. Defaults to all locales with active Workbench lang values.}
+    {--namespace=* : Namespace file(s) to export, for example ui or admin. Defaults to all namespaces.}
+    {--write : Write lang files. Without this option the command only reports the export plan.}')]
+#[Description('Export reviewed Translation Workbench lang values into Laravel lang files.')]
+class ExportTranslationWorkbenchLangFiles extends Command
+{
+    public function handle(TranslationWorkbenchLangFileExporter $exporter): int
+    {
+        $write = (bool) $this->option('write');
+        $summary = $exporter->export(
+            locales: (array) $this->option('locale'),
+            namespaces: (array) $this->option('namespace'),
+            write: $write,
+        );
+        $reportPath = $this->writeReport($summary);
+
+        $this->components->info($write
+            ? 'Translation Workbench lang file export finished.'
+            : 'Translation Workbench lang file export dry-run finished.');
+        $this->line('Locales: ' . implode(', ', $summary['locales'] ?: ['-']));
+        $this->line('Namespaces: ' . implode(', ', $summary['namespaces'] ?: ['-']));
+        $this->line('Files: ' . number_format((int) $summary['files']));
+        $this->line('Exportable values: ' . number_format((int) $summary['values_exportable']));
+        $this->line('New values: ' . number_format((int) $summary['values_new']));
+        $this->line('Changed values: ' . number_format((int) $summary['values_changed']));
+        $this->line('Unchanged values: ' . number_format((int) $summary['values_unchanged']));
+        $this->line('Conflicts: ' . number_format((int) $summary['values_conflicted']));
+        $this->line('Active scope locales: ' . implode(', ', $summary['active_scope']['locales'] ?: ['-']));
+        $this->line('Active scope exportable values: ' . number_format((int) $summary['active_scope']['values_exportable']));
+        $this->line('Active scope source values: ' . number_format((int) $summary['active_scope']['source_values']));
+        $this->line('Active scope target main values: ' . number_format((int) $summary['active_scope']['target_main_values']));
+        $this->line('Active scope target main missing: ' . number_format((int) $summary['active_scope']['target_main_missing']));
+        $this->line('Active scope target main extras: ' . number_format((int) $summary['active_scope']['target_main_extra']));
+        $this->line('Active scope source/target balanced: ' . ($summary['active_scope']['target_main_balanced'] ? 'yes' : 'no'));
+        $this->line('Active scope target sub values: ' . number_format((int) $summary['active_scope']['target_sub_values']));
+        $this->line('Files written: ' . number_format((int) $summary['files_written']));
+        $this->line('JSON report: ' . $reportPath);
+
+        if (! $write) {
+            $this->warn('Dry run only: no lang files were written. Re-run with --write to apply the export.');
+        }
+
+        if ((int) $summary['values_conflicted'] > 0) {
+            $this->warn('Some values were not exportable because nested lang-key paths conflict with scalar values. See the JSON report.');
+        }
+
+        return self::SUCCESS;
+    }
+
+    /**
+     * @param  array<string, mixed>  $summary
+     */
+    private function writeReport(array $summary): string
+    {
+        $path = storage_path('translation-workbench/' . Str::of((string) $this->getName())->replace(':', '-') . '.json');
+
+        File::ensureDirectoryExists(dirname($path));
+        File::put($path, json_encode([
+            'command' => $this->getName(),
+            'generated_at' => now()->toISOString(),
+            'summary' => collect($summary)->except('plans')->all(),
+            'plans' => $summary['plans'],
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+
+        return $path;
+    }
+}

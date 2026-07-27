@@ -7,6 +7,6 @@
 @include($iconView(), [
     'variant' => $variant,
     'attributes' => $attributes->class([
-        'text-red-400' => $isFallback(),
+        $fallbackClass => $isFallback(),
     ]),
 ])

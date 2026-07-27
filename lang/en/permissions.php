@@ -7,58 +7,47 @@ return [
                 'edit_role_permissions' => 'Edit Role Management',
             ],
             'description' => 'Review registered permissions, guards, and role assignments.',
-
             'filters' => [
                 'assignment' => [
                     'label' => 'Assignment',
                 ],
-
                 'categories' => [
                     'all' => 'All categories',
                 ],
                 'description' => 'Refine the list of permissions by name, guard, category, role assignment, and system status.',
-
                 'guards' => [
                     'all' => 'All guards',
                 ],
-
                 'roles' => [
                     'all' => 'All roles',
                 ],
-
                 'search' => [
                     'placeholder' => 'Search by permission name',
                 ],
-
                 'system' => [
                     'label' => 'System',
                 ],
                 'title' => 'Filtering',
             ],
-
             'labels' => [
                 'assigned_roles' => 'Assigned roles',
                 'sort_order' => 'Sort order',
                 'system_permission' => 'System permission',
             ],
-
             'messages' => [
                 'no_changes' => [
                     'heading' => 'No changes',
                     'role_permissions_unchanged' => 'The permissions for :role have not changed.',
                 ],
-
                 'permission_saved' => [
                     'heading' => 'Permission saved',
                     'text' => 'Permission metadata for :permission has been updated.',
                 ],
-
                 'role_permissions_saved' => [
                     'heading' => 'Role permissions saved',
                     'text' => 'Permissions for :role have been updated.',
                 ],
             ],
-
             'modals' => [
                 'edit' => [
                     'category_placeholder' => 'e.g. users, settings, system',
@@ -70,7 +59,6 @@ return [
                     'metadata_section' => 'Permission Metadata',
                     'title' => 'Edit Permission',
                 ],
-
                 'roles' => [
                     'changes' => 'Changes',
                     'current_permissions' => 'Current permissions',
@@ -83,31 +71,26 @@ return [
                     'title' => 'Manage Role Permissions',
                 ],
             ],
-
             'overview' => [
                 'assigned' => [
                     'heading' => 'Assigned permissions',
                     'text' => 'Permissions assigned to at least one role.',
                 ],
                 'description' => 'Summary of permissions, guards, and role assignments.',
-
                 'guards' => [
                     'heading' => 'Guards',
                     'text' => 'Distinct guards used by registered permissions.',
                 ],
                 'title' => 'Overview',
-
                 'total' => [
                     'heading' => 'Total permissions',
                     'text' => 'The total number of registered permissions.',
                 ],
-
                 'unassigned' => [
                     'heading' => 'Unassigned permissions',
                     'text' => 'Permissions not currently assigned to any role.',
                 ],
             ],
-
             'table' => [
                 'columns' => [
                     'assigned_roles' => 'Assigned roles',

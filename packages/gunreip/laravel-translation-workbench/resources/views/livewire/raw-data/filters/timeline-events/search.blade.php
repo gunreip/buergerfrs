@@ -10,8 +10,7 @@
             clearable
             copyable
             wire:model.live.debounce.300ms="timelineEventsSearch"
-            placeholder="{{ __('ID, FK ID, event type, JSON or timestamp') }}"
+            placeholder="{{ __('Event type, JSON values, context or timestamp') }}"
         />
     </flux:input.group>
 </flux:field>
-

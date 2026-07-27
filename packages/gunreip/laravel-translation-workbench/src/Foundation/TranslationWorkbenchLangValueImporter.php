@@ -3,6 +3,7 @@
 namespace Gunreip\TranslationWorkbench\Foundation;
 
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchLangValue;
+use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchReview;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
@@ -204,6 +205,10 @@ class TranslationWorkbenchLangValueImporter
      */
     private function syncValue(array $attributes, mixed $now): array
     {
+        if ($this->hasObsoleteReviewDecision($attributes)) {
+            $attributes['status'] = 'obsolete';
+        }
+
         $langValue = TranslationWorkbenchLangValue::query()
             ->where('locale', $attributes['locale'])
             ->where('namespace', $attributes['namespace'])
@@ -274,6 +279,19 @@ class TranslationWorkbenchLangValueImporter
         );
 
         return ['result' => 'values_updated', 'timeline_events_created' => 1];
+    }
+
+    /**
+     * @param  array<string, mixed>  $attributes
+     */
+    private function hasObsoleteReviewDecision(array $attributes): bool
+    {
+        return TranslationWorkbenchReview::query()
+            ->where('review_type', 'lang_value_obsolete')
+            ->where('decision', 'source_value_marked_obsolete')
+            ->where('meta->locale', $attributes['locale'])
+            ->where('meta->translation_key', $attributes['translation_key'])
+            ->exists();
     }
 
     private function serializeValue(mixed $value): ?string
@@ -374,6 +392,10 @@ class TranslationWorkbenchLangValueImporter
                     $rowKey = $row->locale . "\n" . $row->namespace . "\n" . $row->lang_key;
 
                     if ($seenKeys->has($rowKey)) {
+                        continue;
+                    }
+
+                    if (data_get($row->meta, 'source') !== 'translation-workbench:import-lang-values') {
                         continue;
                     }
 

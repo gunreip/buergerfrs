@@ -29,7 +29,7 @@ class TranslationWorkbenchFoundationSyncer
      * @param  Collection<int, DiscoveredTranslation>  $items
      * @return array<string, int>
      */
-    public function sync(Collection $items, bool $truncate = false): array
+    public function sync(Collection $items, bool $truncate = false, bool $markObsolete = false): array
     {
         $summary = [
             'found' => $items->count(),
@@ -38,15 +38,18 @@ class TranslationWorkbenchFoundationSyncer
             'source_files_updated' => 0,
             'findings_created' => 0,
             'findings_updated' => 0,
+            'findings_obsoleted' => 0,
             'keys_created' => 0,
             'keys_updated' => 0,
+            'keys_obsoleted' => 0,
             'relations_created' => 0,
             'relations_updated' => 0,
+            'relations_obsoleted' => 0,
             'timeline_events_created' => 0,
         ];
         $now = now();
 
-        DB::transaction(function () use ($items, $truncate, $now, &$summary): void {
+        DB::transaction(function () use ($items, $truncate, $markObsolete, $now, &$summary): void {
             $sourceFiles = [];
 
             if ($truncate) {
@@ -64,6 +67,18 @@ class TranslationWorkbenchFoundationSyncer
                 $findingResult = $this->syncFinding($item, $sourceFiles[$item->sourcePath], $now);
                 $summary[$findingResult['result']]++;
                 $summary['timeline_events_created'] += $findingResult['timeline_events_created'];
+                $obsoletedFindings = $this->markSupersededFindingDuplicates($findingResult['finding'], $item, $now);
+                $summary['findings_obsoleted'] += $obsoletedFindings;
+                $summary['timeline_events_created'] += $obsoletedFindings;
+
+                if ($this->isEmptyLiteralFinding($item)) {
+                    $emptyLiteralCleanup = $this->obsoleteEmptyLiteralRelations($findingResult['finding']);
+                    $summary['relations_obsoleted'] += $emptyLiteralCleanup['relations_obsoleted'];
+                    $summary['keys_obsoleted'] += $emptyLiteralCleanup['keys_obsoleted'];
+                    $summary['timeline_events_created'] += $emptyLiteralCleanup['timeline_events_created'];
+
+                    continue;
+                }
 
                 $keyResult = $this->syncKey($item, $now);
 
@@ -78,6 +93,14 @@ class TranslationWorkbenchFoundationSyncer
                     $summary[$relationResult['result']]++;
                     $summary['timeline_events_created'] += $relationResult['timeline_events_created'];
                 }
+            }
+
+            if ($markObsolete && ! $truncate) {
+                $obsoleteResult = $this->markMissingFoundationRowsObsolete($items, $now);
+                $summary['findings_obsoleted'] += $obsoleteResult['findings_obsoleted'];
+                $summary['relations_obsoleted'] += $obsoleteResult['relations_obsoleted'];
+                $summary['keys_obsoleted'] += $obsoleteResult['keys_obsoleted'];
+                $summary['timeline_events_created'] += $obsoleteResult['timeline_events_created'];
             }
         });
 
@@ -181,6 +204,7 @@ class TranslationWorkbenchFoundationSyncer
         mixed $now,
     ): array {
         $keyParts = $this->keyPartsFactory->fromKey($item->suggestedKey);
+        $isEmptyLiteralFinding = $this->isEmptyLiteralFinding($item);
         $attributes = [
             'source_file_id' => $sourceFile->id,
             'source_signature' => $item->sourceSignature,
@@ -205,9 +229,15 @@ class TranslationWorkbenchFoundationSyncer
             'entry_type' => $item->entryType,
             'candidate_type' => $item->candidateType,
             'candidate_reason' => $item->candidateReason,
-            'status' => 'active',
+            'status' => $isEmptyLiteralFinding ? 'obsolete' : 'active',
             'last_seen_at' => $now,
-            'meta' => $item->meta,
+            'meta' => [
+                ...$item->meta,
+                ...($isEmptyLiteralFinding ? [
+                    'ignored_reason' => 'empty_literal_translation_call',
+                    'translation_relevant' => false,
+                ] : []),
+            ],
         ];
 
         if (! $this->hasFindingDynamicDataStateColumn()) {
@@ -215,7 +245,7 @@ class TranslationWorkbenchFoundationSyncer
         }
 
         $finding = TranslationWorkbenchFinding::query()
-            ->where('fingerprint', $item->fingerprint)
+            ->where('source_signature', $item->sourceSignature)
             ->first();
 
         if (! $finding) {
@@ -308,6 +338,14 @@ class TranslationWorkbenchFoundationSyncer
      */
     private function syncKey(DiscoveredTranslation $item, mixed $now): ?array
     {
+        if ($this->isEmptyLiteralFinding($item)) {
+            return null;
+        }
+
+        if ($item->entryType === 'dynamic_numeric' || $item->kind === 'dynamic_numeric') {
+            return null;
+        }
+
         $keyCandidate = $item->translationKey ?: $item->suggestedKey;
 
         if ($keyCandidate === null || $keyCandidate === '') {
@@ -342,9 +380,10 @@ class TranslationWorkbenchFoundationSyncer
             unset($attributes['dynamic_data_state']);
         }
 
-        $key = TranslationWorkbenchKey::query()
-            ->where('fingerprint', $fingerprint)
-            ->first();
+        $key = $this->reviewedKeyForTranslationKey($item->translationKey, $fingerprint)
+            ?? TranslationWorkbenchKey::query()
+                ->where('fingerprint', $fingerprint)
+                ->first();
 
         if (! $key) {
             $key = TranslationWorkbenchKey::query()->create([
@@ -390,6 +429,14 @@ class TranslationWorkbenchFoundationSyncer
             ];
         }
 
+        if ((string) $key->fingerprint !== $fingerprint) {
+            return [
+                'result' => 'keys_updated',
+                'key' => $key,
+                'timeline_events_created' => 0,
+            ];
+        }
+
         if (
             array_key_exists('dynamic_data_state', $attributes)
             && $key->dynamic_data_state === 'structured'
@@ -404,6 +451,18 @@ class TranslationWorkbenchFoundationSyncer
             && ((bool) $key->is_dynamic_key || (bool) $key->is_dynamic_multi)
         ) {
             $attributes['dynamic_data_state'] = 'unstructured';
+        }
+
+        if ($key->review_status === 'reviewed' && filled($key->translation_key)) {
+            $reviewedTranslationKey = (string) $key->translation_key;
+
+            $attributes = [
+                ...$attributes,
+                'translation_key' => $reviewedTranslationKey,
+                'key_type' => $key->key_type,
+                ...$this->keyPartsFactory->fromKey($reviewedTranslationKey),
+                ...$this->keySegmentFactory->fromKey($reviewedTranslationKey),
+            ];
         }
 
         $oldValues = $key->only(array_keys($attributes));
@@ -431,6 +490,318 @@ class TranslationWorkbenchFoundationSyncer
             'key' => $key,
             'timeline_events_created' => $changed !== [] ? 1 : 0,
         ];
+    }
+
+    private function isEmptyLiteralFinding(DiscoveredTranslation $item): bool
+    {
+        return $item->kind === 'literal'
+            && $item->literalText !== null
+            && trim($item->literalText) === '';
+    }
+
+    private function reviewedKeyForTranslationKey(?string $translationKey, string $fingerprint): ?TranslationWorkbenchKey
+    {
+        $translationKey = trim((string) $translationKey);
+
+        if ($translationKey === '') {
+            return null;
+        }
+
+        return TranslationWorkbenchKey::query()
+            ->where('translation_key', $translationKey)
+            ->where('status', 'open')
+            ->where('review_status', 'reviewed')
+            ->where('fingerprint', '!=', $fingerprint)
+            ->orderByDesc('is_ui_key')
+            ->orderBy('id')
+            ->first();
+    }
+
+    /**
+     * @return array{relations_obsoleted: int, keys_obsoleted: int, timeline_events_created: int}
+     */
+    private function obsoleteEmptyLiteralRelations(TranslationWorkbenchFinding $finding): array
+    {
+        $result = [
+            'relations_obsoleted' => 0,
+            'keys_obsoleted' => 0,
+            'timeline_events_created' => 0,
+        ];
+
+        $relations = TranslationWorkbenchKeyFinding::query()
+            ->with('key')
+            ->where('finding_id', $finding->id)
+            ->where('status', 'active')
+            ->get();
+
+        foreach ($relations as $relation) {
+            $key = $relation->key;
+            $oldRelationValues = $relation->only(['status', 'meta']);
+
+            $relation->forceFill([
+                'status' => 'obsolete',
+                'meta' => [
+                    ...($relation->meta ?? []),
+                    'obsolete_reason' => 'empty_literal_translation_call',
+                ],
+            ])->save();
+
+            if ($key) {
+                $this->timelineRecorder->recordKeyFindingEvent(
+                    key: $key,
+                    finding: $finding,
+                    eventType: 'key_finding_relation_obsoleted',
+                    oldValues: $oldRelationValues,
+                    newValues: [
+                        'status' => 'obsolete',
+                        'obsolete_reason' => 'empty_literal_translation_call',
+                    ],
+                    context: [
+                        'source' => 'translation-workbench:sync-foundation',
+                        'reason' => 'empty_literal_translation_call',
+                    ],
+                );
+
+                $result['timeline_events_created']++;
+                $result['relations_obsoleted']++;
+
+                if ($this->keyHasNoActiveNonObsoleteFindings($key)) {
+                    $oldKeyValues = $key->only(['status', 'meta']);
+
+                    $key->forceFill([
+                        'status' => 'obsolete',
+                        'meta' => [
+                            ...($key->meta ?? []),
+                            'obsolete_reason' => 'empty_literal_translation_call',
+                        ],
+                    ])->save();
+
+                    $this->timelineRecorder->recordKeyEvent(
+                        key: $key,
+                        eventType: 'key_candidate_obsoleted',
+                        oldValues: $oldKeyValues,
+                        newValues: [
+                            'status' => 'obsolete',
+                            'obsolete_reason' => 'empty_literal_translation_call',
+                        ],
+                        context: [
+                            'source' => 'translation-workbench:sync-foundation',
+                            'reason' => 'empty_literal_translation_call',
+                            'finding_id' => $finding->id,
+                        ],
+                    );
+
+                    $result['timeline_events_created']++;
+                    $result['keys_obsoleted']++;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    private function keyHasNoActiveNonObsoleteFindings(TranslationWorkbenchKey $key): bool
+    {
+        return ! TranslationWorkbenchKeyFinding::query()
+            ->join('translation_workbench_findings', 'translation_workbench_findings.id', '=', 'translation_workbench_key_findings.finding_id')
+            ->where('translation_workbench_key_findings.key_id', $key->id)
+            ->where('translation_workbench_key_findings.status', 'active')
+            ->where('translation_workbench_findings.status', '!=', 'obsolete')
+            ->exists();
+    }
+
+    private function markSupersededFindingDuplicates(
+        TranslationWorkbenchFinding $finding,
+        DiscoveredTranslation $item,
+        mixed $now,
+    ): int {
+        if ($item->suggestedKey === null || $item->suggestedKey === '' || $item->rawExpression === null || $item->rawExpression === '') {
+            return 0;
+        }
+
+        $duplicates = TranslationWorkbenchFinding::query()
+            ->where('id', '!=', $finding->id)
+            ->where('source_file_id', $finding->source_file_id)
+            ->where('source_line', $item->sourceLine)
+            ->where('raw_expression', $item->rawExpression)
+            ->where('suggested_key', $item->suggestedKey)
+            ->where('status', 'active')
+            ->get();
+
+        foreach ($duplicates as $duplicate) {
+            $oldValues = $duplicate->only(['status']);
+
+            $duplicate->forceFill([
+                'status' => 'obsolete',
+                'last_seen_at' => $now,
+            ])->save();
+
+            $this->timelineRecorder->recordFindingEvent(
+                finding: $duplicate,
+                eventType: 'finding_superseded',
+                oldValues: $oldValues,
+                newValues: [
+                    'status' => 'obsolete',
+                    'superseded_by_finding_id' => $finding->id,
+                ],
+                context: [
+                    'source' => 'translation-workbench:sync-foundation',
+                    'reason' => 'same_source_expression_reclassified',
+                    'source_path' => $item->sourcePath,
+                    'source_line' => $item->sourceLine,
+                    'suggested_key' => $item->suggestedKey,
+                ],
+            );
+        }
+
+        return $duplicates->count();
+    }
+
+    /**
+     * @param  Collection<int, DiscoveredTranslation>  $items
+     * @return array{findings_obsoleted: int, relations_obsoleted: int, keys_obsoleted: int, timeline_events_created: int}
+     */
+    private function markMissingFoundationRowsObsolete(Collection $items, mixed $now): array
+    {
+        $result = [
+            'findings_obsoleted' => 0,
+            'relations_obsoleted' => 0,
+            'keys_obsoleted' => 0,
+            'timeline_events_created' => 0,
+        ];
+        $sourcePaths = $items
+            ->pluck('sourcePath')
+            ->filter()
+            ->unique()
+            ->values();
+        $seenSourceSignatures = $items
+            ->pluck('sourceSignature')
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        if ($sourcePaths->isEmpty()) {
+            return $result;
+        }
+
+        $sourceFileIds = TranslationWorkbenchSourceFile::query()
+            ->whereIn('path', $sourcePaths->all())
+            ->pluck('id');
+
+        if ($sourceFileIds->isEmpty()) {
+            return $result;
+        }
+
+        $missingFindingsQuery = TranslationWorkbenchFinding::query()
+            ->whereIn('source_file_id', $sourceFileIds->all())
+            ->where('status', 'active');
+
+        if ($seenSourceSignatures !== []) {
+            $missingFindingsQuery->whereNotIn('source_signature', $seenSourceSignatures);
+        }
+
+        $missingFindings = $missingFindingsQuery->get();
+
+        foreach ($missingFindings as $finding) {
+            $oldFindingValues = $finding->only(['status', 'meta']);
+
+            $finding->forceFill([
+                'status' => 'obsolete',
+                'last_seen_at' => $now,
+                'meta' => [
+                    ...($finding->meta ?? []),
+                    'obsolete_reason' => 'not_seen_in_latest_foundation_sync',
+                ],
+            ])->save();
+
+            $this->timelineRecorder->recordFindingEvent(
+                finding: $finding,
+                eventType: 'finding_obsoleted',
+                oldValues: $oldFindingValues,
+                newValues: [
+                    'status' => 'obsolete',
+                    'obsolete_reason' => 'not_seen_in_latest_foundation_sync',
+                ],
+                context: [
+                    'source' => 'translation-workbench:sync-foundation',
+                    'reason' => 'not_seen_in_latest_foundation_sync',
+                ],
+            );
+
+            $result['findings_obsoleted']++;
+            $result['timeline_events_created']++;
+
+            $relations = TranslationWorkbenchKeyFinding::query()
+                ->with('key')
+                ->where('finding_id', $finding->id)
+                ->where('status', 'active')
+                ->get();
+
+            foreach ($relations as $relation) {
+                $oldRelationValues = $relation->only(['status', 'meta']);
+
+                $relation->forceFill([
+                    'status' => 'obsolete',
+                    'meta' => [
+                        ...($relation->meta ?? []),
+                        'obsolete_reason' => 'finding_not_seen_in_latest_foundation_sync',
+                    ],
+                ])->save();
+
+                if ($relation->key) {
+                    $this->timelineRecorder->recordKeyFindingEvent(
+                        key: $relation->key,
+                        finding: $finding,
+                        eventType: 'key_finding_relation_obsoleted',
+                        oldValues: $oldRelationValues,
+                        newValues: [
+                            'status' => 'obsolete',
+                            'obsolete_reason' => 'finding_not_seen_in_latest_foundation_sync',
+                        ],
+                        context: [
+                            'source' => 'translation-workbench:sync-foundation',
+                            'reason' => 'finding_not_seen_in_latest_foundation_sync',
+                        ],
+                    );
+
+                    $result['relations_obsoleted']++;
+                    $result['timeline_events_created']++;
+
+                    if ($this->keyHasNoActiveNonObsoleteFindings($relation->key)) {
+                        $oldKeyValues = $relation->key->only(['status', 'meta']);
+
+                        $relation->key->forceFill([
+                            'status' => 'obsolete',
+                            'meta' => [
+                                ...($relation->key->meta ?? []),
+                                'obsolete_reason' => 'no_active_findings_after_foundation_sync',
+                            ],
+                        ])->save();
+
+                        $this->timelineRecorder->recordKeyEvent(
+                            key: $relation->key,
+                            eventType: 'key_candidate_obsoleted',
+                            oldValues: $oldKeyValues,
+                            newValues: [
+                                'status' => 'obsolete',
+                                'obsolete_reason' => 'no_active_findings_after_foundation_sync',
+                            ],
+                            context: [
+                                'source' => 'translation-workbench:sync-foundation',
+                                'reason' => 'no_active_findings_after_foundation_sync',
+                                'finding_id' => $finding->id,
+                            ],
+                        );
+
+                        $result['keys_obsoleted']++;
+                        $result['timeline_events_created']++;
+                    }
+                }
+            }
+        }
+
+        return $result;
     }
 
     private function syncKeyFinding(
@@ -566,6 +937,10 @@ class TranslationWorkbenchFoundationSyncer
 
     private function dynamicDataState(DiscoveredTranslation $item): ?string
     {
+        if ($item->entryType === 'dynamic_numeric' || $item->kind === 'dynamic_numeric') {
+            return null;
+        }
+
         $isDynamic = $item->candidateType === 'dynamic'
             || $item->entryType === 'dynamic'
             || str_starts_with($item->kind, 'dynamic')

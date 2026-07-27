@@ -16,7 +16,7 @@
                 value="all"
                 icon="folder"
             >
-                {{ $keysSegmentDomain === 'all' ? __('Select domain first') : __('All sections') }}
+                {{ $keysSegmentDomain === 'all' ? __('Select domain first') : __('ui.filters.all-sections') }}
             </x-ui.input.select-option>
 
             @foreach ($keyOptions['segment_sections'] ?? [] as $segmentSection)

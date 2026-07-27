@@ -14,6 +14,22 @@ class TranslationFindingClassifier
      */
     public function classify(string $kind, ?string $literalText, ?string $functionName): array
     {
+        if ($kind === 'dynamic_resolved_static_prop') {
+            return [
+                'entry_type' => 'resolved_static_prop',
+                'candidate_type' => null,
+                'candidate_reason' => 'static_translated_prop_default',
+            ];
+        }
+
+        if ($kind === 'dynamic_numeric') {
+            return [
+                'entry_type' => 'dynamic_numeric',
+                'candidate_type' => null,
+                'candidate_reason' => 'numeric_dynamic_expression',
+            ];
+        }
+
         if ($kind === 'dynamic') {
             return [
                 'entry_type' => 'dynamic',
@@ -22,11 +38,19 @@ class TranslationFindingClassifier
             ];
         }
 
-        if ($kind === 'dynamic_multi' || $functionName === 'dynamic_label') {
+        if ($functionName === 'dynamic_label') {
             return [
                 'entry_type' => 'dynamic',
                 'candidate_type' => 'dynamic',
                 'candidate_reason' => 'dynamic_label_call',
+            ];
+        }
+
+        if ($kind === 'dynamic_multi') {
+            return [
+                'entry_type' => 'dynamic',
+                'candidate_type' => 'dynamic',
+                'candidate_reason' => 'runtime_option_expression',
             ];
         }
 

@@ -216,10 +216,10 @@
                     >
                         <x-ui.tooltip.trigger
                             class="ml-3"
-                            :title="__('ui.labels.actions')"
+                            :title="__('ui.table.headers.actions')"
                             :text="__('Available actions for the translation key')"
                         >
-                            {{ __('ui.labels.actions') }}
+                            {{ __('ui.table.headers.actions') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
@@ -373,7 +373,7 @@
                                         variant="subtle"
                                         color="emerald"
                                     >
-                                        {{ __('yes') }}
+                                        {{ __('ui.filters.yes') }}
                                     </flux:badge>
                                 @else
                                     <flux:badge

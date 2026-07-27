@@ -4,21 +4,24 @@
     <flux:label>{{ __('Severity') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
-            <flux:icon.exclamation-triangle />
+            <flux:icon.triangle-alert />
         </flux:input.group.prefix>
         <flux:select
             wire:model.live="eventTypesSeverity"
             variant="listbox"
         >
-            <x-ui.input.select-option value="all" icon="exclamation-triangle">
+            <x-ui.input.select-option
+                value="all"
+                icon="triangle-alert"
+            >
                 {{ __('All severities') }}
             </x-ui.input.select-option>
 
             @foreach ($eventTypeOptions['severities'] ?? [] as $severity)
                 <x-ui.input.select-option
                     value="{{ $severity }}"
-                    icon="exclamation-triangle"
-                    text-class="font-mono text-xs"
+                    icon="triangle-alert"
+                    text-class="text-sm"
                 >
                     {{ $severity }}
                 </x-ui.input.select-option>

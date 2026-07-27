@@ -8,12 +8,12 @@
     />
 
     {{-- Card DEV-Playground --}}
-    <flux:card class="mt-6">
+    {{-- <flux:card class="mt-6">
         <x-ui.headers.card
-            :title="__('DEV-Playground')"
+            :title="__('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.dev_playground')"
             :description="__('This is a sample Text for DEV-playground, testing the review, edit and timline-part.')"
         />
-    </flux:card>
+    </flux:card> --}}
 
     {{-- Card Overview Tabs --}}
     <flux:card
@@ -22,8 +22,8 @@
         x-on:buergerfrs:refresh-show-hide-layout.window="$wire.set('showOverviewTabs', showOverviewTabs)"
     >
         <x-ui.headers.card
-            :title="__('Overview')"
-            :description="__('Compact read-only foundation dashboard for scanner data, keys, lang files and coverage.')"
+            :title="__('ui.overview')"
+            :description="__('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.compact_read_only_foundation_dashboard_for_scanner_data_keys_lang_files_and_coverage')"
         >
             <div class="flex flex-col items-stretch gap-2">
                 <flux:button
@@ -39,7 +39,7 @@
                 <x-ui.button.show-hide
                     size="xs"
                     state="showOverviewTabs"
-                    show-label="{{ __('Show overview') }}"
+                    show-label="{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.show_overview') }}"
                     hide-label="{{ __('Hide overview') }}"
                     width="min-w-28 text-left"
                 />
@@ -81,7 +81,7 @@
                 </flux:tab>
                 {{-- Tab Dynamic --}}
                 <flux:tab name="dynamic">
-                    {{ __('Dynamic') }}
+                    {{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.dynamic') }}
                 </flux:tab>
                 {{-- Tab Locales --}}
                 <flux:tab name="locales">
@@ -158,9 +158,12 @@
 
     {{-- Finding Workflow Modals --}}
     @include('translation-workbench::livewire.entries.modal-review')
+    @include('translation-workbench::livewire.entries.modal-bulk-equalize-translation-key')
     @include('translation-workbench::livewire.entries.review.modal-edit-translation-key')
     @include('translation-workbench::livewire.entries.modal-dynamic-review')
     @include('translation-workbench::livewire.entries.modal-dynamic-source-link-confirm')
+    @include('translation-workbench::livewire.entries.modal-code-update-conflict-review')
+    @include('translation-workbench::livewire.entries.modal-obsolete-source-value-review')
     @include('translation-workbench::livewire.entries.modal-edit')
     @include('translation-workbench::livewire.entries.modal-edit-dynamic')
     @include('translation-workbench::livewire.entries.modal-edit-dynamic-multi')

@@ -7,7 +7,7 @@
     $reviewEffectiveSuggestedKey = $reviewKeySuggestedKey !== '' ? $reviewKeySuggestedKey : $reviewFindingSuggestedKey;
     $reviewKeyState = match (true) {
         $reviewTranslationKey === '' => [
-            'label' => __('Translation key missing'),
+            'label' => __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing'),
             'color' => 'red',
         ],
         $reviewEffectiveSuggestedKey !== '' && $reviewTranslationKey === $reviewEffectiveSuggestedKey => [
@@ -95,26 +95,34 @@
         color="sky"
         icon="scan-search"
     >
+        {{-- Callout Heading Finding State --}}
         <flux:callout.heading>
             <span class="inline-flex items-center gap-1.5">
                 <span>{{ __('Finding state') }}</span>
-                <flux:tooltip
-                    content="{{ __('Scanner metadata for this finding: kind, entry type, function and active/stale status.') }}"
-                >
-                    <flux:icon.info class="size-3.5 text-zinc-400" />
-                </flux:tooltip>
+                {{-- Tooltip Finding State --}}
+                <x-ui.tooltip.simple
+                    :header="__('Finding state')"
+                    :text="__(
+                        'Scanner metadata for this finding: kind, entry type, function and active/stale status.',
+                    )"
+                />
             </span>
         </flux:callout.heading>
         <flux:callout.text class="text-xs">
             {{ __('Shows how the scanner classified this code occurrence and whether it is still present in the latest scan.') }}
         </flux:callout.text>
-
         <div class="flex flex-wrap gap-1.5">
             <flux:badge
                 size="sm"
                 color="sky"
             >
-                {{ __('Kind') }}: {{ $reviewFinding->kind }}
+                <span class="mr-1">{{ __('Kind') }}: {{ $reviewFinding->kind }}</span>
+                <x-ui.tooltip.simple
+                    :header="__('Finding kind')"
+                    :text="__(
+                        'Scanner classification of this code occurrence: normal, UI, dynamic, or dynamic multi.',
+                    )"
+                />
             </flux:badge>
 
             @if ($reviewFinding->entry_type)
@@ -122,7 +130,13 @@
                     size="sm"
                     variant="subtle"
                 >
-                    {{ __('Entry') }}: {{ $reviewFinding->entry_type }}
+                    <span class="mr-1">{{ __('Entry') }}: {{ $reviewFinding->entry_type }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('Finding entry type')"
+                        :text="__(
+                            'Scanner classification of this code occurrence: normal, UI, dynamic, or dynamic multi.',
+                        )"
+                    />
                 </flux:badge>
             @endif
 
@@ -131,7 +145,11 @@
                     size="sm"
                     variant="subtle"
                 >
-                    {{ $reviewFinding->function_name }}
+                    <span class="mr-1">{{ __('Function') }}: {{ $reviewFinding->function_name }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('Translation function')"
+                        :text="__('')"
+                    />
                 </flux:badge>
             @endif
 
@@ -139,7 +157,13 @@
                 size="sm"
                 color="{{ $reviewFinding->status === 'active' ? 'green' : 'amber' }}"
             >
-                {{ $reviewFinding->status }}
+                <span class="mr-1">{{ __('Status') }}: {{ $reviewFinding->status }}</span>
+                <x-ui.tooltip.simple
+                    :header="__('Finding status')"
+                    :text="__(
+                        'Scanner classification of this code occurrence: active (still present) or stale (no longer detected).',
+                    )"
+                />
             </flux:badge>
         </div>
     </flux:callout>
@@ -153,11 +177,12 @@
         <flux:callout.heading>
             <span class="inline-flex items-center gap-1.5">
                 <span>{{ __('Key state') }}</span>
-                <flux:tooltip
-                    content="{{ __('Current workbench key linkage, review status and whether a translation key has already been set.') }}"
-                >
-                    <flux:icon.info class="size-3.5 text-zinc-400" />
-                </flux:tooltip>
+                <x-ui.tooltip.simple
+                    :header="__('Key state')"
+                    :text="__(
+                        'Current workbench key linkage, review status and whether a translation key has already been set.',
+                    )"
+                />
             </span>
         </flux:callout.heading>
         <flux:callout.text class="text-xs">
@@ -169,14 +194,24 @@
                 size="sm"
                 color="{{ $reviewFinding->key_id ? 'green' : 'amber' }}"
             >
-                {{ $reviewFinding->key_id ? __('Key linked') : __('Key missing') }}
+                <span class="mr-1">{{ $reviewFinding->key_id ? __('Key linked') : __('Key missing') }}</span>
+                <x-ui.tooltip.simple
+                    :header="__('Translation key linkage')"
+                    :text="__('Shows whether this finding is linked to a workbench translation key or not.')"
+                />
             </flux:badge>
 
             <flux:badge
                 size="sm"
                 color="{{ $reviewKeyState['color'] }}"
             >
-                {{ $reviewKeyState['label'] }}
+                <span class="mr-1">{{ $reviewKeyState['label'] }}</span>
+                <x-ui.tooltip.simple
+                    :header="__('Translation key state')"
+                    :text="__(
+                        'Shows whether the translation key is missing, equal to the suggested key, or deliberately different.',
+                    )"
+                />
             </flux:badge>
 
             @if ($reviewFinding->key_status)
@@ -184,7 +219,13 @@
                     size="sm"
                     variant="subtle"
                 >
-                    {{ __('Key') }}: {{ $reviewFinding->key_status }}
+                    <span class="mr-1">{{ __('Key') }}: {{ $reviewFinding->key_status }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('Translation key status')"
+                        :text="__(
+                            'Shows the workbench review status for this finding: accepted, rejected, or pending.',
+                        )"
+                    />
                 </flux:badge>
             @endif
 
@@ -193,7 +234,13 @@
                     size="sm"
                     variant="subtle"
                 >
-                    {{ __('Review') }}: {{ $reviewFinding->review_status }}
+                    <span class="mr-1">{{ __('Review') }}: {{ $reviewFinding->review_status }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('Translation review status')"
+                        :text="__(
+                            'Shows the workbench review status for this finding: accepted, rejected, or pending.',
+                        )"
+                    />
                 </flux:badge>
             @endif
         </div>
@@ -207,12 +254,13 @@
     >
         <flux:callout.heading>
             <span class="inline-flex items-center gap-1.5">
-                <span>{{ __('Classification') }}</span>
-                <flux:tooltip
-                    content="{{ __('Resolved review classification. Confirmed states have priority over scanner candidate states.') }}"
-                >
-                    <flux:icon.info class="size-3.5 text-zinc-400" />
-                </flux:tooltip>
+                <span>{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.modal_dynamic_review.classification') }}</span>
+                <x-ui.tooltip.simple
+                    :header="__('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.modal_dynamic_review.classification')"
+                    :text="__(
+                        'Resolved review classification. Confirmed states have priority over scanner candidate states.',
+                    )"
+                />
             </span>
         </flux:callout.heading>
         <flux:callout.text class="text-xs">
@@ -225,7 +273,13 @@
                     size="sm"
                     color="green"
                 >
-                    {{ __('Normal translation') }}
+                    <span class="mr-1">{{ __('Normal translation') }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('Normal translation')"
+                        :text="__(
+                            'This finding is treated as a normal translation: no UI or dynamic classification applies.',
+                        )"
+                    />
                 </flux:badge>
             @endif
 
@@ -238,14 +292,26 @@
                     size="sm"
                     color="amber"
                 >
-                    {{ __('candidate') }}: {{ $reviewFinding->candidate_type }}
+                    <span class="mr-1">{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings_table.candidate') }}: {{ $reviewFinding->candidate_type }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('Scanner candidate')"
+                        :text="__(
+                            'Scanner candidate classification of this code occurrence: UI or dynamic. This is only a scanner suggestion and may be overridden by workbench review.',
+                        )"
+                    />
                 </flux:badge>
             @elseif (!$reviewIsUiConfirmed && !$reviewIsDynamicConfirmed && !$reviewIsDynamicMultiConfirmed)
                 <flux:badge
                     size="sm"
                     variant="subtle"
                 >
-                    {{ __('No candidate') }}
+                    <span class="mr-1">{{ __('No candidate') }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('No scanner candidate')"
+                        :text="__(
+                            'Scanner candidate classification of this code occurrence: UI or dynamic. This is only a scanner suggestion and may be overridden by workbench review.',
+                        )"
+                    />
                 </flux:badge>
             @endif
 
@@ -254,14 +320,26 @@
                     size="sm"
                     color="green"
                 >
-                    {{ __('isUI') }}
+                    <span class="mr-1">{{ __('isUI') }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('UI translation')"
+                        :text="__(
+                            'This finding is treated as a UI translation: the displayed value is resolved from runtime data and needs structured UI handling.',
+                        )"
+                    />
                 </flux:badge>
             @elseif ($reviewEffectiveUiCandidate)
                 <flux:badge
                     size="sm"
                     color="amber"
                 >
-                    {{ __('candidateUI') }}
+                    <span class="mr-1">{{ __('candidateUI') }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('UI translation candidate')"
+                        :text="__(
+                            'This finding is a candidate for UI translation: the displayed value might be resolved from runtime data and may need structured UI handling.',
+                        )"
+                    />
                 </flux:badge>
             @endif
 
@@ -270,7 +348,13 @@
                     size="sm"
                     color="rose"
                 >
-                    {{ __('No UI') }}
+                    <span class="mr-1">{{ __('No UI') }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('No UI translation')"
+                        :text="__(
+                            'This finding is explicitly rejected as a UI translation: the displayed value is not resolved from runtime data and does not need structured UI handling.',
+                        )"
+                    />
                 </flux:badge>
             @endif
 
@@ -279,28 +363,52 @@
                     size="sm"
                     color="cyan"
                 >
-                    {{ __('Dynamic option list') }}
+                    <span class="mr-1">{{ __('Dynamic option list') }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('Dynamic option list')"
+                        :text="__(
+                            'This finding is treated as a dynamic multi entry: multiple runtime option values may need separate translations.',
+                        )"
+                    />
                 </flux:badge>
             @elseif ($reviewIsDynamicConfirmed)
                 <flux:badge
                     size="sm"
                     color="teal"
                 >
-                    {{ __('Dynamic translation') }}
+                    <span class="mr-1">{{ __('Dynamic translation') }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('Dynamic translation')"
+                        :text="__(
+                            'This finding is treated as dynamic: the displayed value is resolved from runtime data and still needs structured dynamic data handling.',
+                        )"
+                    />
                 </flux:badge>
             @elseif ($reviewEffectiveDynamicMulti)
                 <flux:badge
                     size="sm"
                     color="cyan"
                 >
-                    {{ __('Dynamic option candidate') }}
+                    <span class="mr-1">{{ __('Dynamic option candidate') }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('Dynamic option list candidate')"
+                        :text="__(
+                            'This finding is a candidate for dynamic multi: multiple runtime option values may need separate translations.',
+                        )"
+                    />
                 </flux:badge>
             @elseif ($reviewEffectiveDynamicCandidate)
                 <flux:badge
                     size="sm"
                     color="amber"
                 >
-                    {{ __('Dynamic candidate') }}
+                    <span class="mr-1">{{ __('Dynamic candidate') }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('Dynamic translation candidate')"
+                        :text="__(
+                            'This finding is a candidate for dynamic: the displayed value might be resolved from runtime data and may need structured dynamic data handling.',
+                        )"
+                    />
                 </flux:badge>
             @endif
 
@@ -309,7 +417,14 @@
                     size="sm"
                     color="rose"
                 >
-                    {{ __('No dynamic') }}
+                    <span class="mr-1">{{ __('No dynamic') }}</span>
+                    <x-ui.tooltip.simple
+                        wire:click
+                        :header="__('No dynamic translation')"
+                        :text="__(
+                            'This finding is explicitly rejected as a dynamic translation: the displayed value is not resolved from runtime data and does not need structured dynamic data handling.',
+                        )"
+                    />
                 </flux:badge>
             @endif
 
@@ -318,12 +433,18 @@
                     size="sm"
                     variant="subtle"
                 >
-                    {{ __('Scope') }}: {{ $reviewFinding->dynamic_scope }}
+                    <span class="mr-1">{{ __('Scope') }}: {{ $reviewFinding->dynamic_scope }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('Dynamic scope')"
+                        :text="__(
+                            'Shows the scanner classification of this dynamic finding: global, local, or unknown.',
+                        )"
+                    />
                 </flux:badge>
             @endif
 
             @if (filled($reviewDynamicDataState))
-                <x-ui.tooltip.trigger
+                <x-ui.tooltip.simple
                     :title="__('Dynamic data state')"
                     :text="__(
                         'Unstructured means this dynamic finding is identified, but its runtime values have not yet been normalized into dedicated dynamic translation value records.',
@@ -333,13 +454,20 @@
                         size="sm"
                         color="{{ $reviewDynamicDataState === 'structured' ? 'green' : 'orange' }}"
                     >
-                        {{ $reviewDynamicDataState === 'structured' ? __('Data structured') : __('Data unstructured') }}
+                        <span
+                            class="mr-1">{{ $reviewDynamicDataState === 'structured' ? __('Data structured') : __('Data unstructured') }}</span>
+                        <x-ui.tooltip.simple
+                            :header="__('Dynamic data state')"
+                            :text="__(
+                                'Shows whether this dynamic finding has structured runtime values or not: structured means the runtime values have been normalized into dedicated dynamic translation value records.',
+                            )"
+                        />
                     </flux:badge>
-                </x-ui.tooltip.trigger>
+                </x-ui.tooltip.simple>
             @endif
 
             @if ($reviewDynamicQualification)
-                <x-ui.tooltip.trigger
+                <x-ui.tooltip.simple
                     :title="__('Dynamic qualification')"
                     :text="$reviewDynamicQualification['text']"
                 >
@@ -347,9 +475,13 @@
                         size="sm"
                         color="{{ $reviewDynamicQualification['color'] }}"
                     >
-                        {{ __('Qualification') }}: {{ $reviewDynamicQualification['label'] }}
+                        <span class="mr-1">{{ $reviewDynamicQualification['label'] }}</span>
+                        <x-ui.tooltip.simple
+                            :header="__('Dynamic qualification')"
+                            :text="$reviewDynamicQualification['text']"
+                        />
                     </flux:badge>
-                </x-ui.tooltip.trigger>
+                </x-ui.tooltip.simple>
             @endif
         </div>
     </flux:callout>
@@ -363,9 +495,10 @@
         <flux:callout.heading>
             <span class="inline-flex items-center gap-1.5">
                 <span>{{ __('Seen state') }}</span>
-                <flux:tooltip content="{{ __('First and latest scanner timestamps for this finding.') }}">
-                    <flux:icon.info class="size-3.5 text-zinc-400" />
-                </flux:tooltip>
+                <x-ui.tooltip.simple
+                    :header="__('Seen timestamps')"
+                    :text="__('First and latest scanner timestamps for this finding.')"
+                />
             </span>
         </flux:callout.heading>
         <flux:callout.text class="text-xs">
@@ -378,8 +511,12 @@
                     size="sm"
                     color="green"
                 >
-                    {{ __('First') }}:
-                    {{ $reviewFirstSeenAt?->format('D, d.M.Y H:i') ?? $reviewFinding->first_seen_at }}
+                    <span class="mr-1">{{ __('First') }}:
+                        {{ $reviewFirstSeenAt?->format('D, d.M.Y H:i') ?? $reviewFinding->first_seen_at }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('First seen')"
+                        :text="__('Timestamp of the first scanner detection of this finding.')"
+                    />
                 </flux:badge>
             @endif
 
@@ -388,8 +525,12 @@
                     size="sm"
                     color="{{ $reviewSeenAtSameTime ? 'green' : 'orange' }}"
                 >
-                    {{ __('Last') }}:
-                    {{ $reviewLastSeenAt?->format('D, d.M.Y H:i') ?? $reviewFinding->last_seen_at }}
+                    <span class="mr-1">{{ __('Last') }}:
+                        {{ $reviewLastSeenAt?->format('D, d.M.Y H:i') ?? $reviewFinding->last_seen_at }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('Last seen')"
+                        :text="__('Timestamp of the latest scanner detection of this finding.')"
+                    />
                 </flux:badge>
             @endif
 
@@ -398,7 +539,11 @@
                     size="sm"
                     color="{{ $reviewLastSeenAgeColor }}"
                 >
-                    {{ __('Ago') }}: {{ $reviewLastSeenAt->diffForHumans() }}
+                    <span class="mr-1">{{ __('ui.date-time.ago') }}: {{ $reviewLastSeenAt->diffForHumans() }}</span>
+                    <x-ui.tooltip.simple
+                        :header="__('Last seen age')"
+                        :text="__('Time since the latest scanner detection of this finding.')"
+                    />
                 </flux:badge>
             @endif
         </div>
@@ -417,12 +562,11 @@
             <flux:field class="xl:col-span-2">
                 <flux:callout.heading>
                     <span class="inline-flex items-center gap-1.5">
-                        <span>{{ __('Classification review') }}</span>
-                        <flux:tooltip
-                            content="{{ __('Review controls for accepting or rejecting UI and dynamic classifications.') }}"
-                        >
-                            <flux:icon.info class="size-3.5 text-zinc-400" />
-                        </flux:tooltip>
+                        <span>{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.classification_review') }}</span>
+                        <x-ui.tooltip.simple
+                            :header="__('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.classification_review')"
+                            :text="__('Review controls for accepting or rejecting UI and dynamic classifications.')"
+                        />
                     </span>
                 </flux:callout.heading>
                 <flux:callout.text class="text-xs">
@@ -441,7 +585,13 @@
 
                         @if ($reviewFinding->candidate_reason)
                             <div class="wrap-anywhere grid grid-cols-3 text-wrap">
-                                <span class="col-span-1 font-medium">{{ __('Candidate Evaluation') }}!</span>
+                                <div class="col-span-1 inline-flex items-center gap-1.5 font-medium">
+                                    <span>{{ __('Candidate Evaluation') }}!</span>
+                                    <x-ui.tooltip.simple
+                                        :header="__('Candidate reason')"
+                                        :text="__('Shows the scanner candidate reason for this finding, if any.')"
+                                    />
+                                </div>
                                 <span class="col-span-2 font-semibold text-zinc-200">
                                     {{ $reviewFinding->candidate_reason }}
                                 </span>
@@ -455,129 +605,147 @@
                 </flux:callout.text>
             </flux:field>
 
-            <div
-                class="grid self-start gap-3 md:grid-cols-2 xl:col-span-2"
-                x-data="{
-                    uiCandidate: @js($reviewUiControlValue ? 'yes' : 'no'),
-                }"
-                wire:key="translation-workbench-review-classification-{{ $reviewFinding->id }}-{{ (int) $reviewIsUiConfirmed }}-{{ (int) $reviewIsUiRejected }}-{{ (int) $reviewEffectiveUiCandidate }}"
-            >
+            <div class="grid gap-3 self-start md:grid-cols-2 xl:col-span-2">
                 <flux:field>
-                    <flux:radio.group
-                        class="buergerfrs-checkbox-cards-compact grid grid-cols-3 content-start"
-                        label="{{ __('UI translation') }}?"
-                        variant="cards"
-                        x-model="uiCandidate"
-                    >
-                        <flux:radio
-                            @class([
-                                'col-span-1',
-                                'hover:cursor-not-allowed' => $reviewUiReviewDisabled,
-                                'hover:cursor-pointer' => ! $reviewUiReviewDisabled,
-                            ])
-                            value="no"
-                            :disabled="$reviewUiReviewDisabled"
-                            x-on:click="uiCandidate = 'no'"
-                            wire:click="setUiCandidateClassification({{ $reviewFinding->id }}, false)"
-                            wire:loading.attr="disabled"
-                            wire:target="setUiCandidateClassification"
+                    <flux:label>
+                        <span class="mr-1">{{ __('UI translation state') }}</span>
+                        <x-ui.tooltip.simple
+                            :header="__('UI translation state')"
+                            :text="__(
+                                'UI state is derived from the saved translation key. A key starting with ui. is treated as UI; every other key is not UI.',
+                            )"
+                        />
+                    </flux:label>
+                    <div class="grid gap-2">
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            @if ($reviewIsUiCandidate && !$reviewIsUiConfirmed)
+                                <flux:badge
+                                    size="sm"
+                                    color="violet"
+                                >
+                                    {{ __('Candidate UI') }}
+                                </flux:badge>
+                            @endif
+
+                            <flux:badge
+                                size="sm"
+                                color="{{ $reviewIsUiConfirmed ? 'green' : 'zinc' }}"
+                            >
+                                {{ $reviewIsUiConfirmed ? __('Is UI') : __('No UI key') }}
+                            </flux:badge>
+
+                            @if ($reviewUiReviewDisabled)
+                                <flux:badge
+                                    size="sm"
+                                    color="teal"
+                                >
+                                    {{ __('Dynamic finding') }}
+                                </flux:badge>
+                            @endif
+                        </div>
+
+                        <flux:callout.text class="text-xs text-zinc-500 dark:text-zinc-400">
+                            {{ __(
+                                'To classify this as UI, edit the translation key and save it with the ui. namespace. The review controls no longer set UI yes/no separately.',
+                            ) }}
+                        </flux:callout.text>
+
+                        <flux:button
+                            class="w-fit"
+                            type="button"
+                            icon="key-round"
+                            size="xs"
+                            variant="subtle"
+                            wire:click="openTranslationKeyModal({{ $reviewFinding->id }})"
                         >
-                            <div class="flex-1">
-                                <flux:heading class="{{ $reviewIsUiRejected ? 'text-red-500' : '' }} leading-4">
-                                    {{ __('NO') }}
-                                </flux:heading>
-                            </div>
-                            <flux:radio.indicator />
-                        </flux:radio>
-                        <flux:radio
-                            @class([
-                                'col-span-1',
-                                'hover:cursor-not-allowed' => $reviewUiReviewDisabled,
-                                'hover:cursor-pointer' => ! $reviewUiReviewDisabled,
-                            ])
-                            value="yes"
-                            :disabled="$reviewUiReviewDisabled"
-                            x-on:click="uiCandidate = 'yes'"
-                            wire:click="setUiCandidateClassification({{ $reviewFinding->id }}, true)"
-                            wire:loading.attr="disabled"
-                            wire:target="setUiCandidateClassification"
-                        >
-                            <div class="flex-1">
-                                <flux:heading class="{{ $reviewIsUiConfirmed ? 'text-green-500' : '' }} leading-4">
-                                    {{ __('YES') }}
-                                </flux:heading>
-                            </div>
-                            <flux:radio.indicator />
-                        </flux:radio>
-                    </flux:radio.group>
+                            {{ __('Edit translation key') }}
+                        </flux:button>
+                    </div>
                 </flux:field>
                 {{--
-                    Dynamic classification is now scanner/data-state driven.
-                    Keep this block inactive until the structured dynamic-value workflow is implemented.
+                    Dynamic type review is intentionally parked.
 
-                <flux:field>
-                    <flux:radio.group
-                        class="buergerfrs-checkbox-cards-compact grid grid-cols-3"
-                        label="{{ __('Dynamic translation') }}?"
-                        variant="cards"
-                        x-model="dynamicCandidate"
-                    >
-                        <flux:radio
-                            class="col-span-1 hover:cursor-pointer"
-                            value="no"
-                            x-on:click="dynamicCandidate = 'no'; dynamicMulti = false"
-                            wire:click="setDynamicCandidateClassification({{ $reviewFinding->id }}, false)"
-                            wire:loading.attr="disabled"
-                            wire:target="setUiCandidateClassification,setDynamicCandidateClassification"
+                    Dynamic text findings are now handled as dynamic values, while
+                    numeric dynamic findings are excluded from the translation-value
+                    workflow by the scanner/foundation sync. Keep this block here
+                    for short-term reference while the review workflow settles.
+
+                @if ($reviewDynamicQualification !== null || $reviewIsDynamicCandidate || filled($reviewDynamicDataState))
+                    <flux:field>
+                        <flux:label>
+                            <span class="mr-1 font-medium">
+                                {{ __('Dynamic type') }}?
+                            </span>
+                            <x-ui.tooltip.simple
+                                :header="__('Dynamic translation review')"
+                                :text="__(
+                                    'Select whether this finding is a single dynamic translation or a dynamic multi option list.',
+                                )"
+                            />
+                        </flux:label>
+                        <flux:radio.group
+                            class="buergerfrs-checkbox-cards-compact grid grid-cols-2 content-start"
+                            variant="cards"
+                            x-model="dynamicMode"
                         >
-                            <div class="flex-1">
-                                <flux:heading class="leading-4 {{ $reviewIsDynamicRejected ? 'text-red-500' : '' }}">
-                                    {{ __('NO') }}
-                                </flux:heading>
-                            </div>
-                            <flux:radio.indicator />
-                        </flux:radio>
-                        <flux:radio
-                            class="col-span-1 hover:cursor-pointer"
-                            value="yes"
-                            x-on:click="dynamicCandidate = 'yes'; uiCandidate = 'no'"
-                            wire:click="setDynamicCandidateClassification({{ $reviewFinding->id }}, true)"
-                            wire:loading.attr="disabled"
-                            wire:target="setUiCandidateClassification,setDynamicCandidateClassification,setDynamicMultiKeyReview"
-                        >
-                            <div class="flex-1">
-                                <flux:heading class="leading-4 {{ $reviewIsDynamicConfirmed ? 'text-green-500' : '' }}">
-                                    {{ __('YES') }}
-                                </flux:heading>
-                            </div>
-                            <flux:radio.indicator />
-                        </flux:radio>
-                    </flux:radio.group>
-                </flux:field>
-                <flux:field>
-                    <flux:checkbox.group
-                        class="buergerfrs-checkbox-cards-compact grid grid-cols-3"
-                        label="{{ __('Dynamic-Multi') }}?"
-                        variant="cards"
-                    >
-                        <flux:checkbox
-                            class="col-span-1 hover:cursor-pointer"
-                            value="is-candidate-dynamic-multi-yes"
-                            x-model="dynamicMulti"
-                            x-bind:disabled="dynamicCandidate !== 'yes'"
-                            wire:change="setDynamicMultiKeyReview({{ $reviewFinding->id }}, $event.target.checked)"
-                            wire:loading.attr="disabled"
-                            wire:target="setDynamicCandidateClassification,setDynamicMultiKeyReview"
-                        >
-                            <div class="flex-1">
-                                <flux:heading class="leading-4 {{ $reviewIsDynamicMultiConfirmed ? 'text-green-500' : '' }}">
-                                    {{ __('MULTI') }}
-                                </flux:heading>
-                            </div>
-                            <flux:checkbox.indicator />
-                        </flux:checkbox>
-                    </flux:checkbox.group>
-                </flux:field>
+                            <flux:radio
+                                class="col-span-1 hover:cursor-pointer"
+                                value="single"
+                                x-on:click="dynamicMode = 'single'; uiCandidate = 'no'"
+                                wire:click="setDynamicReviewMode({{ $reviewFinding->id }}, 'single')"
+                                wire:loading.attr="disabled"
+                                wire:target="setDynamicReviewMode"
+                            >
+                                <div class="flex-1">
+                                    <flux:heading
+                                        class="{{ $reviewIsDynamicConfirmed && !$reviewIsDynamicMultiConfirmed ? 'text-green-500' : '' }} leading-4"
+                                    >
+                                        <div class="col-span-1 inline-flex items-center gap-1.5 font-medium">
+                                            <span class="font-medium">
+                                                {{ __('Dynamic') }}
+                                            </span>
+                                            <x-ui.tooltip.simple
+                                                :header="__('Accept dynamic translation')"
+                                                :text="__(
+                                                    'Accept this finding as a single dynamic translation candidate.',
+                                                )"
+                                            />
+                                        </div>
+                                    </flux:heading>
+                                </div>
+                                <flux:radio.indicator />
+                            </flux:radio>
+
+                            <flux:radio
+                                class="col-span-1 hover:cursor-pointer"
+                                value="multi"
+                                x-on:click="dynamicMode = 'multi'; uiCandidate = 'no'"
+                                wire:click="setDynamicReviewMode({{ $reviewFinding->id }}, 'multi')"
+                                wire:loading.attr="disabled"
+                                wire:target="setDynamicReviewMode"
+                            >
+                                <div class="flex-1">
+                                    <flux:heading
+                                        class="{{ $reviewIsDynamicMultiConfirmed || $reviewEffectiveDynamicMulti ? 'text-green-500' : '' }} leading-4"
+                                    >
+                                        <div class="col-span-1 inline-flex items-center gap-1.5 font-medium">
+                                            <span class="font-medium">
+                                                {{ __('DynamicMulti') }}
+                                            </span>
+                                            <x-ui.tooltip.simple
+                                                :header="__('Accept dynamic multi translation')"
+                                                :text="__(
+                                                    'Accept this finding as a dynamic multi translation candidate.',
+                                                )"
+                                            />
+                                        </div>
+                                    </flux:heading>
+                                </div>
+                                <flux:radio.indicator />
+                            </flux:radio>
+                        </flux:radio.group>
+                    </flux:field>
+                @endif
                 --}}
             </div>
         </div>

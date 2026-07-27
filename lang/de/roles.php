@@ -6,7 +6,6 @@ return [
             'actions' => [
                 'create' => 'Erstellen',
             ],
-
             'badge' => [
                 'color' => 'Farbe',
             ],

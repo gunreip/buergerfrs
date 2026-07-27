@@ -2,10 +2,16 @@
 
 // packages/gunreip/laravel-translation-workbench/src/Console/ScanTranslationWorkbench.php
 
+// php artisan translation-workbench:scan
+// php artisan translation-workbench:scan --dry-run
 // php artisan translation-workbench:scan --truncate
+// php artisan translation-workbench:scan --truncate --force-truncate
+// php artisan translation-workbench:scan --mark-obsolete
+// php artisan translation-workbench:scan --paths=resources/views/components
 
 namespace Gunreip\TranslationWorkbench\Console;
 
+use Gunreip\TranslationWorkbench\Console\Concerns\ConfirmsTranslationWorkbenchTruncate;
 use Gunreip\TranslationWorkbench\Console\Concerns\WritesTranslationWorkbenchReports;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchEntry;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchEvent;
@@ -21,10 +27,12 @@ use Illuminate\Support\Facades\DB;
     {--paths= : Comma-separated relative paths to scan. Defaults to config translation-workbench.paths.}
     {--dry-run : Scan and report only; do not write database rows.}
     {--truncate : Truncate translation workbench tables before writing scanned entries.}
+    {--force-truncate : Skip the interactive safety confirmation for --truncate.}
     {--mark-obsolete : Mark previously seen but now missing entries as obsolete.}')]
 #[Description('Scan code for translation-capable literals and collect them in the translation workbench tables.')]
 class ScanTranslationWorkbench extends Command
 {
+    use ConfirmsTranslationWorkbenchTruncate;
     use WritesTranslationWorkbenchReports;
 
     public function handle(TranslationWorkbenchScanner $scanner): int
@@ -34,6 +42,26 @@ class ScanTranslationWorkbench extends Command
         $truncate = (bool) $this->option('truncate');
         $markObsolete = (bool) $this->option('mark-obsolete');
         $now = now();
+
+        if (! $this->confirmTranslationWorkbenchTruncate(
+            $truncate,
+            $dryRun,
+            'The --truncate option will delete Translation Workbench scan tables before writing scanned entries.',
+            'force-truncate',
+            [
+                'scope' => 'scan',
+                'tables' => [
+                    'translation_workbench_option_discoveries',
+                    'translation_workbench_dynamic_values',
+                    'translation_workbench_values',
+                    'translation_workbench_occurrences',
+                    'translation_workbench_events',
+                    'translation_workbench_entries',
+                ],
+            ],
+        )) {
+            return self::FAILURE;
+        }
 
         $items = $scanner->scan($paths);
         $summary = [
@@ -173,6 +201,16 @@ class ScanTranslationWorkbench extends Command
     private function syncItem(DiscoveredTranslation $item, mixed $now): array
     {
         $attributes = $item->toEntryAttributes();
+        $isEmptyLiteralEntry = $this->isEmptyLiteralEntry($item);
+
+        if ($isEmptyLiteralEntry) {
+            $attributes['meta'] = [
+                ...($attributes['meta'] ?? []),
+                'ignored_reason' => 'empty_literal_translation_call',
+                'translation_relevant' => false,
+            ];
+        }
+
         $entry = TranslationWorkbenchEntry::query()
             ->where('fingerprint', $item->fingerprint)
             ->first();
@@ -182,7 +220,7 @@ class ScanTranslationWorkbench extends Command
             $entry = TranslationWorkbenchEntry::query()->create([
                 'previous_entry_id' => $previousEntry?->id,
                 ...$attributes,
-                'status' => 'open',
+                'status' => $isEmptyLiteralEntry ? 'obsolete' : 'open',
                 'review_status' => 'pending',
                 'first_seen_at' => $now,
                 'last_seen_at' => $now,
@@ -201,6 +239,7 @@ class ScanTranslationWorkbench extends Command
         }
 
         $stableAttributes = $this->stableEntryAttributes($attributes, $entry);
+        $nextStatus = $isEmptyLiteralEntry ? 'obsolete' : ($entry->status === 'obsolete' ? 'open' : $entry->status);
         $oldValues = $entry->only(array_keys($stableAttributes));
         $changed = collect($stableAttributes)
             ->filter(static fn(mixed $value, string $key): bool => ($oldValues[$key] ?? null) !== $value)
@@ -208,7 +247,7 @@ class ScanTranslationWorkbench extends Command
 
         $entry->forceFill([
             ...$stableAttributes,
-            'status' => $entry->status === 'obsolete' ? 'open' : $entry->status,
+            'status' => $nextStatus,
             'last_seen_at' => $now,
             'scan_count' => ((int) $entry->scan_count) + 1,
         ])->save();
@@ -223,6 +262,13 @@ class ScanTranslationWorkbench extends Command
         }
 
         return ['result' => 'unchanged', 'entry' => $entry, 'replaced' => 0];
+    }
+
+    private function isEmptyLiteralEntry(DiscoveredTranslation $item): bool
+    {
+        return $item->kind === 'literal'
+            && $item->literalText !== null
+            && trim($item->literalText) === '';
     }
 
     private function previousEntryFor(DiscoveredTranslation $item): ?TranslationWorkbenchEntry

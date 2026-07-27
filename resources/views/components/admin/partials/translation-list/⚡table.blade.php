@@ -235,10 +235,10 @@
                     >
                         <x-ui.tooltip.trigger
                             class="mr-3"
-                            :title="__('ui.labels.actions')"
+                            :title="__('ui.table.headers.actions')"
                             :text="__('admin.translation_list.table.open_the_translation_key_review_modal')"
                         >
-                            {{ __('ui.labels.actions') }}
+                            {{ __('ui.table.headers.actions') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 

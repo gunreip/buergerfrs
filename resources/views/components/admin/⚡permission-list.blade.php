@@ -11,7 +11,7 @@
         :description="__('admin.permissions.description')"
     >
         <x-ui.button.confirm
-            label="{{ __('admin.permissions.actions.edit_role_permissions') }}"
+            label="{{ __('admin.permission_list.edit_role_permissions') }}"
             wire:click="openRolePermissionsModal"
         />
     </x-ui.headers.page>

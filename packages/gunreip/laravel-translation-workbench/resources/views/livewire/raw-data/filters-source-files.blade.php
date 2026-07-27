@@ -1,6 +1,6 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters-source-files.blade.php --}}
 
-<flux:separator text="{{ __('Common filters') }}" />
+<flux:separator text="{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.filters_event_types.common_filters') }}" />
 
 <flux:field class="mb-4 grid gap-3 md:grid-cols-10">
     {{-- Source Files Search Filter --}}

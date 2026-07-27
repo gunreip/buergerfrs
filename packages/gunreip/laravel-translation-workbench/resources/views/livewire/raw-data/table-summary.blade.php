@@ -17,7 +17,7 @@
 
                 <flux:table>
                     <flux:table.columns>
-                        <flux:table.column>{{ __('Column') }}</flux:table.column>
+                        <flux:table.column>{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.table_card.column') }}</flux:table.column>
                         <flux:table.column align="end">{{ __('Min') }}</flux:table.column>
                         <flux:table.column align="end">{{ __('Max') }}</flux:table.column>
                         <flux:table.column align="end">∑</flux:table.column>
@@ -56,7 +56,7 @@
 
                 <flux:table>
                     <flux:table.columns>
-                        <flux:table.column>{{ __('Column') }}</flux:table.column>
+                        <flux:table.column>{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.table_card.column') }}</flux:table.column>
                         <flux:table.column align="end">∑</flux:table.column>
                     </flux:table.columns>
 
@@ -125,9 +125,9 @@
 
                 <flux:table container:class="max-h-96 overflow-auto">
                     <flux:table.columns sticky>
-                        <flux:table.column>{{ __('Column') }}</flux:table.column>
+                        <flux:table.column>{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.table_card.column') }}</flux:table.column>
                         <flux:table.column align="end">{{ __('Filled') }}</flux:table.column>
-                        <flux:table.column align="end">{{ __('NULL') }}</flux:table.column>
+                        <flux:table.column align="end">{{ __('ui.null') }}</flux:table.column>
                         <flux:table.column align="end">{{ __('Empty') }}</flux:table.column>
                     </flux:table.columns>
 

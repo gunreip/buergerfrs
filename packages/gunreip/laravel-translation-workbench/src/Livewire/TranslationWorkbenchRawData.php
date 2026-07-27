@@ -4,11 +4,13 @@
 
 namespace Gunreip\TranslationWorkbench\Livewire;
 
+use App\Livewire\Concerns\InteractsWithUserSettings;
 use Gunreip\TranslationWorkbench\Support\RawDataColumnPresentation;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -16,7 +18,151 @@ use Throwable;
 
 class TranslationWorkbenchRawData extends Component
 {
+    use InteractsWithUserSettings;
     use WithPagination;
+
+    /**
+     * User-facing Raw-Data table state that is safe to persist.
+     *
+     * This list intentionally contains only table selections, filters, sort and pagination.
+     *
+     * @var array<int, string>
+     */
+    private const PERSISTED_STATE_PROPERTIES = [
+        'activeTable',
+        'perPage',
+        'sortField',
+        'sortDirection',
+        'sourceFilesSearch',
+        'sourceFilesId',
+        'sourceFilesPath',
+        'sourceFilesRoot',
+        'sourceFilesArea',
+        'sourceFilesPackageVendor',
+        'sourceFilesPackageName',
+        'sourceFilesDomain',
+        'sourceFilesSection',
+        'sourceFilesContext',
+        'sourceFilesScope',
+        'sourceFilesExtra',
+        'sourceFilesFilename',
+        'sourceFilesSourceType',
+        'sourceFilesExtension',
+        'sourceFilesStatus',
+        'eventTypesSearch',
+        'eventTypesId',
+        'eventTypesKey',
+        'eventTypesLabel',
+        'eventTypesCategory',
+        'eventTypesSeverity',
+        'findingsSearch',
+        'findingsId',
+        'findingsSourceFileId',
+        'findingsSourceLine',
+        'findingsKind',
+        'findingsFunctionName',
+        'findingsEntryType',
+        'findingsCandidateType',
+        'findingsStatus',
+        'findingsNamespace',
+        'findingsGroup',
+        'findingsScope',
+        'findingsDynamicScope',
+        'keysSearch',
+        'keysId',
+        'keysTranslationKey',
+        'keysSuggestedKey',
+        'keysNamespace',
+        'keysGroup',
+        'keysScope',
+        'keysSegmentDomain',
+        'keysSegmentSection',
+        'keysSegmentContext',
+        'keysSegmentExtra',
+        'keysSegmentName',
+        'keysKeyType',
+        'keysIsUiKey',
+        'keysIsDynamicKey',
+        'keysIsDynamicMulti',
+        'keysStatus',
+        'keysReviewStatus',
+        'keyFindingsSearch',
+        'keyFindingsId',
+        'keyFindingsKeyId',
+        'keyFindingsFindingId',
+        'keyFindingsRelationType',
+        'keyFindingsStatus',
+        'keyValuesSearch',
+        'keyValuesId',
+        'keyValuesKeyId',
+        'keyValuesLocale',
+        'keyValuesStatus',
+        'keyValuesSource',
+        'dynamicKeyValuesSearch',
+        'dynamicKeyValuesId',
+        'dynamicKeyValuesKeyId',
+        'dynamicKeyValuesValueKey',
+        'dynamicKeyValuesLocale',
+        'dynamicKeyValuesStatus',
+        'dynamicKeyValuesSource',
+        'dynamicSourcesSearch',
+        'dynamicSourcesId',
+        'dynamicSourcesKeyId',
+        'dynamicSourcesFindingId',
+        'dynamicSourcesOptionDiscoveryId',
+        'dynamicSourcesClassification',
+        'dynamicSourcesCardinality',
+        'dynamicSourcesOrigin',
+        'dynamicSourcesSourceType',
+        'dynamicSourcesConfidence',
+        'dynamicSourcesStatus',
+        'dynamicSourceCandidatesSearch',
+        'dynamicSourceCandidatesId',
+        'dynamicSourceCandidatesDynamicSourceId',
+        'dynamicSourceCandidatesKeyId',
+        'dynamicSourceCandidatesFindingId',
+        'dynamicSourceCandidatesCandidateSourceType',
+        'dynamicSourceCandidatesConfidence',
+        'dynamicSourceCandidatesReviewStatus',
+        'dynamicSourceCandidatesStatus',
+        'dynamicSourceValuesSearch',
+        'dynamicSourceValuesId',
+        'dynamicSourceValuesDynamicSourceId',
+        'dynamicSourceValuesValueKey',
+        'dynamicSourceValuesTranslationKey',
+        'dynamicSourceValuesOrigin',
+        'dynamicSourceValuesStatus',
+        'langValuesSearch',
+        'langValuesId',
+        'langValuesMainLocale',
+        'langValuesSubLocale',
+        'langValuesNamespace',
+        'langValuesLangKey',
+        'langValuesTranslationKey',
+        'langValuesSourcePath',
+        'langValuesValueType',
+        'langValuesStatus',
+        'reviewsSearch',
+        'reviewsId',
+        'reviewsKeyId',
+        'reviewsFindingId',
+        'reviewsReviewType',
+        'reviewsDecision',
+        'reviewsReviewedByUserId',
+        'timelineEventsSearch',
+        'timelineEventsId',
+        'timelineEventsEventType',
+        'timelineEventsEventTypeId',
+        'timelineEventsKeyId',
+        'timelineEventsFindingId',
+        'timelineEventsReviewId',
+        'timelineEventsCreatedByUserId',
+        'timelineEventsCreatedRange',
+        'timelineEventsTimeFrom',
+        'timelineEventsChangedRange',
+        'timelineEventsChangedTime',
+        'timelineEventsTimeSpan',
+    ];
 
     public string $pageTitle = 'Translation Workbench Raw-Data';
 
@@ -161,6 +307,86 @@ class TranslationWorkbenchRawData extends Component
 
     public string $keyFindingsStatus = 'all';
 
+    public string $keyValuesSearch = '';
+
+    public string $keyValuesId = '';
+
+    public string $keyValuesKeyId = '';
+
+    public string $keyValuesLocale = 'all';
+
+    public string $keyValuesStatus = 'all';
+
+    public string $keyValuesSource = 'all';
+
+    public string $dynamicKeyValuesSearch = '';
+
+    public string $dynamicKeyValuesId = '';
+
+    public string $dynamicKeyValuesKeyId = '';
+
+    public string $dynamicKeyValuesValueKey = '';
+
+    public string $dynamicKeyValuesLocale = 'all';
+
+    public string $dynamicKeyValuesStatus = 'all';
+
+    public string $dynamicKeyValuesSource = 'all';
+
+    public string $dynamicSourcesSearch = '';
+
+    public string $dynamicSourcesId = '';
+
+    public string $dynamicSourcesKeyId = '';
+
+    public string $dynamicSourcesFindingId = '';
+
+    public string $dynamicSourcesOptionDiscoveryId = '';
+
+    public string $dynamicSourcesClassification = 'all';
+
+    public string $dynamicSourcesCardinality = 'all';
+
+    public string $dynamicSourcesOrigin = 'all';
+
+    public string $dynamicSourcesSourceType = 'all';
+
+    public string $dynamicSourcesConfidence = 'all';
+
+    public string $dynamicSourcesStatus = 'all';
+
+    public string $dynamicSourceCandidatesSearch = '';
+
+    public string $dynamicSourceCandidatesId = '';
+
+    public string $dynamicSourceCandidatesDynamicSourceId = '';
+
+    public string $dynamicSourceCandidatesKeyId = '';
+
+    public string $dynamicSourceCandidatesFindingId = '';
+
+    public string $dynamicSourceCandidatesCandidateSourceType = 'all';
+
+    public string $dynamicSourceCandidatesConfidence = 'all';
+
+    public string $dynamicSourceCandidatesReviewStatus = 'all';
+
+    public string $dynamicSourceCandidatesStatus = 'all';
+
+    public string $dynamicSourceValuesSearch = '';
+
+    public string $dynamicSourceValuesId = '';
+
+    public string $dynamicSourceValuesDynamicSourceId = '';
+
+    public string $dynamicSourceValuesValueKey = '';
+
+    public string $dynamicSourceValuesTranslationKey = '';
+
+    public string $dynamicSourceValuesOrigin = 'all';
+
+    public string $dynamicSourceValuesStatus = 'all';
+
     public string $langValuesSearch = '';
 
     public string $langValuesId = '';
@@ -180,6 +406,20 @@ class TranslationWorkbenchRawData extends Component
     public string $langValuesValueType = 'all';
 
     public string $langValuesStatus = 'all';
+
+    public string $reviewsSearch = '';
+
+    public string $reviewsId = '';
+
+    public string $reviewsKeyId = '';
+
+    public string $reviewsFindingId = '';
+
+    public string $reviewsReviewType = 'all';
+
+    public string $reviewsDecision = 'all';
+
+    public string $reviewsReviewedByUserId = '';
 
     public string $timelineEventsSearch = '';
 
@@ -221,6 +461,35 @@ class TranslationWorkbenchRawData extends Component
 
     public ?string $timelineEventsTimeSpan = '02:00';
 
+    public function mount(): void
+    {
+        $state = $this->userSetting($this->uiStateSettingKey(), $this->uiStateDefaults());
+
+        if (! is_array($state)) {
+            $state = [];
+        }
+
+        foreach (self::PERSISTED_STATE_PROPERTIES as $property) {
+            if (! array_key_exists($property, $state) || ! property_exists($this, $property)) {
+                continue;
+            }
+
+            $this->{$property} = $this->normalizedPersistedPropertyValue($property, $state[$property]);
+        }
+
+        $this->activeTable = $this->normalizedActiveTable();
+        $this->perPage = $this->normalizedPerPage();
+        $this->sortDirection = $this->sortDirection === 'asc' ? 'asc' : 'desc';
+        $this->setPage(1);
+    }
+
+    public function updated(string $property): void
+    {
+        if (in_array($property, self::PERSISTED_STATE_PROPERTIES, true)) {
+            $this->persistUiState();
+        }
+    }
+
     public function setActiveTable(string $table, string $scroll = 'nearest'): void
     {
         $this->activeTable = in_array($table, $this->tables, true)
@@ -229,6 +498,7 @@ class TranslationWorkbenchRawData extends Component
 
         $this->resetSortForTable();
         $this->resetPage();
+        $this->persistUiState();
         $this->dispatchActiveTableTabChanged($scroll);
     }
 
@@ -237,6 +507,7 @@ class TranslationWorkbenchRawData extends Component
         $this->activeTable = $this->normalizedActiveTable();
         $this->resetSortForTable();
         $this->resetPage();
+        $this->persistUiState();
         $this->dispatchActiveTableTabChanged();
     }
 
@@ -292,12 +563,14 @@ class TranslationWorkbenchRawData extends Component
         }
 
         $this->resetPage();
+        $this->persistUiState();
     }
 
     public function updatedPerPage(): void
     {
         $this->perPage = $this->normalizedPerPage();
         $this->resetPage();
+        $this->persistUiState();
     }
 
     public function updatedSourceFilesSearch(): void
@@ -448,6 +721,7 @@ class TranslationWorkbenchRawData extends Component
         $this->sourceFilesStatus = 'all';
 
         $this->resetPage();
+        $this->persistUiState();
     }
 
     private function resetSourceFilePathSegmentsAfterArea(): void
@@ -501,6 +775,7 @@ class TranslationWorkbenchRawData extends Component
         $this->eventTypesSeverity = 'all';
 
         $this->resetPage();
+        $this->persistUiState();
     }
 
     public function updatedFindingsSearch(): void
@@ -589,6 +864,7 @@ class TranslationWorkbenchRawData extends Component
         $this->findingsDynamicScope = 'all';
 
         $this->resetPage();
+        $this->persistUiState();
     }
 
     public function updatedKeysSearch(): void
@@ -733,6 +1009,7 @@ class TranslationWorkbenchRawData extends Component
         $this->keysReviewStatus = 'all';
 
         $this->resetPage();
+        $this->persistUiState();
     }
 
     public function updatedKeyFindingsSearch(): void
@@ -775,6 +1052,282 @@ class TranslationWorkbenchRawData extends Component
         $this->keyFindingsStatus = 'all';
 
         $this->resetPage();
+        $this->persistUiState();
+    }
+
+    public function updatedKeyValuesSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedKeyValuesId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedKeyValuesKeyId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedKeyValuesLocale(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedKeyValuesStatus(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedKeyValuesSource(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetKeyValuesFilters(): void
+    {
+        $this->keyValuesSearch = '';
+        $this->keyValuesId = '';
+        $this->keyValuesKeyId = '';
+        $this->keyValuesLocale = 'all';
+        $this->keyValuesStatus = 'all';
+        $this->keyValuesSource = 'all';
+
+        $this->resetPage();
+        $this->persistUiState();
+    }
+
+    public function updatedDynamicKeyValuesSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicKeyValuesId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicKeyValuesKeyId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicKeyValuesValueKey(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicKeyValuesLocale(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicKeyValuesStatus(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicKeyValuesSource(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetDynamicKeyValuesFilters(): void
+    {
+        $this->dynamicKeyValuesSearch = '';
+        $this->dynamicKeyValuesId = '';
+        $this->dynamicKeyValuesKeyId = '';
+        $this->dynamicKeyValuesValueKey = '';
+        $this->dynamicKeyValuesLocale = 'all';
+        $this->dynamicKeyValuesStatus = 'all';
+        $this->dynamicKeyValuesSource = 'all';
+
+        $this->resetPage();
+        $this->persistUiState();
+    }
+
+    public function updatedDynamicSourcesSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourcesId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourcesKeyId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourcesFindingId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourcesOptionDiscoveryId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourcesClassification(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourcesCardinality(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourcesOrigin(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourcesSourceType(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourcesConfidence(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourcesStatus(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetDynamicSourcesFilters(): void
+    {
+        $this->dynamicSourcesSearch = '';
+        $this->dynamicSourcesId = '';
+        $this->dynamicSourcesKeyId = '';
+        $this->dynamicSourcesFindingId = '';
+        $this->dynamicSourcesOptionDiscoveryId = '';
+        $this->dynamicSourcesClassification = 'all';
+        $this->dynamicSourcesCardinality = 'all';
+        $this->dynamicSourcesOrigin = 'all';
+        $this->dynamicSourcesSourceType = 'all';
+        $this->dynamicSourcesConfidence = 'all';
+        $this->dynamicSourcesStatus = 'all';
+
+        $this->resetPage();
+        $this->persistUiState();
+    }
+
+    public function updatedDynamicSourceCandidatesSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceCandidatesId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceCandidatesDynamicSourceId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceCandidatesKeyId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceCandidatesFindingId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceCandidatesCandidateSourceType(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceCandidatesConfidence(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceCandidatesReviewStatus(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceCandidatesStatus(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetDynamicSourceCandidatesFilters(): void
+    {
+        $this->dynamicSourceCandidatesSearch = '';
+        $this->dynamicSourceCandidatesId = '';
+        $this->dynamicSourceCandidatesDynamicSourceId = '';
+        $this->dynamicSourceCandidatesKeyId = '';
+        $this->dynamicSourceCandidatesFindingId = '';
+        $this->dynamicSourceCandidatesCandidateSourceType = 'all';
+        $this->dynamicSourceCandidatesConfidence = 'all';
+        $this->dynamicSourceCandidatesReviewStatus = 'all';
+        $this->dynamicSourceCandidatesStatus = 'all';
+
+        $this->resetPage();
+        $this->persistUiState();
+    }
+
+    public function updatedDynamicSourceValuesSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceValuesId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceValuesDynamicSourceId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceValuesValueKey(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceValuesTranslationKey(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceValuesOrigin(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDynamicSourceValuesStatus(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetDynamicSourceValuesFilters(): void
+    {
+        $this->dynamicSourceValuesSearch = '';
+        $this->dynamicSourceValuesId = '';
+        $this->dynamicSourceValuesDynamicSourceId = '';
+        $this->dynamicSourceValuesValueKey = '';
+        $this->dynamicSourceValuesTranslationKey = '';
+        $this->dynamicSourceValuesOrigin = 'all';
+        $this->dynamicSourceValuesStatus = 'all';
+
+        $this->resetPage();
+        $this->persistUiState();
     }
 
     public function updatedLangValuesSearch(): void
@@ -843,6 +1396,56 @@ class TranslationWorkbenchRawData extends Component
         $this->langValuesStatus = 'all';
 
         $this->resetPage();
+        $this->persistUiState();
+    }
+
+    public function updatedReviewsSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedReviewsId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedReviewsKeyId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedReviewsFindingId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedReviewsReviewType(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedReviewsDecision(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedReviewsReviewedByUserId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetReviewsFilters(): void
+    {
+        $this->reviewsSearch = '';
+        $this->reviewsId = '';
+        $this->reviewsKeyId = '';
+        $this->reviewsFindingId = '';
+        $this->reviewsReviewType = 'all';
+        $this->reviewsDecision = 'all';
+        $this->reviewsReviewedByUserId = '';
+
+        $this->resetPage();
+        $this->persistUiState();
     }
 
     public function updatedTimelineEventsSearch(): void
@@ -949,6 +1552,7 @@ class TranslationWorkbenchRawData extends Component
         $this->timelineEventsTimeSpan = '02:00';
 
         $this->resetPage();
+        $this->persistUiState();
     }
 
     private function resetKeysSegmentFilters(): void
@@ -958,6 +1562,133 @@ class TranslationWorkbenchRawData extends Component
         $this->keysSegmentContext = 'all';
         $this->keysSegmentExtra = 'all';
         $this->keysSegmentName = 'all';
+    }
+
+    private function uiStateSettingKey(): string
+    {
+        return (string) config('translation-workbench.raw_data_ui_state.setting_key', 'ui.pages.translation_workbench.raw_data');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function uiStateDefaults(): array
+    {
+        $defaults = config('translation-workbench.raw_data_ui_state.defaults', []);
+        $fileDefaults = $this->uiStateFileDefaults();
+
+        return [
+            ...(is_array($defaults) ? $defaults : []),
+            ...$fileDefaults,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function uiStateFileDefaults(): array
+    {
+        $path = base_path((string) config(
+            'translation-workbench.raw_data_ui_state.defaults_file',
+            'packages/gunreip/laravel-translation-workbench/resources/ui-state/raw-data-defaults.json',
+        ));
+
+        if (! File::exists($path)) {
+            return [];
+        }
+
+        $decoded = json_decode((string) File::get($path), true);
+
+        return is_array($decoded) ? $decoded : [];
+    }
+
+    private function persistUiState(): void
+    {
+        $state = $this->currentUiState();
+
+        $this->setUserSetting($this->uiStateSettingKey(), $state);
+        $this->persistUiStateFile($state);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function currentUiState(): array
+    {
+        return collect(self::PERSISTED_STATE_PROPERTIES)
+            ->filter(fn(string $property): bool => property_exists($this, $property))
+            ->mapWithKeys(fn(string $property): array => [$property => $this->{$property}])
+            ->all();
+    }
+
+    /**
+     * Store the most recent non-user-specific Raw-Data UI state as an inspectable file.
+     *
+     * This mirrors the entries page: user-specific state is stored in the users.settings JSON,
+     * while this export file can be reviewed or used as a future package default.
+     *
+     * @param  array<string, mixed>  $state
+     */
+    private function persistUiStateFile(array $state): void
+    {
+        $path = storage_path((string) config(
+            'translation-workbench.raw_data_ui_state.export_file',
+            'translation-workbench/ui-state/raw-data.json',
+        ));
+
+        try {
+            File::ensureDirectoryExists(dirname($path));
+            File::put($path, json_encode([
+                'page' => 'translation-workbench.raw-data',
+                'updated_at' => now()->toISOString(),
+                'state' => $state,
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL);
+        } catch (Throwable) {
+            // File export is diagnostic only; user-specific DB settings remain authoritative.
+        }
+    }
+
+    private function normalizedPersistedPropertyValue(string $property, mixed $value): mixed
+    {
+        if ($property === 'activeTable') {
+            return in_array($value, $this->tables, true)
+                ? (string) $value
+                : $this->activeTable;
+        }
+
+        if ($property === 'perPage') {
+            return $this->normalizedPerPage($value);
+        }
+
+        if ($property === 'sortDirection') {
+            return $value === 'asc' ? 'asc' : 'desc';
+        }
+
+        if (in_array($property, ['timelineEventsCreatedRange', 'timelineEventsChangedRange'], true)) {
+            return is_array($value)
+                ? [
+                    'start' => $value['start'] ?? null,
+                    'end' => $value['end'] ?? null,
+                    'preset' => $value['preset'] ?? null,
+                ]
+                : [
+                    'start' => null,
+                    'end' => null,
+                    'preset' => null,
+                ];
+        }
+
+        if ($property === 'timelineEventsTimeSpan') {
+            return $this->normalizedTimelineEventTimeSpan(is_string($value) ? $value : null);
+        }
+
+        if (in_array($property, ['timelineEventsTimeFrom', 'timelineEventsChangedTime'], true)) {
+            return $this->normalizedTimelineEventTime(is_string($value) ? $value : null);
+        }
+
+        return is_scalar($value) || $value === null
+            ? (string) ($value ?? '')
+            : $this->{$property};
     }
 
     public function render(): View
@@ -991,7 +1722,13 @@ class TranslationWorkbenchRawData extends Component
             'findingOptions' => $this->findingOptions($table),
             'keyOptions' => $this->keyOptions($table),
             'keyFindingOptions' => $this->keyFindingOptions($table),
+            'keyValueOptions' => $this->keyValueOptions($table),
+            'dynamicKeyValueOptions' => $this->dynamicKeyValueOptions($table),
+            'dynamicSourceOptions' => $this->dynamicSourceOptions($table),
+            'dynamicSourceCandidateOptions' => $this->dynamicSourceCandidateOptions($table),
+            'dynamicSourceValueOptions' => $this->dynamicSourceValueOptions($table),
             'langValueOptions' => $this->langValueOptions($table),
+            'reviewOptions' => $this->reviewOptions($table),
             'timelineEventOptions' => $this->timelineEventOptions($table),
             'timelineEventsTimePickersDisabled' => ! $this->hasTimelineEventsDateRange(),
             'timelineEventsChangedTimePickerDisabled' => ! $this->hasTimelineEventsChangedRange(),
@@ -1308,8 +2045,44 @@ class TranslationWorkbenchRawData extends Component
             return;
         }
 
+        if ($table === 'translation_workbench_key_values') {
+            $this->applyKeyValuesFilters($query, $columns);
+
+            return;
+        }
+
+        if ($table === 'translation_workbench_dynamic_key_values') {
+            $this->applyDynamicKeyValuesFilters($query, $columns);
+
+            return;
+        }
+
+        if ($table === 'translation_workbench_dynamic_sources') {
+            $this->applyDynamicSourcesFilters($query, $columns);
+
+            return;
+        }
+
+        if ($table === 'translation_workbench_dynamic_source_candidates') {
+            $this->applyDynamicSourceCandidatesFilters($query, $columns);
+
+            return;
+        }
+
+        if ($table === 'translation_workbench_dynamic_source_values') {
+            $this->applyDynamicSourceValuesFilters($query, $columns);
+
+            return;
+        }
+
         if ($table === 'translation_workbench_lang_values') {
             $this->applyLangValuesFilters($query, $columns);
+
+            return;
+        }
+
+        if ($table === 'translation_workbench_reviews') {
+            $this->applyReviewsFilters($query, $columns);
 
             return;
         }
@@ -1356,10 +2129,6 @@ class TranslationWorkbenchRawData extends Component
 
         if ($search !== '') {
             $query->where(function ($query) use ($columns, $search): void {
-                if (in_array('id', $columns, true) && ctype_digit($search)) {
-                    $query->orWhere('id', (int) $search);
-                }
-
                 if (in_array('path', $columns, true)) {
                     $query->orWhere('path', 'like', $this->likeFilterValue($search));
                 }
@@ -1414,10 +2183,6 @@ class TranslationWorkbenchRawData extends Component
 
         if ($search !== '') {
             $query->where(function ($query) use ($columns, $search): void {
-                if (in_array('id', $columns, true) && ctype_digit($search)) {
-                    $query->orWhere('id', (int) $search);
-                }
-
                 foreach (['key', 'label', 'description', 'category', 'severity'] as $column) {
                     if (in_array($column, $columns, true)) {
                         $query->orWhere($column, 'like', $this->likeFilterValue($search));
@@ -1464,16 +2229,8 @@ class TranslationWorkbenchRawData extends Component
 
         if ($search !== '') {
             $query->where(function ($query) use ($columns, $search): void {
-                if (in_array('id', $columns, true) && ctype_digit($search)) {
-                    $query->orWhere('id', (int) $search);
-                }
-
                 if (in_array('source_line', $columns, true) && ctype_digit($search)) {
                     $query->orWhere('source_line', (int) $search);
-                }
-
-                if (in_array('source_file_id', $columns, true) && ctype_digit($search)) {
-                    $query->orWhere('source_file_id', (int) $search);
                 }
 
                 foreach ([
@@ -1553,10 +2310,6 @@ class TranslationWorkbenchRawData extends Component
 
         if ($search !== '') {
             $query->where(function ($query) use ($columns, $search): void {
-                if (in_array('id', $columns, true) && ctype_digit($search)) {
-                    $query->orWhere('id', (int) $search);
-                }
-
                 foreach ([
                     'fingerprint',
                     'translation_key',
@@ -1617,14 +2370,6 @@ class TranslationWorkbenchRawData extends Component
 
         if ($search !== '') {
             $query->where(function ($query) use ($columns, $search): void {
-                if (ctype_digit($search)) {
-                    foreach (['id', 'key_id', 'finding_id'] as $column) {
-                        if (in_array($column, $columns, true)) {
-                            $query->orWhere($column, (int) $search);
-                        }
-                    }
-                }
-
                 foreach (['relation_type', 'status'] as $column) {
                     if (in_array($column, $columns, true)) {
                         $query->orWhere($column, 'like', $this->likeFilterValue($search));
@@ -1632,6 +2377,246 @@ class TranslationWorkbenchRawData extends Component
                 }
             });
         }
+    }
+
+    /**
+     * @param  array<int, string>  $columns
+     */
+    private function applyKeyValuesFilters($query, array $columns): void
+    {
+        $this->applyExactNumericFilters($query, $columns, [
+            'id' => $this->keyValuesId,
+            'key_id' => $this->keyValuesKeyId,
+        ]);
+
+        $this->applyExactSelectFilters($query, $columns, [
+            'locale' => $this->keyValuesLocale,
+            'status' => $this->keyValuesStatus,
+            'source' => $this->keyValuesSource,
+        ]);
+
+        $this->applyTextSearchFilter($query, $columns, $this->keyValuesSearch, [], [
+            'locale',
+            'value',
+            'status',
+            'source',
+            'meta',
+            'created_at',
+            'updated_at',
+        ]);
+    }
+
+    /**
+     * @param  array<int, string>  $columns
+     */
+    private function applyDynamicKeyValuesFilters($query, array $columns): void
+    {
+        $this->applyExactNumericFilters($query, $columns, [
+            'id' => $this->dynamicKeyValuesId,
+            'key_id' => $this->dynamicKeyValuesKeyId,
+        ]);
+
+        $this->applyExactSelectFilters($query, $columns, [
+            'locale' => $this->dynamicKeyValuesLocale,
+            'status' => $this->dynamicKeyValuesStatus,
+            'source' => $this->dynamicKeyValuesSource,
+        ]);
+
+        $this->applyLikeFilters($query, $columns, [
+            'value_key' => $this->dynamicKeyValuesValueKey,
+        ]);
+
+        $this->applyTextSearchFilter($query, $columns, $this->dynamicKeyValuesSearch, [], [
+            'value_key',
+            'locale',
+            'value',
+            'native_label',
+            'status',
+            'source',
+            'meta',
+            'created_at',
+            'updated_at',
+        ]);
+    }
+
+    /**
+     * @param  array<int, string>  $columns
+     */
+    private function applyDynamicSourcesFilters($query, array $columns): void
+    {
+        $this->applyExactNumericFilters($query, $columns, [
+            'id' => $this->dynamicSourcesId,
+            'key_id' => $this->dynamicSourcesKeyId,
+            'finding_id' => $this->dynamicSourcesFindingId,
+            'option_discovery_id' => $this->dynamicSourcesOptionDiscoveryId,
+        ]);
+
+        $this->applyExactSelectFilters($query, $columns, [
+            'classification' => $this->dynamicSourcesClassification,
+            'cardinality' => $this->dynamicSourcesCardinality,
+            'origin' => $this->dynamicSourcesOrigin,
+            'source_type' => $this->dynamicSourcesSourceType,
+            'confidence' => $this->dynamicSourcesConfidence,
+            'status' => $this->dynamicSourcesStatus,
+        ]);
+
+        $this->applyTextSearchFilter($query, $columns, $this->dynamicSourcesSearch, [
+            'source_line',
+            'values_count',
+        ], [
+            'fingerprint',
+            'classification',
+            'cardinality',
+            'origin',
+            'source_type',
+            'source_reference',
+            'source_path',
+            'source_expression',
+            'dynamic_scope',
+            'confidence',
+            'status',
+            'meta',
+            'created_at',
+            'updated_at',
+        ]);
+    }
+
+    /**
+     * @param  array<int, string>  $columns
+     */
+    private function applyDynamicSourceCandidatesFilters($query, array $columns): void
+    {
+        $this->applyExactNumericFilters($query, $columns, [
+            'id' => $this->dynamicSourceCandidatesId,
+            'dynamic_source_id' => $this->dynamicSourceCandidatesDynamicSourceId,
+            'key_id' => $this->dynamicSourceCandidatesKeyId,
+            'finding_id' => $this->dynamicSourceCandidatesFindingId,
+        ]);
+
+        $this->applyExactSelectFilters($query, $columns, [
+            'candidate_source_type' => $this->dynamicSourceCandidatesCandidateSourceType,
+            'confidence' => $this->dynamicSourceCandidatesConfidence,
+            'review_status' => $this->dynamicSourceCandidatesReviewStatus,
+            'status' => $this->dynamicSourceCandidatesStatus,
+        ]);
+
+        $this->applyTextSearchFilter($query, $columns, $this->dynamicSourceCandidatesSearch, [
+            'candidate_values_count',
+        ], [
+            'suggested_key',
+            'dynamic_scope',
+            'source_expression',
+            'candidate_source_type',
+            'candidate_reference',
+            'candidate_values',
+            'confidence',
+            'review_status',
+            'status',
+            'meta',
+            'created_at',
+            'updated_at',
+        ]);
+    }
+
+    /**
+     * @param  array<int, string>  $columns
+     */
+    private function applyDynamicSourceValuesFilters($query, array $columns): void
+    {
+        $this->applyExactNumericFilters($query, $columns, [
+            'id' => $this->dynamicSourceValuesId,
+            'dynamic_source_id' => $this->dynamicSourceValuesDynamicSourceId,
+        ]);
+
+        $this->applyExactSelectFilters($query, $columns, [
+            'origin' => $this->dynamicSourceValuesOrigin,
+            'status' => $this->dynamicSourceValuesStatus,
+        ]);
+
+        $this->applyLikeFilters($query, $columns, [
+            'value_key' => $this->dynamicSourceValuesValueKey,
+            'translation_key' => $this->dynamicSourceValuesTranslationKey,
+        ]);
+
+        $this->applyTextSearchFilter($query, $columns, $this->dynamicSourceValuesSearch, [], [
+            'value_key',
+            'native_label',
+            'origin',
+            'translation_key',
+            'status',
+            'meta',
+            'created_at',
+            'updated_at',
+        ]);
+    }
+
+    /**
+     * @param  array<int, string>  $columns
+     * @param  array<string, string>  $filters
+     */
+    private function applyExactNumericFilters($query, array $columns, array $filters): void
+    {
+        foreach ($filters as $column => $value) {
+            if (in_array($column, $columns, true) && trim($value) !== '') {
+                $query->where($column, (int) $value);
+            }
+        }
+    }
+
+    /**
+     * @param  array<int, string>  $columns
+     * @param  array<string, string>  $filters
+     */
+    private function applyExactSelectFilters($query, array $columns, array $filters): void
+    {
+        foreach ($filters as $column => $value) {
+            if (in_array($column, $columns, true) && ! in_array($value, ['', 'all'], true)) {
+                $query->where($column, $value);
+            }
+        }
+    }
+
+    /**
+     * @param  array<int, string>  $columns
+     * @param  array<string, string>  $filters
+     */
+    private function applyLikeFilters($query, array $columns, array $filters): void
+    {
+        foreach ($filters as $column => $value) {
+            if (in_array($column, $columns, true) && trim($value) !== '') {
+                $query->where($column, 'like', $this->likeFilterValue($value));
+            }
+        }
+    }
+
+    /**
+     * @param  array<int, string>  $columns
+     * @param  array<int, string>  $numericColumns
+     * @param  array<int, string>  $textColumns
+     */
+    private function applyTextSearchFilter($query, array $columns, string $search, array $numericColumns, array $textColumns): void
+    {
+        $search = trim($search);
+
+        if ($search === '') {
+            return;
+        }
+
+        $query->where(function ($query) use ($columns, $search, $numericColumns, $textColumns): void {
+            if (ctype_digit($search)) {
+                foreach ($numericColumns as $column) {
+                    if (in_array($column, $columns, true)) {
+                        $query->orWhere($column, (int) $search);
+                    }
+                }
+            }
+
+            foreach ($textColumns as $column) {
+                if (in_array($column, $columns, true)) {
+                    $query->orWhere($column, 'like', $this->likeFilterValue($search));
+                }
+            }
+        });
     }
 
     /**
@@ -1682,10 +2667,6 @@ class TranslationWorkbenchRawData extends Component
 
         if ($search !== '') {
             $query->where(function ($query) use ($columns, $search): void {
-                if (in_array('id', $columns, true) && ctype_digit($search)) {
-                    $query->orWhere('id', (int) $search);
-                }
-
                 foreach ([
                     'locale',
                     'namespace',
@@ -1703,6 +2684,35 @@ class TranslationWorkbenchRawData extends Component
                 }
             });
         }
+    }
+
+    /**
+     * @param  array<int, string>  $columns
+     */
+    private function applyReviewsFilters($query, array $columns): void
+    {
+        $this->applyExactNumericFilters($query, $columns, [
+            'id' => $this->reviewsId,
+            'key_id' => $this->reviewsKeyId,
+            'finding_id' => $this->reviewsFindingId,
+            'reviewed_by_user_id' => $this->reviewsReviewedByUserId,
+        ]);
+
+        $this->applyExactSelectFilters($query, $columns, [
+            'review_type' => $this->reviewsReviewType,
+            'decision' => $this->reviewsDecision,
+        ]);
+
+        $this->applyTextSearchFilter($query, $columns, $this->reviewsSearch, [], [
+            'review_type',
+            'decision',
+            'old_values',
+            'new_values',
+            'meta',
+            'reviewed_at',
+            'created_at',
+            'updated_at',
+        ]);
     }
 
     /**
@@ -1747,14 +2757,6 @@ class TranslationWorkbenchRawData extends Component
 
         if ($search !== '') {
             $query->where(function ($query) use ($columns, $search): void {
-                if (ctype_digit($search)) {
-                    foreach (['id', 'event_type_id', 'key_id', 'finding_id', 'review_id', 'created_by_user_id'] as $column) {
-                        if (in_array($column, $columns, true)) {
-                            $query->orWhere($column, (int) $search);
-                        }
-                    }
-                }
-
                 foreach ([
                     'event_type',
                     'old_values',
@@ -2202,6 +3204,112 @@ class TranslationWorkbenchRawData extends Component
     /**
      * @return array<string, array<int, string>>
      */
+    private function keyValueOptions(string $table): array
+    {
+        if ($table !== 'translation_workbench_key_values' || ! Schema::hasTable('translation_workbench_key_values')) {
+            return [
+                'locales' => [],
+                'statuses' => [],
+                'sources' => [],
+            ];
+        }
+
+        return [
+            'locales' => $this->distinctColumnOptions('translation_workbench_key_values', 'locale'),
+            'statuses' => $this->distinctColumnOptions('translation_workbench_key_values', 'status'),
+            'sources' => $this->distinctColumnOptions('translation_workbench_key_values', 'source'),
+        ];
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    private function dynamicKeyValueOptions(string $table): array
+    {
+        if ($table !== 'translation_workbench_dynamic_key_values' || ! Schema::hasTable('translation_workbench_dynamic_key_values')) {
+            return [
+                'locales' => [],
+                'statuses' => [],
+                'sources' => [],
+            ];
+        }
+
+        return [
+            'locales' => $this->distinctColumnOptions('translation_workbench_dynamic_key_values', 'locale'),
+            'statuses' => $this->distinctColumnOptions('translation_workbench_dynamic_key_values', 'status'),
+            'sources' => $this->distinctColumnOptions('translation_workbench_dynamic_key_values', 'source'),
+        ];
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    private function dynamicSourceOptions(string $table): array
+    {
+        if ($table !== 'translation_workbench_dynamic_sources' || ! Schema::hasTable('translation_workbench_dynamic_sources')) {
+            return [
+                'classifications' => [],
+                'cardinalities' => [],
+                'origins' => [],
+                'source_types' => [],
+                'confidences' => [],
+                'statuses' => [],
+            ];
+        }
+
+        return [
+            'classifications' => $this->distinctColumnOptions('translation_workbench_dynamic_sources', 'classification'),
+            'cardinalities' => $this->distinctColumnOptions('translation_workbench_dynamic_sources', 'cardinality'),
+            'origins' => $this->distinctColumnOptions('translation_workbench_dynamic_sources', 'origin'),
+            'source_types' => $this->distinctColumnOptions('translation_workbench_dynamic_sources', 'source_type'),
+            'confidences' => $this->distinctColumnOptions('translation_workbench_dynamic_sources', 'confidence'),
+            'statuses' => $this->distinctColumnOptions('translation_workbench_dynamic_sources', 'status'),
+        ];
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    private function dynamicSourceCandidateOptions(string $table): array
+    {
+        if ($table !== 'translation_workbench_dynamic_source_candidates' || ! Schema::hasTable('translation_workbench_dynamic_source_candidates')) {
+            return [
+                'candidate_source_types' => [],
+                'confidences' => [],
+                'review_statuses' => [],
+                'statuses' => [],
+            ];
+        }
+
+        return [
+            'candidate_source_types' => $this->distinctColumnOptions('translation_workbench_dynamic_source_candidates', 'candidate_source_type'),
+            'confidences' => $this->distinctColumnOptions('translation_workbench_dynamic_source_candidates', 'confidence'),
+            'review_statuses' => $this->distinctColumnOptions('translation_workbench_dynamic_source_candidates', 'review_status'),
+            'statuses' => $this->distinctColumnOptions('translation_workbench_dynamic_source_candidates', 'status'),
+        ];
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    private function dynamicSourceValueOptions(string $table): array
+    {
+        if ($table !== 'translation_workbench_dynamic_source_values' || ! Schema::hasTable('translation_workbench_dynamic_source_values')) {
+            return [
+                'origins' => [],
+                'statuses' => [],
+            ];
+        }
+
+        return [
+            'origins' => $this->distinctColumnOptions('translation_workbench_dynamic_source_values', 'origin'),
+            'statuses' => $this->distinctColumnOptions('translation_workbench_dynamic_source_values', 'status'),
+        ];
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
     private function langValueOptions(string $table): array
     {
         if ($table !== 'translation_workbench_lang_values' || ! Schema::hasTable('translation_workbench_lang_values')) {
@@ -2264,6 +3372,35 @@ class TranslationWorkbenchRawData extends Component
     private function langValueDistinctOptions(string $column): array
     {
         return collect($this->distinctColumnOptions('translation_workbench_lang_values', $column))
+            ->reject(static fn(string $value): bool => $value === 'all')
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    private function reviewOptions(string $table): array
+    {
+        if ($table !== 'translation_workbench_reviews' || ! Schema::hasTable('translation_workbench_reviews')) {
+            return [
+                'review_types' => [],
+                'decisions' => [],
+            ];
+        }
+
+        return [
+            'review_types' => $this->reviewDistinctOptions('review_type'),
+            'decisions' => $this->reviewDistinctOptions('decision'),
+        ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function reviewDistinctOptions(string $column): array
+    {
+        return collect($this->distinctColumnOptions('translation_workbench_reviews', $column))
             ->reject(static fn(string $value): bool => $value === 'all')
             ->values()
             ->all();

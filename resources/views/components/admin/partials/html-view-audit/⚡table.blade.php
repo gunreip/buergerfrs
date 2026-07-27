@@ -164,10 +164,10 @@
                     >
                         {{-- Tooltip Actual: The actual closing tag, if applicable. --}}
                         <x-ui.tooltip.trigger
-                            :title="__('Actual')"
+                            :title="__('ui.actual')"
                             :text="__('The actual closing tag.')"
                         >
-                            {{ __('Actual') }}
+                            {{ __('ui.actual') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
@@ -202,7 +202,7 @@
                                 >
                                     {{-- Tooltip Status: The history status of the finding, such as open, changed, resolved, or ignored. Click to view more details about the finding's history and related information. --}}
                                     <x-ui.tooltip.trigger
-                                        :title="__('Show finding details')"
+                                        :title="__('admin.partials.html_view_audit.table.show_finding_details')"
                                         :text="__(
                                             'Click to view more information about this finding, including its history and any related findings.',
                                         )"

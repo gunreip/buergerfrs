@@ -10,7 +10,7 @@
             clearable
             copyable
             wire:model.live.debounce.300ms="keysSearch"
-            placeholder="{{ __('ID, key, namespace, group or status') }}"
+            placeholder="{{ __('Key, namespace, group or status') }}"
         />
     </flux:input.group>
 </flux:field>

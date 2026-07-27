@@ -487,7 +487,7 @@ class CreatePerson extends Component
                 'input_id' => 'create-person-salutation',
             ],
             'isTestData' => [
-                'label' => __('Test data'),
+                'label' => __('ui.badge.test-data'),
                 'input_id' => 'create-person-is-test-data',
             ],
             'nameTitle' => [
@@ -539,7 +539,7 @@ class CreatePerson extends Component
                 'input_id' => 'create-person-birth-name',
             ],
             'phone' => [
-                'label' => __('Phone'),
+                'label' => __('management.people.create_person.phone'),
                 'input_id' => 'create-person-phone',
             ],
             'mobile' => [
@@ -575,7 +575,7 @@ class CreatePerson extends Component
                 'input_id' => 'create-person-address-house-number',
             ],
             'addressLine2' => [
-                'label' => __('Address line 2'),
+                'label' => __('ui.address-line-2'),
                 'input_id' => 'create-person-address-line-2',
             ],
             'email' => [
@@ -781,7 +781,7 @@ class CreatePerson extends Component
         $this->resetValidation();
 
         Flux::toast(
-            heading: __('Person created'),
+            heading: __('ui.badge.create_person.person_created'),
             text: __('The person and login account have been created.'),
             variant: 'success',
             duration: 4000,

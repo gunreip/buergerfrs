@@ -10,7 +10,7 @@
             clearable
             copyable
             wire:model.live.debounce.300ms="eventTypesSearch"
-            placeholder="{{ __('Search ID, key, label, category or severity') }}"
+            placeholder="{{ __('Search key, label, category or severity') }}"
         />
     </flux:input.group>
 </flux:field>

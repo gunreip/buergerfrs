@@ -7,6 +7,7 @@ use Gunreip\TranslationWorkbench\Scanner\TranslationKeyPartsFactory;
 use Gunreip\TranslationWorkbench\Support\TranslationKeySegmentFactory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Throwable;
 
 class RuntimeDynamicTranslationCollector
 {
@@ -57,8 +58,9 @@ class RuntimeDynamicTranslationCollector
             return;
         }
 
-        $this->syncDynamicSourceValues($sourceId, $values, $origin);
+        $valueSummary = $this->syncDynamicSourceValues($sourceId, $values, $origin);
         $this->syncDynamicSourceCandidate($sourceId, $key, $scope, $values, $source, $origin, $sourceType);
+        $this->recordRuntimeValueChanges($sourceId, $key, $scope, $values, $source, $origin, $sourceType, $valueSummary);
     }
 
     private function enabled(): bool
@@ -214,10 +216,22 @@ class RuntimeDynamicTranslationCollector
 
     /**
      * @param  array<string, string>  $values
+     * @return array{created: int, updated: int, unchanged: int, reactivated: int, staled: int, created_values: array<int, string>, updated_values: array<int, string>, reactivated_values: array<int, string>, stale_values: array<int, string>}
      */
-    private function syncDynamicSourceValues(int $sourceId, array $values, string $origin): void
+    private function syncDynamicSourceValues(int $sourceId, array $values, string $origin): array
     {
         $seenKeys = array_keys($values);
+        $summary = [
+            'created' => 0,
+            'updated' => 0,
+            'unchanged' => 0,
+            'reactivated' => 0,
+            'staled' => 0,
+            'created_values' => [],
+            'updated_values' => [],
+            'reactivated_values' => [],
+            'stale_values' => [],
+        ];
 
         foreach ($values as $valueKey => $label) {
             $existing = DB::table('translation_workbench_dynamic_source_values')
@@ -238,6 +252,8 @@ class RuntimeDynamicTranslationCollector
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+                $summary['created']++;
+                $summary['created_values'][] = $valueKey;
 
                 continue;
             }
@@ -253,17 +269,93 @@ class RuntimeDynamicTranslationCollector
                         ...$changedValues,
                         'updated_at' => now(),
                     ]);
+
+                if (($existing->status ?? null) !== 'active' && $attributes['status'] === 'active') {
+                    $summary['reactivated']++;
+                    $summary['reactivated_values'][] = $valueKey;
+                } else {
+                    $summary['updated']++;
+                    $summary['updated_values'][] = $valueKey;
+                }
+
+                continue;
             }
+
+            $summary['unchanged']++;
         }
 
-        DB::table('translation_workbench_dynamic_source_values')
+        $staleValues = DB::table('translation_workbench_dynamic_source_values')
             ->where('dynamic_source_id', $sourceId)
             ->whereNotIn('value_key', $seenKeys)
             ->where('status', 'active')
-            ->update([
-                'status' => 'stale',
-                'updated_at' => now(),
-            ]);
+            ->pluck('value_key')
+            ->filter(static fn(mixed $value): bool => is_string($value) && trim($value) !== '')
+            ->values()
+            ->all();
+
+        if ($staleValues !== []) {
+            DB::table('translation_workbench_dynamic_source_values')
+                ->where('dynamic_source_id', $sourceId)
+                ->whereIn('value_key', $staleValues)
+                ->where('status', 'active')
+                ->update([
+                    'status' => 'stale',
+                    'updated_at' => now(),
+                ]);
+
+            $summary['staled'] = count($staleValues);
+            $summary['stale_values'] = $staleValues;
+        }
+
+        return $summary;
+    }
+
+    /**
+     * @param  array<string, string>  $values
+     * @param  array{created: int, updated: int, unchanged: int, reactivated: int, staled: int, created_values: array<int, string>, updated_values: array<int, string>, reactivated_values: array<int, string>, stale_values: array<int, string>}  $valueSummary
+     */
+    private function recordRuntimeValueChanges(
+        int $sourceId,
+        string $key,
+        string $scope,
+        array $values,
+        string $source,
+        string $origin,
+        string $sourceType,
+        array $valueSummary,
+    ): void {
+        $changedCount = $valueSummary['created']
+            + $valueSummary['updated']
+            + $valueSummary['reactivated']
+            + $valueSummary['staled'];
+
+        if ($changedCount === 0 || ! function_exists('activity')) {
+            return;
+        }
+
+        try {
+            activity('translation-workbench')
+                ->event('translation_workbench.runtime_dynamic_values_changed')
+                ->withProperties([
+                    'dynamic_source_id' => $sourceId,
+                    'suggested_key' => $key,
+                    'dynamic_scope' => $scope,
+                    'source' => $source,
+                    'origin' => $origin,
+                    'source_type' => $sourceType,
+                    'values_count' => count($values),
+                    'summary' => $valueSummary,
+                    'suggested_action' => 'Review Translation Workbench dynamic values. Run translation:workbench when source-code findings need to be refreshed.',
+                    'actor' => [
+                        'type' => app()->runningInConsole() ? 'terminal' : 'web',
+                        'route' => request()?->route()?->getName(),
+                        'path' => request()?->path(),
+                    ],
+                ])
+                ->log('Translation Workbench runtime dynamic values changed');
+        } catch (Throwable) {
+            //
+        }
     }
 
     /**

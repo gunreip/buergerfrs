@@ -1,14 +1,17 @@
 {
     "findingSearch": "",
+    "findingSearchExact": false,
+    "findingSearchCaseSensitive": false,
     "findingStatus": "all",
     "findingKind": "all",
     "findingCandidateType": "all",
     "findingNamespace": "all",
     "findingGroup": "all",
     "findingKeyRelation": "all",
-    "findingSourceValue": "all",
+    "findingLiteralState": "all",
     "perPage": 25,
     "findingSortField": "last_seen",
     "findingSortDirection": "desc",
-    "showOverviewTabs": true
+    "showOverviewTabs": true,
+    "showObsoleteFindings": false
 }

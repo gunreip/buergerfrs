@@ -19,7 +19,7 @@
                 value="all"
                 icon="component"
             >
-                {{ count($sourceFileOptions['contexts'] ?? []) === 0 ? __('No contexts') : __('All contexts') }}
+                {{ count($sourceFileOptions['contexts'] ?? []) === 0 ? __('No contexts') : __('ui.filters.all-contexts') }}
             </x-ui.input.select-option>
             @foreach ($sourceFileOptions['contexts'] ?? [] as $context)
                 <x-ui.input.select-option

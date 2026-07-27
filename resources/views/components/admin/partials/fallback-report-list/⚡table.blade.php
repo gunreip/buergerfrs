@@ -144,12 +144,12 @@
                     {{-- Column Actions --}}
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('ui.labels.actions')"
+                            :title="__('ui.table.headers.actions')"
                             :text="__(
                                 'Actions available for the fallback report, useful for tracking and reference.',
                             )"
                         >
-                            {{ __('ui.labels.actions') }}
+                            {{ __('ui.table.headers.actions') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>

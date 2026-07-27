@@ -1,5 +1,10 @@
 <?php
 
+// packages/gunreip/laravel-translation-workbench/src/Console/ClassifyDynamicValues.php
+
+// php artisan translation-workbench:classify-dynamic-values
+// php artisan translation-workbench:classify-dynamic-values --dry-run
+
 namespace Gunreip\TranslationWorkbench\Console;
 
 use Gunreip\TranslationWorkbench\Console\Concerns\WritesTranslationWorkbenchReports;
@@ -59,7 +64,9 @@ class ClassifyDynamicValues extends Command
         $seenFingerprints = [];
 
         if (! $dryRun) {
-            DB::table('translation_workbench_dynamic_sources')->update(['status' => 'obsolete']);
+            DB::table('translation_workbench_dynamic_sources')
+                ->whereNotIn('source_type', $this->runtimeSourceTypes())
+                ->update(['status' => 'obsolete']);
         }
 
         foreach ($rows as $row) {
@@ -542,11 +549,27 @@ class ClassifyDynamicValues extends Command
     {
         return (int) DB::table('translation_workbench_dynamic_sources')
             ->where('status', '!=', 'obsolete')
+            ->whereNotIn('source_type', $this->runtimeSourceTypes())
             ->when($seenFingerprints !== [], fn($query) => $query->whereNotIn('fingerprint', array_values(array_unique($seenFingerprints))))
             ->update([
                 'status' => 'obsolete',
                 'updated_at' => now(),
             ]);
+    }
+
+    /**
+     * Runtime sources are observed while the app renders database-backed option lists. They are not
+     * tied to source-code scan presence, so classifier runs must not obsolete them merely because
+     * no matching code-source fingerprint was produced in the current scanner pass.
+     *
+     * @return array<int, string>
+     */
+    private function runtimeSourceTypes(): array
+    {
+        return [
+            'runtime_options',
+            'runtime_db_options',
+        ];
     }
 
     /**

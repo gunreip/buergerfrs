@@ -9,7 +9,6 @@ return [
         'available_application_languages_updated' => 'Die verfügbaren Anwendungssprachen wurden aktualisiert.',
         'global_app_locale_changed' => 'Die globale App-Sprache wurde geändert',
         'invalid_application_language' => 'Ungültige Anwendungssprache.',
-
         'locale' => [
             'application_languages' => 'Anwendungssprachen',
             'configure_which_languages_are_available_for_the_app_ui_and_choose_the_global_def' => 'Legen Sie fest, welche Sprachen für die App/Benutzeroberfläche verfügbar sind, und wählen Sie die globale Standardsprache aus.',
@@ -36,7 +35,6 @@ return [
             'toggle_the_availability_of_this_sub_language_for_the_app_ui' => 'Schalten Sie die Verfügbarkeit dieser Unter-Sprache für die App/Benutzeroberfläche ein oder aus.',
             'top_languages' => 'Die beliebtesten Sprachen',
         ],
-
         'meta_health' => [
             'badge_configs_without_role' => 'Badge-Konfigurationen ohne Rolle',
             'badge_settings_that_reference_roles_that_no_longer_exist' => 'Badge-Einstellungen, die auf Rollen verweisen, die nicht mehr existieren.',
@@ -44,7 +42,6 @@ return [
             'roles_without_badge_config' => 'Rollen ohne Badge-Konfiguration',
             'settings_health' => 'Einstellungen Gesundheit',
         ],
-
         'meta_overview' => [
             'allowed_role_user_management_icons_registered_in_config' => 'Alle in der Konfiguration registrierten Symbole für die Rollen-/Benutzerverwaltung.',
             'app_language' => 'App-Sprache',
@@ -61,7 +58,6 @@ return [
         'primary_locale_availability_updated' => 'Verfügbarkeit der primären Sprache aktualisiert',
         'review_global_application_settings_role_badge_configuration_and_icon_registry_he' => 'Überprüfen Sie die globalen Anwendungseinstellungen, die Konfiguration der Rollen-Badges und den Zustand der Symbol-Registrierung.',
         'sub_locales_updated' => 'Unterlokalisierungen aktualisiert',
-
         'table_icon_registry' => [
             'available' => 'Verfügbar',
             'icon' => 'Symbol',
@@ -72,7 +68,6 @@ return [
             'text' => '#',
             'view' => 'Anzeigen',
         ],
-
         'table_role_badges' => [
             'color' => 'Farbe',
             'icon' => 'Symbol',
@@ -95,10 +90,8 @@ return [
         'this_application_language_is_mandatory_and_cannot_be_disabled' => 'Diese Anwendungssprache ist obligatorisch und kann nicht deaktiviert werden.',
         'without_role' => 'Ohne Rolle',
     ],
-
     'client_list' => [
         'client_management' => 'Kundenmanagement',
-
         'filter' => [
             'all_statuses' => 'Alle Status',
             'all_types' => 'Alle Typen',
@@ -116,7 +109,6 @@ return [
             'with_people' => 'Mit Menschen',
             'without_people' => 'Ohne Menschen',
         ],
-
         'meta' => [
             'active_clients' => 'Aktive Kunden',
             'clients_assigned_to_at_least_one_person' => 'Kunden, die mindestens einer Person zugeordnet sind.',
@@ -131,7 +123,6 @@ return [
             'without_people' => 'Ohne Menschen',
         ],
         'review_organizations_client_status_and_assigned_people' => 'Überprüfen Sie die Organisationen, den Kundenstatus und die zugewiesenen Mitarbeiter.',
-
         'table' => [
             'browse_and_manage_clients_with_ease_view_client_details_sort_by_name_number_type' => 'Kunden einfach durchsuchen und verwalten: Kundendaten anzeigen, nach Name, Nummer, Typ, Status, Personenzahl und Erstellungsdatum sortieren.',
             'client_list' => 'Kundenliste',
@@ -151,10 +142,8 @@ return [
             'unique_number_assigned_to_the_client_useful_for_tracking_and_reference' => 'Eine dem Kunden zugewiesene eindeutige Nummer, die zur Nachverfolgung und als Referenz dient.',
         ],
     ],
-
     'country_reference_list' => [
         'audit_imported_country_reference_data_address_formats_and_available_subdivisions' => 'Überprüfen Sie die importierten Länderdaten, Adressformate und verfügbaren Gebietseinheiten.',
-
         'filter' => [
             'active' => 'Aktiv',
             'data_quality' => 'Datenqualität',
@@ -180,7 +169,6 @@ return [
             'with_subdivisions' => 'Mit Unterteilungen',
             'without_subdivisions' => 'Ohne Unterteilungen',
         ],
-
         'meta' => [
             'active' => 'Aktiv',
             'address_formats' => 'Adressformate',
@@ -191,12 +179,12 @@ return [
             'summary_of_imported_country_reference_data_address_formats_and_available_subdivi' => 'Zusammenfassung der Referenzdaten zu importierten Ländern, Adressformaten und verfügbaren Gebietseinheiten.',
         ],
         'reference_countries' => 'Referenzländer',
-
         'table' => [
             'active' => 'Aktiv',
             'active_status_of_the_country_useful_for_identification_and_reference' => 'Aktueller Status des Landes, nützlich zur Identifizierung und als Referenz.',
             'address' => 'Adresse',
             'address_format_availability_of_the_country_useful_for_identification_and_referen' => 'Verfügbarkeit von Adressformaten des Landes, nützlich zur Identifizierung und als Referenz.',
+            'address_format_available' => 'Adressformat verfügbar',
             'address_format_missing' => 'Das Adressformat fehlt',
             'capital' => 'Hauptstatdt',
             'capital_of_the_country_useful_for_identification_and_reference' => 'Hauptstadt des Landes, nützlich zur Identifizierung und als Referenz.',
@@ -211,16 +199,49 @@ return [
             'unique_identifier_of_the_country_useful_for_tracking_and_reference' => 'Eindeutige Kennung des Landes, nützlich für Nachverfolgung und Referenzzwecke.',
         ],
     ],
-
     'pages' => [
         'settings' => [
             'two_factor_setup_modal' => [
+                'or_enter_the_code_manually' => 'oder geben Sie den Code manuell ein',
                 'two_factor_authentication_is_now_enabled_scan_the_qr_code_or_enter_the_setup_key_in_y' => 'Die Zwei-Faktor-Authentifizierung ist nun aktiviert. Scannen Sie den QR-Code oder geben Sie den Einrichtungsschlüssel in Ihrer Authentifizierungs-App ein.',
             ],
         ],
     ],
-
+    'partials' => [
+        'country_reference_list' => [
+            'table' => [
+                'address_format_available' => 'Adressformat verfügbar',
+            ],
+        ],
+        'html_view_audit' => [
+            'table' => [
+                'show_finding_details' => 'Details zum Suchergebnis anzeigen',
+            ],
+        ],
+        'person_list' => [
+            'filter' => [
+                'filter_by_client' => 'Nach Kunde filtern',
+            ],
+        ],
+        'translation_list' => [
+            'modal_history' => [
+                'timeline' => [
+                    'shared' => [
+                        'affected_usages' => [
+                            'show_usage_locations' => 'Verwendungsorte anzeigen',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        'user_list' => [
+            'table' => [
+                'overview_of_all_users_in_the_system_their_email_addresses_and_assigned_roles' => 'Übersicht über alle Benutzer im System, deren E-Mail-Adressen und zugewiesene Rollen.',
+            ],
+        ],
+    ],
     'permission_list' => [
+        'edit_role_permissions' => 'Rollenberechtigungen bearbeiten',
         'filter' => [
             'enter_a_search_term_to_filter_permissions_by_name_guard_category_or_description_' => 'Geben Sie einen Suchbegriff ein, um Berechtigungen nach Name, Wächter, Kategorie oder Beschreibung zu filtern. Bei der Suche wird die Groß-/Kleinschreibung beachtet.',
             'filter_by_assignment' => 'Nach Aufgabe filtern',
@@ -235,7 +256,6 @@ return [
             'select_a_system_status_to_filter_the_list_of_permissions' => 'Wählen Sie einen Systemstatus aus, um die Liste der Berechtigungen zu filtern.',
             'select_an_assignment_status_to_filter_the_list_of_permissions' => 'Wählen Sie einen Zuweisungsstatus aus, um die Liste der Berechtigungen zu filtern.',
         ],
-
         'table_permissions' => [
             'actions_available_for_the_permission_useful_for_identification_and_reference' => 'Für die Berechtigung verfügbare Aktionen, nützlich zur Identifizierung und als Referenz.',
             'category_of_the_permission_useful_for_identification_and_reference' => 'Art der Berechtigung, nützlich zur Identifizierung und als Referenz.',
@@ -250,64 +270,52 @@ return [
             'sort_order_of_the_permission_useful_for_identification_and_reference' => 'Reihenfolge der Berechtigungen, nützlich zur Identifizierung und als Referenz.',
         ],
     ],
-
     'permissions' => [
         'actions' => [
             'edit_role_permissions' => 'Rollenberechtigungen bearbeiten',
         ],
         'description' => 'Registrierte Berechtigungen, Guards und Rollenzuweisungen prüfen.',
-
         'filters' => [
             'assignment' => [
                 'label' => 'Zuweisung',
             ],
-
             'categories' => [
                 'all' => 'Alle Kategorien',
             ],
             'description' => 'Liste der Berechtigungen nach Name, Guard, Kategorie, Rollenzuweisung und Systemstatus eingrenzen.',
-
             'guards' => [
                 'all' => 'Alle Guards',
             ],
-
             'roles' => [
                 'all' => 'Alle Rollen',
             ],
-
             'search' => [
                 'placeholder' => 'Nach Berechtigungsname suchen',
             ],
-
             'system' => [
                 'label' => 'System',
             ],
             'title' => 'Filter',
         ],
-
         'labels' => [
             'assigned_roles' => 'Zugewiesene Rollen',
             'sort_order' => 'Sortierreihenfolge',
             'system_permission' => 'Systemberechtigung',
         ],
-
         'messages' => [
             'no_changes' => [
                 'heading' => 'Keine Änderungen',
                 'role_permissions_unchanged' => 'Die Berechtigungen für :role wurden nicht geändert.',
             ],
-
             'permission_saved' => [
                 'heading' => 'Berechtigung gespeichert',
                 'text' => 'Die Metadaten für :permission wurden aktualisiert.',
             ],
-
             'role_permissions_saved' => [
                 'heading' => 'Rollenberechtigungen gespeichert',
                 'text' => 'Die Berechtigungen für :role wurden aktualisiert.',
             ],
         ],
-
         'modals' => [
             'edit' => [
                 'category_placeholder' => 'z. B. users, settings, system',
@@ -319,7 +327,6 @@ return [
                 'metadata_section' => 'Berechtigungsmetadaten',
                 'title' => 'Berechtigung bearbeiten',
             ],
-
             'roles' => [
                 'changes' => 'Änderungen',
                 'current_permissions' => 'Aktuelle Berechtigungen',
@@ -332,31 +339,26 @@ return [
                 'title' => 'Rollenberechtigungen verwalten',
             ],
         ],
-
         'overview' => [
             'assigned' => [
                 'heading' => 'Zugewiesene Berechtigungen',
                 'text' => 'Berechtigungen, die mindestens einer Rolle zugewiesen sind.',
             ],
             'description' => 'Zusammenfassung der Berechtigungen, Guards und Rollenzuweisungen.',
-
             'guards' => [
                 'heading' => 'Guards',
                 'text' => 'Unterschiedliche Guards der registrierten Berechtigungen.',
             ],
             'title' => 'Übersicht',
-
             'total' => [
                 'heading' => 'Berechtigungen gesamt',
                 'text' => 'Gesamtzahl der registrierten Berechtigungen.',
             ],
-
             'unassigned' => [
                 'heading' => 'Nicht zugewiesene Berechtigungen',
                 'text' => 'Berechtigungen, die aktuell keiner Rolle zugewiesen sind.',
             ],
         ],
-
         'table' => [
             'columns' => [
                 'assigned_roles' => 'Zugewiesene Rollen',
@@ -369,12 +371,10 @@ return [
         ],
         'title' => 'Berechtigungsverwaltung',
     ],
-
     'roles' => [
         'actions' => [
             'create' => 'Erstellen',
         ],
-
         'badge' => [
             'color' => 'Farbe',
             'icon' => 'Symbol',
@@ -382,56 +382,47 @@ return [
             'variant' => 'Variante',
         ],
         'description' => 'Verwalten Sie die Metadaten von Rollen, die Sichtbarkeit von Zuweisungen und die Anzeigeeinstellungen für Rollenabzeichen.',
-
         'labels' => [
             'assignable_through_ui' => 'Über die Benutzeroberfläche zuweisbar',
             'assigned_users' => 'Zugewiesene Benutzer',
             'sort_order' => 'Sortierreihenfolge',
             'system_role' => 'Systemrolle',
         ],
-
         'messages' => [
             'not_allowed' => [
                 'heading' => 'Nicht erlaubt',
                 'only_super_admins_may_create_roles' => 'Nur Super-Admins dürfen Rollen erstellen.',
             ],
-
             'role_created' => [
                 'heading' => 'Rolle angelegt',
                 'text' => 'Die :role wurde erstellt.',
             ],
-
             'role_saved' => [
                 'heading' => 'Rolle gespeichert',
                 'text' => 'Die Metadaten der Rolle und die Badge-Einstellungen für :role wurden aktualisiert.',
             ],
         ],
-
         'modals' => [
             'create' => [
                 'description' => 'Erstellen Sie eine neue zuweisbare Rolle für die Benutzer- und Rollenverwaltung.',
                 'name_placeholder' => 'Support-Manager',
                 'title' => 'Rolle erstellen',
             ],
-
             'edit' => [
                 'title' => 'Rolle bearbeiten',
             ],
         ],
-
         'preview' => [
             'new_role' => 'Neue Rolle',
         ],
         'title' => 'Rollenverwaltung',
     ],
-
     'translation_list' => [
         'all_visible_language_variation_values_have_been_cleared' => 'Alle sichtbaren Werte für Sprachvarianten wurden gelöscht.',
         'already_reviewed' => 'Bereits bewertet',
         'changes_discarded' => 'Änderungen verworfen',
         'cleared' => 'Freigegeben',
         'copied' => 'Kopiert',
-
         'filter' => [
             'all_currently_code_relevant_translation_entries_this_number_changes_when_the_cur' => 'Alle derzeit für den Code relevanten Übersetzungseinträge. Diese Zahl ändert sich, wenn durch den aktuellen Code neue Übersetzungsstellen hinzugefügt oder entfernt werden.',
             'all_currently_code_relevant_translation_entry_types_that_belong_to_the_active_wo' => 'Alle derzeit für den Code relevanten Übersetzungseintragstypen, die zum aktiven Arbeitssatz gehören.',
@@ -496,7 +487,6 @@ return [
             'workflow_open' => 'Workflow: Offen',
             'workflow_reviewed' => 'Workflow: Geprüft',
         ],
-
         'meta' => [
             'active_filters' => 'Aktive Filter',
             'backfill' => 'Verfüllmaterial',
@@ -537,7 +527,6 @@ return [
             'vendor' => 'Anbieter',
             'workflow' => 'Arbeitsablauf',
         ],
-
         'modal' => [
             'copy_to_translation_key' => 'In den Übersetzungsschlüssel kopieren',
             'current_raw' => 'Aktuelle Rohdaten',
@@ -579,7 +568,6 @@ return [
             'values' => 'Werte',
             'wavy_underline_marks_only_the_differing_key_block' => 'Die wellenförmige Unterstreichung markiert nur den abweichenden Schlüsselblock.',
         ],
-
         'modal_edit' => [
             'below_are_the_translation_values_for_each_language_you_can_edit_the_values_and_s' => 'Nachfolgend finden Sie die Übersetzungswerte für jede Sprache. Sie können die Werte bearbeiten und Ihre Änderungen speichern.',
             'clear_all_language_variations' => 'Alle Sprachvarianten löschen',
@@ -601,7 +589,6 @@ return [
             'translation_values_edit' => 'Übersetzungswerte bearbeiten',
             'usage_locations' => 'Einsatzorte',
         ],
-
         'modal_history' => [
             'audit_events_and_change_history_for_the_selected_translation_key' => 'Protokollereignisse und Änderungshistorie für den ausgewählten Übersetzungsschlüssel.',
             'context' => 'Kontext',
@@ -625,7 +612,6 @@ return [
         'review_translation_keys_missing_values_native_strings_dynamic_calls_and_audit_st' => 'Überprüfen Sie Übersetzungsschlüssel, fehlende Werte, native Zeichenfolgen, dynamische Aufrufe und Prüfstatus.',
         'suggested_key_already_applied' => 'Der vorgeschlagene Schlüssel wurde bereits angewendet',
         'suggested_key_applied' => 'Vorgeschlagener Schlüssel angewendet',
-
         'table' => [
             'current_status_of_the_translation_key_useful_for_identification_and_reference' => 'Aktueller Status des Übersetzungsschlüssels, nützlich zur Identifizierung und als Referenz.',
             'differs_from_suggested_key' => 'Weicht vom vorgeschlagenen Schlüssel ab',
@@ -665,17 +651,16 @@ return [
         'the_translation_values_have_been_saved_successfully' => 'Die Übersetzungswerte wurden erfolgreich gespeichert.',
         'there_is_no_suggested_key_to_apply_for_this_entry' => 'Für diesen Eintrag gibt es keinen vorgeschlagenen Schlüssel.',
         'this_obsolete_entry_is_already_marked_as_reviewed' => 'Dieser veraltete Eintrag ist bereits als geprüft markiert.',
+        'translation_key_missing' => 'Übersetzungsschlüssel fehlt',
         'translation_management' => 'Übersetzungsmanagement',
         'translation_values_saved' => 'Übersetzungswerte gespeichert',
         'unsaved_translation_value_changes_have_been_discarded' => 'Nicht gespeicherte Änderungen an Übersetzungswerten wurden verworfen.',
     ],
-
     'user_list' => [
         'filter' => [
             'without_role' => 'Ohne Rolle',
         ],
         'manage_your_system_s_users_assign_roles_and_manage_permissions' => 'Verwalten Sie die Benutzer Ihres Systems, weisen Sie Rollen zu und verwalten Sie Berechtigungen',
-
         'meta' => [
             'assignable_roles' => 'Zuweisbare Rollen',
             'assignable_roles_grouped_by_role_category' => 'Zuweisbare Rollen, gruppiert nach Rollenkategorie.',
@@ -696,7 +681,6 @@ return [
             'users_grouped_by_assigned_role_category' => 'Benutzer, gruppiert nach der ihnen zugewiesenen Rollenkategorie.',
             'users_without_roles' => 'Benutzer ohne Rollen',
         ],
-
         'modal' => [
             'change_assigned_roles_for' => 'Zugewiesene Rollen ändern für',
             'change_assigned_roles_for_the_selected_user' => 'Ändern Sie die dem ausgewählten Benutzer zugewiesenen Rollen.',
@@ -707,7 +691,6 @@ return [
         ],
         'please_select_a_role' => 'Bitte wählen Sie eine Rolle aus.',
         'please_select_a_valid_role' => 'Bitte wählen Sie eine gültige Rolle aus.',
-
         'table' => [
             'actions' => 'Aktionen',
             'e_mail' => 'E-Mail',

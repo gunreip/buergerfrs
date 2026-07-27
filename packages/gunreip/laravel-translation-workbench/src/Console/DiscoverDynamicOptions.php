@@ -2,8 +2,11 @@
 
 // packages/gunreip/laravel-translation-workbench/src/Console/DiscoverDynamicOptions.php
 
+// php artisan translation-workbench:discover-dynamic-options
 // php artisan translation-workbench:discover-dynamic-options --dry-run
 // php artisan translation-workbench:discover-dynamic-options --sync
+// php artisan translation-workbench:discover-dynamic-options --sync --source-locale=en
+// php artisan translation-workbench:discover-dynamic-options --paths=resources/views/components
 
 namespace Gunreip\TranslationWorkbench\Console;
 

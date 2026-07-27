@@ -502,8 +502,8 @@ class UserList extends Component
         }
 
         app(RuntimeDynamicTranslationCollector::class)->options(
-            key: 'admin.partials.user_list.modal.role_categories',
-            scope: 'role_categories',
+            key: 'admin.partials.user_list.modal.str_headline_category',
+            scope: 'Str_headline_category',
             values: collect($roleCategories)
                 ->mapWithKeys(static fn(string $category): array => [
                     $category => str($category)->headline()->toString(),

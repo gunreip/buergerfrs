@@ -5,5 +5,5 @@
     color="zinc"
     icon="circle-slash-2"
 >
-    <code>{{ __('NULL') }}</code>
+    <code>{{ __('ui.null') }}</code>
 </flux:badge>

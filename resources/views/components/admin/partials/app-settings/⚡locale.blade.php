@@ -194,7 +194,7 @@
                                             min-length="2"
                                             wire:click="openAddPrimaryLanguageModal"
                                         >
-                                            {{ __('Add primary language') }}
+                                            {{ __('ui.add-primary-language') }}
                                         </flux:select.option.create>
                                     @endif
                                 </flux:select>
@@ -208,7 +208,7 @@
                                 <div class="space-y-6">
                                     <div>
                                         <flux:heading size="lg">
-                                            {{ __('Add primary language') }}
+                                            {{ __('ui.add-primary-language') }}
                                         </flux:heading>
 
                                         <flux:text class="mt-2">

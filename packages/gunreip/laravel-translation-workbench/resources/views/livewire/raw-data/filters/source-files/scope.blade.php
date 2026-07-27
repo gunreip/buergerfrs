@@ -19,7 +19,7 @@
                 value="all"
                 icon="rows-3"
             >
-                {{ count($sourceFileOptions['scopes'] ?? []) === 0 ? __('No scopes') : __('All scopes') }}
+                {{ count($sourceFileOptions['scopes'] ?? []) === 0 ? __('No scopes') : __('ui.filters.all-scopes') }}
             </x-ui.input.select-option>
             @foreach ($sourceFileOptions['scopes'] ?? [] as $scope)
                 <x-ui.input.select-option

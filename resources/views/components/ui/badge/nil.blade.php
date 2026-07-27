@@ -5,5 +5,5 @@
     color="purple"
     icon="circle-slash-2"
 >
-    <code>{{ __('NIL') }}</code>
+    <code>{{ __('ui.badge.nil.nil') }}</code>
 </flux:badge>

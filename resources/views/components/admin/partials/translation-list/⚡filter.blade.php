@@ -156,14 +156,14 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
             ];
             $dynamicTooltips = [
                 'none' => [
-                    'title' => __('All entries'),
+                    'title' => __('ui.all-entries'),
                     'text' => __(
                         'Show all current translation entries without a dynamic focus filter.',
                     ),
                     'color' => 'sky',
                 ],
                 'all' => [
-                    'title' => __('All dynamic'),
+                    'title' => __('ui.all-dynamic'),
                     'text' => __(
                         'Show all dynamic translation entries including dynamic multi entries.',
                     ),
@@ -268,7 +268,7 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                             :color="$isWorkflowOpenActive ? ($workflowTooltips['open']['color'] ?? null) : null"
                             wire:click="setWorkflowStatus('open')"
                         >
-                            {{ __('admin.translation_list.filter.open') }}
+                            {{ __('ui.open') }}
                             <span class="ml-1 opacity-70">
                                 {{ $workflowOpenTotal ?? 0 }}
                             </span>
@@ -415,15 +415,15 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                     <span
                         class="mr-2 w-36 shrink-0 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
                     >
-                        {{ __('Dynamic') }}
+                        {{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.dynamic') }}
                     </span>
 
                     @foreach ($dynamicFilterOptions as $option)
                         @php
                             $count = $dynamicFilterCounts[$option] ?? 0;
                             $label = match ($option) {
-                                'none' => __('All entries'),
-                                'all' => __('All dynamic'),
+                                'none' => __('ui.all-entries'),
+                                'all' => __('ui.all-dynamic'),
                                 'candidate' => __('Candidates'),
                                 'multi' => __('Dynamic multi'),
                                 'without_suggested_key' => __('Without suggested key'),
@@ -467,7 +467,7 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                             $count =
                                 $option === 'all' ? $activeTypeTotal ?? 0 : $activeClassificationCounts[$option] ?? 0;
                             $label = match ($option) {
-                                'all' => __('admin.client_list.filter.all_types'),
+                                'all' => __('ui.all-types'),
                                 'backfill_by_translation' => __('admin.translation_list.meta.backfill'),
                                 default => str($option)->headline(),
                             };

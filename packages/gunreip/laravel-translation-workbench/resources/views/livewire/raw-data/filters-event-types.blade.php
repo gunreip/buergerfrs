@@ -1,6 +1,6 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters-event-types.blade.php --}}
 
-<flux:separator text="{{ __('Common filters') }}" />
+<flux:separator text="{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.filters_event_types.common_filters') }}" />
 
 {{-- grid-cols-7 keeps the reset button aligned at the far right. --}}
 <flux:field class="mt-2 grid gap-3 md:grid-cols-7">

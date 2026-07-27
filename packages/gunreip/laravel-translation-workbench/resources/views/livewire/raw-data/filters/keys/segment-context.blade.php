@@ -16,7 +16,7 @@
                 value="all"
                 icon="component"
             >
-                {{ $keysSegmentSection === 'all' ? __('Select section first') : __('All contexts') }}
+                {{ $keysSegmentSection === 'all' ? __('Select section first') : __('ui.filters.all-contexts') }}
             </x-ui.input.select-option>
 
             @foreach ($keyOptions['segment_contexts'] ?? [] as $segmentContext)

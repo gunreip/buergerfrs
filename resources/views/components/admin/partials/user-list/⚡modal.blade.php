@@ -12,10 +12,6 @@
                     :description="__('admin.user_list.modal.change_assigned_roles_for_the_selected_user')"
                 />
             </flux:field>
-
-            {{-- <flux:heading size="xl">
-                {{ __('admin.user_list.modal.edit_roles') }}
-            </flux:heading> --}}
         </div>
 
         <flux:separator class="mb-6" />

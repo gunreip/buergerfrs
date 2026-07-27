@@ -9,7 +9,7 @@
         ],
         [
             'name' => 'address',
-            'label' => __('admin.country_reference_list.table.address'),
+            'label' => __('ui.address'),
             'icon' => 'map-pin-house',
         ],
         [

@@ -75,6 +75,22 @@
                 $dynamicReviewLinkedSources = $dynamicReviewSources
                     ->reject(static fn(array $source): bool => (bool) ($source['is_runtime_options'] ?? false))
                     ->values();
+                $dynamicReviewConfirmedLinkCount = $dynamicReviewLinkedSources
+                    ->filter(static fn(array $source): bool => ($source['link_review_status'] ?? null) === 'confirmed')
+                    ->count();
+                $dynamicReviewPendingLinkCount = $dynamicReviewLinkedSources
+                    ->filter(static fn(array $source): bool => ($source['link_review_status'] ?? null) !== 'confirmed')
+                    ->count();
+                $dynamicReviewRuntimeValueCount = $dynamicReviewRuntimeSources->sum('values_count');
+                $dynamicReviewHasConsumerSources = $dynamicReviewLinkedSources->isNotEmpty();
+                $dynamicReviewHasRuntimeSources = $dynamicReviewRuntimeSources->isNotEmpty();
+                $dynamicReviewHasRuntimeValues = $dynamicReviewRuntimeValueCount > 0;
+                $dynamicReviewRuntimeMissing =
+                    $dynamicReviewHasConsumerSources && !$dynamicReviewHasRuntimeSources;
+                $dynamicReviewLinkMissing =
+                    $dynamicReviewHasConsumerSources &&
+                    $dynamicReviewHasRuntimeSources &&
+                    $dynamicReviewConfirmedLinkCount === 0;
                 $dynamicReviewTranslationKey = trim((string) ($dynamicReviewFinding->translation_key ?? ''));
                 $dynamicReviewKeyAnchor = trim(
                     (string) ($dynamicReviewFinding->translation_key ?:
@@ -109,8 +125,16 @@
                     color="{{ $dynamicReviewHasTranslationKey ? 'green' : 'red' }}"
                     icon="key-round"
                 >
-                    <flux:callout.heading>{{ __('Translation key') }}</flux:callout.heading>
-                    <flux:callout.text class="wrap-anywhere text-wrap text-xs">
+                    <flux:callout.heading>
+                        <span>{{ __('Translation key') }}</span>
+                        <x-ui.tooltip.simple
+                            :header="__('Translation key')"
+                            :text="__(
+                                'The translation key is the anchor for this dynamic finding. It may be missing or unresolved if the finding has not been reviewed yet.',
+                            )"
+                        />
+                    </flux:callout.heading>
+                    <flux:callout.text class="wrap-anywhere text-wrap font-mono text-xs">
                         {{ $dynamicReviewTranslationKey !== '' ? $dynamicReviewTranslationKey : __('Missing translation key') }}
                     </flux:callout.text>
                 </flux:callout>
@@ -121,21 +145,89 @@
                 >
                     <flux:callout.heading>{{ __('Data state') }}</flux:callout.heading>
                     <flux:callout.text class="text-xs">
-                        {{ $dynamicReviewReady ? __('Dynamic data is resolved enough for editing.') : __('Dynamic data still needs review before editing.') }}
+                        @if ($dynamicReviewReady)
+                            {{ __('Dynamic data is resolved enough for editing.') }}
+                        @elseif ($dynamicReviewRuntimeMissing)
+                            {{ __('Runtime option values have not been observed for this dynamic consumer yet.') }}
+                        @elseif ($dynamicReviewLinkMissing)
+                            {{ __('Confirm the runtime option link before editing dynamic translations.') }}
+                        @else
+                            {{ __('Dynamic data still needs review before editing.') }}
+                        @endif
                     </flux:callout.text>
                     <div class="mt-2 flex flex-wrap gap-1.5">
-                        <flux:badge
-                            size="sm"
-                            color="{{ $dynamicReviewDataState === 'structured' ? 'green' : 'orange' }}"
-                        >
-                            {{ $dynamicReviewDataState !== '' ? str($dynamicReviewDataState)->headline() : __('No state') }}
-                        </flux:badge>
-                        <flux:badge
-                            size="sm"
-                            color="{{ $dynamicReviewUnresolvedCount > 0 ? 'red' : 'green' }}"
-                        >
-                            {{ __('Unresolved') }}: {{ $dynamicReviewUnresolvedCount }}
-                        </flux:badge>
+                        @if ($dynamicReviewReady && $dynamicReviewDataState !== 'structured')
+                            <span
+                                class="relative inline-flex opacity-60 after:absolute after:left-1 after:right-1 after:top-1/2 after:h-px after:-rotate-12 after:bg-current after:content-['']">
+                                <flux:badge
+                                    size="sm"
+                                    color="orange"
+                                >
+                                    {{ $dynamicReviewDataState !== '' ? str($dynamicReviewDataState)->headline() : __('No state') }}
+                                </flux:badge>
+                            </span>
+                            <flux:badge
+                                size="sm"
+                                color="green"
+                            >
+                                {{ __('Review resolved') }}
+                            </flux:badge>
+                        @else
+                            <flux:badge
+                                size="sm"
+                                color="{{ $dynamicReviewDataState === 'structured' ? 'green' : 'orange' }}"
+                            >
+                                {{ $dynamicReviewDataState !== '' ? str($dynamicReviewDataState)->headline() : __('No state') }}
+                            </flux:badge>
+                        @endif
+
+                        @if ($dynamicReviewReady && $dynamicReviewUnresolvedCount > 0)
+                            <span
+                                class="relative inline-flex opacity-60 after:absolute after:left-1 after:right-1 after:top-1/2 after:h-px after:-rotate-12 after:bg-current after:content-['']">
+                                <flux:badge
+                                    size="sm"
+                                    color="red"
+                                >
+                                    {{ __('Unresolved') }}: {{ $dynamicReviewUnresolvedCount }}
+                                </flux:badge>
+                            </span>
+                            <flux:badge
+                                size="sm"
+                                color="green"
+                            >
+                                {{ __('Resolved by review') }}
+                            </flux:badge>
+                        @else
+                            <flux:badge
+                                size="sm"
+                                color="{{ $dynamicReviewUnresolvedCount > 0 ? 'red' : 'green' }}"
+                            >
+                                {{ __('Unresolved') }}: {{ $dynamicReviewUnresolvedCount }}
+                            </flux:badge>
+                        @endif
+
+                        @if (!$dynamicReviewReady && $dynamicReviewRuntimeMissing)
+                            <flux:badge
+                                size="sm"
+                                color="red"
+                            >
+                                {{ __('Runtime values missing') }}
+                            </flux:badge>
+                        @elseif (!$dynamicReviewReady && $dynamicReviewLinkMissing)
+                            <flux:badge
+                                size="sm"
+                                color="amber"
+                            >
+                                {{ __('Runtime link missing') }}
+                            </flux:badge>
+                        @elseif ($dynamicReviewHasRuntimeValues)
+                            <flux:badge
+                                size="sm"
+                                color="green"
+                            >
+                                {{ __('Runtime values') }}: {{ $dynamicReviewRuntimeValueCount }}
+                            </flux:badge>
+                        @endif
                     </div>
                 </flux:callout>
 
@@ -155,16 +247,6 @@
                         >
                             {{ $dynamicReviewIsMulti ? __('Current: DynamicMulti') : __('Current: Dynamic') }}
                         </flux:badge>
-
-                        <flux:button
-                            type="button"
-                            size="xs"
-                            variant="primary"
-                            color="{{ $dynamicReviewIsMulti ? 'teal' : 'cyan' }}"
-                            wire:click="setDynamicReviewMode({{ $dynamicReviewFinding->id }}, '{{ $dynamicReviewIsMulti ? 'single' : 'multi' }}')"
-                        >
-                            {{ $dynamicReviewIsMulti ? __('Set Dynamic') : __('Set DynamicMulti') }}
-                        </flux:button>
                     </div>
                 </flux:callout>
 
@@ -192,6 +274,98 @@
                     </div>
                 </flux:callout>
             </div>
+
+            {{-- Callout Dynamic Relationship --}}
+            <flux:callout
+                color="{{ $dynamicReviewConfirmedLinkCount > 0 || $dynamicReviewLinkedSources->isEmpty() ? 'green' : 'amber' }}"
+                icon="git-branch"
+            >
+                <div class="grid gap-3 xl:grid-cols-3">
+                    <div class="min-w-0 space-y-1">
+                        <flux:callout.heading>
+                            <span class="inline-flex items-center gap-1.5">
+                                <span>{{ __('Dynamic consumer') }}</span>
+                                <x-ui.tooltip.simple
+                                    :header="__('Dynamic consumer')"
+                                    :text="__(
+                                        'The selected finding renders one dynamic value at runtime. It may need to be linked to a runtime option source before translations can be edited reliably.',
+                                    )"
+                                    max-width="max-w-[20rem]"
+                                />
+                            </span>
+                        </flux:callout.heading>
+                        <flux:callout.text class="wrap-anywhere text-wrap font-mono text-xs">
+                            {{ $dynamicReviewKeyAnchor !== '' ? $dynamicReviewKeyAnchor : __('No key anchor') }}
+                        </flux:callout.text>
+                    </div>
+
+                    <div class="min-w-0 space-y-1">
+                        <flux:callout.heading>
+                            <span class="inline-flex items-center gap-1.5">
+                                <span>{{ __('Runtime option source') }}</span>
+                                <x-ui.tooltip.simple
+                                    :header="__('Runtime option source')"
+                                    :text="__(
+                                        'Runtime sources are value collections observed while the application rendered option lists or database-backed values.',
+                                    )"
+                                />
+                            </span>
+                        </flux:callout.heading>
+                        <flux:callout.text class="space-y-1 text-xs">
+                            @forelse ($dynamicReviewRuntimeSuggestedKeys as $runtimeSuggestedKey)
+                                <div class="wrap-anywhere text-wrap font-mono">{{ $runtimeSuggestedKey }}</div>
+                            @empty
+                                <span class="text-zinc-500 dark:text-zinc-400">
+                                    {{ __('No runtime source observed yet') }}
+                                </span>
+                            @endforelse
+                        </flux:callout.text>
+                    </div>
+
+                    <div class="min-w-0 space-y-1">
+                        <flux:callout.heading>
+                            <span class="inline-flex items-center gap-1.5">
+                                <span>{{ __('Review link') }}</span>
+                                <x-ui.tooltip.simple
+                                    :header="__('Review link')"
+                                    :text="__(
+                                        'Confirmed links say that this dynamic consumer should use the listed runtime option source for its translatable values.',
+                                    )"
+                                    max-width="max-w-[20rem]"
+                                />
+                            </span>
+                        </flux:callout.heading>
+                        <div class="flex flex-wrap gap-1.5">
+                            <flux:badge
+                                size="sm"
+                                color="{{ $dynamicReviewRuntimeSources->isNotEmpty() ? 'green' : 'orange' }}"
+                            >
+                                {{ __('Runtime sources') }}: {{ $dynamicReviewRuntimeSources->count() }}
+                            </flux:badge>
+                            <flux:badge
+                                size="sm"
+                                color="{{ $dynamicReviewLinkedSources->isNotEmpty() ? 'sky' : 'zinc' }}"
+                            >
+                                {{ __('Consumers') }}: {{ $dynamicReviewLinkedSources->count() }}
+                            </flux:badge>
+                            <flux:badge
+                                size="sm"
+                                color="{{ $dynamicReviewConfirmedLinkCount > 0 ? 'green' : ($dynamicReviewLinkedSources->isNotEmpty() ? 'red' : 'zinc') }}"
+                            >
+                                {{ __('Confirmed links') }}: {{ $dynamicReviewConfirmedLinkCount }}
+                            </flux:badge>
+                            @if ($dynamicReviewPendingLinkCount > 0)
+                                <flux:badge
+                                    size="sm"
+                                    color="amber"
+                                >
+                                    {{ __('Pending links') }}: {{ $dynamicReviewPendingLinkCount }}
+                                </flux:badge>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </flux:callout>
 
             {{-- Card Dynamic Sources --}}
             <flux:card>
@@ -228,21 +402,21 @@
             'title' => __('Runtime options'),
             'description' => __('Values observed while the application rendered this option source. These rows are keyed by translation_workbench_keys.suggested_key.'),
             'rows' => $dynamicReviewRuntimeSources,
-                            'empty' => __('No runtime options have been observed for this finding yet.'),
-                            'color' => 'cyan',
-                            'icon' => 'database-zap',
-                            'match_target' => 'dynamic_key',
-                        ],
-                        [
-                            'title' => __('Related dynamic findings'),
+            'empty' => __('No runtime options have been observed for this finding yet.'),
+            'color' => 'cyan',
+            'icon' => 'database-zap',
+            'match_target' => 'dynamic_key',
+        ],
+        [
+            'title' => __('Related dynamic findings'),
             'description' => __('Scanner or discovery rows that may describe the same dynamic translation context.'),
             'rows' => $dynamicReviewLinkedSources,
-                            'empty' => __('No additional dynamic findings are linked to this entry.'),
-                            'color' => 'sky',
-                            'icon' => 'scan-search',
-                            'match_target' => 'runtime_options',
-                        ],
-                    ] as $dynamicSourceSection)
+            'empty' => __('No additional dynamic findings are linked to this entry.'),
+            'color' => 'sky',
+            'icon' => 'scan-search',
+            'match_target' => 'runtime_options',
+        ],
+    ] as $dynamicSourceSection)
                         @php
                             $dynamicSourceSectionSuggestedKeys = $dynamicSourceSection['rows']
                                 ->pluck('suggested_key')
@@ -257,7 +431,8 @@
                                     $dynamicSourceSectionSuggestedKeys->count() === 1 &&
                                     $dynamicSourceSectionSuggestedKeys->first() === $dynamicReviewKeyAnchor
                                         ? 'equal'
-                                        : ($dynamicReviewKeyAnchor !== '' && $dynamicSourceSectionSuggestedKeys->isNotEmpty()
+                                        : ($dynamicReviewKeyAnchor !== '' &&
+                                        $dynamicSourceSectionSuggestedKeys->isNotEmpty()
                                             ? 'differs'
                                             : 'unknown');
                                 $dynamicSourceSectionKeyMatchLabel = match ($dynamicSourceSectionKeyMatch) {
@@ -292,14 +467,15 @@
                         @endphp
 
                         <flux:callout
-                            class="mt-5"
+                            class="mt-4"
                             color="{{ $dynamicSourceSection['color'] }}"
                             icon="{{ $dynamicSourceSection['icon'] }}"
                         >
                             <div class="flex flex-wrap items-start justify-between gap-2">
                                 <div class="min-w-0">
                                     <div class="flex flex-wrap items-center gap-2">
-                                        <flux:callout.heading>{{ $dynamicSourceSection['title'] }}</flux:callout.heading>
+                                        <flux:callout.heading>{{ $dynamicSourceSection['title'] }}
+                                        </flux:callout.heading>
                                         <flux:badge
                                             class="shrink-0"
                                             size="sm"
@@ -330,7 +506,7 @@
                                 </flux:callout>
                             @else
                                 {{-- Table Runtime Options --}}
-                                <flux:table class="mt-3">
+                                <flux:table class="">
                                     {{-- Table Header Row Runtime Options --}}
                                     <flux:table.columns>
                                         {{-- Table Header Column Source --}}
@@ -347,7 +523,7 @@
                                         </flux:table.column>
                                         {{-- Table Header Column Classification --}}
                                         <flux:table.column class="w-40">
-                                            {{ __('Classification') }}
+                                            {{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.modal_dynamic_review.classification') }}
                                         </flux:table.column>
                                         {{-- Table Header Column Values --}}
                                         <flux:table.column>
@@ -404,7 +580,10 @@
                                                 <flux:table.cell>
                                                     <div class="flex max-w-2xl items-start gap-2">
                                                         @if ($dynamicSourceEditorUrl)
-                                                            <flux:tooltip content="{{ __('Open in VSC') }}">
+                                                            <flux:tooltip
+                                                                class="max-w-[20rem] space-y-2"
+                                                                content="{{ __('Open in VSC') }}"
+                                                            >
                                                                 <flux:button
                                                                     class="mt-0.5 h-5 w-5 shrink-0"
                                                                     type="button"
@@ -420,7 +599,7 @@
 
                                                         <div class="min-w-0 space-y-1.5">
                                                             <div class="flex flex-wrap items-center gap-1">
-                                                                <x-ui.tooltip.trigger
+                                                                <x-ui.tooltip.simple
                                                                     :title="__('Dynamic source ID')"
                                                                     :text="__(
                                                                         'Internal row ID from translation_workbench_dynamic_sources. This is not a source-code line number.',
@@ -432,10 +611,10 @@
                                                                     >
                                                                         #{{ $source['id'] }}
                                                                     </flux:badge>
-                                                                </x-ui.tooltip.trigger>
+                                                                </x-ui.tooltip.simple>
 
                                                                 @if ($source['key_id'])
-                                                                    <x-ui.tooltip.trigger
+                                                                    <x-ui.tooltip.simple
                                                                         :title="__('Linked translation key')"
                                                                         :text="__(
                                                                             'Foreign key to translation_workbench_keys. The suggested key below is the review anchor for this runtime option source.',
@@ -448,8 +627,15 @@
                                                                             {{ __('Key') }}
                                                                             #{{ $source['key_id'] }}
                                                                         </flux:badge>
-                                                                    </x-ui.tooltip.trigger>
+                                                                    </x-ui.tooltip.simple>
                                                                 @endif
+
+                                                                <flux:badge
+                                                                    size="sm"
+                                                                    color="{{ $source['is_runtime_options'] ?? false ? 'cyan' : 'violet' }}"
+                                                                >
+                                                                    {{ $source['is_runtime_options'] ?? false ? __('Runtime source') : __('Dynamic consumer') }}
+                                                                </flux:badge>
 
                                                                 @if ($source['source_type'])
                                                                     <flux:badge size="sm">
@@ -457,7 +643,7 @@
                                                                     </flux:badge>
                                                                 @endif
                                                                 @if ($source['source_reference'])
-                                                                    <x-ui.tooltip.trigger
+                                                                    <x-ui.tooltip.simple
                                                                         :title="__('Discovery reference')"
                                                                         :text="__(
                                                                             'Reference reported by the runtime collector or dynamic option discovery scanner. This may point to the option definition and can differ from the finding position.',
@@ -470,10 +656,10 @@
                                                                         >
                                                                             {{ __('Ref') }}
                                                                         </flux:badge>
-                                                                    </x-ui.tooltip.trigger>
+                                                                    </x-ui.tooltip.simple>
                                                                 @endif
                                                                 @if ($source['source_path'])
-                                                                    <x-ui.tooltip.trigger
+                                                                    <x-ui.tooltip.simple
                                                                         :title="__('Finding position')"
                                                                         :text="__(
                                                                             'Source-code position of the translation finding. The VSC link opens this position.',
@@ -486,7 +672,7 @@
                                                                             {{ __('Line') }}
                                                                             {{ $source['source_line'] ?: '—' }}
                                                                         </flux:badge>
-                                                                    </x-ui.tooltip.trigger>
+                                                                    </x-ui.tooltip.simple>
                                                                 @endif
                                                             </div>
 
@@ -522,8 +708,8 @@
                                                 {{-- Table Row Cell Classification --}}
                                                 <flux:table.cell>
                                                     <div class="flex flex-col items-start gap-1">
-                                                        <x-ui.tooltip.trigger
-                                                            :title="__('Classification')"
+                                                        <x-ui.tooltip.simple
+                                                            :title="__('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.modal_dynamic_review.classification')"
                                                             :text="__(
                                                                 'Combined scanner result from cardinality and origin, for example single_hardcoded or multi_db. Unknown means the scanner could not derive a reliable combined classification yet.',
                                                             )"
@@ -534,10 +720,10 @@
                                                             >
                                                                 {{ $source['classification'] }}
                                                             </flux:badge>
-                                                        </x-ui.tooltip.trigger>
+                                                        </x-ui.tooltip.simple>
 
-                                                        <x-ui.tooltip.trigger
-                                                            :title="__('Cardinality')"
+                                                        <x-ui.tooltip.simple
+                                                            :title="__('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.modal_dynamic_review.cardinality')"
                                                             :text="__(
                                                                 'Whether the scanner found one dynamic value or multiple option values. Unknown means this still needs review or better scanner data.',
                                                             )"
@@ -548,9 +734,9 @@
                                                             >
                                                                 {{ $source['cardinality'] }}
                                                             </flux:badge>
-                                                        </x-ui.tooltip.trigger>
+                                                        </x-ui.tooltip.simple>
 
-                                                        <x-ui.tooltip.trigger
+                                                        <x-ui.tooltip.simple
                                                             :title="__('Origin')"
                                                             :text="__(
                                                                 'Where the possible values appear to come from, for example hardcoded code options or database-backed data. Unknown means the origin was not detected reliably.',
@@ -563,7 +749,7 @@
                                                             >
                                                                 {{ $source['origin'] }}
                                                             </flux:badge>
-                                                        </x-ui.tooltip.trigger>
+                                                        </x-ui.tooltip.simple>
                                                     </div>
                                                 </flux:table.cell>
 

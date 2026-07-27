@@ -188,7 +188,7 @@
         :current="request()->routeIs('admin.app-settings')"
         wire:navigate
     >
-        {{ __('admin.app_settings.app_settings') }}
+        {{ __('ui.app-settings') }}
     </flux:sidebar.item>
 
     {{-- Admin -> logs --}}
@@ -206,7 +206,7 @@
             :current="request()->routeIs('admin.logs.activity-log')"
             wire:navigate
         >
-            {{ __('Activity Log') }}
+            {{ __('ui.activity-log') }}
         </flux:sidebar.item>
     </flux:sidebar.group>
 

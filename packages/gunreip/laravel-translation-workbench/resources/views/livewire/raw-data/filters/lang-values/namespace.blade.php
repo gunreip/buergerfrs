@@ -18,7 +18,7 @@
                 icon="folder-tree"
                 icon-class="text-zinc-400"
             >
-                {{ __('All namespaces') }}
+                {{ __('ui.filters.all-namespaces') }}
             </x-ui.input.select-option>
 
             @foreach ($langValueOptions['namespaces'] ?? [] as $namespace)

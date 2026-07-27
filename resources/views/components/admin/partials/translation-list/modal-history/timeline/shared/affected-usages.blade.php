@@ -53,7 +53,7 @@
                             variant="subtle"
                             color="sky"
                         >
-                            {{ __('Classification') }}: {{ $usageClassification }}
+                            {{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.modal_dynamic_review.classification') }}: {{ $usageClassification }}
                         </flux:badge>
                     @endforeach
                 </div>
@@ -63,7 +63,7 @@
         <details class="group col-span-3 -mt-1">
             <summary class="cursor-pointer text-sm font-semibold text-zinc-600 dark:text-zinc-300">
                 <span class="inline-flex items-center gap-2">
-                    {{ __('Show usage locations') }}
+                    {{ __('admin.partials.translation_list.modal_history.timeline.shared.affected_usages.show_usage_locations') }}
 
                     <flux:badge
                         size="sm"

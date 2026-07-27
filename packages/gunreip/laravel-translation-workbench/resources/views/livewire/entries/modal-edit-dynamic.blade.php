@@ -38,7 +38,7 @@
                 </flux:text>
             </div>
 
-            <div class="ms-auto flex shrink-0 items-center gap-2">
+            <div class="mr-8 ms-auto flex shrink-0 items-center gap-2">
                 @if ($dynamicEditFinding)
                     <flux:badge
                         class="h-6 tabular-nums"
@@ -54,7 +54,7 @@
                         icon="save"
                         wire:click="saveDynamicTranslationValue"
                     >
-                        {{ __('Save') }}
+                        {{ __('ui.save') }}
                     </flux:button>
                 @endif
             </div>
@@ -100,7 +100,11 @@
                 <x-ui.headers.card
                     :title="__('Translation values')"
                     :description="__('Source is editable on purpose; target is the active application language.')"
-                />
+                >
+                    <div class="wrap-anywhere max-w-3xl text-wrap text-end text-sky-500 dark:text-sky-400">
+                        {{ $dynamicEditFinding->translation_key ?: __('No translation key set.') }}
+                    </div>
+                </x-ui.headers.card>
 
                 <div class="mt-4 grid gap-4 lg:grid-cols-2">
                     <flux:field>
@@ -114,7 +118,7 @@
                                         :title="strtoupper($sourceLocale)"
                                     />
                                     <span class="mb-1">{{ __('Source language') }}</span>
-                                    <span class="font-mono text-sm uppercase text-zinc-500 dark:text-zinc-400">
+                                    <span class="font-semibold uppercase text-zinc-500 dark:text-zinc-400">
                                         {{ $sourceLocale }}
                                     </span>
                                 </span>
@@ -160,7 +164,7 @@
                                     :title="strtoupper($activeLocale)"
                                 />
                                 <span class="mb-1">{{ __('Target language') }}</span>
-                                <span class="font-mono text-sm uppercase text-zinc-500 dark:text-zinc-400">
+                                <span class="font-semibold uppercase text-zinc-500 dark:text-zinc-400">
                                     {{ $activeLocale }}
                                 </span>
                             </span>

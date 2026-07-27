@@ -1,8 +1,8 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters-lang-values.blade.php --}}
 
-<flux:separator text="{{ __('Lang Value Filters') }}" />
+<flux:separator text="{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.filters_event_types.common_filters') }}" />
 
-<flux:field class="mt-2 grid gap-3 md:grid-cols-8">
+<flux:field class="mb-4 mt-2 grid gap-3 md:grid-cols-6">
     {{-- Lang Values Search Filter --}}
     @include('translation-workbench::livewire.raw-data.filters.lang-values.search', [
         'fieldClass' => 'md:col-span-3',
@@ -13,6 +13,15 @@
         'fieldClass' => 'md:col-span-1',
     ])
 
+    {{-- Lang Values Namespace Filter --}}
+    @include('translation-workbench::livewire.raw-data.filters.lang-values.namespace', [
+        'fieldClass' => 'md:col-span-2',
+    ])
+</flux:field>
+
+<flux:separator text="{{ __('Language Filters') }}" />
+
+<flux:field class="mb-4 mt-2 grid gap-3 md:grid-cols-6">
     {{-- Lang Values Main Locale Filter --}}
     @include('translation-workbench::livewire.raw-data.filters.lang-values.locale', [
         'fieldClass' => 'md:col-span-2',
@@ -20,11 +29,6 @@
 
     {{-- Lang Values Sub Locale Filter --}}
     @include('translation-workbench::livewire.raw-data.filters.lang-values.sub-locale', [
-        'fieldClass' => 'md:col-span-2',
-    ])
-
-    {{-- Lang Values Namespace Filter --}}
-    @include('translation-workbench::livewire.raw-data.filters.lang-values.namespace', [
         'fieldClass' => 'md:col-span-2',
     ])
 
@@ -54,7 +58,7 @@
     ])
 
     {{-- Lang Values Reset Filter --}}
-    <flux:field class="md:col-span-4 md:justify-self-end">
+    <flux:field class="md:col-span-2 md:justify-self-end">
         <div class="flex h-full items-end justify-end pt-6">
             <x-ui.button.reset
                 label="{{ __('Reset') }}"

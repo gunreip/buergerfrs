@@ -16,7 +16,7 @@
                 value="all"
                 icon="component"
             >
-                {{ $keysNamespace === 'all' ? __('Select namespace first') : __('All groups') }}
+                {{ $keysNamespace === 'all' ? __('Select namespace first') : __('ui.filters.all-groups') }}
             </x-ui.input.select-option>
 
             @foreach ($keyOptions['groups'] ?? [] as $group)

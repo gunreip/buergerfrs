@@ -59,6 +59,7 @@ class RawDataColumnPresentation
             'translation_workbench_keys' => self::keys(),
             'translation_workbench_key_findings' => self::keyFindings(),
             'translation_workbench_dynamic_sources' => self::dynamicSources(),
+            'translation_workbench_lang_values' => self::langValues(),
             default => [],
         };
     }
@@ -118,6 +119,8 @@ class RawDataColumnPresentation
             'source_fingerprint' => ['content_class' => 'min-w-72 max-w-xl wrap-anywhere text-wrap font-mono text-xs'],
             'expression_fingerprint' => ['content_class' => 'min-w-72 max-w-xl wrap-anywhere text-wrap font-mono text-xs'],
             'semantic_fingerprint' => ['content_class' => 'min-w-72 max-w-xl wrap-anywhere text-wrap font-mono text-xs'],
+            'kind' => ['content_class' => 'min-w-36 wrap-anywhere text-wrap font-mono text-xs'],
+            'entry_type' => ['content_class' => 'min-w-40 wrap-anywhere text-wrap font-mono text-xs'],
             'raw_expression' => ['content_class' => 'min-w-96 max-w-2xl wrap-anywhere text-wrap font-mono text-xs'],
             'literal_text' => ['content_class' => 'min-w-96 max-w-2xl wrap-anywhere text-wrap font-mono text-xs'],
             'literal_text_suggested' => ['content_class' => 'min-w-96 max-w-2xl wrap-anywhere text-wrap font-mono text-xs'],
@@ -189,6 +192,18 @@ class RawDataColumnPresentation
             'source_expression' => ['content_class' => 'min-w-96 max-w-2xl wrap-anywhere text-wrap font-mono text-xs'],
             'source_reference' => ['content_class' => 'min-w-72 max-w-xl wrap-anywhere text-wrap font-mono text-xs'],
             'fingerprint' => ['content_class' => 'min-w-72 max-w-xl wrap-anywhere text-wrap font-mono text-xs'],
+        ];
+    }
+
+    /**
+     * @return array<string, array<string, string>>
+     */
+    private static function langValues(): array
+    {
+        return [
+            'lang_key' => ['content_class' => 'min-w-80 max-w-xl wrap-anywhere text-wrap font-mono text-xs'],
+            'translation_key' => ['content_class' => 'min-w-112 wrap-anywhere text-wrap font-mono text-xs'],
+            'value' => ['content_class' => 'min-w-96 max-w-2xl text-wrap wrap-normal hyphens-auto font-sans text-xs'],
         ];
     }
 }

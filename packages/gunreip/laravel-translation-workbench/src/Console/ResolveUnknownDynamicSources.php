@@ -1,5 +1,10 @@
 <?php
 
+// packages/gunreip/laravel-translation-workbench/src/Console/ResolveUnknownDynamicSources.php
+
+// php artisan translation-workbench:resolve-unknown-dynamic-sources
+// php artisan translation-workbench:resolve-unknown-dynamic-sources --dry-run
+
 namespace Gunreip\TranslationWorkbench\Console;
 
 use Gunreip\TranslationWorkbench\Console\Concerns\WritesTranslationWorkbenchReports;
@@ -44,6 +49,11 @@ class ResolveUnknownDynamicSources extends Command
             'source_values_updated' => 0,
             'source_values_unchanged' => 0,
             'dynamic_states_structured' => 0,
+            'runtime_sources_matched' => 0,
+            'runtime_source_links_created' => 0,
+            'runtime_source_links_updated' => 0,
+            'runtime_source_links_unchanged' => 0,
+            'runtime_sources_reactivated' => 0,
             'timeline_events_created' => 0,
         ];
 
@@ -54,7 +64,7 @@ class ResolveUnknownDynamicSources extends Command
             $discovery = $this->bestDiscoveryForSource($source);
 
             if (! $discovery) {
-                $summary['sources_still_unknown']++;
+                $this->tryRuntimeSourceMatch($source, $summary, $dryRun);
 
                 continue;
             }
@@ -62,7 +72,7 @@ class ResolveUnknownDynamicSources extends Command
             $options = $this->optionsFromDiscovery($discovery);
 
             if ($options === []) {
-                $summary['sources_still_unknown']++;
+                $this->tryRuntimeSourceMatch($source, $summary, $dryRun);
 
                 continue;
             }
@@ -111,6 +121,9 @@ class ResolveUnknownDynamicSources extends Command
         $this->line('Sources still unknown: ' . number_format($summary['sources_still_unknown']));
         $this->line('Source values created: ' . number_format($summary['source_values_created']));
         $this->line('Source values updated: ' . number_format($summary['source_values_updated']));
+        $this->line('Runtime sources matched: ' . number_format($summary['runtime_sources_matched']));
+        $this->line('Runtime source links created: ' . number_format($summary['runtime_source_links_created']));
+        $this->line('Runtime source links updated: ' . number_format($summary['runtime_source_links_updated']));
 
         if ($dryRun) {
             $this->warn('Dry run only: no unknown dynamic sources were updated.');
@@ -206,6 +219,195 @@ class ResolveUnknownDynamicSources extends Command
             ->get()
             ->sortByDesc(fn(object $discovery): int => $this->discoveryScore($source, $discovery, $keys))
             ->first();
+    }
+
+    /**
+     * @param  array<string, int>  $summary
+     */
+    private function tryRuntimeSourceMatch(object $source, array &$summary, bool $dryRun): void
+    {
+        $runtimeSource = $this->bestRuntimeSourceForSource($source);
+
+        if (! $runtimeSource) {
+            $summary['sources_still_unknown']++;
+
+            return;
+        }
+
+        $summary['runtime_sources_matched']++;
+
+        if ($dryRun) {
+            return;
+        }
+
+        $linkSummary = $this->syncRuntimeSourceLink($runtimeSource, $source);
+        foreach ($linkSummary as $key => $value) {
+            $summary[$key] += $value;
+        }
+    }
+
+    private function bestRuntimeSourceForSource(object $source): ?object
+    {
+        if (blank($source->dynamic_scope)) {
+            return null;
+        }
+
+        return DB::table('translation_workbench_dynamic_sources as runtime_sources')
+            ->leftJoin('translation_workbench_keys as runtime_keys', 'runtime_keys.id', '=', 'runtime_sources.key_id')
+            ->whereIn('runtime_sources.source_type', $this->runtimeSourceTypes())
+            ->where('runtime_sources.dynamic_scope', $source->dynamic_scope)
+            ->where('runtime_sources.values_count', '>', 0)
+            ->whereExists(function ($query): void {
+                $query
+                    ->selectRaw('1')
+                    ->from('translation_workbench_dynamic_source_values as source_values')
+                    ->whereColumn('source_values.dynamic_source_id', 'runtime_sources.id')
+                    ->whereIn('source_values.status', ['active', 'stale']);
+            })
+            ->orderByRaw("CASE WHEN runtime_sources.status = 'active' THEN 0 WHEN runtime_sources.status = 'needs_review' THEN 1 ELSE 2 END")
+            ->orderByDesc('runtime_sources.values_count')
+            ->orderByDesc('runtime_sources.last_seen_at')
+            ->orderBy('runtime_sources.id')
+            ->first([
+                'runtime_sources.*',
+                'runtime_keys.suggested_key as runtime_suggested_key',
+                'runtime_keys.translation_key as runtime_translation_key',
+            ]);
+    }
+
+    /**
+     * @return array{runtime_source_links_created: int, runtime_source_links_updated: int, runtime_source_links_unchanged: int, runtime_sources_reactivated: int, timeline_events_created: int}
+     */
+    private function syncRuntimeSourceLink(object $runtimeSource, object $consumerSource): array
+    {
+        $summary = [
+            'runtime_source_links_created' => 0,
+            'runtime_source_links_updated' => 0,
+            'runtime_source_links_unchanged' => 0,
+            'runtime_sources_reactivated' => 0,
+            'timeline_events_created' => 0,
+        ];
+        $candidateReference = 'dynamic_source:' . $consumerSource->id;
+        $candidateValues = DB::table('translation_workbench_dynamic_source_values')
+            ->where('dynamic_source_id', $runtimeSource->id)
+            ->whereIn('status', ['active', 'stale'])
+            ->orderBy('value_key')
+            ->pluck('native_label', 'value_key')
+            ->mapWithKeys(static fn(mixed $label, mixed $key): array => [(string) $key => (string) $label])
+            ->all();
+
+        $attributes = [
+            'key_id' => $consumerSource->key_id,
+            'finding_id' => $consumerSource->finding_id,
+            'suggested_key' => $consumerSource->key_suggested_key ?: $consumerSource->finding_suggested_key,
+            'dynamic_scope' => $consumerSource->dynamic_scope,
+            'source_expression' => $consumerSource->source_expression,
+            'candidate_source_type' => 'related_dynamic_source',
+            'candidate_reference' => $candidateReference,
+            'candidate_values_count' => count($candidateValues),
+            'candidate_values' => json_encode($candidateValues, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            'confidence' => 'scope',
+            'review_status' => 'pending',
+            'status' => 'active',
+            'meta' => json_encode([
+                'source' => 'translation-workbench:resolve-unknown-dynamic-sources',
+                'match' => 'runtime_source_by_dynamic_scope',
+                'runtime_source_id' => $runtimeSource->id,
+                'runtime_suggested_key' => $runtimeSource->runtime_suggested_key ?? null,
+                'runtime_translation_key' => $runtimeSource->runtime_translation_key ?? null,
+                'consumer_source_id' => $consumerSource->id,
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+        ];
+
+        if ($runtimeSource->status === 'obsolete') {
+            DB::table('translation_workbench_dynamic_sources')
+                ->where('id', $runtimeSource->id)
+                ->update([
+                    'status' => 'active',
+                    'updated_at' => now(),
+                ]);
+            $summary['runtime_sources_reactivated']++;
+        }
+
+        $existing = DB::table('translation_workbench_dynamic_source_candidates')
+            ->where('dynamic_source_id', $runtimeSource->id)
+            ->where('candidate_source_type', 'related_dynamic_source')
+            ->where('candidate_reference', $candidateReference)
+            ->first();
+
+        if (! $existing) {
+            DB::table('translation_workbench_dynamic_source_candidates')->insert([
+                'dynamic_source_id' => $runtimeSource->id,
+                ...$attributes,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            $summary['runtime_source_links_created']++;
+            $summary['timeline_events_created'] += $this->recordRuntimeLinkEvent($runtimeSource, $consumerSource, null, $attributes);
+
+            return $summary;
+        }
+
+        $changedValues = collect($attributes)
+            ->reject(static fn(mixed $value, string $key): bool => $key === 'review_status' && $existing->review_status === 'confirmed')
+            ->filter(static fn(mixed $value, string $key): bool => ($existing->{$key} ?? null) != $value)
+            ->all();
+
+        if ($changedValues === []) {
+            $summary['runtime_source_links_unchanged']++;
+
+            return $summary;
+        }
+
+        DB::table('translation_workbench_dynamic_source_candidates')
+            ->where('id', $existing->id)
+            ->update([
+                ...$changedValues,
+                'updated_at' => now(),
+            ]);
+        $summary['runtime_source_links_updated']++;
+        $summary['timeline_events_created'] += $this->recordRuntimeLinkEvent(
+            $runtimeSource,
+            $consumerSource,
+            collect((array) $existing)->only(array_keys($changedValues))->all(),
+            $changedValues,
+        );
+
+        return $summary;
+    }
+
+    /**
+     * @param  array<string, mixed>|null  $oldValues
+     * @param  array<string, mixed>  $newValues
+     */
+    private function recordRuntimeLinkEvent(object $runtimeSource, object $consumerSource, ?array $oldValues, array $newValues): int
+    {
+        $finding = $consumerSource->finding_id
+            ? TranslationWorkbenchFinding::query()->find($consumerSource->finding_id)
+            : null;
+        $key = $consumerSource->key_id
+            ? TranslationWorkbenchKey::query()->find($consumerSource->key_id)
+            : null;
+
+        if (! $finding && ! $key) {
+            return 0;
+        }
+
+        $this->timelineRecorder->record(
+            eventType: $oldValues === null ? 'dynamic_runtime_source_link_suggested' : 'dynamic_runtime_source_link_changed',
+            key: $key,
+            finding: $finding,
+            oldValues: $oldValues,
+            newValues: $newValues,
+            context: [
+                'source' => 'translation-workbench:resolve-unknown-dynamic-sources',
+                'runtime_source_id' => $runtimeSource->id,
+                'consumer_source_id' => $consumerSource->id,
+                'dynamic_scope' => $consumerSource->dynamic_scope,
+            ],
+        );
+
+        return 1;
     }
 
     /**
@@ -308,6 +510,17 @@ class ResolveUnknownDynamicSources extends Command
             str_contains($sourceType, 'query') => 'db',
             default => 'unknown',
         };
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function runtimeSourceTypes(): array
+    {
+        return [
+            'runtime_options',
+            'runtime_db_options',
+        ];
     }
 
     /**

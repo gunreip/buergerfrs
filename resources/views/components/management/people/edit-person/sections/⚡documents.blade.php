@@ -93,13 +93,13 @@
         </x-ui.tooltip.trigger>
 
         <x-ui.tooltip.trigger
-            :title="__('Add document')"
+            :title="__('ui.add-document')"
             :text="__('Upload a new document or image for this person.')"
         >
             <flux:button.group>
                 {{-- Button Add Document Icon --}}
                 <flux:button
-                    aria-label="{{ __('Add document') }}"
+                    aria-label="{{ __('ui.add-document') }}"
                     size="sm"
                     wire:click="openAddDocumentModal"
                 >
@@ -108,11 +108,11 @@
 
                 {{-- Button Add Document Text --}}
                 <flux:button
-                    aria-label="{{ __('Add document') }}"
+                    aria-label="{{ __('ui.add-document') }}"
                     size="sm"
                     wire:click="openAddDocumentModal"
                 >
-                    {{ __('Add document') }}
+                    {{ __('ui.add-document') }}
                 </flux:button>
             </flux:button.group>
         </x-ui.tooltip.trigger>

@@ -15,7 +15,7 @@
                 value="all"
                 icon="folder"
             >
-                {{ __('All scopes') }}
+                {{ __('ui.filters.all-scopes') }}
             </x-ui.input.select-option>
 
             @foreach ($keyOptions['scopes'] ?? [] as $scope)

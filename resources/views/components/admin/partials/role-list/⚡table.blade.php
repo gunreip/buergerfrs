@@ -106,12 +106,12 @@
 
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('ui.labels.actions')"
+                            :title="__('ui.table.headers.actions')"
                             :text="__(
                                 'Actions that can be performed on the role, useful for management and administration.',
                             )"
                         >
-                            {{ __('ui.labels.actions') }}
+                            {{ __('ui.table.headers.actions') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>

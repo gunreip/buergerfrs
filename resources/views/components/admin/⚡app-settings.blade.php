@@ -2,7 +2,7 @@
 
 <flux:card>
     <x-ui.headers.page
-        :title="__('admin.app_settings.app_settings')"
+        :title="__('ui.app-settings')"
         :description="__('admin.app_settings.review_global_application_settings_role_badge_configuration_and_icon_registry_he')"
     />
 

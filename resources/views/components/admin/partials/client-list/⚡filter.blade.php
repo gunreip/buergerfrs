@@ -64,7 +64,7 @@
                     wire:model.live="typeFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('admin.client_list.filter.all_types') }}
+                        {{ __('ui.all-types') }}
                     </flux:select.option>
 
                     @foreach ($typeOptions as $type)
@@ -100,7 +100,7 @@
                     wire:model.live="statusFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('admin.client_list.filter.all_statuses') }}
+                        {{ __('ui.all-statuses') }}
                     </flux:select.option>
 
                     @foreach ($statusOptions as $status)

@@ -4,22 +4,25 @@
     <flux:label>{{ __('Key') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
-            <flux:icon.key />
+            <flux:icon.key-round />
         </flux:input.group.prefix>
         <flux:select
             wire:model.live="eventTypesKey"
             variant="listbox"
             searchable
         >
-            <x-ui.input.select-option value="all" icon="key">
+            <x-ui.input.select-option
+                value="all"
+                icon="key-round"
+            >
                 {{ __('All keys') }}
             </x-ui.input.select-option>
 
             @foreach ($eventTypeOptions['keys'] ?? [] as $key)
                 <x-ui.input.select-option
                     value="{{ $key }}"
-                    icon="key"
-                    text-class="font-mono text-xs"
+                    icon="key-round"
+                    text-class="text-sm"
                 >
                     {{ $key }}
                 </x-ui.input.select-option>

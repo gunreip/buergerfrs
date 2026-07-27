@@ -79,7 +79,7 @@
         <div class="min-w-0 flex-none basis-1/5">
             <flux:label for="person-list-client-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('Filter by client')"
+                    :title="__('admin.partials.person_list.filter.filter_by_client')"
                     :text="__('Select a client to filter the list of persons.')"
                 >
                     {{ __('layouts.sidebar.management.client') }}

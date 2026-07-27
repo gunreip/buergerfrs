@@ -4,7 +4,7 @@
 
 @if ($password !== '')
     <x-ui.tooltip.trigger
-        title="{{ __('Generated temporary password') }}"
+        title="{{ __('ui.badge.created_password.generated_temporary_password') }}"
         text="{{ __('Temporary password: :password | This password is shown once here and is also written to the local development JSONL password log.', [
             'password' => $password,
         ]) }}"
@@ -15,7 +15,7 @@
             size="sm"
             variant="subtle"
         >
-            {{ __('Temporary password') }}
+            {{ __('ui.badge.created_password.temporary_password') }}
         </flux:badge>
     </x-ui.tooltip.trigger>
 @endif

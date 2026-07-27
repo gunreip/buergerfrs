@@ -16,7 +16,7 @@
                 value="all"
                 icon="route"
             >
-                {{ $keysNamespace === 'all' || $keysGroup === 'all' ? __('Select namespace and group first') : __('All domains') }}
+                {{ $keysNamespace === 'all' || $keysGroup === 'all' ? __('Select namespace and group first') : __('ui.filters.all-domains') }}
             </x-ui.input.select-option>
 
             @foreach ($keyOptions['segment_domains'] ?? [] as $segmentDomain)

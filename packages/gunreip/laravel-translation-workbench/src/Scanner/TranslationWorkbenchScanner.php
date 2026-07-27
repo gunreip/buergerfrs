@@ -55,6 +55,7 @@ class TranslationWorkbenchScanner
         $files = collect($paths)
             ->map(static fn (string $path): string => base_path($path))
             ->filter(static fn (string $path): bool => File::isFile($path))
+            ->reject(fn (string $path): bool => $this->isExcludedPath($path))
             ->map(static fn (string $path): SplFileInfo => new SplFileInfo($path))
             ->values()
             ->all();
@@ -75,6 +76,7 @@ class TranslationWorkbenchScanner
 
         return collect($files)
             ->merge(iterator_to_array($finder, false))
+            ->reject(fn (SplFileInfo $file): bool => $this->isExcludedPath($file->getPathname()))
             ->all();
     }
 
@@ -162,10 +164,12 @@ class TranslationWorkbenchScanner
     private function extractDynamicTranslationCalls(string $contents, string $relativePath): array
     {
         $items = [];
+        $translatedPropDefaults = $this->translatedPropDefaults($contents);
         $patterns = [
             '/(?P<function>__|trans)\(\s*(?P<argument>(?![\'"])[^,\)\n]+)/su',
             '/(?P<function>@lang)\(\s*(?P<argument>(?![\'"])[^,\)\n]+)/su',
             '/(?P<function>Lang::get)\(\s*(?P<argument>(?![\'"])[^,\)\n]+)/su',
+            '/(?P<function>@js)\(\s*(?P<argument>\$[A-Za-z_][A-Za-z0-9_]*)\s*\)/su',
         ];
 
         foreach ($patterns as $pattern) {
@@ -185,12 +189,16 @@ class TranslationWorkbenchScanner
                 $raw = $this->rawCallAt($contents, (int) $match[0][1]);
                 $line = $this->lineNumberForOffset($contents, (int) $match[0][1]);
                 $optionLoopContext = $this->optionLoopContextForDynamicArgument($contents, $offset, $argument);
+                $isNumericDynamic = $this->findingNormalizer->isDynamicNumericArgument($argument, $raw);
+                $resolvedStaticProp = $this->resolvedStaticTranslatedProp($argument, $translatedPropDefaults);
                 $dynamicKeyName = $optionLoopContext['scope'] ?? $this->findingNormalizer->dynamicKeyNameFromArgument($argument);
                 $scope = $dynamicKeyName;
                 $suggestedKey = $this->suggestedKeyFactory->forDynamicExpressionAtSource($dynamicKeyName, $relativePath);
 
                 $items[] = $this->makeDiscoveredTranslation(
-                    kind: $optionLoopContext !== null ? 'dynamic_multi' : 'dynamic',
+                    kind: $resolvedStaticProp !== null
+                        ? 'dynamic_resolved_static_prop'
+                        : ($isNumericDynamic ? 'dynamic_numeric' : 'dynamic_multi'),
                     sourcePath: $relativePath,
                     sourceLine: $line,
                     functionName: $function,
@@ -207,6 +215,11 @@ class TranslationWorkbenchScanner
                         'dynamic_expression' => $argument,
                         'dynamic_key_name' => $dynamicKeyName,
                         'dynamic_scope' => $scope,
+                        'dynamic_value_type' => $resolvedStaticProp !== null
+                            ? 'static_translated_prop'
+                            : ($isNumericDynamic ? 'numeric' : 'text'),
+                        'translation_relevant' => $resolvedStaticProp === null && ! $isNumericDynamic,
+                        'resolved_by_static_prop_translation' => $resolvedStaticProp,
                         'dynamic_option_context' => $optionLoopContext,
                         'suggested_key_path' => $suggestedKey->pathSegments,
                         'suggested_key_name' => $suggestedKey->keyName,
@@ -216,6 +229,65 @@ class TranslationWorkbenchScanner
         }
 
         return $items;
+    }
+
+    /**
+     * @return array<string, array{literal: string, function: string, raw_expression: string}>
+     */
+    private function translatedPropDefaults(string $contents): array
+    {
+        if (! preg_match_all('/@props\s*\(\s*\[(?<body>.*?)\]\s*\)/su', $contents, $matches, PREG_SET_ORDER)) {
+            return [];
+        }
+
+        $defaults = [];
+
+        foreach ($matches as $match) {
+            $body = (string) $match['body'];
+
+            if (! preg_match_all(
+                '/(?P<quote>[\'"])(?P<prop>[A-Za-z_][A-Za-z0-9_]*)\k<quote>\s*=>\s*(?P<function>__|trans)\(\s*(?P<literal_quote>[\'"])(?P<literal>(?:\\\\.|(?!\k<literal_quote>).)*)\k<literal_quote>\s*\)/su',
+                $body,
+                $propMatches,
+                PREG_SET_ORDER,
+            )) {
+                continue;
+            }
+
+            foreach ($propMatches as $propMatch) {
+                $prop = (string) $propMatch['prop'];
+                $literal = stripcslashes((string) $propMatch['literal']);
+                $defaults[$prop] = [
+                    'literal' => $literal,
+                    'function' => (string) $propMatch['function'],
+                    'raw_expression' => (string) $propMatch[0],
+                ];
+            }
+        }
+
+        return $defaults;
+    }
+
+    /**
+     * @param  array<string, array{literal: string, function: string, raw_expression: string}>  $translatedPropDefaults
+     * @return array{prop: string, literal: string, function: string, raw_expression: string}|null
+     */
+    private function resolvedStaticTranslatedProp(string $argument, array $translatedPropDefaults): ?array
+    {
+        if (! preg_match('/^\$(?<prop>[A-Za-z_][A-Za-z0-9_]*)$/', trim($argument), $match)) {
+            return null;
+        }
+
+        $prop = (string) $match['prop'];
+
+        if (! isset($translatedPropDefaults[$prop])) {
+            return null;
+        }
+
+        return [
+            'prop' => $prop,
+            ...$translatedPropDefaults[$prop],
+        ];
     }
 
     /**
@@ -369,15 +441,21 @@ class TranslationWorkbenchScanner
     }
 
     /**
-     * @return array{options_variable: string, key_variable: string, label_variable: string, scope: string}|null
+     * Detect whether a dynamic translation argument is fed by the surrounding
+     * Blade loop. Keep suggested-key naming independent from this context; the
+     * context only classifies the finding as runtime option-like data.
+     *
+     * @return array{options_variable: string, key_variable: string, label_variable: string, argument_variable: string, argument_variable_role: string, value_transform: string|null, source_expression_type: string, scope?: string}|null
      */
     private function optionLoopContextForDynamicArgument(string $contents, int $offset, string $argument): ?array
     {
-        if (! preg_match('/^\$(?P<name>[A-Za-z_][A-Za-z0-9_]*)$/u', trim($argument), $argumentMatch)) {
+        $argumentVariableContext = $this->dynamicArgumentVariableContext($argument);
+
+        if ($argumentVariableContext === null) {
             return null;
         }
 
-        $argumentVariable = (string) $argumentMatch['name'];
+        $argumentVariable = $argumentVariableContext['variable'];
         $pattern = '/@foreach\s*\(\s*\$(?<options>[A-Za-z_][A-Za-z0-9_]*)\s+as\s+\$(?<key>[A-Za-z_][A-Za-z0-9_]*)\s*=>\s*\$(?<label>[A-Za-z_][A-Za-z0-9_]*)\s*\)(?<body>.*?)@endforeach/su';
 
         if (! preg_match_all($pattern, $contents, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
@@ -387,19 +465,63 @@ class TranslationWorkbenchScanner
         foreach ($matches as $match) {
             $loopStart = (int) $match[0][1];
             $loopEnd = $loopStart + strlen((string) $match[0][0]);
+            $keyVariable = (string) $match['key'][0];
             $labelVariable = (string) $match['label'][0];
 
-            if ($argumentVariable !== $labelVariable || $offset < $loopStart || $offset > $loopEnd) {
+            if (! in_array($argumentVariable, [$keyVariable, $labelVariable], true) || $offset < $loopStart || $offset > $loopEnd) {
                 continue;
             }
 
             $optionsVariable = (string) $match['options'][0];
-
-            return [
+            $argumentVariableRole = $argumentVariable === $keyVariable ? 'key' : 'label';
+            $context = [
                 'options_variable' => $optionsVariable,
-                'key_variable' => (string) $match['key'][0],
+                'key_variable' => $keyVariable,
                 'label_variable' => $labelVariable,
-            'scope' => $this->findingNormalizer->scopeFromOptionsVariable($optionsVariable),
+                'argument_variable' => $argumentVariable,
+                'argument_variable_role' => $argumentVariableRole,
+                'value_transform' => $argumentVariableContext['transform'],
+                'source_expression_type' => $argumentVariableContext['type'],
+            ];
+
+            if ($argumentVariableRole === 'label' && $argumentVariableContext['type'] === 'direct_variable') {
+                $context['scope'] = $this->findingNormalizer->scopeFromOptionsVariable($optionsVariable);
+            }
+
+            return $context;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array{variable: string, transform: string|null, type: string}|null
+     */
+    private function dynamicArgumentVariableContext(string $argument): ?array
+    {
+        $argument = trim($argument);
+
+        if (preg_match('/^\$(?P<name>[A-Za-z_][A-Za-z0-9_]*)$/u', $argument, $match)) {
+            return [
+                'variable' => (string) $match['name'],
+                'transform' => null,
+                'type' => 'direct_variable',
+            ];
+        }
+
+        if (preg_match('/\bStr::headline\(\s*\$(?P<name>[A-Za-z_][A-Za-z0-9_]*)\b/u', $argument, $match)) {
+            return [
+                'variable' => (string) $match['name'],
+                'transform' => 'headline',
+                'type' => 'str_headline',
+            ];
+        }
+
+        if (preg_match('/\bstr\(\s*\$(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*\)->headline\(/u', $argument, $match)) {
+            return [
+                'variable' => (string) $match['name'],
+                'transform' => 'headline',
+                'type' => 'str_helper_headline',
             ];
         }
 
@@ -466,6 +588,25 @@ class TranslationWorkbenchScanner
 
         foreach ((array) config('translation-workbench.ignored_filename_contains', []) as $needle) {
             if ($needle !== '' && str_contains($filename, strtolower((string) $needle))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function isExcludedPath(string $path): bool
+    {
+        $relativePath = $this->relativePath($path);
+
+        foreach ((array) config('translation-workbench.exclude_paths', []) as $excludedPath) {
+            $excludedPath = trim(str_replace('\\', '/', (string) $excludedPath), '/');
+
+            if ($excludedPath === '') {
+                continue;
+            }
+
+            if ($relativePath === $excludedPath || str_starts_with($relativePath, $excludedPath . '/')) {
                 return true;
             }
         }

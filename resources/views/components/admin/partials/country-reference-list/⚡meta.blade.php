@@ -56,7 +56,7 @@
             class="hyphens-auto"
             color="green"
             icon="check-circle"
-            heading="{{ __('admin.country_reference_list.filter.active') }}"
+            heading="{{ __('ui.active') }}"
         >
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                 {{ $summary['active'] }}

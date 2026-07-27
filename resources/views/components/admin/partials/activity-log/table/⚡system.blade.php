@@ -138,7 +138,7 @@
                     class="w-px whitespace-nowrap"
                     align="center"
                 >
-                    <span class="mr-4">{{ __('ui.labels.actions') }}</span>
+                    <span class="mr-4">{{ __('ui.table.headers.actions') }}</span>
                 </flux:table.column>
             </flux:table.columns>
 

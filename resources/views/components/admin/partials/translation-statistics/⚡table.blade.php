@@ -74,12 +74,12 @@
                         >
                             <x-ui.tooltip.trigger
                                 class="ml-3"
-                                :title="__('Active / State')"
+                                :title="__('ui.active-state')"
                                 :text="__(
                                     'Shows whether this language is active, current, or the source language.',
                                 )"
                             >
-                                {{ __('Active / State') }}
+                                {{ __('ui.active-state') }}
                             </x-ui.tooltip.trigger>
                         </flux:table.column>
 
@@ -249,7 +249,7 @@
                                                 variant="subtle"
                                                 color="lime"
                                             >
-                                                {{ __('admin.country_reference_list.filter.active') }}
+                                                {{ __('ui.active') }}
                                             </flux:badge>
                                         @endif
                                         {{-- Source Badge --}}

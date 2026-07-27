@@ -1,7 +1,17 @@
 <?php
 
+// packages/gunreip/laravel-translation-workbench/src/Console/ImportTranslationWorkbenchLangValues.php
+
+// php artisan translation-workbench:import-lang-values
+// php artisan translation-workbench:import-lang-values --dry-run
+// php artisan translation-workbench:import-lang-values --source-locale=en
+// php artisan translation-workbench:import-lang-values --all-locales
+// php artisan translation-workbench:import-lang-values --all-locales --truncate-lang-values
+// php artisan translation-workbench:import-lang-values --all-locales --truncate-lang-values --force-truncate
+
 namespace Gunreip\TranslationWorkbench\Console;
 
+use Gunreip\TranslationWorkbench\Console\Concerns\ConfirmsTranslationWorkbenchTruncate;
 use Gunreip\TranslationWorkbench\Console\Concerns\WritesTranslationWorkbenchReports;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchLangValueImporter;
 use Illuminate\Console\Attributes\Description;
@@ -12,10 +22,12 @@ use Illuminate\Console\Command;
     {--source-locale=en : Source locale directory below lang/ to import.}
     {--all-locales : Import all locale directories below lang/, excluding lang/vendor.}
     {--dry-run : Read and report only; do not write lang value rows.}
-    {--truncate-lang-values : Truncate imported lang value rows before importing.}')]
+    {--truncate-lang-values : Truncate imported lang value rows before importing.}
+    {--force-truncate : Skip the interactive safety confirmation for --truncate-lang-values.}')]
 #[Description('Import existing lang file values into the separate Translation Workbench lang values table.')]
 class ImportTranslationWorkbenchLangValues extends Command
 {
+    use ConfirmsTranslationWorkbenchTruncate;
     use WritesTranslationWorkbenchReports;
 
     public function handle(TranslationWorkbenchLangValueImporter $importer): int
@@ -23,6 +35,20 @@ class ImportTranslationWorkbenchLangValues extends Command
         $locales = $this->locales($importer);
         $dryRun = (bool) $this->option('dry-run');
         $truncate = (bool) $this->option('truncate-lang-values');
+
+        if (! $this->confirmTranslationWorkbenchTruncate(
+            $truncate,
+            $dryRun,
+            'The --truncate-lang-values option will delete imported Translation Workbench lang values before importing.',
+            'force-truncate',
+            [
+                'scope' => 'lang_values',
+                'locales' => $locales,
+            ],
+        )) {
+            return self::FAILURE;
+        }
+
         $values = collect($locales)
             ->flatMap(fn(string $locale): array => $importer->readLangValues($locale))
             ->values()

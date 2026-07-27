@@ -1,5 +1,10 @@
 <?php
 
+// packages/gunreip/laravel-translation-workbench/src/Console/DetectDuplicateCandidates.php
+
+// php artisan translation-workbench:detect-duplicates
+// php artisan translation-workbench:detect-duplicates --dry-run
+
 namespace Gunreip\TranslationWorkbench\Console;
 
 use Gunreip\TranslationWorkbench\Console\Concerns\WritesTranslationWorkbenchReports;

@@ -7,7 +7,7 @@
     wire:model="editModalOpen"
 >
     <div class="space-y-4">
-        <div class="mr-10 flex items-start gap-3">
+        <div class="mr-2 flex items-start gap-3">
             <div class="min-w-0 space-y-1">
                 <div class="flex min-w-0 flex-wrap items-center gap-2">
                     <flux:heading
@@ -55,7 +55,7 @@
                         icon="save"
                         wire:click="saveTranslationValue"
                     >
-                        {{ __('Save') }}
+                        {{ __('ui.save') }}
                     </flux:button>
                 @endif
             </div>
@@ -150,8 +150,24 @@
                     :title="__('Translation key')"
                     :description="$editFinding->translation_key ?: __('No translation key set.')"
                 >
-                    <div class="flex items-center gap-2">
-                        <x-ui.tooltip.trigger
+                    <div class="flex flex-wrap items-center justify-end gap-2">
+                        @if ($editWarnings !== [])
+                            @foreach ($editWarnings as $warning)
+                                <x-ui.tooltip.simple
+                                    :title="$warning['label']"
+                                    :text="$warning['text']"
+                                >
+                                    <flux:badge
+                                        size="sm"
+                                        color="{{ $warning['color'] }}"
+                                    >
+                                        {{ $warning['label'] }}
+                                    </flux:badge>
+                                </x-ui.tooltip.simple>
+                            @endforeach
+                        @endif
+
+                        <x-ui.tooltip.simple
                             :title="__('Source language')"
                             :text="strtoupper($sourceLocale)"
                         >
@@ -165,9 +181,9 @@
                                 />
                                 <span class="font-mono text-xs uppercase">{{ $sourceLocale }}</span>
                             </span>
-                        </x-ui.tooltip.trigger>
+                        </x-ui.tooltip.simple>
 
-                        <x-ui.tooltip.trigger
+                        <x-ui.tooltip.simple
                             :title="__('Target language')"
                             :text="strtoupper($activeLocale)"
                         >
@@ -181,7 +197,7 @@
                                 />
                                 <span class="font-mono text-xs uppercase">{{ $activeLocale }}</span>
                             </span>
-                        </x-ui.tooltip.trigger>
+                        </x-ui.tooltip.simple>
 
                         @if ($subLocales->isNotEmpty())
                             <span
@@ -201,24 +217,6 @@
                         @endif
                     </div>
                 </x-ui.headers.card>
-
-                @if ($editWarnings !== [])
-                    <div class="mt-3 flex flex-wrap gap-2">
-                        @foreach ($editWarnings as $warning)
-                            <x-ui.tooltip.trigger
-                                :title="$warning['label']"
-                                :text="$warning['text']"
-                            >
-                                <flux:badge
-                                    size="sm"
-                                    color="{{ $warning['color'] }}"
-                                >
-                                    {{ $warning['label'] }}
-                                </flux:badge>
-                            </x-ui.tooltip.trigger>
-                        @endforeach
-                    </div>
-                @endif
             </flux:card>
 
             <flux:card>
@@ -328,7 +326,7 @@
                                 $isSelectedSubLocale = $selectedTargetSubLocales->contains($subLocale);
                             @endphp
 
-                            <x-ui.tooltip.trigger
+                            <x-ui.tooltip.simple
                                 :title="__('Target sub-language')"
                                 :text="strtoupper((string) $subLocale)"
                             >
@@ -352,7 +350,7 @@
                                     />
                                     <span class="ml-2 font-mono text-sm uppercase">{{ $subLocale }}</span>
                                 </flux:button>
-                            </x-ui.tooltip.trigger>
+                            </x-ui.tooltip.simple>
                         @endforeach
                     </div>
 

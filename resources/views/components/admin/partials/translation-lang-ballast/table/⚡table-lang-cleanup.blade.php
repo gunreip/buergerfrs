@@ -67,7 +67,7 @@
             class="w-24 whitespace-nowrap"
             align="center"
         >
-            {{ __('ui.labels.actions') }}
+            {{ __('ui.table.headers.actions') }}
         </flux:table.column>
     </flux:table.columns>
 
@@ -99,10 +99,10 @@
                     default => 'amber',
                 };
                 $decisionLabel = match ($decisionStatus) {
-                    'approved' => __('Approved'),
+                    'approved' => __('ui.approved'),
                     'reviewed' => __('admin.translation_list.modal_edit.reviewed'),
                     'ignored' => __('Ignored'),
-                    default => __('admin.translation_list.filter.open'),
+                    default => __('ui.open'),
                 };
             @endphp
 

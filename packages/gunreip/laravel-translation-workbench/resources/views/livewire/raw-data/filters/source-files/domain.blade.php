@@ -19,7 +19,7 @@
                 value="all"
                 icon="route"
             >
-                {{ count($sourceFileOptions['domains'] ?? []) === 0 ? __('No domains') : __('All domains') }}
+                {{ count($sourceFileOptions['domains'] ?? []) === 0 ? __('No domains') : __('ui.filters.all-domains') }}
             </x-ui.input.select-option>
             @foreach ($sourceFileOptions['domains'] ?? [] as $domain)
                 <x-ui.input.select-option

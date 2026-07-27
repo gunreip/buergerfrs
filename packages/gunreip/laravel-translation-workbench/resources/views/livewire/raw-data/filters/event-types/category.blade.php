@@ -11,7 +11,10 @@
             variant="listbox"
             searchable
         >
-            <x-ui.input.select-option value="all" icon="folder">
+            <x-ui.input.select-option
+                value="all"
+                icon="folder"
+            >
                 {{ __('All categories') }}
             </x-ui.input.select-option>
 
@@ -19,7 +22,7 @@
                 <x-ui.input.select-option
                     value="{{ $category }}"
                     icon="folder"
-                    text-class="font-mono text-xs"
+                    text-class="text-sm"
                 >
                     {{ $category }}
                 </x-ui.input.select-option>

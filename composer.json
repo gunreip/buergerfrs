@@ -12,6 +12,7 @@
         "php": "^8.5",
         "blade-ui-kit/blade-icons": "^1.10",
         "commerceguys/addressing": "^2.2",
+        "deeplcom/deepl-php": "^1.19",
         "laravel/fortify": "^1.34",
         "laravel/framework": "^13.7",
         "laravel/horizon": "^5.46",

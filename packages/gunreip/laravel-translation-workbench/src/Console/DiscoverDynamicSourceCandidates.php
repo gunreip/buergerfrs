@@ -1,5 +1,10 @@
 <?php
 
+// packages/gunreip/laravel-translation-workbench/src/Console/DiscoverDynamicSourceCandidates.php
+
+// php artisan translation-workbench:discover-dynamic-source-candidates
+// php artisan translation-workbench:discover-dynamic-source-candidates --dry-run
+
 namespace Gunreip\TranslationWorkbench\Console;
 
 use Gunreip\TranslationWorkbench\Console\Concerns\WritesTranslationWorkbenchReports;

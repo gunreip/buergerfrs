@@ -21,11 +21,23 @@
             </x-ui.input.select-option>
 
             @foreach ($findingOptions['kinds'] ?? [] as $kind)
+                @php
+                    $kindLabel = match ($kind) {
+                        'dynamic_multi' => __('Dynamic values'),
+                        'dynamic_numeric' => __('Numeric dynamic'),
+                        default => $kind,
+                    };
+                    $kindIcon = match ($kind) {
+                        'dynamic_multi' => 'list-tree',
+                        'dynamic_numeric' => 'calculator',
+                        default => 'tag',
+                    };
+                @endphp
                 <x-ui.input.select-option
                     value="{{ $kind }}"
-                    icon="tag"
+                    icon="{{ $kindIcon }}"
                 >
-                    {{ $kind }}
+                    {{ $kindLabel }}
                 </x-ui.input.select-option>
             @endforeach
         </flux:select>

@@ -15,10 +15,9 @@
         >
             <x-ui.input.select-option
                 value="all"
-                icon="asterisk"
-                icon-class="text-sky-400"
+                icon="badge-check"
             >
-                {{ __('All statuses') }}
+                {{ __('ui.all-statuses') }}
             </x-ui.input.select-option>
 
             @foreach ($langValueOptions['statuses'] ?? [] as $status)

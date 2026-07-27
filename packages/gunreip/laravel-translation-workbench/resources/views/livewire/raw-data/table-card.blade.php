@@ -35,14 +35,59 @@
         @include('translation-workbench::livewire.raw-data.filters-key-findings')
     @endif
 
+    @if ($table === 'translation_workbench_key_values')
+        @include('translation-workbench::livewire.raw-data.filters-key-values')
+    @endif
+
+    @if ($table === 'translation_workbench_dynamic_key_values')
+        @include('translation-workbench::livewire.raw-data.filters-dynamic-key-values')
+    @endif
+
+    @if ($table === 'translation_workbench_dynamic_sources')
+        @include('translation-workbench::livewire.raw-data.filters-dynamic-sources')
+    @endif
+
+    @if ($table === 'translation_workbench_dynamic_source_candidates')
+        @include('translation-workbench::livewire.raw-data.filters-dynamic-source-candidates')
+    @endif
+
+    @if ($table === 'translation_workbench_dynamic_source_values')
+        @include('translation-workbench::livewire.raw-data.filters-dynamic-source-values')
+    @endif
+
     @if ($table === 'translation_workbench_lang_values')
         @include('translation-workbench::livewire.raw-data.filters-lang-values')
+    @endif
+
+    @if ($table === 'translation_workbench_reviews')
+        @include('translation-workbench::livewire.raw-data.filters-reviews')
     @endif
 
     @if ($table === 'translation_workbench_timeline_events')
         @include('translation-workbench::livewire.raw-data.filters-timeline-events')
         @include('translation-workbench::livewire.raw-data.results-timeline-events')
     @endif
+
+    @php
+        $rawDataSearch = trim(
+            (string) match ($table) {
+                'translation_workbench_source_files' => $sourceFilesSearch ?? '',
+                'translation_workbench_event_types' => $eventTypesSearch ?? '',
+                'translation_workbench_findings' => $findingsSearch ?? '',
+                'translation_workbench_keys' => $keysSearch ?? '',
+                'translation_workbench_key_findings' => $keyFindingsSearch ?? '',
+                'translation_workbench_key_values' => $keyValuesSearch ?? '',
+                'translation_workbench_dynamic_key_values' => $dynamicKeyValuesSearch ?? '',
+                'translation_workbench_dynamic_sources' => $dynamicSourcesSearch ?? '',
+                'translation_workbench_dynamic_source_candidates' => $dynamicSourceCandidatesSearch ?? '',
+                'translation_workbench_dynamic_source_values' => $dynamicSourceValuesSearch ?? '',
+                'translation_workbench_lang_values' => $langValuesSearch ?? '',
+                'translation_workbench_reviews' => $reviewsSearch ?? '',
+                'translation_workbench_timeline_events' => $timelineEventsSearch ?? '',
+                default => '',
+            },
+        );
+    @endphp
 
     <div class="mt-4">
         <flux:pagination :paginator="$rows" />
@@ -72,13 +117,13 @@
                                 ? __('name-based fallback')
                                 : '—');
                     $tooltipRows = [
-                        __('Column') => $column,
+                        __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.table_card.column') => $column,
                         __('Type') => $metadata['type'] ?? 'unknown',
-                        __('Nullable') => $metadata['nullable'] ?? false ? __('yes') : __('no'),
+                        __('Nullable') => $metadata['nullable'] ?? false ? __('ui.filters.yes') : __('no'),
                         __('Default') =>
                             ($metadata['default'] ?? null) !== null ? (string) $metadata['default'] : 'NULL',
-                        __('Auto increment') => $metadata['auto_increment'] ?? false ? __('yes') : __('no'),
-                        __('Foreign key') => $isForeignKey ? __('yes') : __('no'),
+                        __('Auto increment') => $metadata['auto_increment'] ?? false ? __('ui.filters.yes') : __('no'),
+                        __('Foreign key') => $isForeignKey ? __('ui.filters.yes') : __('no'),
                         __('FK detected by') =>
                             $foreignKey['is_schema_foreign_key'] ?? false
                                 ? __('Database schema constraint')
@@ -87,7 +132,7 @@
                                     : '—'),
                         __('FK target') => $foreignTarget,
                         __('FK constraint') => $foreignKey['name'] ?? '—',
-                        __('Sortable') => $isSortable ? __('yes') : __('no'),
+                        __('Sortable') => $isSortable ? __('ui.filters.yes') : __('no'),
                     ];
                 @endphp
 
@@ -278,7 +323,12 @@
                                         title="{{ $prettyDisplayValue }}"
                                         x-on:click="expanded = ! expanded"
                                     >
-                                        <span class="truncate">{{ $jsonPreview }}</span>
+                                        <span class="truncate">
+                                            <x-translation-workbench::text.highlight
+                                                :value="$jsonPreview"
+                                                :search="$rawDataSearch"
+                                            />
+                                        </span>
                                         <flux:icon.chevron-down
                                             class="size-3.5 shrink-0 text-zinc-400 transition-transform"
                                             x-bind:class="{ 'rotate-180': expanded }"
@@ -289,7 +339,10 @@
                                         class="mt-1 max-h-56 overflow-auto rounded border border-zinc-200 bg-white p-2 text-xs dark:border-zinc-700 dark:bg-zinc-950"
                                         x-show="expanded"
                                         x-cloak
-                                    ><code>{{ $prettyDisplayValue }}</code></pre>
+                                    ><code><x-translation-workbench::text.highlight
+                                                :value="$prettyDisplayValue"
+                                                :search="$rawDataSearch"
+                                            /></code></pre>
                                 </div>
                             @elseif ($isSourceFilePath)
                                 <div class="{{ $presentation['source_path_wrapper_class'] ?? 'flex max-w-lg items-start gap-2' }}">
@@ -310,7 +363,10 @@
                                         class="{{ $presentation['content_class'] ?? 'wrap-anywhere text-wrap font-mono text-xs' }} text-zinc-700 dark:text-zinc-300"
                                         title="{{ $prettyDisplayValue }}"
                                     >
-                                        {{ $prettyDisplayValue }}
+                                        <x-translation-workbench::text.highlight
+                                            :value="$prettyDisplayValue"
+                                            :search="$rawDataSearch"
+                                        />
                                     </span>
                                 </div>
                             @elseif ($isFindingSourceFileId)
@@ -345,7 +401,10 @@
                                                         {{ __('Only the FK ID is stored in this column. The path is resolved from translation_workbench_source_files for readability.') }}
                                                     </div>
                                                     <div class="break-all font-mono text-xs text-zinc-100">
-                                                        {{ $findingSourcePath }}
+                                                        <x-translation-workbench::text.highlight
+                                                            :value="$findingSourcePath"
+                                                            :search="$rawDataSearch"
+                                                        />
                                                     </div>
                                                 </flux:tooltip.content>
                                             </flux:tooltip>
@@ -355,7 +414,10 @@
                                             class="{{ $presentation['content_class'] ?? 'wrap-anywhere text-wrap font-mono text-xs' }} text-zinc-700 dark:text-zinc-300"
                                             title="{{ $findingSourcePath }}"
                                         >
-                                            {{ $findingSourcePathPreview }}
+                                            <x-translation-workbench::text.highlight
+                                                :value="$findingSourcePathPreview"
+                                                :search="$rawDataSearch"
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -378,13 +440,33 @@
                                                 </div>
                                                 <div class="grid grid-cols-3 gap-x-3 gap-y-1 text-xs">
                                                     <div class="font-semibold text-zinc-400">{{ __('Translation key') }}</div>
-                                                    <div class="col-span-2 break-all font-mono text-zinc-100">{{ $keyFindingKeyContext['translation_key'] ?: 'NULL' }}</div>
+                                                    <div class="col-span-2 break-all font-mono text-zinc-100">
+                                                        <x-translation-workbench::text.highlight
+                                                            :value="$keyFindingKeyContext['translation_key'] ?: 'NULL'"
+                                                            :search="$rawDataSearch"
+                                                        />
+                                                    </div>
                                                     <div class="font-semibold text-zinc-400">{{ __('Suggested key') }}</div>
-                                                    <div class="col-span-2 break-all font-mono text-zinc-100">{{ $keyFindingKeyContext['suggested_key'] ?: 'NULL' }}</div>
+                                                    <div class="col-span-2 break-all font-mono text-zinc-100">
+                                                        <x-translation-workbench::text.highlight
+                                                            :value="$keyFindingKeyContext['suggested_key'] ?: 'NULL'"
+                                                            :search="$rawDataSearch"
+                                                        />
+                                                    </div>
                                                     <div class="font-semibold text-zinc-400">{{ __('Namespace') }}</div>
-                                                    <div class="col-span-2 break-all font-mono text-zinc-100">{{ $keyFindingKeyContext['namespace'] ?: 'NULL' }}</div>
+                                                    <div class="col-span-2 break-all font-mono text-zinc-100">
+                                                        <x-translation-workbench::text.highlight
+                                                            :value="$keyFindingKeyContext['namespace'] ?: 'NULL'"
+                                                            :search="$rawDataSearch"
+                                                        />
+                                                    </div>
                                                     <div class="font-semibold text-zinc-400">{{ __('Group') }}</div>
-                                                    <div class="col-span-2 break-all font-mono text-zinc-100">{{ $keyFindingKeyContext['group'] ?: 'NULL' }}</div>
+                                                    <div class="col-span-2 break-all font-mono text-zinc-100">
+                                                        <x-translation-workbench::text.highlight
+                                                            :value="$keyFindingKeyContext['group'] ?: 'NULL'"
+                                                            :search="$rawDataSearch"
+                                                        />
+                                                    </div>
                                                 </div>
                                             </flux:tooltip.content>
                                         </flux:tooltip>
@@ -394,7 +476,10 @@
                                         class="{{ $presentation['content_class'] ?? 'wrap-anywhere text-wrap font-mono text-xs' }} text-zinc-700 dark:text-zinc-300"
                                         title="{{ $keyFindingKeyPreview }}"
                                     >
-                                        {{ $keyFindingKeyPreview }}
+                                        <x-translation-workbench::text.highlight
+                                            :value="$keyFindingKeyPreview"
+                                            :search="$rawDataSearch"
+                                        />
                                     </div>
                                 </div>
                             @elseif ($isKeyFindingFindingId)
@@ -416,13 +501,33 @@
                                                 </div>
                                                 <div class="grid grid-cols-3 gap-x-3 gap-y-1 text-xs">
                                                     <div class="font-semibold text-zinc-400">{{ __('Literal text') }}</div>
-                                                    <div class="col-span-2 break-all font-mono text-zinc-100">{{ $keyFindingFindingContext['literal_text'] ?: 'NULL' }}</div>
+                                                    <div class="col-span-2 break-all font-mono text-zinc-100">
+                                                        <x-translation-workbench::text.highlight
+                                                            :value="$keyFindingFindingContext['literal_text'] ?: 'NULL'"
+                                                            :search="$rawDataSearch"
+                                                        />
+                                                    </div>
                                                     <div class="font-semibold text-zinc-400">{{ __('Suggested key') }}</div>
-                                                    <div class="col-span-2 break-all font-mono text-zinc-100">{{ $keyFindingFindingContext['suggested_key'] ?: 'NULL' }}</div>
+                                                    <div class="col-span-2 break-all font-mono text-zinc-100">
+                                                        <x-translation-workbench::text.highlight
+                                                            :value="$keyFindingFindingContext['suggested_key'] ?: 'NULL'"
+                                                            :search="$rawDataSearch"
+                                                        />
+                                                    </div>
                                                     <div class="font-semibold text-zinc-400">{{ __('Raw expression') }}</div>
-                                                    <div class="col-span-2 break-all font-mono text-zinc-100">{{ $keyFindingFindingContext['raw_expression'] ?: 'NULL' }}</div>
+                                                    <div class="col-span-2 break-all font-mono text-zinc-100">
+                                                        <x-translation-workbench::text.highlight
+                                                            :value="$keyFindingFindingContext['raw_expression'] ?: 'NULL'"
+                                                            :search="$rawDataSearch"
+                                                        />
+                                                    </div>
                                                     <div class="font-semibold text-zinc-400">{{ __('Source line') }}</div>
-                                                    <div class="col-span-2 break-all font-mono text-zinc-100">{{ $keyFindingFindingContext['source_line'] ?? 'NULL' }}</div>
+                                                    <div class="col-span-2 break-all font-mono text-zinc-100">
+                                                        <x-translation-workbench::text.highlight
+                                                            :value="$keyFindingFindingContext['source_line'] ?? 'NULL'"
+                                                            :search="$rawDataSearch"
+                                                        />
+                                                    </div>
                                                 </div>
                                             </flux:tooltip.content>
                                         </flux:tooltip>
@@ -432,7 +537,10 @@
                                         class="{{ $presentation['content_class'] ?? 'wrap-anywhere text-wrap font-mono text-xs' }} text-zinc-700 dark:text-zinc-300"
                                         title="{{ $keyFindingFindingPreview }}"
                                     >
-                                        {{ $keyFindingFindingPreview }}
+                                        <x-translation-workbench::text.highlight
+                                            :value="$keyFindingFindingPreview"
+                                            :search="$rawDataSearch"
+                                        />
                                     </div>
                                 </div>
                             @else
@@ -443,7 +551,10 @@
                                         'text-sky-600 dark:text-sky-400' => $value === null,
                                     ])
                                 >
-                                    {{ $prettyDisplayValue ?? 'NULL' }}
+                                    <x-translation-workbench::text.highlight
+                                        :value="$prettyDisplayValue ?? 'NULL'"
+                                        :search="$rawDataSearch"
+                                    />
                                 </div>
                             @endif
                         </flux:table.cell>

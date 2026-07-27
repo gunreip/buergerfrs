@@ -3,6 +3,6 @@
     size="sm"
     variant="subtle"
     color="red"
-    label="{{ __('No Value') }}"
+    label="{{ __('ui.badge.no_value.no_value') }}"
     icon="circle-slash-2"
 />

@@ -8,6 +8,6 @@
         size="sm"
         variant="subtle"
     >
-        {{ __('Test data') }}
+        {{ __('ui.badge.test-data') }}
     </flux:badge>
 @endif

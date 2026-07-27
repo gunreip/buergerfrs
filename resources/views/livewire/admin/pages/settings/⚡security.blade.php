@@ -128,20 +128,16 @@ new #[Title('Security settings')] class extends Component {
             <div class="flex items-center gap-4">
                 <x-ui.button.save
                     data-test="update-password-button"
-                    label="{{ __('ui.actions.save') }}"
-                    {{-- icon="save" --}}
-                    {{-- color="green" --}}
+                    label="{{ __('ui.save') }}"
                 />
-                {{-- <flux:button variant="primary" type="submit" data-test="update-password-button">
-                    {{ __('ui.actions.save') }}
-                </flux:button> --}}
             </div>
         </form>
 
         @if ($canManageTwoFactor)
             <section class="mt-12">
                 <flux:heading>{{ __('pages.settings.security.two_factor_authentication') }}</flux:heading>
-                <flux:subheading>{{ __('pages.settings.security.manage_your_two_factor_authentication_settings') }}</flux:subheading>
+                <flux:subheading>{{ __('pages.settings.security.manage_your_two_factor_authentication_settings') }}
+                </flux:subheading>
 
                 <div
                     class="mx-auto flex w-full flex-col space-y-6 text-sm"
@@ -159,12 +155,6 @@ new #[Title('Security settings')] class extends Component {
                                     icon="shield-off"
                                     wire:click="disable"
                                 />
-                                {{-- <flux:button
-                                    variant="danger"
-                                    wire:click="disable"
-                                >
-                                    {{ __('pages.settings.security.disable_2fa') }}
-                                </flux:button> --}}
                             </div>
 
                             <livewire:pages::settings.two-factor.recovery-codes :$requiresConfirmation />
@@ -181,12 +171,6 @@ new #[Title('Security settings')] class extends Component {
                                     icon="shield-check"
                                     wire:click="$dispatch('start-two-factor-setup')"
                                 />
-                                {{-- <flux:button
-                                    variant="primary"
-                                    wire:click="$dispatch('start-two-factor-setup')"
-                                >
-                                    {{ __('pages.settings.security.enable_2fa') }}
-                                </flux:button> --}}
                             </flux:modal.trigger>
 
                             <livewire:pages::settings.two-factor-setup-modal :requires-confirmation="$requiresConfirmation" />

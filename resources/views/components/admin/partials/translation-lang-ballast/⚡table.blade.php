@@ -32,7 +32,7 @@
 
     $decisionStatusMeta = [
         'open' => [
-            'label' => __('admin.translation_list.filter.open'),
+            'label' => __('ui.open'),
             'color' => 'amber',
         ],
         'reviewed' => [
@@ -40,7 +40,7 @@
             'color' => 'sky',
         ],
         'approved' => [
-            'label' => __('Approved'),
+            'label' => __('ui.approved'),
             'color' => 'emerald',
         ],
         'ignored' => [

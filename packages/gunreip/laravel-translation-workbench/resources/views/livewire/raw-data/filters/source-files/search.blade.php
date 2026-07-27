@@ -10,7 +10,7 @@
             clearable
             copyable
             wire:model.live.debounce.300ms="sourceFilesSearch"
-            placeholder="{{ __('Search ID, path, source type, extension or status') }}"
+            placeholder="{{ __('Search path, source type, extension or status') }}"
         />
     </flux:input.group>
 </flux:field>

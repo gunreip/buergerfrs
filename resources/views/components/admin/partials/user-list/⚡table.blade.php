@@ -6,7 +6,7 @@
     {{-- Card Header --}}
     <x-ui.headers.card
         :title="__('admin.user_list.table.user_list')"
-        :description="__('Overview of all users in the system, their email addresses and assigned roles.')"
+        :description="__('admin.partials.user_list.table.overview_of_all_users_in_the_system_their_email_addresses_and_assigned_roles')"
     />
 
     <div class="mx-auto max-w-full">
@@ -76,10 +76,10 @@
                     {{-- Column Actions --}}
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('ui.labels.actions')"
+                            :title="__('ui.table.headers.actions')"
                             :text="__('Available actions for the user, such as editing roles.')"
                         >
-                            {{ __('ui.labels.actions') }}
+                            {{ __('ui.table.headers.actions') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>

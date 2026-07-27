@@ -21,11 +21,26 @@
             </x-ui.input.select-option>
 
             @foreach ($findingOptions['entry_types'] ?? [] as $entryType)
+                @php
+                    $entryTypeLabel = match ($entryType) {
+                        'dynamic' => __('Dynamic values'),
+                        'dynamic_numeric' => __('Numeric dynamic'),
+                        'key' => __('Translation key'),
+                        'literal' => __('Literal'),
+                        default => $entryType,
+                    };
+                    $entryTypeIcon = match ($entryType) {
+                        'dynamic' => 'list-tree',
+                        'dynamic_numeric' => 'calculator',
+                        'key' => 'key-round',
+                        default => 'tag',
+                    };
+                @endphp
                 <x-ui.input.select-option
                     value="{{ $entryType }}"
-                    icon="tag"
+                    icon="{{ $entryTypeIcon }}"
                 >
-                    {{ $entryType }}
+                    {{ $entryTypeLabel }}
                 </x-ui.input.select-option>
             @endforeach
         </flux:select>

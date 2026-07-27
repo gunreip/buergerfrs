@@ -15,14 +15,14 @@
                 icon="asterisk"
                 icon-class="text-sky-400"
             >
-                {{ __('All') }}
+                {{ __('ui.states.all') }}
             </x-ui.input.select-option>
             <x-ui.input.select-option
                 value="yes"
                 icon="check"
                 icon-class="text-green-400"
             >
-                {{ __('Yes') }}
+                {{ __('ui.filters.yes') }}
             </x-ui.input.select-option>
             <x-ui.input.select-option
                 value="no"

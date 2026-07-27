@@ -72,7 +72,7 @@
                         color="red"
                         variant="subtle"
                     >
-                        {{ __('admin.translation_list.filter.open') }}: {{ $statistics['by_status']['open'] ?? 0 }}
+                        {{ __('ui.open') }}: {{ $statistics['by_status']['open'] ?? 0 }}
                     </flux:badge>
 
                     <flux:badge

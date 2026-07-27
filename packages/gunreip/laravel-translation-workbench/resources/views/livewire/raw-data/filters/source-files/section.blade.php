@@ -19,7 +19,7 @@
                 value="all"
                 icon="folder"
             >
-                {{ count($sourceFileOptions['sections'] ?? []) === 0 ? __('No sections') : __('All sections') }}
+                {{ count($sourceFileOptions['sections'] ?? []) === 0 ? __('No sections') : __('ui.filters.all-sections') }}
             </x-ui.input.select-option>
             @foreach ($sourceFileOptions['sections'] ?? [] as $section)
                 <x-ui.input.select-option

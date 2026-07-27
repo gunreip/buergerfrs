@@ -18,7 +18,7 @@
             <x-ui.button.show-hide
                 size="xs"
                 state="showMeta"
-                show-label="{{ __('Show overview') }}"
+                show-label="{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.show_overview') }}"
                 hide-label="{{ __('Hide overview') }}"
             />
         </div>

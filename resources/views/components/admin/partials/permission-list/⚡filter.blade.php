@@ -62,7 +62,7 @@
                     wire:model.live="guardFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('admin.permissions.filters.guards.all') }}
+                        {{ __('ui.states.all') }}
                     </flux:select.option>
 
                     @foreach ($guardOptions as $guard)
@@ -98,7 +98,7 @@
                     wire:model.live="categoryFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('admin.permissions.filters.categories.all') }}
+                        {{ __('ui.states.all') }}
                     </flux:select.option>
 
                     @foreach ($categoryOptions as $category)
@@ -134,7 +134,7 @@
                     wire:model.live="roleFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('admin.permissions.filters.roles.all') }}
+                        {{ __('ui.states.all') }}
                     </flux:select.option>
 
                     @foreach ($roleOptions as $role)

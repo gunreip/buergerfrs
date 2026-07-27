@@ -38,6 +38,10 @@
             $isDynamicMulti =
                 ($isDynamicConfirmed && (bool) ($translationKeyFinding->is_dynamic_multi ?? false)) ||
                 ($isDynamicCandidate && (bool) ($translationKeyFinding->reviewed_is_dynamic_multi ?? false));
+            $isDynamicContext = $isDynamicConfirmed || $isDynamicCandidate || $isDynamicMulti;
+            $translationKeyCandidate = trim((string) ($translationKeyValue ?? ''));
+            $translationKeyIsValid =
+                preg_match('/^[a-z0-9][a-z0-9_-]*(\.[a-z0-9][a-z0-9_-]*)+$/', $translationKeyCandidate) === 1;
         @endphp
 
         <form
@@ -66,7 +70,7 @@
                                 size="sm"
                                 color="{{ $isDynamicConfirmed ? 'green' : ($isDynamicCandidate ? 'violet' : 'zinc') }}"
                             >
-                                {{ $isDynamicConfirmed ? __('Is dynamic') : ($isDynamicCandidate ? __('Dynamic candidate') : __('No dynamic candidate')) }}
+                                {{ $isDynamicConfirmed ? __('Dynamic values') : ($isDynamicCandidate ? __('Dynamic values candidate') : __('No dynamic values')) }}
                             </flux:badge>
 
                             @if ($isDynamicConfirmed || $isDynamicCandidate)
@@ -74,7 +78,7 @@
                                     size="sm"
                                     color="{{ $isDynamicMulti ? 'green' : 'zinc' }}"
                                 >
-                                    {{ $isDynamicMulti ? __('Dynamic multi') : __('No dynamic multi') }}
+                                    {{ $isDynamicMulti ? __('Dynamic values') : __('Dynamic values pending') }}
                                 </flux:badge>
                             @endif
                         </div>
@@ -104,11 +108,10 @@
                         <flux:callout.heading>
                             <span class="inline-flex items-center gap-1.5">
                                 <span>{{ __('Current key') }}</span>
-                                <flux:tooltip
-                                    content="{{ __('The currently reviewed translation key stored on the workbench key record.') }}"
-                                >
-                                    <flux:icon.info class="size-3.5 text-zinc-400" />
-                                </flux:tooltip>
+                                <x-ui.tooltip.simple
+                                    :header="__('Current key')"
+                                    :text="__('The currently reviewed translation key stored on the workbench key record.')"
+                                />
                             </span>
                         </flux:callout.heading>
                         <flux:callout.text class="wrap-anywhere text-wrap font-mono text-xs">
@@ -117,24 +120,22 @@
                         <flux:callout.heading>
                             <span class="inline-flex items-center gap-1.5">
                                 <span>{{ __('Existing key') }}</span>
-                                <flux:tooltip
-                                    content="{{ __('A translation key that already exists in the source language files and may be reusable.') }}"
-                                >
-                                    <flux:icon.info class="size-3.5 text-zinc-400" />
-                                </flux:tooltip>
+                                <x-ui.tooltip.simple
+                                    :header="__('Existing key')"
+                                    :text="__('Scanner context for a translation key that already existed in code or source language files. Empty means no existing key was detected, not that a required value is missing.')"
+                                />
                             </span>
                         </flux:callout.heading>
                         <flux:callout.text class="wrap-anywhere text-wrap font-mono text-xs">
-                            <span class="text-zinc-400">{{ $existingKey ?: __('Missing') }}</span>
+                            <span class="text-zinc-400">{{ $existingKey ?: __('No existing key') }}</span>
                         </flux:callout.text>
                         <flux:callout.heading>
                             <span class="inline-flex items-center gap-1.5">
                                 <span>{{ __('Found translation key') }}</span>
-                                <flux:tooltip
-                                    content="{{ __('A translation key detected directly at the scanned code location, for example inside a translation call.') }}"
-                                >
-                                    <flux:icon.info class="size-3.5 text-zinc-400" />
-                                </flux:tooltip>
+                                <x-ui.tooltip.simple
+                                    :header="__('Found translation key')"
+                                    :text="__('A translation key detected directly at the scanned code location, for example inside a translation call.')"
+                                />
                             </span>
                         </flux:callout.heading>
                         <flux:callout.text class="wrap-anywhere text-wrap font-mono text-xs">
@@ -144,11 +145,10 @@
                             <span class="flex w-full items-center justify-between gap-2">
                                 <span class="inline-flex items-center gap-1.5">
                                     <span>{{ __('Suggested key') }}</span>
-                                    <flux:tooltip
-                                        content="{{ __('The deterministic key suggestion generated from the Workbench key rules and scan context.') }}"
-                                    >
-                                        <flux:icon.info class="size-3.5 text-zinc-400" />
-                                    </flux:tooltip>
+                                    <x-ui.tooltip.simple
+                                        :header="__('Suggested key')"
+                                        :text="__('The deterministic key suggestion generated from the Workbench key rules and scan context.')"
+                                    />
                                 </span>
 
                                 <span class="inline-flex items-center gap-1">
@@ -166,7 +166,11 @@
                                         />
                                     </flux:tooltip>
 
-                                    <flux:tooltip content="{{ __('Transform suggested key to UI translation key') }}">
+                                    <flux:tooltip
+                                        content="{{ $isDynamicContext
+                                            ? __('Dynamic translation keys cannot be transformed into UI keys.')
+                                            : __('Transform suggested key to UI translation key') }}"
+                                    >
                                         <flux:button
                                             class="h-5 w-5 shrink-0"
                                             type="button"
@@ -174,7 +178,7 @@
                                             variant="ghost"
                                             icon="wand-sparkles"
                                             icon:class="text-cyan-500 dark:text-cyan-400"
-                                            :disabled="$effectiveSuggestedKey === ''"
+                                            :disabled="$effectiveSuggestedKey === '' || $isDynamicContext"
                                             :aria-label="__('Transform suggested key to UI translation key')"
                                             wire:click="transformSuggestedKeyToUiTranslationKeyModal"
                                         />
@@ -197,11 +201,10 @@
                             <span class="flex w-full items-center justify-between gap-2">
                                 <span class="inline-flex items-center gap-1.5">
                                     <span>{{ __('Source') }}</span>
-                                    <flux:tooltip
-                                        content="{{ __('The scanned file path and line number where this finding was detected.') }}"
-                                    >
-                                        <flux:icon.info class="size-3.5 text-zinc-400" />
-                                    </flux:tooltip>
+                                    <x-ui.tooltip.simple
+                                        :header="__('Source')"
+                                        :text="__('The scanned file path and line number where this finding was detected.')"
+                                    />
                                 </span>
 
                                 <flux:tooltip content="{{ __('Open in VSC') }}">
@@ -234,11 +237,10 @@
                     <flux:callout.heading>
                         <span class="inline-flex items-center gap-1.5">
                             <span>{{ __('Literal segment usage') }}</span>
-                            <flux:tooltip
-                                content="{{ __('Counts how often the last key segment appears as translation, suggested, or existing key segment.') }}"
-                            >
-                                <flux:icon.info class="size-3.5 text-zinc-400" />
-                            </flux:tooltip>
+                            <x-ui.tooltip.simple
+                                :header="__('Literal segment usage')"
+                                :text="__('Counts how often the last key segment appears as translation, suggested, or existing key segment.')"
+                            />
                         </span>
                     </flux:callout.heading>
                     <flux:callout.text class="col-span-2 text-xs">
@@ -305,17 +307,16 @@
                     {{-- Callout Translation Key Input --}}
                     <flux:callout
                         class="col-span-2"
-                        color="red"
+                        color="{{ $translationKeyIsValid ? 'green' : 'red' }}"
                         icon="file-text"
                     >
                         <flux:callout.heading>
                             <span class="inline-flex items-center gap-1.5">
-                                <span>{{ __('Translation key') }}</span>
-                                <flux:tooltip
-                                    content="{{ __('The translation key to use for this finding. It will be saved to the workbench key record and can be used in the source code.') }}"
-                                >
-                                    <flux:icon.info class="size-3.5 text-zinc-400" />
-                                </flux:tooltip>
+                            <span>{{ __('Translation key') }}</span>
+                            <x-ui.tooltip.simple
+                                :header="__('Translation key')"
+                                :text="__('The translation key to use for this finding. It will be saved to the workbench key record and can be used in the source code.')"
+                            />
                             </span>
                         </flux:callout.heading>
                         <flux:callout.text class="grid grid-cols-3">
@@ -331,7 +332,7 @@
                                 :aria-label="__('Delete first segment')"
                                 wire:click="deleteFirstTranslationKeySegmentModal"
                             >
-                                {{ __('Delete') }}
+                                {{ __('ui.delete') }}
                                 {{ $translationKeySegmentControls['next_delete_segment'] ?: __('segment') }}
                             </flux:button>
                             <flux:button
@@ -354,6 +355,7 @@
                                 class="font-mono"
                                 wire:model.live="translationKeyValue"
                                 placeholder="{{ __('Edit or copy a translation key') }}"
+                                :invalid="!$translationKeyIsValid"
                             />
                         </flux:input.group>
                         <flux:error name="translationKeyValue" />
@@ -368,11 +370,10 @@
                     <flux:callout.heading>
                         <span class="inline-flex items-center gap-1.5">
                             <span>{{ __('Segments') }}</span>
-                            <flux:tooltip
-                                content="{{ __('Remove or restore leading translation key segments while the key has not been manually edited.') }}"
-                            >
-                                <flux:icon.info class="size-3.5 text-zinc-400" />
-                            </flux:tooltip>
+                            <x-ui.tooltip.simple
+                                :header="__('Segments')"
+                                :text="__('Remove or restore leading translation key segments while the key has not been manually edited.')"
+                            />
                         </span>
                     </flux:callout.heading>
                     <flux:callout.text class="space-y-3 text-xs">
@@ -393,7 +394,7 @@
 
                         @if ($translationKeySegmentControls['disable_segment_buttons'])
                             <flux:text class="text-xs text-amber-600 dark:text-amber-300">
-                                {{ __('Segment actions are disabled because the translation key was edited manually or transformed.') }}
+                                {{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_edit_translation_key.segment_actions_are_disabled_because_the_translation_key_was_edited_manually_or_transformed') }}
                             </flux:text>
                         @endif
                     </flux:callout.text>
@@ -406,6 +407,7 @@
                     variant="primary"
                     size="sm"
                     icon="save"
+                    :disabled="!$translationKeyIsValid"
                     wire:loading.attr="disabled"
                     wire:target="saveTranslationKeyModal"
                 >

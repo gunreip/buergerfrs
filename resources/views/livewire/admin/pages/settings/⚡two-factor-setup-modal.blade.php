@@ -126,7 +126,7 @@ new class extends Component {
             return [
                 'title' => __('pages.settings.two_factor_setup_modal.two_factor_authentication_enabled'),
                 'description' => __('Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.'),
-                'buttonText' => __('ui.actions.close'),
+                'buttonText' => __('ui.close'),
             ];
         }
 
@@ -262,7 +262,7 @@ new class extends Component {
             <div class="relative flex w-full items-center justify-center">
                 <div class="absolute inset-0 top-1/2 h-px w-full bg-stone-200 dark:bg-stone-600"></div>
                 <span class="relative bg-white px-2 text-sm text-stone-600 dark:bg-stone-800 dark:text-stone-400">
-                    {{ __('or, enter the code manually') }}
+                    {{ __('admin.pages.settings.two_factor_setup_modal.or_enter_the_code_manually') }}
                 </span>
             </div>
 

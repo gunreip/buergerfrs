@@ -125,11 +125,11 @@
                     {{-- Actions --}}
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('ui.labels.actions')"
+                            :title="__('ui.table.headers.actions')"
                             :text="__('admin.permission_list.table_permissions.actions_available_for_the_permission_useful_for_identification_and_reference',
                             )"
                         >
-                            {{ __('ui.labels.actions') }}
+                            {{ __('ui.table.headers.actions') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>

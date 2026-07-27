@@ -17,7 +17,7 @@
         ],
         [
             'key' => 'open',
-            'label' => __('admin.translation_list.filter.open'),
+            'label' => __('ui.open'),
             'count' => (int) data_get($summary, 'decision_open_entries', 0),
             'color' => 'amber',
         ],
@@ -29,7 +29,7 @@
         ],
         [
             'key' => 'approved',
-            'label' => __('Approved'),
+            'label' => __('ui.approved'),
             'count' => (int) data_get($summary, 'decision_approved_entries', 0),
             'color' => 'emerald',
         ],

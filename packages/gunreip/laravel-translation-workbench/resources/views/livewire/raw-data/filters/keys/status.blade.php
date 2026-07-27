@@ -15,7 +15,7 @@
                 value="all"
                 icon="activity"
             >
-                {{ __('All statuses') }}
+                {{ __('ui.all-statuses') }}
             </x-ui.input.select-option>
 
             @foreach ($keyOptions['statuses'] ?? [] as $status)

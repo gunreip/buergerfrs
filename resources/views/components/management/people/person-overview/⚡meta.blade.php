@@ -46,7 +46,7 @@
             <flux:callout
                 color="amber"
                 icon="sparkles"
-                heading="{{ __('Test data') }}"
+                heading="{{ __('ui.badge.test-data') }}"
                 text="{{ __('Records marked as test data.') }}"
             >
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">

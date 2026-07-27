@@ -61,7 +61,7 @@
                     wire:model.live="testDataFilter"
                 >
                     <flux:select.option value="">{{ __('ui.states.all') }}</flux:select.option>
-                    <flux:select.option value="test">{{ __('Test data') }}</flux:select.option>
+                    <flux:select.option value="test">{{ __('ui.badge.test-data') }}</flux:select.option>
                     <flux:select.option value="real">{{ __('Real data') }}</flux:select.option>
                 </flux:select>
             </flux:input.group>

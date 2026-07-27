@@ -72,6 +72,41 @@ class TranslationFindingNormalizer
         return (string) (end($segments) ?: $scope);
     }
 
+    public function isDynamicNumericArgument(string $argument, ?string $rawExpression = null): bool
+    {
+        $expression = trim($rawExpression ?: $argument);
+
+        if ($expression === '') {
+            return false;
+        }
+
+        if (preg_match('/\b(count|sum|avg|min|max|number_format|round|floor|ceil|intval|floatval)\s*\(/iu', $expression)) {
+            return true;
+        }
+
+        if (preg_match('/->\s*(count|sum|avg|min|max)\s*\(/iu', $expression)) {
+            return true;
+        }
+
+        if (preg_match('/(?<![A-Za-z0-9_])\$(?<name>[A-Za-z_][A-Za-z0-9_]*)\b/u', $argument, $match)) {
+            $name = Str::snake((string) $match['name']);
+
+            if (preg_match('/(^|_)(count|total|number|amount|percent|percentage|rate|ratio|quantity|qty|size|limit|page|pages|per_page|index|sort_order|id|ids)$/iu', $name)) {
+                return true;
+            }
+        }
+
+        if (preg_match('/->\s*(?<property>[A-Za-z_][A-Za-z0-9_]*)\b/u', $argument, $match)) {
+            $property = Str::snake((string) $match['property']);
+
+            if (preg_match('/(^|_)(count|total|number|amount|percent|percentage|rate|ratio|quantity|qty|size|limit|page|pages|per_page|index|sort_order|id|ids)$/iu', $property)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function scopeFromOptionsVariable(string $optionsVariable): string
     {
         $scope = preg_replace('/Options$/', '', $optionsVariable) ?: $optionsVariable;

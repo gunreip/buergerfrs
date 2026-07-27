@@ -60,7 +60,7 @@
                     wire:model.live="categoryFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('admin.permissions.filters.categories.all') }}
+                        {{ __('ui.states.all') }}
                     </flux:select.option>
 
                     @foreach ($roleCategories as $category)

@@ -6,10 +6,6 @@
 // php artisan translation-workbench:import-existing --dry-run
 // php artisan translation-workbench:import-existing --source-locale=en --dry-run
 
-// php artisan translation-workbench:scan
-// php artisan translation-workbench:import-existing
-// php artisan translation-workbench:discover-dynamic-options --sync
-
 namespace Gunreip\TranslationWorkbench\Console;
 
 use Gunreip\TranslationWorkbench\Console\Concerns\WritesTranslationWorkbenchReports;

@@ -1,1 +1,9 @@
 .flux-callout-text-blue {}
+
+.text-error {
+    color: var(--color-red-500) !important;
+}
+
+.dark .text-error {
+    color: var(--color-red-400) !important;
+}

@@ -1,0 +1,6 @@
+{
+    "activeTable": "translation_workbench_source_files",
+    "perPage": 50,
+    "sortField": "id",
+    "sortDirection": "desc"
+}

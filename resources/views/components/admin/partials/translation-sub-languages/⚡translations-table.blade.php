@@ -166,7 +166,7 @@
                         class="w-36"
                         align="center"
                     >
-                        {{ __('Action') }}
+                        {{ __('ui.action') }}
                     </flux:table.column>
                 </flux:table.columns>
 

@@ -98,11 +98,11 @@
 
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('admin.country_reference_list.table.address')"
+                            :title="__('ui.address')"
                             :text="__('admin.country_reference_list.table.address_format_availability_of_the_country_useful_for_identification_and_referen',
                             )"
                         >
-                            {{ __('admin.country_reference_list.table.address') }}
+                            {{ __('ui.address') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -231,7 +231,7 @@
 
                             <flux:table.cell align="center">
                                 @if ($country->address_format_key)
-                                    <flux:tooltip content="{{ __('Address format available') }}">
+                                    <flux:tooltip content="{{ __('admin.partials.country_reference_list.table.address_format_available') }}">
                                         <flux:badge
                                             color="green"
                                             variant="subtle"
@@ -265,12 +265,12 @@
 
                             <flux:table.cell align="center">
                                 @if ($country->is_active)
-                                    <flux:tooltip content="{{ __('admin.country_reference_list.filter.active') }}">
+                                    <flux:tooltip content="{{ __('ui.active') }}">
                                         <flux:badge
                                             color="green"
                                             variant="subtle"
                                         >
-                                            {{-- {{ __('admin.country_reference_list.filter.active') }} --}}
+                                            {{-- {{ __('ui.active') }} --}}
                                             <flux:icon.check
                                                 class="text-green-900"
                                                 variant="micro"

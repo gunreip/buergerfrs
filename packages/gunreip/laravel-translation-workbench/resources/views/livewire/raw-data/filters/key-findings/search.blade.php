@@ -10,7 +10,7 @@
             clearable
             copyable
             wire:model.live.debounce.300ms="keyFindingsSearch"
-            placeholder="{{ __('Relation ID, key ID, finding ID, relation type or status') }}"
+            placeholder="{{ __('Relation type or status') }}"
         />
     </flux:input.group>
 </flux:field>

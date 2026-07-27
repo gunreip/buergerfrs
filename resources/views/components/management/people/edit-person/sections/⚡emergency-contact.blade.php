@@ -246,7 +246,7 @@
                                 :title="__('Emergency Contact Phone')"
                                 :text="__('Enter the phone number of the emergency contact person.')"
                             >
-                                {{ __('Phone') }}
+                                {{ __('management.people.create_person.phone') }}
                             </x-ui.tooltip.trigger>
                         </flux:input.group.prefix>
                         @if ($editingField === 'emergencyContactPhone')

@@ -160,7 +160,7 @@
                 {{-- Decision state filters --}}
                 <div class="flex flex-wrap items-center gap-2 rounded-md bg-zinc-50/50 px-3 py-2 dark:bg-zinc-800/50">
                     <x-ui.tooltip.trigger
-                        :title="__('All decisions')"
+                        :title="__('ui.all-decisions')"
                         :text="__('Show all items regardless of their usage audit decision state.')"
                     >
                         <span
@@ -260,7 +260,7 @@
                             :color="$decisionFilter === 'applied' ? 'sky' : null"
                             wire:click="$set('decisionFilter', 'applied')"
                         >
-                            {{ __('Applied') }}
+                            {{ __('ui.applied') }}
                             <span class="ml-1 opacity-70">{{ $appliedDecisionCount }}</span>
                         </flux:button>
                     </x-ui.tooltip.trigger>

@@ -84,7 +84,7 @@
                 </flux:select.option>
 
                 <flux:select.option value="active">
-                    {{ __('admin.country_reference_list.filter.active') }}
+                    {{ __('ui.active') }}
                 </flux:select.option>
 
                 <flux:select.option value="inactive">

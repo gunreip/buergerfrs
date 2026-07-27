@@ -304,7 +304,7 @@
                             </span>
 
                             <span class="text-xs text-zinc-500 group-open:hidden">
-                                {{ __('show') }}
+                                {{ __('ui.button.show') }}
                             </span>
 
                             <span class="hidden text-xs text-zinc-500 group-open:inline">

@@ -1015,7 +1015,7 @@ class TranslationList extends Component
 
         if ($currentKey === '') {
             Flux::toast(
-                heading: __('Translation key missing'),
+                heading: __('admin.translation_list.translation_key_missing'),
                 text: __('Set a translation key before changing the dynamic multi workflow state.'),
                 variant: 'warning',
                 duration: 5000,
@@ -1245,7 +1245,7 @@ class TranslationList extends Component
 
         if (trim((string) ($translationKey->key ?? '')) === '') {
             Flux::toast(
-                heading: __('Translation key missing'),
+                heading: __('admin.translation_list.translation_key_missing'),
                 text: __('Set a translation key before marking this entry as needing a new key.'),
                 variant: 'warning',
                 duration: 5000,
@@ -1316,7 +1316,7 @@ class TranslationList extends Component
 
         if (trim((string) ($translationKey->key ?? '')) === '') {
             Flux::toast(
-                heading: __('Translation key missing'),
+                heading: __('admin.translation_list.translation_key_missing'),
                 text: __('Set a translation key before resolving the Needs-New-Key marker.'),
                 variant: 'warning',
                 duration: 5000,

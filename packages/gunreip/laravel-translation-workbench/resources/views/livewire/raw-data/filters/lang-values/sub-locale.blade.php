@@ -16,8 +16,7 @@
         >
             <x-ui.input.select-option
                 value="all"
-                icon="asterisk"
-                icon-class="text-sky-400"
+                icon="languages"
             >
                 {{ $langValuesMainLocale === 'all' ? __('Select main locale first') : __('All sub locales') }}
             </x-ui.input.select-option>

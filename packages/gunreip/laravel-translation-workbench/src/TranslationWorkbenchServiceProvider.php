@@ -4,10 +4,15 @@ namespace Gunreip\TranslationWorkbench;
 
 use Gunreip\TranslationWorkbench\Console\ImportExistingTranslations;
 use Gunreip\TranslationWorkbench\Console\ImportTranslationWorkbenchLangValues;
+use Gunreip\TranslationWorkbench\Console\ApplyTranslationWorkbenchCodeUpdates;
 use Gunreip\TranslationWorkbench\Console\ClassifyDynamicValues;
+use Gunreip\TranslationWorkbench\Console\CleanupExcludedTranslationWorkbenchPaths;
 use Gunreip\TranslationWorkbench\Console\DiscoverDynamicOptions;
 use Gunreip\TranslationWorkbench\Console\DiscoverDynamicSourceCandidates;
 use Gunreip\TranslationWorkbench\Console\DetectDuplicateCandidates;
+use Gunreip\TranslationWorkbench\Console\ExportTranslationWorkbenchLangFiles;
+use Gunreip\TranslationWorkbench\Console\PlanTranslationWorkbenchCodeUpdates;
+use Gunreip\TranslationWorkbench\Console\ProfileTranslationWorkbenchFindings;
 use Gunreip\TranslationWorkbench\Console\ResolveUnknownDynamicSources;
 use Gunreip\TranslationWorkbench\Console\RunTranslationWorkbench;
 use Gunreip\TranslationWorkbench\Console\ScanTranslationWorkbench;
@@ -44,12 +49,17 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
+                ApplyTranslationWorkbenchCodeUpdates::class,
                 ClassifyDynamicValues::class,
+                CleanupExcludedTranslationWorkbenchPaths::class,
                 DetectDuplicateCandidates::class,
                 DiscoverDynamicOptions::class,
                 DiscoverDynamicSourceCandidates::class,
                 ImportExistingTranslations::class,
                 ImportTranslationWorkbenchLangValues::class,
+                ExportTranslationWorkbenchLangFiles::class,
+                PlanTranslationWorkbenchCodeUpdates::class,
+                ProfileTranslationWorkbenchFindings::class,
                 ResolveUnknownDynamicSources::class,
                 RunTranslationWorkbench::class,
                 ScanTranslationWorkbench::class,

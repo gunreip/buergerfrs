@@ -65,7 +65,7 @@
                     </flux:select.option>
 
                     <flux:select.option value="open">
-                        {{ __('admin.translation_list.filter.open') }}
+                        {{ __('ui.open') }}
                     </flux:select.option>
 
                     <flux:select.option value="reviewed">

@@ -145,7 +145,7 @@
 
             <div class="flex shrink-0 justify-end">
                 <x-ui.button.cancel
-                    label="{{ __('pages.settings.two_factor_setup_modal.close') }}"
+                    label="{{ __('ui.close') }}"
                     icon="circle-x"
                     wire:click="closeTranslationHistory"
                 />

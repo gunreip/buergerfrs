@@ -16,6 +16,7 @@ class FluxIcon extends Component
         public ?string $name = '',
         public ?string $fallback = 'file-x',
         public ?string $variant = 'outline',
+        public string $fallbackClass = 'text-red-400',
         bool|string|int|null $report = true,
     ) {
         $this->shouldReport = filter_var($report, FILTER_VALIDATE_BOOLEAN);

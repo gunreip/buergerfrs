@@ -16,7 +16,7 @@
                 value="all"
                 icon="list-tree"
             >
-                {{ $keysSegmentContext === 'all' ? __('Select context first') : __('All extras') }}
+                {{ $keysSegmentContext === 'all' ? __('Select context first') : __('ui.filters.all-extras') }}
             </x-ui.input.select-option>
 
             @foreach ($keyOptions['segment_extras'] ?? [] as $segmentExtra)

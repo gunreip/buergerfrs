@@ -138,7 +138,7 @@
                     </flux:table.column>
                     {{-- Column Actions --}}
                     <flux:table.column align="center">
-                        {{ __('ui.labels.actions') }}
+                        {{ __('ui.table.headers.actions') }}
                     </flux:table.column>
                 </flux:table.columns>
 

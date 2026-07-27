@@ -31,11 +31,10 @@
             <span class="flex w-full items-center justify-between gap-2">
                 <span class="inline-flex items-center gap-1.5">
                     <span>{{ __('Source') }}</span>
-                    <flux:tooltip
-                        content="{{ __('Scanned file path, line number and translation function found in the code.') }}"
-                    >
-                        <flux:icon.info class="size-3.5 text-zinc-400" />
-                    </flux:tooltip>
+                    <x-ui.tooltip.simple
+                        :header="__('Source')"
+                        :text="__('Scanned file path, line number and translation function found in the code.')"
+                    />
                 </span>
                 <flux:tooltip content="{{ __('Open in VSC') }}">
                     <flux:button
@@ -52,14 +51,18 @@
             </span>
         </flux:callout.heading>
         <flux:callout.text class="text-xs">
-            {{ __('Shows the exact code location that produced this finding and opens it directly in VS Code.') }}
+            {{ __('Displays the exact code location where this finding was detected, assuming the code has not been modified since then, and opens it directly in VS Code. If the code has changed, run a new translation:workbench cycle first.') }}
         </flux:callout.text>
 
         <flux:callout.text>
             <div class="space-y-2 text-sm">
                 <div class="space-y-1">
-                    <flux:callout.heading class="text-xs uppercase">
-                        {{ __('Path') }}
+                    <flux:callout.heading>
+                        <span class="text-xs uppercase">{{ __('Path') }}</span>
+                        <x-ui.tooltip.simple
+                            :header="__('Source path')"
+                            :text="__('Absolute path to the source file that produced this finding.')"
+                        />
                     </flux:callout.heading>
                     <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
                         {{ $reviewFinding->source_path }}
@@ -78,7 +81,11 @@
                             size="sm"
                             variant="subtle"
                         >
-                            {{ $reviewFinding->function_name }}
+                            <span class="mr-1">{{ __('Function') }}: {{ $reviewFinding->function_name }}</span>
+                            <x-ui.tooltip.simple
+                                :header="__('Source function')"
+                                :text="__('The translation function that is used in this finding.')"
+                            />
                         </flux:badge>
                     @endif
                 </div>
@@ -95,11 +102,12 @@
         <flux:callout.heading>
             <span class="inline-flex items-center gap-1.5">
                 <span>{{ __('Literal') }}</span>
-                <flux:tooltip
-                    content="{{ __('Literal text extracted from the translation call or suggested from the raw expression.') }}"
-                >
-                    <flux:icon.info class="size-3.5 text-zinc-400" />
-                </flux:tooltip>
+                <x-ui.tooltip.simple
+                    :header="__('Literal')"
+                    :text="__(
+                        'Literal text extracted from the translation call or suggested from the raw expression.',
+                    )"
+                />
             </span>
         </flux:callout.heading>
         <flux:callout.text class="text-xs">
@@ -109,8 +117,16 @@
         <flux:callout.text>
             <div class="space-y-3 text-sm">
                 <div class="space-y-1">
-                    <flux:callout.heading class="text-xs uppercase">
-                        {{ $reviewLiteralText !== '' ? __('Literal text') : __('Literal suggested') }}
+                    <flux:callout.heading>
+                        <span class="text-xs uppercase">
+                            {{ $reviewLiteralText !== '' ? __('Literal text') : __('Literal suggested') }}
+                        </span>
+                        <x-ui.tooltip.simple
+                            :header="__('Literal text / Literal suggested')"
+                            :text="__(
+                                'Literal text is the saved value, literal suggested is the scanner suggestion when no literal text is saved.',
+                            )"
+                        />
                     </flux:callout.heading>
                     <div class="wrap-anywhere text-wrap text-xs text-zinc-500">
                         {{ $reviewLiteralText ?: $reviewLiteralSuggested ?: __('No literal') }}
@@ -127,8 +143,12 @@
 
                 @if ($reviewFinding->raw_expression)
                     <div class="space-y-1">
-                        <flux:callout.heading class="text-xs uppercase">
-                            {{ __('Raw expression') }}
+                        <flux:callout.heading>
+                            <span class="text-xs uppercase">{{ __('Raw expression') }}</span>
+                            <x-ui.tooltip.simple
+                                :header="__('Raw expression')"
+                                :text="__('The raw code expression that produced this finding, if available.')"
+                            />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
                             {{ $reviewFinding->raw_expression }}
@@ -149,11 +169,12 @@
             <span class="flex w-full items-center justify-between gap-2">
                 <span class="inline-flex items-center gap-1.5">
                     <span>{{ __('Keys') }}</span>
-                    <flux:tooltip
-                        content="{{ __('Current, suggested, existing and directly found translation keys for this finding.') }}"
-                    >
-                        <flux:icon.info class="size-3.5 text-zinc-400" />
-                    </flux:tooltip>
+                    <x-ui.tooltip.simple
+                        :header="__('Keys')"
+                        :text="__(
+                            'Current, suggested, existing and directly found translation keys for this finding.',
+                        )"
+                    />
                 </span>
                 <flux:tooltip content="{{ __('Review and edit translation key') }}">
                     <flux:button
@@ -177,8 +198,14 @@
         <flux:callout.text>
             <div class="space-y-3 text-sm">
                 <div class="space-y-1">
-                    <flux:callout.heading class="text-xs uppercase">
-                        {{ __('Translation key') }}
+                    <flux:callout.heading>
+                        <span class="text-xs uppercase">
+                            {{ __('Translation key') }}
+                        </span>
+                        <x-ui.tooltip.simple
+                            :header="__('Translation key')"
+                            :text="__('The translation key that is currently linked to this finding.')"
+                        />
                     </flux:callout.heading>
                     <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
                         {{ $reviewTranslationKey ?: __('Missing') }}
@@ -186,8 +213,16 @@
                 </div>
 
                 <div class="space-y-1">
-                    <flux:callout.heading class="text-xs uppercase">
-                        {{ __('Suggested key') }}
+                    <flux:callout.heading>
+                        <span class="text-xs uppercase">
+                            {{ __('Suggested key') }}
+                        </span>
+                        <x-ui.tooltip.simple
+                            :header="__('Suggested key')"
+                            :text="__(
+                                'The suggested translation key that is derived from the scanner and workbench.',
+                            )"
+                        />
                     </flux:callout.heading>
                     <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
                         {{ $reviewEffectiveSuggestedKey ?: __('Missing') }}
@@ -196,8 +231,16 @@
 
                 @if ($reviewExistingKey !== '')
                     <div class="space-y-1">
-                        <flux:callout.heading class="text-xs uppercase">
-                            {{ __('Existing key') }}
+                        <flux:callout.heading>
+                            <span class="text-xs uppercase">
+                                {{ __('Existing key') }}
+                            </span>
+                            <x-ui.tooltip.simple
+                                :header="__('Existing key')"
+                                :text="__(
+                                    'The existing translation key that is already present in the language files.',
+                                )"
+                            />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
                             {{ $reviewExistingKey }}
@@ -207,9 +250,15 @@
 
                 @if ($reviewFoundTranslationKey !== '')
                     <div class="space-y-1">
-                        <div class="text-[11px] font-semibold uppercase text-zinc-500">
-                            {{ __('Found translation key') }}
-                        </div>
+                        <flux:callout.heading>
+                            <span class="text-xs uppercase">
+                                {{ __('Found translation key') }}
+                            </span>
+                            <x-ui.tooltip.simple
+                                :header="__('Found translation key')"
+                                :text="__('The translation key that was found in the language files.')"
+                            />
+                        </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
                             {{ $reviewFoundTranslationKey }}
                         </div>
@@ -228,11 +277,12 @@
         <flux:callout.heading>
             <span class="inline-flex items-center gap-1.5">
                 <span>{{ __('Structure') }}</span>
-                <flux:tooltip
-                    content="{{ __('Namespace, group, path key and scope derived from the scanner and linked workbench key.') }}"
-                >
-                    <flux:icon.info class="size-3.5 text-zinc-400" />
-                </flux:tooltip>
+                <x-ui.tooltip.simple
+                    :header="__('Structure')"
+                    :text="__(
+                        'Namespace, group, path key and scope derived from the scanner and linked workbench key.',
+                    )"
+                />
             </span>
         </flux:callout.heading>
         <flux:callout.text class="text-xs">
@@ -243,8 +293,14 @@
             <div class="space-y-3 text-sm">
                 <div class="grid gap-2 md:grid-cols-2">
                     <div class="space-y-1">
-                        <flux:callout.heading class="text-xs uppercase">
-                            {{ __('Namespace') }}
+                        <flux:callout.heading>
+                            <span class="text-xs uppercase">
+                                {{ __('Namespace') }}
+                            </span>
+                            <x-ui.tooltip.simple
+                                :header="__('Namespace')"
+                                :text="__('The namespace derived from the scanner and linked workbench key.')"
+                            />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
                             {{ $reviewFinding->namespace ?: __('Missing') }}
@@ -252,8 +308,14 @@
                     </div>
 
                     <div class="space-y-1">
-                        <flux:callout.heading class="text-xs uppercase">
-                            {{ __('Group') }}
+                        <flux:callout.heading>
+                            <span class="text-xs uppercase">
+                                {{ __('Group') }}
+                            </span>
+                            <x-ui.tooltip.simple
+                                :header="__('Group')"
+                                :text="__('The group derived from the scanner and linked workbench key.')"
+                            />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
                             {{ $reviewFinding->group ?: __('Missing') }}
@@ -263,8 +325,14 @@
 
                 <div class="grid gap-2 md:grid-cols-2">
                     <div class="space-y-1">
-                        <flux:callout.heading class="text-xs uppercase">
-                            {{ __('Path key') }}
+                        <flux:callout.heading>
+                            <span class="text-xs uppercase">
+                                {{ __('Path key') }}
+                            </span>
+                            <x-ui.tooltip.simple
+                                :header="__('Path key')"
+                                :text="__('The path key derived from the scanner and linked workbench key.')"
+                            />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
                             {{ $reviewFinding->path_key ?: __('Missing') }}
@@ -272,8 +340,14 @@
                     </div>
 
                     <div class="space-y-1">
-                        <flux:callout.heading class="text-xs uppercase">
-                            {{ __('Scope') }}
+                        <flux:callout.heading>
+                            <span class="text-xs uppercase">
+                                {{ __('Scope') }}
+                            </span>
+                            <x-ui.tooltip.simple
+                                :header="__('Scope')"
+                                :text="__('The scope derived from the scanner and linked workbench key.')"
+                            />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
                             {{ $reviewFinding->scope ?: __('Missing') }}
@@ -283,8 +357,16 @@
 
                 @if ($reviewFinding->key_namespace || $reviewFinding->key_group)
                     <div class="border-t border-zinc-200 pt-3 dark:border-zinc-700">
-                        <flux:callout.heading class="mb-2 text-xs uppercase">
-                            {{ __('Linked key structure') }}
+                        <flux:callout.heading class="mb-2">
+                            <span class="text-xs uppercase">
+                                {{ __('Linked key structure') }}
+                            </span>
+                            <x-ui.tooltip.simple
+                                :header="__('Linked key structure')"
+                                :text="__(
+                                    'The namespace and group derived from the linked workbench key, if available.',
+                                )"
+                            />
                         </flux:callout.heading>
                         <div class="grid gap-2 md:grid-cols-2">
                             <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">

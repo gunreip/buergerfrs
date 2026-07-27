@@ -101,7 +101,7 @@
 
             <x-ui.button.save
                 icon="check"
-                label="{{ __('ui.actions.save') }}"
+                label="{{ __('ui.save') }}"
                 wire:click="savePermissionMetadata"
                 wire:loading.attr="disabled"
                 :disabled="$editingPermissionId === null || !$this->hasPermissionMetadataChanges()"

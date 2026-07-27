@@ -19,7 +19,7 @@
                 value="all"
                 icon="list-tree"
             >
-                {{ count($sourceFileOptions['extras'] ?? []) === 0 ? __('No extras') : __('All extras') }}
+                {{ count($sourceFileOptions['extras'] ?? []) === 0 ? __('No extras') : __('ui.filters.all-extras') }}
             </x-ui.input.select-option>
             @foreach ($sourceFileOptions['extras'] ?? [] as $extra)
                 <x-ui.input.select-option

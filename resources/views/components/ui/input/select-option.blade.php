@@ -2,7 +2,7 @@
 
 {{-- Component-Calls
 <x-ui.input.select-option value="all" icon="asterisk" icon-class="text-sky-400">
-    {{ __('All') }}
+    {{ __('ui.states.all') }}
 </x-ui.input.select-option>
 
 <x-ui.input.select-option value="yes" icon="check">

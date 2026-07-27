@@ -177,7 +177,7 @@
                     <div class="mt-4 grid gap-4 lg:grid-cols-3">
                         <flux:field>
                             <flux:label>
-                                {{ __('Action') }}
+                                {{ __('ui.action') }}
                             </flux:label>
 
                             {{-- Input für die Auswahl der Entscheidungsaktion (Unify, Skip, Needs new key) --}}
@@ -414,7 +414,7 @@
                                                     'cursor-not-allowed' =>
                                                         ($usageRow['change_status'] ?? null) === 'already_target',
                                                 ])>
-                                                    {{ ($usageRow['change_status'] ?? null) === 'already_target' ? __('Already target') : __('Include in change') }}
+                                                    {{ ($usageRow['change_status'] ?? null) === 'already_target' ? __('ui.already-target') : __('Include in change') }}
                                                 </flux:label>
                                             </flux:field>
 
@@ -443,10 +443,10 @@
                                                             {{ __('Skipped') }}
                                                         </flux:select.option>
                                                         <flux:select.option value="applied">
-                                                            {{ __('Applied') }}
+                                                            {{ __('ui.applied') }}
                                                         </flux:select.option>
                                                         <flux:select.option value="already_target">
-                                                            {{ __('Already target') }}
+                                                            {{ __('ui.already-target') }}
                                                         </flux:select.option>
                                                         <flux:select.option value="needs_key">
                                                             {{ __('Needs key') }}

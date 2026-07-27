@@ -8,8 +8,8 @@
 
 @props([
     'state',
-    'showLabel' => 'Show',
-    'hideLabel' => 'Hide',
+    'showLabel' => __('ui.button.show'),
+    'hideLabel' => __('ui.button.hide'),
     'variant' => 'ghost',
     'size' => 'xs',
     'width' => 'min-w-10 text-left',
@@ -36,9 +36,9 @@
 
         <span
             @class(['inline-block whitespace-nowrap', $width])
-            x-text="{{ $state }} ? @js(__($hideLabel)) : @js(__($showLabel))"
+            x-text="{{ $state }} ? @js($hideLabel) : @js($showLabel)"
         >
-            {{ __($showLabel) }}
+            {{ $showLabel }}
         </span>
     </span>
 </flux:button>

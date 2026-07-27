@@ -54,7 +54,7 @@
                         icon="save"
                         wire:click="saveDynamicMultiTranslationValues"
                     >
-                        {{ __('Save') }}
+                        {{ __('ui.save') }}
                     </flux:button>
                 @endif
             </div>
@@ -70,6 +70,25 @@
                 $sourceLocale = (string) ($editLocales['source'] ?? 'en');
                 $activeLocale = (string) ($editLocales['active'] ?? app()->getLocale());
                 $rows = collect($dynamicMultiRows ?? []);
+                $overrideButtonCount = $rows
+                    ->filter(function (array $row) use (
+                        $dynamicMultiTargetValues,
+                        $dynamicMultiSourceEqualsTargetOverrides,
+                    ): bool {
+                        $fieldKey = (string) ($row['field_key'] ?? '');
+                        $sourceValue = trim((string) ($row['source'] ?? ($row['native_label'] ?? '')));
+                        $targetValue = trim(
+                            (string) ($dynamicMultiTargetValues[$fieldKey] ?? (null ?? ($row['target'] ?? ''))),
+                        );
+                        $isOverridden = (bool) ($dynamicMultiSourceEqualsTargetOverrides[$fieldKey] ?? false);
+
+                        return $fieldKey !== '' &&
+                            $sourceValue !== '' &&
+                            $targetValue !== '' &&
+                            $sourceValue === $targetValue &&
+                            !$isOverridden;
+                    })
+                    ->count();
             @endphp
 
             <flux:card>
@@ -101,7 +120,11 @@
                 <x-ui.headers.card
                     :title="__('Option values')"
                     :description="__('Each value key can have a source value and a target-language translation.')"
-                />
+                >
+                    <div class="wrap-anywhere max-w-3xl text-wrap text-end text-sky-500 dark:text-sky-400">
+                        {{ $dynamicMultiEditFinding->translation_key ?: __('No translation key set.') }}
+                    </div>
+                </x-ui.headers.card>
 
                 @if ($rows->isEmpty())
                     <flux:callout
@@ -126,19 +149,31 @@
                                         :title="strtoupper($sourceLocale)"
                                     />
                                     <span class="font-mono text-sm font-semibold uppercase">{{ $sourceLocale }}</span>
+                                    <x-ui.tooltip.simple
+                                        :header="__('Source language')"
+                                        :text="__(
+                                            'The source language is the default locale of the application, which is used for the original text.',
+                                        )"
+                                    />
                                 </span>
                             </flux:table.column>
                             <flux:table.column class="w-[28%]">
                                 <span class="flex items-center gap-2">
-                                    <flux:button
-                                        class="ms-auto h-6 w-6 shrink-0"
-                                        type="button"
-                                        size="xs"
-                                        variant="ghost"
-                                        icon="copy"
-                                        :aria-label="__('Copy all source values to target')"
-                                        wire:click="copyAllDynamicMultiSourceToTarget"
-                                    />
+                                    <flux:tooltip
+                                        :content="__(
+                                            'Copy all source values to the target language for this dynamic key.',
+                                        )"
+                                    >
+                                        <flux:button
+                                            class="ms-auto h-6 w-6 shrink-0"
+                                            type="button"
+                                            size="xs"
+                                            variant="ghost"
+                                            icon="copy"
+                                            :aria-label="__('Copy all source values to target')"
+                                            wire:click="copyAllDynamicMultiSourceToTarget"
+                                        />
+                                    </flux:tooltip>
                                     <span class="inline-flex items-center gap-2">
                                         <x-ui.locale.flag
                                             :locale="$activeLocale"
@@ -148,9 +183,33 @@
                                         <span
                                             class="font-mono text-sm font-semibold uppercase">{{ $activeLocale }}</span>
                                     </span>
+                                    <x-ui.tooltip.simple
+                                        :header="__('Target language')"
+                                        :text="__(
+                                            'The target language is the currently active locale of the application.',
+                                        )"
+                                    />
                                 </span>
                             </flux:table.column>
-                            <flux:table.column class="w-40">{{ __('State') }}</flux:table.column>
+                            <flux:table.column class="w-40">
+                                <span class="flex items-center gap-2">
+                                    <span>{{ __('State') }}</span>
+
+                                    @if ($overrideButtonCount > 2)
+                                        <flux:tooltip :content="__('packages.gunreip.laravel_translation_workbench.resources.bulk.entries.modal_edit_dynamic_multi.accept_all_matching_source_and_target_values')">
+                                            <flux:button
+                                                class="ms-auto h-6 w-6 shrink-0"
+                                                type="button"
+                                                size="xs"
+                                                variant="ghost"
+                                                icon="check-check"
+                                                :aria-label="__('packages.gunreip.laravel_translation_workbench.resources.bulk.entries.modal_edit_dynamic_multi.accept_all_matching_source_and_target_values')"
+                                                wire:click="overrideAllDynamicMultiSourceEqualsTarget"
+                                            />
+                                        </flux:tooltip>
+                                    @endif
+                                </span>
+                            </flux:table.column>
                         </flux:table.columns>
 
                         <flux:table.rows>
@@ -161,12 +220,19 @@
                                         (string) ($dynamicMultiTargetValues[$row['field_key']] ??
                                             ($row['target'] ?? '')),
                                     );
+                                    $sourceValue = trim(
+                                        (string) ($dynamicMultiSourceValues[$row['field_key']] ??
+                                            ($row['source'] ?? ($row['native_label'] ?? ''))),
+                                    );
                                     $targetEqualsSource =
                                         $sourceValue !== '' && $targetValue !== '' && $sourceValue === $targetValue;
                                     $targetEqualsSourceOverridden =
                                         (bool) ($dynamicMultiSourceEqualsTargetOverrides[$row['field_key']] ?? false);
                                     $targetEqualsSourceInvalid = $targetEqualsSource && !$targetEqualsSourceOverridden;
-                                    $targetEditable = (bool) ($dynamicMultiEditableTargetFields[$row['field_key']] ?? false);
+                                    $targetEditable =
+                                        (bool) ($dynamicMultiEditableTargetFields[$row['field_key']] ?? false);
+                                    $sourceEditable =
+                                        (bool) ($dynamicMultiEditableSourceFields[$row['field_key']] ?? false);
                                 @endphp
 
                                 <flux:table.row>
@@ -183,8 +249,38 @@
                                         </div>
                                     </flux:table.cell>
                                     <flux:table.cell class="align-top">
-                                        <div class="hyphens-auto text-wrap text-sm">
-                                            {{ $row['source'] ?: '—' }}
+                                        <div class="flex items-start gap-2">
+                                            <flux:textarea
+                                                class="min-w-0 flex-1 hyphens-auto"
+                                                id="translation-workbench-dynamic-multi-source-{{ $row['field_key'] }}"
+                                                rows="1"
+                                                wire:model.live.debounce.500ms="dynamicMultiSourceValues.{{ $row['field_key'] }}"
+                                                placeholder="{{ __('Enter source value') }}"
+                                                :readonly="!$sourceEditable"
+                                            />
+
+                                            @if ($sourceEditable)
+                                                <flux:button
+                                                    class="mt-1 h-6 w-6 shrink-0"
+                                                    type="button"
+                                                    size="xs"
+                                                    variant="primary"
+                                                    color="green"
+                                                    icon="save"
+                                                    :aria-label="__('Save source value')"
+                                                    wire:click="saveDynamicMultiSourceValue('{{ $row['field_key'] }}')"
+                                                />
+                                            @else
+                                                <flux:button
+                                                    class="mt-1 h-6 w-6 shrink-0"
+                                                    type="button"
+                                                    size="xs"
+                                                    variant="ghost"
+                                                    icon="pencil"
+                                                    :aria-label="__('Edit source value')"
+                                                    wire:click="editDynamicMultiSourceValue('{{ $row['field_key'] }}')"
+                                                />
+                                            @endif
                                         </div>
                                     </flux:table.cell>
                                     <flux:table.cell class="align-top">
@@ -195,7 +291,7 @@
                                                 size="xs"
                                                 variant="ghost"
                                                 icon="copy"
-                                                :disabled="blank($row['source'] ?? $row['native_label'] ?? null)"
+                                                :disabled="blank($dynamicMultiSourceValues[$row['field_key']] ?? $row['source'] ?? $row['native_label'] ?? null)"
                                                 :aria-label="__('Copy source value to target')"
                                                 wire:click="copyDynamicMultiSourceToTarget('{{ $row['field_key'] }}')"
                                             />

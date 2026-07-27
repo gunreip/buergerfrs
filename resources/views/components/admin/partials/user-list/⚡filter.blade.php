@@ -66,7 +66,7 @@
                                 class="text-zinc-400"
                                 variant="mini"
                             />
-                            {{ __('admin.permissions.filters.roles.all') }}
+                            {{ __('ui.states.all') }}
                         </div>
                     </flux:select.option>
 

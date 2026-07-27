@@ -10,8 +10,7 @@
             clearable
             copyable
             wire:model.live.debounce.300ms="langValuesSearch"
-            placeholder="{{ __('ID, locale, key, value, path or status') }}"
+            placeholder="{{ __('Locale, key, value, path or status') }}"
         />
     </flux:input.group>
 </flux:field>
-
