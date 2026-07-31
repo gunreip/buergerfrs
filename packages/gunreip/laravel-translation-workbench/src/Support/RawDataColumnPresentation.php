@@ -60,6 +60,7 @@ class RawDataColumnPresentation
             'translation_workbench_key_findings' => self::keyFindings(),
             'translation_workbench_dynamic_sources' => self::dynamicSources(),
             'translation_workbench_lang_values' => self::langValues(),
+            'translation_workbench_shared_key_candidates' => self::sharedKeyCandidates(),
             default => [],
         };
     }
@@ -152,6 +153,7 @@ class RawDataColumnPresentation
             'key_segment_extra' => ['content_class' => 'min-w-44 max-w-md wrap-anywhere text-wrap font-mono text-xs'],
             'key_segment_name' => ['content_class' => 'min-w-44 max-w-md wrap-anywhere text-wrap font-mono text-xs'],
             'key_type' => ['content_class' => 'min-w-32 max-w-40 truncate font-mono text-xs'],
+            'lang_node_type' => ['content_class' => 'min-w-36 max-w-44 truncate font-mono text-xs'],
             'status' => ['content_class' => 'min-w-32 max-w-40 truncate font-mono text-xs'],
             'review_status' => ['content_class' => 'min-w-32 max-w-40 truncate font-mono text-xs'],
             'meta' => ['cell_class' => 'min-w-96'],
@@ -204,6 +206,21 @@ class RawDataColumnPresentation
             'lang_key' => ['content_class' => 'min-w-80 max-w-xl wrap-anywhere text-wrap font-mono text-xs'],
             'translation_key' => ['content_class' => 'min-w-112 wrap-anywhere text-wrap font-mono text-xs'],
             'value' => ['content_class' => 'min-w-96 max-w-2xl text-wrap wrap-normal hyphens-auto font-sans text-xs'],
+        ];
+    }
+
+    /**
+     * @return array<string, array<string, string>>
+     */
+    private static function sharedKeyCandidates(): array
+    {
+        return [
+            'normalized_literal' => ['content_class' => 'min-w-56 max-w-lg wrap-anywhere text-wrap font-mono text-xs'],
+            'literal_text' => ['content_class' => 'min-w-72 max-w-xl wrap-anywhere text-wrap font-mono text-xs'],
+            'current_translation_key' => ['content_class' => 'min-w-112 wrap-anywhere text-wrap font-mono text-xs'],
+            'suggested_shared_translation_key' => ['content_class' => 'min-w-112 wrap-anywhere text-wrap font-mono text-xs'],
+            'matched_finding_ids' => ['cell_class' => 'min-w-96'],
+            'meta' => ['cell_class' => 'min-w-96'],
         ];
     }
 }

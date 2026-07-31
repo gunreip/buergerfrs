@@ -1,7 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/dynamic-key-values/value-key.blade.php --}}
 
 <flux:field class="{{ $fieldClass ?? '' }}">
-    <flux:label>{{ __('Value key') }}</flux:label>
+    <flux:label>{{ __('ui.value.value-key') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
             <flux:icon.key-round />

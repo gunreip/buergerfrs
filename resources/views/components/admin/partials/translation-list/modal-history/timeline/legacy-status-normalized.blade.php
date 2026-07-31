@@ -62,7 +62,7 @@
                         variant="subtle"
                         color="zinc"
                     >
-                        {{ __('admin.translation_list.meta.workflow') }}: {{ $workflowStatus }}
+                        {{ __('ui.workflow') }}: {{ $workflowStatus }}
                     </flux:badge>
                 </div>
             @endif

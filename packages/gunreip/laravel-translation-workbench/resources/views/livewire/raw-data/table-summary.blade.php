@@ -2,7 +2,7 @@
 
 <flux:card class="mt-6">
         <x-ui.headers.card
-            :title="__('Summary')"
+            :title="__('ui.summary')"
             :description="__('Raw aggregate overview for the active database table.')"
         />
 
@@ -179,7 +179,7 @@
                         <flux:table.column align="end">{{ __('translation_key') }}</flux:table.column>
                         <flux:table.column align="end">{{ __('existing_key') }}</flux:table.column>
                         <flux:table.column align="end">{{ __('suggested_key') }}</flux:table.column>
-                        <flux:table.column align="end">{{ __('Total') }}</flux:table.column>
+                        <flux:table.column align="end">{{ __('ui.total') }}</flux:table.column>
                     </flux:table.columns>
 
                     <flux:table.rows>
@@ -277,7 +277,7 @@
 
                         <flux:table>
                             <flux:table.columns>
-                                <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                                 <flux:table.column align="end">{{ __('Size') }}</flux:table.column>
                                 <flux:table.column align="end">{{ __('Rows') }}</flux:table.column>
                             </flux:table.columns>
@@ -286,12 +286,13 @@
                                 @foreach ($summary['duplicate_diagnostics']['groups'] ?? [] as $group)
                                     <flux:table.row>
                                         <flux:table.cell>
-                                            <div
+                                            <x-ui.tooltip.simple
                                                 class="max-w-36 truncate font-mono text-xs"
-                                                title="{{ $group['group_fingerprint'] }}"
+                                                :title="__('Duplicate group fingerprint')"
+                                                :text="$group['group_fingerprint']"
                                             >
                                                 {{ $group['duplicate_type'] }}
-                                            </div>
+                                            </x-ui.tooltip.simple>
                                             <div class="text-xs text-zinc-500 dark:text-zinc-400">
                                                 {{ str($group['confidence'])->headline() }}
                                             </div>

@@ -20,6 +20,7 @@ class TranslationWorkbenchRawDataNew extends TranslationWorkbenchRawData
         'translation_workbench_dynamic_source_values',
         'translation_workbench_lang_values',
         'translation_workbench_reviews',
+        'translation_workbench_shared_key_candidates',
         'translation_workbench_timeline_events',
     ];
 

@@ -6,9 +6,9 @@
         <flux:table.column>{{ __('Role') }}</flux:table.column>
         <flux:table.column>{{ __('Main') }}</flux:table.column>
         <flux:table.column>{{ __('Parent') }}</flux:table.column>
-        <flux:table.column align="end">{{ __('Values') }}</flux:table.column>
+        <flux:table.column align="end">{{ __('ui.values.values') }}</flux:table.column>
         <flux:table.column align="end">{{ __('Matched') }}</flux:table.column>
-        <flux:table.column align="end">{{ __('Missing') }}</flux:table.column>
+        <flux:table.column align="end">{{ __('ui.missing') }}</flux:table.column>
         <flux:table.column align="end">{{ __('Extra') }}</flux:table.column>
         <flux:table.column align="end">{{ __('Coverage') }}</flux:table.column>
     </flux:table.columns>
@@ -26,7 +26,7 @@
                                 size="sm"
                                 color="sky"
                             >
-                                {{ __('Source') }}
+                                {{ __('ui.source') }}
                             </flux:badge>
                         @endif
                     </div>

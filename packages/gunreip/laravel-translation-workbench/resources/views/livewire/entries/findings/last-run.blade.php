@@ -11,7 +11,6 @@
         <flux:callout
             color="amber"
             icon="file-warning"
-            variant="secondary"
         >
             <flux:callout.heading>{{ __('No pipeline report found') }}</flux:callout.heading>
             <flux:callout.text>
@@ -22,7 +21,6 @@
         <flux:callout
             color="{{ $summary['has_blockers'] ?? false ? 'red' : ($summary['has_stale_reports'] ?? false ? 'amber' : 'green') }}"
             icon="{{ $summary['has_blockers'] ?? false ? 'octagon-alert' : ($summary['has_stale_reports'] ?? false ? 'triangle-alert' : 'circle-check') }}"
-            variant="secondary"
         >
             <flux:callout.heading>
                 <span class="inline-flex flex-wrap items-center gap-2">
@@ -51,7 +49,6 @@
                 <flux:callout
                     color="{{ $callout['color'] }}"
                     icon="{{ $callout['icon'] }}"
-                    variant="secondary"
                 >
                     <flux:callout.heading>{{ $callout['title'] }}</flux:callout.heading>
                     <flux:callout.text>
@@ -66,7 +63,6 @@
         <flux:callout
             color="zinc"
             icon="database"
-            variant="secondary"
         >
             <flux:callout.heading>{{ __('Pipeline step reports') }}</flux:callout.heading>
             <flux:callout.text>
@@ -82,7 +78,7 @@
                         <flux:table.column class="w-12 text-center">#</flux:table.column>
                         <flux:table.column>{{ __('Step') }}</flux:table.column>
                         <flux:table.column>{{ __('Generated') }}</flux:table.column>
-                        <flux:table.column>{{ __('State') }}</flux:table.column>
+                        <flux:table.column>{{ __('ui.state') }}</flux:table.column>
                         <flux:table.column>{{ __('Result') }}</flux:table.column>
                     </flux:table.columns>
                     <flux:table.rows>
@@ -157,7 +153,6 @@
                                                     <flux:callout
                                                         color="{{ $note['color'] }}"
                                                         icon="info"
-                                                        variant="secondary"
                                                         inline
                                                     >
                                                         <flux:callout.text class="hyphens-auto text-wrap">

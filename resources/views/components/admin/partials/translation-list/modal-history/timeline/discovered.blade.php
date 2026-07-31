@@ -157,7 +157,7 @@
                 variant="subtle"
                 color="zinc"
             >
-                {{ __('admin.app_settings.table_icon_registry.status') }}: {{ $historyEvent->new_status }}
+                {{ __('ui.status') }}: {{ $historyEvent->new_status }}
             </flux:badge>
         @endif
 
@@ -167,7 +167,7 @@
                 variant="subtle"
                 color="zinc"
             >
-                {{ __('admin.translation_list.meta.workflow') }}: {{ $workflowStatus }}
+                {{ __('ui.workflow') }}: {{ $workflowStatus }}
             </flux:badge>
         @endif
     </div>

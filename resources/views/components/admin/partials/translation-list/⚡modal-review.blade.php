@@ -48,7 +48,7 @@
                 >
                     {{-- Status --}}
                     <flux:callout.heading>
-                        {{ __('admin.app_settings.table_icon_registry.status') }}
+                        {{ __('ui.status') }}
                     </flux:callout.heading>
 
                     <flux:callout.text class="space-y-2">
@@ -527,7 +527,7 @@
                                     :badge="$isDuplicate
                                         ? 'Duplicate'
                                         : $englishReviewValue?->status ??
-                                            __('admin.app_settings.table_icon_registry.missing')"
+                                            __('ui.missing')"
                                     :badge-context="$englishReviewValue && !$isDuplicate ? 'translation.value.status' : null"
                                     :badge-color="$isDuplicate || $englishReviewValue === null ? 'amber' : 'zinc'"
                                     :badge-variant="$isDuplicate ? 'subtle' : 'subtle'"
@@ -553,7 +553,7 @@
                                     :badge="$selectedTargetReviewValue?->is_base_duplicate === true
                                         ? 'Duplicate'
                                         : $selectedTargetReviewValue?->status ??
-                                            __('admin.app_settings.table_icon_registry.missing')"
+                                            __('ui.missing')"
                                     :badge-context="$selectedTargetReviewValue &&
                                     $selectedTargetReviewValue->is_base_duplicate !== true
                                         ? 'translation.value.status'

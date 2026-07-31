@@ -98,7 +98,7 @@
 
             <flux:card>
                 <x-ui.headers.card
-                    :title="__('Translation values')"
+                    :title="__('ui.translation-values')"
                     :description="__('Source is editable on purpose; target is the active application language.')"
                 >
                     <div class="wrap-anywhere max-w-3xl text-wrap text-end text-sky-500 dark:text-sky-400">
@@ -117,7 +117,7 @@
                                         size="lg"
                                         :title="strtoupper($sourceLocale)"
                                     />
-                                    <span class="mb-1">{{ __('Source language') }}</span>
+                                    <span class="mb-1">{{ __('ui.source-language') }}</span>
                                     <span class="font-semibold uppercase text-zinc-500 dark:text-zinc-400">
                                         {{ $sourceLocale }}
                                     </span>
@@ -163,7 +163,7 @@
                                     size="lg"
                                     :title="strtoupper($activeLocale)"
                                 />
-                                <span class="mb-1">{{ __('Target language') }}</span>
+                                <span class="mb-1">{{ __('ui.target.target-language') }}</span>
                                 <span class="font-semibold uppercase text-zinc-500 dark:text-zinc-400">
                                     {{ $activeLocale }}
                                 </span>

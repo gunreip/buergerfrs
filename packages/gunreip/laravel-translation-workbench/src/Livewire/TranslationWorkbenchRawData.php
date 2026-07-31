@@ -6,6 +6,7 @@ namespace Gunreip\TranslationWorkbench\Livewire;
 
 use App\Livewire\Concerns\InteractsWithUserSettings;
 use Gunreip\TranslationWorkbench\Support\RawDataColumnPresentation;
+use Gunreip\TranslationWorkbench\Support\TranslationWorkbenchVersion;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
@@ -1700,6 +1701,7 @@ class TranslationWorkbenchRawData extends Component
         );
 
         return view('translation-workbench::livewire.raw-data', [
+            'workbenchVersion' => app(TranslationWorkbenchVersion::class)->toArray(),
             'table' => $table,
             'tables' => $this->tables,
             'activeTableIndex' => $this->activeTableIndex(),
@@ -1712,6 +1714,7 @@ class TranslationWorkbenchRawData extends Component
             'rows' => $this->rows($table, $columns),
             'summary' => $this->summary($table, $columns),
             'tableCounts' => $this->tableCounts(),
+            'tableStorageSize' => $this->tableStorageSize($table),
             'sourceFileOptions' => $this->sourceFileOptions($table),
             'sourceFilePathOptions' => $this->sourceFilePathOptions($table),
             'builtSourceFilePath' => $this->builtSourceFilePath(),
@@ -4046,6 +4049,23 @@ class TranslationWorkbenchRawData extends Component
                     'foreign_columns' => ['id'],
                 ],
             ],
+            'translation_workbench_shared_key_candidates' => [
+                'finding_id' => [
+                    'name' => 'translation_workbench_shared_key_candidates_finding_id_foreign',
+                    'foreign_table' => 'translation_workbench_findings',
+                    'foreign_columns' => ['id'],
+                ],
+                'key_id' => [
+                    'name' => 'translation_workbench_shared_key_candidates_key_id_foreign',
+                    'foreign_table' => 'translation_workbench_keys',
+                    'foreign_columns' => ['id'],
+                ],
+                'matched_key_id' => [
+                    'name' => 'translation_workbench_shared_key_candidates_matched_key_id_foreign',
+                    'foreign_table' => 'translation_workbench_keys',
+                    'foreign_columns' => ['id'],
+                ],
+            ],
             'translation_workbench_timeline_events' => [
                 'event_type_id' => [
                     'name' => 'translation_workbench_timeline_events_event_type_id_foreign',
@@ -4570,6 +4590,36 @@ class TranslationWorkbenchRawData extends Component
                 ];
             })
             ->all();
+    }
+
+    /**
+     * @return array{bytes: int|null, pretty: string}
+     */
+    private function tableStorageSize(string $table): array
+    {
+        if (! Schema::hasTable($table)) {
+            return [
+                'bytes' => null,
+                'pretty' => '—',
+            ];
+        }
+
+        try {
+            $row = DB::selectOne(
+                'SELECT pg_total_relation_size(to_regclass(?))::bigint as bytes, pg_size_pretty(pg_total_relation_size(to_regclass(?))) as pretty',
+                [$table, $table],
+            );
+        } catch (\Throwable) {
+            return [
+                'bytes' => null,
+                'pretty' => '—',
+            ];
+        }
+
+        return [
+            'bytes' => isset($row->bytes) ? (int) $row->bytes : null,
+            'pretty' => (string) ($row->pretty ?? '—'),
+        ];
     }
 
     private function normalizedActiveTable(): string

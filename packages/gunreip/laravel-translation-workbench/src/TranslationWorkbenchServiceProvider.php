@@ -6,7 +6,9 @@ use Gunreip\TranslationWorkbench\Console\ImportExistingTranslations;
 use Gunreip\TranslationWorkbench\Console\ImportTranslationWorkbenchLangValues;
 use Gunreip\TranslationWorkbench\Console\ApplyTranslationWorkbenchCodeUpdates;
 use Gunreip\TranslationWorkbench\Console\ClassifyDynamicValues;
+use Gunreip\TranslationWorkbench\Console\ClassifyLangNodeTypes;
 use Gunreip\TranslationWorkbench\Console\CleanupExcludedTranslationWorkbenchPaths;
+use Gunreip\TranslationWorkbench\Console\DetectSharedKeyCandidates;
 use Gunreip\TranslationWorkbench\Console\DiscoverDynamicOptions;
 use Gunreip\TranslationWorkbench\Console\DiscoverDynamicSourceCandidates;
 use Gunreip\TranslationWorkbench\Console\DetectDuplicateCandidates;
@@ -51,8 +53,10 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
             $this->commands([
                 ApplyTranslationWorkbenchCodeUpdates::class,
                 ClassifyDynamicValues::class,
+                ClassifyLangNodeTypes::class,
                 CleanupExcludedTranslationWorkbenchPaths::class,
                 DetectDuplicateCandidates::class,
+                DetectSharedKeyCandidates::class,
                 DiscoverDynamicOptions::class,
                 DiscoverDynamicSourceCandidates::class,
                 ImportExistingTranslations::class,

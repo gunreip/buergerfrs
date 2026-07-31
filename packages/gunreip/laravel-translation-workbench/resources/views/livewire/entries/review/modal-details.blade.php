@@ -30,9 +30,9 @@
         <flux:callout.heading>
             <span class="flex w-full items-center justify-between gap-2">
                 <span class="inline-flex items-center gap-1.5">
-                    <span>{{ __('Source') }}</span>
+                    <span>{{ __('ui.source') }}</span>
                     <x-ui.tooltip.simple
-                        :header="__('Source')"
+                        :header="__('ui.source')"
                         :text="__('Scanned file path, line number and translation function found in the code.')"
                     />
                 </span>
@@ -60,7 +60,7 @@
                     <flux:callout.heading>
                         <span class="text-xs uppercase">{{ __('Path') }}</span>
                         <x-ui.tooltip.simple
-                            :header="__('Source path')"
+                            :header="__('ui.source-path')"
                             :text="__('Absolute path to the source file that produced this finding.')"
                         />
                     </flux:callout.heading>
@@ -101,9 +101,9 @@
     >
         <flux:callout.heading>
             <span class="inline-flex items-center gap-1.5">
-                <span>{{ __('Literal') }}</span>
+                <span>{{ __('ui.literal.literal') }}</span>
                 <x-ui.tooltip.simple
-                    :header="__('Literal')"
+                    :header="__('ui.literal.literal')"
                     :text="__(
                         'Literal text extracted from the translation call or suggested from the raw expression.',
                     )"
@@ -200,32 +200,32 @@
                 <div class="space-y-1">
                     <flux:callout.heading>
                         <span class="text-xs uppercase">
-                            {{ __('Translation key') }}
+                            {{ __('ui.translation.translation-key') }}
                         </span>
                         <x-ui.tooltip.simple
-                            :header="__('Translation key')"
+                            :header="__('ui.translation.translation-key')"
                             :text="__('The translation key that is currently linked to this finding.')"
                         />
                     </flux:callout.heading>
                     <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                        {{ $reviewTranslationKey ?: __('Missing') }}
+                        {{ $reviewTranslationKey ?: __('ui.missing') }}
                     </div>
                 </div>
 
                 <div class="space-y-1">
                     <flux:callout.heading>
                         <span class="text-xs uppercase">
-                            {{ __('Suggested key') }}
+                            {{ __('ui.key.suggested-key') }}
                         </span>
                         <x-ui.tooltip.simple
-                            :header="__('Suggested key')"
+                            :header="__('ui.key.suggested-key')"
                             :text="__(
                                 'The suggested translation key that is derived from the scanner and workbench.',
                             )"
                         />
                     </flux:callout.heading>
                     <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                        {{ $reviewEffectiveSuggestedKey ?: __('Missing') }}
+                        {{ $reviewEffectiveSuggestedKey ?: __('ui.missing') }}
                     </div>
                 </div>
 
@@ -276,9 +276,9 @@
     >
         <flux:callout.heading>
             <span class="inline-flex items-center gap-1.5">
-                <span>{{ __('Structure') }}</span>
+                <span>{{ __('ui.structure') }}</span>
                 <x-ui.tooltip.simple
-                    :header="__('Structure')"
+                    :header="__('ui.structure')"
                     :text="__(
                         'Namespace, group, path key and scope derived from the scanner and linked workbench key.',
                     )"
@@ -303,7 +303,7 @@
                             />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                            {{ $reviewFinding->namespace ?: __('Missing') }}
+                            {{ $reviewFinding->namespace ?: __('ui.missing') }}
                         </div>
                     </div>
 
@@ -318,7 +318,7 @@
                             />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                            {{ $reviewFinding->group ?: __('Missing') }}
+                            {{ $reviewFinding->group ?: __('ui.missing') }}
                         </div>
                     </div>
                 </div>
@@ -335,7 +335,7 @@
                             />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                            {{ $reviewFinding->path_key ?: __('Missing') }}
+                            {{ $reviewFinding->path_key ?: __('ui.missing') }}
                         </div>
                     </div>
 
@@ -350,7 +350,7 @@
                             />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                            {{ $reviewFinding->scope ?: __('Missing') }}
+                            {{ $reviewFinding->scope ?: __('ui.missing') }}
                         </div>
                     </div>
                 </div>
@@ -370,10 +370,10 @@
                         </flux:callout.heading>
                         <div class="grid gap-2 md:grid-cols-2">
                             <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                                {{ $reviewFinding->key_namespace ?: __('Missing') }}
+                                {{ $reviewFinding->key_namespace ?: __('ui.missing') }}
                             </div>
                             <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                                {{ $reviewFinding->key_group ?: __('Missing') }}
+                                {{ $reviewFinding->key_group ?: __('ui.missing') }}
                             </div>
                         </div>
                     </div>

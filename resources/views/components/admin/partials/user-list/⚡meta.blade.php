@@ -57,13 +57,13 @@
                 class="col-span-4 min-h-6 hyphens-auto md:col-span-1"
                 color="green"
                 icon="user-check"
-                heading="{{ __('admin.roles.labels.assigned_users') }}"
+                heading="{{ __('ui.assigned-users') }}"
                 text="{{ __('admin.user_list.meta.users_grouped_by_assigned_role_category') }}"
             >
                 <flux:field class="space-y-1 text-sm">
                     <div class="-mb-1 flex items-center justify-between gap-3">
                         <span class="text-zinc-300">
-                            {{ __('admin.permissions.filters.system.label') }}
+                            {{ __('ui.label.label') }}
                         </span>
                         <span class="font-semibold tabular-nums text-zinc-100">
                             {{ $summary['assignedUsersByRoleCategory']['system'] ?? 0 }}
@@ -85,13 +85,13 @@
                 class="col-span-4 hyphens-auto md:col-span-1"
                 color="orange"
                 icon="shield-alert"
-                heading="{{ __('admin.user_list.meta.assignable_roles') }}"
+                heading="{{ __('ui.meta.assignable-roles') }}"
                 text="{{ __('admin.user_list.meta.assignable_roles_grouped_by_role_category') }}"
             >
                 <flux:field class="space-y-1 text-sm">
                     <div class="-mb-1 flex items-center justify-between gap-4">
                         <span class="text-zinc-300">
-                            {{ __('admin.permissions.filters.system.label') }}
+                            {{ __('ui.label.label') }}
                         </span>
                         <span class="font-semibold tabular-nums text-zinc-100">
                             {{ $summary['assignableRolesByCategory']['system'] ?? 0 }}

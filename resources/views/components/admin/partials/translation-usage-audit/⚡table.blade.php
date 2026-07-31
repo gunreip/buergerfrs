@@ -134,10 +134,10 @@
                     >
                         <x-ui.tooltip.trigger
                             class="ml-3"
-                            :title="__('admin.app_settings.locale.current')"
+                            :title="__('ui.current')"
                             :text="__('Current usages of the translation key')"
                         >
-                            {{ __('admin.app_settings.locale.current') }}
+                            {{ __('ui.current') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -546,7 +546,7 @@
         @if ($translationUsageItems->hasPages())
             <flux:separator
                 class=""
-                text="{{ __('admin.client_list.table.pagination') }}"
+                text="{{ __('ui.pagination') }}"
             />
 
             {{-- Pagination --}}

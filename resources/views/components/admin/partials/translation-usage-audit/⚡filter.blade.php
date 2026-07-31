@@ -89,7 +89,7 @@
                             :title="__('All audit types')"
                             :text="__('Show all items regardless of their audit type.')"
                         >
-                            {{ __('Audit') }}
+                            {{ __('ui.audit') }}
                         </x-ui.tooltip.trigger>
                     </span>
 

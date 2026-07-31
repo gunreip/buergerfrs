@@ -22,7 +22,7 @@
                             color="{{ $editFinding->translation_key ? 'green' : 'red' }}"
                             size="sm"
                         >
-                            {{ $editFinding->translation_key ? __('Translation key') : __('Missing key') }}
+                            {{ $editFinding->translation_key ? __('ui.translation.translation-key') : __('Missing key') }}
                         </flux:badge>
 
                         <flux:badge
@@ -47,6 +47,32 @@
                     >
                         #{{ $editFinding->id }}
                     </flux:badge>
+
+                    <div
+                        class="flex h-6 items-center"
+                        @if ($editModalAutoCloseCountdown > 0) wire:poll.1s="tickEditModalAutoClose" @endif
+                    >
+                        <x-ui.tooltip.simple
+                            class="inline-flex items-center"
+                            :title="$editModalAutoCloseAfterSave
+                                ? __('Auto-close enabled')
+                                : __('Auto-close disabled')"
+                            :text="__(
+                                'When enabled, this modal closes automatically three seconds after the translation values have been saved successfully.',
+                            )"
+                        >
+                            <flux:button
+                                type="button tabular-nums"
+                                size="xs"
+                                variant="{{ $editModalAutoCloseAfterSave ? 'primary' : 'subtle' }}"
+                                color="{{ $editModalAutoCloseAfterSave ? 'cyan' : 'zinc' }}"
+                                icon="clock"
+                                wire:click="toggleEditModalAutoCloseAfterSave"
+                            >
+                                {{ $editModalAutoCloseCountdown > 0 ? $editModalAutoCloseCountdown . 's' : __('3s') }}
+                            </flux:button>
+                        </x-ui.tooltip.simple>
+                    </div>
 
                     <flux:button
                         type="button"
@@ -89,7 +115,7 @@
                 $sourceOrigin = (string) ($editValues['source_origin'] ?? 'missing');
                 $sourceBadge = match ($sourceOrigin) {
                     'translation_value' => [
-                        'label' => __('Translation exists'),
+                        'label' => __('ui.translation.translation-exists'),
                         'color' => 'green',
                     ],
                     'literal_text' => [
@@ -109,7 +135,7 @@
 
                 if (blank($editFinding->translation_key)) {
                     $editWarnings[] = [
-                        'label' => __('Translation key missing'),
+                        'label' => __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing'),
                         'text' => __('Review this finding and set a translation key before editing values.'),
                         'color' => 'red',
                     ];
@@ -142,12 +168,36 @@
                         'color' => 'sky',
                     ];
                 }
+
+                $extractTranslationVariables = static function (?string $value): array {
+                    $value = (string) $value;
+                    $variables = [];
+
+                    if (preg_match_all('/(?<!:):[A-Za-z][A-Za-z0-9_]*/', $value, $matches)) {
+                        $variables = array_merge($variables, $matches[0]);
+                    }
+
+                    if (preg_match_all('/\{[A-Za-z][A-Za-z0-9_]*\}/', $value, $matches)) {
+                        $variables = array_merge($variables, $matches[0]);
+                    }
+
+                    return collect($variables)
+                        ->unique()
+                        ->values()
+                        ->all();
+                };
+                $sourceTranslationVariables = $extractTranslationVariables($sourceTranslationValue);
+                $targetTranslationVariables = $extractTranslationVariables($targetTranslationValue);
+                $missingTargetTranslationVariables = collect($sourceTranslationVariables)
+                    ->reject(static fn(string $variable): bool => in_array($variable, $targetTranslationVariables, true))
+                    ->values()
+                    ->all();
             @endphp
 
             {{-- Card Translation Key --}}
             <flux:card>
                 <x-ui.headers.card
-                    :title="__('Translation key')"
+                    :title="__('ui.translation.translation-key')"
                     :description="$editFinding->translation_key ?: __('No translation key set.')"
                 >
                     <div class="flex flex-wrap items-center justify-end gap-2">
@@ -168,7 +218,7 @@
                         @endif
 
                         <x-ui.tooltip.simple
-                            :title="__('Source language')"
+                            :title="__('ui.source-language')"
                             :text="strtoupper($sourceLocale)"
                         >
                             <span
@@ -184,7 +234,7 @@
                         </x-ui.tooltip.simple>
 
                         <x-ui.tooltip.simple
-                            :title="__('Target language')"
+                            :title="__('ui.target.target-language')"
                             :text="strtoupper($activeLocale)"
                         >
                             <span
@@ -221,7 +271,7 @@
 
             <flux:card>
                 <x-ui.headers.card
-                    :title="__('Translation values')"
+                    :title="__('ui.translation-values')"
                     :description="__(
                         'Source value is read-only by default; use the edit button if the source-language value must be corrected explicitly.',
                     )"
@@ -238,7 +288,7 @@
                                         size="lg"
                                         :title="strtoupper($sourceLocale)"
                                     />
-                                    <span class="mb-1">{{ __('Source language') }}</span>
+                                    <span class="mb-1">{{ __('ui.source-language') }}</span>
                                     <span class="font-mono text-sm uppercase text-zinc-500 dark:text-zinc-400">
                                         {{ $sourceLocale }}
                                     </span>
@@ -248,6 +298,22 @@
                                     >
                                         {{ $sourceBadge['label'] }}
                                     </flux:badge>
+                                    @if ($sourceTranslationVariables !== [])
+                                        <x-ui.tooltip.simple
+                                            :title="__('Translation variables')"
+                                            :text="__(
+                                                'This source value contains placeholders that must be preserved in the target translation: :variables',
+                                                ['variables' => implode(', ', $sourceTranslationVariables)],
+                                            )"
+                                        >
+                                            <flux:badge
+                                                size="sm"
+                                                color="red"
+                                            >
+                                                {{ __('Variables warning') }}
+                                            </flux:badge>
+                                        </x-ui.tooltip.simple>
+                                    @endif
                                 </span>
 
                                 <flux:button
@@ -277,7 +343,7 @@
                             id="translation-workbench-source-translation-value"
                             rows="2"
                             :readonly="!$sourceTranslationEditable"
-                            wire:model="sourceTranslationValue"
+                            wire:model.live.debounce.300ms="sourceTranslationValue"
                         />
                     </flux:field>
 
@@ -291,7 +357,7 @@
                                         size="lg"
                                         :title="strtoupper($activeLocale)"
                                     />
-                                    <span class="mb-1">{{ __('Target language') }}</span>
+                                    <span class="mb-1">{{ __('ui.target.target-language') }}</span>
                                     <span class="font-mono text-sm uppercase text-zinc-500 dark:text-zinc-400">
                                         {{ $activeLocale }}
                                     </span>
@@ -301,15 +367,37 @@
                                     size="sm"
                                     color="{{ $editValues['target_exists'] ?? false ? 'green' : 'amber' }}"
                                 >
-                                    {{ $editValues['target_exists'] ?? false ? __('Translation exists') : __('Translation missing') }}
+                                    {{ $editValues['target_exists'] ?? false ? __('ui.translation.translation-exists') : __('Translation missing') }}
                                 </flux:badge>
+
+                                @if ($sourceTranslationVariables !== [])
+                                    <x-ui.tooltip.simple
+                                        :title="$missingTargetTranslationVariables !== [] ? __('ui.variables.variable-missing') : __('ui.variables.variables-ok')"
+                                        :text="$missingTargetTranslationVariables !== []
+                                            ? __(
+                                                'The target translation is missing placeholders from the source value: :variables',
+                                                ['variables' => implode(', ', $missingTargetTranslationVariables)],
+                                            )
+                                            : __(
+                                                'All source placeholders are present in the target translation: :variables',
+                                                ['variables' => implode(', ', $sourceTranslationVariables)],
+                                            )"
+                                    >
+                                        <flux:badge
+                                            size="sm"
+                                            color="{{ $missingTargetTranslationVariables !== [] ? 'red' : 'green' }}"
+                                        >
+                                            {{ $missingTargetTranslationVariables !== [] ? __('ui.variables.variable-missing') : __('ui.variables.variables-ok') }}
+                                        </flux:badge>
+                                    </x-ui.tooltip.simple>
+                                @endif
                             </span>
                         </flux:label>
 
                         <flux:textarea
                             id="translation-workbench-target-translation-value"
                             rows="2"
-                            wire:model="targetTranslationValue"
+                            wire:model.live.debounce.300ms="targetTranslationValue"
                         />
                     </flux:field>
                 </div>
@@ -317,7 +405,7 @@
                 @if ($subLocales->isNotEmpty())
                     <flux:separator
                         class="my-4"
-                        text="{{ __('Sub-languages') }}"
+                        text="{{ __('ui.languages.sub-languages') }}"
                     />
 
                     <div class="flex flex-wrap items-center gap-2">
@@ -327,7 +415,7 @@
                             @endphp
 
                             <x-ui.tooltip.simple
-                                :title="__('Target sub-language')"
+                                :title="__('ui.language.target-sub-language')"
                                 :text="strtoupper((string) $subLocale)"
                             >
                                 <flux:button
@@ -365,7 +453,7 @@
                                                 size="lg"
                                                 :title="strtoupper((string) $subLocale)"
                                             />
-                                            <span>{{ __('Target sub-language') }}</span>
+                                            <span>{{ __('ui.language.target-sub-language') }}</span>
                                             <span class="font-mono text-sm uppercase text-zinc-500 dark:text-zinc-400">
                                                 {{ $subLocale }}
                                             </span>

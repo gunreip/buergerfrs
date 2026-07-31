@@ -1,9 +1,7 @@
 <?php
 
 return [
-    'header' => [
-        'search' => 'Suchen',
-    ],
+    'header' => [],
     'sidebar' => [
         'administration' => [
             'countries' => 'Länder',
@@ -11,7 +9,6 @@ return [
         ],
         'management' => [
             'client' => 'Kunde',
-            'create' => 'Erstellen',
         ],
     ],
 ];

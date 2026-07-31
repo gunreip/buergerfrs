@@ -1,7 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/lang-values/translation-key.blade.php --}}
 
 <flux:field class="{{ $fieldClass ?? '' }}">
-    <flux:label>{{ __('Translation key') }}</flux:label>
+    <flux:label>{{ __('ui.translation.translation-key') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
             <flux:icon.key-round />

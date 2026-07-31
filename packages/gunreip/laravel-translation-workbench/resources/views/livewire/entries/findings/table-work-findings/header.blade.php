@@ -1,7 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/findings/table-work-findings/header.blade.php --}}
 
 {{-- Table Findings Header Row --}}
-<flux:table.columns>
+<flux:table.columns class="bg-white dark:bg-zinc-700">
     {{-- Table Findings Header Column ID --}}
     <flux:table.column
         class="w-20 bg-white dark:bg-zinc-700"
@@ -23,7 +23,7 @@
         wire:click="sortFindingsBy('source')"
     >
         <span class="inline-flex items-center gap-1">
-            <span>{{ __('Source') }}</span>
+            <span>{{ __('ui.source') }}</span>
             <x-ui.tooltip.simple
                 :header="__('Source location')"
                 :text="__('Source file and line where the scanner found this translation-capable code occurrence.')"
@@ -55,7 +55,7 @@
                 </flux:button>
             </x-ui.tooltip.simple>
             <span class="inline-flex items-center justify-center gap-1 text-center">
-                <span>{{ __('Status') }}</span>
+                <span>{{ __('ui.status') }}</span>
                 <x-ui.tooltip.simple
                     :header="__('Finding status')"
                     :text="__(
@@ -83,7 +83,7 @@
         wire:click="sortFindingsBy('literal')"
     >
         <span class="inline-flex items-center gap-1">
-            <span>{{ __('Literal') }}</span>
+            <span>{{ __('ui.literal.literal') }}</span>
             <x-ui.tooltip.simple
                 :header="__('Scanned literal')"
                 :text="__(
@@ -124,7 +124,7 @@
     {{-- Table Findings Header Column State --}}
     <flux:table.column>
         <span class="inline-flex items-center gap-1">
-            <span>{{ __('State') }}</span>
+            <span>{{ __('ui.state') }}</span>
             <x-ui.tooltip.simple
                 :header="__('Workflow state')"
                 :text="__('Shows review, source/target translation and saved-to-langfile state for this finding.')"
@@ -157,30 +157,72 @@
             </span>
 
             @if (($bulkEqualizeContext['selected_count'] ?? 0) > 0)
+                @php
+                    $equalizeToExistingSharedKey =
+                        (bool) ($bulkEqualizeContext['equalize_to_existing_shared_key'] ?? false);
+                    $bulkButtonColor =
+                        $bulkEqualizeContext['can_confirm'] ?? false
+                            ? ($equalizeToExistingSharedKey
+                                ? 'cyan'
+                                : 'amber')
+                            : 'zinc';
+                    $bulkButtonIcon = $equalizeToExistingSharedKey ? 'git-pull-request-arrow' : 'git-merge';
+                    $bulkButtonPulseClass = $bulkEqualizeContext['can_confirm'] ?? false ? 'animate-pulse' : '';
+                @endphp
+
                 <div class="flex items-center gap-1">
                     <x-ui.tooltip.simple
-                        :title="__('Equalize selected translation keys')"
+                        :title="$equalizeToExistingSharedKey
+                            ? __('Equalize open candidates to existing shared keys')
+                            : __('Equalize selected translation keys')"
+                        :text="$equalizeToExistingSharedKey
+                            ? __(
+                                'Equalize open candidates to already existing shared keys. The existing shared key will be used as the target translation key.',
+                            )
+                            : __(
+                                'Review the selected findings and set one shared translation key for entries with the same literal.',
+                            )"
+                    >
+                        <flux:button.group>
+                            <flux:button
+                                class="{{ $bulkButtonPulseClass }} h-6"
+                                type="button"
+                                size="xs"
+                                variant="{{ $bulkEqualizeContext['can_confirm'] ?? false ? 'primary' : 'subtle' }}"
+                                color="{{ $bulkButtonColor }}"
+                                icon="{{ $bulkButtonIcon }}"
+                                wire:click="openBulkEqualizeTranslationKeyModal"
+                            />
+                            {{-- {{ __('Bulk') }} --}}
+                            <flux:button
+                                class="{{ $bulkButtonPulseClass }} h-6 text-zinc-900 dark:text-zinc-900"
+                                type="button"
+                                size="xs"
+                                variant="{{ $bulkEqualizeContext['can_confirm'] ?? false ? 'primary' : 'subtle' }}"
+                                color="{{ $bulkButtonColor }}"
+                                {{-- icon="git-merge" --}}
+                                wire:click="openBulkEqualizeTranslationKeyModal"
+                            >
+                                {{ $bulkEqualizeContext['selected_count'] }}
+                            </flux:button>
+                        </flux:button.group>
+                    </x-ui.tooltip.simple>
+
+                    <x-ui.tooltip.simple
+                        :title="__('Select all matching bulk findings')"
                         :text="__(
-                            'Review the selected findings and set one shared translation key for entries with the same literal.',
+                            'Adds every currently matching and selectable finding with the same shared literal to the bulk translation-key review.',
                         )"
                     >
                         <flux:button
-                            class="h-6"
+                            class="h-6 w-6"
                             type="button"
                             size="xs"
-                            variant="{{ $bulkEqualizeContext['can_confirm'] ?? false ? 'primary' : 'subtle' }}"
-                            color="{{ $bulkEqualizeContext['can_confirm'] ?? false ? 'amber' : 'zinc' }}"
-                            icon="git-merge"
-                            wire:click="openBulkEqualizeTranslationKeyModal"
-                        >
-                            {{ __('Bulk') }}
-                            <flux:badge
-                                size="sm"
-                                color="{{ $bulkEqualizeContext['can_confirm'] ?? false ? 'amber' : 'zinc' }}"
-                            >
-                                {{ $bulkEqualizeContext['selected_count'] }}
-                            </flux:badge>
-                        </flux:button>
+                            variant="primary"
+                            color="amber"
+                            icon="check-check"
+                            wire:click="selectAllBulkEqualizeSelection"
+                        />
                     </x-ui.tooltip.simple>
 
                     <x-ui.tooltip.simple

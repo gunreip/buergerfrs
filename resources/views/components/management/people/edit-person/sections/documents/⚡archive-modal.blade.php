@@ -2,7 +2,7 @@
 
 @php
     $archiveFilters = [
-        'current' => __('admin.app_settings.locale.current'),
+        'current' => __('ui.current'),
         'all' => __('ui.states.all'),
         'expired' => __('Expired'),
         'replaced' => __('Replaced'),
@@ -71,7 +71,7 @@
                 <flux:table.columns class="bg-zinc-800 text-zinc-400">
                     {{-- Column Status --}}
                     <flux:table.column>
-                        {{ __('admin.app_settings.table_icon_registry.status') }}
+                        {{ __('ui.status') }}
                     </flux:table.column>
                     {{-- Column Category --}}
                     <flux:table.column
@@ -98,7 +98,7 @@
                         :direction="$documentArchiveSortDirection"
                         wire:click="sortDocumentArchiveBy('type')"
                     >
-                        {{ __('admin.client_list.table.type') }}
+                        {{ __('ui.type') }}
                     </flux:table.column>
                     {{-- Column Number --}}
                     <flux:table.column

@@ -2,7 +2,7 @@
 
 <flux:field class="{{ $fieldClass ?? '' }}">
     <flux:label>
-        {{ __('Status') }}
+        {{ __('ui.status') }}
     </flux:label>
     <flux:input.group>
         <flux:input.group.prefix>

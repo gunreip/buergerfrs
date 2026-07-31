@@ -78,7 +78,7 @@
                     :title="__('Filter by assignable')"
                     :text="__('Select an assignable status to filter the list of roles.')"
                 >
-                    {{ __('Assignable') }}
+                    {{ __('ui.assignable') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -100,7 +100,7 @@
                     </flux:select.option>
 
                     <flux:select.option value="yes">
-                        {{ __('Assignable') }}
+                        {{ __('ui.assignable') }}
                     </flux:select.option>
 
                     <flux:select.option value="no">
@@ -116,7 +116,7 @@
                     :title="__('admin.permission_list.filter.filter_by_system')"
                     :text="__('Select a system status to filter the list of roles.')"
                 >
-                    {{ __('admin.permissions.filters.system.label') }}
+                    {{ __('ui.label.label') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 

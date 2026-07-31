@@ -51,8 +51,8 @@
                 type="number"
                 min="0"
                 max="65535"
-                {{-- i18n-native: __('admin.permissions.labels.sort_order') --}}
-                label="{{ __('admin.roles.labels.sort_order') }}"
+                {{-- i18n-native: __('ui.sort-order') --}}
+                label="{{ __('ui.sort-order') }}"
                 wire:model.live="creatingSortOrder"
             />
 
@@ -67,8 +67,8 @@
 
             <div class="col-span-2">
                 <flux:checkbox
-                    {{-- i18n-native: __('admin.roles.labels.assignable_through_ui') --}}
-                    label="{{ __('admin.roles.labels.assignable_through_ui') }}"
+                    {{-- i18n-native: __('ui.assignable-through-ui') --}}
+                    label="{{ __('ui.assignable-through-ui') }}"
                     wire:model.live="creatingIsAssignable"
                 />
             </div>

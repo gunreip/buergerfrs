@@ -228,7 +228,7 @@
 
                         <flux:card>
                             <x-ui.headers.card
-                                :title="__('admin.client_list.table.created')"
+                                :title="__('ui.created')"
                                 :description="__('Creation timestamp of this activity_log entry.')"
                             />
 

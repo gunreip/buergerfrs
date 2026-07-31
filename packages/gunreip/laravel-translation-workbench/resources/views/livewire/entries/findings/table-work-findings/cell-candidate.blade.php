@@ -5,7 +5,7 @@
                     <div class="flex flex-wrap gap-1">
                         @if ($isUiState)
                             <x-ui.tooltip.simple
-                                :title="__('UI translation')"
+                                :title="__('ui.ui-translation')"
                                 :text="__(
                                     'This finding was reviewed and confirmed as a reusable user-interface translation.',
                                 )"
@@ -39,7 +39,7 @@
                                         size="sm"
                                         color="{{ $isUiState ? 'zinc' : 'violet' }}"
                                     >
-                                        {{ __('UI candidate') }}
+                                        {{ __('ui.ui-candidate') }}
                                     </flux:badge>
                                 </span>
                             </x-ui.tooltip.simple>

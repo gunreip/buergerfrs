@@ -261,7 +261,7 @@
                                 :color="($referenceIsMissing || $referenceHasFallback) ? 'amber' : 'green'"
                                 variant="subtle"
                                 :label="__('Fallback').
-                                ':'.$referenceHasFallback ? __('yes') : __('no')"
+                                ':'.$referenceHasFallback ? __('ui.filters.yes') : __('no')"
                             />
                         </div>
 

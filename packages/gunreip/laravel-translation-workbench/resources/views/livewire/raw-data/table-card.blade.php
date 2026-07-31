@@ -3,11 +3,28 @@
 {{-- Card --}}
 <flux:card>
     {{-- Card Header --}}
+    @php
+        $tableStorageSize = $tableStorageSize ?? ['bytes' => null, 'pretty' => '—'];
+        $tableStorageSizeText = (string) ($tableStorageSize['pretty'] ?? '—');
+    @endphp
     <x-ui.headers.card
         class="tabular-nums"
         :title="$table"
-        :description="count($columns) . ' ' . __('columns')"
     >
+        <x-slot:descriptionSlot>
+            <span class="inline-flex items-center gap-1">
+                <span>{{ count($columns) }} {{ __('columns') }}</span>
+                <span>·</span>
+                <span>{{ __('ui.storage') }}: {{ $tableStorageSizeText }}</span>
+                <x-ui.tooltip.simple
+                    :title="__('Database table storage')"
+                    :text="__(
+                        'PostgreSQL total relation size for this table, including table data, indexes and auxiliary storage where available.',
+                    )"
+                />
+            </span>
+        </x-slot:descriptionSlot>
+
         <x-ui.table.per-page-selector
             id="translation-workbench-raw-data-per-page"
             name="translation-workbench-raw-data-per-page"
@@ -118,7 +135,7 @@
                                 : '—');
                     $tooltipRows = [
                         __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.table_card.column') => $column,
-                        __('Type') => $metadata['type'] ?? 'unknown',
+                        __('ui.type') => $metadata['type'] ?? 'unknown',
                         __('Nullable') => $metadata['nullable'] ?? false ? __('ui.filters.yes') : __('no'),
                         __('Default') =>
                             ($metadata['default'] ?? null) !== null ? (string) $metadata['default'] : 'NULL',
@@ -317,23 +334,27 @@
                                     class="max-w-md"
                                     x-data="{ expanded: false }"
                                 >
-                                    <button
-                                        class="flex w-full items-center justify-between gap-2 rounded border border-zinc-200 bg-zinc-50 px-2 py-1 text-left font-mono text-xs text-zinc-700 hover:border-sky-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-sky-500"
-                                        type="button"
-                                        title="{{ $prettyDisplayValue }}"
-                                        x-on:click="expanded = ! expanded"
+                                    <x-ui.tooltip.simple
+                                        :title="__('Cell value')"
+                                        :text="$prettyDisplayValue"
                                     >
-                                        <span class="truncate">
-                                            <x-translation-workbench::text.highlight
-                                                :value="$jsonPreview"
-                                                :search="$rawDataSearch"
+                                        <button
+                                            class="flex w-full items-center justify-between gap-2 rounded border border-zinc-200 bg-zinc-50 px-2 py-1 text-left font-mono text-xs text-zinc-700 hover:border-sky-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-sky-500"
+                                            type="button"
+                                            x-on:click="expanded = ! expanded"
+                                        >
+                                            <span class="truncate">
+                                                <x-translation-workbench::text.highlight
+                                                    :value="$jsonPreview"
+                                                    :search="$rawDataSearch"
+                                                />
+                                            </span>
+                                            <flux:icon.chevron-down
+                                                class="size-3.5 shrink-0 text-zinc-400 transition-transform"
+                                                x-bind:class="{ 'rotate-180': expanded }"
                                             />
-                                        </span>
-                                        <flux:icon.chevron-down
-                                            class="size-3.5 shrink-0 text-zinc-400 transition-transform"
-                                            x-bind:class="{ 'rotate-180': expanded }"
-                                        />
-                                    </button>
+                                        </button>
+                                    </x-ui.tooltip.simple>
 
                                     <pre
                                         class="mt-1 max-h-56 overflow-auto rounded border border-zinc-200 bg-white p-2 text-xs dark:border-zinc-700 dark:bg-zinc-950"
@@ -359,15 +380,16 @@
                                         />
                                     </flux:tooltip>
 
-                                    <span
+                                    <x-ui.tooltip.simple
                                         class="{{ $presentation['content_class'] ?? 'wrap-anywhere text-wrap font-mono text-xs' }} text-zinc-700 dark:text-zinc-300"
-                                        title="{{ $prettyDisplayValue }}"
+                                        :title="__('ui.source-path')"
+                                        :text="$prettyDisplayValue"
                                     >
                                         <x-translation-workbench::text.highlight
                                             :value="$prettyDisplayValue"
                                             :search="$rawDataSearch"
                                         />
-                                    </span>
+                                    </x-ui.tooltip.simple>
                                 </div>
                             @elseif ($isFindingSourceFileId)
                                 <div class="{{ $presentation['finding_source_wrapper_class'] ?? 'flex min-w-[28rem] max-w-2xl items-start gap-2' }}">
@@ -410,15 +432,16 @@
                                             </flux:tooltip>
                                         </div>
 
-                                        <div
+                                        <x-ui.tooltip.simple
                                             class="{{ $presentation['content_class'] ?? 'wrap-anywhere text-wrap font-mono text-xs' }} text-zinc-700 dark:text-zinc-300"
-                                            title="{{ $findingSourcePath }}"
+                                            :title="__('Resolved source path')"
+                                            :text="$findingSourcePath"
                                         >
                                             <x-translation-workbench::text.highlight
                                                 :value="$findingSourcePathPreview"
                                                 :search="$rawDataSearch"
                                             />
-                                        </div>
+                                        </x-ui.tooltip.simple>
                                     </div>
                                 </div>
                             @elseif ($isKeyFindingKeyId)
@@ -439,14 +462,14 @@
                                                     {{ __('Only the FK ID is stored in this column. Key details are resolved from translation_workbench_keys for readability.') }}
                                                 </div>
                                                 <div class="grid grid-cols-3 gap-x-3 gap-y-1 text-xs">
-                                                    <div class="font-semibold text-zinc-400">{{ __('Translation key') }}</div>
+                                                    <div class="font-semibold text-zinc-400">{{ __('ui.translation.translation-key') }}</div>
                                                     <div class="col-span-2 break-all font-mono text-zinc-100">
                                                         <x-translation-workbench::text.highlight
                                                             :value="$keyFindingKeyContext['translation_key'] ?: 'NULL'"
                                                             :search="$rawDataSearch"
                                                         />
                                                     </div>
-                                                    <div class="font-semibold text-zinc-400">{{ __('Suggested key') }}</div>
+                                                    <div class="font-semibold text-zinc-400">{{ __('ui.key.suggested-key') }}</div>
                                                     <div class="col-span-2 break-all font-mono text-zinc-100">
                                                         <x-translation-workbench::text.highlight
                                                             :value="$keyFindingKeyContext['suggested_key'] ?: 'NULL'"
@@ -472,15 +495,16 @@
                                         </flux:tooltip>
                                     </div>
 
-                                    <div
+                                    <x-ui.tooltip.simple
                                         class="{{ $presentation['content_class'] ?? 'wrap-anywhere text-wrap font-mono text-xs' }} text-zinc-700 dark:text-zinc-300"
-                                        title="{{ $keyFindingKeyPreview }}"
+                                        :title="__('Resolved key preview')"
+                                        :text="$keyFindingKeyPreview"
                                     >
                                         <x-translation-workbench::text.highlight
                                             :value="$keyFindingKeyPreview"
                                             :search="$rawDataSearch"
                                         />
-                                    </div>
+                                    </x-ui.tooltip.simple>
                                 </div>
                             @elseif ($isKeyFindingFindingId)
                                 <div class="min-w-0 space-y-1">
@@ -507,7 +531,7 @@
                                                             :search="$rawDataSearch"
                                                         />
                                                     </div>
-                                                    <div class="font-semibold text-zinc-400">{{ __('Suggested key') }}</div>
+                                                    <div class="font-semibold text-zinc-400">{{ __('ui.key.suggested-key') }}</div>
                                                     <div class="col-span-2 break-all font-mono text-zinc-100">
                                                         <x-translation-workbench::text.highlight
                                                             :value="$keyFindingFindingContext['suggested_key'] ?: 'NULL'"
@@ -533,19 +557,21 @@
                                         </flux:tooltip>
                                     </div>
 
-                                    <div
+                                    <x-ui.tooltip.simple
                                         class="{{ $presentation['content_class'] ?? 'wrap-anywhere text-wrap font-mono text-xs' }} text-zinc-700 dark:text-zinc-300"
-                                        title="{{ $keyFindingFindingPreview }}"
+                                        :title="__('Resolved finding preview')"
+                                        :text="$keyFindingFindingPreview"
                                     >
                                         <x-translation-workbench::text.highlight
                                             :value="$keyFindingFindingPreview"
                                             :search="$rawDataSearch"
                                         />
-                                    </div>
+                                    </x-ui.tooltip.simple>
                                 </div>
                             @else
-                                <div
-                                    title="{{ $prettyDisplayValue }}"
+                                <x-ui.tooltip.simple
+                                    :title="__('Cell value')"
+                                    :text="$prettyDisplayValue"
                                     @class([
                                         $presentation['content_class'] ?? 'max-w-md truncate font-mono text-xs',
                                         'text-sky-600 dark:text-sky-400' => $value === null,
@@ -555,7 +581,7 @@
                                         :value="$prettyDisplayValue ?? 'NULL'"
                                         :search="$rawDataSearch"
                                     />
-                                </div>
+                                </x-ui.tooltip.simple>
                             @endif
                         </flux:table.cell>
                     @endforeach

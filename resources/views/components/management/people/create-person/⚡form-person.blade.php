@@ -197,7 +197,7 @@
 
                         <dl class="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-2 text-xs">
                             @if ($documentType !== '')
-                                <dt class="text-zinc-500 dark:text-zinc-400">{{ __('admin.client_list.table.type') }}
+                                <dt class="text-zinc-500 dark:text-zinc-400">{{ __('ui.type') }}
                                 </dt>
                                 <dd class="truncate text-zinc-700 dark:text-zinc-300">
                                     {{ __($documentTypeOptions[$documentType] ?? $documentType) }}

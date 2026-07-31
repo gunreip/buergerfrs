@@ -19,15 +19,23 @@ return [
     'all-decisions' => 'Alle Entscheidungen',
     'all-dynamic' => 'Alles dynamisch',
     'all-entries' => 'All entries',
+    'all-states' => 'Alle Status',
     'all-statuses' => 'Alle Status',
     'all-types' => 'Alle Typen',
     'already-target' => 'Bereits als Ziel festgelegt',
     'app-settings' => 'App-Einstellungen',
     'appearance' => 'Erscheinungsbild',
     'applied' => 'Angewandt',
+    'apply-conflict' => 'Konflikt anwenden',
     'approved' => 'Genehmigt',
+    'assignable' => 'Zuweisbar',
+    'assignable-through-ui' => 'Über die Benutzeroberfläche zuweisbar',
+    'assigned-roles' => 'Zugewiesene Rollen',
+    'assigned-users' => 'Zugewiesene Benutzer',
+    'audit' => 'Prüfung',
+    'available' => 'Verfügbar',
     'badge' => [
-        'bulk-equalized' => 'Massenausgleich',
+        'bulk-equalized' => 'Bulk equalized',
         'create_person' => [
             'person_created' => 'Person created',
         ],
@@ -95,13 +103,15 @@ return [
         'show' => 'Anzeigen',
     ],
     'cancel' => 'Abbrechen',
+    'client-number' => 'Kundennummer',
     'close' => 'Schließen',
+    'created' => 'Erstellt',
+    'current' => 'Aktuell',
     'date-time' => [
         'ago' => 'Vor',
     ],
     'delete' => 'Löschen',
     'filters' => [
-        'all' => 'Alle',
         'all-contexts' => 'Alle Kontexte',
         'all-domains' => 'Alle Domains',
         'all-extras' => 'Alle Extras',
@@ -111,10 +121,13 @@ return [
         'all-scopes' => 'Alle Bereiche',
         'all-sections' => 'Alle Abschnitte',
         'all-sources' => 'Alle Quellen',
-        'all-statuses' => 'Alle Status',
-        'option' => [
-            'all' => 'Alle',
-        ],
+        'eea' => 'EWR',
+        'eu' => 'EU',
+        'filter-by-status' => 'Nach Status filtern',
+        'inactive' => 'Inaktiv',
+        'missing-capital' => 'Fehlende Hauptstadt',
+        'option' => [],
+        'region' => 'Region',
         'yes' => 'Ja',
     ],
     'form' => [
@@ -127,8 +140,14 @@ return [
             'required' => 'Erforderlich',
         ],
     ],
+    'key' => [
+        'suggested-key' => 'Vorgeschlagene Schlüssel',
+    ],
+    'label' => [
+        'label' => 'Etikett',
+        'label-testing-2' => 'Etikettenprüfung 2',
+    ],
     'labels' => [
-        'actions' => 'Aktionen',
         'category' => 'Kategorie',
         'description' => 'Beschreibung',
         'guard' => 'Guard',
@@ -139,31 +158,54 @@ return [
         'role' => 'Rolle',
         'roles' => 'Rollen',
     ],
+    'language' => [
+        'target-sub-language' => 'Ziel-Sprachvariante',
+    ],
+    'languages' => [
+        'sub-languages' => 'Sprachvarainten',
+    ],
     'laravel_translation_workbench' => [
         'resources' => [
             'views' => [
                 'livewire' => [
                     'entries' => [
-                        'table_entries' => [
-                            'show_entries' => 'Einträge anzeigen',
-                        ],
+                        'table_entries' => [],
                     ],
                 ],
             ],
         ],
     ],
+    'literal' => [
+        'literal' => 'Wörtlich',
+        'literal-testing' => 'Literalprüfung',
+        'literal-testing-2' => 'Literalprüfung 2',
+    ],
     'messages' => [
         'no_description_available' => 'Keine Beschreibung verfügbar.',
     ],
+    'meta' => [
+        'assignable-roles' => 'Zuweisbare Rollen',
+        'with-people' => 'Mit Menschen',
+        'without-people' => 'Ohne Menschen',
+    ],
+    'missing' => 'Fehlt',
+    'nickname' => 'Spitzname',
     'null' => 'NULL',
     'open' => 'Öffnen',
     'overview' => 'Übersicht',
-    'people' => [
-        'create_person' => [
-            'person_created' => 'Person angelegt',
-        ],
-    ],
+    'pagination' => 'Paginierung',
+    'people' => 'Menschen',
     'save' => 'Speichern',
+    'sort-order' => 'Sortierreihenfolge',
+    'source' => 'Quelle',
+    'source-language' => 'Ausgangssprache',
+    'source-locale-missing' => 'Quelle :locale fehlt',
+    'source-path' => 'Quellpfad',
+    'source-type' => 'Quellentyp',
+    'sources' => 'Quellen',
+    'stale' => 'Abgelaufen',
+    'stale-source' => 'Veraltete Quelle',
+    'state' => 'Zustand',
     'states' => [
         'all' => 'Alle',
         'assigned' => 'Zugewiesen',
@@ -175,8 +217,12 @@ return [
         'system' => 'System',
         'unassigned' => 'Nicht zugewiesen',
         'unsaved_changes' => 'Ungespeicherte Änderungen',
-        'yes' => 'Ja',
     ],
+    'status' => 'Status',
+    'storage' => 'Lagerung',
+    'structure' => 'Aufbau',
+    'suggested' => 'Vorgeschlagen',
+    'summary' => 'Zusammenfassung',
     'table' => [
         'header' => [
             'actions' => 'Aktionen',
@@ -192,21 +238,64 @@ return [
             'per_page' => 'Für Seite',
         ],
     ],
+    'target' => [
+        'target-language' => 'Zielsprache',
+        'target-locale-ready' => 'Zielsprache :locale fertig',
+        'target-missing' => 'Ziel fehlt',
+    ],
     'text' => [
         'copyable_field' => [
             'copy_to_clipboard' => 'In die Zwischenablage kopieren',
         ],
     ],
+    'this-finding-is-treated-as-a-dynamic-multi-entry-multiple-runtime-option-values-may-n' => 'Dieser Eintrag wird als dynamischer Mehrfacheintrag behandelt: Für mehrere Werte der Laufzeitoption sind möglicherweise separate Übersetzungen erforderlich.',
+    'this-finding-is-treated-as-dynamic-the-displayed-value-is-resolved-from-runtime-data' => 'Diese Ermittlung wird als dynamisch behandelt: Der angezeigte Wert wird aus Laufzeitdaten ermittelt und erfordert weiterhin eine strukturierte dynamische Datenverarbeitung.',
+    'time' => [
+        'timeline' => 'Zeitleiste',
+        'timeline-relation-context' => 'Zeitlicher Zusammenhang',
+        'timeline-value-context' => 'Zeitachsenwert-Kontext',
+    ],
+    'timespan' => 'Zeitspanne',
     'tooltip' => [
-        'badge_required' => [
-            'required' => 'Erforderlich',
-        ],
+        'badge_required' => [],
+    ],
+    'total' => 'Gesamt',
+    'translation' => [
+        'transform-suggested-key-to-ui-translation-key' => 'Vorgeschlagenen Schlüssel in UI-Übersetzungsschlüssel umwandeln',
+        'translation-exists' => 'Es gibt eine Übersetzung',
+        'translation-key' => 'Übersetzungsschlüssel',
+        'translation-key-state' => 'Status des Übersetzungsschlüssels',
+    ],
+    'translation-values' => 'Übersetzungswerte',
+    'translation-workbench' => 'Translation Workbench',
+    'type' => 'Typ',
+    'ui-candidate' => 'UI-Kandidat',
+    'ui-translation' => 'Übersetzung der Benutzeroberfläche',
+    'ui-translation-state' => 'Status der UI-Übersetzung',
+    'unresolved' => 'Ungelöst',
+    'updated' => 'Aktualisiert',
+    'user' => [
+        'user-id' => 'Benutzer-ID',
     ],
     'user_avatar' => [
         'avatar_for_name' => 'Avatar für: Name',
         'user_avatar' => 'Benutzer-Avatar',
     ],
-    'welcome' => [
-        'welcome' => 'Willkommen',
+    'value' => [
+        'value-key' => 'Wertschlüssel',
     ],
+    'values' => [
+        'stored-values' => 'Gespeicherte Werte',
+        'values' => 'Werte',
+    ],
+    'variables' => [
+        'variable-missing' => 'Variable fehlt',
+        'variables-ok' => 'Variablen OK',
+    ],
+    'view' => 'Anzeigen',
+    'welcome' => [],
+    'workflow' => 'Arbeitsablauf',
+    'would-apply' => 'Würde gelten',
+    'writing' => 'Schreiben',
+    'written' => 'Geschrieben',
 ];

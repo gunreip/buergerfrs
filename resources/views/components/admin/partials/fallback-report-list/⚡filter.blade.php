@@ -43,10 +43,10 @@
         <div class="min-w-0 flex-none basis-1/5">
             <flux:label for="fallback-report-list-status-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('admin.client_list.filter.filter_by_status')"
+                    :title="__('ui.filters.filter-by-status')"
                     :text="__('Select a status to filter the list of fallback reports.')"
                 >
-                    {{ __('admin.app_settings.table_icon_registry.status') }}
+                    {{ __('ui.status') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 

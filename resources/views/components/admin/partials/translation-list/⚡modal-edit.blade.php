@@ -590,7 +590,7 @@
                                             color="amber"
                                             icon="pen-line"
                                         >
-                                            {{ __('admin.app_settings.table_icon_registry.missing') }}
+                                            {{ __('ui.missing') }}
                                         </flux:badge>
                                     @endif
                                 </div>

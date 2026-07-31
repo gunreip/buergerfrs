@@ -2,7 +2,7 @@
 
 <flux:field class="{{ $fieldClass ?? '' }}">
     <flux:label>
-        {{ __('Translation key') }}
+        {{ __('ui.translation.translation-key') }}
     </flux:label>
     <flux:input.group>
         <flux:input.group.prefix>

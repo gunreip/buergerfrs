@@ -180,7 +180,7 @@ new #[Title('Profile settings')] class extends Component {
 
                     <div>
                         <flux:label for="nickname">
-                            {{ __('account.preferences.current_user.nickname') }}
+                            {{ __('ui.nickname') }}
                         </flux:label>
 
                         <flux:input.group>

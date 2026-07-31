@@ -40,10 +40,10 @@
         <div class="w-74">
             <flux:label for="html-view-audit-filter-status">
                 <x-ui.tooltip.trigger
-                    :title="__('admin.client_list.filter.filter_by_status')"
+                    :title="__('ui.filters.filter-by-status')"
                     :text="__('Select a status to filter the audit history.')"
                 >
-                    {{ __('admin.app_settings.table_icon_registry.status') }}
+                    {{ __('ui.status') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 

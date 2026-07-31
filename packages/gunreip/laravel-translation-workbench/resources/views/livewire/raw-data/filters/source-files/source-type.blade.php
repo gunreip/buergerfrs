@@ -1,7 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/source-files/source-type.blade.php --}}
 
 <flux:field class="{{ $fieldClass ?? '' }}">
-    <flux:label>{{ __('Source type') }}</flux:label>
+    <flux:label>{{ __('ui.source-type') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
             <flux:icon.type />

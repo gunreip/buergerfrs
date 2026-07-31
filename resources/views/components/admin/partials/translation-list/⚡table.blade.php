@@ -149,12 +149,12 @@
                     >
                         <x-ui.tooltip.trigger
                             class="ml-3"
-                            :title="__('admin.app_settings.table_icon_registry.status')"
+                            :title="__('ui.status')"
                             :text="__(
                                 'admin.translation_list.table.current_status_of_the_translation_key_useful_for_identification_and_reference',
                             )"
                         >
-                            {{ __('admin.app_settings.table_icon_registry.status') }}
+                            {{ __('ui.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -694,7 +694,7 @@
                                                     color="amber"
                                                     variant="subtle"
                                                 >
-                                                    {{ __('admin.app_settings.table_icon_registry.missing') }}
+                                                    {{ __('ui.missing') }}
                                                 </flux:badge>
                                             @endif
                                         </div>
@@ -753,7 +753,7 @@
                                                         color="amber"
                                                         variant="subtle"
                                                     >
-                                                        {{ __('admin.app_settings.table_icon_registry.missing') }}
+                                                        {{ __('ui.missing') }}
                                                     </flux:badge>
                                                 @endif
                                             </div>
@@ -944,7 +944,7 @@
         @if ($translationKeys->hasPages())
             <flux:separator
                 class=""
-                text="{{ __('admin.client_list.table.pagination') }}"
+                text="{{ __('ui.pagination') }}"
             />
 
             {{-- Pagination --}}

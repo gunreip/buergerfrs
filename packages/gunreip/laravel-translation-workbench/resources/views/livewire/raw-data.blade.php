@@ -8,12 +8,22 @@ TODO: Consider extracting repeated result-row presentations once more raw-data t
 TODO: Add a Raw Data Diagnostics callout with active filters, query count, table count, and visible row count.
 --}}
 
-<flux:card>
+<flux:card class="translation-workbench">
     {{-- Page Header --}}
     <x-ui.headers.page
         :title="$pageTitle"
         :description="$pageDescription"
-    />
+    >
+        <x-slot:meta>
+            <flux:badge
+                class="text-[0.65rem] font-normal leading-none"
+                size="sm"
+                color="zinc"
+            >
+                {{ $workbenchVersion['label'] ?? 'v0.7.0-dev' }}
+            </flux:badge>
+        </x-slot:meta>
+    </x-ui.headers.page>
 
     <flux:tab.group class="mt-6 min-w-0 max-w-full">
         @include('translation-workbench::livewire.raw-data.table-tabs')

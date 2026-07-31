@@ -19,13 +19,21 @@ return [
     'all-decisions' => 'All decisions',
     'all-dynamic' => 'All dynamic',
     'all-entries' => 'All entries',
+    'all-states' => 'All states',
     'all-statuses' => 'All statuses',
     'all-types' => 'All types',
     'already-target' => 'Already target',
     'app-settings' => 'App settings',
     'appearance' => 'Appearance',
     'applied' => 'Applied',
+    'apply-conflict' => 'Apply conflict',
     'approved' => 'Approved',
+    'assignable' => 'Assignable',
+    'assignable-through-ui' => 'Assignable through UI',
+    'assigned-roles' => 'Assigned roles',
+    'assigned-users' => 'Assigned users',
+    'audit' => 'Audit',
+    'available' => 'Available',
     'badge' => [
         'bulk-equalized' => 'Bulk equalized',
         'create_person' => [
@@ -95,13 +103,15 @@ return [
         'show' => 'Show',
     ],
     'cancel' => 'Cancel',
+    'client-number' => 'Client number',
     'close' => 'Close',
+    'created' => 'Created',
+    'current' => 'Current',
     'date-time' => [
         'ago' => 'Ago',
     ],
     'delete' => 'Delete',
     'filters' => [
-        'all' => 'All',
         'all-contexts' => 'All contexts',
         'all-domains' => 'All domains',
         'all-extras' => 'All extras',
@@ -111,10 +121,13 @@ return [
         'all-scopes' => 'All scopes',
         'all-sections' => 'All sections',
         'all-sources' => 'All sources',
-        'all-statuses' => 'All statuses',
-        'option' => [
-            'all' => 'All',
-        ],
+        'eea' => 'EEA',
+        'eu' => 'EU',
+        'filter-by-status' => 'Filter by status',
+        'inactive' => 'Inactive',
+        'missing-capital' => 'Missing capital',
+        'option' => [],
+        'region' => 'Region',
         'yes' => 'Yes',
     ],
     'form' => [
@@ -127,8 +140,14 @@ return [
             'required' => 'Required',
         ],
     ],
+    'key' => [
+        'suggested-key' => 'Suggested key',
+    ],
+    'label' => [
+        'label' => 'Label',
+        'label-testing-2' => 'Label-Testing 2',
+    ],
     'labels' => [
-        'actions' => 'Actions',
         'category' => 'Category',
         'description' => 'Description',
         'guard' => 'Guard',
@@ -139,31 +158,54 @@ return [
         'role' => 'Role',
         'roles' => 'Roles',
     ],
+    'language' => [
+        'target-sub-language' => 'Target sub-language',
+    ],
+    'languages' => [
+        'sub-languages' => 'Sub-languages',
+    ],
     'laravel_translation_workbench' => [
         'resources' => [
             'views' => [
                 'livewire' => [
                     'entries' => [
-                        'table_entries' => [
-                            'show_entries' => 'Show entries',
-                        ],
+                        'table_entries' => [],
                     ],
                 ],
             ],
         ],
     ],
+    'literal' => [
+        'literal' => 'Literal',
+        'literal-testing' => 'Literal testing',
+        'literal-testing-2' => 'Literal testing 2',
+    ],
     'messages' => [
         'no_description_available' => 'No description available.',
     ],
+    'meta' => [
+        'assignable-roles' => 'Assignable roles',
+        'with-people' => 'With people',
+        'without-people' => 'Without people',
+    ],
+    'missing' => 'Missing',
+    'nickname' => 'Nickname',
     'null' => 'NULL',
     'open' => 'Open',
     'overview' => 'Overview',
-    'people' => [
-        'create_person' => [
-            'person_created' => 'Person created',
-        ],
-    ],
+    'pagination' => 'Pagination',
+    'people' => 'People',
     'save' => 'Save',
+    'sort-order' => 'Sort order',
+    'source' => 'Source',
+    'source-language' => 'Source language',
+    'source-locale-missing' => 'Source :locale missing',
+    'source-path' => 'Source path',
+    'source-type' => 'Source type',
+    'sources' => 'Sources',
+    'stale' => 'Stale',
+    'stale-source' => 'Stale source',
+    'state' => 'State',
     'states' => [
         'all' => 'All',
         'assigned' => 'Assigned',
@@ -175,8 +217,12 @@ return [
         'system' => 'System',
         'unassigned' => 'Unassigned',
         'unsaved_changes' => 'Unsaved changes',
-        'yes' => 'Yes',
     ],
+    'status' => 'Status',
+    'storage' => 'Storage',
+    'structure' => 'Structure',
+    'suggested' => 'Suggested',
+    'summary' => 'Summary',
     'table' => [
         'header' => [
             'actions' => 'Actions',
@@ -192,21 +238,64 @@ return [
             'per_page' => 'Per Page',
         ],
     ],
+    'target' => [
+        'target-language' => 'Target language',
+        'target-locale-ready' => 'Target :locale ready',
+        'target-missing' => 'Target missing',
+    ],
     'text' => [
         'copyable_field' => [
             'copy_to_clipboard' => 'Copy to clipboard',
         ],
     ],
+    'this-finding-is-treated-as-a-dynamic-multi-entry-multiple-runtime-option-values-may-n' => 'This finding is treated as a dynamic multi entry: multiple runtime option values may need separate translations.',
+    'this-finding-is-treated-as-dynamic-the-displayed-value-is-resolved-from-runtime-data' => 'This finding is treated as dynamic: the displayed value is resolved from runtime data and still needs structured dynamic data handling.',
+    'time' => [
+        'timeline' => 'Timeline',
+        'timeline-relation-context' => 'Timeline relation context',
+        'timeline-value-context' => 'Timeline value context',
+    ],
+    'timespan' => 'Timespan',
     'tooltip' => [
-        'badge_required' => [
-            'required' => 'Required',
-        ],
+        'badge_required' => [],
+    ],
+    'total' => 'Total',
+    'translation' => [
+        'transform-suggested-key-to-ui-translation-key' => 'Transform suggested key to UI translation key',
+        'translation-exists' => 'Translation exists',
+        'translation-key' => 'Translation key',
+        'translation-key-state' => 'Translation key state',
+    ],
+    'translation-values' => 'Translation values',
+    'translation-workbench' => 'Translation Workbench',
+    'type' => 'Type',
+    'ui-candidate' => 'UI candidate',
+    'ui-translation' => 'UI translation',
+    'ui-translation-state' => 'UI translation state',
+    'unresolved' => 'Unresolved',
+    'updated' => 'Updated',
+    'user' => [
+        'user-id' => 'User ID',
     ],
     'user_avatar' => [
         'avatar_for_name' => 'Avatar for :name',
         'user_avatar' => 'User avatar',
     ],
-    'welcome' => [
-        'welcome' => 'Welcome',
+    'value' => [
+        'value-key' => 'Value key',
     ],
+    'values' => [
+        'stored-values' => 'Stored values',
+        'values' => 'Values',
+    ],
+    'variables' => [
+        'variable-missing' => 'Variable missing',
+        'variables-ok' => 'Variables OK',
+    ],
+    'view' => 'View',
+    'welcome' => [],
+    'workflow' => 'Workflow',
+    'would-apply' => 'Would apply',
+    'writing' => 'Writing',
+    'written' => 'Written',
 ];

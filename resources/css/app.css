@@ -142,3 +142,4 @@ option::checkmark {
 @import './errors.css';
 @import './tooltip.css';
 @import './animations.css';
+@import '../../packages/gunreip/laravel-translation-workbench/resources/css/tabs.css';

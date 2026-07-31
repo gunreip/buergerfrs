@@ -18,7 +18,7 @@
     $hasTriggerSlot = trim((string) $slot) !== '';
 @endphp
 
-<flux:tooltip>
+<flux:tooltip {{ $attributes }}>
     @if ($hasTriggerSlot)
         {{ $slot }}
     @else

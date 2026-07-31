@@ -109,7 +109,7 @@
                             name="timeline"
                             icon="clock-arrow-right"
                         >
-                            {{ __('Timeline') }}
+                            {{ __('ui.time.timeline') }}
                         </flux:tab>
                     </flux:tabs>
 

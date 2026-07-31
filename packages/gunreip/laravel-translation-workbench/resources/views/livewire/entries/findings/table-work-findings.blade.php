@@ -1,6 +1,45 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/findings/table-work-findings.blade.php --}}
 
 <flux:separator class="mt-4" />
+{{--
+TODO:: DEV-Section delete --}}
+{{-- <flux:field class="my-4">
+    <flux:heading
+        class="mb-2"
+        size="lg"
+    >
+        {{ __('DEV: Workbench Findings Table') }}
+    </flux:heading>
+    <flux:text class="text-sm text-zinc-500">
+        {{ __('This is a development view of the Workbench findings table. It is used for testing and debugging purposes.') }}
+    </flux:text>
+    <flux:text class="text-sm text-zinc-500">
+        {{ __('ui.literal.literal') }}
+    </flux:text>
+    <flux:text class="text-sm text-zinc-500">
+        {{ __('ui.literal.literal') }}
+    </flux:text>
+    <flux:text class="text-sm text-zinc-500">
+        {{ __('ui.literal.literal-testing') }}
+    </flux:text>
+    <flux:text class="text-sm text-zinc-500">
+        {{ __('ui.literal.literal-testing') }}
+    </flux:text>
+    <flux:text class="text-sm text-zinc-500">
+        {{ __('ui.literal.literal-testing-2') }}
+    </flux:text>
+    <flux:text class="text-sm text-zinc-500">
+        {{ __('ui.literal.literal-testing-2') }}
+    </flux:text>
+    <flux:text class="text-sm text-zinc-500">
+        {{ __('ui.label.label-testing-2') }}
+    </flux:text>
+    <flux:text class="text-sm text-zinc-500">
+        {{ __('ui.label.label-testing-2') }}
+    </flux:text>
+</flux:field> --}}
+
+<flux:separator class="mt-4" />
 
 <div class="mt-4">
     {{-- Pagination Top --}}
@@ -26,6 +65,12 @@
                 $hasKey = $finding->key_id !== null;
                 $hasSourceValue = (bool) $finding->has_source_value;
                 $hasTargetValue = (bool) ($finding->has_target_value ?? false);
+                $sourceTranslationValue = trim((string) ($finding->source_translation_value ?? ''));
+                $targetTranslationValue = trim((string) ($finding->target_translation_value ?? ''));
+                $hasSourceTranslationValue = filled($sourceTranslationValue);
+                $hasTargetTranslationValue = filled($targetTranslationValue);
+                $sourceTranslationOrigin = trim((string) ($finding->source_translation_origin ?? ''));
+                $targetTranslationOrigin = trim((string) ($finding->target_translation_origin ?? ''));
                 $sourceValueDiffers = (bool) ($finding->source_value_differs ?? false);
                 $literal = $finding->literal_text ?: $finding->literal_text_suggested;
                 $hasSourceLiteral = filled($literal);
@@ -120,6 +165,26 @@
                         ($finding->candidate_type ?? null) === 'dynamic' ||
                         ($finding->entry_type ?? null) === 'dynamic' ||
                         str_starts_with((string) ($finding->kind ?? ''), 'dynamic'));
+                $translationValuesComplete = $isDynamicFinding
+                    ? $dynamicTranslationValuesComplete
+                    : $hasSourceTranslationValue && $hasTargetTranslationValue;
+                $translationWorkflowComplete =
+                    $reviewStatus === 'reviewed' && $hasTranslationKey && $translationValuesComplete;
+                $sourceLangFileImported = $sourceTranslationOrigin === 'translation-workbench:import-lang-values';
+                $targetLangFileImported = $targetTranslationOrigin === 'translation-workbench:import-lang-values';
+                $translationLangFileSynced =
+                    $translationWorkflowComplete && $sourceLangFileImported && $targetLangFileImported;
+                $translationWorkflowState = match (true) {
+                    !$translationWorkflowComplete => 'inProgress',
+                    !$isDynamicFinding && $translationLangFileSynced => 'progressWritten',
+                    default => 'progressEdited',
+                };
+                $translationWorkflowEdited = in_array(
+                    $translationWorkflowState,
+                    ['progressEdited', 'progressWritten'],
+                    true,
+                );
+                $translationWorkflowWritten = $translationWorkflowState === 'progressWritten';
                 $dynamicSourceTypes = collect(explode(',', (string) ($finding->dynamic_source_types ?? '')))
                     ->map(static fn(string $sourceType): string => trim($sourceType))
                     ->filter(static fn(string $sourceType): bool => $sourceType !== '')
@@ -130,10 +195,14 @@
 
                 if ($canOpenEditAction) {
                     $editActionColor = $isDynamicFinding
-                        ? ($dynamicTranslationValuesComplete ? 'green' : 'amber')
-                        : (($hasSourceTranslationContext && $hasTargetValue)
+                        ? ($dynamicTranslationValuesComplete
                             ? 'green'
-                            : ($hasSourceTranslationContext ? 'amber' : 'red'));
+                            : 'amber')
+                        : ($hasSourceTranslationContext && $hasTargetValue
+                            ? 'green'
+                            : ($hasSourceTranslationContext
+                                ? 'amber'
+                                : 'red'));
                 }
                 $hasHistory = (bool) ($finding->has_history ?? false);
                 $sourceAbsolutePath = str_replace('\\', '/', base_path($finding->source_path));

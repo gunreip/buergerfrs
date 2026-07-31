@@ -320,7 +320,7 @@
                                 variant="subtle"
                                 color="{{ $workflowStatus === 'reviewed' ? 'emerald' : 'zinc' }}"
                             >
-                                {{ __('admin.translation_list.meta.workflow') }}:
+                                {{ __('ui.workflow') }}:
                                 {{ $workflowStatus }}
                             </flux:badge>
                         @endif

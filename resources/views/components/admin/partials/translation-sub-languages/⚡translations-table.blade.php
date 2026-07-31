@@ -294,7 +294,7 @@
 
         <flux:separator
             class="mt-4"
-            text="{{ __('admin.client_list.table.pagination') }}"
+            text="{{ __('ui.pagination') }}"
         />
 
         @if ($translationRows->hasPages())

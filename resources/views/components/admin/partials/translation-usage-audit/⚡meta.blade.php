@@ -56,7 +56,7 @@
             class="col-span-5 hyphens-auto"
             color="emerald"
             icon="scan-search"
-            heading="{{ __('Audit') }}"
+            heading="{{ __('ui.audit') }}"
         >
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                 {{ $activeTab === 'duplicate' ? 'duplicate' : 'frequent' }}

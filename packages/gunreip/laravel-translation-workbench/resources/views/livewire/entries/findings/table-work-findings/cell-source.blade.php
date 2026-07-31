@@ -16,9 +16,10 @@
                         />
 
                         <div class="flex flex-wrap items-start gap-1.5">
-                            <span
+                            <x-ui.tooltip.simple
                                 class="wrap-anywhere text-wrap font-mono text-xs text-zinc-700 dark:text-zinc-300"
-                                title="{{ $finding->source_path }}"
+                                :title="__('ui.source-path')"
+                                :text="$finding->source_path"
                             >
                                 <x-translation-workbench::text.highlight
                                     :value="$finding->source_path"
@@ -26,7 +27,7 @@
                                     :exact="$findingSearchExact"
                                     :case-sensitive="$findingSearchCaseSensitive"
                                 />
-                            </span>
+                            </x-ui.tooltip.simple>
                             {{-- Badge Code-Line-Number --}}
                             <flux:badge
                                 class="shrink-0"

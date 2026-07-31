@@ -13,7 +13,6 @@ return [
         ],
         'current_user' => [
             'edit_profile' => 'Edit profile',
-            'nickname' => 'Nickname',
         ],
         'manage_your_personal_application_preferences' => 'Manage your personal application preferences.',
         'preferences_saved' => 'Preferences saved',

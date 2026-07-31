@@ -18,7 +18,11 @@ trait WritesTranslationWorkbenchReports
      * the same scanner output. Changes to this report contract must be discussed
      * before implementation; do not change it silently from a command.
      */
-    protected function writeTranslationWorkbenchReport(?string $commandName = null): string
+    /**
+     * @param  array<string, mixed>  $summary
+     * @param  array<string, mixed>  $planSummary
+     */
+    protected function writeTranslationWorkbenchReport(?string $commandName = null, array $summary = [], array $planSummary = []): string
     {
         $commandName ??= (string) $this->getName();
         $directory = storage_path('translation-workbench');
@@ -35,6 +39,8 @@ trait WritesTranslationWorkbenchReports
         File::put($path, json_encode([
             'command' => $commandName,
             'generated_at' => now()->toISOString(),
+            'summary' => $summary,
+            'plan_summary' => $planSummary,
             'raw_data' => $this->translationWorkbenchReportRawData(),
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL);
 

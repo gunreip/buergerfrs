@@ -19,10 +19,7 @@ return [
                             'dynamic' => 'Dynamisch',
                             'findings' => [
                                 'code_update_plan' => [
-                                    'actions' => 'Aktionen',
-                                    'all_states' => 'Alle Stati',
                                     'already_current' => 'Bereits aktuell',
-                                    'applied' => 'Angewandt',
                                     'apply_ready_plan' => 'Antragsfertiger Plan',
                                     'apply_result_freshness' => 'Aktualität der Ergebnisse anwenden',
                                     'apply_results' => 'Ergebnisse anwenden',
@@ -72,9 +69,7 @@ return [
                         'raw_data' => [
                             'filters' => [
                                 'reviews' => [
-                                    'decision' => [
-                                        'all_decisions' => 'Alle Entscheidungen',
-                                    ],
+                                    'decision' => [],
                                 ],
                             ],
                             'filters_event_types' => [

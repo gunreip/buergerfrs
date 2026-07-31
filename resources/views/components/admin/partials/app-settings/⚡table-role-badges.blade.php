@@ -37,7 +37,7 @@
                 </flux:table.column>
 
                 <flux:table.column align="center">
-                    {{ __('admin.app_settings.table_icon_registry.status') }}
+                    {{ __('ui.status') }}
                 </flux:table.column>
             </flux:table.columns>
 

@@ -6,7 +6,7 @@
 </x-ui.input.select-option>
 
 <x-ui.input.select-option value="yes" icon="check">
-    {{ __('Yes') }}
+    {{ __('ui.filters.yes') }}
 </x-ui.input.select-option>
 --}}
 

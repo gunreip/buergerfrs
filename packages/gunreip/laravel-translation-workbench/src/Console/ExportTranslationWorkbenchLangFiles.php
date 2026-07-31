@@ -6,6 +6,7 @@
 // php artisan translation-workbench:export-lang-files --locale=de --namespace=ui
 // php artisan translation-workbench:export-lang-files --write
 // php artisan translation-workbench:export-lang-files --locale=de --namespace=ui --write
+// php artisan translation-workbench:export-lang-files --suppress-dry-run-warning
 
 namespace Gunreip\TranslationWorkbench\Console;
 
@@ -19,7 +20,8 @@ use Illuminate\Support\Str;
 #[Signature('translation-workbench:export-lang-files
     {--locale=* : Locale(s) to export. Defaults to all locales with active Workbench lang values.}
     {--namespace=* : Namespace file(s) to export, for example ui or admin. Defaults to all namespaces.}
-    {--write : Write lang files. Without this option the command only reports the export plan.}')]
+    {--write : Write lang files. Without this option the command only reports the export plan.}
+    {--suppress-dry-run-warning : Suppress the dry-run warning when the command is used as an orchestrated report refresh step.}')]
 #[Description('Export reviewed Translation Workbench lang values into Laravel lang files.')]
 class ExportTranslationWorkbenchLangFiles extends Command
 {
@@ -43,6 +45,7 @@ class ExportTranslationWorkbenchLangFiles extends Command
         $this->line('New values: ' . number_format((int) $summary['values_new']));
         $this->line('Changed values: ' . number_format((int) $summary['values_changed']));
         $this->line('Unchanged values: ' . number_format((int) $summary['values_unchanged']));
+        $this->line('Pruned values: ' . number_format((int) $summary['values_pruned']));
         $this->line('Conflicts: ' . number_format((int) $summary['values_conflicted']));
         $this->line('Active scope locales: ' . implode(', ', $summary['active_scope']['locales'] ?: ['-']));
         $this->line('Active scope exportable values: ' . number_format((int) $summary['active_scope']['values_exportable']));
@@ -53,9 +56,10 @@ class ExportTranslationWorkbenchLangFiles extends Command
         $this->line('Active scope source/target balanced: ' . ($summary['active_scope']['target_main_balanced'] ? 'yes' : 'no'));
         $this->line('Active scope target sub values: ' . number_format((int) $summary['active_scope']['target_sub_values']));
         $this->line('Files written: ' . number_format((int) $summary['files_written']));
+        $this->line('Timeline events created: ' . number_format((int) $summary['timeline_events_created']));
         $this->line('JSON report: ' . $reportPath);
 
-        if (! $write) {
+        if (! $write && ! (bool) $this->option('suppress-dry-run-warning')) {
             $this->warn('Dry run only: no lang files were written. Re-run with --write to apply the export.');
         }
 
@@ -77,6 +81,8 @@ class ExportTranslationWorkbenchLangFiles extends Command
         File::put($path, json_encode([
             'command' => $this->getName(),
             'generated_at' => now()->toISOString(),
+            'write' => (bool) $this->option('write'),
+            'dry_run' => ! (bool) $this->option('write'),
             'summary' => collect($summary)->except('plans')->all(),
             'plans' => $summary['plans'],
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));

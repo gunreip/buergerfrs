@@ -13,7 +13,6 @@ return [
         ],
         'current_user' => [
             'edit_profile' => 'Profil bearbeiten',
-            'nickname' => 'Spitzname',
         ],
         'manage_your_personal_application_preferences' => 'Verwalten Sie Ihre persönlichen Anwendungseinstellungen.',
         'preferences_saved' => 'Einstellungen gespeichert',

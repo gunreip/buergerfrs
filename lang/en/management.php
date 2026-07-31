@@ -3,9 +3,7 @@
 return [
     'people' => [
         'create_person' => [
-            'form_person' => [
-                'emergency' => 'Emergency',
-            ],
+            'form_person' => [],
             'phone' => 'Phone',
             'sections' => [
                 'address' => [

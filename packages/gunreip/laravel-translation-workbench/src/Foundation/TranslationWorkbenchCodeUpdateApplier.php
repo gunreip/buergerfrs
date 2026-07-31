@@ -2,6 +2,8 @@
 
 namespace Gunreip\TranslationWorkbench\Foundation;
 
+use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchFinding;
+use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchKey;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Collection;
@@ -10,6 +12,7 @@ class TranslationWorkbenchCodeUpdateApplier
 {
     public function __construct(
         private readonly TranslationWorkbenchCodeUpdatePlanner $planner,
+        private readonly TranslationWorkbenchTimelineRecorder $timelineRecorder,
     ) {}
 
     /**
@@ -38,6 +41,7 @@ class TranslationWorkbenchCodeUpdateApplier
                 ($row['source_path'] ?? '') . "\n" . ($row['raw_expression'] ?? '')
             ] ?? null))
             ->values();
+        $timelineEventsCreated = $write ? $this->recordAppliedTimelineEvents($results) : 0;
         $diff = $this->buildDiff($results->whereIn('state', ['would_apply', 'applied'])->values()->all());
 
         return [
@@ -54,10 +58,81 @@ class TranslationWorkbenchCodeUpdateApplier
                 'duplicate_expression' => $results->where('state', 'duplicate_expression')->count(),
                 'duplicate_reviewed' => $results->where('state', 'duplicate_reviewed')->count(),
                 'diff_files' => count($diff['files']),
+                'timeline_events_created' => $timelineEventsCreated,
             ],
             'diff' => $diff,
             'results' => $results->all(),
         ];
+    }
+
+    /**
+     * @param  Collection<int, array<string, mixed>>  $results
+     */
+    private function recordAppliedTimelineEvents(Collection $results): int
+    {
+        $appliedRows = $results
+            ->where('state', 'applied')
+            ->values();
+
+        if ($appliedRows->isEmpty()) {
+            return 0;
+        }
+
+        $keys = TranslationWorkbenchKey::query()
+            ->whereIn('id', $appliedRows->pluck('key_id')->filter()->unique()->values())
+            ->get()
+            ->keyBy('id');
+        $findings = TranslationWorkbenchFinding::query()
+            ->whereIn('id', $appliedRows->pluck('finding_id')->filter()->unique()->values())
+            ->get()
+            ->keyBy('id');
+        $created = 0;
+
+        foreach ($appliedRows as $row) {
+            $key = $keys->get((int) ($row['key_id'] ?? 0));
+            $finding = $findings->get((int) ($row['finding_id'] ?? 0));
+
+            if (! $key instanceof TranslationWorkbenchKey || ! $finding instanceof TranslationWorkbenchFinding) {
+                continue;
+            }
+
+            $this->timelineRecorder->recordKeyFindingEvent(
+                key: $key,
+                finding: $finding,
+                eventType: 'code_update_applied',
+                oldValues: [
+                    'raw_expression' => $row['raw_expression'] ?? null,
+                    'source_path' => $row['source_path'] ?? null,
+                    'source_line' => $row['source_line'] ?? null,
+                    'translation_key' => $row['translation_key'] ?? null,
+                    'reason' => $row['reason'] ?? null,
+                    'replacement_scope' => $row['replacement_scope'] ?? null,
+                    'occurrences' => $row['occurrences'] ?? null,
+                ],
+                newValues: [
+                    'new_expression' => $row['new_expression'] ?? null,
+                    'source_path' => $row['source_path'] ?? null,
+                    'source_line' => $row['source_line'] ?? null,
+                    'translation_key' => $row['translation_key'] ?? null,
+                    'reason' => $row['reason'] ?? null,
+                    'replacement_scope' => $row['replacement_scope'] ?? null,
+                    'occurrences' => $row['occurrences'] ?? null,
+                ],
+                context: [
+                    'source' => 'translation-workbench:apply-code-updates',
+                    'source_path' => $row['source_path'] ?? null,
+                    'source_line' => $row['source_line'] ?? null,
+                    'translation_key' => $row['translation_key'] ?? null,
+                    'reason' => $row['reason'] ?? null,
+                    'occurrences' => $row['occurrences'] ?? null,
+                    'replacement_scope' => $row['replacement_scope'] ?? null,
+                ],
+            );
+
+            $created++;
+        }
+
+        return $created;
     }
 
     /**

@@ -33,7 +33,7 @@
 
         <div class="min-w-44">
             <flux:label for="flag-reference-type-filter">
-                {{ __('admin.client_list.table.type') }}
+                {{ __('ui.type') }}
             </flux:label>
 
             <flux:select
@@ -55,7 +55,7 @@
 
         <div class="min-w-44">
             <flux:label for="flag-reference-status-filter">
-                {{ __('admin.app_settings.table_icon_registry.status') }}
+                {{ __('ui.status') }}
             </flux:label>
 
             <flux:select

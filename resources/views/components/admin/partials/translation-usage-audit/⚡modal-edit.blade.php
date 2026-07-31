@@ -344,7 +344,7 @@
                                                 variant="subtle"
                                                 color="{{ (bool) ($usageRow['is_stale'] ?? false) ? 'amber' : 'emerald' }}"
                                             >
-                                                {{ (bool) ($usageRow['is_stale'] ?? false) ? __('Stale') : __('admin.app_settings.locale.current') }}
+                                                {{ (bool) ($usageRow['is_stale'] ?? false) ? __('Stale') : __('ui.current') }}
                                             </flux:badge>
 
                                             @if (trim((string) ($usageRow['detected_function'] ?? '')) !== '')

@@ -46,10 +46,10 @@
                         wire:click="sortBy('status')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('admin.app_settings.table_icon_registry.status')"
+                            :title="__('ui.status')"
                             :text="__('Status of the fallback report, useful for tracking and reference.')"
                         >
-                            {{ __('admin.app_settings.table_icon_registry.status') }}
+                            {{ __('ui.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -61,10 +61,10 @@
                         wire:click="sortBy('type')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('admin.client_list.table.type')"
+                            :title="__('ui.type')"
                             :text="__('Type of the fallback report, useful for tracking and reference.')"
                         >
-                            {{ __('admin.client_list.table.type') }}
+                            {{ __('ui.type') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -273,7 +273,7 @@
         @if ($reports->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('admin.client_list.table.pagination') }}"
+                text="{{ __('ui.pagination') }}"
             />
 
             <div class="mt-4">

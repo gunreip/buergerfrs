@@ -36,7 +36,7 @@
 
                 <div>
                     <flux:text class="text-zinc-400">
-                        {{ __('admin.app_settings.table_icon_registry.status') }}
+                        {{ __('ui.status') }}
                     </flux:text>
 
                     <div class="flex items-center gap-2">
@@ -80,7 +80,7 @@
 
                 <div>
                     <flux:text class="text-zinc-400">
-                        {{ __('admin.client_list.table.type') }}
+                        {{ __('ui.type') }}
                     </flux:text>
 
                     <div class="flex items-center gap-2">
@@ -231,7 +231,7 @@
 
                     <div>
                         <flux:text class="text-zinc-400">
-                            {{ __('admin.app_settings.table_icon_registry.status') }}
+                            {{ __('ui.status') }}
                         </flux:text>
 
                         <div class="font-mono text-sm">

@@ -155,6 +155,9 @@
                             stroke-width="1"
                         />
                         {{ __('ui.states.all') }}
+                        {{ __('All') }}
+                        {{--
+                        TODO:Testweise implementiert,unbedingt wieder löschen --}}
                     </flux:select.option>
 
                     @foreach ($birthCountryOptions as $country)

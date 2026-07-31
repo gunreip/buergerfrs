@@ -114,7 +114,7 @@
                                 variant="subtle"
                                 color="emerald"
                             >
-                                {{ __('admin.app_settings.locale.current') }} {{ $keyUsageCurrent }}
+                                {{ __('ui.current') }} {{ $keyUsageCurrent }}
                             </flux:badge>
 
                             <flux:badge

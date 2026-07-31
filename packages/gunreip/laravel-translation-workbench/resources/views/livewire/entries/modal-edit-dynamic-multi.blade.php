@@ -110,7 +110,7 @@
                             size="sm"
                             color="{{ $rows->count() > 0 ? 'cyan' : 'amber' }}"
                         >
-                            {{ __('Stored values') }}: {{ number_format($rows->count()) }}
+                            {{ __('ui.values.stored-values') }}: {{ number_format($rows->count()) }}
                         </flux:badge>
                     </div>
                 </x-ui.headers.card>
@@ -140,7 +140,7 @@
                 @else
                     <flux:table class="mt-4 table-fixed">
                         <flux:table.columns>
-                            <flux:table.column class="w-[28%]">{{ __('Value key') }}</flux:table.column>
+                            <flux:table.column class="w-[28%]">{{ __('ui.value.value-key') }}</flux:table.column>
                             <flux:table.column class="w-[28%]">
                                 <span class="inline-flex items-center gap-2">
                                     <x-ui.locale.flag
@@ -150,7 +150,7 @@
                                     />
                                     <span class="font-mono text-sm font-semibold uppercase">{{ $sourceLocale }}</span>
                                     <x-ui.tooltip.simple
-                                        :header="__('Source language')"
+                                        :header="__('ui.source-language')"
                                         :text="__(
                                             'The source language is the default locale of the application, which is used for the original text.',
                                         )"
@@ -184,7 +184,7 @@
                                             class="font-mono text-sm font-semibold uppercase">{{ $activeLocale }}</span>
                                     </span>
                                     <x-ui.tooltip.simple
-                                        :header="__('Target language')"
+                                        :header="__('ui.target.target-language')"
                                         :text="__(
                                             'The target language is the currently active locale of the application.',
                                         )"
@@ -193,7 +193,7 @@
                             </flux:table.column>
                             <flux:table.column class="w-40">
                                 <span class="flex items-center gap-2">
-                                    <span>{{ __('State') }}</span>
+                                    <span>{{ __('ui.state') }}</span>
 
                                     @if ($overrideButtonCount > 2)
                                         <flux:tooltip :content="__('packages.gunreip.laravel_translation_workbench.resources.bulk.entries.modal_edit_dynamic_multi.accept_all_matching_source_and_target_values')">
@@ -323,7 +323,7 @@
                                                 size="sm"
                                                 color="amber"
                                             >
-                                                {{ __('Target missing') }}
+                                                {{ __('ui.target.target-missing') }}
                                             </flux:badge>
                                         @elseif ($targetEqualsSourceInvalid)
                                             <div class="flex-col-2 flex items-start gap-1.5">

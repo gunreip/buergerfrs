@@ -2,9 +2,7 @@
 
 return [
     'auth' => [
-        'confirm_password' => [
-            'confirm_password' => 'Passwort bestätigen',
-        ],
+        'confirm_password' => [],
         'register' => [
             'already_have_an_account' => 'Haben Sie bereits ein Konto?',
             'confirm_password' => 'Passwort bestätigen',
@@ -12,7 +10,6 @@ return [
             'email_address' => 'E-Mail-Adresse',
             'full_name' => 'Vollständiger Name',
             'log_in' => 'Anmelden',
-            'name' => 'Name',
             'password' => 'Passwort',
         ],
         'reset_password' => [
@@ -20,27 +17,22 @@ return [
         ],
     ],
     'settings' => [
-        'appearance' => [
-            'system' => 'System',
-        ],
+        'appearance' => [],
         'profile' => [
             'avatar_image' => 'Profilbild',
             'current_avatar' => 'Aktueller Avatar',
             'please_check_the_storage_permissions_for_storage_app_public_avatars' => 'Bitte überprüfe die Speicherberechtigungen für „storage/app/public/avatars“.',
         ],
         'security' => [
-            'confirm_password' => 'Passwort bestätigen',
             'disable_2fa' => '2FA deaktivieren',
             'enable_2fa' => '2FA aktivieren',
             'manage_your_two_factor_authentication_settings' => 'Verwalten Sie Ihre Einstellungen für die Zwei-Faktor-Authentifizierung',
-            'save' => 'Speichern',
             'security_settings' => 'Sicherheitseinstellungen',
             'two_factor_authentication' => 'Zwei-Faktor-Authentifizierung',
             'update_password' => 'Passwort aktualisieren',
         ],
         'two_factor_setup_modal' => [
             'back' => 'Zurück',
-            'close' => 'Schließen',
             'confirm' => 'Bestätigen',
             'continue' => 'Weiter',
             'enable_two_factor_authentication' => 'Zwei-Faktor-Authentifizierung aktivieren',

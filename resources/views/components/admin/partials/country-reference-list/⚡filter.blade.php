@@ -43,7 +43,7 @@
                     :title="__('admin.country_reference_list.filter.filter_by_region')"
                     :text="__('admin.country_reference_list.filter.select_a_region_to_filter_the_list_of_reference_countries')"
                 >
-                    {{ __('admin.country_reference_list.filter.region') }}
+                    {{ __('ui.filters.region') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -67,10 +67,10 @@
         <div>
             <flux:label for="country-reference-list-status-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('admin.client_list.filter.filter_by_status')"
+                    :title="__('ui.filters.filter-by-status')"
                     :text="__('admin.country_reference_list.filter.select_a_status_to_filter_the_list_of_reference_countries')"
                 >
-                    {{ __('admin.app_settings.table_icon_registry.status') }}
+                    {{ __('ui.status') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -88,7 +88,7 @@
                 </flux:select.option>
 
                 <flux:select.option value="inactive">
-                    {{ __('admin.country_reference_list.filter.inactive') }}
+                    {{ __('ui.filters.inactive') }}
                 </flux:select.option>
             </flux:select>
         </div>
@@ -113,11 +113,11 @@
                 </flux:select.option>
 
                 <flux:select.option value="eu">
-                    {{ __('admin.country_reference_list.filter.eu') }}
+                    {{ __('ui.filters.eu') }}
                 </flux:select.option>
 
                 <flux:select.option value="eea">
-                    {{ __('admin.country_reference_list.filter.eea') }}
+                    {{ __('ui.filters.eea') }}
                 </flux:select.option>
 
                 <flux:select.option value="schengen">
@@ -146,7 +146,7 @@
                 </flux:select.option>
 
                 <flux:select.option value="missing_capital">
-                    {{ __('admin.country_reference_list.filter.missing_capital') }}
+                    {{ __('ui.filters.missing-capital') }}
                 </flux:select.option>
 
                 <flux:select.option value="missing_phone_code">

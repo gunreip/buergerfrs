@@ -38,10 +38,10 @@
                         wire:click="sortBy('client_number')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('admin.client_list.table.client_number')"
+                            :title="__('ui.client-number')"
                             :text="__('admin.client_list.table.unique_number_assigned_to_the_client_useful_for_tracking_and_reference')"
                         >
-                            {{ __('admin.client_list.table.client_number') }}
+                            {{ __('ui.client-number') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -50,10 +50,10 @@
                         wire:click="sortBy('type')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('admin.client_list.table.type')"
+                            :title="__('ui.type')"
                             :text="__('admin.client_list.table.type_of_the_client_useful_for_categorization_and_filtering')"
                         >
-                            {{ __('admin.client_list.table.type') }}
+                            {{ __('ui.type') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -62,10 +62,10 @@
                         wire:click="sortBy('status')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('admin.app_settings.table_icon_registry.status')"
+                            :title="__('ui.status')"
                             :text="__('admin.client_list.table.current_status_of_the_client_indicating_their_activity_and_engagement')"
                         >
-                            {{ __('admin.app_settings.table_icon_registry.status') }}
+                            {{ __('ui.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -75,11 +75,11 @@
                         wire:click="sortBy('people_count')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('admin.client_list.table.people')"
+                            :title="__('ui.people')"
                             :text="__('admin.client_list.table.number_of_people_associated_with_the_client_useful_for_understanding_client_size',
                             )"
                         >
-                            {{ __('admin.client_list.table.people') }}
+                            {{ __('ui.people') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -88,10 +88,10 @@
                         wire:click="sortBy('created_at')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('admin.client_list.table.created')"
+                            :title="__('ui.created')"
                             :text="__('admin.client_list.table.date_when_the_client_was_created_useful_for_tracking_client_history')"
                         >
-                            {{ __('admin.client_list.table.created') }}
+                            {{ __('ui.created') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
@@ -152,7 +152,7 @@
                                         color="zinc"
                                         variant="subtle"
                                     >
-                                        {{ __('admin.app_settings.table_icon_registry.missing') }}
+                                        {{ __('ui.missing') }}
                                     </flux:badge>
                                 @endif
                             </flux:table.cell>
@@ -206,7 +206,7 @@
         @if ($clients->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('admin.client_list.table.pagination') }}"
+                text="{{ __('ui.pagination') }}"
             />
 
             <div class="mt-4">

@@ -25872,6 +25872,184 @@ namespace Illuminate\View {
             }
     }
 
+namespace App\Livewire\Account {
+    /**
+     * Account preferences component for locale and user-specific list defaults.
+     *
+     */
+    class Preferences extends \Livewire\Component {
+            }
+    }
+
+namespace App\Livewire\Admin {
+    /**
+     * Administrative user list with role filtering, pagination and role assignment modal.
+     *
+     */
+    class UserList extends \Livewire\Component {
+            }
+    /**
+     * Administrative people list with relation-aware filters, sorting and pagination.
+     *
+     */
+    class PersonList extends \Livewire\Component {
+            }
+    /**
+     * Administrative client list with filtering, sorting and pagination.
+     *
+     */
+    class ClientList extends \Livewire\Component {
+            }
+    /**
+     * Administrative role list with role creation/editing workflows and badge settings.
+     *
+     */
+    class RoleList extends \Livewire\Component {
+            }
+    /**
+     * Administrative permission list with metadata editing and role-permission assignment.
+     *
+     */
+    class PermissionList extends \Livewire\Component {
+            }
+    /**
+     * Livewire administration component for the translation list and review workflow.
+     *
+     * This component is the central UI controller for browsing, filtering, reviewing,
+     * editing and auditing translation keys in the administration area. It combines
+     * persisted list filters, workflow scopes, language and namespace filters, status
+     * counters, paginated table rendering and the review/edit/history modal workflows.
+     *
+     * The component intentionally separates database-level translation metadata from
+     * code-rewrite operations. UI actions may update translation values, suggested-key
+     * decisions or workflow metadata, but source-code rewrites are handled by the
+     * dedicated translation audit and project translation console commands.
+     *
+     * Main responsibilities:
+     * - maintain persisted filter, sorting and pagination state for the translation list;
+     * - provide workflow counters for open, reviewed, completed, problem and archive states;
+     * - render review, edit and history modal data for selected translation keys;
+     * - persist manual translation value changes and write audit events;
+     * - expose Usage-Audit follow-up filters such as the Needs-Key focus without directly
+     *   applying source-code changes.
+     *
+     */
+    class TranslationList extends \Livewire\Component {
+            }
+    /**
+     * Livewire administration component for reviewing repeated translation usage literals.
+     *
+     * The component reads generated duplicate and frequent usage audit reports, renders the
+     * in-memory candidate lists with filters, sorting and pagination, and provides review/edit
+     * modals for deciding how repeated source-language literals should be handled.
+     *
+     * Usage decisions are stored in translation_usage_audit_decisions and linked usage rows. The
+     * component itself does not rewrite source files. Code changes are delegated to the dedicated
+     * preview/apply console commands and the project translation pipeline.
+     *
+     * Main responsibilities:
+     * - load duplicate and frequent usage literal reports from storage/audits/translations;
+     * - filter, sort and paginate audit candidates without modifying the source reports;
+     * - display current keys, values, UI-key candidates and usage locations for review;
+     * - persist workflow decisions such as unify, skip and needs-key follow-ups;
+     * - prepare usage-row metadata for later command-based preview/apply processing.
+     *
+     */
+    class TranslationUsageAudit extends \Livewire\Component {
+            }
+    /**
+     */
+    class TranslationLangBallast extends \Livewire\Component {
+            }
+    /**
+     * Read-only statistics dashboard for translation coverage and key health.
+     *
+     */
+    class TranslationStatistics extends \Livewire\Component {
+            }
+    /**
+     * First-draft administration page for sub-language (locale variant) coverage.
+     *
+     */
+    class TranslationSubLanguages extends \Livewire\Component {
+            }
+    /**
+     * Administrative settings component for locale and role-badge configuration.
+     *
+     * Manages:
+     * - globally available primary locales
+     * - active sub-locales for a selected primary language
+     * - global default app locale
+     *
+     */
+    class AppSettings extends \Livewire\Component {
+            }
+    /**
+     */
+    class ActivityLog extends \Livewire\Component {
+            }
+    /**
+     * Administrative country reference list with audit-oriented filters and metrics.
+     *
+     */
+    class CountryReferenceList extends \Livewire\Component {
+            }
+    /**
+     * Flag reference list based on generated audit reports.
+     *
+     */
+    class FlagReferenceList extends \Livewire\Component {
+            }
+    /**
+     * Administrative HTML view audit dashboard with finding filters and details modal.
+     *
+     */
+    class HtmlViewAudit extends \Livewire\Component {
+            }
+    /**
+     * Administrative list for fallback reports with review workflow controls.
+     *
+     */
+    class FallbackReportList extends \Livewire\Component {
+            }
+    }
+
+namespace Gunreip\TranslationWorkbench\Livewire {
+    /**
+     */
+    class TranslationWorkbenchEntries extends \Livewire\Component {
+            }
+    /**
+     */
+    class TranslationWorkbenchOldEntries extends \Livewire\Component {
+            }
+    /**
+     */
+    class TranslationWorkbenchRawData extends \Livewire\Component {
+            }
+    /**
+     */
+    class TranslationWorkbenchRawDataNew extends \Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawData {
+            }
+    }
+
+namespace App\Livewire\Management\People {
+    /**
+     */
+    class PersonOverview extends \Livewire\Component {
+            }
+    /**
+     * Management form component for creating a person with initial related records.
+     *
+     */
+    class CreatePerson extends \Livewire\Component {
+            }
+    /**
+     */
+    class EditPerson extends \Livewire\Component {
+            }
+    }
+
 
 namespace  {
     class App extends \Illuminate\Support\Facades\App {}

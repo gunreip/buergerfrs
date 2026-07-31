@@ -77,7 +77,7 @@
                                         size="sm"
                                         color="sky"
                                     >
-                                        {{ __('Source') }} #{{ $runtimeSource['id'] }}
+                                        {{ __('ui.source') }} #{{ $runtimeSource['id'] }}
                                     </flux:badge>
 
                                     @if ($runtimeSource['key_id'])
@@ -90,7 +90,7 @@
                                     @endif
 
                                     <flux:badge size="sm">
-                                        {{ __('Values') }}: {{ $runtimeSource['values_count'] }}
+                                        {{ __('ui.values.values') }}: {{ $runtimeSource['values_count'] }}
                                     </flux:badge>
                                 </div>
 
@@ -114,7 +114,7 @@
                             size="sm"
                             variant="subtle"
                         >
-                            {{ __('Source') }} #{{ $linkPreviewRelatedSource['id'] ?? '—' }}
+                            {{ __('ui.source') }} #{{ $linkPreviewRelatedSource['id'] ?? '—' }}
                         </flux:badge>
                     </div>
 
@@ -144,7 +144,7 @@
 
                             @if ($linkPreviewRelatedSource['values_count'] ?? null)
                                 <flux:badge size="sm">
-                                    {{ __('Values') }}: {{ $linkPreviewRelatedSource['values_count'] }}
+                                    {{ __('ui.values.values') }}: {{ $linkPreviewRelatedSource['values_count'] }}
                                 </flux:badge>
                             @endif
                         </div>

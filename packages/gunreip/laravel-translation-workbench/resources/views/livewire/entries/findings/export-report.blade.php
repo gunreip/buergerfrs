@@ -14,7 +14,6 @@
         <flux:callout
             color="amber"
             icon="file-warning"
-            variant="secondary"
         >
             <flux:callout.heading>{{ __('No export report found') }}</flux:callout.heading>
             <flux:callout.text>
@@ -25,7 +24,6 @@
         <flux:callout
             color="{{ $activeScope['target_main_balanced'] ? 'green' : 'amber' }}"
             icon="{{ $activeScope['target_main_balanced'] ? 'circle-check' : 'triangle-alert' }}"
-            variant="secondary"
         >
             <flux:callout.heading>
                 <span class="inline-flex flex-wrap items-center gap-2">
@@ -35,7 +33,7 @@
                         size="sm"
                         color="{{ $report['dry_run'] ? 'sky' : 'green' }}"
                     >
-                        {{ $report['dry_run'] ? __('Dry run') : __('Written') }}
+                        {{ $report['dry_run'] ? __('Dry run') : __('ui.written') }}
                     </flux:badge>
                     <flux:badge
                         class="mr-3"
@@ -57,12 +55,11 @@
             </flux:callout.text>
         </flux:callout>
 
-        <div class="grid grid-cols-1 gap-3 xl:grid-cols-4">
-            @foreach ([['title' => __('Exportable values'), 'count' => $report['values_exportable'], 'color' => 'sky', 'icon' => 'database'], ['title' => __('New values'), 'count' => $report['values_new'], 'color' => $report['values_new'] > 0 ? 'cyan' : 'zinc', 'icon' => 'plus'], ['title' => __('Changed values'), 'count' => $report['values_changed'], 'color' => $report['values_changed'] > 0 ? 'amber' : 'zinc', 'icon' => 'pencil'], ['title' => __('Conflicts'), 'count' => $report['values_conflicted'], 'color' => $report['values_conflicted'] > 0 ? 'red' : 'green', 'icon' => $report['values_conflicted'] > 0 ? 'octagon-alert' : 'circle-check']] as $callout)
+        <div class="grid grid-cols-1 gap-3 xl:grid-cols-5">
+            @foreach ([['title' => __('Exportable values'), 'count' => $report['values_exportable'], 'color' => 'sky', 'icon' => 'database'], ['title' => __('New values'), 'count' => $report['values_new'], 'color' => $report['values_new'] > 0 ? 'cyan' : 'zinc', 'icon' => 'plus'], ['title' => __('Changed values'), 'count' => $report['values_changed'], 'color' => $report['values_changed'] > 0 ? 'amber' : 'zinc', 'icon' => 'pencil'], ['title' => __('Pruned values'), 'count' => $report['values_pruned'] ?? 0, 'color' => ($report['values_pruned'] ?? 0) > 0 ? 'amber' : 'zinc', 'icon' => 'scissors'], ['title' => __('Conflicts'), 'count' => $report['values_conflicted'], 'color' => $report['values_conflicted'] > 0 ? 'red' : 'green', 'icon' => $report['values_conflicted'] > 0 ? 'octagon-alert' : 'circle-check']] as $callout)
                 <flux:callout
                     color="{{ $callout['color'] }}"
                     icon="{{ $callout['icon'] }}"
-                    variant="secondary"
                 >
                     <flux:callout.heading>{{ $callout['title'] }}</flux:callout.heading>
                     <flux:callout.text>
@@ -78,7 +75,6 @@
             <flux:callout
                 color="red"
                 icon="octagon-alert"
-                variant="secondary"
             >
                 <flux:callout.heading>
                     <span class="inline-flex flex-wrap items-center gap-2">
@@ -103,12 +99,26 @@
                         >
                             <flux:table.column class="w-24">{{ __('Locale') }}</flux:table.column>
                             <flux:table.column class="w-36">{{ __('Namespace') }}</flux:table.column>
-                            <flux:table.column>{{ __('Translation key') }}</flux:table.column>
+                            <flux:table.column>{{ __('ui.translation.translation-key') }}</flux:table.column>
                             <flux:table.column>{{ __('Lang key') }}</flux:table.column>
+                            <flux:table.column>{{ __('Blocking key') }}</flux:table.column>
+                            <flux:table.column>{{ __('Usage') }}</flux:table.column>
                             <flux:table.column>{{ __('Reason') }}</flux:table.column>
+                            <flux:table.column align="end">{{ __('ui.actions.actions') }}</flux:table.column>
                         </flux:table.columns>
                         <flux:table.rows>
                             @foreach ($conflicts as $conflict)
+                                @php
+                                    $blockingFindings = collect($conflict['blocking_findings'] ?? []);
+                                    $blockingUsageStatus = (string) ($conflict['blocking_usage_status'] ?? '');
+                                    $blockingUsageColor = match ($blockingUsageStatus) {
+                                        'active' => 'green',
+                                        'obsolete' => 'amber',
+                                        'lang_file_only', 'missing_active_usage' => 'red',
+                                        default => 'zinc',
+                                    };
+                                @endphp
+
                                 <flux:table.row>
                                     <flux:table.cell>
                                         <flux:badge
@@ -131,12 +141,87 @@
                                         <div class="wrap-anywhere font-mono text-xs">{{ $conflict['lang_key'] }}</div>
                                     </flux:table.cell>
                                     <flux:table.cell>
+                                        <div class="space-y-1">
+                                            <div class="wrap-anywhere font-mono text-xs">
+                                                {{ $conflict['blocking_translation_key'] ?? __('No matching workbench key') }}
+                                            </div>
+                                            <div
+                                                class="wrap-anywhere font-mono text-xs text-zinc-500 dark:text-zinc-400">
+                                                {{ __('Lang key') }}:
+                                                {{ $conflict['blocking_lang_key'] ?? '—' }}
+                                            </div>
+                                            <div class="wrap-anywhere text-xs text-zinc-500 dark:text-zinc-400">
+                                                {{ __('Value') }}:
+                                                @if (is_array($conflict['blocking_value'] ?? null))
+                                                    {{ $conflict['blocking_value']['type'] ?? 'array' }}
+                                                    ({{ number_format((int) ($conflict['blocking_value']['count'] ?? 0)) }})
+                                                @else
+                                                    {{ str((string) ($conflict['blocking_value'] ?? '—'))->limit(80) }}
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </flux:table.cell>
+                                    <flux:table.cell>
+                                        <div class="space-y-1">
+                                            <flux:badge
+                                                size="sm"
+                                                color="{{ $blockingUsageColor }}"
+                                            >
+                                                {{ $blockingUsageStatus !== '' ? str($blockingUsageStatus)->replace('_', ' ')->title() : __('Unknown') }}
+                                            </flux:badge>
+
+                                            @if ($conflict['blocking_key_id'] ?? null)
+                                                <div class="font-mono text-xs text-zinc-500 dark:text-zinc-400">
+                                                    K#{{ $conflict['blocking_key_id'] }}
+                                                </div>
+                                            @endif
+
+                                            @if ($conflict['blocking_lang_value_id'] ?? null)
+                                                <div class="font-mono text-xs text-zinc-500 dark:text-zinc-400">
+                                                    LV#{{ $conflict['blocking_lang_value_id'] }}
+                                                </div>
+                                            @endif
+
+                                            @if ($blockingFindings->isNotEmpty())
+                                                <div class="flex flex-wrap gap-1">
+                                                    @foreach ($blockingFindings->take(4) as $finding)
+                                                        <flux:badge
+                                                            size="sm"
+                                                            color="sky"
+                                                        >
+                                                            F#{{ $finding['id'] ?? '—' }}
+                                                        </flux:badge>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </flux:table.cell>
+                                    <flux:table.cell>
                                         <flux:badge
                                             size="sm"
                                             color="red"
                                         >
                                             {{ str($conflict['reason'])->replace('_', ' ')->title() }}
                                         </flux:badge>
+                                    </flux:table.cell>
+                                    <flux:table.cell>
+                                        <x-ui.tooltip.simple
+                                            :title="__('Resolve export conflict')"
+                                            :text="__(
+                                                'Opens the export conflict context so the blocked write and the blocking existing lang key can be reviewed together.',
+                                            )"
+                                        >
+                                            <flux:button
+                                                type="button"
+                                                size="xs"
+                                                variant="primary"
+                                                color="red"
+                                                icon="octagon-alert"
+                                                wire:click="openExportConflictResolveByKey('{{ $conflict['conflict_key'] }}')"
+                                            >
+                                                {{ __('Resolve') }}
+                                            </flux:button>
+                                        </x-ui.tooltip.simple>
                                     </flux:table.cell>
                                 </flux:table.row>
                             @endforeach
@@ -147,11 +232,10 @@
         @endif
 
         <div class="grid grid-cols-1 gap-3 xl:grid-cols-5">
-            @foreach ([['title' => __('Source values'), 'count' => $activeScope['source_values'] ?? 0, 'color' => 'sky', 'icon' => 'languages'], ['title' => __('Target main values'), 'count' => $activeScope['target_main_values'] ?? 0, 'color' => 'green', 'icon' => 'flag'], ['title' => __('Target missing'), 'count' => $activeScope['target_main_missing'] ?? 0, 'color' => ($activeScope['target_main_missing'] ?? 0) > 0 ? 'red' : 'green', 'icon' => 'circle-minus'], ['title' => __('Target extras'), 'count' => $activeScope['target_main_extra'] ?? 0, 'color' => ($activeScope['target_main_extra'] ?? 0) > 0 ? 'amber' : 'green', 'icon' => 'circle-plus'], ['title' => __('Sub values'), 'count' => $activeScope['target_sub_values'] ?? 0, 'color' => 'violet', 'icon' => 'git-branch']] as $callout)
+            @foreach ([['title' => __('Source values'), 'count' => $activeScope['source_values'] ?? 0, 'color' => 'sky', 'icon' => 'languages'], ['title' => __('Target main values'), 'count' => $activeScope['target_main_values'] ?? 0, 'color' => 'green', 'icon' => 'flag'], ['title' => __('ui.target.target-missing'), 'count' => $activeScope['target_main_missing'] ?? 0, 'color' => ($activeScope['target_main_missing'] ?? 0) > 0 ? 'red' : 'green', 'icon' => 'circle-minus'], ['title' => __('Target extras'), 'count' => $activeScope['target_main_extra'] ?? 0, 'color' => ($activeScope['target_main_extra'] ?? 0) > 0 ? 'amber' : 'green', 'icon' => 'circle-plus'], ['title' => __('Sub values'), 'count' => $activeScope['target_sub_values'] ?? 0, 'color' => 'violet', 'icon' => 'git-branch']] as $callout)
                 <flux:callout
                     color="{{ $callout['color'] }}"
                     icon="{{ $callout['icon'] }}"
-                    variant="secondary"
                 >
                     <flux:callout.heading>{{ $callout['title'] }}</flux:callout.heading>
                     <flux:callout.text>
@@ -167,7 +251,6 @@
             <flux:callout
                 color="{{ $missingKeys->isEmpty() ? 'green' : 'red' }}"
                 icon="{{ $missingKeys->isEmpty() ? 'circle-check' : 'circle-minus' }}"
-                variant="secondary"
             >
                 <flux:callout.heading>
                     {{ __('Source keys without matching target-main translation value') }}
@@ -191,7 +274,7 @@
                                     <flux:icon.search-code />
                                 </span>
                             </flux:table.column>
-                            <flux:table.column>{{ __('Translation key') }}</flux:table.column>
+                            <flux:table.column>{{ __('ui.translation.translation-key') }}</flux:table.column>
                             <flux:table.column
                                 class="w-12"
                                 align="center"
@@ -273,7 +356,6 @@
             <flux:callout
                 color="{{ $extraKeys->isEmpty() ? 'green' : 'amber' }}"
                 icon="{{ $extraKeys->isEmpty() ? 'circle-check' : 'circle-plus' }}"
-                variant="secondary"
             >
                 <flux:callout.heading>
                     {{ __('Target main values without matching source key') }}
@@ -294,7 +376,7 @@
                             >
                                 <span class="ml-2">{{ __('ui.table.headers.actions') }}</span>
                             </flux:table.column>
-                            <flux:table.column>{{ __('Translation key') }}</flux:table.column>
+                            <flux:table.column>{{ __('ui.translation.translation-key') }}</flux:table.column>
                         </flux:table.columns>
                         <flux:table.rows>
                             @forelse ($extraKeys as $key)
@@ -345,7 +427,6 @@
         <flux:callout
             color="zinc"
             icon="list"
-            variant="secondary"
         >
             <flux:callout.heading>{{ __('Values by active locale') }}</flux:callout.heading>
             <div class="mt-3 flex flex-wrap gap-2">

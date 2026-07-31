@@ -6,6 +6,7 @@
 // php artisan translation-workbench:apply-code-updates --paths=resources/views/components
 // php artisan translation-workbench:apply-code-updates --limit=10
 // php artisan translation-workbench:apply-code-updates --limit=10 --write
+// php artisan translation-workbench:apply-code-updates --suppress-dry-run-warning
 
 namespace Gunreip\TranslationWorkbench\Console;
 
@@ -19,7 +20,8 @@ use Illuminate\Support\Str;
 #[Signature('translation-workbench:apply-code-updates
     {--paths= : Comma-separated relative paths to limit the code update apply plan.}
     {--limit= : Maximum number of reviewed findings to inspect before applying safe updates.}
-    {--write : Actually update source files. Without this option the command only reports what would be changed.}')]
+    {--write : Actually update source files. Without this option the command only reports what would be changed.}
+    {--suppress-dry-run-warning : Suppress the dry-run warning when the command is used as an orchestrated report refresh step.}')]
 #[Description('Apply safe reviewed Translation Workbench code replacements, dry-run by default.')]
 class ApplyTranslationWorkbenchCodeUpdates extends Command
 {
@@ -46,10 +48,11 @@ class ApplyTranslationWorkbenchCodeUpdates extends Command
         $this->line('Stale source: ' . number_format((int) $summary['stale_source']));
         $this->line('Duplicate expressions: ' . number_format((int) $summary['duplicate_expression']));
         $this->line('Reviewed duplicates: ' . number_format((int) ($summary['duplicate_reviewed'] ?? 0)));
+        $this->line('Timeline events created: ' . number_format((int) ($summary['timeline_events_created'] ?? 0)));
         $this->line('JSON report: ' . $reportPath);
         $this->line('Patch report: ' . $diffPath);
 
-        if (! $write) {
+        if (! $write && ! (bool) $this->option('suppress-dry-run-warning')) {
             $this->warn('Dry run only: no source files were changed. Re-run with --write to apply safe updates.');
         }
 

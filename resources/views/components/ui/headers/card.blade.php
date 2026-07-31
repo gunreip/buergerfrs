@@ -4,14 +4,27 @@
 
 <div {{ $attributes->class('flex items-start justify-between gap-4') }}>
     <div class="mb-4 min-w-0 space-y-1">
-        <flux:heading
-            size="xl"
-            level="3"
-        >
-            {{ $title }}
-        </flux:heading>
+        <div class="flex min-w-0 flex-wrap items-baseline gap-2">
+            <flux:heading
+                class="min-w-0"
+                size="xl"
+                level="3"
+            >
+                {{ $title }}
+            </flux:heading>
 
-        @if (filled($description))
+            @if (isset($meta) && $meta->isNotEmpty())
+                <div class="shrink-0">
+                    {{ $meta }}
+                </div>
+            @endif
+        </div>
+
+        @if (isset($descriptionSlot) && $descriptionSlot->isNotEmpty())
+            <div class="-mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                {{ $descriptionSlot }}
+            </div>
+        @elseif (filled($description))
             <flux:text class="-mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                 {{ $description }}
             </flux:text>

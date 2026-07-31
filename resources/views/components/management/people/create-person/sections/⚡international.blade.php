@@ -246,7 +246,7 @@
                                             <x-ui.checkbox.icon
                                                 id="create-person-language-{{ $primaryLanguage->id }}-writing"
                                                 icon="pen-line"
-                                                :label="__('Writing')"
+                                                :label="__('ui.writing')"
                                                 :title="__('Primary Language Writing') .
                                                     ': ' .
                                                     ($primaryLanguage->native_name ?: $primaryLanguage->name)"
@@ -318,7 +318,7 @@
                                                         <x-ui.checkbox.icon
                                                             id="create-person-language-{{ $language->id }}-writing"
                                                             icon="pen-line"
-                                                            :label="__('Writing')"
+                                                            :label="__('ui.writing')"
                                                             :title="__('Secondary Language Writing') .
                                                                 ': ' .
                                                                 ($language->native_name ?: $language->name)"

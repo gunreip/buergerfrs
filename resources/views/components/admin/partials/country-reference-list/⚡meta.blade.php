@@ -15,7 +15,7 @@
             <flux:badge
                 color="blue"
                 variant="subtle"
-                :label="__('admin.country_reference_list.filter.eu').
+                :label="__('ui.filters.eu').
                 ': '.$summary['eu']"
             />
 
@@ -23,7 +23,7 @@
             <flux:badge
                 color="blue"
                 variant="subtle"
-                :label="__('admin.country_reference_list.filter.eea').
+                :label="__('ui.filters.eea').
                 ': '.$summary['eea']"
             />
 
@@ -92,7 +92,7 @@
             class="hyphens-auto"
             color="amber"
             icon="circle-question-mark"
-            heading="{{ __('admin.country_reference_list.filter.missing_capital') }}"
+            heading="{{ __('ui.filters.missing-capital') }}"
         >
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                 {{ $summary['missing_capital'] }}

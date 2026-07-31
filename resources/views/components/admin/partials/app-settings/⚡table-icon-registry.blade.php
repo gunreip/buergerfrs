@@ -21,18 +21,18 @@
                 </flux:table.column>
 
                 <flux:table.column sortable>
-                    {{ __('admin.app_settings.table_icon_registry.label') }}
+                    {{ __('ui.label.label') }}
                 </flux:table.column>
 
                 <flux:table.column sortable>
-                    {{ __('admin.app_settings.table_icon_registry.view') }}
+                    {{ __('ui.view') }}
                 </flux:table.column>
 
                 <flux:table.column
                     align="center"
                     sortable
                 >
-                    {{ __('admin.app_settings.table_icon_registry.status') }}
+                    {{ __('ui.status') }}
                 </flux:table.column>
             </flux:table.columns>
 
@@ -76,14 +76,14 @@
                                     color="green"
                                     variant="subtle"
                                 >
-                                    {{ __('admin.app_settings.table_icon_registry.available') }}
+                                    {{ __('ui.available') }}
                                 </flux:badge>
                             @else
                                 <flux:badge
                                     color="red"
                                     variant="subtle"
                                 >
-                                    {{ __('admin.app_settings.table_icon_registry.missing') }}
+                                    {{ __('ui.missing') }}
                                 </flux:badge>
                             @endif
                         </flux:table.cell>

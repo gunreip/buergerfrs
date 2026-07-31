@@ -21,7 +21,7 @@
                             color="teal"
                             size="sm"
                         >
-                            {{ __('Dynamic') }}
+                            {{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.dynamic') }}
                         </flux:badge>
 
                         @if (
@@ -126,9 +126,9 @@
                     icon="key-round"
                 >
                     <flux:callout.heading>
-                        <span>{{ __('Translation key') }}</span>
+                        <span>{{ __('ui.translation.translation-key') }}</span>
                         <x-ui.tooltip.simple
-                            :header="__('Translation key')"
+                            :header="__('ui.translation.translation-key')"
                             :text="__(
                                 'The translation key is the anchor for this dynamic finding. It may be missing or unresolved if the finding has not been reviewed yet.',
                             )"
@@ -188,7 +188,7 @@
                                     size="sm"
                                     color="red"
                                 >
-                                    {{ __('Unresolved') }}: {{ $dynamicReviewUnresolvedCount }}
+                                    {{ __('ui.unresolved') }}: {{ $dynamicReviewUnresolvedCount }}
                                 </flux:badge>
                             </span>
                             <flux:badge
@@ -202,7 +202,7 @@
                                 size="sm"
                                 color="{{ $dynamicReviewUnresolvedCount > 0 ? 'red' : 'green' }}"
                             >
-                                {{ __('Unresolved') }}: {{ $dynamicReviewUnresolvedCount }}
+                                {{ __('ui.unresolved') }}: {{ $dynamicReviewUnresolvedCount }}
                             </flux:badge>
                         @endif
 
@@ -260,8 +260,8 @@
                         {{ __('Scanner context that may describe runtime option values.') }}
                     </flux:callout.text>
                     <div class="mt-2 flex flex-wrap gap-1.5">
-                        <flux:badge size="sm">{{ __('Sources') }}: {{ $dynamicReviewSourceCount }}</flux:badge>
-                        <flux:badge size="sm">{{ __('Values') }}:
+                        <flux:badge size="sm">{{ __('ui.sources') }}: {{ $dynamicReviewSourceCount }}</flux:badge>
+                        <flux:badge size="sm">{{ __('ui.values.values') }}:
                             {{ (int) ($dynamicReviewFinding->dynamic_source_value_count ?? 0) }}</flux:badge>
                         @foreach ($dynamicReviewSourceTypes as $sourceType)
                             <flux:badge
@@ -512,7 +512,7 @@
                                         {{-- Table Header Column Source --}}
                                         <flux:table.column>
                                             <div class="flex items-center gap-1.5">
-                                                <span>{{ __('Source') }}</span>
+                                                <span>{{ __('ui.source') }}</span>
                                                 <flux:badge
                                                     size="sm"
                                                     variant="subtle"
@@ -528,7 +528,7 @@
                                         {{-- Table Header Column Values --}}
                                         <flux:table.column>
                                             <div class="flex items-center gap-1.5">
-                                                <span>{{ __('Values') }}</span>
+                                                <span>{{ __('ui.values.values') }}</span>
                                                 <flux:badge
                                                     size="sm"
                                                     variant="subtle"
@@ -538,7 +538,7 @@
                                             </div>
                                         </flux:table.column>
                                         {{-- Table Header Column State --}}
-                                        <flux:table.column class="w-32">{{ __('State') }}</flux:table.column>
+                                        <flux:table.column class="w-32">{{ __('ui.state') }}</flux:table.column>
                                     </flux:table.columns>
 
                                     {{-- Table Body Rows Runtime Options --}}
@@ -679,20 +679,21 @@
                                                             @if ($source['suggested_key'])
                                                                 <div
                                                                     class="wrap-anywhere text-wrap font-mono text-xs text-cyan-700 dark:text-cyan-300">
-                                                                    {{ __('Suggested key') }}:
+                                                                    {{ __('ui.key.suggested-key') }}:
                                                                     {{ $source['suggested_key'] }}
                                                                 </div>
                                                             @endif
 
                                                             @if ($source['source_path'])
-                                                                <div
+                                                                <x-ui.tooltip.simple
                                                                     class="wrap-anywhere font-mono text-xs text-zinc-500 dark:text-zinc-400"
-                                                                    title="{{ $source['source_path'] }}"
+                                                                    :title="__('ui.source-path')"
+                                                                    :text="$source['source_path']"
                                                                 >
                                                                     {{ $source['source_path'] }}@if ($source['source_line'])
                                                                         :{{ $source['source_line'] }}
                                                                     @endif
-                                                                </div>
+                                                                </x-ui.tooltip.simple>
                                                             @endif
 
                                                             @if ($source['source_expression'])

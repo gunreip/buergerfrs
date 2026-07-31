@@ -95,12 +95,12 @@
                     class="mr-2 w-36 shrink-0 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
                 >
                     <x-ui.tooltip.trigger
-                        :title="__('admin.app_settings.table_icon_registry.view')"
+                        :title="__('ui.view')"
                         :text="__(
                             'Switch between affected lang files, lang cleanup candidates, missing lang entries, redundant sub-language values, and entries that need review.',
                         )"
                     >
-                        {{ __('admin.app_settings.table_icon_registry.view') }}
+                        {{ __('ui.view') }}
                     </x-ui.tooltip.trigger>
                 </span>
 

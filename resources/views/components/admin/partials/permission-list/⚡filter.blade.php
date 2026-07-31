@@ -165,7 +165,7 @@
                         'admin.permission_list.filter.select_an_assignment_status_to_filter_the_list_of_permissions',
                     )"
                 >
-                    {{ __('admin.permissions.filters.assignment.label') }}
+                    {{ __('ui.label.label') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -205,7 +205,7 @@
                         'admin.permission_list.filter.select_a_system_status_to_filter_the_list_of_permissions',
                     )"
                 >
-                    {{ __('admin.permissions.filters.system.label') }}
+                    {{ __('ui.label.label') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 

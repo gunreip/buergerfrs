@@ -41,18 +41,18 @@
                     {{-- Column Status --}}
                     <flux:table.column
                         class="w-22"
-                        aria-label="{{ __('admin.app_settings.table_icon_registry.status') }}"
+                        aria-label="{{ __('ui.status') }}"
                         align="center"
                         sortable
                         wire:click="sortBy('status')"
                     >
                         {{-- Tooltip Status: History status of the finding, open, changed, resolved, or ignored. --}}
                         <x-ui.tooltip.trigger
-                            :title="__('admin.app_settings.table_icon_registry.status')"
+                            :title="__('ui.status')"
                             :text="$legendTexts['status'] ??
                                 __('History status of the finding: open, changed, resolved, or ignored.')"
                         >
-                            {{ __('admin.app_settings.table_icon_registry.status') }}
+                            {{ __('ui.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -90,7 +90,7 @@
                             :text="$legendTexts['type'] ??
                                 __('Type of the problem, e.g. unclosed tag, unexpected closing tag, etc.')"
                         >
-                            {{ __('admin.client_list.table.type') }}
+                            {{ __('ui.type') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -346,7 +346,7 @@
         @if ($problems->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('admin.client_list.table.pagination') }}"
+                text="{{ __('ui.pagination') }}"
             />
 
             <div class="mt-4">

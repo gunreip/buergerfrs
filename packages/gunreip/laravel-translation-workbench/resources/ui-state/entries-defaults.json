@@ -13,5 +13,6 @@
     "findingSortField": "last_seen",
     "findingSortDirection": "desc",
     "showOverviewTabs": true,
-    "showObsoleteFindings": false
+    "showObsoleteFindings": false,
+    "editModalAutoCloseAfterSave": true
 }

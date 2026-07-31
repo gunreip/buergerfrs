@@ -226,7 +226,7 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                     <span
                         class="mr-2 w-36 shrink-0 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
                     >
-                        {{ __('admin.translation_list.meta.workflow') }}
+                        {{ __('ui.workflow') }}
                     </span>
 
                     @php
@@ -380,7 +380,7 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                     <span
                         class="mr-2 w-36 shrink-0 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
                     >
-                        {{ __('admin.app_settings.table_icon_registry.status') }}
+                        {{ __('ui.status') }}
                     </span>
 
                     @foreach ($statusOptions as $option)
@@ -459,7 +459,7 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                     <span
                         class="mr-2 w-36 shrink-0 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
                     >
-                        {{ __('admin.client_list.table.type') }}
+                        {{ __('ui.type') }}
                     </span>
 
                     @foreach ($classificationOptions as $option)

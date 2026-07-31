@@ -46,7 +46,7 @@
                     :title="__('admin.client_list.filter.filter_by_type')"
                     :text="__('admin.client_list.filter.select_a_type_to_filter_the_client_list')"
                 >
-                    {{ __('admin.client_list.table.type') }}
+                    {{ __('ui.type') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -79,10 +79,10 @@
         <div class="min-w-0 flex-none basis-1/6">
             <flux:label for="client-list-status-filter">
                 <x-ui.tooltip.trigger
-                    :title="__('admin.client_list.filter.filter_by_status')"
+                    :title="__('ui.filters.filter-by-status')"
                     :text="__('admin.client_list.filter.select_a_status_to_filter_the_client_list')"
                 >
-                    {{ __('admin.app_settings.table_icon_registry.status') }}
+                    {{ __('ui.status') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -118,7 +118,7 @@
                     :title="__('admin.client_list.filter.filter_by_people')"
                     :text="__('admin.client_list.filter.select_a_people_filter_to_filter_the_client_list')"
                 >
-                    {{ __('admin.client_list.table.people') }}
+                    {{ __('ui.people') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -140,11 +140,11 @@
                     </flux:select.option>
 
                     <flux:select.option value="with_people">
-                        {{ __('admin.client_list.meta.with_people') }}
+                        {{ __('ui.meta.with-people') }}
                     </flux:select.option>
 
                     <flux:select.option value="without_people">
-                        {{ __('admin.client_list.meta.without_people') }}
+                        {{ __('ui.meta.without-people') }}
                     </flux:select.option>
                 </flux:select>
             </flux:input.group>

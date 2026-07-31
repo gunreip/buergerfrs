@@ -86,12 +86,12 @@
                     :direction="$sortDirection"
                     wire:click="sortBy('created_at')"
                 >
-                    {{ __('admin.client_list.table.created') }}
+                    {{ __('ui.created') }}
                 </flux:table.column>
 
                 {{-- Table-Header Type --}}
                 <flux:table.column class="w-px whitespace-nowrap">
-                    {{ __('admin.client_list.table.type') }}
+                    {{ __('ui.type') }}
                 </flux:table.column>
 
                 {{-- Table-Header Log --}}
@@ -179,7 +179,7 @@
                         $activityLogTypeLabel = match ($activityLogType) {
                             'app' => __('App'),
                             'artisan' => __('Artisan'),
-                            default => __('admin.permissions.filters.system.label'),
+                            default => __('ui.label.label'),
                         };
 
                         $activityLogTypeColor = match ($activityLogType) {
@@ -416,7 +416,7 @@
                                             variant="subtle"
                                             color="purple"
                                         >
-                                            {{ __('admin.permissions.filters.system.label') }}
+                                            {{ __('ui.label.label') }}
                                         </flux:badge>
                                     @endif
 

@@ -16,13 +16,13 @@
 
             <flux:text class="text-sm">
                 <flux:field class="grid grid-cols-8">
-                    <span class="font-semibold">{{ __('admin.client_list.table.created') }}:</span>
+                    <span class="font-semibold">{{ __('ui.created') }}:</span>
                     <x-ui.date-time.date
                         :format="'dd, DD. MMM. YYYY'"
                         :value="$person->created_at"
                     />
                     <x-ui.date-time.time :value="$person->created_at" />
-                    <span class="font-semibold">{{ __('Updated') }}:</span>
+                    <span class="font-semibold">{{ __('ui.updated') }}:</span>
                     <x-ui.date-time.date
                         :format="'dd, DD. MMM. YYYY'"
                         :value="$person->updated_at"

@@ -62,7 +62,7 @@
                 class="hyphens-auto"
                 color="{{ ($keysByStatus['missing'] ?? 0) > 0 ? 'amber' : 'green' }}"
                 icon="shield-alert"
-                heading="{{ __('admin.app_settings.table_icon_registry.missing') }}"
+                heading="{{ __('ui.missing') }}"
                 text="{{ __('Keys with missing values.') }}"
             >
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">

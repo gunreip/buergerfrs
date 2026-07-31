@@ -46,7 +46,7 @@
                 class="hyphens-auto md:col-span-1"
                 color="green"
                 icon="check-circle"
-                heading="{{ __('admin.user_list.meta.assignable_roles') }}"
+                heading="{{ __('ui.meta.assignable-roles') }}"
                 text="{{ __('Roles that can be assigned to users through the UI.') }}"
             >
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -70,7 +70,7 @@
                 class="hyphens-auto md:col-span-1"
                 color="orange"
                 icon="users"
-                heading="{{ __('admin.roles.labels.assigned_users') }}"
+                heading="{{ __('ui.assigned-users') }}"
                 text="{{ __('Distinct users currently assigned to at least one role.') }}"
             >
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">

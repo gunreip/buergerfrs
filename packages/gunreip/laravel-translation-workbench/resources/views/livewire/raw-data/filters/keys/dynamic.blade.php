@@ -1,7 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/keys/dynamic.blade.php --}}
 
 <flux:field class="{{ $fieldClass ?? '' }}">
-    <flux:label>{{ __('Dynamic') }}</flux:label>
+    <flux:label>{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.dynamic') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
             <flux:icon.code />

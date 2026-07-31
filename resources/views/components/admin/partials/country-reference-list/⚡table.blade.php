@@ -77,10 +77,10 @@
                         wire:click="sortBy('region')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('admin.country_reference_list.filter.region')"
+                            :title="__('ui.filters.region')"
                             :text="__('admin.country_reference_list.table.region_of_the_country_useful_for_identification_and_reference')"
                         >
-                            {{ __('admin.country_reference_list.filter.region') }}
+                            {{ __('ui.filters.region') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -126,10 +126,10 @@
                         wire:click="sortBy('is_active')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('admin.app_settings.table_icon_registry.status')"
+                            :title="__('ui.status')"
                             :text="__('admin.country_reference_list.table.active_status_of_the_country_useful_for_identification_and_reference')"
                         >
-                            {{ __('admin.app_settings.table_icon_registry.status') }}
+                            {{ __('ui.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
@@ -278,12 +278,12 @@
                                         </flux:badge>
                                     </flux:tooltip>
                                 @else
-                                    <flux:tooltip content="{{ __('admin.country_reference_list.filter.inactive') }}">
+                                    <flux:tooltip content="{{ __('ui.filters.inactive') }}">
                                         <flux:badge
                                             color="zinc"
                                             variant="subtle"
                                         >
-                                            {{-- {{ __('admin.country_reference_list.filter.inactive') }} --}}
+                                            {{-- {{ __('ui.filters.inactive') }} --}}
                                             <flux:icon.x
                                                 class="text-red-900"
                                                 variant="micro"
@@ -306,7 +306,7 @@
             </flux:table>
         </div>
 
-        <flux:separator text="{{ __('admin.client_list.table.pagination') }}" />
+        <flux:separator text="{{ __('ui.pagination') }}" />
 
         @if ($countries->hasPages())
             <x-ui.table.pagination :paginator="$countries" />

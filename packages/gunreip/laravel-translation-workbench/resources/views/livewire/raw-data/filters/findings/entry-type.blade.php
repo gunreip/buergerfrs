@@ -25,8 +25,8 @@
                     $entryTypeLabel = match ($entryType) {
                         'dynamic' => __('Dynamic values'),
                         'dynamic_numeric' => __('Numeric dynamic'),
-                        'key' => __('Translation key'),
-                        'literal' => __('Literal'),
+                        'key' => __('ui.translation.translation-key'),
+                        'literal' => __('ui.literal.literal'),
                         default => $entryType,
                     };
                     $entryTypeIcon = match ($entryType) {

@@ -22,7 +22,6 @@ return [
             'usage_locations' => 'Verwendung im Code',
         ],
         'table' => [
-            'open_history' => 'Historie öffnen',
             'target_sub_language_values' => 'Werte für die Sprachvaritionen der Zielsprache',
         ],
     ],

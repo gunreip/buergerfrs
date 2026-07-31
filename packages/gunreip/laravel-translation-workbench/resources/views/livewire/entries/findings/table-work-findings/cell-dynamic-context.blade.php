@@ -30,7 +30,7 @@
                                     size="sm"
                                     color="green"
                                 >
-                                    {{ __('State') }}:
+                                    {{ __('ui.state') }}:
                                     {{ __('Dynamic values') }}
                                 </flux:badge>
                             </x-ui.tooltip.simple>
@@ -46,7 +46,7 @@
                                     size="sm"
                                     color="amber"
                                 >
-                                    {{ __('State') }}: {{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings_table.candidate') }}
+                                    {{ __('ui.state') }}: {{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings_table.candidate') }}
                                 </flux:badge>
                             </x-ui.tooltip.simple>
                         @endif
@@ -97,7 +97,7 @@
                                         size="sm"
                                         color="{{ $dynamicTranslationValuesComplete ? 'zinc' : 'red' }}"
                                     >
-                                        {{ __('Unresolved') }}: {{ $dynamicUnresolvedSourceCount }}
+                                        {{ __('ui.unresolved') }}: {{ $dynamicUnresolvedSourceCount }}
                                     </flux:badge>
                                 </span>
                             </x-ui.tooltip.simple>
@@ -179,7 +179,7 @@
                                     size="sm"
                                     color="{{ $dynamicTranslationValuesComplete ? 'green' : ($dynamicValueCount > 1 ? 'cyan' : 'sky') }}"
                                 >
-                                    {{ __('Stored values') }}: {{ $dynamicValueCount }}
+                                    {{ __('ui.values.stored-values') }}: {{ $dynamicValueCount }}
                                 </flux:badge>
                             </x-ui.tooltip.simple>
                         @endif

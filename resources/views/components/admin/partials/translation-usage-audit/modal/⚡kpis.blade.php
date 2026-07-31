@@ -53,7 +53,7 @@
     >
         <flux:callout.heading>{{ __('UI candidate') }}</flux:callout.heading>
         <flux:callout.text class="mt-1 text-lg font-semibold">
-            {{ (bool) ($selectedItem['already_has_ui_candidate'] ?? false) ? __('yes') : __('no') }}
+            {{ (bool) ($selectedItem['already_has_ui_candidate'] ?? false) ? __('ui.filters.yes') : __('no') }}
         </flux:callout.text>
     </flux:callout>
 </div>

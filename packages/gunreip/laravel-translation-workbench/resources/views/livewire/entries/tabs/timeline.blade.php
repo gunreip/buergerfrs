@@ -9,7 +9,6 @@
             color="{{ $callout['color'] }}"
             icon="{{ $callout['icon'] }}"
             heading="{{ $callout['title'] }}"
-            {{-- text="{{ $callout['text'] }}" --}}
         >
             <flux:callout.text class="hyphens-auto text-xs">
                 {{ $callout['text'] }}

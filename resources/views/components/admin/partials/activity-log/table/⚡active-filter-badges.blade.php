@@ -6,7 +6,7 @@
             color="{{ $activeActivityLogTabCard['color'] ?? 'sky' }}"
             variant="subtle"
         >
-            {{ __('admin.client_list.table.type') }}: {{ $activeActivityLogTabCard['label'] ?? str($activityLogTab)->headline() }}
+            {{ __('ui.type') }}: {{ $activeActivityLogTabCard['label'] ?? str($activityLogTab)->headline() }}
         </flux:badge>
     @endif
 

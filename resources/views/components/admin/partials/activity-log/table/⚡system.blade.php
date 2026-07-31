@@ -86,7 +86,7 @@
                     :direction="$sortDirection"
                     wire:click="sortBy('created_at')"
                 >
-                    {{ __('admin.client_list.table.created') }}
+                    {{ __('ui.created') }}
                 </flux:table.column>
 
                 {{-- Table-Header Log --}}
@@ -262,7 +262,7 @@
                                         variant="subtle"
                                         color="purple"
                                     >
-                                        {{ __('admin.permissions.filters.system.label') }}
+                                        {{ __('ui.label.label') }}
                                     </flux:badge>
                                 @endif
 

@@ -1,0 +1,130 @@
+{
+    "command": "translation-workbench:apply-code-updates",
+    "generated_at": "2026-07-31T12:38:34.255469Z",
+    "write": false,
+    "paths": [],
+    "plan_summary": {
+        "reviewed_findings": 720,
+        "safe_updates": 8,
+        "already_current": 676,
+        "manual_review": 25,
+        "missing_lang_values": 0,
+        "stale_source": 11,
+        "missing_source_file": 0,
+        "unsupported_expression": 0
+    },
+    "summary": {
+        "planned_safe_updates": 8,
+        "applied": 0,
+        "would_apply": 0,
+        "skipped": 0,
+        "stale_source": 0,
+        "duplicate_expression": 8,
+        "duplicate_reviewed": 0,
+        "diff_files": 0,
+        "timeline_events_created": 0
+    },
+    "diff": {
+        "files": [],
+        "content": ""
+    },
+    "results": [
+        {
+            "finding_id": 812,
+            "key_id": 1136,
+            "source_path": "resources/views/components/admin/partials/activity-log/⚡filter.blade.php",
+            "source_line": 39,
+            "translation_key": "ui.timespan",
+            "raw_expression": "__('Timespan')",
+            "new_expression": "__('ui.timespan')",
+            "state": "duplicate_expression",
+            "reason": "raw_expression_occurs_more_than_once_in_source_file",
+            "occurrences": 2
+        },
+        {
+            "finding_id": 402,
+            "key_id": 437,
+            "source_path": "resources/views/components/admin/partials/translation-sub-languages/⚡table.blade.php",
+            "source_line": 73,
+            "translation_key": "ui.languages.sub-languages",
+            "raw_expression": "__('Sub-languages')",
+            "new_expression": "__('ui.languages.sub-languages')",
+            "state": "duplicate_expression",
+            "reason": "raw_expression_occurs_more_than_once_in_source_file",
+            "occurrences": 2
+        },
+        {
+            "finding_id": 625,
+            "key_id": 791,
+            "source_path": "resources/views/components/admin/partials/translation-usage-audit/⚡table.blade.php",
+            "source_line": 158,
+            "translation_key": "ui.stale",
+            "raw_expression": "__('Stale')",
+            "new_expression": "__('ui.stale')",
+            "state": "duplicate_expression",
+            "reason": "raw_expression_occurs_more_than_once_in_source_file",
+            "occurrences": 2
+        },
+        {
+            "finding_id": 266,
+            "key_id": 273,
+            "source_path": "resources/views/components/admin/partials/translation-usage-audit/⚡table.blade.php",
+            "source_line": 177,
+            "translation_key": "ui.ui-candidate",
+            "raw_expression": "__('UI candidate')",
+            "new_expression": "__('ui.ui-candidate')",
+            "state": "duplicate_expression",
+            "reason": "raw_expression_occurs_more_than_once_in_source_file",
+            "occurrences": 2
+        },
+        {
+            "finding_id": 133,
+            "key_id": 134,
+            "source_path": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "source_line": 48,
+            "translation_key": "ui.badge.test-data",
+            "raw_expression": "__('Test data')",
+            "new_expression": "__('ui.badge.test-data')",
+            "state": "duplicate_expression",
+            "reason": "raw_expression_occurs_more_than_once_in_source_file",
+            "occurrences": 2
+        },
+        {
+            "finding_id": 146,
+            "key_id": 147,
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡contact.blade.php",
+            "source_line": 30,
+            "translation_key": "management.people.create_person.phone",
+            "raw_expression": "__('Phone')",
+            "new_expression": "__('management.people.create_person.phone')",
+            "state": "duplicate_expression",
+            "reason": "raw_expression_occurs_more_than_once_in_source_file",
+            "occurrences": 2
+        },
+        {
+            "finding_id": 941,
+            "key_id": 1338,
+            "source_path": "resources/views/components/ui/button/close.blade.php",
+            "source_line": 14,
+            "translation_key": "ui.button.close",
+            "raw_expression": "__('ui.actions.close')",
+            "new_expression": "__('ui.button.close')",
+            "state": "duplicate_expression",
+            "reason": "raw_expression_occurs_more_than_once_in_source_file",
+            "occurrences": 2
+        },
+        {
+            "finding_id": 214,
+            "key_id": 218,
+            "source_path": "resources/views/layouts/app/sidebar/⚡administration.blade.php",
+            "source_line": 150,
+            "translation_key": "ui.translation-workbench",
+            "raw_expression": "__('Translation Workbench')",
+            "new_expression": "__('ui.translation-workbench')",
+            "state": "duplicate_expression",
+            "reason": "raw_expression_occurs_more_than_once_in_source_file",
+            "occurrences": 2
+        }
+    ],
+    "diff_path": "/home/gunreip/code/buergerfrs/storage/translation-workbench/translation-workbench-apply-code-updates.patch"
+}

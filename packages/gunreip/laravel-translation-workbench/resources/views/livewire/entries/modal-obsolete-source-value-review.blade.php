@@ -41,13 +41,12 @@
                 <flux:callout
                     color="sky"
                     icon="languages"
-                    variant="secondary"
                 >
                     <flux:callout.heading>{{ __('Locale context') }}</flux:callout.heading>
                     <flux:callout.text>
                         <div class="grid gap-2 text-sm">
                             <div class="flex items-center justify-between gap-3">
-                                <span class="text-zinc-500 dark:text-zinc-400">{{ __('Source') }}</span>
+                                <span class="text-zinc-500 dark:text-zinc-400">{{ __('ui.source') }}</span>
                                 <flux:badge size="sm">{{ $obsoleteReview['source_locale'] }}
                                     <x-ui.locale.flag
                                         class="ml-1"
@@ -74,9 +73,8 @@
                     class="lg:col-span-2"
                     color="{{ $obsoleteLangValue ? 'amber' : 'red' }}"
                     icon="{{ $obsoleteLangValue ? 'key-round' : 'circle-alert' }}"
-                    variant="secondary"
                 >
-                    <flux:callout.heading>{{ __('Translation key') }}</flux:callout.heading>
+                    <flux:callout.heading>{{ __('ui.translation.translation-key') }}</flux:callout.heading>
                     <flux:callout.text>
                         <div class="wrap-anywhere font-mono text-xs">
                             {{ $obsoleteReview['translation_key'] }}
@@ -88,7 +86,6 @@
             <flux:callout
                 color="{{ $obsoleteLangValue ? ($obsoleteReview['is_obsolete'] ?? false ? 'zinc' : 'amber') : 'red' }}"
                 icon="{{ $obsoleteLangValue ? 'file-text' : 'circle-alert' }}"
-                variant="secondary"
             >
                 <div class="flex flex-wrap items-center gap-2">
                     <flux:callout.heading>{{ __('Source-language value') }}</flux:callout.heading>
@@ -98,7 +95,7 @@
                             size="sm"
                             color="{{ $obsoleteLangValue->status === 'obsolete' ? 'zinc' : 'green' }}"
                         >
-                            {{ __('Status') }}: {{ $obsoleteLangValue->status }}
+                            {{ __('ui.status') }}: {{ $obsoleteLangValue->status }}
                         </flux:badge>
                         <flux:badge size="sm">
                             ID #{{ $obsoleteLangValue->id }}
@@ -121,7 +118,6 @@
             <flux:callout
                 color="{{ $possibleMatchingEntry ? 'cyan' : 'zinc' }}"
                 icon="{{ $possibleMatchingEntry ? 'git-branch' : 'search' }}"
-                variant="secondary"
             >
                 <div class="flex flex-wrap items-center gap-2">
                     <flux:callout.heading>{{ __('Possible matching entry') }}</flux:callout.heading>
@@ -157,7 +153,7 @@
                         <div
                             class="mt-2 space-y-2 rounded-md border border-zinc-200 bg-white p-3 text-xs dark:border-zinc-700 dark:bg-zinc-900">
                             <div class="grid gap-1 lg:grid-cols-[12rem_minmax(0,1fr)]">
-                                <span class="text-zinc-500 dark:text-zinc-400">{{ __('Translation key') }}</span>
+                                <span class="text-zinc-500 dark:text-zinc-400">{{ __('ui.translation.translation-key') }}</span>
                                 <span class="wrap-anywhere font-mono">{{ $obsoleteReview['translation_key'] }}</span>
                             </div>
 
@@ -203,7 +199,6 @@
             <flux:callout
                 color="amber"
                 icon="triangle-alert"
-                variant="secondary"
             >
                 <flux:callout.heading>{{ __('What will happen?') }}</flux:callout.heading>
                 <flux:callout.text>

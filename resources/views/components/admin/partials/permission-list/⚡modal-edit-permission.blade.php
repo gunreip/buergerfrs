@@ -40,7 +40,7 @@
 
             <div>
                 <flux:text class="text-zinc-400">
-                    {{ __('ui.assigned_roles') }}
+                    {{ __('ui.assigned-roles') }}
                 </flux:text>
 
                 <flux:heading size="md">
@@ -75,7 +75,7 @@
 
             <flux:input
                 type="number"
-                label="{{ __('admin.permissions.labels.sort_order') }}"
+                label="{{ __('ui.sort-order') }}"
                 wire:model.live="editingSortOrder"
                 min="0"
                 step="1"

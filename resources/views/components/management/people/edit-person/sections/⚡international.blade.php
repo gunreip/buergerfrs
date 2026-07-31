@@ -271,7 +271,7 @@
                                             <x-ui.checkbox.icon
                                                 id="edit-person-language-{{ $language->id }}-writing"
                                                 icon="pen-line"
-                                                :label="__('Writing')"
+                                                :label="__('ui.writing')"
                                                 :title="($index === 0
                                                     ? __('Primary Language Writing')
                                                     : __('Secondary Language Writing')) .

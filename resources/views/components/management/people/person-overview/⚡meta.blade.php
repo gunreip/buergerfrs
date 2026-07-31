@@ -24,7 +24,7 @@
             <flux:callout
                 color="sky"
                 icon="users"
-                heading="{{ __('Total') }}"
+                heading="{{ __('ui.total') }}"
                 text="{{ __('All person records.') }}"
             >
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">

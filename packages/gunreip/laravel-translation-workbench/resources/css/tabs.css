@@ -1,0 +1,11 @@
+/* packages/gunreip/laravel-translation-workbench/resources/css/tabs.css */
+
+@layer components {
+    .translation-workbench [data-flux-tabs]>[data-flux-tab] {
+        @apply rounded-md transition-colors hover:cursor-pointer;
+    }
+
+    .translation-workbench [data-flux-tabs]>[data-flux-tab][data-selected] {
+        @apply border-b-transparent;
+    }
+}

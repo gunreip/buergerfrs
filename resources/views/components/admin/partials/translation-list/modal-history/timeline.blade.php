@@ -50,7 +50,7 @@
                     };
 
                     $eventTitle = match ($historyEvent->event_type) {
-                        'created' => __('admin.client_list.table.created'),
+                        'created' => __('ui.created'),
                         'value_changed' => __('Value changed'),
                         'key_changed' => __('Key changed'),
                         'moved' => __('Moved'),
@@ -149,7 +149,7 @@
                             ? __('admin.translation_list.modal_history.event') . ' #' . $historyEvent->id
                             : __('Derived baseline'),
                         __('Entity') . ': ' . $historyEvent->entity_type,
-                        __('admin.client_list.table.type') . ': ' . $historyEvent->event_type,
+                        __('ui.type') . ': ' . $historyEvent->event_type,
                         __('Renderer') . ': ' . ($usesTimelineFallback ? __('Fallback') : __('Specific component')),
                         $historyLocale ? __('Locale') . ': ' . strtoupper($historyLocale) : null,
                         $historyEvent->reason ? __('admin.translation_list.modal_history.reason') . ': ' . $historyEvent->reason : null,

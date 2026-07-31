@@ -1,7 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/lang-values/source-path.blade.php --}}
 
 <flux:field class="{{ $fieldClass ?? '' }}">
-    <flux:label>{{ __('Source path') }}</flux:label>
+    <flux:label>{{ __('ui.source-path') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
             <flux:icon.file-text />

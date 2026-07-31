@@ -172,7 +172,7 @@
                                             color="purple"
                                             variant="subtle"
                                         >
-                                            {{ __('admin.permissions.filters.system.label') }}
+                                            {{ __('ui.label.label') }}
                                         </flux:badge>
                                     @endif
 
@@ -181,7 +181,7 @@
                                             color="green"
                                             variant="subtle"
                                         >
-                                            {{ __('Assignable') }}
+                                            {{ __('ui.assignable') }}
                                         </flux:badge>
                                     @else
                                         <flux:badge
@@ -220,7 +220,7 @@
         @if ($roles->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('admin.client_list.table.pagination') }}"
+                text="{{ __('ui.pagination') }}"
             />
 
             <div class="mt-4">

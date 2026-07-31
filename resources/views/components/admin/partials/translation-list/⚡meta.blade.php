@@ -83,7 +83,7 @@
                 class="col-span-2 hyphens-auto"
                 color="amber"
                 icon="shield-alert"
-                heading="{{ __('admin.app_settings.table_icon_registry.missing') }}"
+                heading="{{ __('ui.missing') }}"
                 text="{{ __('admin.translation_list.meta.translation_keys_with_missing_values_or_required_follow_up') }}"
             >
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -211,7 +211,7 @@
                                 color="amber"
                                 variant="subtle"
                             >
-                                {{ __('admin.app_settings.table_icon_registry.status') }}:
+                                {{ __('ui.status') }}:
                                 {{ str($status)->headline() }}
                             </flux:badge>
                         @endif
@@ -221,7 +221,7 @@
                                 color="emerald"
                                 variant="subtle"
                             >
-                                {{ __('admin.translation_list.meta.workflow') }}:
+                                {{ __('ui.workflow') }}:
                                 {{ str($workflowStatus)->headline() }}
                             </flux:badge>
                         @endif
@@ -238,7 +238,7 @@
                                 color="purple"
                                 variant="subtle"
                             >
-                                {{ __('admin.client_list.table.type') }}: {{ $classificationLabel }}
+                                {{ __('ui.type') }}: {{ $classificationLabel }}
                             </flux:badge>
                         @endif
 

@@ -41,16 +41,16 @@
                         {{ __('admin.roles.labels.system_role') }}
                     </flux:text>
                     <div class="mt-1 font-semibold text-zinc-100">
-                        {{-- i18n-native: __('ui.states.yes') --}}
+                        {{-- i18n-native: __('ui.filters.yes') --}}
                         {{-- i18n-native: __('ui.states.no') --}}
-                        {{ $editingIsSystem ? __('ui.states.yes') : __('ui.states.no') }}
+                        {{ $editingIsSystem ? __('ui.filters.yes') : __('ui.states.no') }}
                     </div>
                 </div>
 
                 <div>
                     <flux:text class="text-zinc-400">
-                        {{-- i18n-native: __('admin.roles.labels.assigned_users') --}}
-                        {{ __('admin.roles.labels.assigned_users') }}
+                        {{-- i18n-native: __('ui.assigned-users') --}}
+                        {{ __('ui.assigned-users') }}
                     </flux:text>
                     <div class="mt-1 font-semibold tabular-nums text-zinc-100">
                         {{ $editingUsersCount }}
@@ -73,8 +73,8 @@
                 type="number"
                 min="0"
                 max="65535"
-                {{-- i18n-native: __('admin.permissions.labels.sort_order') --}}
-                label="{{ __('admin.roles.labels.sort_order') }}"
+                {{-- i18n-native: __('ui.sort-order') --}}
+                label="{{ __('ui.sort-order') }}"
                 wire:model.live="editingSortOrder"
             />
 
@@ -89,8 +89,8 @@
 
             <div class="col-span-2">
                 <flux:checkbox
-                    {{-- i18n-native: __('admin.roles.labels.assignable_through_ui') --}}
-                    label="{{ __('admin.roles.labels.assignable_through_ui') }}"
+                    {{-- i18n-native: __('ui.assignable-through-ui') --}}
+                    label="{{ __('ui.assignable-through-ui') }}"
                     wire:model.live="editingIsAssignable"
                 />
             </div>

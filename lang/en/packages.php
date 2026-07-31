@@ -19,10 +19,7 @@ return [
                             'dynamic' => 'Dynamic',
                             'findings' => [
                                 'code_update_plan' => [
-                                    'actions' => 'Actions',
-                                    'all_states' => 'All states',
                                     'already_current' => 'Already current',
-                                    'applied' => 'Applied',
                                     'apply_ready_plan' => 'Apply-ready plan',
                                     'apply_result_freshness' => 'Apply result freshness',
                                     'apply_results' => 'Apply results',
@@ -72,9 +69,7 @@ return [
                         'raw_data' => [
                             'filters' => [
                                 'reviews' => [
-                                    'decision' => [
-                                        'all_decisions' => 'All decisions',
-                                    ],
+                                    'decision' => [],
                                 ],
                             ],
                             'filters_event_types' => [

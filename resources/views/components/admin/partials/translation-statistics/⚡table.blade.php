@@ -44,12 +44,12 @@
                         >
                             <x-ui.tooltip.trigger
                                 class="ml-3"
-                                :title="__('admin.client_list.table.type')"
+                                :title="__('ui.type')"
                                 :text="__(
                                     'Shows whether this locale is a main language or a sub-language variant.',
                                 )"
                             >
-                                {{ __('admin.client_list.table.type') }}
+                                {{ __('ui.type') }}
                             </x-ui.tooltip.trigger>
                         </flux:table.column>
 
@@ -130,10 +130,10 @@
                         >
                             <x-ui.tooltip.trigger
                                 class="mr-3"
-                                :title="__('admin.app_settings.table_icon_registry.missing')"
+                                :title="__('ui.missing')"
                                 :text="__('Keys that are not translated yet in this language combination.')"
                             >
-                                {{ __('admin.app_settings.table_icon_registry.missing') }}
+                                {{ __('ui.missing') }}
                             </x-ui.tooltip.trigger>
                         </flux:table.column>
 
@@ -269,7 +269,7 @@
                                                 variant="subtle"
                                                 color="emerald"
                                             >
-                                                {{ __('admin.app_settings.locale.current') }}
+                                                {{ __('ui.current') }}
                                             </flux:badge>
                                         @endif
                                     </div>

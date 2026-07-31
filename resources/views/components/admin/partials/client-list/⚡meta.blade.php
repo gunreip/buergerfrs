@@ -70,7 +70,7 @@
                 class="col-span-5 hyphens-auto md:col-span-1"
                 color="purple"
                 icon="users"
-                heading="{{ __('admin.client_list.meta.with_people') }}"
+                heading="{{ __('ui.meta.with-people') }}"
                 text="{{ __('admin.client_list.meta.clients_assigned_to_at_least_one_person') }}"
             >
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -82,7 +82,7 @@
                 class="col-span-5 hyphens-auto md:col-span-1"
                 color="zinc"
                 icon="user-x"
-                heading="{{ __('admin.client_list.meta.without_people') }}"
+                heading="{{ __('ui.meta.without-people') }}"
                 text="{{ __('admin.client_list.meta.clients_without_assigned_people') }}"
             >
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">

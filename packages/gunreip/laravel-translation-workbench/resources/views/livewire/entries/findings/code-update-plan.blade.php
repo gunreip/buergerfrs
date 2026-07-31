@@ -47,7 +47,7 @@
             ),
         ],
         'stale_source' => [
-            'title' => __('Stale source'),
+            'title' => __('ui.stale-source'),
             'color' => 'red',
             'icon' => 'file-exclamation-point',
             'text' => __(
@@ -68,7 +68,6 @@
         <flux:callout
             color="amber"
             icon="file-exclamation-point"
-            variant="secondary"
         >
             <flux:callout.heading>{{ __('No code update plan found') }}</flux:callout.heading>
             <flux:callout.text>
@@ -79,7 +78,6 @@
         <flux:callout
             color="sky"
             icon="scan-search"
-            variant="secondary"
         >
             <flux:callout.heading>
                 <span class="inline-flex flex-wrap items-center gap-2">
@@ -108,7 +106,6 @@
                 class="xl:col-span-3"
                 color="{{ $applyReady ? 'green' : 'amber' }}"
                 icon="{{ $applyReady ? 'circle-check' : 'triangle-alert' }}"
-                variant="secondary"
             >
                 <flux:callout.heading>
                     {{ $applyReady ? __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.apply_ready_plan') : __('Plan needs review') }}
@@ -123,7 +120,6 @@
             <flux:callout
                 color="{{ $filters['active'] ?? false ? 'cyan' : 'zinc' }}"
                 icon="sliders-horizontal"
-                variant="secondary"
             >
                 <flux:callout.heading>{{ __('Filtered rows') }}</flux:callout.heading>
                 <flux:callout.text>
@@ -137,7 +133,6 @@
         <flux:callout
             color="zinc"
             icon="terminal"
-            variant="secondary"
         >
             <flux:callout.heading>{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.controlled_write_workflow') }}</flux:callout.heading>
             <flux:callout.text>
@@ -150,7 +145,6 @@
                 <flux:callout
                     color="{{ $callout['color'] }}"
                     icon="{{ $callout['icon'] }}"
-                    variant="secondary"
                 >
                     <flux:callout.heading>{{ $callout['title'] }}</flux:callout.heading>
                     <flux:callout.text>
@@ -165,7 +159,6 @@
         <flux:callout
             color="{{ $applyReport ? 'cyan' : 'zinc' }}"
             icon="file-diff"
-            variant="secondary"
         >
             <flux:callout.heading>
                 <span class="flex flex-wrap items-center justify-between gap-2">
@@ -176,7 +169,7 @@
                                 size="sm"
                                 color="{{ $applyReport['write'] ? 'green' : 'sky' }}"
                             >
-                                {{ $applyReport['write'] ? __('Written') : __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.dry_run') }}
+                                {{ $applyReport['write'] ? __('ui.written') : __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.dry_run') }}
                             </flux:badge>
                             <flux:badge size="sm">
                                 {{ __('Files') }}: {{ number_format((int) ($applySummary['diff_files'] ?? 0)) }}
@@ -213,7 +206,7 @@
                         </div>
 
                         <div class="flex flex-wrap gap-2">
-                            <flux:badge size="sm">{{ __('Would apply') }}:
+                            <flux:badge size="sm">{{ __('ui.would-apply') }}:
                                 {{ number_format((int) ($applySummary['would_apply'] ?? 0)) }}</flux:badge>
                             <flux:badge size="sm">{{ __('ui.applied') }}:
                                 {{ number_format((int) ($applySummary['applied'] ?? 0)) }}</flux:badge>
@@ -285,7 +278,7 @@
 
             @php
                 $applyStateMeta = [
-                    'would_apply' => ['title' => __('Would apply'), 'color' => 'green', 'icon' => 'circle-check'],
+                    'would_apply' => ['title' => __('ui.would-apply'), 'color' => 'green', 'icon' => 'circle-check'],
                     'duplicate_expression' => [
                         'title' => __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.duplicate_expressions'),
                         'color' => 'amber',
@@ -297,7 +290,7 @@
                         'icon' => 'badge-check',
                     ],
                     'stale_source' => [
-                        'title' => __('Stale source'),
+                        'title' => __('ui.stale-source'),
                         'color' => 'red',
                         'icon' => 'file-exclamation-point',
                     ],
@@ -307,7 +300,6 @@
             <flux:callout
                 color="zinc"
                 icon="list-checks"
-                variant="secondary"
             >
                 <flux:callout.heading>{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.apply_results') }}</flux:callout.heading>
                 <flux:callout.text>
@@ -362,8 +354,8 @@
                                             sticky
                                         >
                                             <flux:table.column class="w-24">{{ __('ID') }}</flux:table.column>
-                                            <flux:table.column>{{ __('Source') }}</flux:table.column>
-                                            <flux:table.column class="w-36">{{ __('State') }}</flux:table.column>
+                                            <flux:table.column>{{ __('ui.source') }}</flux:table.column>
+                                            <flux:table.column class="w-36">{{ __('ui.state') }}</flux:table.column>
                                             <flux:table.column
                                                 class="w-28"
                                                 align="center"
@@ -612,11 +604,11 @@
                             searchable
                             wire:model.live="codeUpdatePlanState"
                         >
-                            <flux:select.option value="all">{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.all_states') }}</flux:select.option>
+                            <flux:select.option value="all">{{ __('ui.all-states') }}</flux:select.option>
                             <flux:select.option value="safe_update">{{ __('Safe updates') }}</flux:select.option>
                             <flux:select.option value="missing_lang_values">{{ __('Missing lang values') }}</flux:select.option>
                             <flux:select.option value="manual_review">{{ __('Manual review') }}</flux:select.option>
-                            <flux:select.option value="stale_source">{{ __('Stale source') }}</flux:select.option>
+                            <flux:select.option value="stale_source">{{ __('ui.stale-source') }}</flux:select.option>
                             <flux:select.option value="already_current">{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.already_current') }}</flux:select.option>
                             <flux:select.option value="unsupported_expression">{{ __('Unsupported expression') }}
                             </flux:select.option>
@@ -644,7 +636,6 @@
                 <flux:callout
                     color="{{ $meta['color'] }}"
                     icon="{{ $meta['icon'] }}"
-                    variant="secondary"
                 >
                     <flux:callout.heading>
                         <span class="inline-flex flex-wrap items-center gap-2">
@@ -686,7 +677,7 @@
                                             ]"
                                         />
                                     </flux:table.column>
-                                    <flux:table.column class="">{{ __('Source') }}</flux:table.column>
+                                    <flux:table.column class="">{{ __('ui.source') }}</flux:table.column>
                                     <flux:table.column class="">{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.current_expression') }}</flux:table.column>
                                     <flux:table.column class="">
                                         {{ $state === 'safe_update' || $state === 'already_current' ? __('Planned expression') : __('Reason') }}

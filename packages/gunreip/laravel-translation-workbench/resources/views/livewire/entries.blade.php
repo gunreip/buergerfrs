@@ -1,11 +1,21 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries.blade.php --}}
 
 {{-- View Entries of the new Translation Workbench data model. --}}
-<div class="space-y-6">
+<div class="translation-workbench space-y-6">
     <x-ui.headers.page
-        :title="__('Translation Workbench')"
+        :title="__('ui.translation-workbench')"
         :description="__('Foundation overview based on the new Translation Workbench data model.')"
-    />
+    >
+        <x-slot:meta>
+            <flux:badge
+                class="text-[0.65rem] font-normal leading-none"
+                size="sm"
+                color="zinc"
+            >
+                {{ $workbenchVersion['label'] ?? 'v0.7.0-dev' }}
+            </flux:badge>
+        </x-slot:meta>
+    </x-ui.headers.page>
 
     {{-- Card DEV-Playground --}}
     {{-- <flux:card class="mt-6">
@@ -69,7 +79,7 @@
                 </flux:tab>
                 {{-- Tab Source --}}
                 <flux:tab name="source">
-                    {{ __('Source') }}
+                    {{ __('ui.source') }}
                 </flux:tab>
                 {{-- Tab Lang Files --}}
                 <flux:tab name="lang-files">
@@ -89,7 +99,7 @@
                 </flux:tab>
                 {{-- Tab Timeline --}}
                 <flux:tab name="timeline">
-                    {{ __('Timeline') }}
+                    {{ __('ui.time.timeline') }}
                 </flux:tab>
                 {{-- Tab Tables --}}
                 <flux:tab name="tables">
@@ -97,7 +107,7 @@
                 </flux:tab>
                 {{-- Tab Summary --}}
                 <flux:tab name="summary">
-                    {{ __('Summary') }}
+                    {{ __('ui.summary') }}
                 </flux:tab>
             </flux:tabs>
 
@@ -163,6 +173,7 @@
     @include('translation-workbench::livewire.entries.modal-dynamic-review')
     @include('translation-workbench::livewire.entries.modal-dynamic-source-link-confirm')
     @include('translation-workbench::livewire.entries.modal-code-update-conflict-review')
+    @include('translation-workbench::livewire.entries.modal-resolve-export-conflict')
     @include('translation-workbench::livewire.entries.modal-obsolete-source-value-review')
     @include('translation-workbench::livewire.entries.modal-edit')
     @include('translation-workbench::livewire.entries.modal-edit-dynamic')

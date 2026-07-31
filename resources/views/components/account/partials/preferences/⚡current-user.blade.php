@@ -20,7 +20,7 @@
 
                 @if ($nickname !== '')
                     <flux:text class="truncate">
-                        <span class="font-semibold">{{ __('account.preferences.current_user.nickname') }}:</span> {{ $nickname }}
+                        <span class="font-semibold">{{ __('ui.nickname') }}:</span> {{ $nickname }}
                     </flux:text>
                 @endif
 

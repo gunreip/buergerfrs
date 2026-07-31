@@ -28,7 +28,7 @@
                         :direction="$sortDirection"
                         wire:click="sortBy('type')"
                     >
-                        {{ __('admin.client_list.table.type') }}
+                        {{ __('ui.type') }}
                     </flux:table.column>
 
                     <flux:table.column
@@ -38,7 +38,7 @@
                         :direction="$sortDirection"
                         wire:click="sortBy('status')"
                     >
-                        {{ __('admin.app_settings.table_icon_registry.status') }}
+                        {{ __('ui.status') }}
                     </flux:table.column>
 
                     <flux:table.column
@@ -67,7 +67,7 @@
                         :direction="$sortDirection"
                         wire:click="sortBy('sources')"
                     >
-                        {{ __('Sources') }}
+                        {{ __('ui.sources') }}
                     </flux:table.column>
 
                     <flux:table.column
@@ -193,7 +193,7 @@
 
         <flux:separator
             class="mt-4"
-            text="{{ __('admin.client_list.table.pagination') }}"
+            text="{{ __('ui.pagination') }}"
         />
 
         @if ($entries->hasPages())

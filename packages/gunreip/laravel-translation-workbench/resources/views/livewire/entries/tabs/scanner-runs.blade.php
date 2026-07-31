@@ -69,9 +69,10 @@
                     </flux:table.cell>
                     {{-- Table of Scanner Runs Cell Generated At --}}
                     <flux:table.cell>
-                        <div
+                        <x-ui.tooltip.simple
                             class="flex flex-wrap items-center gap-2"
-                            title="{{ $row['generated_at'] ?? ($row['modified_at'] ?? '-') }}"
+                            :title="__('Generated at')"
+                            :text="$row['generated_at'] ?? ($row['modified_at'] ?? '-')"
                         >
                             <x-ui.date-time.date-time
                                 class="font-mono"
@@ -89,7 +90,7 @@
                             >
                                 {{ $scannerReportTimezone }}
                             </flux:badge>
-                        </div>
+                        </x-ui.tooltip.simple>
                     </flux:table.cell>
                     {{-- Table of Scanner Runs Cell Files --}}
                     <flux:table.cell

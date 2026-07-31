@@ -12,6 +12,8 @@
 // php artisan translation:workbench --paths=resources/views/components
 // php artisan translation:workbench --write-lang-files
 // php artisan translation:workbench --complete
+// php artisan translation:workbench --skip-lang-node-classification
+// php artisan translation:workbench --skip-shared-key-candidates
 // php artisan translation:workbench --skip-code-update-apply
 
 namespace Gunreip\TranslationWorkbench\Console;
@@ -38,10 +40,12 @@ use Throwable;
     {--skip-import : Skip importing existing source language values.}
     {--skip-dynamic-options : Skip discovering dynamic option values.}
     {--skip-duplicates : Skip duplicate candidate detection.}
+    {--skip-shared-key-candidates : Skip detecting new findings that may reuse reviewed shared translation keys.}
     {--skip-dynamic-classification : Skip classifying dynamic value sources.}
     {--skip-dynamic-resolution : Skip resolving unknown dynamic sources from option discoveries.}
     {--skip-dynamic-source-candidates : Skip discovering reviewable dynamic source candidates.}
     {--skip-lang-file-export : Skip the final lang file export dry-run/report step.}
+    {--skip-lang-node-classification : Skip classifying keys as lang-file leaf/container/conflict nodes.}
     {--skip-code-update-plan : Skip the final code update planning report step.}
     {--skip-code-update-apply : Skip the final code update apply dry-run and patch report step.}
     {--write-lang-files : Write exported lang files as the final pipeline step. Without this option the export step is a dry-run report only.}
@@ -129,7 +133,7 @@ class RunTranslationWorkbench extends Command
             ];
         }
 
-        $deferLangValueImportUntilAfterWriteExport = $complete && ! $dryRun && $writeLangFiles;
+        $deferLangValueImportUntilAfterWriteExport = ! (bool) $this->option('skip-lang-values') && ! $dryRun && $writeLangFiles;
 
         if (! (bool) $this->option('skip-lang-values') && ! $deferLangValueImportUntilAfterWriteExport) {
             $steps[] = [
@@ -178,6 +182,16 @@ class RunTranslationWorkbench extends Command
             ];
         }
 
+        if (! (bool) $this->option('skip-shared-key-candidates')) {
+            $steps[] = [
+                'label' => 'Detect shared-key candidates',
+                'command' => 'translation-workbench:detect-shared-key-candidates',
+                'arguments' => array_filter([
+                    '--dry-run' => $dryRun,
+                ], static fn(mixed $value): bool => $value !== null && $value !== false),
+            ];
+        }
+
         if (! (bool) $this->option('skip-dynamic-classification')) {
             $steps[] = [
                 'label' => 'Classify dynamic value sources',
@@ -208,6 +222,16 @@ class RunTranslationWorkbench extends Command
             ];
         }
 
+        if (! (bool) $this->option('skip-lang-node-classification')) {
+            $steps[] = [
+                'label' => 'Classify lang node types',
+                'command' => 'translation-workbench:classify-lang-node-types',
+                'arguments' => array_filter([
+                    '--dry-run' => $dryRun,
+                ], static fn(mixed $value): bool => $value !== null && $value !== false),
+            ];
+        }
+
         if (! (bool) $this->option('skip-lang-file-export')) {
             $steps[] = [
                 'label' => $writeLangFiles
@@ -217,6 +241,16 @@ class RunTranslationWorkbench extends Command
                 'arguments' => array_filter([
                     '--write' => $writeLangFiles,
                 ], static fn(mixed $value): bool => $value !== null && $value !== false),
+            ];
+        }
+
+        if ($deferLangValueImportUntilAfterWriteExport && ! $complete) {
+            $steps[] = [
+                'label' => 'Refresh existing lang values after lang export',
+                'command' => 'translation-workbench:import-lang-values',
+                'arguments' => [
+                    '--all-locales' => true,
+                ],
             ];
         }
 
@@ -500,6 +534,14 @@ class RunTranslationWorkbench extends Command
             ];
         }
 
+        if (! (bool) $this->option('skip-shared-key-candidates')) {
+            $steps[] = [
+                'label' => 'Refresh shared-key candidates',
+                'command' => 'translation-workbench:detect-shared-key-candidates',
+                'arguments' => [],
+            ];
+        }
+
         if (! (bool) $this->option('skip-dynamic-classification')) {
             $steps[] = [
                 'label' => 'Refresh dynamic value source classification',
@@ -524,11 +566,49 @@ class RunTranslationWorkbench extends Command
             ];
         }
 
+        if (! (bool) $this->option('skip-lang-node-classification')) {
+            $steps[] = [
+                'label' => 'Refresh lang node types after workbench refresh',
+                'command' => 'translation-workbench:classify-lang-node-types',
+                'arguments' => [],
+            ];
+        }
+
+        if (! (bool) $this->option('skip-lang-file-export')) {
+            $steps[] = [
+                'label' => 'Finalize reviewed lang files after refresh',
+                'command' => 'translation-workbench:export-lang-files',
+                'arguments' => [
+                    '--write' => true,
+                ],
+            ];
+        }
+
+        if (! (bool) $this->option('skip-lang-values') && ! (bool) $this->option('skip-lang-file-export')) {
+            $steps[] = [
+                'label' => 'Refresh existing lang values after final lang export',
+                'command' => 'translation-workbench:import-lang-values',
+                'arguments' => [
+                    '--all-locales' => true,
+                ],
+            ];
+        }
+
+        if (! (bool) $this->option('skip-lang-node-classification') && ! (bool) $this->option('skip-lang-file-export')) {
+            $steps[] = [
+                'label' => 'Refresh lang node types after final lang export',
+                'command' => 'translation-workbench:classify-lang-node-types',
+                'arguments' => [],
+            ];
+        }
+
         if (! (bool) $this->option('skip-lang-file-export')) {
             $steps[] = [
                 'label' => 'Refresh reviewed lang file export report',
                 'command' => 'translation-workbench:export-lang-files',
-                'arguments' => [],
+                'arguments' => [
+                    '--suppress-dry-run-warning' => true,
+                ],
             ];
         }
 
@@ -548,6 +628,7 @@ class RunTranslationWorkbench extends Command
                 'command' => 'translation-workbench:apply-code-updates',
                 'arguments' => array_filter([
                     '--paths' => $paths,
+                    '--suppress-dry-run-warning' => true,
                 ], static fn(mixed $value): bool => $value !== null && $value !== false),
             ];
         }

@@ -20,9 +20,15 @@
     ])
 
     @include('translation-workbench::livewire.entries.summary-card', [
-        'title' => __('Locales'),
+        'title' => __('Active locales'),
         'icon' => 'globe',
-        'rows' => $localeCounts,
+        'rows' => $activeLocaleCounts,
+    ])
+
+    @include('translation-workbench::livewire.entries.summary-card', [
+        'title' => __('Supported locales'),
+        'icon' => 'languages',
+        'rows' => $supportedLocaleCounts,
     ])
 
     @include('translation-workbench::livewire.entries.summary-card', [

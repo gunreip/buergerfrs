@@ -6,12 +6,18 @@ use App\Models\Locale;
 use App\Settings\AppGeneralSettings;
 use App\Support\Locale\LocaleCode;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchLangValue;
+use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchKey;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 class TranslationWorkbenchLangFileExporter
 {
+    public function __construct(
+        private readonly TranslationWorkbenchTimelineRecorder $timelineRecorder,
+    ) {}
+
     /**
      * @param  array<int, string>  $locales
      * @param  array<int, string>  $namespaces
@@ -26,6 +32,7 @@ class TranslationWorkbenchLangFileExporter
             ->map(fn(Collection $group): array => $this->planFile($group, $write))
             ->values()
             ->all();
+        $timelineEventsCreated = $write ? $this->recordLangFileTimelineEvents($plans) : 0;
 
         return [
             'dry_run' => ! $write,
@@ -36,10 +43,12 @@ class TranslationWorkbenchLangFileExporter
             'values_new' => collect($plans)->sum('values_new'),
             'values_changed' => collect($plans)->sum('values_changed'),
             'values_unchanged' => collect($plans)->sum('values_unchanged'),
+            'values_pruned' => collect($plans)->sum('values_pruned'),
             'values_conflicted' => collect($plans)->sum('values_conflicted'),
             'active_scope' => $activeScope,
             'files_written' => collect($plans)->where('written', true)->count(),
             'files_skipped' => collect($plans)->where('written', false)->count(),
+            'timeline_events_created' => $timelineEventsCreated,
             'plans' => $plans,
         ];
     }
@@ -58,6 +67,13 @@ class TranslationWorkbenchLangFileExporter
             ->where('status', 'active')
             ->whereNotNull('translation_key')
             ->whereNotNull('value')
+            ->whereExists(function ($query): void {
+                $query
+                    ->selectRaw('1')
+                    ->from('translation_workbench_keys')
+                    ->whereColumn('translation_workbench_keys.translation_key', 'translation_workbench_lang_values.translation_key')
+                    ->where('translation_workbench_keys.status', '<>', 'obsolete');
+            })
             ->when($locales !== [], fn($query) => $query->whereIn('locale', $locales))
             ->when($namespaces !== [], fn($query) => $query->whereIn('namespace', $namespaces))
             ->orderBy('locale')
@@ -80,7 +96,32 @@ class TranslationWorkbenchLangFileExporter
         $existing = $this->readExistingFile($path);
         $merged = $existing;
         $changes = [];
+        $pruned = [];
         $conflicts = [];
+
+        foreach ($this->prunableRows($locale, $namespace) as $row) {
+            $langKey = (string) $row->lang_key;
+
+            if (! Arr::has($merged, $langKey)) {
+                continue;
+            }
+
+            $oldValue = Arr::get($merged, $langKey);
+            $prunableValue = $this->typedPrunableRowValue($row);
+
+            if (is_array($oldValue) && ! is_array($prunableValue)) {
+                continue;
+            }
+
+            $pruned[] = [
+                'lang_key' => $langKey,
+                'translation_key' => (string) $row->translation_key,
+                'reason' => (string) $row->prune_reason,
+                'old_value' => $oldValue,
+            ];
+
+            Arr::forget($merged, $langKey);
+        }
 
         foreach ($rows as $row) {
             $langKey = (string) $row->lang_key;
@@ -93,6 +134,7 @@ class TranslationWorkbenchLangFileExporter
                     'lang_key' => $langKey,
                     'translation_key' => (string) $row->translation_key,
                     'reason' => 'nested_path_conflict',
+                    ...$this->nestedPathConflictContext($merged, $row, $langKey, $locale, $namespace, $path),
                 ];
 
                 continue;
@@ -126,14 +168,152 @@ class TranslationWorkbenchLangFileExporter
             'values_new' => $changes->where('state', 'new')->count(),
             'values_changed' => $changes->where('state', 'changed')->count(),
             'values_unchanged' => $changes->where('state', 'unchanged')->count(),
+            'values_pruned' => count($pruned),
             'values_conflicted' => count($conflicts),
             'written' => $written,
             'conflicts' => $conflicts,
+            'pruned' => $pruned,
             'changes' => $changes
                 ->reject(static fn(array $change): bool => $change['state'] === 'unchanged')
                 ->values()
                 ->all(),
         ];
+    }
+
+    /**
+     * @return Collection<int, object>
+     */
+    private function prunableRows(string $locale, string $namespace): Collection
+    {
+        return DB::table('translation_workbench_lang_values')
+            ->select([
+                'translation_workbench_lang_values.lang_key',
+                'translation_workbench_lang_values.translation_key',
+                'translation_workbench_lang_values.value',
+                'translation_workbench_lang_values.value_type',
+                DB::raw("
+                    CASE
+                        WHEN translation_workbench_lang_values.status <> 'active'
+                            THEN 'obsolete_lang_value'
+                        ELSE 'no_active_workbench_key'
+                    END as prune_reason
+                "),
+            ])
+            ->where('translation_workbench_lang_values.locale', $locale)
+            ->where('translation_workbench_lang_values.namespace', $namespace)
+            ->where(function ($query): void {
+                $query
+                    ->where('translation_workbench_lang_values.status', '<>', 'active')
+                    ->orWhereNotExists(function ($query): void {
+                        $query
+                            ->selectRaw('1')
+                            ->from('translation_workbench_keys')
+                            ->whereColumn('translation_workbench_keys.translation_key', 'translation_workbench_lang_values.translation_key')
+                            ->where('translation_workbench_keys.status', '<>', 'obsolete');
+                    });
+            })
+            ->orderBy('translation_workbench_lang_values.lang_key')
+            ->get();
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $plans
+     */
+    private function recordLangFileTimelineEvents(array $plans): int
+    {
+        $eventRows = collect($plans)
+            ->filter(static fn(array $plan): bool => (bool) ($plan['written'] ?? false))
+            ->flatMap(function (array $plan): Collection {
+                $baseContext = [
+                    'source' => 'translation-workbench:export-lang-files',
+                    'locale' => $plan['locale'] ?? null,
+                    'namespace' => $plan['namespace'] ?? null,
+                    'path' => $plan['path'] ?? null,
+                ];
+
+                $changes = collect($plan['changes'] ?? [])
+                    ->map(static fn(array $change): array => [
+                        ...$change,
+                        'event_type' => 'lang_file_value_exported',
+                        'context' => [
+                            ...$baseContext,
+                            'state' => $change['state'] ?? null,
+                            'lang_key' => $change['lang_key'] ?? null,
+                        ],
+                    ]);
+
+                $pruned = collect($plan['pruned'] ?? [])
+                    ->map(static fn(array $pruned): array => [
+                        ...$pruned,
+                        'event_type' => 'lang_file_value_pruned',
+                        'state' => 'pruned',
+                        'new_value' => null,
+                        'context' => [
+                            ...$baseContext,
+                            'state' => 'pruned',
+                            'reason' => $pruned['reason'] ?? null,
+                            'lang_key' => $pruned['lang_key'] ?? null,
+                        ],
+                    ]);
+
+                return $changes->merge($pruned);
+            })
+            ->values();
+
+        if ($eventRows->isEmpty()) {
+            return 0;
+        }
+
+        $keys = TranslationWorkbenchKey::query()
+            ->whereIn('translation_key', $eventRows->pluck('translation_key')->filter()->unique()->values())
+            ->orderByRaw("CASE WHEN status = 'obsolete' THEN 1 ELSE 0 END")
+            ->orderBy('id')
+            ->get()
+            ->unique('translation_key')
+            ->keyBy('translation_key');
+        $created = 0;
+
+        foreach ($eventRows as $row) {
+            $translationKey = (string) ($row['translation_key'] ?? '');
+            $key = $translationKey !== '' ? $keys->get($translationKey) : null;
+
+            if (! $key instanceof TranslationWorkbenchKey) {
+                continue;
+            }
+
+            $this->timelineRecorder->recordKeyEvent(
+                key: $key,
+                eventType: (string) $row['event_type'],
+                oldValues: [
+                    'value' => $row['old_value'] ?? null,
+                    'locale' => $row['context']['locale'] ?? null,
+                    'namespace' => $row['context']['namespace'] ?? null,
+                    'lang_key' => $row['context']['lang_key'] ?? null,
+                    'translation_key' => $translationKey,
+                    'state' => $row['context']['state'] ?? null,
+                    'reason' => $row['context']['reason'] ?? null,
+                    'path' => $row['context']['path'] ?? null,
+                ],
+                newValues: [
+                    'value' => $row['new_value'] ?? null,
+                    'locale' => $row['context']['locale'] ?? null,
+                    'namespace' => $row['context']['namespace'] ?? null,
+                    'lang_key' => $row['context']['lang_key'] ?? null,
+                    'translation_key' => $translationKey,
+                    'state' => $row['context']['state'] ?? null,
+                    'reason' => $row['context']['reason'] ?? null,
+                    'path' => $row['context']['path'] ?? null,
+                ],
+                context: [
+                    ...((array) ($row['context'] ?? [])),
+                    'translation_key' => $translationKey,
+                ],
+            );
+
+            $created++;
+        }
+
+        return $created;
     }
 
     /**
@@ -174,6 +354,188 @@ class TranslationWorkbenchLangFileExporter
         }
 
         return true;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function nestedPathConflictContext(
+        array $merged,
+        TranslationWorkbenchLangValue $blockedRow,
+        string $langKey,
+        string $locale,
+        string $namespace,
+        string $path,
+    ): array {
+        $blockingLangKey = $this->blockingLangKey($merged, $langKey);
+        $blockingValue = $blockingLangKey !== null ? Arr::get($merged, $blockingLangKey) : null;
+        $blockingLangValue = $blockingLangKey !== null
+            ? $this->blockingLangValue($locale, $namespace, $blockingLangKey)
+            : null;
+        $blockingTranslationKey = (string) (
+            $blockingLangValue?->translation_key
+            ?? $this->translationKeyFromLangKey($namespace, $blockingLangKey)
+            ?? ''
+        );
+        $blockingKey = $blockingTranslationKey !== ''
+            ? $this->translationWorkbenchKey($blockingTranslationKey)
+            : null;
+        $blockingFindingRows = $blockingKey
+            ? $this->translationWorkbenchFindingRows((int) $blockingKey->id)
+            : collect();
+
+        return [
+            'blocked_value' => $this->reportableValue($this->typedValue($blockedRow)),
+            'blocking_lang_key' => $blockingLangKey,
+            'blocking_translation_key' => $blockingTranslationKey !== '' ? $blockingTranslationKey : null,
+            'blocking_value' => $this->reportableValue($blockingValue),
+            'blocking_value_type' => get_debug_type($blockingValue),
+            'blocking_path' => $this->relativePath($path),
+            'blocking_lang_value_id' => $blockingLangValue?->id,
+            'blocking_lang_value_status' => $blockingLangValue?->status,
+            'blocking_key_id' => $blockingKey?->id,
+            'blocking_key_status' => $blockingKey?->status,
+            'blocking_finding_ids' => $blockingFindingRows->pluck('id')->all(),
+            'blocking_findings' => $blockingFindingRows->all(),
+            'blocking_usage_status' => $this->blockingUsageStatus($blockingLangValue, $blockingKey, $blockingFindingRows),
+        ];
+    }
+
+    private function blockingLangKey(array $values, string $langKey): ?string
+    {
+        $segments = explode('.', $langKey);
+        array_pop($segments);
+        $current = $values;
+        $path = '';
+
+        foreach ($segments as $segment) {
+            $path = $path === '' ? $segment : $path . '.' . $segment;
+
+            if (! Arr::has($current, $segment)) {
+                return null;
+            }
+
+            $next = $current[$segment];
+
+            if (! is_array($next)) {
+                return $path;
+            }
+
+            $current = $next;
+        }
+
+        return null;
+    }
+
+    private function blockingLangValue(string $locale, string $namespace, string $langKey): ?object
+    {
+        return DB::table('translation_workbench_lang_values')
+            ->where('locale', $locale)
+            ->where('namespace', $namespace)
+            ->where('lang_key', $langKey)
+            ->orderByRaw("CASE WHEN status = 'active' THEN 0 ELSE 1 END")
+            ->orderByDesc('updated_at')
+            ->first([
+                'id',
+                'translation_key',
+                'status',
+            ]);
+    }
+
+    private function translationKeyFromLangKey(string $namespace, ?string $langKey): ?string
+    {
+        if ($langKey === null || $langKey === '') {
+            return null;
+        }
+
+        return $namespace . '.' . $langKey;
+    }
+
+    private function translationWorkbenchKey(string $translationKey): ?object
+    {
+        return DB::table('translation_workbench_keys')
+            ->where('translation_key', $translationKey)
+            ->orderByRaw("CASE WHEN status = 'obsolete' THEN 1 ELSE 0 END")
+            ->orderBy('id')
+            ->first([
+                'id',
+                'translation_key',
+                'status',
+                'is_ui_key',
+                'is_dynamic_key',
+                'is_dynamic_multi',
+            ]);
+    }
+
+    private function translationWorkbenchFindingRows(int $keyId): Collection
+    {
+        return DB::table('translation_workbench_key_findings')
+            ->join('translation_workbench_findings', 'translation_workbench_findings.id', '=', 'translation_workbench_key_findings.finding_id')
+            ->leftJoin('translation_workbench_source_files', 'translation_workbench_source_files.id', '=', 'translation_workbench_findings.source_file_id')
+            ->where('translation_workbench_key_findings.key_id', $keyId)
+            ->where('translation_workbench_key_findings.status', 'active')
+            ->orderBy('translation_workbench_findings.id')
+            ->limit(8)
+            ->get([
+                'translation_workbench_findings.id',
+                'translation_workbench_findings.status',
+                'translation_workbench_findings.kind',
+                'translation_workbench_findings.source_line',
+                'translation_workbench_source_files.path as source_path',
+            ])
+            ->map(static fn(object $row): array => [
+                'id' => (int) $row->id,
+                'status' => (string) $row->status,
+                'kind' => (string) $row->kind,
+                'source_path' => (string) ($row->source_path ?? ''),
+                'source_line' => $row->source_line !== null ? (int) $row->source_line : null,
+            ]);
+    }
+
+    private function blockingUsageStatus(?object $blockingLangValue, ?object $blockingKey, Collection $blockingFindingRows): string
+    {
+        if ($blockingKey === null && $blockingLangValue === null) {
+            return 'lang_file_only';
+        }
+
+        if ($blockingKey !== null && (string) $blockingKey->status === 'obsolete') {
+            return 'obsolete';
+        }
+
+        if ($blockingFindingRows->isNotEmpty()) {
+            return 'active';
+        }
+
+        return 'missing_active_usage';
+    }
+
+    private function reportableValue(mixed $value): mixed
+    {
+        if (is_array($value)) {
+            return [
+                'type' => 'array',
+                'count' => count($value),
+            ];
+        }
+
+        if (is_object($value)) {
+            return [
+                'type' => get_debug_type($value),
+            ];
+        }
+
+        return $value;
+    }
+
+    private function typedPrunableRowValue(object $row): mixed
+    {
+        return match ((string) ($row->value_type ?? 'string')) {
+            'boolean' => filter_var($row->value ?? null, FILTER_VALIDATE_BOOLEAN),
+            'integer' => (int) ($row->value ?? 0),
+            'float' => (float) ($row->value ?? 0),
+            'null' => null,
+            default => (string) ($row->value ?? ''),
+        };
     }
 
     private function typedValue(TranslationWorkbenchLangValue $row): mixed

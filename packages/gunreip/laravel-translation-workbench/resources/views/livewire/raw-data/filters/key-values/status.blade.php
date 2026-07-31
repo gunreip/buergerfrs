@@ -1,7 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/key-values/status.blade.php --}}
 
 <flux:field class="{{ $fieldClass ?? '' }}">
-    <flux:label>{{ __('Status') }}</flux:label>
+    <flux:label>{{ __('ui.status') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
             <flux:icon.badge-check />

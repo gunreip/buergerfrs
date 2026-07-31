@@ -1,7 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/keys/suggested-key.blade.php --}}
 
 <flux:field class="{{ $fieldClass ?? '' }}">
-    <flux:label>{{ __('Suggested key') }}</flux:label>
+    <flux:label>{{ __('ui.key.suggested-key') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
             <flux:icon.sparkles />

@@ -51,9 +51,8 @@
                 <flux:callout
                     color="sky"
                     icon="map-pin"
-                    variant="secondary"
                 >
-                    <flux:callout.heading>{{ __('Source') }}</flux:callout.heading>
+                    <flux:callout.heading>{{ __('ui.source') }}</flux:callout.heading>
                     <flux:callout.text>
                         <div class="wrap-anywhere font-mono text-xs">
                             {{ $finding->source_path }}@if ($finding->source_line)
@@ -66,16 +65,15 @@
                 <flux:callout
                     color="amber"
                     icon="copy-x"
-                    variant="secondary"
                 >
-                    <flux:callout.heading>{{ __('Apply conflict') }}</flux:callout.heading>
+                    <flux:callout.heading>{{ __('ui.apply-conflict') }}</flux:callout.heading>
                     <flux:callout.text>
                         <div class="flex flex-wrap gap-2">
                             <flux:badge size="sm">
                                 {{ __('Occurrences') }}: {{ $applyRow['occurrences'] ?? __('Unknown') }}
                             </flux:badge>
                             <flux:badge size="sm">
-                                {{ __('State') }}: {{ $applyRow['state'] ?? 'duplicate_expression' }}
+                                {{ __('ui.state') }}: {{ $applyRow['state'] ?? 'duplicate_expression' }}
                             </flux:badge>
                         </div>
                     </flux:callout.text>
@@ -85,7 +83,6 @@
             <flux:callout
                 color="zinc"
                 icon="code"
-                variant="secondary"
             >
                 <flux:callout.heading>{{ __('Expression') }}</flux:callout.heading>
                 <flux:callout.text>
@@ -148,7 +145,6 @@
             <flux:callout
                 color="amber"
                 icon="triangle-alert"
-                variant="secondary"
             >
                 <flux:callout.heading>{{ __('Conflict context unavailable') }}</flux:callout.heading>
                 <flux:callout.text>

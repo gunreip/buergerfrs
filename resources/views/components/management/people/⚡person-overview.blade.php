@@ -2,7 +2,7 @@
 
 <flux:card>
     <x-ui.headers.page
-        :title="__('admin.client_list.table.people')"
+        :title="__('ui.people')"
         :description="__('Review, filter and inspect person records.')"
     />
 

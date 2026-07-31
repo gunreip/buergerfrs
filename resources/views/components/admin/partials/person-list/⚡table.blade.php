@@ -84,10 +84,10 @@
                         wire:click="sortBy('created_at')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('admin.client_list.table.created')"
+                            :title="__('ui.created')"
                             :text="__('Date when the person was created, useful for identification and reference.')"
                         >
-                            {{ __('admin.client_list.table.created') }}
+                            {{ __('ui.created') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
@@ -128,7 +128,7 @@
                                         color="zinc"
                                         variant="subtle"
                                     >
-                                        {{ __('admin.app_settings.table_icon_registry.missing') }}
+                                        {{ __('ui.missing') }}
                                     </flux:badge>
                                 @endif
                             </flux:table.cell>
@@ -189,7 +189,7 @@
         @if ($people->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('admin.client_list.table.pagination') }}"
+                text="{{ __('ui.pagination') }}"
             />
 
             <div class="mt-4">

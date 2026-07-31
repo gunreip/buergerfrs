@@ -115,10 +115,10 @@
                     {{-- Assigned roles --}}
                     <flux:table.column>
                         <x-ui.tooltip.trigger
-                            :title="__('admin.permissions.table.columns.assigned_roles')"
+                            :title="__('ui.assigned-roles')"
                             :text="__('admin.permission_list.table_permissions.roles_assigned_to_the_permission_useful_for_identification_and_reference')"
                         >
-                            {{ __('ui.assigned_roles') }}
+                            {{ __('ui.assigned-roles') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -249,7 +249,7 @@
         </div>
 
         @if ($permissions->hasPages())
-            <flux:separator text="{{ __('admin.client_list.table.pagination') }}" />
+            <flux:separator text="{{ __('ui.pagination') }}" />
 
             <div class="mt-4">
                 <x-ui.table.pagination :paginator="$permissions" />
