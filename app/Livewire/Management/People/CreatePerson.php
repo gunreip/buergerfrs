@@ -575,7 +575,7 @@ class CreatePerson extends Component
                 'input_id' => 'create-person-address-house-number',
             ],
             'addressLine2' => [
-                'label' => __('ui.address-line-2'),
+                'label' => __('ui.address.address.address-line-2'),
                 'input_id' => 'create-person-address-line-2',
             ],
             'email' => [

@@ -1,0 +1,43 @@
+{{-- resources/views/components/ui/tw-graph-protocol/primitives/connector.blade.php --}}
+{{--
+    Primitive connector element.
+
+    Usage:
+    <x-ui.tw-graph-protocol.primitives.connector placement="right" anchor-x="0rem" anchor-y="0rem" />
+    <x-ui.tw-graph-protocol.primitives.connector placement="top" length="1rem" />
+
+    Rule:
+    connector draws only a thin helper line from an existing anchor. It does not
+    render labels, nodes, counters, or path geometry.
+--}}
+
+@props([
+    'id' => 'connector',
+    'placement' => 'right',
+    'anchorX' => '0rem',
+    'anchorY' => '0rem',
+    'length' => '2rem',
+    'gap' => null,
+    'color' => 'cyan',
+])
+
+@php
+    $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '6 182 212');
+@endphp
+
+<span
+    {{ $attributes->class([
+        'tw-graph-protocol-primitive',
+        'tw-graph-protocol-primitive-connector',
+        'tw-graph-protocol-primitive-connector-' . $placement,
+    ])->style([
+        '--tw-graph-protocol-anchor-x: ' . $anchorX,
+        '--tw-graph-protocol-anchor-y: ' . $anchorY,
+        '--tw-graph-protocol-connector-length: ' . $length,
+        '--tw-graph-protocol-connector-anchor-gap: ' . $gap => filled($gap),
+        '--tw-graph-protocol-local-color-rgb: ' . $colorRgb,
+    ]) }}
+    title="{{ $id }} | connector {{ $placement }}"
+    data-tw-graph-path="{{ $id }}"
+    x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
+></span>

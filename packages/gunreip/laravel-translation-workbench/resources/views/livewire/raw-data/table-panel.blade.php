@@ -5,6 +5,8 @@
         @if ($panelTable === $table)
             @include('translation-workbench::livewire.raw-data.table-card')
             @include('translation-workbench::livewire.raw-data.table-summary')
+        @else
+            @include('translation-workbench::livewire.raw-data.lazy-placeholder', ['tableName' => $panelTable])
         @endif
     </flux:tab.panel>
 @endforeach

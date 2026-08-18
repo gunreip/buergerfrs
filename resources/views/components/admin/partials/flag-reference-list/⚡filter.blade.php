@@ -5,7 +5,7 @@
         class="mb-4"
         size="lg"
     >
-        {{ __('admin.permissions.filters.title') }}
+        {{ __('ui.title.filter') }}
     </flux:heading>
 
     <div class="flex w-full flex-wrap items-end gap-3">
@@ -55,7 +55,7 @@
 
         <div class="min-w-44">
             <flux:label for="flag-reference-status-filter">
-                {{ __('ui.status') }}
+                {{ __('ui.state.status') }}
             </flux:label>
 
             <flux:select

@@ -46,10 +46,10 @@
                         wire:click="sortBy('status')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('ui.status')"
+                            :title="__('ui.state.status')"
                             :text="__('Status of the fallback report, useful for tracking and reference.')"
                         >
-                            {{ __('ui.status') }}
+                            {{ __('ui.state.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -273,7 +273,7 @@
         @if ($reports->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('ui.pagination') }}"
+                text="{{ __('ui.nouns.pagination') }}"
             />
 
             <div class="mt-4">

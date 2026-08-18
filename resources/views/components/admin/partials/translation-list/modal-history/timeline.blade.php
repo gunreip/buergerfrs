@@ -50,11 +50,11 @@
                     };
 
                     $eventTitle = match ($historyEvent->event_type) {
-                        'created' => __('ui.created'),
+                        'created' => __('ui.labels.created'),
                         'value_changed' => __('Value changed'),
                         'key_changed' => __('Key changed'),
                         'moved' => __('Moved'),
-                        'stale_marked' => __('Marked stale'),
+                        'stale_marked' => __('ui.stale.marked-stale'),
                         'reactivated' => __('Reactivated'),
                         'fingerprint_changed' => __('Fingerprint changed'),
                         'manual_needs_new_key_changed' => __('Needs new key changed'),

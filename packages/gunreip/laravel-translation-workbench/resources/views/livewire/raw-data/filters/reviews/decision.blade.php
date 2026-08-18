@@ -17,7 +17,7 @@
                 value="all"
                 icon="badge-check"
             >
-                {{ __('ui.all-decisions') }}
+                {{ __('ui.all.all-decisions') }}
             </x-ui.input.select-option>
             @foreach ($reviewOptions['decisions'] ?? [] as $decision)
                 <x-ui.input.select-option

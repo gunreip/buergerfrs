@@ -79,12 +79,20 @@ class PlanTranslationWorkbenchCodeUpdates extends Command
     private function writeReport(array $report): string
     {
         $path = storage_path('translation-workbench/' . Str::of((string) $this->getName())->replace(':', '-') . '.json');
+        $directory = dirname($path);
 
-        File::ensureDirectoryExists(dirname($path));
+        File::ensureDirectoryExists($directory);
+        @chmod($directory, 0777);
+
+        if (File::exists($path) && ! is_writable($path)) {
+            @unlink($path);
+        }
+
         File::put($path, json_encode([
             'command' => $this->getName(),
             ...$report,
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL);
+        @chmod($path, 0666);
 
         return $path;
     }

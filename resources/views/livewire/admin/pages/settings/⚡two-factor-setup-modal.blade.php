@@ -209,7 +209,7 @@ new class extends Component {
                         wire:click="confirmTwoFactor"
                         x-bind:disabled="$wire.code.length < 6"
                     >
-                        {{ __('pages.settings.two_factor_setup_modal.confirm') }}
+                        {{ __('ui.button.confirm.confirm') }}
                     </flux:button>
                 </div>
             </div>

@@ -40,7 +40,7 @@
         icon="shrink"
         stroke-width="1"
     >
-        <flux:callout.heading>{{ __('Stale usages') }}</flux:callout.heading>
+        <flux:callout.heading>{{ __('ui.stale.stale-usages') }}</flux:callout.heading>
         <flux:callout.text class="text-2xl! font-semibold tabular-nums">
             {{ (int) ($selectedItem['usage_count_stale'] ?? 0) }}
         </flux:callout.text>

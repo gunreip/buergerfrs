@@ -38,7 +38,7 @@
                         :direction="$sortDirection"
                         wire:click="sortBy('status')"
                     >
-                        {{ __('ui.status') }}
+                        {{ __('ui.state.status') }}
                     </flux:table.column>
 
                     <flux:table.column
@@ -67,7 +67,7 @@
                         :direction="$sortDirection"
                         wire:click="sortBy('sources')"
                     >
-                        {{ __('ui.sources') }}
+                        {{ __('ui.sources.sources') }}
                     </flux:table.column>
 
                     <flux:table.column
@@ -193,7 +193,7 @@
 
         <flux:separator
             class="mt-4"
-            text="{{ __('ui.pagination') }}"
+            text="{{ __('ui.nouns.pagination') }}"
         />
 
         @if ($entries->hasPages())

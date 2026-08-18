@@ -27,9 +27,15 @@ class TranslationWorkbenchLangFileExporter
     {
         $rows = $this->exportableRows($locales, $namespaces);
         $activeScope = $this->activeScopeSummary($rows);
-        $plans = $rows
-            ->groupBy(fn(TranslationWorkbenchLangValue $row): string => $row->locale . "\n" . $row->namespace)
-            ->map(fn(Collection $group): array => $this->planFile($group, $write))
+        $rowGroups = $rows->groupBy(fn(TranslationWorkbenchLangValue $row): string => $row->locale . "\n" . $row->namespace);
+        $fileScopes = $this->exportFileScopes($rows, $locales, $namespaces);
+        $plans = $fileScopes
+            ->map(fn(array $scope): array => $this->planFile(
+                rows: $rowGroups->get($scope['key'], collect()),
+                write: $write,
+                locale: $scope['locale'],
+                namespace: $scope['namespace'],
+            ))
             ->values()
             ->all();
         $timelineEventsCreated = $write ? $this->recordLangFileTimelineEvents($plans) : 0;
@@ -84,14 +90,67 @@ class TranslationWorkbenchLangFileExporter
 
     /**
      * @param  Collection<int, TranslationWorkbenchLangValue>  $rows
+     * @param  array<int, string>  $locales
+     * @param  array<int, string>  $namespaces
+     * @return Collection<int, array{key: string, locale: string, namespace: string}>
+     */
+    private function exportFileScopes(Collection $rows, array $locales, array $namespaces): Collection
+    {
+        $locales = $this->normalizedFilters($locales);
+        $namespaces = $this->normalizedFilters($namespaces);
+        $activeScopes = $rows
+            ->map(static fn(TranslationWorkbenchLangValue $row): array => [
+                'locale' => (string) $row->locale,
+                'namespace' => (string) $row->namespace,
+            ]);
+
+        $prunableScopes = DB::table('translation_workbench_lang_values')
+            ->select([
+                'translation_workbench_lang_values.locale',
+                'translation_workbench_lang_values.namespace',
+            ])
+            ->where(function ($query): void {
+                $query
+                    ->where('translation_workbench_lang_values.status', '<>', 'active')
+                    ->orWhereNotExists(function ($query): void {
+                        $query
+                            ->selectRaw('1')
+                            ->from('translation_workbench_keys')
+                            ->whereColumn('translation_workbench_keys.translation_key', 'translation_workbench_lang_values.translation_key')
+                            ->where('translation_workbench_keys.status', '<>', 'obsolete');
+                    });
+            })
+            ->when($locales !== [], fn($query) => $query->whereIn('translation_workbench_lang_values.locale', $locales))
+            ->when($namespaces !== [], fn($query) => $query->whereIn('translation_workbench_lang_values.namespace', $namespaces))
+            ->distinct()
+            ->get()
+            ->map(static fn(object $row): array => [
+                'locale' => (string) $row->locale,
+                'namespace' => (string) $row->namespace,
+            ]);
+
+        return $activeScopes
+            ->merge($prunableScopes)
+            ->map(static fn(array $scope): array => [
+                'key' => $scope['locale'] . "\n" . $scope['namespace'],
+                'locale' => $scope['locale'],
+                'namespace' => $scope['namespace'],
+            ])
+            ->unique('key')
+            ->sortBy([['locale', 'asc'], ['namespace', 'asc']])
+            ->values();
+    }
+
+    /**
+     * @param  Collection<int, TranslationWorkbenchLangValue>  $rows
      * @return array<string, mixed>
      */
-    private function planFile(Collection $rows, bool $write): array
+    private function planFile(Collection $rows, bool $write, ?string $locale = null, ?string $namespace = null): array
     {
         /** @var TranslationWorkbenchLangValue $first */
         $first = $rows->first();
-        $locale = (string) $first->locale;
-        $namespace = (string) $first->namespace;
+        $locale = (string) ($locale ?? $first?->locale);
+        $namespace = (string) ($namespace ?? $first?->namespace);
         $path = lang_path($locale . '/' . $namespace . '.php');
         $existing = $this->readExistingFile($path);
         $merged = $existing;
@@ -121,6 +180,7 @@ class TranslationWorkbenchLangFileExporter
             ];
 
             Arr::forget($merged, $langKey);
+            $merged = $this->removeEmptyArrays($merged);
         }
 
         foreach ($rows as $row) {
@@ -153,8 +213,13 @@ class TranslationWorkbenchLangFileExporter
 
         $changes = collect($changes);
         $written = false;
+        $hasWritableChanges = $changes
+            ->whereIn('state', ['new', 'changed'])
+            ->isNotEmpty() || count($pruned) > 0;
 
-        if ($write && $conflicts === []) {
+        if ($write && $conflicts === [] && $hasWritableChanges) {
+            $merged = $this->removeEmptyArrays($merged);
+
             File::ensureDirectoryExists(dirname($path));
             File::put($path, $this->formatPhpArray($merged));
             $written = true;
@@ -171,6 +236,7 @@ class TranslationWorkbenchLangFileExporter
             'values_pruned' => count($pruned),
             'values_conflicted' => count($conflicts),
             'written' => $written,
+            'write_skipped_no_changes' => $write && $conflicts === [] && ! $hasWritableChanges,
             'conflicts' => $conflicts,
             'pruned' => $pruned,
             'changes' => $changes
@@ -277,37 +343,50 @@ class TranslationWorkbenchLangFileExporter
             $translationKey = (string) ($row['translation_key'] ?? '');
             $key = $translationKey !== '' ? $keys->get($translationKey) : null;
 
+            $oldValues = [
+                'value' => $row['old_value'] ?? null,
+                'locale' => $row['context']['locale'] ?? null,
+                'namespace' => $row['context']['namespace'] ?? null,
+                'lang_key' => $row['context']['lang_key'] ?? null,
+                'translation_key' => $translationKey,
+                'state' => $row['context']['state'] ?? null,
+                'reason' => $row['context']['reason'] ?? null,
+                'path' => $row['context']['path'] ?? null,
+            ];
+            $newValues = [
+                'value' => $row['new_value'] ?? null,
+                'locale' => $row['context']['locale'] ?? null,
+                'namespace' => $row['context']['namespace'] ?? null,
+                'lang_key' => $row['context']['lang_key'] ?? null,
+                'translation_key' => $translationKey,
+                'state' => $row['context']['state'] ?? null,
+                'reason' => $row['context']['reason'] ?? null,
+                'path' => $row['context']['path'] ?? null,
+            ];
+            $context = [
+                ...((array) ($row['context'] ?? [])),
+                'translation_key' => $translationKey,
+            ];
+
             if (! $key instanceof TranslationWorkbenchKey) {
+                $this->timelineRecorder->record(
+                    eventType: (string) $row['event_type'],
+                    oldValues: $oldValues,
+                    newValues: $newValues,
+                    context: $context,
+                );
+
+                $created++;
+
                 continue;
             }
 
             $this->timelineRecorder->recordKeyEvent(
                 key: $key,
                 eventType: (string) $row['event_type'],
-                oldValues: [
-                    'value' => $row['old_value'] ?? null,
-                    'locale' => $row['context']['locale'] ?? null,
-                    'namespace' => $row['context']['namespace'] ?? null,
-                    'lang_key' => $row['context']['lang_key'] ?? null,
-                    'translation_key' => $translationKey,
-                    'state' => $row['context']['state'] ?? null,
-                    'reason' => $row['context']['reason'] ?? null,
-                    'path' => $row['context']['path'] ?? null,
-                ],
-                newValues: [
-                    'value' => $row['new_value'] ?? null,
-                    'locale' => $row['context']['locale'] ?? null,
-                    'namespace' => $row['context']['namespace'] ?? null,
-                    'lang_key' => $row['context']['lang_key'] ?? null,
-                    'translation_key' => $translationKey,
-                    'state' => $row['context']['state'] ?? null,
-                    'reason' => $row['context']['reason'] ?? null,
-                    'path' => $row['context']['path'] ?? null,
-                ],
-                context: [
-                    ...((array) ($row['context'] ?? [])),
-                    'translation_key' => $translationKey,
-                ],
+                oldValues: $oldValues,
+                newValues: $newValues,
+                context: $context,
             );
 
             $created++;
@@ -653,6 +732,31 @@ class TranslationWorkbenchLangFileExporter
         ksort($values);
 
         return "<?php\n\nreturn " . $this->formatArray($values) . ";\n";
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $values
+     * @return array<int|string, mixed>
+     */
+    private function removeEmptyArrays(array $values): array
+    {
+        foreach ($values as $key => $value) {
+            if (! is_array($value)) {
+                continue;
+            }
+
+            $value = $this->removeEmptyArrays($value);
+
+            if ($value === []) {
+                unset($values[$key]);
+
+                continue;
+            }
+
+            $values[$key] = $value;
+        }
+
+        return $values;
     }
 
     /**

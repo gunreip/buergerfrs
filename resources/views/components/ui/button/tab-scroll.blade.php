@@ -18,11 +18,11 @@
 
 @php
     $resolvedTitle = $title ?: match ($direction) {
-        'first' => __('First tab'),
-        'previous' => __('Previous tab'),
-        'next' => __('Next tab'),
-        'last' => __('Last tab'),
-        default => __('Scroll tabs'),
+        'first' => __('ui.button.tab_scroll.first_tab'),
+        'previous' => __('ui.button.tab_scroll.previous_tab'),
+        'next' => __('ui.button.tab_scroll.next_tab'),
+        'last' => __('ui.button.tab_scroll.last_tab'),
+        default => __('ui.button.tab_scroll.scroll_tabs'),
     };
     $resolvedAriaLabel = $ariaLabel ?: $resolvedTitle;
 @endphp

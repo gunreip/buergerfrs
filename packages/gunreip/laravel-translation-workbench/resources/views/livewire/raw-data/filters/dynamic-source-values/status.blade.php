@@ -2,7 +2,7 @@
 
 <flux:field class="{{ $fieldClass ?? '' }}">
     <flux:label>
-        {{ __('ui.status') }}
+        {{ __('ui.state.status') }}
     </flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
@@ -17,7 +17,7 @@
                 value="all"
                 icon="badge-check"
             >
-                {{ __('ui.all-statuses') }}
+                {{ __('ui.states.all-statuses') }}
             </x-ui.input.select-option>
             @foreach ($dynamicSourceValueOptions['statuses'] ?? [] as $status)
                 <x-ui.input.select-option

@@ -2,9 +2,7 @@
 
 return [
     'auth' => [
-        'confirm_password' => [],
         'register' => [
-            'already_have_an_account' => 'Haben Sie bereits ein Konto?',
             'confirm_password' => 'Passwort bestätigen',
             'create_account' => 'Konto erstellen',
             'email_address' => 'E-Mail-Adresse',
@@ -17,7 +15,6 @@ return [
         ],
     ],
     'settings' => [
-        'appearance' => [],
         'profile' => [
             'avatar_image' => 'Profilbild',
             'current_avatar' => 'Aktueller Avatar',
@@ -33,7 +30,6 @@ return [
         ],
         'two_factor_setup_modal' => [
             'back' => 'Zurück',
-            'confirm' => 'Bestätigen',
             'continue' => 'Weiter',
             'enable_two_factor_authentication' => 'Zwei-Faktor-Authentifizierung aktivieren',
             'enter_the_6_digit_code_from_your_authenticator_app' => 'Geben Sie den 6-stelligen Code aus Ihrer Authentifizierungs-App ein.',

@@ -78,7 +78,7 @@
                         <flux:table.column class="w-12 text-center">#</flux:table.column>
                         <flux:table.column>{{ __('Step') }}</flux:table.column>
                         <flux:table.column>{{ __('Generated') }}</flux:table.column>
-                        <flux:table.column>{{ __('ui.state') }}</flux:table.column>
+                        <flux:table.column>{{ __('ui.state.state') }}</flux:table.column>
                         <flux:table.column>{{ __('Result') }}</flux:table.column>
                     </flux:table.columns>
                     <flux:table.rows>

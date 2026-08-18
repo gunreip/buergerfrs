@@ -8,7 +8,7 @@
     <div class="flex w-full items-center justify-between gap-3">
         <div class="min-w-0">
             <x-ui.headers.card
-                :title="__('admin.permissions.overview.title')"
+                :title="__('ui.title.overview')"
                 :description="__(
                     'Get a quick snapshot of role statistics, including total roles, assignable roles, system roles, and user assignments.',
                 )"
@@ -70,7 +70,7 @@
                 class="hyphens-auto md:col-span-1"
                 color="orange"
                 icon="users"
-                heading="{{ __('ui.assigned-users') }}"
+                heading="{{ __('ui.assign.assigned.assigned-users') }}"
                 text="{{ __('Distinct users currently assigned to at least one role.') }}"
             >
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">

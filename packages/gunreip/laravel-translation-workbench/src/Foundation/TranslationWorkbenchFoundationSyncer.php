@@ -38,12 +38,14 @@ class TranslationWorkbenchFoundationSyncer
             'source_files_updated' => 0,
             'findings_created' => 0,
             'findings_updated' => 0,
+            'findings_commented_out' => 0,
             'findings_obsoleted' => 0,
             'keys_created' => 0,
             'keys_updated' => 0,
             'keys_obsoleted' => 0,
             'relations_created' => 0,
             'relations_updated' => 0,
+            'relations_commented_out' => 0,
             'relations_obsoleted' => 0,
             'timeline_events_created' => 0,
         ];
@@ -71,6 +73,15 @@ class TranslationWorkbenchFoundationSyncer
                 $summary['findings_obsoleted'] += $obsoletedFindings;
                 $summary['timeline_events_created'] += $obsoletedFindings;
 
+                if ($this->isCommentedOutFinding($item)) {
+                    $commentedOutCleanup = $this->commentOutFindingRelations($findingResult['finding']);
+                    $summary['relations_commented_out'] += $commentedOutCleanup['relations_commented_out'];
+                    $summary['timeline_events_created'] += $commentedOutCleanup['timeline_events_created'];
+                    $summary['findings_commented_out']++;
+
+                    continue;
+                }
+
                 if ($this->isEmptyLiteralFinding($item)) {
                     $emptyLiteralCleanup = $this->obsoleteEmptyLiteralRelations($findingResult['finding']);
                     $summary['relations_obsoleted'] += $emptyLiteralCleanup['relations_obsoleted'];
@@ -91,6 +102,7 @@ class TranslationWorkbenchFoundationSyncer
                         $findingResult['finding'],
                     );
                     $summary[$relationResult['result']]++;
+                    $summary['relations_obsoleted'] += $relationResult['relations_obsoleted'] ?? 0;
                     $summary['timeline_events_created'] += $relationResult['timeline_events_created'];
                 }
             }
@@ -205,6 +217,7 @@ class TranslationWorkbenchFoundationSyncer
     ): array {
         $keyParts = $this->keyPartsFactory->fromKey($item->suggestedKey);
         $isEmptyLiteralFinding = $this->isEmptyLiteralFinding($item);
+        $isCommentedOutFinding = $this->isCommentedOutFinding($item);
         $attributes = [
             'source_file_id' => $sourceFile->id,
             'source_signature' => $item->sourceSignature,
@@ -229,12 +242,20 @@ class TranslationWorkbenchFoundationSyncer
             'entry_type' => $item->entryType,
             'candidate_type' => $item->candidateType,
             'candidate_reason' => $item->candidateReason,
-            'status' => $isEmptyLiteralFinding ? 'obsolete' : 'active',
+            'status' => match (true) {
+                $isEmptyLiteralFinding => 'obsolete',
+                $isCommentedOutFinding => 'commented_out',
+                default => 'active',
+            },
             'last_seen_at' => $now,
             'meta' => [
                 ...$item->meta,
                 ...($isEmptyLiteralFinding ? [
                     'ignored_reason' => 'empty_literal_translation_call',
+                    'translation_relevant' => false,
+                ] : []),
+                ...($isCommentedOutFinding ? [
+                    'commented_out_reason' => 'source_expression_inside_comment',
                     'translation_relevant' => false,
                 ] : []),
             ],
@@ -465,6 +486,10 @@ class TranslationWorkbenchFoundationSyncer
             ];
         }
 
+        if ($key->status === 'obsolete') {
+            $attributes['status'] = 'open';
+        }
+
         $oldValues = $key->only(array_keys($attributes));
         $changed = $this->changedValues($oldValues, $attributes);
 
@@ -497,6 +522,65 @@ class TranslationWorkbenchFoundationSyncer
         return $item->kind === 'literal'
             && $item->literalText !== null
             && trim($item->literalText) === '';
+    }
+
+    private function isCommentedOutFinding(DiscoveredTranslation $item): bool
+    {
+        return ($item->meta['source_context'] ?? null) === 'commented_out';
+    }
+
+    /**
+     * @return array{relations_commented_out: int, timeline_events_created: int}
+     */
+    private function commentOutFindingRelations(TranslationWorkbenchFinding $finding): array
+    {
+        $result = [
+            'relations_commented_out' => 0,
+            'timeline_events_created' => 0,
+        ];
+
+        $relations = TranslationWorkbenchKeyFinding::query()
+            ->with('key')
+            ->where('finding_id', $finding->id)
+            ->where('status', 'active')
+            ->get();
+
+        foreach ($relations as $relation) {
+            $key = $relation->key;
+            $oldRelationValues = $relation->only(['status', 'meta']);
+
+            $relation->forceFill([
+                'status' => 'commented_out',
+                'meta' => [
+                    ...($relation->meta ?? []),
+                    'commented_out_reason' => 'source_expression_inside_comment',
+                ],
+            ])->save();
+
+            if (! $key) {
+                continue;
+            }
+
+            $this->timelineRecorder->recordKeyFindingEvent(
+                key: $key,
+                finding: $finding,
+                eventType: 'key_finding_relation_commented_out',
+                oldValues: $oldRelationValues,
+                newValues: [
+                    'status' => 'commented_out',
+                    'commented_out_reason' => 'source_expression_inside_comment',
+                ],
+                context: [
+                    'source' => 'translation-workbench:sync-foundation',
+                    'reason' => 'source_expression_inside_comment',
+                ],
+            );
+
+            $result['relations_commented_out']++;
+            $result['timeline_events_created']++;
+        }
+
+        return $result;
     }
 
     private function reviewedKeyForTranslationKey(?string $translationKey, string $fingerprint): ?TranslationWorkbenchKey
@@ -845,9 +929,12 @@ class TranslationWorkbenchFoundationSyncer
                 ],
             );
 
+            $cleanup = $this->obsoleteObsoleteSiblingKeyRelations($key, $finding);
+
             return [
                 'result' => 'relations_created',
-                'timeline_events_created' => 1,
+                'relations_obsoleted' => $cleanup['relations_obsoleted'],
+                'timeline_events_created' => 1 + $cleanup['timeline_events_created'],
             ];
         }
 
@@ -870,10 +957,70 @@ class TranslationWorkbenchFoundationSyncer
             );
         }
 
+        $cleanup = $this->obsoleteObsoleteSiblingKeyRelations($key, $finding);
+
         return [
             'result' => 'relations_updated',
-            'timeline_events_created' => $changed !== [] ? 1 : 0,
+            'relations_obsoleted' => $cleanup['relations_obsoleted'],
+            'timeline_events_created' => ($changed !== [] ? 1 : 0) + $cleanup['timeline_events_created'],
         ];
+    }
+
+    /**
+     * @return array{relations_obsoleted: int, timeline_events_created: int}
+     */
+    private function obsoleteObsoleteSiblingKeyRelations(
+        TranslationWorkbenchKey $key,
+        TranslationWorkbenchFinding $finding,
+    ): array {
+        $result = [
+            'relations_obsoleted' => 0,
+            'timeline_events_created' => 0,
+        ];
+
+        $relations = TranslationWorkbenchKeyFinding::query()
+            ->with('key')
+            ->where('finding_id', $finding->id)
+            ->where('relation_type', 'candidate')
+            ->where('status', 'active')
+            ->where('key_id', '!=', $key->id)
+            ->get()
+            ->filter(static fn(TranslationWorkbenchKeyFinding $relation): bool => $relation->key?->status === 'obsolete');
+
+        foreach ($relations as $relation) {
+            $oldRelationValues = $relation->only(['status', 'meta']);
+
+            $relation->forceFill([
+                'status' => 'obsolete',
+                'meta' => [
+                    ...($relation->meta ?? []),
+                    'obsolete_reason' => 'active_finding_relinked_to_non_obsolete_key',
+                    'replacement_key_id' => $key->id,
+                ],
+            ])->save();
+
+            $this->timelineRecorder->recordKeyFindingEvent(
+                key: $relation->key,
+                finding: $finding,
+                eventType: 'key_finding_relation_obsoleted',
+                oldValues: $oldRelationValues,
+                newValues: [
+                    'status' => 'obsolete',
+                    'obsolete_reason' => 'active_finding_relinked_to_non_obsolete_key',
+                    'replacement_key_id' => $key->id,
+                ],
+                context: [
+                    'source' => 'translation-workbench:sync-foundation',
+                    'reason' => 'active_finding_relinked_to_non_obsolete_key',
+                    'replacement_key_id' => $key->id,
+                ],
+            );
+
+            $result['relations_obsoleted']++;
+            $result['timeline_events_created']++;
+        }
+
+        return $result;
     }
 
     private function truncateFoundationTables(): int

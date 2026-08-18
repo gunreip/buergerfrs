@@ -69,6 +69,9 @@ class ScanTranslationWorkbench extends Command
             'created' => 0,
             'updated' => 0,
             'unchanged' => 0,
+            'commented_out' => $items
+                ->filter(static fn(DiscoveredTranslation $item): bool => ($item->meta['source_context'] ?? null) === 'commented_out')
+                ->count(),
             'replaced' => 0,
             'obsolete' => 0,
             'truncated' => 0,
@@ -107,6 +110,7 @@ class ScanTranslationWorkbench extends Command
 
         $this->components->info('Translation workbench scan finished.');
         $this->line('Items found: ' . number_format($summary['found']));
+        $this->line('Commented out: ' . number_format($summary['commented_out'] ?? 0));
 
         if ($dryRun) {
             $this->warn('Dry run only: no database rows were written.');
@@ -202,11 +206,20 @@ class ScanTranslationWorkbench extends Command
     {
         $attributes = $item->toEntryAttributes();
         $isEmptyLiteralEntry = $this->isEmptyLiteralEntry($item);
+        $isCommentedOutEntry = $this->isCommentedOutEntry($item);
 
         if ($isEmptyLiteralEntry) {
             $attributes['meta'] = [
                 ...($attributes['meta'] ?? []),
                 'ignored_reason' => 'empty_literal_translation_call',
+                'translation_relevant' => false,
+            ];
+        }
+
+        if ($isCommentedOutEntry) {
+            $attributes['meta'] = [
+                ...($attributes['meta'] ?? []),
+                'commented_out_reason' => 'source_expression_inside_comment',
                 'translation_relevant' => false,
             ];
         }
@@ -220,7 +233,11 @@ class ScanTranslationWorkbench extends Command
             $entry = TranslationWorkbenchEntry::query()->create([
                 'previous_entry_id' => $previousEntry?->id,
                 ...$attributes,
-                'status' => $isEmptyLiteralEntry ? 'obsolete' : 'open',
+                'status' => match (true) {
+                    $isEmptyLiteralEntry => 'obsolete',
+                    $isCommentedOutEntry => 'commented_out',
+                    default => 'open',
+                },
                 'review_status' => 'pending',
                 'first_seen_at' => $now,
                 'last_seen_at' => $now,
@@ -239,7 +256,12 @@ class ScanTranslationWorkbench extends Command
         }
 
         $stableAttributes = $this->stableEntryAttributes($attributes, $entry);
-        $nextStatus = $isEmptyLiteralEntry ? 'obsolete' : ($entry->status === 'obsolete' ? 'open' : $entry->status);
+        $nextStatus = match (true) {
+            $isEmptyLiteralEntry => 'obsolete',
+            $isCommentedOutEntry => 'commented_out',
+            $entry->status === 'obsolete' || $entry->status === 'commented_out' => 'open',
+            default => $entry->status,
+        };
         $oldValues = $entry->only(array_keys($stableAttributes));
         $changed = collect($stableAttributes)
             ->filter(static fn(mixed $value, string $key): bool => ($oldValues[$key] ?? null) !== $value)
@@ -269,6 +291,11 @@ class ScanTranslationWorkbench extends Command
         return $item->kind === 'literal'
             && $item->literalText !== null
             && trim($item->literalText) === '';
+    }
+
+    private function isCommentedOutEntry(DiscoveredTranslation $item): bool
+    {
+        return ($item->meta['source_context'] ?? null) === 'commented_out';
     }
 
     private function previousEntryFor(DiscoveredTranslation $item): ?TranslationWorkbenchEntry

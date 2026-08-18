@@ -590,7 +590,7 @@
                                             color="amber"
                                             icon="pen-line"
                                         >
-                                            {{ __('ui.missing') }}
+                                            {{ __('ui.state.missing') }}
                                         </flux:badge>
                                     @endif
                                 </div>

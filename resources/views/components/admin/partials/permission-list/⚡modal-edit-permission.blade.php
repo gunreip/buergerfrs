@@ -8,7 +8,7 @@
         <div class="flex items-start justify-between gap-4">
             <flux:field>
                 <x-ui.headers.card
-                    :title="__('admin.permissions.modals.edit.title')"
+                    :title="__('ui.title.filter')"
                     :description="__('admin.permissions.modals.edit.description')"
                 />
 
@@ -40,7 +40,7 @@
 
             <div>
                 <flux:text class="text-zinc-400">
-                    {{ __('ui.assigned-roles') }}
+                    {{ __('ui.assign.assigned.assigned-roles') }}
                 </flux:text>
 
                 <flux:heading size="md">
@@ -75,7 +75,7 @@
 
             <flux:input
                 type="number"
-                label="{{ __('ui.sort-order') }}"
+                label="{{ __('ui.sort.sort.sort-order') }}"
                 wire:model.live="editingSortOrder"
                 min="0"
                 step="1"
@@ -101,7 +101,7 @@
 
             <x-ui.button.save
                 icon="check"
-                label="{{ __('ui.save') }}"
+                label="{{ __('ui.button.save.save') }}"
                 wire:click="savePermissionMetadata"
                 wire:loading.attr="disabled"
                 :disabled="$editingPermissionId === null || !$this->hasPermissionMetadataChanges()"

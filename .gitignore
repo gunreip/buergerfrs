@@ -17,6 +17,7 @@
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
+/storage/
 /storage/*.key
 /storage/app/private/dev/
 /storage/pail
@@ -41,3 +42,4 @@ npm-debug.log
 yarn-error.log
 auth.json
 storage/reports/
+storage/translation-workbench/

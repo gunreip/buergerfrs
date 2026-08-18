@@ -7,6 +7,10 @@
     $extraKeys = collect($activeScope['target_main_extra_keys'] ?? []);
     $valuesByLocale = collect($activeScope['values_by_locale'] ?? []);
     $conflicts = collect($report['conflicts'] ?? []);
+    $prunedValues = collect($report['pruned'] ?? []);
+    $lastEditedRows = collect($exportReportLastEditedRows ?? []);
+    $lastEditedGroups = $lastEditedRows->groupBy('translation_key')->map(static fn($rows) => $rows->values())->values();
+    $lastEditedLimitOptions = collect($exportReportLastEditedLimitOptions ?? [10, 25, 50, 100]);
 @endphp
 
 <div class="mt-4 space-y-4">
@@ -33,7 +37,7 @@
                         size="sm"
                         color="{{ $report['dry_run'] ? 'sky' : 'green' }}"
                     >
-                        {{ $report['dry_run'] ? __('Dry run') : __('ui.written') }}
+                        {{ $report['dry_run'] ? __('Dry run') : __('ui.label.written') }}
                     </flux:badge>
                     <flux:badge
                         class="mr-3"
@@ -104,7 +108,7 @@
                             <flux:table.column>{{ __('Blocking key') }}</flux:table.column>
                             <flux:table.column>{{ __('Usage') }}</flux:table.column>
                             <flux:table.column>{{ __('Reason') }}</flux:table.column>
-                            <flux:table.column align="end">{{ __('ui.actions.actions') }}</flux:table.column>
+                            <flux:table.column align="end">{{ __('Actions') }}</flux:table.column>
                         </flux:table.columns>
                         <flux:table.rows>
                             @foreach ($conflicts as $conflict)
@@ -231,6 +235,96 @@
             </flux:callout>
         @endif
 
+        @if ($prunedValues->isNotEmpty())
+            <flux:callout
+                color="{{ $report['dry_run'] ? 'amber' : 'green' }}"
+                icon="scissors"
+            >
+                <flux:callout.heading>
+                    <span class="inline-flex flex-wrap items-center gap-2">
+                        <span>{{ $report['dry_run'] ? __('ui.remove.removed.values-that-would-be-removed') : __('ui.remove.removed.removed-lang-values') }}</span>
+                        <flux:badge
+                            size="sm"
+                            color="{{ $report['dry_run'] ? 'amber' : 'green' }}"
+                        >
+                            {{ number_format($prunedValues->count()) }}
+                        </flux:badge>
+                    </span>
+                </flux:callout.heading>
+                <flux:callout.text>
+                    {{ __('ui.remove.removed.these-entries-are-present-in-lang-files-but-are-no-longer-active-export-values-in-dry') }}
+                </flux:callout.text>
+
+                <div class="mt-3 max-h-80 overflow-auto rounded-md border border-amber-200 dark:border-amber-700">
+                    <flux:table container:class="max-h-80">
+                        <flux:table.columns
+                            class="bg-white dark:bg-zinc-800"
+                            sticky
+                        >
+                            <flux:table.column class="w-24">{{ __('Locale') }}</flux:table.column>
+                            <flux:table.column class="w-36">{{ __('Namespace') }}</flux:table.column>
+                            <flux:table.column>{{ __('ui.translation.translation-key') }}</flux:table.column>
+                            <flux:table.column>{{ __('Lang key') }}</flux:table.column>
+                            <flux:table.column>{{ __('Old value') }}</flux:table.column>
+                            <flux:table.column>{{ __('Reason') }}</flux:table.column>
+                        </flux:table.columns>
+                        <flux:table.rows>
+                            @foreach ($prunedValues as $pruned)
+                                <flux:table.row>
+                                    <flux:table.cell>
+                                        <div class="flex items-center gap-2">
+                                            <x-ui.locale.flag
+                                                :locale="$pruned['locale'] ?? ''"
+                                                size="sm"
+                                            />
+                                            <flux:badge
+                                                size="sm"
+                                                color="{{ $report['dry_run'] ? 'amber' : 'green' }}"
+                                            >
+                                                {{ $pruned['locale'] }}
+                                            </flux:badge>
+                                        </div>
+                                    </flux:table.cell>
+                                    <flux:table.cell>
+                                        <div class="wrap-anywhere font-mono text-xs">{{ $pruned['namespace'] }}</div>
+                                        <div class="wrap-anywhere text-xs text-zinc-500 dark:text-zinc-400">
+                                            {{ $pruned['path'] }}
+                                        </div>
+                                    </flux:table.cell>
+                                    <flux:table.cell>
+                                        <div class="wrap-anywhere font-mono text-xs">
+                                            {{ $pruned['translation_key'] }}
+                                        </div>
+                                    </flux:table.cell>
+                                    <flux:table.cell>
+                                        <div class="wrap-anywhere font-mono text-xs">{{ $pruned['lang_key'] }}</div>
+                                    </flux:table.cell>
+                                    <flux:table.cell>
+                                        <div class="wrap-anywhere max-w-md text-wrap text-xs">
+                                            @if (is_array($pruned['old_value'] ?? null))
+                                                {{ __('Array value') }}
+                                                ({{ number_format(count($pruned['old_value'])) }})
+                                            @else
+                                                {{ str((string) ($pruned['old_value'] ?? '—'))->limit(120) }}
+                                            @endif
+                                        </div>
+                                    </flux:table.cell>
+                                    <flux:table.cell>
+                                        <flux:badge
+                                            size="sm"
+                                            color="{{ ($pruned['reason'] ?? '') === 'obsolete_lang_value' ? 'amber' : 'zinc' }}"
+                                        >
+                                            {{ str((string) ($pruned['reason'] ?? 'unknown'))->replace('_', ' ')->headline() }}
+                                        </flux:badge>
+                                    </flux:table.cell>
+                                </flux:table.row>
+                            @endforeach
+                        </flux:table.rows>
+                    </flux:table>
+                </div>
+            </flux:callout>
+        @endif
+
         <div class="grid grid-cols-1 gap-3 xl:grid-cols-5">
             @foreach ([['title' => __('Source values'), 'count' => $activeScope['source_values'] ?? 0, 'color' => 'sky', 'icon' => 'languages'], ['title' => __('Target main values'), 'count' => $activeScope['target_main_values'] ?? 0, 'color' => 'green', 'icon' => 'flag'], ['title' => __('ui.target.target-missing'), 'count' => $activeScope['target_main_missing'] ?? 0, 'color' => ($activeScope['target_main_missing'] ?? 0) > 0 ? 'red' : 'green', 'icon' => 'circle-minus'], ['title' => __('Target extras'), 'count' => $activeScope['target_main_extra'] ?? 0, 'color' => ($activeScope['target_main_extra'] ?? 0) > 0 ? 'amber' : 'green', 'icon' => 'circle-plus'], ['title' => __('Sub values'), 'count' => $activeScope['target_sub_values'] ?? 0, 'color' => 'violet', 'icon' => 'git-branch']] as $callout)
                 <flux:callout
@@ -305,7 +399,7 @@
                                                     color="sky"
                                                     icon="list-filter"
                                                     :aria-label="__('Show in work findings')"
-                                                    wire:click="showExportReportKeyInWorkFindings('{{ $key }}')"
+                                                    wire:click="showExportReportKeyInWorkFindingsFromBase64('{{ base64_encode((string) $key) }}')"
                                                 />
                                             </div>
                                         </x-ui.tooltip.simple>
@@ -330,7 +424,7 @@
                                                     color="amber"
                                                     icon="archive-x"
                                                     :aria-label="__('Review obsolete source value')"
-                                                    wire:click="openObsoleteSourceValueReview('{{ $key }}')"
+                                                    wire:click="openObsoleteSourceValueReviewFromBase64('{{ base64_encode((string) $key) }}')"
                                                 />
                                             </div>
                                         </x-ui.tooltip.simple>
@@ -398,7 +492,7 @@
                                                     color="sky"
                                                     icon="list-filter"
                                                     :aria-label="__('Show in work findings')"
-                                                    wire:click="showExportReportKeyInWorkFindings('{{ $key }}')"
+                                                    wire:click="showExportReportKeyInWorkFindingsFromBase64('{{ base64_encode((string) $key) }}')"
                                                 />
                                             </x-ui.tooltip.simple>
                                         </div>
@@ -443,4 +537,283 @@
             </div>
         </flux:callout>
     @endif
+
+    <flux:callout
+        color="{{ $lastEditedRows->isNotEmpty() ? 'sky' : 'zinc' }}"
+        icon="history"
+    >
+        <flux:callout.heading>
+            <span class="flex w-full flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                <span class="inline-flex flex-wrap items-center gap-2">
+                    <span>{{ __('Recently edited translation values') }}</span>
+                    <flux:badge
+                        size="sm"
+                        color="{{ $lastEditedRows->isNotEmpty() ? 'sky' : 'zinc' }}"
+                    >
+                        {{ number_format($lastEditedRows->count()) }}
+                    </flux:badge>
+                </span>
+
+                <div class="w-32">
+                    <flux:input.group>
+                        <flux:input.group.prefix>
+                            <flux:icon.layout-list />
+                        </flux:input.group.prefix>
+                        <flux:select
+                            aria-label="{{ __('Entries') }}"
+                            wire:model.live="exportReportLastEditedLimit"
+                            variant="listbox"
+                            size="sm"
+                        >
+                            @foreach ($lastEditedLimitOptions as $limitOption)
+                                <flux:select.option value="{{ $limitOption }}">
+                                    {{ number_format((int) $limitOption) }}
+                                </flux:select.option>
+                            @endforeach
+                        </flux:select>
+                    </flux:input.group>
+                </div>
+            </span>
+        </flux:callout.heading>
+        <flux:callout.text class="-mt-4">
+            <span>
+                {{ __('Latest saved source and target translation values for the active target language, independent of the latest export run result.') }}
+            </span>
+        </flux:callout.text>
+
+        <div class="mt-3 max-h-96 overflow-auto">
+            <flux:table container:class="max-h-96 overflow-auto">
+                <flux:table.columns
+                    class="bg-white dark:bg-zinc-800"
+                    sticky
+                >
+                    <flux:table.column>
+                        {{ __('ui.translation.translation-key') }}
+                    </flux:table.column>
+                    <flux:table.column>
+                        {{ __('Namespace') }}
+                    </flux:table.column>
+                    <flux:table.column>
+                        {{ __('Group') }}
+                    </flux:table.column>
+                    <flux:table.column>
+                        {{ __('Source') }}
+                    </flux:table.column>
+                    <flux:table.column>
+                        {{ __('Target') }}
+                    </flux:table.column>
+                    <flux:table.column>
+                        {{ __('Edited') }}
+                    </flux:table.column>
+                    <flux:table.column>
+                        {{ __('Context') }}
+                    </flux:table.column>
+                    <flux:table.column align="center">
+                        {{ __('Actions') }}
+                    </flux:table.column>
+                </flux:table.columns>
+
+                <flux:table.rows>
+                    @forelse ($lastEditedGroups as $groupRows)
+                        @php
+                            $row = $groupRows->first();
+                            $duplicateRows = $groupRows->slice(1)->values();
+                            $groupCount = $groupRows->count();
+                        @endphp
+                        <flux:table.row
+                            wire:key="translation-workbench-export-last-edit-{{ $row['translation_key'] }}"
+                        >
+                            <flux:table.cell>
+                                <div class="space-y-1">
+                                    <div class="wrap-anywhere max-w-lg text-wrap font-mono text-xs">
+                                        {{ $row['translation_key'] }}
+
+                                        @if ($groupCount > 1)
+                                            <flux:badge
+                                                size="sm"
+                                                color="cyan"
+                                            >
+                                                {{ __('Entries: :count', ['count' => number_format($groupCount)]) }}
+                                            </flux:badge>
+                                        @endif
+                                    </div>
+                                </div>
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                <flux:badge
+                                    size="sm"
+                                    variant="subtle"
+                                >
+                                    {{ $row['namespace'] ?: __('None') }}
+                                </flux:badge>
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                <flux:badge
+                                    size="sm"
+                                    variant="subtle"
+                                >
+                                    {{ $row['group'] ?: __('None') }}
+                                </flux:badge>
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                <div
+                                    class="max-w-md text-wrap text-sm leading-relaxed text-zinc-700 dark:text-zinc-200">
+                                    {{ str((string) $row['source_value'])->limit(80)->toString() }}
+                                </div>
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                <div
+                                    class="max-w-md text-wrap text-sm leading-relaxed text-zinc-900 dark:text-zinc-100">
+                                    {{ str((string) $row['target_value'])->limit(80)->toString() }}
+                                </div>
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                <div class="space-y-0.5 text-xs text-zinc-500">
+                                    <x-ui.date-time.date :value="$row['updated_at']" />
+                                    <x-ui.date-time.time :value="$row['updated_at']" />
+                                </div>
+                            </flux:table.cell>
+                            <flux:table.cell>
+                                <div class="flex max-w-xs flex-wrap gap-1">
+                                    @foreach ($row['context_badges'] ?? [] as $badge)
+                                        <flux:badge
+                                            size="sm"
+                                            color="{{ $badge['color'] ?? 'zinc' }}"
+                                        >
+                                            {{ __($badge['label'] ?? '') }}
+                                        </flux:badge>
+                                    @endforeach
+                                </div>
+                            </flux:table.cell>
+                            <flux:table.cell align="center">
+                                @if ($row['finding_id'])
+                                    <x-ui.tooltip.simple
+                                        :title="__('Show in Work findings')"
+                                        :text="__(
+                                            'Filters the Work findings tab to this translation key. Use the Work findings actions for review and edit workflows.',
+                                        )"
+                                    >
+                                        <flux:button
+                                            type="button"
+                                            size="xs"
+                                            variant="primary"
+                                            color="pink"
+                                            icon="list-filter"
+                                            :aria-label="__('Show in Work findings')"
+                                            wire:click="showLastEditedTranslationInWorkFindingsFromBase64({{ (int) $row['finding_id'] }}, '{{ base64_encode((string) $row['translation_key']) }}')"
+                                        />
+                                    </x-ui.tooltip.simple>
+                                @else
+                                    <x-ui.tooltip.simple
+                                        :title="__('No finding context available')"
+                                        :text="__(
+                                            'This translation value exists, but no active finding relation could be resolved for direct editing.',
+                                        )"
+                                    >
+                                        <flux:button
+                                            type="button"
+                                            size="xs"
+                                            variant="subtle"
+                                            color="zinc"
+                                            icon="square-pen"
+                                            :disabled="true"
+                                            :aria-label="__('No finding context available')"
+                                        />
+                                    </x-ui.tooltip.simple>
+                                @endif
+                            </flux:table.cell>
+                        </flux:table.row>
+
+                        @if ($duplicateRows->isNotEmpty())
+                            <flux:table.row
+                                wire:key="translation-workbench-export-last-edit-details-{{ $row['translation_key'] }}"
+                            >
+                                <flux:table.cell colspan="8">
+                                    <flux:accordion variant="outline">
+                                        <flux:accordion.item>
+                                            <flux:accordion.heading>
+                                                <span class="flex w-full items-center justify-between gap-3">
+                                                    <div class="wrap-anywhere max-w-lg text-wrap font-mono text-xs">
+                                                        {{ $row['translation_key'] }}
+                                                    </div>
+
+                                                    <span class="inline-flex shrink-0 items-center gap-2">
+                                                        <flux:badge
+                                                            size="sm"
+                                                            color="cyan"
+                                                        >
+                                                            {{ number_format($duplicateRows->count()) }}
+                                                        </flux:badge>
+                                                        <span>{{ __('Further entries') }}</span>
+                                                    </span>
+                                                </span>
+                                            </flux:accordion.heading>
+                                            <flux:accordion.content>
+                                                <div class="grid gap-2 md:grid-cols-2">
+                                                    @foreach ($duplicateRows as $duplicateRow)
+                                                        <flux:callout
+                                                            color="zinc"
+                                                            icon="history"
+                                                        >
+                                                            <flux:callout.heading>
+                                                                <span class="inline-flex flex-wrap items-center gap-2">
+                                                                    @if ($duplicateRow['finding_id'])
+                                                                        <flux:badge
+                                                                            size="sm"
+                                                                            color="sky"
+                                                                        >
+                                                                            {{ __('Entry #:id', ['id' => $duplicateRow['finding_id']]) }}
+                                                                        </flux:badge>
+                                                                    @endif
+                                                                    <span class="font-mono text-xs">
+                                                                        <x-ui.date-time.date :value="$duplicateRow['updated_at']" />
+                                                                        <x-ui.date-time.time :value="$duplicateRow['updated_at']" />
+                                                                    </span>
+                                                                </span>
+                                                            </flux:callout.heading>
+                                                            <flux:callout.text>
+                                                                <div class="grid gap-2 md:grid-cols-3">
+                                                                    <div
+                                                                        class="text-sm text-zinc-700 dark:text-zinc-200">
+                                                                        {{ str((string) $duplicateRow['source_value'])->limit(80)->toString() }}
+                                                                    </div>
+                                                                    <div
+                                                                        class="text-sm text-zinc-900 dark:text-zinc-100">
+                                                                        {{ str((string) $duplicateRow['target_value'])->limit(80)->toString() }}
+                                                                    </div>
+                                                                    <div class="flex flex-wrap gap-1">
+                                                                        @foreach ($duplicateRow['context_badges'] ?? [] as $badge)
+                                                                            <flux:badge
+                                                                                size="sm"
+                                                                                color="{{ $badge['color'] ?? 'zinc' }}"
+                                                                            >
+                                                                                {{ __($badge['label'] ?? '') }}
+                                                                            </flux:badge>
+                                                                        @endforeach
+                                                                    </div>
+                                                                </div>
+                                                            </flux:callout.text>
+                                                        </flux:callout>
+                                                    @endforeach
+                                                </div>
+                                            </flux:accordion.content>
+                                        </flux:accordion.item>
+                                    </flux:accordion>
+                                </flux:table.cell>
+                            </flux:table.row>
+                        @endif
+                    @empty
+                        <flux:table.row>
+                            <flux:table.cell colspan="8">
+                                <flux:text class="text-sm text-zinc-500">
+                                    {{ __('No recently edited translation values for the active target language yet.') }}
+                                </flux:text>
+                            </flux:table.cell>
+                        </flux:table.row>
+                    @endforelse
+                </flux:table.rows>
+            </flux:table>
+        </div>
+    </flux:callout>
+
 </div>

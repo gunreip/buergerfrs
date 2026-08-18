@@ -77,7 +77,7 @@
                                         size="sm"
                                         color="sky"
                                     >
-                                        {{ __('ui.source') }} #{{ $runtimeSource['id'] }}
+                                        {{ __('ui.source.source') }} #{{ $runtimeSource['id'] }}
                                     </flux:badge>
 
                                     @if ($runtimeSource['key_id'])
@@ -114,7 +114,7 @@
                             size="sm"
                             variant="subtle"
                         >
-                            {{ __('ui.source') }} #{{ $linkPreviewRelatedSource['id'] ?? '—' }}
+                            {{ __('ui.source.source') }} #{{ $linkPreviewRelatedSource['id'] ?? '—' }}
                         </flux:badge>
                     </div>
 
@@ -173,7 +173,7 @@
                 </flux:callout.heading>
                 <flux:callout.text>
                     {{ $linkPreviewIsLinked
-                        ? __('Choose Unlink to remove the active relation, or Keep link to leave the confirmed decision unchanged.')
+                        ? __('ui.remove.remove.choose-unlink-to-remove-the-active-relation-or-keep-link-to-leave-the-confirmed-decison')
                         : __('Choose Confirm link to store that the runtime options belong to the selected related dynamic finding.') }}
                 </flux:callout.text>
             </flux:callout>
@@ -184,7 +184,7 @@
                     variant="ghost"
                     wire:click="closeDynamicSourceLinkConfirm"
                 >
-                    {{ $linkPreviewIsLinked ? __('Keep link') : __('ui.cancel') }}
+                    {{ $linkPreviewIsLinked ? __('Keep link') : __('ui.button.cancel') }}
                 </flux:button>
 
                 @if ($linkPreviewIsLinked)

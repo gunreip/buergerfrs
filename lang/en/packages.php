@@ -18,6 +18,18 @@ return [
                             'dev_playground' => 'DEV-Playground',
                             'dynamic' => 'Dynamic',
                             'findings' => [
+                                'cleanup_history' => [
+                                    'array_value' => 'Array value',
+                                    'cleanup_history' => 'Cleanup history',
+                                    'derived' => 'Derived',
+                                    'event' => 'Event',
+                                    'lang_key' => 'Lang key',
+                                    'locales' => 'Locales',
+                                    'moved' => 'Moved',
+                                    'moved_to' => 'Moved to',
+                                    'namespace' => 'Namespace',
+                                    'outcome' => 'Outcome',
+                                ],
                                 'code_update_plan' => [
                                     'already_current' => 'Already current',
                                     'apply_ready_plan' => 'Apply-ready plan',
@@ -36,9 +48,6 @@ return [
                                     'cell_actions' => [
                                         'edit_translation_values' => 'Edit translation values',
                                         'review_finding' => 'Review finding',
-                                    ],
-                                    'cell_state' => [
-                                        'a_stored_translation_value_exists_for_the_source_language' => 'A stored translation value exists for the source language.',
                                     ],
                                 ],
                             ],
@@ -67,17 +76,19 @@ return [
                             'show_overview' => 'Show overview',
                         ],
                         'raw_data' => [
-                            'filters' => [
-                                'reviews' => [
-                                    'decision' => [],
-                                ],
-                            ],
                             'filters_event_types' => [
                                 'common_filters' => 'Common filters',
                             ],
                             'table_card' => [
                                 'column' => 'Column',
                             ],
+                        ],
+                        'settings' => [
+                            'inspect_and_reset_persisted_translation_workbench_ui_settings_for_the_current_user_an_a06c4c2605' => 'Inspect and reset persisted Translation Workbench UI settings for the current user and package defaults.',
+                            'reset_all_translation_workbench_ui_settings_for_the_current_user' => 'Reset all Translation Workbench UI settings for the current user?',
+                            'reset_these_settings_for_the_current_user' => 'Reset these settings for the current user?',
+                            'settings_overview' => 'Settings overview',
+                            'user_settings_are_stored_on_the_user_record_export_files_are_diagnostic_snapshots_tha_d71eaffe64' => 'User settings are stored on the user record. Export files are diagnostic snapshots that can be reviewed or reused as package defaults later.',
                         ],
                     ],
                 ],

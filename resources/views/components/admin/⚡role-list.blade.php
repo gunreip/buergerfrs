@@ -18,7 +18,7 @@
             <x-ui.button.save
                 icon="plus"
                 {{-- i18n-native: __('admin.roles.modals.create.title') --}}
-                label="{{ __('admin.roles.actions.create') }}"
+                label="{{ __('ui.button.create.create') }}"
                 wire:click="openCreateRoleModal"
             />
         @endrole

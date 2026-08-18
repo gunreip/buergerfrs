@@ -30,9 +30,9 @@
         <flux:callout.heading>
             <span class="flex w-full items-center justify-between gap-2">
                 <span class="inline-flex items-center gap-1.5">
-                    <span>{{ __('ui.source') }}</span>
+                    <span>{{ __('ui.source.source') }}</span>
                     <x-ui.tooltip.simple
-                        :header="__('ui.source')"
+                        :header="__('ui.source.source')"
                         :text="__('Scanned file path, line number and translation function found in the code.')"
                     />
                 </span>
@@ -60,7 +60,7 @@
                     <flux:callout.heading>
                         <span class="text-xs uppercase">{{ __('Path') }}</span>
                         <x-ui.tooltip.simple
-                            :header="__('ui.source-path')"
+                            :header="__('ui.source.source-path')"
                             :text="__('Absolute path to the source file that produced this finding.')"
                         />
                     </flux:callout.heading>
@@ -208,7 +208,7 @@
                         />
                     </flux:callout.heading>
                     <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                        {{ $reviewTranslationKey ?: __('ui.missing') }}
+                        {{ $reviewTranslationKey ?: __('ui.state.missing') }}
                     </div>
                 </div>
 
@@ -225,7 +225,7 @@
                         />
                     </flux:callout.heading>
                     <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                        {{ $reviewEffectiveSuggestedKey ?: __('ui.missing') }}
+                        {{ $reviewEffectiveSuggestedKey ?: __('ui.state.missing') }}
                     </div>
                 </div>
 
@@ -276,9 +276,9 @@
     >
         <flux:callout.heading>
             <span class="inline-flex items-center gap-1.5">
-                <span>{{ __('ui.structure') }}</span>
+                <span>{{ __('ui.structure.structure') }}</span>
                 <x-ui.tooltip.simple
-                    :header="__('ui.structure')"
+                    :header="__('ui.structure.structure')"
                     :text="__(
                         'Namespace, group, path key and scope derived from the scanner and linked workbench key.',
                     )"
@@ -303,7 +303,7 @@
                             />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                            {{ $reviewFinding->namespace ?: __('ui.missing') }}
+                            {{ $reviewFinding->namespace ?: __('ui.state.missing') }}
                         </div>
                     </div>
 
@@ -318,7 +318,7 @@
                             />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                            {{ $reviewFinding->group ?: __('ui.missing') }}
+                            {{ $reviewFinding->group ?: __('ui.state.missing') }}
                         </div>
                     </div>
                 </div>
@@ -335,7 +335,7 @@
                             />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                            {{ $reviewFinding->path_key ?: __('ui.missing') }}
+                            {{ $reviewFinding->path_key ?: __('ui.state.missing') }}
                         </div>
                     </div>
 
@@ -350,7 +350,7 @@
                             />
                         </flux:callout.heading>
                         <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                            {{ $reviewFinding->scope ?: __('ui.missing') }}
+                            {{ $reviewFinding->scope ?: __('ui.state.missing') }}
                         </div>
                     </div>
                 </div>
@@ -370,10 +370,10 @@
                         </flux:callout.heading>
                         <div class="grid gap-2 md:grid-cols-2">
                             <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                                {{ $reviewFinding->key_namespace ?: __('ui.missing') }}
+                                {{ $reviewFinding->key_namespace ?: __('ui.state.missing') }}
                             </div>
                             <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                                {{ $reviewFinding->key_group ?: __('ui.missing') }}
+                                {{ $reviewFinding->key_group ?: __('ui.state.missing') }}
                             </div>
                         </div>
                     </div>

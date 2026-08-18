@@ -1,7 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/lang-values/source-path.blade.php --}}
 
 <flux:field class="{{ $fieldClass ?? '' }}">
-    <flux:label>{{ __('ui.source-path') }}</flux:label>
+    <flux:label>{{ __('ui.source.source-path') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
             <flux:icon.file-text />
@@ -10,7 +10,7 @@
             clearable
             copyable
             wire:model.live.debounce.300ms="langValuesSourcePath"
-            placeholder="{{ __('Contains source path') }}"
+            placeholder="{{ __('ui.source.contains-source-path') }}"
         />
     </flux:input.group>
 </flux:field>

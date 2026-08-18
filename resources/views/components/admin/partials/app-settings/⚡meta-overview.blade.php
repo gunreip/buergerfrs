@@ -6,7 +6,7 @@
         class="mb-4"
         size="lg"
     >
-        {{ __('admin.permissions.overview.title') }}
+        {{ __('ui.title.filter') }}
     </flux:heading>
 
     <div class="grid grid-cols-5 gap-3">

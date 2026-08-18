@@ -62,10 +62,10 @@
                         wire:click="sortBy('status')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('ui.status')"
+                            :title="__('ui.state.status')"
                             :text="__('admin.client_list.table.current_status_of_the_client_indicating_their_activity_and_engagement')"
                         >
-                            {{ __('ui.status') }}
+                            {{ __('ui.state.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -75,11 +75,11 @@
                         wire:click="sortBy('people_count')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('ui.people')"
+                            :title="__('ui.people.people')"
                             :text="__('admin.client_list.table.number_of_people_associated_with_the_client_useful_for_understanding_client_size',
                             )"
                         >
-                            {{ __('ui.people') }}
+                            {{ __('ui.people.people') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -88,10 +88,10 @@
                         wire:click="sortBy('created_at')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('ui.created')"
+                            :title="__('ui.labels.created')"
                             :text="__('admin.client_list.table.date_when_the_client_was_created_useful_for_tracking_client_history')"
                         >
-                            {{ __('ui.created') }}
+                            {{ __('ui.labels.created') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
@@ -152,7 +152,7 @@
                                         color="zinc"
                                         variant="subtle"
                                     >
-                                        {{ __('ui.missing') }}
+                                        {{ __('ui.state.missing') }}
                                     </flux:badge>
                                 @endif
                             </flux:table.cell>
@@ -206,7 +206,7 @@
         @if ($clients->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('ui.pagination') }}"
+                text="{{ __('ui.nouns.pagination') }}"
             />
 
             <div class="mt-4">

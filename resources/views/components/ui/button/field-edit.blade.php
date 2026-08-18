@@ -1,7 +1,7 @@
 {{-- resources/views/components/ui/button/field-edit.blade.php --}}
 
 @props([
-    'label' => __('admin.translation_list.modal.edit'),
+    'label' => __('ui.button.edit.edit'),
     'changed' => false,
 ])
 

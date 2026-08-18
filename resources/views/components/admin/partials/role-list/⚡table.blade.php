@@ -172,7 +172,7 @@
                                             color="purple"
                                             variant="subtle"
                                         >
-                                            {{ __('ui.label.label') }}
+                                            {{ __('ui.labels.label') }}
                                         </flux:badge>
                                     @endif
 
@@ -181,7 +181,7 @@
                                             color="green"
                                             variant="subtle"
                                         >
-                                            {{ __('ui.assignable') }}
+                                            {{ __('ui.assignable.assignable') }}
                                         </flux:badge>
                                     @else
                                         <flux:badge
@@ -220,7 +220,7 @@
         @if ($roles->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('ui.pagination') }}"
+                text="{{ __('ui.nouns.pagination') }}"
             />
 
             <div class="mt-4">

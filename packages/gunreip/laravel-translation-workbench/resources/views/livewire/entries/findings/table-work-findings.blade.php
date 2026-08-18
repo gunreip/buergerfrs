@@ -14,10 +14,10 @@ TODO:: DEV-Section delete --}}
         {{ __('This is a development view of the Workbench findings table. It is used for testing and debugging purposes.') }}
     </flux:text>
     <flux:text class="text-sm text-zinc-500">
-        {{ __('ui.literal.literal') }}
+        {{ __('Literal') }}
     </flux:text>
     <flux:text class="text-sm text-zinc-500">
-        {{ __('ui.literal.literal') }}
+        {{ __('Literal') }}
     </flux:text>
     <flux:text class="text-sm text-zinc-500">
         {{ __('ui.literal.literal-testing') }}
@@ -37,9 +37,9 @@ TODO:: DEV-Section delete --}}
     <flux:text class="text-sm text-zinc-500">
         {{ __('ui.label.label-testing-2') }}
     </flux:text>
-</flux:field> --}}
+</flux:field>
 
-<flux:separator class="mt-4" />
+<flux:separator class="mt-4" /> --}}
 
 <div class="mt-4">
     {{-- Pagination Top --}}
@@ -47,10 +47,7 @@ TODO:: DEV-Section delete --}}
 </div>
 
 {{-- Table Findings --}}
-<flux:table
-    class="mt-4"
-    container:class="overflow-x-auto"
->
+<flux:table container:class="mt-4 overflow-x-auto">
     @php
         $bulkSelectedLiteral = $bulkEqualizeContext['normalized_literal'] ?? null;
     @endphp
@@ -127,6 +124,7 @@ TODO:: DEV-Section delete --}}
                     'dynamic_numeric' => 'zinc',
                     default => 'sky',
                 };
+                $findingLifecycleStatus = trim((string) ($finding->status ?? ''));
                 $reviewStatus = trim((string) ($finding->review_status ?? ''));
                 $reviewStatusColor = match ($reviewStatus) {
                     'reviewed', 'approved' => 'green',

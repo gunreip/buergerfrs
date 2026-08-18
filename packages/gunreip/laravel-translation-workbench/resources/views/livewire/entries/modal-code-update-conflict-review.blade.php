@@ -52,7 +52,7 @@
                     color="sky"
                     icon="map-pin"
                 >
-                    <flux:callout.heading>{{ __('ui.source') }}</flux:callout.heading>
+                    <flux:callout.heading>{{ __('ui.source.source') }}</flux:callout.heading>
                     <flux:callout.text>
                         <div class="wrap-anywhere font-mono text-xs">
                             {{ $finding->source_path }}@if ($finding->source_line)
@@ -66,14 +66,14 @@
                     color="amber"
                     icon="copy-x"
                 >
-                    <flux:callout.heading>{{ __('ui.apply-conflict') }}</flux:callout.heading>
+                    <flux:callout.heading>{{ __('ui.apply.apply-conflict') }}</flux:callout.heading>
                     <flux:callout.text>
                         <div class="flex flex-wrap gap-2">
                             <flux:badge size="sm">
                                 {{ __('Occurrences') }}: {{ $applyRow['occurrences'] ?? __('Unknown') }}
                             </flux:badge>
                             <flux:badge size="sm">
-                                {{ __('ui.state') }}: {{ $applyRow['state'] ?? 'duplicate_expression' }}
+                                {{ __('ui.state.state') }}: {{ $applyRow['state'] ?? 'duplicate_expression' }}
                             </flux:badge>
                         </div>
                     </flux:callout.text>
@@ -159,7 +159,7 @@
                 variant="subtle"
                 wire:click="closeCodeUpdateConflictReview"
             >
-                {{ __('ui.cancel') }}
+                {{ __('ui.button.cancel') }}
             </flux:button>
 
             <flux:button

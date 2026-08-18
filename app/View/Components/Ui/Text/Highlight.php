@@ -52,6 +52,10 @@ class Highlight extends Component
             return new HtmlString($escapedValue);
         }
 
+        if (mb_strlen($this->value) > 10000) {
+            return new HtmlString($escapedValue);
+        }
+
         $modifiers = $this->caseSensitive ? 'u' : 'iu';
 
         $highlighted = Str::of($escapedValue)

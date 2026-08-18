@@ -61,6 +61,10 @@ class RawDataColumnPresentation
             'translation_workbench_dynamic_sources' => self::dynamicSources(),
             'translation_workbench_lang_values' => self::langValues(),
             'translation_workbench_shared_key_candidates' => self::sharedKeyCandidates(),
+            'translation_workbench_key_inventory' => self::keyInventory(),
+            'translation_workbench_timeline_chains' => self::timelineChains(),
+            'translation_workbench_pipeline_runs' => self::pipelineRuns(),
+            'translation_workbench_pipeline_run_steps' => self::pipelineRunSteps(),
             default => [],
         };
     }
@@ -220,6 +224,94 @@ class RawDataColumnPresentation
             'current_translation_key' => ['content_class' => 'min-w-112 wrap-anywhere text-wrap font-mono text-xs'],
             'suggested_shared_translation_key' => ['content_class' => 'min-w-112 wrap-anywhere text-wrap font-mono text-xs'],
             'matched_finding_ids' => ['cell_class' => 'min-w-96'],
+            'meta' => ['cell_class' => 'min-w-96'],
+        ];
+    }
+
+    /**
+     * @return array<string, array<string, string>>
+     */
+    private static function keyInventory(): array
+    {
+        return [
+            'translation_key' => ['content_class' => 'min-w-112 wrap-anywhere text-wrap font-mono text-xs'],
+            'normalized_translation_key' => ['content_class' => 'min-w-112 wrap-anywhere text-wrap font-mono text-xs'],
+            'namespace' => ['content_class' => 'min-w-40 max-w-sm wrap-anywhere text-wrap font-mono text-xs'],
+            'group' => ['content_class' => 'min-w-40 max-w-sm wrap-anywhere text-wrap font-mono text-xs'],
+            'key_type' => ['content_class' => 'min-w-32 max-w-40 truncate font-mono text-xs'],
+            'inventory_status' => ['content_class' => 'min-w-36 max-w-44 truncate font-mono text-xs'],
+            'meta' => ['cell_class' => 'min-w-96'],
+        ];
+    }
+
+    /**
+     * @return array<string, array<string, string>>
+     */
+    private static function timelineChains(): array
+    {
+        return [
+            'chain_key' => ['content_class' => 'min-w-72 max-w-xl wrap-anywhere text-wrap font-mono text-xs'],
+            'translation_key' => ['content_class' => 'min-w-112 wrap-anywhere text-wrap font-mono text-xs'],
+            'normalized_translation_key' => ['content_class' => 'min-w-112 wrap-anywhere text-wrap font-mono text-xs'],
+            'namespace' => ['content_class' => 'min-w-40 max-w-sm wrap-anywhere text-wrap font-mono text-xs'],
+            'group' => ['content_class' => 'min-w-40 max-w-sm wrap-anywhere text-wrap font-mono text-xs'],
+            'chain_type' => ['content_class' => 'min-w-32 max-w-40 truncate font-mono text-xs'],
+            'chain_status' => ['content_class' => 'min-w-32 max-w-40 truncate font-mono text-xs'],
+            'key_ids' => ['cell_class' => 'min-w-80'],
+            'finding_ids' => ['cell_class' => 'min-w-80'],
+            'review_ids' => ['cell_class' => 'min-w-80'],
+            'timeline_event_ids' => ['cell_class' => 'min-w-80'],
+            'lang_value_ids' => ['cell_class' => 'min-w-80'],
+            'related_translation_keys' => ['cell_class' => 'min-w-96'],
+            'relation_summary' => ['cell_class' => 'min-w-96'],
+            'lang_value_summary' => ['cell_class' => 'min-w-96'],
+            'timeline_event_summary' => ['cell_class' => 'min-w-96'],
+            'meta' => ['cell_class' => 'min-w-96'],
+        ];
+    }
+
+    /**
+     * @return array<string, array<string, string>>
+     */
+    private static function pipelineRuns(): array
+    {
+        return [
+            'command' => ['content_class' => 'min-w-64 max-w-lg wrap-anywhere text-wrap font-mono text-xs'],
+            'options' => ['cell_class' => 'min-w-96'],
+            'status' => ['content_class' => 'min-w-32 max-w-40 truncate font-mono text-xs'],
+            'current_step_label' => ['content_class' => 'min-w-72 max-w-xl wrap-anywhere text-wrap font-mono text-xs'],
+            'current_step_command' => ['content_class' => 'min-w-72 max-w-xl wrap-anywhere text-wrap font-mono text-xs'],
+            'error_message' => ['content_class' => 'min-w-96 max-w-2xl wrap-anywhere text-wrap font-mono text-xs'],
+            'summary' => ['cell_class' => 'min-w-96'],
+            'meta' => ['cell_class' => 'min-w-96'],
+        ];
+    }
+
+    /**
+     * @return array<string, array<string, string>>
+     */
+    private static function pipelineRunSteps(): array
+    {
+        return [
+            'pipeline_run_id' => [
+                'header_class' => 'min-w-36',
+                'cell_class' => 'min-w-36',
+                'content_class' => 'max-w-36 truncate font-mono text-xs tabular-nums',
+            ],
+            'label' => [
+                'header_class' => 'min-w-96',
+                'cell_class' => 'min-w-96',
+                'content_class' => 'min-w-96 max-w-2xl wrap-anywhere text-wrap font-mono text-xs',
+            ],
+            'command' => [
+                'header_class' => 'min-w-96',
+                'cell_class' => 'min-w-96',
+                'content_class' => 'min-w-96 max-w-2xl wrap-anywhere text-wrap font-mono text-xs',
+            ],
+            'arguments' => ['cell_class' => 'min-w-96'],
+            'status' => ['content_class' => 'min-w-32 max-w-40 truncate font-mono text-xs'],
+            'error_message' => ['content_class' => 'min-w-96 max-w-2xl wrap-anywhere text-wrap font-mono text-xs'],
+            'summary' => ['cell_class' => 'min-w-96'],
             'meta' => ['cell_class' => 'min-w-96'],
         ];
     }

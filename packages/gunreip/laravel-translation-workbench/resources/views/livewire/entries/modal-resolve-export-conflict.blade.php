@@ -281,9 +281,9 @@
                                 sticky
                             >
                                 <flux:table.column class="w-24">{{ __('Finding') }}</flux:table.column>
-                                <flux:table.column>{{ __('ui.source') }}</flux:table.column>
+                                <flux:table.column>{{ __('ui.source.source') }}</flux:table.column>
                                 <flux:table.column class="w-32">{{ __('Kind') }}</flux:table.column>
-                                <flux:table.column align="center">{{ __('ui.actions.actions') }}</flux:table.column>
+                                <flux:table.column align="center">{{ __('ui.table.headers.actions') }}</flux:table.column>
                             </flux:table.columns>
                             {{-- Table Body Blocking Key Usage --}}
                             <flux:table.rows>
@@ -381,7 +381,7 @@
                 variant="subtle"
                 wire:click="closeExportConflictResolve"
             >
-                {{ __('ui.close') }}
+                {{ __('Close') }}
             </flux:button>
         </div>
     </div>

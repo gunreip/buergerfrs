@@ -3,7 +3,7 @@
 <flux:card class="mt-6">
 
     <x-ui.headers.card
-        :title="__('admin.permissions.filters.title')"
+        :title="__('ui.title.filter')"
         :description="__('Refine sub-language variants by locale, base language, and override availability.')"
     />
 

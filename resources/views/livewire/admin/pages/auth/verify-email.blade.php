@@ -6,7 +6,7 @@
 
         @if (session('status') == 'verification-link-sent')
             <flux:text class="text-center font-medium !dark:text-green-400 !text-green-600">
-                {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+                {{ __('auth.email.a-new-verification-link-has-been-sent-to-the-email-address-you-provided-during-registration') }}
             </flux:text>
         @endif
 

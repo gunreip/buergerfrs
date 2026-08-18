@@ -150,7 +150,7 @@
         @if ($users->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('ui.pagination') }}"
+                text="{{ __('ui.nouns.pagination') }}"
             />
 
             <div class="mt-4">

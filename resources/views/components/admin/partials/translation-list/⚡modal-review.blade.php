@@ -48,7 +48,7 @@
                 >
                     {{-- Status --}}
                     <flux:callout.heading>
-                        {{ __('ui.status') }}
+                        {{ __('ui.state.status') }}
                     </flux:callout.heading>
 
                     <flux:callout.text class="space-y-2">
@@ -527,7 +527,7 @@
                                     :badge="$isDuplicate
                                         ? 'Duplicate'
                                         : $englishReviewValue?->status ??
-                                            __('ui.missing')"
+                                            __('ui.state.missing')"
                                     :badge-context="$englishReviewValue && !$isDuplicate ? 'translation.value.status' : null"
                                     :badge-color="$isDuplicate || $englishReviewValue === null ? 'amber' : 'zinc'"
                                     :badge-variant="$isDuplicate ? 'subtle' : 'subtle'"
@@ -553,7 +553,7 @@
                                     :badge="$selectedTargetReviewValue?->is_base_duplicate === true
                                         ? 'Duplicate'
                                         : $selectedTargetReviewValue?->status ??
-                                            __('ui.missing')"
+                                            __('ui.state.missing')"
                                     :badge-context="$selectedTargetReviewValue &&
                                     $selectedTargetReviewValue->is_base_duplicate !== true
                                         ? 'translation.value.status'

@@ -180,7 +180,7 @@
                                     color="pink"
                                     icon="list-filter"
                                     :aria-label="__('Show in Work findings')"
-                                    wire:click="showExportReportKeyInWorkFindings(@js($row['translation_key']))"
+                                    wire:click="showExportReportKeyInWorkFindingsFromBase64('{{ base64_encode((string) $row['translation_key']) }}')"
                                 />
                             </x-ui.tooltip.simple>
                         @else

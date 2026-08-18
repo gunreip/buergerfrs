@@ -11,23 +11,29 @@ use App\Support\Locale\LocaleCode;
 use Flux\Flux;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchLangFileExporter;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchLangNodeClassifier;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPipelineRunTracker;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchTimelineRecorder;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchFinding;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchKey;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchKeyFinding;
+use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchKeyInventory;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchLangValue;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchReview;
+use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchTimelineEvent;
 use Gunreip\TranslationWorkbench\Scanner\TranslationFingerprintFactory;
 use Gunreip\TranslationWorkbench\Scanner\TranslationKeyPartsFactory;
 use Gunreip\TranslationWorkbench\Support\TranslationKeySegmentFactory;
 use Gunreip\TranslationWorkbench\Support\TranslationWorkbenchVersion;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -49,6 +55,9 @@ class TranslationWorkbenchEntries extends Component
         'findingSearch',
         'findingSearchExact',
         'findingSearchCaseSensitive',
+        'findingValueSearch',
+        'findingValueSearchExact',
+        'findingValueSearchCaseSensitive',
         'findingStatus',
         'findingKind',
         'findingCandidateType',
@@ -56,12 +65,27 @@ class TranslationWorkbenchEntries extends Component
         'findingGroup',
         'findingKeyRelation',
         'findingLiteralState',
+        'findingCommentedOutScope',
+        'langCleanupSearch',
+        'langCleanupNamespace',
+        'langCleanupGroup',
+        'langCleanupKeyType',
+        'langCleanupContext',
+        'langCleanupUsage',
+        'langCleanupValueState',
+        'scalarReviewSearch',
+        'scalarReviewRisk',
+        'scalarReviewNamespace',
+        'scalarReviewProposal',
         'perPage',
         'findingSortField',
         'findingSortDirection',
+        'scalarReviewSortField',
+        'scalarReviewSortDirection',
         'showOverviewTabs',
         'showObsoleteFindings',
         'editModalAutoCloseAfterSave',
+        'exportReportLastEditedLimit',
     ];
 
     /**
@@ -80,6 +104,12 @@ class TranslationWorkbenchEntries extends Component
 
     public bool $findingSearchCaseSensitive = false;
 
+    public string $findingValueSearch = '';
+
+    public bool $findingValueSearchExact = false;
+
+    public bool $findingValueSearchCaseSensitive = false;
+
     public string $findingStatus = 'all';
 
     public string $findingKind = 'all';
@@ -94,6 +124,22 @@ class TranslationWorkbenchEntries extends Component
 
     public string $findingLiteralState = 'all';
 
+    public string $findingCommentedOutScope = 'commentedOutPresentNo';
+
+    public string $langCleanupSearch = '';
+
+    public string $langCleanupNamespace = 'all';
+
+    public string $langCleanupGroup = 'all';
+
+    public string $langCleanupKeyType = 'all';
+
+    public string $langCleanupContext = 'all';
+
+    public string $langCleanupUsage = 'all';
+
+    public string $langCleanupValueState = 'all';
+
     public string $findingsActiveTab = 'work-findings';
 
     public string $codeUpdatePlanState = 'all';
@@ -106,9 +152,27 @@ class TranslationWorkbenchEntries extends Component
 
     public string $findingSortDirection = 'desc';
 
+    public string $scalarReviewSortField = 'risk';
+
+    public string $scalarReviewSortDirection = 'desc';
+
+    public string $scalarReviewSearch = '';
+
+    public string $scalarReviewRisk = 'all';
+
+    public string $scalarReviewNamespace = 'all';
+
+    public string $scalarReviewProposal = 'all';
+
+    public bool $scalarTransformModalOpen = false;
+
+    public string $scalarTransformTargetPath = '';
+
     public bool $showOverviewTabs = true;
 
     public bool $showObsoleteFindings = false;
+
+    public int $exportReportLastEditedLimit = 50;
 
     public bool $reviewModalOpen = false;
 
@@ -124,7 +188,13 @@ class TranslationWorkbenchEntries extends Component
 
     public bool $obsoleteSourceValueReviewModalOpen = false;
 
+    public bool $langCleanupReviewModalOpen = false;
+
     public bool $timelineModalOpen = false;
+
+    public bool $suspiciousKeyReviewModalOpen = false;
+
+    public ?string $suspiciousKeyReviewSourceSignature = null;
 
     public bool $translationKeyModalOpen = false;
 
@@ -143,6 +213,8 @@ class TranslationWorkbenchEntries extends Component
     public ?int $dynamicSourceLinkRelatedSourceId = null;
 
     public ?string $obsoleteSourceValueTranslationKey = null;
+
+    public ?int $langCleanupInventoryId = null;
 
     public ?int $timelineFindingId = null;
 
@@ -170,6 +242,16 @@ class TranslationWorkbenchEntries extends Component
      * @var array<int, int>
      */
     public array $bulkEqualizeSelectedFindingIds = [];
+
+    /**
+     * @var array<int, int>
+     */
+    public array $scalarReviewSelectedLangValueIds = [];
+
+    /**
+     * @var array<int, int>
+     */
+    public array $scalarTransformIncludedLangValueIds = [];
 
     public ?string $bulkEqualizeTranslationKey = null;
 
@@ -234,17 +316,57 @@ class TranslationWorkbenchEntries extends Component
      */
     public array $translationKeyDeletedSegments = [];
 
+    /**
+     * @var array<int, string>
+     */
+    public array $loadedFindingsTabs = ['work-findings'];
+
     public function render(): View
     {
         $editFinding = $this->selectedFinding($this->editFindingId);
         $dynamicReviewFinding = $this->selectedFinding($this->dynamicReviewFindingId);
         $editLocales = $this->editLocales();
+        $loadReviewLastEdits = $this->shouldLoadFindingsTab('review-last-edits');
+        $loadKeyPaths = $this->shouldLoadFindingsTab('key-paths');
+        $loadLangCleanup = $this->shouldLoadFindingsTab('lang-cleanup');
+        $loadCleanupHistory = $this->shouldLoadFindingsTab('cleanup-history');
+        $loadScalarReview = $this->shouldLoadFindingsTab('scalar-review');
+        $loadSharedKeyCandidates = $this->shouldLoadFindingsTab('shared-key-candidates');
+        $loadExportReport = $this->shouldLoadFindingsTab('export-report');
+        $loadCodeUpdatePlan = $this->shouldLoadFindingsTab('code-update-plan');
+        $pipelineRunReport = $this->pipelineRunReport();
+        $langFileExportReport = $loadExportReport ? $this->langFileExportReport() : null;
+        $suspiciousKeyedAdditionsReport = $this->suspiciousKeyedAdditionsReport();
 
         return view('translation-workbench::livewire.entries', [
             'workbenchVersion' => app(TranslationWorkbenchVersion::class)->toArray(),
             'findings' => $this->findings(),
-            'lastEditedTranslationRows' => $this->lastEditedTranslationRows(),
-            'sharedKeyCandidateRows' => $this->sharedKeyCandidateRows(),
+            'lastEditedTranslationRows' => $loadReviewLastEdits ? $this->lastEditedTranslationRows() : [],
+            'exportReportLastEditedRows' => $loadExportReport
+                ? $this->lastEditedTranslationRows($this->normalizedExportReportLastEditedLimit())
+                : [],
+            'exportReportLastEditedLimitOptions' => $this->exportReportLastEditedLimitOptions(),
+            'keyPathRows' => $loadKeyPaths ? $this->keyPathRows() : [],
+            'keyPathContext' => $this->keyPathContext(),
+            'langCleanupCandidates' => $loadLangCleanup
+                ? $this->langCleanupCandidates()
+                : new LengthAwarePaginator([], 0, $this->normalizedPerPage(), 1, ['pageName' => 'cleanupPage']),
+            'langCleanupCandidateCount' => $this->langCleanupCandidateCount(),
+            'langCleanupNamespaceOptions' => $this->langCleanupNamespaceOptions(),
+            'langCleanupGroupOptions' => $this->langCleanupGroupOptions(),
+            'langCleanupKeyTypeOptions' => $this->langCleanupKeyTypeOptions(),
+            'langCleanupFiltersActive' => $this->langCleanupFiltersActive(),
+            'langCleanupInventoryReport' => $this->langCleanupInventoryReport(),
+            'cleanupHistoryRows' => $loadCleanupHistory ? $this->cleanupHistoryRows() : [],
+            'cleanupHistoryCount' => $this->cleanupHistoryCount(),
+            'scalarReviewRows' => $loadScalarReview
+                ? $this->scalarReviewRows()
+                : new LengthAwarePaginator([], 0, $this->normalizedPerPage(), 1, ['pageName' => 'scalarReviewPage']),
+            'scalarReviewCount' => $this->scalarReviewCount(),
+            'scalarReviewNamespaceOptions' => $loadScalarReview ? $this->scalarReviewNamespaceOptions() : [],
+            'scalarReviewFiltersActive' => $this->scalarReviewFiltersActive(),
+            'scalarTransformContext' => $this->scalarTransformModalOpen ? $this->scalarTransformContext() : ['rows' => [], 'selected_count' => 0],
+            'sharedKeyCandidateRows' => $loadSharedKeyCandidates ? $this->sharedKeyCandidateRows() : [],
             'reviewFinding' => $this->selectedFinding($this->reviewFindingId),
             'editFinding' => $editFinding,
             'dynamicReviewFinding' => $dynamicReviewFinding,
@@ -252,6 +374,8 @@ class TranslationWorkbenchEntries extends Component
             'dynamicReviewSources' => $this->dynamicReviewSources($this->dynamicReviewFindingId),
             'dynamicSourceLinkPreview' => $this->dynamicSourceLinkPreview(),
             'obsoleteSourceValueReview' => $this->obsoleteSourceValueReview(),
+            'langCleanupReview' => $this->langCleanupReview(),
+            'suspiciousKeyReview' => $this->suspiciousKeyReview(),
             'dynamicEditFinding' => $this->selectedFinding($this->editFindingId),
             'dynamicMultiEditFinding' => $this->selectedFinding($this->editFindingId),
             'editLocales' => $editLocales,
@@ -280,10 +404,12 @@ class TranslationWorkbenchEntries extends Component
             'localeCoverageRows' => $this->localeCoverageRows(),
             'scannerRunCallouts' => $this->scannerRunCallouts(),
             'scannerReportRows' => $this->scannerReportRows(),
-            'pipelineRunReport' => $this->pipelineRunReport(),
-            'langFileExportReport' => $this->langFileExportReport(),
-            'codeUpdatePlanReport' => $this->codeUpdatePlanReport(),
-            'codeUpdateApplyReport' => $this->codeUpdateApplyReport(),
+            'pipelineRunReport' => $pipelineRunReport,
+            'pipelineRunStatus' => $this->pipelineRunStatus(),
+            'langFileExportReport' => $langFileExportReport,
+            'suspiciousKeyedAdditionsReport' => $suspiciousKeyedAdditionsReport,
+            'codeUpdatePlanReport' => $loadCodeUpdatePlan ? $this->codeUpdatePlanReport() : null,
+            'codeUpdateApplyReport' => $loadCodeUpdatePlan ? $this->codeUpdateApplyReport() : null,
             'timelineHealthCallouts' => $this->timelineHealthCallouts(),
             'dynamicValuesHealthCallouts' => $this->dynamicValuesHealthCallouts(),
             'sourceMainLocale' => $this->sourceMainLocale(),
@@ -295,6 +421,9 @@ class TranslationWorkbenchEntries extends Component
             'supportedLocaleCounts' => $this->supportedLocaleSummaryRows(),
             'timelineEventCounts' => $this->distribution('translation_workbench_timeline_events', 'event_type'),
             'findingFiltersActive' => $this->findingFiltersActive(),
+            'currentFindingsTabFiltersActive' => $this->currentFindingsTabFiltersActive(),
+            'findingsTabFiltersActive' => $this->findingsTabFiltersActive(),
+            'findingsTabLoaded' => $this->findingsTabLoadedState(),
             'bulkEqualizeContext' => $this->bulkEqualizeContext(),
         ]);
     }
@@ -311,6 +440,9 @@ class TranslationWorkbenchEntries extends Component
         $this->findingSearch = trim((string) ($state['findingSearch'] ?? $defaults['findingSearch'] ?? $this->findingSearch));
         $this->findingSearchExact = (bool) ($state['findingSearchExact'] ?? $defaults['findingSearchExact'] ?? $this->findingSearchExact);
         $this->findingSearchCaseSensitive = (bool) ($state['findingSearchCaseSensitive'] ?? $defaults['findingSearchCaseSensitive'] ?? $this->findingSearchCaseSensitive);
+        $this->findingValueSearch = trim((string) ($state['findingValueSearch'] ?? $defaults['findingValueSearch'] ?? $this->findingValueSearch));
+        $this->findingValueSearchExact = (bool) ($state['findingValueSearchExact'] ?? $defaults['findingValueSearchExact'] ?? $this->findingValueSearchExact);
+        $this->findingValueSearchCaseSensitive = (bool) ($state['findingValueSearchCaseSensitive'] ?? $defaults['findingValueSearchCaseSensitive'] ?? $this->findingValueSearchCaseSensitive);
         $this->findingStatus = $this->normalizeOptionState($state['findingStatus'] ?? $defaults['findingStatus'] ?? $this->findingStatus);
         $this->findingKind = $this->normalizeOptionState($state['findingKind'] ?? $defaults['findingKind'] ?? $this->findingKind);
         $this->findingCandidateType = $this->normalizeOptionState($state['findingCandidateType'] ?? $defaults['findingCandidateType'] ?? $this->findingCandidateType);
@@ -322,12 +454,31 @@ class TranslationWorkbenchEntries extends Component
                 ?? $defaults['findingLiteralState']
                 ?? $this->legacyFindingLiteralState($state['findingSourceValue'] ?? $defaults['findingSourceValue'] ?? null),
         );
+        $this->findingCommentedOutScope = $this->normalizeFindingCommentedOutScope(
+            $state['findingCommentedOutScope'] ?? $defaults['findingCommentedOutScope'] ?? $this->findingCommentedOutScope,
+        );
+        $this->langCleanupSearch = trim((string) ($state['langCleanupSearch'] ?? $defaults['langCleanupSearch'] ?? $this->langCleanupSearch));
+        $this->langCleanupNamespace = $this->normalizeOptionState($state['langCleanupNamespace'] ?? $defaults['langCleanupNamespace'] ?? $this->langCleanupNamespace);
+        $this->langCleanupGroup = $this->normalizeOptionState($state['langCleanupGroup'] ?? $defaults['langCleanupGroup'] ?? $this->langCleanupGroup);
+        $this->langCleanupKeyType = $this->normalizeOptionState($state['langCleanupKeyType'] ?? $defaults['langCleanupKeyType'] ?? $this->langCleanupKeyType);
+        $this->langCleanupContext = $this->normalizeOptionState($state['langCleanupContext'] ?? $defaults['langCleanupContext'] ?? $this->langCleanupContext);
+        $this->langCleanupUsage = $this->normalizeOptionState($state['langCleanupUsage'] ?? $defaults['langCleanupUsage'] ?? $this->langCleanupUsage);
+        $this->langCleanupValueState = $this->normalizeOptionState($state['langCleanupValueState'] ?? $defaults['langCleanupValueState'] ?? $this->langCleanupValueState);
         $this->perPage = $this->normalizedPerPage($state['perPage'] ?? $defaults['perPage'] ?? $this->perPage);
         $this->findingSortField = $this->normalizeFindingSortField($state['findingSortField'] ?? $defaults['findingSortField'] ?? $this->findingSortField);
         $this->findingSortDirection = $this->normalizeSortDirection($state['findingSortDirection'] ?? $defaults['findingSortDirection'] ?? $this->findingSortDirection);
+        $this->scalarReviewSearch = trim((string) ($state['scalarReviewSearch'] ?? $defaults['scalarReviewSearch'] ?? $this->scalarReviewSearch));
+        $this->scalarReviewRisk = $this->normalizeScalarReviewRisk($state['scalarReviewRisk'] ?? $defaults['scalarReviewRisk'] ?? $this->scalarReviewRisk);
+        $this->scalarReviewNamespace = $this->normalizeOptionState($state['scalarReviewNamespace'] ?? $defaults['scalarReviewNamespace'] ?? $this->scalarReviewNamespace);
+        $this->scalarReviewProposal = $this->normalizeScalarReviewProposal($state['scalarReviewProposal'] ?? $defaults['scalarReviewProposal'] ?? $this->scalarReviewProposal);
+        $this->scalarReviewSortField = $this->normalizeScalarReviewSortField($state['scalarReviewSortField'] ?? $defaults['scalarReviewSortField'] ?? $this->scalarReviewSortField);
+        $this->scalarReviewSortDirection = $this->normalizeSortDirection($state['scalarReviewSortDirection'] ?? $defaults['scalarReviewSortDirection'] ?? $this->scalarReviewSortDirection);
         $this->showOverviewTabs = (bool) ($state['showOverviewTabs'] ?? $defaults['showOverviewTabs'] ?? $this->showOverviewTabs);
         $this->showObsoleteFindings = (bool) ($state['showObsoleteFindings'] ?? $defaults['showObsoleteFindings'] ?? $this->showObsoleteFindings);
         $this->editModalAutoCloseAfterSave = (bool) ($state['editModalAutoCloseAfterSave'] ?? $defaults['editModalAutoCloseAfterSave'] ?? true);
+        $this->exportReportLastEditedLimit = $this->normalizedExportReportLastEditedLimit(
+            $state['exportReportLastEditedLimit'] ?? $defaults['exportReportLastEditedLimit'] ?? $this->exportReportLastEditedLimit,
+        );
 
         $this->setPage(1);
     }
@@ -338,6 +489,9 @@ class TranslationWorkbenchEntries extends Component
             'findingSearch',
             'findingSearchExact',
             'findingSearchCaseSensitive',
+            'findingValueSearch',
+            'findingValueSearchExact',
+            'findingValueSearchCaseSensitive',
             'findingStatus',
             'findingKind',
             'findingCandidateType',
@@ -345,11 +499,36 @@ class TranslationWorkbenchEntries extends Component
             'findingGroup',
             'findingKeyRelation',
             'findingLiteralState',
+            'findingCommentedOutScope',
+            'langCleanupSearch',
+            'langCleanupNamespace',
+            'langCleanupGroup',
+            'langCleanupKeyType',
+            'langCleanupContext',
+            'langCleanupUsage',
+            'langCleanupValueState',
+            'scalarReviewSearch',
+            'scalarReviewRisk',
+            'scalarReviewNamespace',
+            'scalarReviewProposal',
             'perPage',
+            'exportReportLastEditedLimit',
             'showObsoleteFindings',
         ], true)) {
             $this->perPage = $this->normalizedPerPage();
-            $this->resetPage();
+            $this->exportReportLastEditedLimit = $this->normalizedExportReportLastEditedLimit();
+
+            if ($property === 'perPage') {
+                $this->resetPage();
+                $this->resetPage('cleanupPage');
+                $this->resetPage('scalarReviewPage');
+            } else {
+                $this->resetPage(match (true) {
+                    $this->isLangCleanupFilterProperty($property) => 'cleanupPage',
+                    $this->isScalarReviewFilterProperty($property) => 'scalarReviewPage',
+                    default => 'page',
+                });
+            }
         }
 
         if (in_array($property, self::PERSISTED_STATE_PROPERTIES, true)) {
@@ -361,6 +540,25 @@ class TranslationWorkbenchEntries extends Component
     {
         if ($this->findingGroup !== 'all' && ! in_array($this->findingGroup, $this->findingGroupOptions(), true)) {
             $this->findingGroup = 'all';
+            $this->persistUiState();
+        }
+    }
+
+    public function updatedFindingsActiveTab(): void
+    {
+        $this->markFindingsTabLoaded($this->findingsActiveTab);
+    }
+
+    public function selectFindingsTab(string $tab): void
+    {
+        $this->findingsActiveTab = $tab;
+        $this->markFindingsTabLoaded($tab);
+    }
+
+    public function updatedLangCleanupNamespace(): void
+    {
+        if ($this->langCleanupGroup !== 'all' && ! in_array($this->langCleanupGroup, $this->langCleanupGroupOptions(), true)) {
+            $this->langCleanupGroup = 'all';
             $this->persistUiState();
         }
     }
@@ -394,11 +592,223 @@ class TranslationWorkbenchEntries extends Component
             ->all();
     }
 
+    public function updatedScalarReviewSelectedLangValueIds(): void
+    {
+        $this->scalarReviewSelectedLangValueIds = collect($this->scalarReviewSelectedLangValueIds)
+            ->map(static fn(mixed $id): int => (int) $id)
+            ->filter(static fn(int $id): bool => $id > 0)
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    public function updatedScalarTransformIncludedLangValueIds(): void
+    {
+        $selectedIds = collect($this->scalarReviewSelectedLangValueIds)
+            ->map(static fn(mixed $id): int => (int) $id)
+            ->filter(static fn(int $id): bool => $id > 0)
+            ->unique();
+
+        $this->scalarTransformIncludedLangValueIds = collect($this->scalarTransformIncludedLangValueIds)
+            ->map(static fn(mixed $id): int => (int) $id)
+            ->filter(static fn(int $id): bool => $id > 0)
+            ->intersect($selectedIds)
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    public function clearScalarReviewSelection(): void
+    {
+        $this->scalarReviewSelectedLangValueIds = [];
+        $this->closeScalarTransformModal();
+    }
+
+    public function openScalarTransformModal(): void
+    {
+        $rows = $this->scalarTransformRows();
+
+        if ($rows->isEmpty()) {
+            Flux::toast(
+                heading: __('No scalar keys selected'),
+                text: __('Select at least one scalar key candidate before opening the transform review.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->scalarTransformTargetPath = '';
+        $this->scalarTransformIncludedLangValueIds = $rows
+            ->pluck('id')
+            ->map(static fn(mixed $id): int => (int) $id)
+            ->values()
+            ->all();
+        $this->scalarTransformModalOpen = true;
+    }
+
+    public function closeScalarTransformModal(): void
+    {
+        $this->scalarTransformModalOpen = false;
+        $this->scalarTransformTargetPath = '';
+        $this->scalarTransformIncludedLangValueIds = [];
+    }
+
+    public function confirmScalarTransformToArray(): void
+    {
+        $context = $this->scalarTransformContext();
+        $rows = collect($context['rows'] ?? [])
+            ->where('is_included', true)
+            ->values();
+
+        if ($rows->isEmpty()) {
+            Flux::toast(
+                heading: __('No scalar keys included'),
+                text: __('Include at least one selected scalar key before confirming the transform.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        if (($context['invalid_count'] ?? 0) > 0 || ($context['duplicate_target_count'] ?? 0) > 0 || ($context['conflict_count'] ?? 0) > 0) {
+            Flux::toast(
+                heading: __('Transform blocked'),
+                text: __('Resolve invalid target keys, duplicate targets or existing lang-value conflicts for included rows before transforming scalar keys.'),
+                variant: 'danger',
+            );
+
+            return;
+        }
+
+        $changed = 0;
+        $timelineRecorder = app(TranslationWorkbenchTimelineRecorder::class);
+
+        DB::transaction(function () use ($rows, $timelineRecorder, &$changed): void {
+            foreach ($rows as $row) {
+                $oldTranslationKey = $this->nullableString($row['translation_key'] ?? null);
+                $newTranslationKey = $this->nullableString($row['target_translation_key'] ?? null);
+
+                if ($oldTranslationKey === null || $newTranslationKey === null || $oldTranslationKey === $newTranslationKey) {
+                    continue;
+                }
+
+                $keys = TranslationWorkbenchKey::query()
+                    ->where('translation_key', $oldTranslationKey)
+                    ->get();
+
+                foreach ($keys as $key) {
+                    $oldValues = $key->only(['translation_key', 'namespace', 'group', 'path_key', 'scope', 'key_segment_domain', 'key_segment_section', 'key_segment_context', 'key_segment_extra', 'key_segment_name', 'is_ui_key', 'key_type', 'review_status']);
+                    $attributes = [
+                        ...$this->keyStructureFromTranslationKey($newTranslationKey, $key),
+                        'review_status' => 'reviewed',
+                        'reviewed_at' => now(),
+                        'reviewed_by_user_id' => Auth::id(),
+                    ];
+
+                    $key->forceFill($attributes)->save();
+
+                    $newValues = $key->only(array_keys($oldValues));
+                    $review = TranslationWorkbenchReview::query()->create([
+                        'key_id' => $key->id,
+                        'finding_id' => null,
+                        'review_type' => 'scalar_key_transform',
+                        'decision' => 'scalar_key_transformed_to_array',
+                        'old_values' => $oldValues,
+                        'new_values' => $newValues,
+                        'meta' => [
+                            'source' => 'translation-workbench:scalar-review',
+                            'lang_value_id' => $row['id'],
+                        ],
+                        'reviewed_by_user_id' => Auth::id(),
+                        'reviewed_at' => now(),
+                    ]);
+
+                    $timelineRecorder->recordReviewEvent(
+                        review: $review,
+                        eventType: 'scalar_key_transformed_to_array',
+                        oldValues: $oldValues,
+                        newValues: $newValues,
+                        context: [
+                            'source' => 'translation-workbench:scalar-review',
+                            'lang_value_id' => $row['id'],
+                        ],
+                    );
+                }
+
+                $langValueChanges = $this->rekeyScalarLangValues($oldTranslationKey, $newTranslationKey);
+
+                $timelineRecorder->record(
+                    eventType: 'scalar_lang_values_rekeyed',
+                    oldValues: [
+                        'translation_key' => $oldTranslationKey,
+                    ],
+                    newValues: [
+                        'translation_key' => $newTranslationKey,
+                        ...$langValueChanges,
+                    ],
+                    context: [
+                        'source' => 'translation-workbench:scalar-review',
+                        'lang_value_id' => $row['id'],
+                    ],
+                );
+
+                $changed++;
+            }
+        });
+
+        if ($changed === 0) {
+            Flux::toast(
+                heading: __('No change'),
+                text: __('The selected scalar keys already use the configured target keys.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->clearScalarReviewSelection();
+
+        Flux::toast(
+            heading: __('Scalar keys transformed'),
+            text: trans_choice('{1} One scalar key was transformed.|[2,*] :count scalar keys were transformed.', $changed, ['count' => $changed]),
+            variant: 'success',
+        );
+    }
+
+    private function resetScalarReviewFilterState(): void
+    {
+        $this->scalarReviewSearch = '';
+        $this->scalarReviewRisk = 'all';
+        $this->scalarReviewNamespace = 'all';
+        $this->scalarReviewProposal = 'all';
+    }
+
     public function resetFindingFilters(): void
+    {
+        match ($this->findingsActiveTab) {
+            'lang-cleanup' => $this->resetLangCleanupFilterState(),
+            'code-update-plan' => $this->resetCodeUpdatePlanFilterState(),
+            'scalar-review' => $this->resetScalarReviewFilterState(),
+            default => $this->resetWorkFindingFilterState(),
+        };
+
+        $this->resetPage(match ($this->findingsActiveTab) {
+            'lang-cleanup' => 'cleanupPage',
+            'scalar-review' => 'scalarReviewPage',
+            default => 'page',
+        });
+        $this->persistUiState();
+    }
+
+    private function resetWorkFindingFilterState(): void
     {
         $this->findingSearch = '';
         $this->findingSearchExact = false;
         $this->findingSearchCaseSensitive = false;
+        $this->findingValueSearch = '';
+        $this->findingValueSearchExact = false;
+        $this->findingValueSearchCaseSensitive = false;
         $this->findingStatus = 'all';
         $this->findingKind = 'all';
         $this->findingCandidateType = 'all';
@@ -406,13 +816,35 @@ class TranslationWorkbenchEntries extends Component
         $this->findingGroup = 'all';
         $this->findingKeyRelation = 'all';
         $this->findingLiteralState = 'all';
+        $this->findingCommentedOutScope = 'commentedOutPresentNo';
         $this->showObsoleteFindings = false;
+    }
 
-        $this->resetPage();
+    public function resetLangCleanupFilters(): void
+    {
+        $this->resetLangCleanupFilterState();
+
+        $this->resetPage('cleanupPage');
         $this->persistUiState();
     }
 
+    private function resetLangCleanupFilterState(): void
+    {
+        $this->langCleanupSearch = '';
+        $this->langCleanupNamespace = 'all';
+        $this->langCleanupGroup = 'all';
+        $this->langCleanupKeyType = 'all';
+        $this->langCleanupContext = 'all';
+        $this->langCleanupUsage = 'all';
+        $this->langCleanupValueState = 'all';
+    }
+
     public function resetCodeUpdatePlanFilters(): void
+    {
+        $this->resetCodeUpdatePlanFilterState();
+    }
+
+    private function resetCodeUpdatePlanFilterState(): void
     {
         $this->codeUpdatePlanState = 'all';
         $this->codeUpdatePlanSearch = '';
@@ -423,6 +855,156 @@ class TranslationWorkbenchEntries extends Component
         $this->refreshFindingsTab($this->findingsActiveTab);
     }
 
+    public function refreshPipelineRunStatus(): void
+    {
+        // Intentionally empty: wire:poll only needs to trigger a Livewire refresh.
+    }
+
+    public function startCompletePipelineRun(): void
+    {
+        $tracker = app(TranslationWorkbenchPipelineRunTracker::class);
+        $latest = $tracker->latest();
+
+        if ($latest && in_array((string) $latest->status, ['pending', 'running'], true)) {
+            Flux::toast(
+                heading: __('Pipeline already running'),
+                text: __('Wait until the current Translation Workbench run has finished before starting another one.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        if (! $tracker->tablesExist()) {
+            Flux::toast(
+                heading: __('Pipeline run tables missing'),
+                text: __('Run the latest migrations before starting Translation Workbench from the UI.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $writePreflightFailures = $this->pipelineLangWritePreflightFailures();
+
+        if ($writePreflightFailures !== []) {
+            Flux::toast(
+                heading: __('Lang files are not writable'),
+                text: __('The UI runner cannot write :path. Fix file permissions or run the complete pipeline from the console.', [
+                    'path' => $writePreflightFailures[0],
+                ]),
+                variant: 'danger',
+            );
+
+            return;
+        }
+
+        $run = $tracker->create('translation:workbench', [
+            '--complete' => true,
+            'started_from' => 'ui',
+            'user_id' => Auth::id(),
+        ]);
+
+        if (! $run) {
+            Flux::toast(
+                heading: __('Pipeline run could not be created'),
+                text: __('The Translation Workbench pipeline tracker is not available.'),
+                variant: 'danger',
+            );
+
+            return;
+        }
+
+        $logPath = storage_path(sprintf('logs/translation-workbench-pipeline-%d.log', $run->id));
+        File::ensureDirectoryExists(dirname($logPath));
+        $phpBinary = PHP_BINDIR . DIRECTORY_SEPARATOR . 'php';
+        $phpCommand = is_executable($phpBinary) ? $phpBinary : 'php';
+        $command = implode(' ', [
+            'nohup',
+            escapeshellarg($phpCommand),
+            escapeshellarg(base_path('artisan')),
+            'translation:workbench',
+            '--complete',
+            '--pipeline-run-id=' . (int) $run->id,
+            '>',
+            escapeshellarg($logPath),
+            '2>&1',
+            '&',
+            'echo',
+            '$!',
+        ]);
+        $output = [];
+        $exitCode = 0;
+
+        exec($command, $output, $exitCode);
+
+        if ($exitCode !== 0) {
+            $tracker->fail($run, 'Could not start background pipeline process.');
+            Flux::toast(
+                heading: __('Pipeline start failed'),
+                text: __('The background process could not be started. Check PHP permissions and logs.'),
+                variant: 'danger',
+            );
+
+            return;
+        }
+
+        $run->forceFill([
+            'meta' => [
+                ...((array) ($run->meta ?? [])),
+                'pid' => isset($output[0]) ? (int) $output[0] : null,
+                'log_path' => $logPath,
+            ],
+        ])->save();
+
+        $this->findingsActiveTab = 'last-run';
+        $this->markFindingsTabLoaded('last-run');
+
+        Flux::toast(
+            heading: __('Pipeline started'),
+            text: __('translation:workbench --complete is running in the background.'),
+            variant: 'success',
+        );
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function pipelineLangWritePreflightFailures(): array
+    {
+        $langPath = lang_path();
+
+        if (! File::exists($langPath) || ! is_writable($langPath)) {
+            return [$this->relativePath($langPath)];
+        }
+
+        $paths = collect(File::directories($langPath))
+            ->reject(static fn(string $path): bool => basename($path) === 'vendor')
+            ->flatMap(function (string $directory): array {
+                return [
+                    $directory,
+                    ...collect(File::files($directory))
+                        ->filter(static fn($file): bool => $file->getExtension() === 'php')
+                        ->map(static fn($file): string => $file->getPathname())
+                        ->all(),
+                ];
+            });
+
+        return $paths
+            ->filter(static fn(string $path): bool => ! is_writable($path))
+            ->map(fn(string $path): string => $this->relativePath($path))
+            ->values()
+            ->all();
+    }
+
+    private function relativePath(string $path): string
+    {
+        return Str::of($path)
+            ->replace('\\', '/')
+            ->after(Str::of(base_path())->replace('\\', '/')->append('/')->toString())
+            ->toString();
+    }
+
     public function refreshFindingsAllTabs(): void
     {
         $results = [
@@ -430,6 +1012,7 @@ class TranslationWorkbenchEntries extends Component
             'code_plan' => $this->refreshCodeUpdatePlanReport(),
             'code_apply' => $this->refreshCodeUpdateApplyReportFile(),
             'shared_key_candidates' => $this->refreshSharedKeyCandidates(),
+            'suspicious_keys' => $this->refreshSuspiciousKeyedAdditions(),
         ];
         $failed = collect($results)->filter(static fn(bool $success): bool => ! $success)->keys();
 
@@ -457,6 +1040,7 @@ class TranslationWorkbenchEntries extends Component
         $success = match ($tab) {
             'shared-key-candidates' => $this->refreshSharedKeyCandidates(),
             'export-report' => $this->refreshLangFileExportReport(),
+            'suspicious-keys' => $this->refreshSuspiciousKeyedAdditions(),
             'code-update-plan' => $this->refreshCodeUpdatePlanReport()
                 && $this->refreshCodeUpdateApplyReportFile(),
             default => true,
@@ -1023,6 +1607,23 @@ class TranslationWorkbenchEntries extends Component
         $this->persistUiState();
     }
 
+    public function sortScalarReviewBy(string $field): void
+    {
+        if (! in_array($field, ['risk', 'translation_key', 'values', 'proposal', 'usage'], true)) {
+            return;
+        }
+
+        if ($this->scalarReviewSortField === $field) {
+            $this->scalarReviewSortDirection = $this->scalarReviewSortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->scalarReviewSortField = $field;
+            $this->scalarReviewSortDirection = $field === 'risk' ? 'desc' : 'asc';
+        }
+
+        $this->resetPage('scalarReviewPage');
+        $this->persistUiState();
+    }
+
     public function toggleOverviewTabs(): void
     {
         $this->showOverviewTabs = ! $this->showOverviewTabs;
@@ -1073,6 +1674,43 @@ class TranslationWorkbenchEntries extends Component
         $this->persistUiState();
     }
 
+    public function toggleFindingValueSearchExact(): void
+    {
+        $this->findingValueSearchExact = ! $this->findingValueSearchExact;
+        $this->resetPage();
+        $this->persistUiState();
+    }
+
+    public function toggleFindingValueSearchCaseSensitive(): void
+    {
+        $this->findingValueSearchCaseSensitive = ! $this->findingValueSearchCaseSensitive;
+        $this->resetPage();
+        $this->persistUiState();
+    }
+
+    public function reduceFindingValueSearchFirstSegment(): void
+    {
+        $search = trim($this->findingValueSearch);
+
+        if ($search === '' || ! str_contains($search, '.')) {
+            return;
+        }
+
+        $segments = collect(explode('.', $search))
+            ->map(static fn(string $segment): string => trim($segment))
+            ->filter(static fn(string $segment): bool => $segment !== '')
+            ->values();
+
+        if ($segments->count() <= 1) {
+            return;
+        }
+
+        $this->findingValueSearch = $segments->skip(1)->implode('.');
+        $this->findingValueSearchExact = false;
+        $this->resetPage();
+        $this->persistUiState();
+    }
+
     public function updatedShowOverviewTabs(): void
     {
         $this->persistUiState();
@@ -1084,7 +1722,144 @@ class TranslationWorkbenchEntries extends Component
         $this->reviewModalOpen = true;
     }
 
+    public function openSuspiciousKeyReviewModal(string $sourceSignature): void
+    {
+        $sourceSignature = trim($sourceSignature);
+
+        if ($sourceSignature === '') {
+            Flux::toast(
+                heading: __('Review context missing'),
+                text: __('The suspicious keyed addition report row does not contain a source signature. Refresh the report and try again.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $this->suspiciousKeyReviewSourceSignature = $sourceSignature;
+        $this->suspiciousKeyReviewModalOpen = true;
+    }
+
+    public function closeSuspiciousKeyReviewModal(): void
+    {
+        $this->suspiciousKeyReviewModalOpen = false;
+        $this->suspiciousKeyReviewSourceSignature = null;
+    }
+
+    public function reviewSuspiciousKeyProvenance(string $decision): void
+    {
+        $allowedDecisions = [
+            'mark_as_valid_existing_key',
+            'needs_literal_restore',
+            'needs_key_review',
+            'ignore_for_now',
+        ];
+
+        if (! in_array($decision, $allowedDecisions, true)) {
+            return;
+        }
+
+        $context = $this->suspiciousKeyReview();
+
+        if (! $context) {
+            Flux::toast(
+                heading: __('Review context missing'),
+                text: __('Refresh the suspicious-key report and open the review again.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $row = $context['row'];
+        $finding = $context['finding'];
+        $key = $context['key'];
+        $oldValues = [
+            'state' => $row['state'] ?? null,
+            'translation_key' => $row['translation_key'] ?? null,
+            'source_lang_value_exists' => $row['source_lang_value_exists'] ?? false,
+            'active_usage_count' => $row['active_usage_count'] ?? 0,
+            'reviewed_usage_count' => $row['reviewed_usage_count'] ?? 0,
+        ];
+        $newValues = [
+            'decision' => $decision,
+            'reviewed_at' => now()->toISOString(),
+            'reviewed_by_user_id' => Auth::id(),
+        ];
+
+        DB::transaction(function () use ($finding, $key, $row, $decision, $oldValues, $newValues): void {
+            $review = TranslationWorkbenchReview::query()->create([
+                'key_id' => $key?->id,
+                'finding_id' => $finding?->id,
+                'review_type' => 'suspicious_key_provenance',
+                'decision' => $decision,
+                'old_values' => $oldValues,
+                'new_values' => $newValues,
+                'meta' => [
+                    'source' => 'translation-workbench:suspicious-keys',
+                    'source_signature' => $row['source_signature'] ?? null,
+                    'source_path' => $row['source_path'] ?? null,
+                    'source_line' => $row['source_line'] ?? null,
+                    'translation_key' => $row['translation_key'] ?? null,
+                    'suggested_key' => $row['suggested_key'] ?? null,
+                    'raw_expression' => $row['raw_expression'] ?? null,
+                    'literal_text_suggested' => $row['literal_text_suggested'] ?? null,
+                    'source_lang_value' => $row['source_lang_value'] ?? null,
+                ],
+                'reviewed_by_user_id' => Auth::id(),
+                'reviewed_at' => now(),
+            ]);
+
+            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
+                review: $review,
+                eventType: 'suspicious_key_reviewed',
+                oldValues: $oldValues,
+                newValues: $newValues,
+                context: [
+                    'source' => 'translation-workbench:suspicious-keys',
+                    'decision' => $decision,
+                    'source_signature' => $row['source_signature'] ?? null,
+                    'translation_key' => $row['translation_key'] ?? null,
+                ],
+            );
+        });
+
+        $this->refreshSuspiciousKeyedAdditions();
+        $this->closeSuspiciousKeyReviewModal();
+
+        Flux::toast(
+            heading: __('Suspicious key reviewed'),
+            text: __('The provenance decision has been saved and the suspicious-key report was refreshed.'),
+            variant: 'success',
+        );
+    }
+
     public function showExportReportKeyInWorkFindings(string $translationKey): void
+    {
+        $this->showTranslationKeyInWorkFindings($translationKey);
+    }
+
+    public function showExportReportKeyInWorkFindingsFromBase64(string $translationKey): void
+    {
+        $this->showExportReportKeyInWorkFindings($this->decodeBase64Argument($translationKey));
+    }
+
+    public function showLastEditedTranslationInWorkFindings(int $findingId, string $translationKey): void
+    {
+        $this->showTranslationKeyInWorkFindings($translationKey);
+    }
+
+    public function showLastEditedTranslationInWorkFindingsFromBase64(int $findingId, string $translationKey): void
+    {
+        $this->showLastEditedTranslationInWorkFindings($findingId, $this->decodeBase64Argument($translationKey));
+    }
+
+    public function openObsoleteSourceValueReviewFromBase64(string $translationKey): void
+    {
+        $this->openObsoleteSourceValueReview($this->decodeBase64Argument($translationKey));
+    }
+
+    public function showTranslationKeyInWorkFindings(string $translationKey): void
     {
         $translationKey = trim($translationKey);
 
@@ -1093,6 +1868,7 @@ class TranslationWorkbenchEntries extends Component
         }
 
         $this->findingsActiveTab = 'work-findings';
+        $this->markFindingsTabLoaded('work-findings');
         $this->findingSearch = $translationKey;
         $this->findingSearchExact = false;
         $this->findingSearchCaseSensitive = false;
@@ -1113,6 +1889,13 @@ class TranslationWorkbenchEntries extends Component
             text: __('Showing findings matching :key.', ['key' => $translationKey]),
             variant: 'success',
         );
+    }
+
+    private function decodeBase64Argument(string $value): string
+    {
+        $decoded = base64_decode($value, true);
+
+        return is_string($decoded) ? $decoded : '';
     }
 
     public function openObsoleteSourceValueReview(string $translationKey): void
@@ -1245,6 +2028,179 @@ class TranslationWorkbenchEntries extends Component
                 ? __('The export report has been refreshed.')
                 : __('The source value was updated, but the export report file could not be refreshed because it is not writable by the web process. Run the export dry-run command once to refresh it.'),
             variant: 'success',
+        );
+    }
+
+    public function openLangCleanupReview(int $inventoryId): void
+    {
+        if ($inventoryId <= 0) {
+            return;
+        }
+
+        $this->langCleanupInventoryId = $inventoryId;
+        $this->langCleanupReviewModalOpen = true;
+    }
+
+    public function closeLangCleanupReview(): void
+    {
+        $this->langCleanupReviewModalOpen = false;
+        $this->langCleanupInventoryId = null;
+    }
+
+    public function saveLangCleanupReview(string $decision): void
+    {
+        $decision = trim($decision);
+        $allowedDecisions = ['keep', 'needs_review', 'obsolete'];
+
+        if (! in_array($decision, $allowedDecisions, true)) {
+            Flux::toast(
+                heading: __('Unknown cleanup decision'),
+                text: __('The selected cleanup decision is not supported.'),
+                variant: 'warning',
+            );
+
+            return;
+        }
+
+        $reviewContext = $this->langCleanupReview();
+        $inventory = $reviewContext['inventory'] ?? null;
+
+        if (! $inventory instanceof TranslationWorkbenchKeyInventory) {
+            Flux::toast(
+                heading: __('Cleanup context unavailable'),
+                text: __('Refresh the lang cleanup tab and open the candidate again.'),
+                variant: 'warning',
+            );
+
+            $this->closeLangCleanupReview();
+
+            return;
+        }
+
+        $translationKey = trim((string) $inventory->translation_key);
+        $sourceLocale = $this->sourceMainLocale();
+        $key = TranslationWorkbenchKey::query()
+            ->where('translation_key', $translationKey)
+            ->orWhere('suggested_key', $translationKey)
+            ->first();
+
+        $langValuesBefore = TranslationWorkbenchLangValue::query()
+            ->where('translation_key', $translationKey)
+            ->orderBy('locale')
+            ->orderBy('id')
+            ->get()
+            ->map(fn(TranslationWorkbenchLangValue $langValue): array => $langValue->only([
+                'id',
+                'locale',
+                'namespace',
+                'lang_key',
+                'translation_key',
+                'value',
+                'status',
+            ]))
+            ->all();
+
+        $obsoleteCount = 0;
+
+        DB::transaction(function () use ($decision, $inventory, $key, $translationKey, $sourceLocale, $langValuesBefore, &$obsoleteCount): void {
+            if ($decision === 'obsolete') {
+                $obsoleteCount = TranslationWorkbenchLangValue::query()
+                    ->where('translation_key', $translationKey)
+                    ->where('status', 'active')
+                    ->update([
+                        'status' => 'obsolete',
+                        'last_seen_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+
+                $this->refreshLangCleanupInventoryCounts($inventory, $sourceLocale);
+            }
+
+            $langValuesAfter = TranslationWorkbenchLangValue::query()
+                ->where('translation_key', $translationKey)
+                ->orderBy('locale')
+                ->orderBy('id')
+                ->get()
+                ->map(fn(TranslationWorkbenchLangValue $langValue): array => $langValue->only([
+                    'id',
+                    'locale',
+                    'namespace',
+                    'lang_key',
+                    'translation_key',
+                    'value',
+                    'status',
+                ]))
+                ->all();
+
+            $review = TranslationWorkbenchReview::query()->create([
+                'key_id' => $key?->id,
+                'finding_id' => null,
+                'review_type' => 'lang_cleanup',
+                'decision' => $decision,
+                'old_values' => [
+                    'inventory' => $inventory->only([
+                        'id',
+                        'translation_key',
+                        'namespace',
+                        'group',
+                        'candidate_for_lang_delete',
+                        'finding_active_count',
+                        'finding_commented_out_count',
+                        'finding_obsolete_count',
+                        'relation_active_count',
+                    ]),
+                    'lang_values' => $langValuesBefore,
+                ],
+                'new_values' => [
+                    'decision' => $decision,
+                    'obsolete_lang_values_count' => $obsoleteCount,
+                    'inventory' => $inventory->fresh()?->only([
+                        'id',
+                        'translation_key',
+                        'source_value_active_count',
+                        'source_value_obsolete_count',
+                        'target_value_active_count',
+                        'target_value_obsolete_count',
+                        'candidate_for_lang_delete',
+                    ]),
+                    'lang_values' => $langValuesAfter,
+                ],
+                'meta' => [
+                    'source' => 'translation-workbench:lang-cleanup',
+                    'inventory_id' => $inventory->id,
+                    'translation_key' => $translationKey,
+                ],
+                'reviewed_by_user_id' => Auth::id(),
+                'reviewed_at' => now(),
+            ]);
+
+            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
+                review: $review,
+                eventType: match ($decision) {
+                    'keep' => 'lang_value_kept',
+                    'obsolete' => 'lang_value_marked_obsolete',
+                    default => 'lang_cleanup_needs_review',
+                },
+                oldValues: $review->old_values,
+                newValues: $review->new_values,
+                context: $review->meta,
+            );
+        });
+
+        $reportRefreshed = $this->refreshLangFileExportReport();
+
+        $this->closeLangCleanupReview();
+
+        Flux::toast(
+            heading: match ($decision) {
+                'keep' => __('Lang cleanup candidate kept'),
+                'obsolete' => __('Lang values marked obsolete'),
+                default => __('Lang cleanup candidate marked for review'),
+            },
+            text: $decision === 'obsolete'
+                ? __('Marked :count active lang values obsolete. Refresh/export will remove them from lang files.', ['count' => number_format($obsoleteCount)])
+                : ($reportRefreshed ? __('The export report has been refreshed.') : __('The cleanup decision was saved. Run the export dry-run command once to refresh the report file.')),
+            variant: $decision === 'obsolete' ? 'success' : 'success',
         );
     }
 
@@ -3702,9 +4658,258 @@ class TranslationWorkbenchEntries extends Component
     }
 
     /**
+     * @return array<int, array{namespace: string, paths: array<int, array{key_path: string, tree_path: array<int, string>, usage_count: int, key_count: int, examples: array<int, string>}>, tree: array<int, array{name: string, path: string, children: array}>}>
+     */
+    private function keyPathRows(): array
+    {
+        if (! $this->hasTables([
+            'translation_workbench_lang_values',
+        ])) {
+            return [];
+        }
+
+        $sourceLocale = $this->sourceMainLocale();
+        $targetLocale = (string) ($this->editLocales()['active'] ?? app()->getLocale());
+        $namespaceFilter = trim((string) $this->findingNamespace);
+
+        $query = DB::table('translation_workbench_lang_values as source_values')
+            ->join('translation_workbench_lang_values as target_values', function ($join) use ($targetLocale): void {
+                $join
+                    ->on('target_values.translation_key', '=', 'source_values.translation_key')
+                    ->where('target_values.locale', $targetLocale)
+                    ->where('target_values.status', 'active')
+                    ->whereRaw("NULLIF(BTRIM(target_values.value), '') IS NOT NULL");
+            })
+            ->where('source_values.locale', $sourceLocale)
+            ->where('source_values.status', 'active')
+            ->whereRaw("NULLIF(BTRIM(source_values.value), '') IS NOT NULL")
+            ->whereRaw("NULLIF(BTRIM(source_values.translation_key), '') IS NOT NULL");
+
+        if ($namespaceFilter !== '' && $namespaceFilter !== 'all') {
+            $query->where('source_values.namespace', $namespaceFilter);
+        }
+
+        $keySearch = trim($this->findingValueSearch);
+
+        if ($keySearch !== '') {
+            $query->where(function ($query) use ($keySearch): void {
+                $this->whereFindingSearchValue(
+                    $query,
+                    'source_values.translation_key',
+                    $keySearch,
+                    'orWhere',
+                    'orWhereRaw',
+                    $this->findingValueSearchExact,
+                    $this->findingValueSearchCaseSensitive,
+                );
+                $this->whereFindingSearchValue(
+                    $query,
+                    'source_values.lang_key',
+                    $keySearch,
+                    'orWhere',
+                    'orWhereRaw',
+                    $this->findingValueSearchExact,
+                    $this->findingValueSearchCaseSensitive,
+                );
+            });
+        }
+
+        $rows = $query
+            ->select([
+                'source_values.translation_key',
+                'source_values.namespace',
+            ])
+            ->selectRaw('COUNT(DISTINCT target_values.locale) + 1 as locale_count')
+            ->groupBy('source_values.translation_key', 'source_values.namespace')
+            ->orderByRaw(
+                $namespaceFilter !== '' && $namespaceFilter !== 'all'
+                    ? 'CASE WHEN source_values.namespace = ? THEN 0 ELSE 1 END'
+                    : 'source_values.namespace',
+                $namespaceFilter !== '' && $namespaceFilter !== 'all' ? [$namespaceFilter] : [],
+            )
+            ->orderBy('source_values.namespace')
+            ->orderBy('source_values.translation_key')
+            ->limit(2000)
+            ->get();
+        $usageCounts = $this->keyPathUsageCounts(
+            $rows
+                ->pluck('translation_key')
+                ->map(static fn(mixed $key): string => (string) $key)
+                ->filter()
+                ->unique()
+                ->values()
+                ->all(),
+        );
+
+        return $rows
+            ->map(function ($row) use ($usageCounts): ?array {
+                $translationKey = trim((string) $row->translation_key);
+                $segments = collect(explode('.', $translationKey))
+                    ->map(static fn(string $segment): string => trim($segment))
+                    ->filter(static fn(string $segment): bool => $segment !== '')
+                    ->values();
+
+                if ($segments->count() < 3) {
+                    return null;
+                }
+
+                $namespace = (string) ($segments->first() ?: $row->namespace ?: 'unknown');
+                $pathSegments = $segments->slice(1, -1)->values();
+
+                if ($pathSegments->isEmpty()) {
+                    return null;
+                }
+
+                return [
+                    'namespace' => $namespace,
+                    'key_path' => $pathSegments->implode('.'),
+                    'tree_path' => $segments->slice(1)->values()->all(),
+                    'translation_key' => $translationKey,
+                    'usage_count' => (int) ($usageCounts[$translationKey] ?? 0),
+                ];
+            })
+            ->filter()
+            ->groupBy('namespace')
+            ->map(function ($namespaceRows, string $namespace): array {
+                $paths = $namespaceRows
+                    ->groupBy('key_path')
+                    ->map(function ($pathRows, string $keyPath): array {
+                        return [
+                            'key_path' => $keyPath,
+                            'tree_path' => explode('.', $keyPath),
+                            'usage_count' => (int) $pathRows->sum('usage_count'),
+                            'key_count' => $pathRows->count(),
+                            'examples' => $pathRows
+                                ->pluck('translation_key')
+                                ->unique()
+                                ->take(4)
+                                ->values()
+                                ->all(),
+                        ];
+                    })
+                    ->sortBy('key_path')
+                    ->values()
+                    ->all();
+
+                return [
+                    'namespace' => $namespace,
+                    'paths' => $paths,
+                    'tree' => $this->buildKeyPathTree($namespaceRows->values()->all()),
+                ];
+            })
+            ->sortKeys()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  array<int, array{tree_path: array<int, string>}>  $paths
+     * @return array<int, array{name: string, path: string, children: array}>
+     */
+    private function buildKeyPathTree(array $paths): array
+    {
+        $tree = [];
+
+        foreach ($paths as $path) {
+            $segments = collect($path['tree_path'] ?? [])
+                ->map(static fn(string $segment): string => trim($segment))
+                ->filter(static fn(string $segment): bool => $segment !== '')
+                ->values();
+
+            $cursor = &$tree;
+            $currentPath = [];
+
+            foreach ($segments as $segment) {
+                $currentPath[] = $segment;
+
+                if (! array_key_exists($segment, $cursor)) {
+                    $cursor[$segment] = [
+                        'name' => $segment,
+                        'path' => implode('.', $currentPath),
+                        'children' => [],
+                    ];
+                }
+
+                $cursor = &$cursor[$segment]['children'];
+            }
+
+            unset($cursor);
+        }
+
+        return $this->sortKeyPathTree($tree);
+    }
+
+    /**
+     * @param  array<string, array{name: string, path: string, children: array}>  $nodes
+     * @return array<int, array{name: string, path: string, children: array}>
+     */
+    private function sortKeyPathTree(array $nodes): array
+    {
+        ksort($nodes, SORT_NATURAL);
+
+        return collect($nodes)
+            ->map(function (array $node): array {
+                $node['children'] = $this->sortKeyPathTree($node['children'] ?? []);
+
+                return $node;
+            })
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  array<int, string>  $translationKeys
+     * @return array<string, int>
+     */
+    private function keyPathUsageCounts(array $translationKeys): array
+    {
+        if ($translationKeys === [] || ! $this->hasTables([
+            'translation_workbench_findings',
+            'translation_workbench_key_findings',
+            'translation_workbench_keys',
+        ])) {
+            return [];
+        }
+
+        $keyLinks = DB::table('translation_workbench_key_findings')
+            ->selectRaw('finding_id, MIN(key_id) as key_id')
+            ->where('status', 'active')
+            ->groupBy('finding_id');
+
+        return DB::table('translation_workbench_findings as findings')
+            ->leftJoinSub($keyLinks, 'key_links', function ($join): void {
+                $join->on('key_links.finding_id', '=', 'findings.id');
+            })
+            ->join('translation_workbench_keys as keys', 'keys.id', '=', 'key_links.key_id')
+            ->where('findings.status', '!=', 'obsolete')
+            ->where('findings.status', '!=', 'commented_out')
+            ->where('keys.status', '!=', 'obsolete')
+            ->whereIn('keys.translation_key', $translationKeys)
+            ->select('keys.translation_key')
+            ->selectRaw('COUNT(DISTINCT findings.id) as usage_count')
+            ->groupBy('keys.translation_key')
+            ->pluck('usage_count', 'translation_key')
+            ->map(static fn(mixed $count): int => (int) $count)
+            ->all();
+    }
+
+    /**
+     * @return array{namespace: string, value_search: string, value_search_exact: bool, value_search_case_sensitive: bool}
+     */
+    private function keyPathContext(): array
+    {
+        return [
+            'namespace' => $this->findingNamespace,
+            'value_search' => trim($this->findingValueSearch),
+            'value_search_exact' => $this->findingValueSearchExact,
+            'value_search_case_sensitive' => $this->findingValueSearchCaseSensitive,
+        ];
+    }
+
+    /**
      * @return array<int, array<string, mixed>>
      */
-    private function lastEditedTranslationRows(): array
+    private function lastEditedTranslationRows(?int $limit = null): array
     {
         if (! $this->hasTables(['translation_workbench_lang_values', 'translation_workbench_keys'])) {
             return [];
@@ -3727,7 +4932,7 @@ class TranslationWorkbenchEntries extends Component
             ->whereNotNull('key_id')
             ->groupBy('key_id');
 
-        return DB::table('translation_workbench_lang_values as target_values')
+        $rows = DB::table('translation_workbench_lang_values as target_values')
             ->join('translation_workbench_lang_values as source_values', function ($join) use ($sourceLocale): void {
                 $join
                     ->on('source_values.translation_key', '=', 'target_values.translation_key')
@@ -3747,15 +4952,22 @@ class TranslationWorkbenchEntries extends Component
             ->whereRaw("NULLIF(BTRIM(target_values.value), '') IS NOT NULL")
             ->orderByDesc('target_values.updated_at')
             ->orderByDesc('target_values.id')
-            ->limit(25)
+            ->limit($this->normalizedExportReportLastEditedLimit($limit ?? 25))
             ->get([
                 'target_values.translation_key',
                 'target_values.namespace',
                 'target_values.lang_key',
                 'target_values.value as target_value',
                 'target_values.updated_at',
+                'target_values.created_at',
+                'target_values.first_seen_at',
+                'target_values.last_seen_at',
+                'target_values.status as target_status',
                 'target_values.meta',
+                'target_values.id as target_lang_value_id',
                 'source_values.value as source_value',
+                'source_values.status as source_status',
+                'source_values.id as source_lang_value_id',
                 'keys.id as key_id',
                 'keys.is_dynamic_key',
                 'keys.is_dynamic_multi',
@@ -3764,13 +4976,26 @@ class TranslationWorkbenchEntries extends Component
                 'bulk_reviews.bulk_review_id',
                 'bulk_reviews.bulk_finding_id',
                 'bulk_reviews.bulk_finding_count',
-            ])
-            ->map(function ($row) use ($sourceLocale, $targetLocale): array {
+            ]);
+        $entryStatusCounts = $this->entryStatusCountsForTranslationKeys(
+            $rows
+                ->pluck('translation_key')
+                ->map(static fn(mixed $translationKey): string => (string) $translationKey)
+                ->filter()
+                ->unique()
+                ->values()
+                ->all(),
+        );
+
+        return $rows
+            ->map(function ($row) use ($sourceLocale, $targetLocale, $entryStatusCounts): array {
                 $langKeySegments = collect(explode('.', (string) $row->lang_key))
                     ->map(static fn(string $segment): string => trim($segment))
                     ->filter(static fn(string $segment): bool => $segment !== '')
                     ->values();
                 $meta = is_string($row->meta) ? json_decode($row->meta, true) : (array) $row->meta;
+                $translationKey = (string) $row->translation_key;
+                $rowEntryStatusCounts = $entryStatusCounts[$translationKey] ?? [];
 
                 $metaFindingId = isset($meta['finding_id']) ? (int) $meta['finding_id'] : null;
                 $relationFindingId = $row->relation_finding_id !== null ? (int) $row->relation_finding_id : null;
@@ -3781,7 +5006,7 @@ class TranslationWorkbenchEntries extends Component
                 $bulkCount = (int) ($row->bulk_finding_count ?? 0);
 
                 return [
-                    'translation_key' => (string) $row->translation_key,
+                    'translation_key' => $translationKey,
                     'namespace' => (string) $row->namespace,
                     'group' => $langKeySegments->first(),
                     'key_id' => $row->key_id !== null ? (int) $row->key_id : null,
@@ -3790,6 +5015,16 @@ class TranslationWorkbenchEntries extends Component
                     'source_value' => (string) $row->source_value,
                     'target_value' => (string) $row->target_value,
                     'updated_at' => $row->updated_at,
+                    'created_at' => $row->created_at,
+                    'first_seen_at' => $row->first_seen_at,
+                    'last_seen_at' => $row->last_seen_at,
+                    'target_status' => (string) ($row->target_status ?? ''),
+                    'source_status' => (string) ($row->source_status ?? ''),
+                    'target_lang_value_id' => $row->target_lang_value_id !== null ? (int) $row->target_lang_value_id : null,
+                    'source_lang_value_id' => $row->source_lang_value_id !== null ? (int) $row->source_lang_value_id : null,
+                    'meta_source' => (string) ($meta['source'] ?? ''),
+                    'entry_status_counts' => $rowEntryStatusCounts,
+                    'context_badges' => $this->lastEditedTranslationContextBadges($rowEntryStatusCounts),
                     'finding_id' => $findingId,
                     'meta_finding_id' => $metaFindingId,
                     'relation_finding_id' => $relationFindingId,
@@ -3802,6 +5037,992 @@ class TranslationWorkbenchEntries extends Component
                 ];
             })
             ->all();
+    }
+
+    /**
+     * @param  array<int, string>  $translationKeys
+     * @return array<string, array<string, int>>
+     */
+    private function entryStatusCountsForTranslationKeys(array $translationKeys): array
+    {
+        if ($translationKeys === []) {
+            return [];
+        }
+
+        return DB::table('translation_workbench_keys as keys')
+            ->join('translation_workbench_key_findings as key_findings', 'key_findings.key_id', '=', 'keys.id')
+            ->whereIn('translation_key', $translationKeys)
+            ->select('keys.translation_key', 'key_findings.status')
+            ->selectRaw('COUNT(DISTINCT key_findings.finding_id) as value_count')
+            ->groupBy('keys.translation_key', 'key_findings.status')
+            ->get()
+            ->groupBy('translation_key')
+            ->map(static fn($rows): array => $rows
+                ->mapWithKeys(static fn($row): array => [(string) $row->status => (int) $row->value_count])
+                ->all())
+            ->all();
+    }
+
+    /**
+     * @param  array<string, int>  $keyStatusCounts
+     * @return array<int, array{label: string, color: string}>
+     */
+    private function lastEditedTranslationContextBadges(array $keyStatusCounts): array
+    {
+        $badges = [];
+
+        if ((int) ($keyStatusCounts['active'] ?? 0) > 0) {
+            $badges[] = ['label' => 'Active', 'color' => 'green'];
+        }
+
+        if ((int) ($keyStatusCounts['obsolete'] ?? 0) > 0) {
+            $badges[] = ['label' => 'Obsolete sibling', 'color' => 'amber'];
+        }
+
+        return $badges;
+    }
+
+    private function normalizedExportReportLastEditedLimit(mixed $value = null): int
+    {
+        $value ??= $this->exportReportLastEditedLimit;
+        $limit = (int) $value;
+
+        return in_array($limit, $this->exportReportLastEditedLimitOptions(), true)
+            ? $limit
+            : 50;
+    }
+
+    /**
+     * @return array<int, int>
+     */
+    private function exportReportLastEditedLimitOptions(): array
+    {
+        return [10, 25, 50, 100];
+    }
+
+    private function langCleanupCandidateCount(): int
+    {
+        return $this->langCleanupCandidates()->getCollection()->count();
+    }
+
+    private function langCleanupCandidates(): LengthAwarePaginator
+    {
+        if (! $this->hasTables(['translation_workbench_key_inventory', 'translation_workbench_lang_values'])) {
+            return new LengthAwarePaginator([], 0, $this->normalizedPerPage(), 1, ['pageName' => 'cleanupPage']);
+        }
+
+        $sourceLocale = LocaleCode::normalize($this->sourceMainLocale());
+        $targetLocale = LocaleCode::normalize((string) ($this->editLocales()['active'] ?? app()->getLocale()));
+        $latestCleanupReviews = DB::table('translation_workbench_reviews')
+            ->selectRaw("DISTINCT ON (meta->>'translation_key') meta->>'translation_key' as translation_key, decision, reviewed_at")
+            ->where('review_type', 'lang_cleanup')
+            ->whereNotNull('meta')
+            ->orderByRaw("meta->>'translation_key'")
+            ->orderByDesc('reviewed_at')
+            ->orderByDesc('id');
+
+        $query = DB::table('translation_workbench_key_inventory as inventory')
+            ->leftJoinSub($latestCleanupReviews, 'cleanup_reviews', function ($join): void {
+                $join->on('cleanup_reviews.translation_key', '=', 'inventory.translation_key');
+            })
+            ->leftJoin('translation_workbench_lang_values as source_values', function ($join) use ($sourceLocale): void {
+                $join
+                    ->on('source_values.translation_key', '=', 'inventory.translation_key')
+                    ->where('source_values.locale', '=', $sourceLocale);
+            })
+            ->leftJoin('translation_workbench_lang_values as target_values', function ($join) use ($targetLocale): void {
+                $join
+                    ->on('target_values.translation_key', '=', 'inventory.translation_key')
+                    ->where('target_values.locale', '=', $targetLocale);
+            });
+
+        $this->applyLangCleanupVisibilityScope($query);
+
+        $query = $this->applyLangCleanupFilters($query)
+            ->orderByDesc('inventory.is_orphaned_lang_value')
+            ->orderBy('inventory.namespace')
+            ->orderBy('inventory.group')
+            ->orderBy('inventory.translation_key');
+
+        $paginator = $query->paginate($this->normalizedPerPage(), [
+                'inventory.id',
+                'inventory.translation_key',
+                'inventory.namespace',
+                'inventory.group',
+                'inventory.key_type',
+                'inventory.inventory_status',
+                'inventory.finding_active_count',
+                'inventory.finding_commented_out_count',
+                'inventory.finding_obsolete_count',
+                'inventory.relation_active_count',
+                'inventory.source_value_active_count',
+                'inventory.target_value_active_count',
+                'inventory.lang_file_locale_count',
+                'inventory.workbench_value_count',
+                'inventory.dynamic_value_count',
+                'inventory.dynamic_source_count',
+                'inventory.shared_finding_count',
+                'inventory.is_shared',
+                'inventory.is_ui',
+                'inventory.is_dynamic',
+                'inventory.is_dynamic_multi',
+                'inventory.has_active_code_usage',
+                'inventory.has_only_obsolete_code_usage',
+                'inventory.has_lang_values',
+                'inventory.is_orphaned_lang_value',
+                'inventory.candidate_for_lang_delete',
+                'inventory.first_seen_at',
+                'inventory.last_seen_at',
+                'inventory.created_at',
+                'inventory.updated_at',
+                'source_values.value as source_value',
+                'source_values.status as source_value_status',
+                'source_values.created_at as source_value_created_at',
+                'source_values.updated_at as source_value_updated_at',
+                'target_values.value as target_value',
+                'target_values.status as target_value_status',
+                'target_values.created_at as target_value_created_at',
+                'target_values.updated_at as target_value_updated_at',
+                'cleanup_reviews.decision as cleanup_decision',
+                'cleanup_reviews.reviewed_at as cleanup_reviewed_at',
+            ],
+            pageName: 'cleanupPage',
+        );
+
+        $paginator->setCollection($paginator->getCollection()->map(static fn(object $row): array => [
+                'id' => (int) $row->id,
+                'translation_key' => (string) $row->translation_key,
+                'namespace' => (string) $row->namespace,
+                'group' => (string) $row->group,
+                'key_type' => (string) $row->key_type,
+                'inventory_status' => (string) $row->inventory_status,
+                'finding_active_count' => (int) $row->finding_active_count,
+                'finding_commented_out_count' => (int) $row->finding_commented_out_count,
+                'finding_obsolete_count' => (int) $row->finding_obsolete_count,
+                'relation_active_count' => (int) $row->relation_active_count,
+                'source_value_active_count' => (int) $row->source_value_active_count,
+                'target_value_active_count' => (int) $row->target_value_active_count,
+                'lang_file_locale_count' => (int) $row->lang_file_locale_count,
+                'workbench_value_count' => (int) $row->workbench_value_count,
+                'dynamic_value_count' => (int) $row->dynamic_value_count,
+                'dynamic_source_count' => (int) $row->dynamic_source_count,
+                'shared_finding_count' => (int) $row->shared_finding_count,
+                'is_shared' => (bool) $row->is_shared,
+                'is_ui' => (bool) $row->is_ui,
+                'is_dynamic' => (bool) $row->is_dynamic,
+                'is_dynamic_multi' => (bool) $row->is_dynamic_multi,
+                'has_active_code_usage' => (bool) $row->has_active_code_usage,
+                'has_only_obsolete_code_usage' => (bool) $row->has_only_obsolete_code_usage,
+                'has_lang_values' => (bool) $row->has_lang_values,
+                'is_orphaned_lang_value' => (bool) $row->is_orphaned_lang_value,
+                'candidate_for_lang_delete' => (bool) $row->candidate_for_lang_delete,
+                'source_value' => self::previewText($row->source_value ?? ''),
+                'target_value' => self::previewText($row->target_value ?? ''),
+                'source_value_status' => (string) ($row->source_value_status ?? ''),
+                'target_value_status' => (string) ($row->target_value_status ?? ''),
+                'cleanup_decision' => (string) ($row->cleanup_decision ?? ''),
+                'cleanup_reviewed_at' => $row->cleanup_reviewed_at,
+                'inventory_created_at' => $row->created_at,
+                'inventory_updated_at' => $row->updated_at,
+                'source_value_created_at' => $row->source_value_created_at,
+                'source_value_updated_at' => $row->source_value_updated_at,
+                'target_value_created_at' => $row->target_value_created_at,
+                'target_value_updated_at' => $row->target_value_updated_at,
+                'first_seen_at' => $row->first_seen_at,
+                'last_seen_at' => $row->last_seen_at,
+            ])
+            ->filter(fn(array $row): bool => $this->langCleanupCandidateStillPending($row))
+            ->values());
+
+        return $paginator;
+    }
+
+    /**
+     * @param  array<string, mixed>  $row
+     */
+    private function langCleanupCandidateStillPending(array $row): bool
+    {
+        if (($row['cleanup_decision'] ?? '') !== 'obsolete') {
+            return true;
+        }
+
+        $translationKey = trim((string) ($row['translation_key'] ?? ''));
+
+        if ($translationKey === '') {
+            return true;
+        }
+
+        return TranslationWorkbenchLangValue::query()
+            ->where('translation_key', $translationKey)
+            ->where('status', 'obsolete')
+            ->get(['locale', 'namespace', 'lang_key', 'value', 'value_type'])
+            ->contains(function (TranslationWorkbenchLangValue $langValue): bool {
+                return ! $this->cleanupHistoryRowStillRemoved([
+                    'locale' => (string) $langValue->locale,
+                    'namespace' => (string) $langValue->namespace,
+                    'lang_key' => (string) $langValue->lang_key,
+                    'old_value' => $this->typedCleanupHistoryLangValue($langValue),
+                ]);
+            });
+    }
+
+    private function cleanupHistoryCount(): int
+    {
+        return count($this->cleanupHistoryRows(limit: null));
+    }
+
+    private function scalarReviewCount(): int
+    {
+        return $this->scalarReviewCandidateRows()->count();
+    }
+
+    private function scalarReviewRows(): LengthAwarePaginator
+    {
+        $rows = $this->sortScalarReviewRows($this->scalarReviewCandidateRows());
+        $perPage = $this->normalizedPerPage();
+        $page = LengthAwarePaginator::resolveCurrentPage('scalarReviewPage');
+
+        return new LengthAwarePaginator(
+            $rows->forPage($page, $perPage)->values(),
+            $rows->count(),
+            $perPage,
+            $page,
+            ['pageName' => 'scalarReviewPage'],
+        );
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     */
+    private function scalarReviewCandidateRows(): \Illuminate\Support\Collection
+    {
+        return $this->applyScalarReviewFilters($this->scalarReviewBaseRows());
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     */
+    private function scalarReviewBaseRows(): \Illuminate\Support\Collection
+    {
+        if (! $this->hasTables(['translation_workbench_lang_values', 'translation_workbench_key_inventory'])) {
+            return collect();
+        }
+
+        $sourceLocale = LocaleCode::normalize($this->sourceMainLocale());
+        $targetLocale = LocaleCode::normalize((string) ($this->editLocales()['active'] ?? app()->getLocale()));
+
+        $query = DB::table('translation_workbench_lang_values as source_values')
+            ->leftJoin('translation_workbench_lang_values as target_values', function ($join) use ($targetLocale): void {
+                $join
+                    ->on('target_values.translation_key', '=', 'source_values.translation_key')
+                    ->where('target_values.locale', '=', $targetLocale)
+                    ->where('target_values.status', '=', 'active');
+            })
+            ->leftJoin('translation_workbench_key_inventory as inventory', 'inventory.translation_key', '=', 'source_values.translation_key')
+            ->where('source_values.locale', $sourceLocale)
+            ->where('source_values.status', 'active')
+            ->where('source_values.value_type', 'string')
+            ->whereNotNull('source_values.translation_key')
+            ->whereNotNull('source_values.value')
+            ->where(function (QueryBuilder $query): void {
+                $query
+                    ->whereNull('inventory.is_dynamic')
+                    ->orWhere('inventory.is_dynamic', false);
+            })
+            ->where(function (QueryBuilder $query): void {
+                $query
+                    ->whereRaw("array_length(string_to_array(source_values.translation_key, '.'), 1) <= 3")
+                    ->orWhere('inventory.is_ui', true);
+            })
+            ->orderBy('source_values.translation_key');
+
+        return $query
+            ->get([
+                'source_values.id',
+                'source_values.locale as source_locale',
+                'source_values.namespace',
+                'source_values.lang_key',
+                'source_values.translation_key',
+                'source_values.value as source_value',
+                'target_values.locale as target_locale',
+                'target_values.value as target_value',
+                'inventory.key_type',
+                'inventory.is_ui',
+                'inventory.finding_active_count',
+                'inventory.reviewed_key_count',
+                'inventory.lang_file_locale_count',
+            ])
+            ->map(function (object $row): array {
+                $translationKey = (string) $row->translation_key;
+                $segments = array_values(array_filter(explode('.', $translationKey), static fn(string $segment): bool => $segment !== ''));
+                $leaf = (string) ($segments[array_key_last($segments)] ?? '');
+                $isUi = (bool) ($row->is_ui ?? false) || (($segments[0] ?? null) === 'ui');
+                $suggestedGroup = $isUi
+                    ? $this->scalarReviewSuggestedGroup($leaf, (string) ($row->source_value ?? ''))
+                    : null;
+                $suggestedTranslationKey = $suggestedGroup !== null
+                    ? $this->scalarReviewSuggestedTranslationKey($segments, $suggestedGroup, $leaf)
+                    : null;
+
+                return [
+                    'id' => (int) $row->id,
+                    'translation_key' => $translationKey,
+                    'namespace' => (string) ($row->namespace ?? ''),
+                    'lang_key' => (string) ($row->lang_key ?? ''),
+                    'segments' => $segments,
+                    'segment_count' => count($segments),
+                    'leaf' => $leaf,
+                    'source_locale' => (string) ($row->source_locale ?? ''),
+                    'source_value' => (string) ($row->source_value ?? ''),
+                    'target_locale' => (string) ($row->target_locale ?? ''),
+                    'target_value' => (string) ($row->target_value ?? ''),
+                    'key_type' => (string) ($row->key_type ?? ''),
+                    'is_ui' => $isUi,
+                    'finding_active_count' => (int) ($row->finding_active_count ?? 0),
+                    'reviewed_key_count' => (int) ($row->reviewed_key_count ?? 0),
+                    'lang_file_locale_count' => (int) ($row->lang_file_locale_count ?? 0),
+                    'risk' => count($segments) <= 2 ? 'high' : 'medium',
+                    'risk_weight' => count($segments) <= 2 ? 2 : 1,
+                    'suggested_group' => $suggestedGroup,
+                    'suggested_translation_key' => $suggestedTranslationKey,
+                ];
+            })
+            ->filter(static fn(array $row): bool => ($row['suggested_translation_key'] !== null && $row['suggested_translation_key'] !== $row['translation_key'])
+                || $row['segment_count'] <= 2)
+            ->values();
+    }
+
+    /**
+     * @param  \Illuminate\Support\Collection<int, array<string, mixed>>  $rows
+     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     */
+    private function applyScalarReviewFilters(\Illuminate\Support\Collection $rows): \Illuminate\Support\Collection
+    {
+        $search = Str::lower(trim($this->scalarReviewSearch));
+        $risk = $this->normalizeScalarReviewRisk($this->scalarReviewRisk);
+        $namespace = $this->normalizeOptionState($this->scalarReviewNamespace);
+        $proposal = $this->normalizeScalarReviewProposal($this->scalarReviewProposal);
+
+        return $rows
+            ->filter(static function (array $row) use ($search): bool {
+                if ($search === '') {
+                    return true;
+                }
+
+                return collect([
+                    $row['translation_key'] ?? '',
+                    $row['source_value'] ?? '',
+                    $row['target_value'] ?? '',
+                    $row['suggested_translation_key'] ?? '',
+                    $row['suggested_group'] ?? '',
+                    $row['leaf'] ?? '',
+                ])
+                    ->contains(static fn(mixed $value): bool => str_contains(Str::lower((string) $value), $search));
+            })
+            ->filter(static fn(array $row): bool => $risk === 'all' || (string) ($row['risk'] ?? '') === $risk)
+            ->filter(static fn(array $row): bool => $namespace === 'all' || (string) ($row['namespace'] ?? '') === $namespace)
+            ->filter(static function (array $row) use ($proposal): bool {
+                $hasProposal = filled($row['suggested_translation_key'] ?? null);
+
+                return match ($proposal) {
+                    'with' => $hasProposal,
+                    'without' => ! $hasProposal,
+                    default => true,
+                };
+            })
+            ->values();
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function scalarReviewNamespaceOptions(): array
+    {
+        return $this->scalarReviewBaseRows()
+            ->pluck('namespace')
+            ->map(static fn(mixed $namespace): string => trim((string) $namespace))
+            ->filter(static fn(string $namespace): bool => $namespace !== '')
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     */
+    private function scalarTransformRows(): \Illuminate\Support\Collection
+    {
+        $selectedIds = collect($this->scalarReviewSelectedLangValueIds)
+            ->map(static fn(mixed $id): int => (int) $id)
+            ->filter(static fn(int $id): bool => $id > 0)
+            ->unique()
+            ->values();
+
+        if ($selectedIds->isEmpty()) {
+            return collect();
+        }
+
+        return $this->scalarReviewBaseRows()
+            ->whereIn('id', $selectedIds->all())
+            ->values();
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function scalarTransformContext(): array
+    {
+        $targetPath = $this->normalizedScalarTransformTargetPath();
+        $includedIds = collect($this->scalarTransformIncludedLangValueIds)
+            ->map(static fn(mixed $id): int => (int) $id)
+            ->filter(static fn(int $id): bool => $id > 0)
+            ->unique()
+            ->values();
+
+        $rows = $this->scalarTransformRows()
+            ->map(function (array $row) use ($targetPath, $includedIds): array {
+                $targetKey = $this->scalarTransformTargetKeyForRow($row, $targetPath);
+                $row['is_included'] = $includedIds->contains((int) ($row['id'] ?? 0));
+                $row['target_translation_key'] = $targetKey;
+                $row['target_is_valid'] = $this->isValidTranslationKey($targetKey);
+                $row['target_conflicts'] = $this->scalarTransformTargetConflicts((string) $row['translation_key'], $targetKey);
+
+                return $row;
+            });
+
+        $includedRows = $rows->where('is_included', true)->values();
+
+        $targetCounts = $includedRows
+            ->pluck('target_translation_key')
+            ->filter()
+            ->countBy();
+
+        $rows = $rows
+            ->map(function (array $row) use ($targetCounts): array {
+                $row['target_is_duplicate'] = (bool) ($row['is_included'] ?? false)
+                    && (int) ($targetCounts[$row['target_translation_key']] ?? 0) > 1;
+
+                return $row;
+            })
+            ->values();
+
+        $includedRows = $rows->where('is_included', true)->values();
+
+        return [
+            'rows' => $rows->all(),
+            'target_path' => $targetPath,
+            'selected_count' => $rows->count(),
+            'included_count' => $includedRows->count(),
+            'invalid_count' => $includedRows->where('target_is_valid', false)->count(),
+            'duplicate_target_count' => $includedRows->where('target_is_duplicate', true)->count(),
+            'conflict_count' => $includedRows->filter(static fn(array $row): bool => count($row['target_conflicts'] ?? []) > 0)->count(),
+        ];
+    }
+
+    private function normalizedScalarTransformTargetPath(): ?string
+    {
+        $targetPath = $this->nullableString($this->scalarTransformTargetPath);
+
+        if ($targetPath === null) {
+            return null;
+        }
+
+        return collect(explode('.', $targetPath))
+            ->map(static fn(string $segment): string => Str::of($segment)->trim()->lower()->replace(' ', '_')->toString())
+            ->filter(static fn(string $segment): bool => $segment !== '')
+            ->implode('.');
+    }
+
+    private function scalarTransformTargetKeyForRow(array $row, ?string $targetPath): string
+    {
+        $leaf = $this->nullableString($row['leaf'] ?? null)
+            ?? str((string) ($row['source_value'] ?? ''))->slug('_')->toString();
+
+        return collect([$targetPath, $leaf])
+            ->filter(static fn(?string $segment): bool => filled($segment))
+            ->implode('.');
+    }
+
+    private function isValidTranslationKey(?string $translationKey): bool
+    {
+        return $translationKey !== null
+            && preg_match('/^[a-z0-9][a-z0-9_-]*(\.[a-z0-9][a-z0-9_-]*)+$/', $translationKey) === 1
+            && substr_count($translationKey, '.') >= 2;
+    }
+
+    /**
+     * @return array<int, array{id: int, locale: string, status: string, value: string|null}>
+     */
+    private function scalarTransformTargetConflicts(string $oldTranslationKey, ?string $newTranslationKey): array
+    {
+        if ($newTranslationKey === null || ! Schema::hasTable('translation_workbench_lang_values')) {
+            return [];
+        }
+
+        return TranslationWorkbenchLangValue::query()
+            ->where('translation_key', $newTranslationKey)
+            ->where('translation_key', '<>', $oldTranslationKey)
+            ->orderBy('locale')
+            ->limit(10)
+            ->get(['id', 'locale', 'status', 'value'])
+            ->map(static fn(TranslationWorkbenchLangValue $value): array => [
+                'id' => (int) $value->id,
+                'locale' => (string) $value->locale,
+                'status' => (string) $value->status,
+                'value' => $value->value,
+            ])
+            ->all();
+    }
+
+    /**
+     * @param  \Illuminate\Support\Collection<int, array<string, mixed>>  $rows
+     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     */
+    private function sortScalarReviewRows(\Illuminate\Support\Collection $rows): \Illuminate\Support\Collection
+    {
+        $field = $this->normalizeScalarReviewSortField($this->scalarReviewSortField);
+        $descending = $this->scalarReviewSortDirection === 'desc';
+
+        return $rows
+            ->sortBy(function (array $row) use ($field): mixed {
+                $primary = match ($field) {
+                    'risk' => (int) ($row['risk_weight'] ?? 0),
+                    'values' => Str::lower((string) ($row['source_value'] ?? '')),
+                    'proposal' => Str::lower((string) ($row['suggested_translation_key'] ?? '')),
+                    'usage' => (int) ($row['finding_active_count'] ?? 0),
+                    default => Str::lower((string) ($row['translation_key'] ?? '')),
+                };
+
+                return [$primary, Str::lower((string) ($row['translation_key'] ?? ''))];
+            }, SORT_REGULAR, $descending)
+            ->values();
+    }
+
+    private function scalarReviewSuggestedGroup(string $leaf, string $sourceValue): ?string
+    {
+        $normalized = Str::of($leaf !== '' ? $leaf : $sourceValue)
+            ->lower()
+            ->replace(['-', '_'], ' ')
+            ->squish()
+            ->replace(' ', '_')
+            ->toString();
+
+        return match (true) {
+            in_array($normalized, ['add', 'apply', 'cancel', 'clear', 'close', 'confirm', 'copy', 'create', 'delete', 'download', 'edit', 'export', 'hide', 'open', 'remove', 'reset', 'save', 'search', 'show', 'submit', 'update', 'upload'], true) => 'actions',
+            in_array($normalized, ['active', 'all', 'assigned', 'available', 'closed', 'custom', 'disabled', 'enabled', 'inactive', 'missing', 'no', 'none', 'open', 'pending', 'ready', 'selected', 'system', 'unassigned', 'unknown', 'yes'], true) => 'states',
+            in_array($normalized, ['description', 'email', 'label', 'name', 'phone', 'status', 'title', 'type', 'value'], true) => 'labels',
+            default => null,
+        };
+    }
+
+    /**
+     * @param  array<int, string>  $segments
+     */
+    private function scalarReviewSuggestedTranslationKey(array $segments, string $group, string $leaf): ?string
+    {
+        $namespace = (string) ($segments[0] ?? '');
+
+        if ($namespace === '' || $leaf === '') {
+            return null;
+        }
+
+        return implode('.', [$namespace, $group, $leaf]);
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function cleanupHistoryRows(?int $limit = 100): array
+    {
+        if (! Schema::hasTable('translation_workbench_timeline_events')) {
+            return [];
+        }
+
+        $query = TranslationWorkbenchTimelineEvent::query()
+            ->where('event_type', 'lang_file_value_pruned')
+            ->whereNotExists(function (QueryBuilder $query): void {
+                $query
+                    ->selectRaw('1')
+                    ->from('translation_workbench_lang_values as restored_values')
+                    ->where('restored_values.status', 'active')
+                    ->whereRaw("restored_values.locale = translation_workbench_timeline_events.context->>'locale'")
+                    ->whereRaw("restored_values.namespace = translation_workbench_timeline_events.context->>'namespace'")
+                    ->whereRaw("restored_values.lang_key = translation_workbench_timeline_events.context->>'lang_key'")
+                    ->whereRaw("restored_values.translation_key = translation_workbench_timeline_events.context->>'translation_key'")
+                    ->whereColumn('restored_values.updated_at', '>=', 'translation_workbench_timeline_events.created_at');
+            })
+            ->latest('created_at')
+            ->latest('id');
+
+        if ($limit !== null) {
+            $query->limit($limit * 4);
+        }
+
+        $eventRows = $query
+            ->get()
+            ->map(function (TranslationWorkbenchTimelineEvent $event): array {
+                $oldValues = (array) ($event->old_values ?? []);
+                $newValues = (array) ($event->new_values ?? []);
+                $context = (array) ($event->context ?? []);
+                $translationKey = (string) ($context['translation_key'] ?? $oldValues['translation_key'] ?? $newValues['translation_key'] ?? '');
+                $movedToTranslationKey = $this->cleanupHistoryMovedToTranslationKey($translationKey);
+                $removedAt = $event->created_at;
+
+                return [
+                    'id' => $event->id,
+                    'key_id' => $event->key_id,
+                    'review_id' => $event->review_id,
+                    'locale' => (string) ($context['locale'] ?? $oldValues['locale'] ?? $newValues['locale'] ?? ''),
+                    'namespace' => (string) ($context['namespace'] ?? $oldValues['namespace'] ?? $newValues['namespace'] ?? ''),
+                    'lang_key' => (string) ($context['lang_key'] ?? $oldValues['lang_key'] ?? $newValues['lang_key'] ?? ''),
+                    'translation_key' => $translationKey,
+                    'outcome' => filled($movedToTranslationKey) ? 'moved' : 'removed',
+                    'moved_to_translation_key' => $movedToTranslationKey,
+                    'reason' => (string) ($context['reason'] ?? $oldValues['reason'] ?? $newValues['reason'] ?? ''),
+                    'path' => (string) ($context['path'] ?? $oldValues['path'] ?? $newValues['path'] ?? ''),
+                    'old_value' => $oldValues['value'] ?? null,
+                    'removed_at' => $removedAt,
+                    'export_run_at' => $removedAt instanceof Carbon ? $removedAt->format('Y-m-d H:i:s') : (string) $removedAt,
+                ];
+            })
+            ->filter(fn(array $row): bool => $this->cleanupHistoryRowStillRemoved($row))
+            ->values();
+
+        $rows = $eventRows
+            ->merge($this->derivedCleanupHistoryRows($limit))
+            ->sortByDesc(static fn(array $row): string => (string) ($row['export_run_at'] ?? ''))
+            ->values();
+
+        $groupedRows = $rows
+            ->groupBy(static fn(array $row): string => implode('|', [
+                $row['export_run_at'] ?? '',
+                $row['translation_key'] ?? '',
+                $row['outcome'] ?? '',
+                $row['moved_to_translation_key'] ?? '',
+                $row['reason'] ?? '',
+                $row['namespace'] ?? '',
+                $row['lang_key'] ?? '',
+            ]))
+            ->map(static function ($rows): array {
+                $first = $rows->first();
+                $eventIds = $rows->pluck('id')->filter()->unique()->values()->all();
+                $keyIds = $rows->pluck('key_id')->filter()->unique()->values()->all();
+                $reviewIds = $rows->pluck('review_id')->filter()->unique()->values()->all();
+
+                $rowId = $eventIds !== []
+                    ? implode('-', $eventIds)
+                    : 'derived-' . sha1(implode('|', [
+                        $first['export_run_at'] ?? '',
+                        $first['translation_key'] ?? '',
+                        $first['namespace'] ?? '',
+                        $first['lang_key'] ?? '',
+                    ]));
+
+                return [
+                    'id' => $rowId,
+                    'event_ids' => $eventIds,
+                    'key_ids' => $keyIds,
+                    'review_ids' => $reviewIds,
+                    'derived' => $eventIds === [],
+                    'namespace' => (string) ($first['namespace'] ?? ''),
+                    'lang_key' => (string) ($first['lang_key'] ?? ''),
+                    'translation_key' => (string) ($first['translation_key'] ?? ''),
+                    'outcome' => (string) ($first['outcome'] ?? 'removed'),
+                    'moved_to_translation_key' => $first['moved_to_translation_key'] ?? null,
+                    'reason' => (string) ($first['reason'] ?? ''),
+                    'removed_at' => $first['removed_at'] ?? null,
+                    'locales' => $rows
+                        ->sortBy('locale')
+                        ->map(static fn(array $row): array => [
+                            'event_id' => $row['id'] ?? null,
+                            'key_id' => $row['key_id'] ?? null,
+                            'review_id' => $row['review_id'] ?? null,
+                            'locale' => (string) ($row['locale'] ?? ''),
+                            'path' => (string) ($row['path'] ?? ''),
+                            'old_value' => $row['old_value'] ?? null,
+                        ])
+                        ->values()
+                        ->all(),
+                ];
+            })
+            ->values()
+            ->when($limit !== null, static fn($rows) => $rows->take($limit))
+            ->values()
+            ->all();
+
+        return $groupedRows;
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     */
+    private function derivedCleanupHistoryRows(?int $limit = 100): \Illuminate\Support\Collection
+    {
+        if (! Schema::hasTable('translation_workbench_lang_values')) {
+            return collect();
+        }
+
+        $query = TranslationWorkbenchLangValue::query()
+            ->where('status', 'obsolete')
+            ->whereNotNull('translation_key')
+            ->whereNotNull('lang_key')
+            ->whereExists(function (QueryBuilder $query): void {
+                $query
+                    ->selectRaw('1')
+                    ->from('translation_workbench_reviews as cleanup_reviews')
+                    ->where('cleanup_reviews.review_type', 'lang_cleanup')
+                    ->where('cleanup_reviews.decision', 'obsolete')
+                    ->whereRaw("cleanup_reviews.meta->>'translation_key' = translation_workbench_lang_values.translation_key");
+            })
+            ->whereNotExists(function (QueryBuilder $query): void {
+                $query
+                    ->selectRaw('1')
+                    ->from('translation_workbench_timeline_events as pruned_events')
+                    ->where('pruned_events.event_type', 'lang_file_value_pruned')
+                    ->whereRaw("COALESCE(pruned_events.context->>'locale', pruned_events.old_values->>'locale') = translation_workbench_lang_values.locale")
+                    ->whereRaw("COALESCE(pruned_events.context->>'namespace', pruned_events.old_values->>'namespace') = translation_workbench_lang_values.namespace")
+                    ->whereRaw("COALESCE(pruned_events.context->>'lang_key', pruned_events.old_values->>'lang_key') = translation_workbench_lang_values.lang_key")
+                    ->whereRaw("COALESCE(pruned_events.context->>'translation_key', pruned_events.old_values->>'translation_key') = translation_workbench_lang_values.translation_key");
+            })
+            ->latest('updated_at')
+            ->latest('id');
+
+        if ($limit !== null) {
+            $query->limit($limit * 4);
+        }
+
+        return $query
+            ->get()
+            ->map(function (TranslationWorkbenchLangValue $langValue): array {
+                $translationKey = (string) $langValue->translation_key;
+                $movedToTranslationKey = $this->cleanupHistoryMovedToTranslationKey($translationKey);
+                $removedAt = $langValue->updated_at;
+
+                return [
+                    'id' => null,
+                    'key_id' => null,
+                    'review_id' => null,
+                    'locale' => (string) $langValue->locale,
+                    'namespace' => (string) $langValue->namespace,
+                    'lang_key' => (string) $langValue->lang_key,
+                    'translation_key' => $translationKey,
+                    'outcome' => filled($movedToTranslationKey) ? 'moved' : 'removed',
+                    'moved_to_translation_key' => $movedToTranslationKey,
+                    'reason' => 'obsolete_lang_value_without_prune_event',
+                    'path' => (string) ($langValue->source_path ?? ''),
+                    'old_value' => $this->typedCleanupHistoryLangValue($langValue),
+                    'removed_at' => $removedAt,
+                    'export_run_at' => $removedAt instanceof Carbon ? $removedAt->format('Y-m-d H:i:s') : (string) $removedAt,
+                ];
+            })
+            ->filter(fn(array $row): bool => $this->cleanupHistoryRowStillRemoved($row))
+            ->values();
+    }
+
+    /**
+     * @param  array<string, mixed>  $row
+     */
+    private function cleanupHistoryRowStillRemoved(array $row): bool
+    {
+        $locale = trim((string) ($row['locale'] ?? ''));
+        $namespace = trim((string) ($row['namespace'] ?? ''));
+        $langKey = trim((string) ($row['lang_key'] ?? ''));
+
+        if ($locale === '' || $namespace === '' || $langKey === '') {
+            return true;
+        }
+
+        $path = lang_path($locale . '/' . $namespace . '.php');
+
+        if (! File::exists($path)) {
+            return true;
+        }
+
+        $values = require $path;
+
+        if (! is_array($values)) {
+            return true;
+        }
+
+        if (! Arr::has($values, $langKey)) {
+            return true;
+        }
+
+        $currentValue = Arr::get($values, $langKey);
+        $oldValue = $row['old_value'] ?? null;
+
+        if (is_array($oldValue)) {
+            return ! is_array($currentValue);
+        }
+
+        if (is_array($currentValue)) {
+            return true;
+        }
+
+        return (string) $currentValue !== (string) $oldValue;
+    }
+
+    private function cleanupHistoryMovedToTranslationKey(string $translationKey): ?string
+    {
+        if ($translationKey === '') {
+            return null;
+        }
+
+        $event = TranslationWorkbenchTimelineEvent::query()
+            ->where('event_type', 'translation_lang_values_rekeyed')
+            ->whereRaw("old_values->>'translation_key' = ?", [$translationKey])
+            ->latest('created_at')
+            ->latest('id')
+            ->first(['new_values']);
+
+        $newValues = is_array($event?->new_values) ? $event->new_values : [];
+        $movedToTranslationKey = $this->nullableString($newValues['translation_key'] ?? null);
+
+        return $movedToTranslationKey !== $translationKey ? $movedToTranslationKey : null;
+    }
+
+    private function typedCleanupHistoryLangValue(TranslationWorkbenchLangValue $langValue): mixed
+    {
+        return match ((string) ($langValue->value_type ?? 'string')) {
+            'boolean' => filter_var($langValue->value ?? null, FILTER_VALIDATE_BOOLEAN),
+            'integer' => (int) ($langValue->value ?? 0),
+            'float' => (float) ($langValue->value ?? 0),
+            'null' => null,
+            default => $langValue->value,
+        };
+    }
+
+    /**
+     * @return array{generated_at: string|null, command: string, synced: bool|null, rows: int|null}
+     */
+    private function langCleanupInventoryReport(): array
+    {
+        $path = storage_path('translation-workbench/translation-workbench-inventory-keys.json');
+
+        if (! File::exists($path)) {
+            return [
+                'generated_at' => null,
+                'command' => 'translation-workbench:inventory-keys',
+                'synced' => null,
+                'rows' => null,
+            ];
+        }
+
+        $data = json_decode((string) File::get($path), true);
+        $summary = is_array($data['summary'] ?? null) ? $data['summary'] : [];
+
+        return [
+            'generated_at' => filled($data['generated_at'] ?? null) ? (string) $data['generated_at'] : null,
+            'command' => (string) ($data['command'] ?? 'translation-workbench:inventory-keys'),
+            'synced' => array_key_exists('synced', $summary) ? (bool) $summary['synced'] : null,
+            'rows' => array_key_exists('inventory_rows', $summary) ? (int) $summary['inventory_rows'] : null,
+        ];
+    }
+
+    private function applyLangCleanupVisibilityScope(QueryBuilder $query): QueryBuilder
+    {
+        return $query
+            ->where(function (QueryBuilder $query): void {
+                $query
+                    ->where('inventory.candidate_for_lang_delete', true)
+                    ->orWhereExists(function (QueryBuilder $query): void {
+                        $query
+                            ->selectRaw('1')
+                            ->from('translation_workbench_reviews as cleanup_reviews')
+                            ->where('cleanup_reviews.review_type', 'lang_cleanup')
+                            ->whereRaw("cleanup_reviews.meta->>'translation_key' = inventory.translation_key");
+                    });
+            })
+            ->whereNotExists(function (QueryBuilder $query): void {
+                $query
+                    ->selectRaw('1')
+                    ->from('translation_workbench_timeline_events as cleanup_history')
+                    ->where('cleanup_history.event_type', 'lang_file_value_pruned')
+                    ->whereRaw("cleanup_history.context->>'translation_key' = inventory.translation_key");
+            });
+    }
+
+    private function applyLangCleanupFilters(QueryBuilder $query): QueryBuilder
+    {
+        $search = trim($this->langCleanupSearch);
+
+        if ($search !== '') {
+            $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\%', '\_'], mb_strtolower($search)) . '%';
+
+            $query->where(function (QueryBuilder $query) use ($like): void {
+                $query
+                    ->whereRaw('LOWER(inventory.translation_key) LIKE ? ESCAPE ?', [$like, '\\'])
+                    ->orWhereRaw('LOWER(COALESCE(inventory.namespace, ?)) LIKE ? ESCAPE ?', ['', $like, '\\'])
+                    ->orWhereRaw('LOWER(COALESCE(inventory."group", ?)) LIKE ? ESCAPE ?', ['', $like, '\\'])
+                    ->orWhereRaw('LOWER(COALESCE(inventory.key_type, ?)) LIKE ? ESCAPE ?', ['', $like, '\\']);
+            });
+        }
+
+        if ($this->langCleanupNamespace !== 'all') {
+            $this->applyNullableTextFilter($query, 'inventory.namespace', $this->langCleanupNamespace);
+        }
+
+        if ($this->langCleanupGroup !== 'all') {
+            $this->applyNullableTextFilter($query, 'inventory."group"', $this->langCleanupGroup);
+        }
+
+        if ($this->langCleanupKeyType !== 'all') {
+            $this->applyNullableTextFilter($query, 'inventory.key_type', $this->langCleanupKeyType);
+        }
+
+        match ($this->langCleanupContext) {
+            'orphaned' => $query->where('inventory.is_orphaned_lang_value', true),
+            'shared' => $query->where('inventory.is_shared', true),
+            'ui' => $query->where('inventory.is_ui', true),
+            'dynamic' => $query->where('inventory.is_dynamic', true)->where('inventory.is_dynamic_multi', false),
+            'dynamic_multi' => $query->where('inventory.is_dynamic_multi', true),
+            default => null,
+        };
+
+        match ($this->langCleanupUsage) {
+            'no_active' => $query->where('inventory.finding_active_count', 0),
+            'commented' => $query->where('inventory.finding_commented_out_count', '>', 0),
+            'obsolete' => $query->where('inventory.finding_obsolete_count', '>', 0),
+            'relations' => $query->where('inventory.relation_active_count', '>', 0),
+            default => null,
+        };
+
+        match ($this->langCleanupValueState) {
+            'source_missing' => $query->where('inventory.source_value_active_count', 0),
+            'target_missing' => $query->where('inventory.target_value_active_count', 0),
+            'source_target_available' => $query
+                ->where('inventory.source_value_active_count', '>', 0)
+                ->where('inventory.target_value_active_count', '>', 0),
+            'lang_values' => $query->where('inventory.has_lang_values', true),
+            default => null,
+        };
+
+        return $query;
+    }
+
+    private function applyNullableTextFilter(QueryBuilder $query, string $column, string $value): void
+    {
+        if ($value === 'NULL') {
+            $query->whereNull(DB::raw($column));
+
+            return;
+        }
+
+        $query->where(DB::raw($column), $value);
+    }
+
+    private static function previewText(mixed $value, int $limit = 90): string
+    {
+        $text = trim((string) $value);
+
+        if ($text === '') {
+            return '';
+        }
+
+        return mb_strlen($text) > $limit
+            ? mb_substr($text, 0, $limit - 1) . '...'
+            : $text;
     }
 
     /**
@@ -5667,6 +7888,98 @@ class TranslationWorkbenchEntries extends Component
     }
 
     /**
+     * @return array{migrated: array<int, array<string, mixed>>, obsoleted: array<int, array<string, mixed>>, migrated_count: int, obsoleted_count: int}
+     */
+    private function rekeyScalarLangValues(string $oldTranslationKey, string $newTranslationKey): array
+    {
+        if (! Schema::hasTable('translation_workbench_lang_values') || $oldTranslationKey === $newTranslationKey) {
+            return [
+                'migrated' => [],
+                'obsoleted' => [],
+                'migrated_count' => 0,
+                'obsoleted_count' => 0,
+            ];
+        }
+
+        $newParts = $this->translationKeyLangParts($newTranslationKey);
+        $rows = TranslationWorkbenchLangValue::query()
+            ->where('translation_key', $oldTranslationKey)
+            ->where('status', '<>', 'obsolete')
+            ->orderBy('id')
+            ->get();
+
+        $migrated = [];
+        $obsoleted = [];
+        $now = now();
+
+        foreach ($rows as $row) {
+            $target = TranslationWorkbenchLangValue::query()
+                ->where('locale', $row->locale)
+                ->where('namespace', $newParts['namespace'])
+                ->where('lang_key', $newParts['lang_key'])
+                ->first();
+
+            $oldValues = $row->only(['id', 'locale', 'namespace', 'lang_key', 'translation_key', 'source_path', 'status']);
+
+            if ($target && $target->id !== $row->id) {
+                $row->forceFill([
+                    'status' => 'obsolete',
+                    'last_seen_at' => $now,
+                    'meta' => [
+                        ...(is_array($row->meta) ? $row->meta : []),
+                        'obsolete_reason' => 'scalar_transform_target_exists',
+                        'rekeyed_to_translation_key' => $newTranslationKey,
+                        'rekeyed_to_lang_value_id' => $target->id,
+                        'previous_translation_key' => $oldTranslationKey,
+                        'previous_namespace' => $oldValues['namespace'] ?? null,
+                        'previous_lang_key' => $oldValues['lang_key'] ?? null,
+                    ],
+                ])->save();
+
+                $obsoleted[] = [
+                    'id' => (int) $row->id,
+                    'locale' => (string) $row->locale,
+                    'target_id' => (int) $target->id,
+                    'target_status' => (string) $target->status,
+                ];
+
+                continue;
+            }
+
+            $row->forceFill([
+                'namespace' => $newParts['namespace'],
+                'lang_key' => $newParts['lang_key'],
+                'translation_key' => $newTranslationKey,
+                'source_path' => 'lang/' . $row->locale . '/' . $newParts['namespace'] . '.php',
+                'last_seen_at' => $now,
+                'meta' => [
+                    ...(is_array($row->meta) ? $row->meta : []),
+                    'source' => 'translation-workbench:scalar-review',
+                    'previous_translation_key' => $oldTranslationKey,
+                    'previous_namespace' => $oldValues['namespace'] ?? null,
+                    'previous_lang_key' => $oldValues['lang_key'] ?? null,
+                ],
+            ])->save();
+
+            $migrated[] = [
+                'id' => (int) $row->id,
+                'locale' => (string) $row->locale,
+                'old_namespace' => $oldValues['namespace'] ?? null,
+                'old_lang_key' => $oldValues['lang_key'] ?? null,
+                'new_namespace' => $newParts['namespace'],
+                'new_lang_key' => $newParts['lang_key'],
+            ];
+        }
+
+        return [
+            'migrated' => $migrated,
+            'obsoleted' => $obsoleted,
+            'migrated_count' => count($migrated),
+            'obsoleted_count' => count($obsoleted),
+        ];
+    }
+
+    /**
      * @return array<string, mixed>
      */
     private function keyStructureFromTranslationKey(?string $translationKey, ?TranslationWorkbenchKey $currentKey = null): array
@@ -5825,6 +8138,10 @@ class TranslationWorkbenchEntries extends Component
             $query->where('findings.status', '!=', 'obsolete');
         }
 
+        if ($this->findingStatus === 'all' && $this->findingCommentedOutScope !== 'commentedOutPresentYes') {
+            $query->where('findings.status', '!=', 'commented_out');
+        }
+
         if ($this->findingKind !== 'all') {
             $query->where('findings.kind', $this->findingKind);
         }
@@ -5927,6 +8244,17 @@ class TranslationWorkbenchEntries extends Component
                 foreach ($this->findingSearchColumns() as $column) {
                     $this->orWhereFindingSearchColumn($query, $column, $search);
                 }
+            });
+        }
+
+        $valueSearch = trim($this->findingValueSearch);
+
+        if ($valueSearch !== '') {
+            $query->where(function ($query) use ($sourceLocale, $targetLocale, $valueSearch): void {
+                $this->orWhereFindingValueSearchColumn($query, 'findings.literal_text', $valueSearch);
+                $this->orWhereFindingValueSearchColumn($query, 'findings.literal_text_suggested', $valueSearch);
+                $this->orWhereFindingLangValueSearch($query, $sourceLocale, $valueSearch);
+                $this->orWhereFindingLangValueSearch($query, $targetLocale, $valueSearch);
             });
         }
     }
@@ -6617,27 +8945,83 @@ class TranslationWorkbenchEntries extends Component
 
     private function orWhereFindingSearchColumn($query, string $column, string $search): void
     {
-        if ($this->findingSearchExact) {
-            if ($this->findingSearchCaseSensitive) {
-                $query->orWhere($column, '=', $search);
+        $this->whereFindingSearchValue($query, $column, $search, 'orWhere', 'orWhereRaw');
+    }
+
+    private function orWhereFindingValueSearchColumn($query, string $column, string $search): void
+    {
+        $this->whereFindingSearchValue(
+            $query,
+            $column,
+            $search,
+            'orWhere',
+            'orWhereRaw',
+            $this->findingValueSearchExact,
+            $this->findingValueSearchCaseSensitive,
+        );
+    }
+
+    private function whereFindingSearchValue(
+        $query,
+        string $column,
+        string $search,
+        string $whereMethod = 'where',
+        string $whereRawMethod = 'whereRaw',
+        ?bool $exact = null,
+        ?bool $caseSensitive = null,
+    ): void
+    {
+        $exact ??= $this->findingSearchExact;
+        $caseSensitive ??= $this->findingSearchCaseSensitive;
+
+        if ($exact) {
+            if ($caseSensitive) {
+                $query->{$whereMethod}($column, '=', $search);
 
                 return;
             }
 
-            $query->orWhereRaw('LOWER(' . $column . ') = ?', [Str::lower($search)]);
+            $query->{$whereRawMethod}('LOWER(' . $column . ') = ?', [Str::lower($search)]);
 
             return;
         }
 
         $like = '%' . str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $search) . '%';
 
-        if ($this->findingSearchCaseSensitive) {
-            $query->orWhereRaw($column . ' LIKE ? ESCAPE \'!\'', [$like]);
+        if ($caseSensitive) {
+            $query->{$whereRawMethod}($column . ' LIKE ? ESCAPE \'!\'', [$like]);
 
             return;
         }
 
-        $query->orWhereRaw('LOWER(' . $column . ') LIKE ? ESCAPE \'!\'', [Str::lower($like)]);
+        $query->{$whereRawMethod}('LOWER(' . $column . ') LIKE ? ESCAPE \'!\'', [Str::lower($like)]);
+    }
+
+    private function orWhereFindingLangValueSearch($query, string $locale, string $search): void
+    {
+        $query->orWhereExists(function ($query) use ($locale, $search): void {
+            $query
+                ->selectRaw('1')
+                ->from('translation_workbench_lang_values as searched_values')
+                ->where('searched_values.locale', $locale)
+                ->where('searched_values.status', 'active')
+                ->where(function ($query): void {
+                    $query
+                        ->whereColumn('searched_values.translation_key', 'keys.translation_key')
+                        ->orWhereColumn('searched_values.translation_key', 'keys.suggested_key')
+                        ->orWhereColumn('searched_values.translation_key', 'findings.suggested_key')
+                        ->orWhereColumn('searched_values.translation_key', 'findings.found_translation_key');
+                })
+                ->where(function ($query) use ($search): void {
+                    $this->whereFindingSearchValue(
+                        $query,
+                        'searched_values.value',
+                        $search,
+                        exact: $this->findingValueSearchExact,
+                        caseSensitive: $this->findingValueSearchCaseSensitive,
+                    );
+                });
+        });
     }
 
     private function applyLanguageLiteralExistsFilter(
@@ -6862,6 +9246,20 @@ class TranslationWorkbenchEntries extends Component
             ],
             [
                 'class' => 'col-span-2',
+                'table' => 'translation_workbench_key_inventory',
+                'color' => 'sky',
+                'icon' => 'archive',
+                'text' => __('Established translation-key inventory aggregated from reviewed keys, code usage, lang values, shared keys, and dynamic values.'),
+            ],
+            [
+                'class' => 'col-span-2',
+                'table' => 'translation_workbench_timeline_chains',
+                'color' => 'cyan',
+                'icon' => 'git-merge',
+                'text' => __('Translation-chain snapshot for future extended timeline views.'),
+            ],
+            [
+                'class' => 'col-span-2',
                 'table' => 'translation_workbench_reviews',
                 'color' => 'amber',
                 'icon' => 'badge-check',
@@ -7072,6 +9470,69 @@ class TranslationWorkbenchEntries extends Component
             ->all();
     }
 
+    /**
+     * @return array<int, string>
+     */
+    private function langCleanupNamespaceOptions(): array
+    {
+        return $this->langCleanupDistinctOptions('namespace');
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function langCleanupGroupOptions(): array
+    {
+        return $this->langCleanupDistinctOptions('group', [
+            'namespace' => $this->langCleanupNamespace,
+        ]);
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function langCleanupKeyTypeOptions(): array
+    {
+        return $this->langCleanupDistinctOptions('key_type');
+    }
+
+    /**
+     * @param  array<string, string>  $scopes
+     * @return array<int, string>
+     */
+    private function langCleanupDistinctOptions(string $column, array $scopes = []): array
+    {
+        if (! Schema::hasTable('translation_workbench_key_inventory') || ! Schema::hasColumn('translation_workbench_key_inventory', $column)) {
+            return [];
+        }
+
+        $wrappedColumn = DB::getQueryGrammar()->wrap($column);
+        $query = DB::table('translation_workbench_key_inventory')
+            ->where('candidate_for_lang_delete', true);
+
+        foreach ($scopes as $scopeColumn => $scopeValue) {
+            if ($scopeValue === 'all' || ! Schema::hasColumn('translation_workbench_key_inventory', $scopeColumn)) {
+                continue;
+            }
+
+            if ($scopeValue === 'NULL') {
+                $query->whereNull($scopeColumn);
+
+                continue;
+            }
+
+            $query->where($scopeColumn, $scopeValue);
+        }
+
+        return $query
+            ->selectRaw("COALESCE(CAST({$wrappedColumn} AS TEXT), 'NULL') as value")
+            ->distinct()
+            ->orderBy('value')
+            ->pluck('value')
+            ->map(static fn($value): string => (string) $value)
+            ->all();
+    }
+
     private function normalizedPerPage(mixed $value = null): int
     {
         $value = (int) ($value ?? $this->perPage);
@@ -7095,6 +9556,36 @@ class TranslationWorkbenchEntries extends Component
         return in_array($value, ['last_seen', 'source', 'literal', 'keys'], true) ? $value : 'last_seen';
     }
 
+    private function normalizeScalarReviewSortField(mixed $value): string
+    {
+        $value = trim((string) $value);
+
+        return in_array($value, ['risk', 'translation_key', 'values', 'proposal', 'usage'], true) ? $value : 'risk';
+    }
+
+    private function normalizeScalarReviewRisk(mixed $value): string
+    {
+        $value = trim((string) $value);
+
+        return in_array($value, ['all', 'high', 'medium'], true) ? $value : 'all';
+    }
+
+    private function normalizeScalarReviewProposal(mixed $value): string
+    {
+        $value = trim((string) $value);
+
+        return in_array($value, ['all', 'with', 'without'], true) ? $value : 'all';
+    }
+
+    private function normalizeFindingCommentedOutScope(mixed $value): string
+    {
+        $value = trim((string) $value);
+
+        return in_array($value, ['commentedOutPresentNo', 'commentedOutPresentYes'], true)
+            ? $value
+            : 'commentedOutPresentNo';
+    }
+
     private function normalizeSortDirection(mixed $value): string
     {
         return trim((string) $value) === 'asc' ? 'asc' : 'desc';
@@ -7114,6 +9605,9 @@ class TranslationWorkbenchEntries extends Component
         return $this->findingSearch !== ''
             || $this->findingSearchExact
             || $this->findingSearchCaseSensitive
+            || $this->findingValueSearch !== ''
+            || $this->findingValueSearchExact
+            || $this->findingValueSearchCaseSensitive
             || $this->findingStatus !== 'all'
             || $this->showObsoleteFindings
             || $this->findingKind !== 'all'
@@ -7121,7 +9615,94 @@ class TranslationWorkbenchEntries extends Component
             || $this->findingNamespace !== 'all'
             || $this->findingGroup !== 'all'
             || $this->findingKeyRelation !== 'all'
-            || $this->findingLiteralState !== 'all';
+            || $this->findingLiteralState !== 'all'
+            || $this->findingCommentedOutScope !== 'commentedOutPresentNo';
+    }
+
+    private function langCleanupFiltersActive(): bool
+    {
+        return $this->langCleanupSearch !== ''
+            || $this->langCleanupNamespace !== 'all'
+            || $this->langCleanupGroup !== 'all'
+            || $this->langCleanupKeyType !== 'all'
+            || $this->langCleanupContext !== 'all'
+            || $this->langCleanupUsage !== 'all'
+            || $this->langCleanupValueState !== 'all';
+    }
+
+    private function scalarReviewFiltersActive(): bool
+    {
+        return $this->scalarReviewSearch !== ''
+            || $this->scalarReviewRisk !== 'all'
+            || $this->scalarReviewNamespace !== 'all'
+            || $this->scalarReviewProposal !== 'all';
+    }
+
+    private function findingsTabFiltersActive(): bool
+    {
+        return $this->findingFiltersActive()
+            || $this->langCleanupFiltersActive()
+            || $this->scalarReviewFiltersActive()
+            || $this->codeUpdatePlanFiltersActive();
+    }
+
+    private function currentFindingsTabFiltersActive(): bool
+    {
+        return match ($this->findingsActiveTab) {
+            'lang-cleanup' => $this->langCleanupFiltersActive(),
+            'scalar-review' => $this->scalarReviewFiltersActive(),
+            'code-update-plan' => $this->codeUpdatePlanFiltersActive(),
+            default => $this->findingFiltersActive(),
+        };
+    }
+
+    private function shouldLoadFindingsTab(string $tab): bool
+    {
+        return $this->findingsActiveTab === $tab
+            || in_array($tab, $this->loadedFindingsTabs, true);
+    }
+
+    private function markFindingsTabLoaded(string $tab): void
+    {
+        if ($tab === '' || in_array($tab, $this->loadedFindingsTabs, true)) {
+            return;
+        }
+
+        $this->loadedFindingsTabs[] = $tab;
+        $this->loadedFindingsTabs = array_values(array_unique($this->loadedFindingsTabs));
+    }
+
+    /**
+     * @return array<string, bool>
+     */
+    private function findingsTabLoadedState(): array
+    {
+        return collect([
+            'work-findings',
+            'review-last-edits',
+            'key-paths',
+            'lang-cleanup',
+            'cleanup-history',
+            'scalar-review',
+            'shared-key-candidates',
+            'export-report',
+            'suspicious-keys',
+            'last-run',
+            'code-update-plan',
+        ])
+            ->mapWithKeys(fn(string $tab): array => [$tab => $this->shouldLoadFindingsTab($tab)])
+            ->all();
+    }
+
+    private function isLangCleanupFilterProperty(string $property): bool
+    {
+        return str_starts_with($property, 'langCleanup');
+    }
+
+    private function isScalarReviewFilterProperty(string $property): bool
+    {
+        return str_starts_with($property, 'scalarReview')
+            && ! in_array($property, ['scalarReviewSortField', 'scalarReviewSortDirection', 'scalarReviewSelectedLangValueIds'], true);
     }
 
     /**
@@ -7179,6 +9760,9 @@ class TranslationWorkbenchEntries extends Component
             'findingSearch' => $this->findingSearch,
             'findingSearchExact' => $this->findingSearchExact,
             'findingSearchCaseSensitive' => $this->findingSearchCaseSensitive,
+            'findingValueSearch' => $this->findingValueSearch,
+            'findingValueSearchExact' => $this->findingValueSearchExact,
+            'findingValueSearchCaseSensitive' => $this->findingValueSearchCaseSensitive,
             'findingStatus' => $this->findingStatus,
             'findingKind' => $this->findingKind,
             'findingCandidateType' => $this->findingCandidateType,
@@ -7186,12 +9770,26 @@ class TranslationWorkbenchEntries extends Component
             'findingGroup' => $this->findingGroup,
             'findingKeyRelation' => $this->findingKeyRelation,
             'findingLiteralState' => $this->findingLiteralState,
+            'langCleanupSearch' => $this->langCleanupSearch,
+            'langCleanupNamespace' => $this->langCleanupNamespace,
+            'langCleanupGroup' => $this->langCleanupGroup,
+            'langCleanupKeyType' => $this->langCleanupKeyType,
+            'langCleanupContext' => $this->langCleanupContext,
+            'langCleanupUsage' => $this->langCleanupUsage,
+            'langCleanupValueState' => $this->langCleanupValueState,
+            'scalarReviewSearch' => $this->scalarReviewSearch,
+            'scalarReviewRisk' => $this->scalarReviewRisk,
+            'scalarReviewNamespace' => $this->scalarReviewNamespace,
+            'scalarReviewProposal' => $this->scalarReviewProposal,
             'perPage' => $this->perPage,
             'findingSortField' => $this->findingSortField,
             'findingSortDirection' => $this->findingSortDirection,
+            'scalarReviewSortField' => $this->scalarReviewSortField,
+            'scalarReviewSortDirection' => $this->scalarReviewSortDirection,
             'showOverviewTabs' => $this->showOverviewTabs,
             'showObsoleteFindings' => $this->showObsoleteFindings,
             'editModalAutoCloseAfterSave' => $this->editModalAutoCloseAfterSave,
+            'exportReportLastEditedLimit' => $this->exportReportLastEditedLimit,
         ];
     }
 
@@ -7716,6 +10314,8 @@ class TranslationWorkbenchEntries extends Component
             ['label' => 'Import source language values', 'command' => 'translation-workbench:import-existing'],
             ['label' => 'Discover dynamic options', 'command' => 'translation-workbench:discover-dynamic-options'],
             ['label' => 'Detect duplicates', 'command' => 'translation-workbench:detect-duplicates'],
+            ['label' => 'Detect suspicious keyed additions', 'command' => 'translation-workbench:detect-suspicious-keyed-additions'],
+            ['label' => 'Apply suspicious key restores', 'command' => 'translation-workbench:apply-suspicious-key-restores'],
             ['label' => 'Classify dynamic values', 'command' => 'translation-workbench:classify-dynamic-values'],
             ['label' => 'Resolve unknown dynamic sources', 'command' => 'translation-workbench:resolve-unknown-dynamic-sources'],
             ['label' => 'Discover dynamic source candidates', 'command' => 'translation-workbench:discover-dynamic-source-candidates'],
@@ -7822,6 +10422,29 @@ class TranslationWorkbenchEntries extends Component
                 ['Plan manual', $planSummary['manual_review'] ?? 0, ((int) ($planSummary['manual_review'] ?? 0)) > 0 ? 'amber' : 'zinc'],
                 ['Timeline', $summary['timeline_events_created'] ?? 0, ((int) ($summary['timeline_events_created'] ?? 0)) > 0 ? 'green' : 'zinc'],
             ]),
+            'translation-workbench:inventory-keys' => $this->metricRows([
+                ['Inventory', $summary['inventory_rows'] ?? 0, 'sky'],
+                ['Shared', $summary['shared_rows'] ?? 0, ((int) ($summary['shared_rows'] ?? 0)) > 0 ? 'purple' : 'zinc'],
+                ['Dynamic', $summary['dynamic_rows'] ?? 0, ((int) ($summary['dynamic_rows'] ?? 0)) > 0 ? 'violet' : 'zinc'],
+                ['Orphaned', $summary['orphaned_lang_value_rows'] ?? 0, ((int) ($summary['orphaned_lang_value_rows'] ?? 0)) > 0 ? 'amber' : 'green'],
+                ['Delete cand.', $summary['candidate_for_lang_delete_rows'] ?? 0, ((int) ($summary['candidate_for_lang_delete_rows'] ?? 0)) > 0 ? 'amber' : 'green'],
+                ['Stale', $summary['stale_marked'] ?? 0, ((int) ($summary['stale_marked'] ?? 0)) > 0 ? 'amber' : 'zinc'],
+            ]),
+            'translation-workbench:detect-suspicious-keyed-additions' => $this->metricRows([
+                ['Keyed', $summary['keyed_findings_scanned'] ?? 0, 'sky'],
+                ['Suspicious', $summary['suspicious'] ?? 0, ((int) ($summary['suspicious'] ?? 0)) > 0 ? 'red' : 'green'],
+                ['Reviewed', $summary['reviewed'] ?? 0, ((int) ($summary['reviewed'] ?? 0)) > 0 ? 'green' : 'zinc'],
+                ['Recent only', ($summary['recent_only'] ?? false) ? 'yes' : 'no', ($summary['recent_only'] ?? false) ? 'amber' : 'zinc'],
+            ]),
+            'translation-workbench:apply-suspicious-key-restores' => $this->metricRows([
+                ['Reviewed', $summary['reviewed_restore_decisions'] ?? 0, 'sky'],
+                ['Would restore', $summary['would_restore'] ?? 0, ((int) ($summary['would_restore'] ?? 0)) > 0 ? 'amber' : 'green'],
+                ['Restored', $summary['restored'] ?? 0, ((int) ($summary['restored'] ?? 0)) > 0 ? 'green' : 'zinc'],
+                ['Already', $summary['already_restored'] ?? 0, ((int) ($summary['already_restored'] ?? 0)) > 0 ? 'sky' : 'zinc'],
+                ['Stale', $summary['stale_source'] ?? 0, ((int) ($summary['stale_source'] ?? 0)) > 0 ? 'red' : 'green'],
+                ['Missing value', $summary['missing_source_lang_value'] ?? 0, ((int) ($summary['missing_source_lang_value'] ?? 0)) > 0 ? 'red' : 'green'],
+                ['Timeline', $summary['timeline_events_created'] ?? 0, ((int) ($summary['timeline_events_created'] ?? 0)) > 0 ? 'green' : 'zinc'],
+            ]),
             default => $this->metricRows([
                 ['Files', $rawData['files'] ?? ($summary['files'] ?? 0), 'sky'],
                 ['Found', $rawData['found'] ?? ($summary['found'] ?? 0), 'sky'],
@@ -7923,6 +10546,36 @@ class TranslationWorkbenchEntries extends Component
             }
         }
 
+        if ($command === 'translation-workbench:detect-suspicious-keyed-additions') {
+            $suspicious = (int) ($summary['suspicious'] ?? 0);
+
+            $notes[] = [
+                'color' => $suspicious > 0 ? 'amber' : 'green',
+                'text' => $suspicious > 0
+                    ? __('Code contains translation-key calls that do not have reviewed Workbench or code-update provenance. Review them, but the remaining pipeline can continue unless another step reports a concrete error.')
+                    : __('No suspicious direct translation-key additions were detected in the configured source paths.'),
+            ];
+        }
+
+        if ($command === 'translation-workbench:apply-suspicious-key-restores') {
+            $stale = (int) ($summary['stale_source'] ?? 0);
+            $missingValue = (int) ($summary['missing_source_lang_value'] ?? 0);
+
+            $notes[] = [
+                'color' => ((int) ($summary['restored'] ?? 0)) > 0 ? 'green' : 'sky',
+                'text' => (bool) ($data['write'] ?? false)
+                    ? __('This step applies already reviewed suspicious-key restore decisions before the scanner builds fresh data.')
+                    : __('This step reports reviewed suspicious direct key calls that would be restored back to source literals. It does not change files in dry-run mode.'),
+            ];
+
+            if ($stale > 0 || $missingValue > 0) {
+                $notes[] = [
+                    'color' => 'amber',
+                    'text' => __('Some suspicious key restore decisions could not be applied automatically. Review these rows when convenient; they do not block unrelated pipeline steps.'),
+                ];
+            }
+        }
+
         if ((int) ($data['exit_code'] ?? 0) !== 0) {
             $notes[] = [
                 'color' => 'red',
@@ -7944,6 +10597,8 @@ class TranslationWorkbenchEntries extends Component
             'translation-workbench:export-lang-files' => (int) ($summary['values_conflicted'] ?? 0) > 0,
             'translation-workbench:apply-code-updates' => (int) ($summary['stale_source'] ?? 0) > 0
                 || (int) ($summary['skipped'] ?? 0) > 0,
+            'translation-workbench:detect-suspicious-keyed-additions' => false,
+            'translation-workbench:apply-suspicious-key-restores' => false,
             default => false,
         };
     }
@@ -8017,6 +10672,20 @@ class TranslationWorkbenchEntries extends Component
             })
             ->values()
             ->all();
+        $pruned = collect(is_array($data['plans'] ?? null) ? $data['plans'] : [])
+            ->flatMap(function (array $plan): array {
+                return collect(is_array($plan['pruned'] ?? null) ? $plan['pruned'] : [])
+                    ->map(static fn(array $pruned) => [
+                        ...$pruned,
+                        'locale' => (string) ($plan['locale'] ?? ''),
+                        'namespace' => (string) ($plan['namespace'] ?? ''),
+                        'path' => (string) ($plan['path'] ?? ''),
+                        'written' => (bool) ($plan['written'] ?? false),
+                    ])
+                    ->all();
+            })
+            ->values()
+            ->all();
 
         return [
             'command' => (string) ($data['command'] ?? 'translation-workbench:export-lang-files'),
@@ -8031,6 +10700,7 @@ class TranslationWorkbenchEntries extends Component
             'values_conflicted' => (int) ($summary['values_conflicted'] ?? 0),
             'files_written' => (int) ($summary['files_written'] ?? 0),
             'conflicts' => $conflicts,
+            'pruned' => $pruned,
             'active_scope' => [
                 'source_locale' => (string) ($activeScope['source_locale'] ?? ''),
                 'target_main_locale' => (string) ($activeScope['target_main_locale'] ?? ''),
@@ -8047,6 +10717,202 @@ class TranslationWorkbenchEntries extends Component
                 'target_main_missing_keys' => is_array($activeScope['target_main_missing_keys'] ?? null) ? $activeScope['target_main_missing_keys'] : [],
                 'target_main_extra_keys' => is_array($activeScope['target_main_extra_keys'] ?? null) ? $activeScope['target_main_extra_keys'] : [],
             ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function pipelineRunStatus(): ?array
+    {
+        $run = app(TranslationWorkbenchPipelineRunTracker::class)->latest();
+
+        if (! $run) {
+            return null;
+        }
+
+        $status = (string) $run->status;
+        $totalSteps = max(0, (int) $run->total_steps);
+        $currentStep = max(0, (int) $run->current_step);
+        $progress = $totalSteps > 0
+            ? (int) min(100, max(0, round(($currentStep / $totalSteps) * 100)))
+            : ($status === 'finished' ? 100 : 0);
+        $color = match ($status) {
+            'finished' => 'green',
+            'failed' => 'red',
+            'running' => 'sky',
+            default => 'amber',
+        };
+
+        return [
+            'id' => (int) $run->id,
+            'command' => (string) $run->command,
+            'status' => $status,
+            'status_label' => match ($status) {
+                'finished' => __('Ready'),
+                'failed' => __('Failed'),
+                'running' => __('Running'),
+                default => __('Pending'),
+            },
+            'color' => $color,
+            'is_active' => in_array($status, ['pending', 'running'], true),
+            'current_step' => $currentStep,
+            'total_steps' => $totalSteps,
+            'progress' => $progress,
+            'current_step_label' => (string) ($run->current_step_label ?? ''),
+            'current_step_command' => (string) ($run->current_step_command ?? ''),
+            'started_at' => $run->started_at,
+            'finished_at' => $run->finished_at,
+            'error_message' => (string) ($run->error_message ?? ''),
+            'summary' => (array) ($run->summary ?? []),
+            'steps' => $run->steps
+                ->map(static fn($step): array => [
+                    'step_number' => (int) $step->step_number,
+                    'label' => (string) $step->label,
+                    'command' => (string) $step->command,
+                    'status' => (string) $step->status,
+                    'exit_code' => $step->exit_code,
+                    'duration_ms' => $step->duration_ms,
+                    'started_at' => $step->started_at,
+                    'finished_at' => $step->finished_at,
+                    'error_message' => (string) ($step->error_message ?? ''),
+                ])
+                ->values()
+                ->all(),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function suspiciousKeyedAdditionsReport(): ?array
+    {
+        $path = $this->translationWorkbenchReportPath('translation-workbench:detect-suspicious-keyed-additions');
+
+        if (! File::exists($path)) {
+            return null;
+        }
+
+        $data = json_decode((string) File::get($path), true);
+
+        if (! is_array($data)) {
+            return null;
+        }
+
+        $summary = is_array($data['summary'] ?? null) ? $data['summary'] : [];
+        $results = collect(is_array($data['results'] ?? null) ? $data['results'] : [])
+            ->map(static fn(array $row): array => [
+                'state' => (string) ($row['state'] ?? ''),
+                'reason' => (string) ($row['reason'] ?? ''),
+                'review_decision' => (string) ($row['review_decision'] ?? ''),
+                'review_decision_label' => (string) ($row['review_decision_label'] ?? ''),
+                'reviewed_at' => (string) ($row['reviewed_at'] ?? ''),
+                'reviewed_by_user_id' => $row['reviewed_by_user_id'] ?? null,
+                'source_path' => (string) ($row['source_path'] ?? ''),
+                'source_signature' => (string) ($row['source_signature'] ?? ''),
+                'source_line' => $row['source_line'] ?? null,
+                'raw_expression' => (string) ($row['raw_expression'] ?? ''),
+                'translation_key' => (string) ($row['translation_key'] ?? ''),
+                'suggested_key' => (string) ($row['suggested_key'] ?? ''),
+                'literal_text_suggested' => (string) ($row['literal_text_suggested'] ?? ''),
+                'finding_id' => $row['finding_id'] ?? null,
+                'key_id' => $row['key_id'] ?? null,
+                'finding_status' => (string) ($row['finding_status'] ?? ''),
+                'key_status' => (string) ($row['key_status'] ?? ''),
+                'key_review_status' => (string) ($row['key_review_status'] ?? ''),
+                'has_active_key_link' => (bool) ($row['has_active_key_link'] ?? false),
+                'has_reviewed_key' => (bool) ($row['has_reviewed_key'] ?? false),
+                'has_code_update_applied_event' => (bool) ($row['has_code_update_applied_event'] ?? false),
+                'has_review_event' => (bool) ($row['has_review_event'] ?? false),
+                'source_locale' => (string) ($row['source_locale'] ?? $summary['source_locale'] ?? 'en'),
+                'source_lang_value_exists' => (bool) ($row['source_lang_value_exists'] ?? false),
+                'source_lang_value_count' => (int) ($row['source_lang_value_count'] ?? 0),
+                'source_lang_active_value_count' => (int) ($row['source_lang_active_value_count'] ?? 0),
+                'source_lang_status' => (string) ($row['source_lang_status'] ?? ''),
+                'source_lang_namespace' => (string) ($row['source_lang_namespace'] ?? ''),
+                'source_lang_key' => (string) ($row['source_lang_key'] ?? ''),
+                'source_lang_value' => (string) ($row['source_lang_value'] ?? ''),
+                'key_record_count' => (int) ($row['key_record_count'] ?? 0),
+                'active_usage_count' => (int) ($row['active_usage_count'] ?? 0),
+                'reviewed_usage_count' => (int) ($row['reviewed_usage_count'] ?? 0),
+                'direct_code_usage_count' => (int) ($row['direct_code_usage_count'] ?? 0),
+            ])
+            ->values()
+            ->all();
+
+        return [
+            'command' => (string) ($data['command'] ?? 'translation-workbench:detect-suspicious-keyed-additions'),
+            'generated_at' => (string) ($data['generated_at'] ?? ''),
+            'summary' => [
+                'keyed_findings_scanned' => (int) ($summary['keyed_findings_scanned'] ?? 0),
+                'report_rows' => (int) ($summary['report_rows'] ?? 0),
+                'suspicious' => (int) ($summary['suspicious'] ?? 0),
+                'reviewed' => (int) ($summary['reviewed'] ?? 0),
+                'recent_only' => (bool) ($summary['recent_only'] ?? false),
+                'source_locale' => (string) ($summary['source_locale'] ?? 'en'),
+                'since_hours' => $summary['since_hours'] ?? null,
+                'since_at' => $summary['since_at'] ?? null,
+                'default_since_at' => $summary['default_since_at'] ?? null,
+                'previous_detector_report_generated_at' => $summary['previous_detector_report_generated_at'] ?? null,
+                'pipeline_report_generated_at' => $summary['pipeline_report_generated_at'] ?? null,
+                'fail_on_suspicious' => (bool) ($summary['fail_on_suspicious'] ?? false),
+            ],
+            'results' => $results,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function suspiciousKeyReview(): ?array
+    {
+        $sourceSignature = trim((string) $this->suspiciousKeyReviewSourceSignature);
+
+        if ($sourceSignature === '') {
+            return null;
+        }
+
+        $report = $this->suspiciousKeyedAdditionsReport();
+        $row = collect($report['results'] ?? [])
+            ->first(static fn(array $row): bool => (string) ($row['source_signature'] ?? '') === $sourceSignature);
+
+        if (! $row) {
+            return null;
+        }
+
+        $finding = ! empty($row['finding_id'])
+            ? TranslationWorkbenchFinding::query()->with('sourceFile')->find((int) $row['finding_id'])
+            : TranslationWorkbenchFinding::query()->with('sourceFile')->where('source_signature', $sourceSignature)->first();
+        $key = ! empty($row['key_id'])
+            ? TranslationWorkbenchKey::query()->find((int) $row['key_id'])
+            : TranslationWorkbenchKey::query()
+                ->where('translation_key', (string) ($row['translation_key'] ?? ''))
+                ->orderByRaw("CASE WHEN review_status = 'reviewed' THEN 0 ELSE 1 END")
+                ->orderBy('id')
+                ->first();
+        $latestReview = TranslationWorkbenchReview::query()
+            ->where('review_type', 'suspicious_key_provenance')
+            ->where(function ($query) use ($sourceSignature, $finding, $key, $row): void {
+                $query->where('meta->source_signature', $sourceSignature)
+                    ->orWhere('meta->translation_key', (string) ($row['translation_key'] ?? ''));
+
+                if ($finding) {
+                    $query->orWhere('finding_id', $finding->id);
+                }
+
+                if ($key) {
+                    $query->orWhere('key_id', $key->id);
+                }
+            })
+            ->latest('reviewed_at')
+            ->latest('id')
+            ->first();
+
+        return [
+            'row' => $row,
+            'finding' => $finding,
+            'key' => $key,
+            'latest_review' => $latestReview,
         ];
     }
 
@@ -8416,6 +11282,23 @@ class TranslationWorkbenchEntries extends Component
         }
     }
 
+    private function refreshSuspiciousKeyedAdditions(): bool
+    {
+        try {
+            return Artisan::call('translation-workbench:detect-suspicious-keyed-additions', [
+                '--source-locale' => $this->sourceMainLocale(),
+                '--skip-raw-data' => true,
+            ]) === 0;
+        } catch (\Throwable $exception) {
+            Log::warning('Translation Workbench suspicious-key report refresh failed.', [
+                'message' => $exception->getMessage(),
+                'exception' => $exception::class,
+            ]);
+
+            return false;
+        }
+    }
+
     private function refreshLangFileExportReport(): bool
     {
         try {
@@ -8470,6 +11353,97 @@ class TranslationWorkbenchEntries extends Component
             'is_obsolete' => $langValue?->status === 'obsolete',
             'possible_matching_entry' => $this->possibleMatchingEntryForObsoleteSourceKey($translationKey),
         ];
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function langCleanupReview(): ?array
+    {
+        $inventoryId = (int) ($this->langCleanupInventoryId ?? 0);
+
+        if ($inventoryId <= 0 || ! Schema::hasTable('translation_workbench_key_inventory')) {
+            return null;
+        }
+
+        $inventory = TranslationWorkbenchKeyInventory::query()->find($inventoryId);
+
+        if (! $inventory) {
+            return null;
+        }
+
+        $translationKey = trim((string) $inventory->translation_key);
+        $sourceLocale = $this->sourceMainLocale();
+        $targetLocale = (string) ($this->editLocales()['active'] ?? app()->getLocale());
+        $key = TranslationWorkbenchKey::query()
+            ->where('translation_key', $translationKey)
+            ->orWhere('suggested_key', $translationKey)
+            ->first();
+
+        $langValues = TranslationWorkbenchLangValue::query()
+            ->where('translation_key', $translationKey)
+            ->orderByRaw("CASE WHEN locale = ? THEN 0 WHEN locale = ? THEN 1 ELSE 2 END", [$sourceLocale, $targetLocale])
+            ->orderBy('locale')
+            ->get();
+
+        $latestReview = TranslationWorkbenchReview::query()
+            ->where('review_type', 'lang_cleanup')
+            ->where(function ($query) use ($inventory, $translationKey, $key): void {
+                $query->where('meta->inventory_id', $inventory->id)
+                    ->orWhere('meta->translation_key', $translationKey);
+
+                if ($key) {
+                    $query->orWhere('key_id', $key->id);
+                }
+            })
+            ->latest('reviewed_at')
+            ->latest('id')
+            ->first();
+
+        return [
+            'inventory' => $inventory,
+            'translation_key' => $translationKey,
+            'source_locale' => $sourceLocale,
+            'target_locale' => $targetLocale,
+            'key' => $key,
+            'lang_values' => $langValues,
+            'latest_review' => $latestReview,
+            'decision' => (string) ($latestReview?->decision ?? 'open'),
+        ];
+    }
+
+    private function refreshLangCleanupInventoryCounts(TranslationWorkbenchKeyInventory $inventory, string $sourceLocale): void
+    {
+        $row = DB::table('translation_workbench_lang_values')
+            ->where('translation_key', (string) $inventory->translation_key)
+            ->selectRaw("SUM(CASE WHEN locale = ? AND status = 'active' THEN 1 ELSE 0 END) as source_active", [$sourceLocale])
+            ->selectRaw("SUM(CASE WHEN locale = ? AND status = 'obsolete' THEN 1 ELSE 0 END) as source_obsolete", [$sourceLocale])
+            ->selectRaw("SUM(CASE WHEN locale = ? AND status = 'deleted' THEN 1 ELSE 0 END) as source_deleted", [$sourceLocale])
+            ->selectRaw("SUM(CASE WHEN locale <> ? AND status = 'active' THEN 1 ELSE 0 END) as target_active", [$sourceLocale])
+            ->selectRaw("SUM(CASE WHEN locale <> ? AND status = 'obsolete' THEN 1 ELSE 0 END) as target_obsolete", [$sourceLocale])
+            ->selectRaw("SUM(CASE WHEN locale <> ? AND status = 'deleted' THEN 1 ELSE 0 END) as target_deleted", [$sourceLocale])
+            ->selectRaw('COUNT(DISTINCT locale) as locale_count')
+            ->first();
+
+        $sourceActive = (int) ($row->source_active ?? 0);
+        $sourceObsolete = (int) ($row->source_obsolete ?? 0);
+        $sourceDeleted = (int) ($row->source_deleted ?? 0);
+        $targetActive = (int) ($row->target_active ?? 0);
+        $targetObsolete = (int) ($row->target_obsolete ?? 0);
+        $targetDeleted = (int) ($row->target_deleted ?? 0);
+        $langValueCount = $sourceActive + $sourceObsolete + $sourceDeleted + $targetActive + $targetObsolete + $targetDeleted;
+
+        $inventory->forceFill([
+            'source_value_active_count' => $sourceActive,
+            'source_value_obsolete_count' => $sourceObsolete,
+            'source_value_deleted_count' => $sourceDeleted,
+            'target_value_active_count' => $targetActive,
+            'target_value_obsolete_count' => $targetObsolete,
+            'target_value_deleted_count' => $targetDeleted,
+            'lang_file_locale_count' => (int) ($row->locale_count ?? 0),
+            'has_lang_values' => $langValueCount > 0,
+            'candidate_for_lang_delete' => (bool) $inventory->is_orphaned_lang_value && ($sourceActive > 0 || $targetActive > 0),
+        ])->save();
     }
 
     /**

@@ -3,7 +3,7 @@
 {{-- Filter --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('admin.client_list.filter.filtering')"
+        :title="__('ui.filter.filter')"
         :description="__(
             'admin.client_list.filter.refine_the_client_list_with_powerful_filters_search_by_name_legal_name_client_nu',
         )"
@@ -64,7 +64,7 @@
                     wire:model.live="typeFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('ui.all-types') }}
+                        {{ __('ui.all.all-types') }}
                     </flux:select.option>
 
                     @foreach ($typeOptions as $type)
@@ -82,7 +82,7 @@
                     :title="__('ui.filters.filter-by-status')"
                     :text="__('admin.client_list.filter.select_a_status_to_filter_the_client_list')"
                 >
-                    {{ __('ui.status') }}
+                    {{ __('ui.state.status') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -100,7 +100,7 @@
                     wire:model.live="statusFilter"
                 >
                     <flux:select.option value="">
-                        {{ __('ui.all-statuses') }}
+                        {{ __('ui.states.all-statuses') }}
                     </flux:select.option>
 
                     @foreach ($statusOptions as $status)
@@ -118,7 +118,7 @@
                     :title="__('admin.client_list.filter.filter_by_people')"
                     :text="__('admin.client_list.filter.select_a_people_filter_to_filter_the_client_list')"
                 >
-                    {{ __('ui.people') }}
+                    {{ __('ui.people.people') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 

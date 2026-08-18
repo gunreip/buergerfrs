@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "id": "path-protocol-dev-merge-left",
+    "version": "0.1",
+    "description": "Minimal trunk to merge-left path protocol. The structure follows the chain from trunk to the visible merge path."
+  },
+  "geometry": {
+    "unit": "rem",
+    "color": "cyan",
+    "pathWidth": "0.25rem",
+    "nodeSize": "1rem",
+    "arcSize": "2.75rem"
+  },
+  "twGraph": {
+    "strang": {
+      "trunk": {
+        "trunk": {
+          "paths": [
+            {
+              "id": "trunk.path.1",
+              "type": "trunk",
+              "segments": {
+                "start": {
+                  "id": "trunk.path.1.start",
+                  "segment": "trunk-start",
+                  "type": "path",
+                  "direction": "bottom-top",
+                  "length": "8rem",
+                  "anchorStart": { "x": "0rem", "y": "0rem" },
+                  "anchorEnd": { "x": "0rem", "y": "8rem" },
+                  "nodeStart": false,
+                  "nodeEnd": true,
+                  "color": "green"
+                },
+                "paths": [],
+                "end": null
+              }
+            }
+          ],
+          "end": null
+        }
+      },
+      "merge": {
+        "left": {
+          "merge": {
+            "id": "merge.left",
+            "segments": [
+              {
+                "id": "merge.left.1.arc-se",
+                "type": "arc",
+                "direction": "se",
+                "anchorStart": { "x": "0rem", "y": "8rem" },
+                "anchorEnd": { "x": "-2.5rem", "y": "5.5rem" },
+                "color": "amber"
+              },
+              {
+                "id": "merge.left.2.right-left",
+                "type": "path",
+                "direction": "right-left",
+                "length": "6rem",
+                "anchorStart": { "x": "-2.5rem", "y": "5.5rem" },
+                "anchorEnd": { "x": "-8.5rem", "y": "5.5rem" },
+                "color": "amber"
+              },
+              {
+                "id": "merge.left.3.arc-nw",
+                "type": "arc",
+                "direction": "nw",
+                "anchorStart": { "x": "-8.5rem", "y": "5.5rem" },
+                "anchorEnd": { "x": "-11rem", "y": "3rem" },
+                "color": "amber"
+              },
+              {
+                "id": "merge.left.4.top-bottom",
+                "type": "path",
+                "direction": "top-bottom",
+                "length": "2rem",
+                "anchorStart": { "x": "-11rem", "y": "3rem" },
+                "anchorEnd": { "x": "-11rem", "y": "1rem" },
+                "color": "amber"
+              },
+              {
+                "id": "merge.left.5.start-south",
+                "type": "path",
+                "direction": "top-bottom",
+                "length": "1rem",
+                "anchorStart": { "x": "-11rem", "y": "1rem" },
+                "anchorEnd": { "x": "-11rem", "y": "0rem" },
+                "color": "amber"
+              },
+              {
+                "id": "merge.left.node.end",
+                "type": "node",
+                "anchorStart": { "x": "-11rem", "y": "1rem" },
+                "anchorEnd": { "x": "-11rem", "y": "1rem" },
+                "label": "merge end",
+                "color": "amber"
+              }
+            ]
+          }
+        },
+        "right": null
+      }
+    }
+  }
+}

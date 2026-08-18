@@ -101,7 +101,7 @@
                                 size="sm"
                                 color="{{ $isUiConfirmed ? 'green' : ($isUiCandidate ? 'cyan' : 'zinc') }}"
                             >
-                                {{ $isUiConfirmed ? __('Is UI') : ($isUiCandidate ? __('ui.ui-candidate') : __('No UI candidate')) }}
+                                {{ $isUiConfirmed ? __('Is UI') : ($isUiCandidate ? __('ui.ui.ui-candidate') : __('No UI candidate')) }}
                             </flux:badge>
 
                             <flux:badge
@@ -169,7 +169,7 @@
                         </flux:callout.heading>
                         {{-- Text Current Key --}}
                         <flux:callout.text class="wrap-anywhere text-wrap font-mono text-xs">
-                            {{ $currentTranslationKey ?: __('ui.missing') }}
+                            {{ $currentTranslationKey ?: __('ui.state.missing') }}
                         </flux:callout.text>
 
                         {{-- Heading Existing Key --}}
@@ -203,7 +203,7 @@
                         </flux:callout.heading>
                         {{-- Text Found Translation Key --}}
                         <flux:callout.text class="wrap-anywhere text-wrap font-mono text-xs">
-                            {{ $foundTranslationKey ?: __('ui.missing') }}
+                            {{ $foundTranslationKey ?: __('ui.state.missing') }}
                         </flux:callout.text>
 
                         {{-- Heading Suggested Key --}}
@@ -256,7 +256,7 @@
                         </flux:callout.heading>
                         {{-- Text Suggested Key --}}
                         <flux:callout.text class="wrap-anywhere text-wrap font-mono text-xs">
-                            {{ $effectiveSuggestedKey ?: __('ui.missing') }}
+                            {{ $effectiveSuggestedKey ?: __('ui.state.missing') }}
                         </flux:callout.text>
                     </flux:callout>
 
@@ -270,9 +270,9 @@
                         <flux:callout.heading>
                             <span class="flex w-full items-center justify-between gap-2">
                                 <span class="inline-flex items-center gap-1.5">
-                                    <span>{{ __('ui.source') }}</span>
+                                    <span>{{ __('ui.source.source') }}</span>
                                     <x-ui.tooltip.simple
-                                        :header="__('ui.source')"
+                                        :header="__('ui.source.source')"
                                         :text="__(
                                             'The scanned file path and line number where this finding was detected.',
                                         )"
@@ -331,7 +331,7 @@
                                     @php
                                         $sectionLabel = match ($segmentStat['label']) {
                                             __('Current key') => __('ui.translation.translation-key'),
-                                            __('Suggested key') => __('ui.key.suggested-key'),
+                                            __('ui.key.suggested-key') => __('ui.key.suggested-key'),
                                             default => $segmentStat['label'],
                                         };
                                     @endphp
@@ -434,7 +434,7 @@
                                 :aria-label="__('Delete first segment')"
                                 wire:click="deleteFirstTranslationKeySegmentModal"
                             >
-                                {{ __('ui.delete') }}
+                                {{ __('Delete') }}
                                 {{ $translationKeySegmentControls['next_delete_segment'] ?: __('segment') }}
                             </flux:button>
                             <flux:button
@@ -459,10 +459,10 @@
                                     variant="ghost"
                                     icon="hash"
                                     icon:class="text-amber-600 dark:text-amber-300"
-                                    :aria-label="__('Remove hash suffix')"
+                                    :aria-label="__('ui.remove.remove.remove-hash-suffix')"
                                     wire:click="removeTranslationKeyHashSuffixModal"
                                 >
-                                    {{ __('Remove hash suffix') }}
+                                    {{ __('ui.remove.remove.remove-hash-suffix') }}
                                 </flux:button>
                             @endif
                         </flux:callout.text>
@@ -521,7 +521,7 @@
                                                     <div
                                                         class="grid max-h-40 grid-cols-2 gap-x-3 gap-y-2 overflow-y-auto pr-1">
                                                         <flux:callout.heading>
-                                                            {{ __('Translation key') }}
+                                                            {{ __('ui.translation.translation-key') }}
                                                         </flux:callout.heading>
                                                         <flux:callout.heading>
                                                             {{ __('Translation values') }}

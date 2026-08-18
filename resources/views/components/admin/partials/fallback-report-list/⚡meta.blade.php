@@ -3,7 +3,7 @@
 {{-- Overview --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('admin.permissions.overview.title')"
+        :title="__('ui.title.filter')"
         :description="__(
             'Summary of technical fallback events such as missing icons, missing config values or other recoverable UI fallbacks.',
         )"

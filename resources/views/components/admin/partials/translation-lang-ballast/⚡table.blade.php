@@ -40,7 +40,7 @@
             'color' => 'sky',
         ],
         'approved' => [
-            'label' => __('ui.approved'),
+            'label' => __('ui.labels.approved'),
             'color' => 'emerald',
         ],
         'ignored' => [

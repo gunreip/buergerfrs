@@ -684,7 +684,7 @@ class TranslationUsageAudit extends Component
         return match ($this->computedUsageAuditDecisionStatus()) {
             'ready' => __('Ready'),
             'needs_key' => __('Needs key'),
-            'applied' => __('ui.applied'),
+            'applied' => __('ui.apply.applied'),
             default => __('Draft'),
         };
     }
@@ -726,7 +726,7 @@ class TranslationUsageAudit extends Component
         return match ($status) {
             'ready' => __('Ready'),
             'needs_key' => __('Needs key'),
-            'applied' => __('ui.applied'),
+            'applied' => __('ui.apply.applied'),
             'draft' => __('Draft'),
             default => __('New'),
         };

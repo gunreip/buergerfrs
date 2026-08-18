@@ -19,7 +19,7 @@
 
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('admin.permissions.overview.title')"
+        :title="__('ui.title.filter')"
         :description="$audit['note'] ?? __('Current HTML / Blade view structure audit result.')"
     />
 

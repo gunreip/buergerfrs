@@ -51,7 +51,7 @@
                         @if (!$translationWorkflowEdited && filled($literalTextSuggested) && $literalTextSuggested !== $literalText)
                             <div class="space-y-0.5 text-xs text-zinc-500">
                                 <div class="text-[11px] font-semibold uppercase">
-                                    {{ __('ui.suggested') }}
+                                    {{ __('ui.suggest.suggested') }}
                                 </div>
                                 <div>
                                     <x-translation-workbench::text.highlight

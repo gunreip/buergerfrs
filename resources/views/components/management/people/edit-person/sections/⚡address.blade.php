@@ -11,7 +11,7 @@
 
 <flux:card>
     <x-ui.headers.card
-        :title="__('ui.address')"
+        :title="__('ui.labels.address.address')"
         :description="__('Primary person address.')"
     />
 
@@ -309,12 +309,12 @@
                     </flux:input.group.prefix>
                     <flux:input.group.prefix class="w-64 rounded-l-none">
                         <x-ui.tooltip.trigger
-                            :title="__('ui.address-line-2')"
+                            :title="__('ui.address.address.address-line-2')"
                             :text="__(
                                 'Enter the second line of the address. This can include apartment numbers, suite numbers, or other secondary address information.',
                             )"
                         >
-                            {{ __('ui.address-line-2') }}
+                            {{ __('ui.address.address.address-line-2') }}
                         </x-ui.tooltip.trigger>
                     </flux:input.group.prefix>
                     @if ($editingField === 'addressLine2')

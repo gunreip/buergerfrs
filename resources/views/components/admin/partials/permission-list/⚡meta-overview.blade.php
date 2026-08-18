@@ -8,7 +8,7 @@
     <div class="flex w-full items-center justify-between gap-3">
         <div class="min-w-0">
             <x-ui.headers.card
-                :title="__('admin.permissions.overview.title')"
+                :title="__('ui.title.filter')"
                 :description="__('admin.permissions.overview.description')"
             />
         </div>

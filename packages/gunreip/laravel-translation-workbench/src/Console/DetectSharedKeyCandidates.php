@@ -308,6 +308,12 @@ class DetectSharedKeyCandidates extends Command
         $path = $directory . DIRECTORY_SEPARATOR . Str::of((string) $this->getName())->replace(':', '-')->append('.json');
 
         File::ensureDirectoryExists($directory);
+        @chmod($directory, 0777);
+
+        if (File::exists($path) && ! is_writable($path)) {
+            @unlink($path);
+        }
+
         File::put($path, json_encode([
             'command' => $this->getName(),
             'generated_at' => now()->toISOString(),
@@ -319,6 +325,7 @@ class DetectSharedKeyCandidates extends Command
                 ->all(),
             'raw_data' => $this->translationWorkbenchReportRawData(),
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL);
+        @chmod($path, 0666);
 
         $this->line('JSON report: ' . $path);
     }

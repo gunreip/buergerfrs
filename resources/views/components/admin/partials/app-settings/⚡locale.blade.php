@@ -17,7 +17,7 @@
             color="sky"
             size="lg"
         >
-            {{ __('ui.current') }}:
+            {{ __('ui.badge.current.current') }}:
             <x-ui.locale.flag
                 class="ml-2"
                 size="lg"
@@ -182,7 +182,7 @@
                                                         variant="subtle"
                                                         color="sky"
                                                     >
-                                                        {{ __('ui.current') }}
+                                                        {{ __('ui.badge.current.current') }}
                                                     </flux:badge>
                                                 @endif
                                             </div>

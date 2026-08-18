@@ -22,7 +22,7 @@
                 </flux:heading>
 
                 <flux:text class="text-sm text-zinc-500 dark:text-zinc-400">
-                    {{ __('Review whether this source-language value should be removed from the active export workflow.') }}
+                    {{ __('ui.remove.removed.review-whether-this-source-language-value-should-be-removed-from-the-active-export-workflow') }}
                 </flux:text>
             </div>
 
@@ -46,7 +46,7 @@
                     <flux:callout.text>
                         <div class="grid gap-2 text-sm">
                             <div class="flex items-center justify-between gap-3">
-                                <span class="text-zinc-500 dark:text-zinc-400">{{ __('ui.source') }}</span>
+                                <span class="text-zinc-500 dark:text-zinc-400">{{ __('ui.source.source') }}</span>
                                 <flux:badge size="sm">{{ $obsoleteReview['source_locale'] }}
                                     <x-ui.locale.flag
                                         class="ml-1"
@@ -95,7 +95,7 @@
                             size="sm"
                             color="{{ $obsoleteLangValue->status === 'obsolete' ? 'zinc' : 'green' }}"
                         >
-                            {{ __('ui.status') }}: {{ $obsoleteLangValue->status }}
+                            {{ __('ui.state.status') }}: {{ $obsoleteLangValue->status }}
                         </flux:badge>
                         <flux:badge size="sm">
                             ID #{{ $obsoleteLangValue->id }}
@@ -131,7 +131,7 @@
                         </flux:badge>
 
                         <flux:badge size="sm">
-                            {{ __('Removed') }}: {{ $possibleMatchingEntry['deleted_segments_count'] }}
+                            {{ __('ui.remove.removed.removed') }}: {{ $possibleMatchingEntry['deleted_segments_count'] }}
                         </flux:badge>
 
                         @if ($possibleMatchingEntry['key_id'])
@@ -212,7 +212,7 @@
                     variant="ghost"
                     wire:click="closeObsoleteSourceValueReview"
                 >
-                    {{ __('ui.cancel') }}
+                    {{ __('ui.button.cancel') }}
                 </flux:button>
 
                 <flux:button

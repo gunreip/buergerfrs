@@ -9,7 +9,7 @@
         ],
         [
             'name' => 'address',
-            'label' => __('ui.address'),
+            'label' => __('ui.labels.address.address'),
             'icon' => 'map-pin-house',
         ],
         [

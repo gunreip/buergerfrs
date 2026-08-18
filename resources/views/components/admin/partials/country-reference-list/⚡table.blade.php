@@ -98,11 +98,11 @@
 
                     <flux:table.column align="center">
                         <x-ui.tooltip.trigger
-                            :title="__('ui.address')"
+                            :title="__('ui.labels.address.address')"
                             :text="__('admin.country_reference_list.table.address_format_availability_of_the_country_useful_for_identification_and_referen',
                             )"
                         >
-                            {{ __('ui.address') }}
+                            {{ __('ui.labels.address.address') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -126,10 +126,10 @@
                         wire:click="sortBy('is_active')"
                     >
                         <x-ui.tooltip.trigger
-                            :title="__('ui.status')"
+                            :title="__('ui.state.status')"
                             :text="__('admin.country_reference_list.table.active_status_of_the_country_useful_for_identification_and_reference')"
                         >
-                            {{ __('ui.status') }}
+                            {{ __('ui.state.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
                 </flux:table.columns>
@@ -306,7 +306,7 @@
             </flux:table>
         </div>
 
-        <flux:separator text="{{ __('ui.pagination') }}" />
+        <flux:separator text="{{ __('ui.nouns.pagination') }}" />
 
         @if ($countries->hasPages())
             <x-ui.table.pagination :paginator="$countries" />

@@ -166,8 +166,8 @@
                 >
                     <flux:table.column class="rounded-tl-lg">{{ __('Finding') }}</flux:table.column>
                     <flux:table.column>{{ __('Key') }}</flux:table.column>
-                    <flux:table.column>{{ __('ui.current') }}</flux:table.column>
-                    <flux:table.column class="rounded-tr-lg">{{ __('ui.suggested') }}</flux:table.column>
+                    <flux:table.column>{{ __('ui.badge.current.current') }}</flux:table.column>
+                    <flux:table.column class="rounded-tr-lg">{{ __('ui.suggest.suggested') }}</flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
                     @forelse ($bulkRows as $bulkRow)
@@ -183,7 +183,7 @@
                                         size="sm"
                                         color="red"
                                     >
-                                        {{ __('ui.missing') }}
+                                        {{ __('ui.state.missing') }}
                                     </flux:badge>
                                 @endif
                             </flux:table.cell>
@@ -216,7 +216,7 @@
                 color="zinc"
                 wire:click="closeBulkEqualizeTranslationKeyModal"
             >
-                {{ __('ui.cancel') }}
+                {{ __('ui.button.cancel') }}
             </flux:button>
 
             <flux:button

@@ -37,7 +37,7 @@
                 </flux:table.column>
 
                 <flux:table.column align="center">
-                    {{ __('ui.status') }}
+                    {{ __('ui.state.status') }}
                 </flux:table.column>
             </flux:table.columns>
 

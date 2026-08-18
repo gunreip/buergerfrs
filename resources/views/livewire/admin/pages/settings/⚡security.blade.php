@@ -128,7 +128,7 @@ new #[Title('Security settings')] class extends Component {
             <div class="flex items-center gap-4">
                 <x-ui.button.save
                     data-test="update-password-button"
-                    label="{{ __('ui.save') }}"
+                    label="{{ __('ui.button.save.save') }}"
                 />
             </div>
         </form>

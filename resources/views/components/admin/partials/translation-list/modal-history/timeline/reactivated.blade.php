@@ -30,8 +30,8 @@
             ->toString(),
     };
 
-    $stateBefore = $isUsageEvent ? __('Marked stale') : $historyEvent->old_status;
-    $stateAfter = $isUsageEvent ? __('ui.active') : $historyEvent->new_status;
+    $stateBefore = $isUsageEvent ? __('ui.stale.marked-stale') : $historyEvent->old_status;
+    $stateAfter = $isUsageEvent ? __('ui.state.active') : $historyEvent->new_status;
 
     $affectedUsages = $isUsageEvent
         ? collect($historyUsages)
@@ -68,7 +68,7 @@
     <div class="grid items-center gap-3 md:grid-cols-4">
         <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             <flux:icon.archive-x class="inset mr-1 inline h-4 w-4 min-w-0 text-red-400 dark:text-red-500" />
-            {{ $isUsageEvent ? __('Usage state before') : __('Status before') }}
+            {{ $isUsageEvent ? __('ui.usage.usage-state-before') : __('Status before') }}
         </div>
 
         <code class="wrap-anywhere col-span-3 block text-xs text-red-400 dark:text-red-500">
@@ -79,7 +79,7 @@
     <div class="grid items-center gap-3 md:grid-cols-4">
         <div class="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             <flux:icon.refresh-ccw class="inset mr-1 inline h-4 w-4 min-w-0 text-lime-500 dark:text-lime-400" />
-            {{ $isUsageEvent ? __('Usage state after') : __('Status after') }}
+            {{ $isUsageEvent ? __('ui.usage.usage-state-after') : __('Status after') }}
         </div>
 
         <code class="wrap-anywhere col-span-3 block text-xs text-lime-600 dark:text-lime-400">

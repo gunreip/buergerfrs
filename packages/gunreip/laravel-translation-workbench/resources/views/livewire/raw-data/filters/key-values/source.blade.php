@@ -1,7 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/key-values/source.blade.php --}}
 
 <flux:field class="{{ $fieldClass ?? '' }}">
-    <flux:label>{{ __('ui.source') }}</flux:label>
+    <flux:label>{{ __('ui.source.source') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
             <flux:icon.database />

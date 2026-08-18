@@ -30,7 +30,7 @@
                                     size="sm"
                                     color="green"
                                 >
-                                    {{ __('ui.state') }}:
+                                    {{ __('ui.state.state') }}:
                                     {{ __('Dynamic values') }}
                                 </flux:badge>
                             </x-ui.tooltip.simple>
@@ -46,7 +46,7 @@
                                     size="sm"
                                     color="amber"
                                 >
-                                    {{ __('ui.state') }}: {{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings_table.candidate') }}
+                                    {{ __('ui.state.state') }}: {{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings_table.candidate') }}
                                 </flux:badge>
                             </x-ui.tooltip.simple>
                         @endif
@@ -97,7 +97,7 @@
                                         size="sm"
                                         color="{{ $dynamicTranslationValuesComplete ? 'zinc' : 'red' }}"
                                     >
-                                        {{ __('ui.unresolved') }}: {{ $dynamicUnresolvedSourceCount }}
+                                        {{ __('ui.badge.unresolved') }}: {{ $dynamicUnresolvedSourceCount }}
                                     </flux:badge>
                                 </span>
                             </x-ui.tooltip.simple>

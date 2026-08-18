@@ -1,0 +1,599 @@
+/* packages/gunreip/laravel-translation-workbench/resources/css/tw-graph-protocol.css */
+
+@layer components {
+
+    /*
+     * Protocol-driven graph renderer.
+     *
+     * Rule:
+     * JSON protocol data owns the chain and anchors. CSS only places a segment
+     * from anchorStart/anchorEnd and must not invent follow-up coordinates.
+     */
+    .tw-graph-protocol {
+        --tw-graph-protocol-color-rgb: 6 182 212;
+        --tw-graph-protocol-color-alpha: 1;
+        --tw-graph-protocol-path-width: 0.25rem;
+        --tw-graph-protocol-path-half: calc(var(--tw-graph-protocol-path-width) / 2);
+        --tw-graph-protocol-text-connector-width: calc(var(--tw-graph-protocol-path-width) / 2);
+        --tw-graph-protocol-text-connector-anchor-gap: 0.25rem;
+        --tw-graph-protocol-node-size: 1rem;
+        --tw-graph-protocol-node-half: calc(var(--tw-graph-protocol-node-size) / 2);
+        --tw-graph-protocol-dev-node-counter-width: 1rem;
+        --tw-graph-protocol-dev-node-counter-half: calc(var(--tw-graph-protocol-dev-node-counter-width) / 2);
+        --tw-graph-protocol-arc-size: 2.75rem;
+        --tw-graph-protocol-arc-radius: var(--tw-graph-protocol-arc-size);
+        --tw-graph-protocol-trunk-x: 50%;
+
+        position: relative;
+        min-width: max-content;
+        overflow: visible;
+    }
+
+    .tw-graph-protocol-canvas {
+        position: relative;
+        width: max(100%, var(--tw-graph-protocol-min-width, 40rem));
+        min-width: var(--tw-graph-protocol-min-width, 40rem);
+        height: var(--tw-graph-protocol-min-height, 18rem);
+        min-height: var(--tw-graph-protocol-min-height, 18rem);
+        overflow: visible;
+        border: 1px dashed rgb(113 113 122 / 0.35);
+        border-radius: 0.5rem;
+    }
+
+    .tw-graph-protocol-catalog-preview {
+        position: relative;
+        width: 12rem;
+        height: 6rem;
+        min-width: 12rem;
+        min-height: 6rem;
+        overflow: visible;
+    }
+
+    .tw-graph-protocol-dev-disabled .tw-graph-protocol-dev-only,
+    .tw-graph-protocol-dev-disabled .tw-graph-protocol-primitive-dev-node-counter {
+        display: none;
+    }
+
+    .tw-graph-protocol-dev-disabled .tw-graph-protocol {
+        --tw-graph-protocol-color-alpha: 1 !important;
+    }
+
+    .tw-graph-protocol-primitive,
+    .tw-graph-protocol-segment {
+        --tw-graph-protocol-active-color-rgb: var(--tw-graph-protocol-local-color-rgb, var(--tw-graph-protocol-color-rgb));
+
+        pointer-events: auto;
+        position: absolute;
+        cursor: pointer;
+    }
+
+    .tw-graph-protocol-primitive-line {
+        z-index: var(--tw-graph-protocol-z-index, 1);
+        background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+    }
+
+    .tw-graph-protocol-segment-trunk {
+        z-index: 4;
+    }
+
+    .tw-graph-protocol-primitive-line-start {
+        background-color: transparent;
+        background-image: linear-gradient(to top,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / 0) 0%,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 85%,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 100%);
+    }
+
+    .tw-graph-protocol-primitive-line-start.tw-graph-protocol-primitive-line-top-bottom {
+        background-image: linear-gradient(to bottom,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / 0) 0%,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 85%,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 100%);
+    }
+
+    .tw-graph-protocol-primitive-line-start.tw-graph-protocol-primitive-line-left-right {
+        background-image: linear-gradient(to right,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / 0) 0%,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 85%,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 100%);
+    }
+
+    .tw-graph-protocol-primitive-line-start.tw-graph-protocol-primitive-line-right-left {
+        background-image: linear-gradient(to left,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / 0) 0%,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 85%,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 100%);
+    }
+
+    .tw-graph-protocol-primitive-line-end {
+        background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+    }
+
+    .tw-graph-protocol-primitive-line-end::after {
+        pointer-events: none;
+        position: absolute;
+        z-index: 4;
+        display: block;
+        width: var(--tw-graph-protocol-line-end-cap-length, 1.25rem);
+        height: var(--tw-graph-protocol-path-width);
+        border-radius: 9999px;
+        background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        content: "";
+    }
+
+    .tw-graph-protocol-primitive-line-end.tw-graph-protocol-primitive-line-bottom-top::after {
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .tw-graph-protocol-primitive-line-end.tw-graph-protocol-primitive-line-top-bottom::after {
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 50%);
+    }
+
+    .tw-graph-protocol-primitive-line-end.tw-graph-protocol-primitive-line-left-right::after {
+        top: 50%;
+        right: 0;
+        width: var(--tw-graph-protocol-path-width);
+        height: var(--tw-graph-protocol-line-end-cap-length, 1.25rem);
+        transform: translate(50%, -50%);
+    }
+
+    .tw-graph-protocol-primitive-line-end.tw-graph-protocol-primitive-line-right-left::after {
+        top: 50%;
+        left: 0;
+        width: var(--tw-graph-protocol-path-width);
+        height: var(--tw-graph-protocol-line-end-cap-length, 1.25rem);
+        transform: translate(-50%, -50%);
+    }
+
+    .tw-graph-protocol-primitive-line-node-start::before,
+    .tw-graph-protocol-primitive-line-node-end::after {
+        pointer-events: none;
+        position: absolute;
+        z-index: 5;
+        display: block;
+        width: var(--tw-graph-protocol-node-size);
+        height: var(--tw-graph-protocol-node-size);
+        border-radius: 9999px;
+        background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        content: "";
+    }
+
+    .tw-graph-protocol-primitive-line-bottom-top {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-start-x) - var(--tw-graph-protocol-path-half));
+        bottom: var(--tw-graph-protocol-start-y);
+        width: var(--tw-graph-protocol-path-width);
+        height: var(--tw-graph-protocol-local-length, 4rem);
+    }
+
+    .tw-graph-protocol-primitive-line-top-bottom {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-start-x) - var(--tw-graph-protocol-path-half));
+        bottom: var(--tw-graph-protocol-end-y);
+        width: var(--tw-graph-protocol-path-width);
+        height: var(--tw-graph-protocol-local-length, 4rem);
+    }
+
+    .tw-graph-protocol-primitive-line-left-right {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-start-x));
+        bottom: calc(var(--tw-graph-protocol-start-y) - var(--tw-graph-protocol-path-half));
+        width: var(--tw-graph-protocol-local-length, 4rem);
+        height: var(--tw-graph-protocol-path-width);
+    }
+
+    .tw-graph-protocol-primitive-line-right-left {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-end-x));
+        bottom: calc(var(--tw-graph-protocol-start-y) - var(--tw-graph-protocol-path-half));
+        width: var(--tw-graph-protocol-local-length, 4rem);
+        height: var(--tw-graph-protocol-path-width);
+    }
+
+    .tw-graph-protocol-primitive-line-bottom-top::before,
+    .tw-graph-protocol-primitive-line-top-bottom::after {
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 50%);
+    }
+
+    .tw-graph-protocol-primitive-line-bottom-top::after,
+    .tw-graph-protocol-primitive-line-top-bottom::before {
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .tw-graph-protocol-primitive-line-left-right::before,
+    .tw-graph-protocol-primitive-line-right-left::after {
+        top: 50%;
+        left: 0;
+        transform: translate(-50%, -50%);
+    }
+
+    .tw-graph-protocol-primitive-line-left-right::after,
+    .tw-graph-protocol-primitive-line-right-left::before {
+        top: 50%;
+        right: 0;
+        transform: translate(50%, -50%);
+    }
+
+    .tw-graph-protocol-primitive-path {
+        z-index: 1;
+        background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+    }
+
+    .tw-graph-protocol-primitive-path-start {
+        background-color: transparent;
+        background-image: linear-gradient(to top,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / 0) 0%,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 85%,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 100%);
+    }
+
+    .tw-graph-protocol-primitive-path-start.tw-graph-protocol-primitive-path-top-bottom {
+        background-image: linear-gradient(to bottom,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / 0) 0%,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 85%,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 100%);
+    }
+
+    .tw-graph-protocol-primitive-path-end {
+        background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+    }
+
+    .tw-graph-protocol-primitive-path-end::after {
+        pointer-events: none;
+        position: absolute;
+        z-index: 4;
+        display: block;
+        width: var(--tw-graph-protocol-path-end-cap-length, 1.25rem);
+        height: var(--tw-graph-protocol-path-width);
+        border-radius: 9999px;
+        background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        content: "";
+    }
+
+    .tw-graph-protocol-primitive-path-end.tw-graph-protocol-primitive-path-bottom-top::after {
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .tw-graph-protocol-primitive-path-end.tw-graph-protocol-primitive-path-top-bottom::after {
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 50%);
+    }
+
+    .tw-graph-protocol-primitive-path-node-start::before,
+    .tw-graph-protocol-primitive-path-node-end::after {
+        pointer-events: none;
+        position: absolute;
+        z-index: 5;
+        display: block;
+        width: var(--tw-graph-protocol-node-size);
+        height: var(--tw-graph-protocol-node-size);
+        border-radius: 9999px;
+        background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        content: "";
+    }
+
+    .tw-graph-protocol-primitive-path-bottom-top {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-start-x) - var(--tw-graph-protocol-path-half));
+        bottom: var(--tw-graph-protocol-start-y);
+        width: var(--tw-graph-protocol-path-width);
+        height: var(--tw-graph-protocol-local-length, 4rem);
+    }
+
+    .tw-graph-protocol-primitive-path-top-bottom {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-start-x) - var(--tw-graph-protocol-path-half));
+        bottom: var(--tw-graph-protocol-end-y);
+        width: var(--tw-graph-protocol-path-width);
+        height: var(--tw-graph-protocol-local-length, 4rem);
+    }
+
+    .tw-graph-protocol-primitive-path-left-right {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-start-x));
+        bottom: calc(var(--tw-graph-protocol-start-y) - var(--tw-graph-protocol-path-half));
+        width: var(--tw-graph-protocol-local-length, 4rem);
+        height: var(--tw-graph-protocol-path-width);
+    }
+
+    .tw-graph-protocol-primitive-path-right-left {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-end-x));
+        bottom: calc(var(--tw-graph-protocol-start-y) - var(--tw-graph-protocol-path-half));
+        width: var(--tw-graph-protocol-local-length, 4rem);
+        height: var(--tw-graph-protocol-path-width);
+    }
+
+    .tw-graph-protocol-primitive-path-bottom-top::before,
+    .tw-graph-protocol-primitive-path-top-bottom::after {
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 50%);
+    }
+
+    .tw-graph-protocol-primitive-path-bottom-top::after,
+    .tw-graph-protocol-primitive-path-top-bottom::before {
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .tw-graph-protocol-primitive-path-left-right::before,
+    .tw-graph-protocol-primitive-path-right-left::after {
+        top: 50%;
+        left: 0;
+        transform: translate(-50%, -50%);
+    }
+
+    .tw-graph-protocol-primitive-path-left-right::after,
+    .tw-graph-protocol-primitive-path-right-left::before {
+        top: 50%;
+        right: 0;
+        transform: translate(50%, -50%);
+    }
+
+    .tw-graph-protocol-primitive-text {
+        --tw-graph-protocol-active-color-rgb: var(--tw-graph-protocol-local-color-rgb, var(--tw-graph-protocol-color-rgb));
+
+        z-index: 8;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .tw-graph-protocol-primitive-text-connector {
+        display: block;
+        flex: 0 0 auto;
+        background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+    }
+
+    .tw-graph-protocol-primitive-text-label {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x));
+        bottom: var(--tw-graph-protocol-anchor-y);
+    }
+
+    .tw-graph-protocol-primitive-text-label-right {
+        transform: translate(var(--tw-graph-protocol-text-label-offset, 0rem), 50%);
+    }
+
+    .tw-graph-protocol-primitive-text-label-left {
+        transform: translate(calc(-100% - var(--tw-graph-protocol-text-label-offset, 0rem)), 50%);
+    }
+
+    .tw-graph-protocol-primitive-text-label-top {
+        transform: translate(-50%, calc(-1 * var(--tw-graph-protocol-text-label-offset, 0rem)));
+    }
+
+    .tw-graph-protocol-primitive-text-label-bottom {
+        transform: translate(-50%, calc(100% + var(--tw-graph-protocol-text-label-offset, 0rem)));
+    }
+
+    .tw-graph-protocol-primitive-connector {
+        --tw-graph-protocol-active-color-rgb: var(--tw-graph-protocol-local-color-rgb, var(--tw-graph-protocol-color-rgb));
+
+        z-index: 7;
+        background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        border-radius: 9999px;
+    }
+
+    .tw-graph-protocol-primitive-connector-right,
+    .tw-graph-protocol-primitive-connector-left {
+        bottom: calc(var(--tw-graph-protocol-anchor-y) - (var(--tw-graph-protocol-text-connector-width) / 2));
+        width: var(--tw-graph-protocol-connector-length, 2rem);
+        height: var(--tw-graph-protocol-text-connector-width);
+    }
+
+    .tw-graph-protocol-primitive-connector-right {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x) + var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-connector-anchor-gap, var(--tw-graph-protocol-text-connector-anchor-gap)));
+    }
+
+    .tw-graph-protocol-primitive-connector-left {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x) - var(--tw-graph-protocol-node-half) - var(--tw-graph-protocol-connector-anchor-gap, var(--tw-graph-protocol-text-connector-anchor-gap)) - var(--tw-graph-protocol-connector-length, 2rem));
+    }
+
+    .tw-graph-protocol-primitive-connector-top,
+    .tw-graph-protocol-primitive-connector-bottom {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x) - (var(--tw-graph-protocol-text-connector-width) / 2));
+        width: var(--tw-graph-protocol-text-connector-width);
+        height: var(--tw-graph-protocol-connector-length, 2rem);
+    }
+
+    .tw-graph-protocol-primitive-connector-top {
+        bottom: calc(var(--tw-graph-protocol-anchor-y) + var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-connector-anchor-gap, var(--tw-graph-protocol-text-connector-anchor-gap)));
+    }
+
+    .tw-graph-protocol-primitive-connector-bottom {
+        bottom: calc(var(--tw-graph-protocol-anchor-y) - var(--tw-graph-protocol-node-half) - var(--tw-graph-protocol-connector-anchor-gap, var(--tw-graph-protocol-text-connector-anchor-gap)) - var(--tw-graph-protocol-connector-length, 2rem));
+    }
+
+    .tw-graph-protocol-primitive-node-counter {
+        z-index: 12;
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x));
+        bottom: var(--tw-graph-protocol-anchor-y);
+        transform: translate(-50%, -50%);
+    }
+
+    .tw-graph-protocol-primitive-dev-node-counter {
+        z-index: 12;
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x));
+        bottom: var(--tw-graph-protocol-anchor-y);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 0.625rem;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .tw-graph-protocol-primitive-dev-node-counter-offset {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x) + var(--tw-graph-protocol-dev-node-counter-offset-x, 0rem));
+        bottom: calc(var(--tw-graph-protocol-anchor-y) + var(--tw-graph-protocol-dev-node-counter-offset-y, 0rem));
+        transform: translate(-50%, 50%);
+    }
+
+    .tw-graph-protocol-primitive-dev-node-counter-top,
+    .tw-graph-protocol-primitive-dev-node-counter-above {
+        bottom: calc(var(--tw-graph-protocol-anchor-y) + var(--tw-graph-protocol-node-half) + 0.25rem);
+        transform: translateX(-50%);
+    }
+
+    .tw-graph-protocol-primitive-dev-node-counter-bottom {
+        bottom: calc(var(--tw-graph-protocol-anchor-y) - var(--tw-graph-protocol-node-half) - 0.25rem);
+        transform: translate(-50%, 100%);
+    }
+
+    .tw-graph-protocol-primitive-dev-node-counter-right {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x) + var(--tw-graph-protocol-node-half) + 0.25rem);
+        transform: translateY(50%);
+    }
+
+    .tw-graph-protocol-primitive-dev-node-counter-left {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x) - var(--tw-graph-protocol-node-half) - 0.25rem);
+        transform: translate(-100%, 50%);
+    }
+
+    .tw-graph-protocol-primitive-text-name {
+        z-index: 12;
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x));
+        bottom: var(--tw-graph-protocol-anchor-y);
+        border-radius: 0.25rem;
+        background-color: rgb(24 24 27 / 0.84);
+        padding: 0.125rem 0.25rem;
+        color: rgb(244 244 245);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 0.625rem;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .tw-graph-protocol-primitive-text-name-right {
+        transform: translate(0.5rem, 50%);
+    }
+
+    .tw-graph-protocol-primitive-text-name-left {
+        transform: translate(calc(-100% - 0.5rem), 50%);
+    }
+
+    .tw-graph-protocol-primitive-node {
+        --tw-graph-protocol-active-color-rgb: var(--tw-graph-protocol-local-color-rgb, var(--tw-graph-protocol-color-rgb));
+
+        z-index: var(--tw-graph-protocol-z-index, 9);
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x));
+        bottom: var(--tw-graph-protocol-anchor-y);
+        width: var(--tw-graph-protocol-local-node-size, var(--tw-graph-protocol-node-size));
+        height: var(--tw-graph-protocol-local-node-size, var(--tw-graph-protocol-node-size));
+        transform: translate(-50%, 50%);
+        border-radius: 9999px;
+        background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+    }
+
+    .tw-graph-protocol-primitive-text-terminal {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x));
+        bottom: var(--tw-graph-protocol-anchor-y);
+        flex-direction: column;
+        transform: translateX(-50%);
+    }
+
+    .tw-graph-protocol-primitive-text-terminal .tw-graph-protocol-primitive-text-connector {
+        width: var(--tw-graph-protocol-text-connector-width);
+        height: var(--tw-graph-protocol-text-connector-length, 0.75rem);
+        border-radius: 9999px;
+    }
+
+    .tw-graph-protocol-primitive-text-terminal-bottom {
+        flex-direction: column;
+        transform: translate(-50%, 100%);
+    }
+
+    .tw-graph-protocol-primitive-text-terminal-bottom .tw-graph-protocol-primitive-text-connector {
+        margin-top: var(--tw-graph-protocol-text-connector-anchor-gap);
+    }
+
+    .tw-graph-protocol-primitive-text-terminal-top {
+        flex-direction: column-reverse;
+        transform: translateX(-50%);
+    }
+
+    .tw-graph-protocol-primitive-text-terminal-top .tw-graph-protocol-primitive-text-connector {
+        margin-bottom: var(--tw-graph-protocol-text-connector-anchor-gap);
+    }
+
+    .tw-graph-protocol-primitive-arc {
+        box-sizing: border-box;
+        z-index: var(--tw-graph-protocol-z-index, 2);
+        width: var(--tw-graph-protocol-arc-size);
+        height: var(--tw-graph-protocol-arc-size);
+    }
+
+    .tw-graph-protocol-primitive-arc-se {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-start-x) - var(--tw-graph-protocol-arc-size) + var(--tw-graph-protocol-path-half));
+        bottom: calc(var(--tw-graph-protocol-end-y) - var(--tw-graph-protocol-path-half));
+        border-right: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        border-bottom: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        border-bottom-right-radius: var(--tw-graph-protocol-arc-radius);
+    }
+
+    .tw-graph-protocol-primitive-arc-sw {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-start-x) - var(--tw-graph-protocol-path-half));
+        bottom: calc(var(--tw-graph-protocol-end-y) - var(--tw-graph-protocol-path-half));
+        border-bottom: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        border-left: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        border-bottom-left-radius: var(--tw-graph-protocol-arc-radius);
+    }
+
+    .tw-graph-protocol-primitive-arc-nw {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-end-x) - var(--tw-graph-protocol-path-half));
+        bottom: calc(var(--tw-graph-protocol-start-y) - var(--tw-graph-protocol-arc-size) + var(--tw-graph-protocol-path-half));
+        border-top: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        border-left: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        border-top-left-radius: var(--tw-graph-protocol-arc-radius);
+    }
+
+    .tw-graph-protocol-primitive-arc-ne {
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-end-x) - var(--tw-graph-protocol-arc-size) + var(--tw-graph-protocol-path-half));
+        bottom: calc(var(--tw-graph-protocol-start-y) - var(--tw-graph-protocol-arc-size) + var(--tw-graph-protocol-path-half));
+        border-top: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        border-right: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        border-top-right-radius: var(--tw-graph-protocol-arc-radius);
+    }
+
+    .tw-graph-protocol-json {
+        max-width: min(56rem, calc(100vw - 6rem));
+        max-height: 18rem;
+        overflow: auto;
+        border-radius: 0.5rem;
+        background-color: rgb(24 24 27 / 0.92);
+        padding: 0.75rem;
+        color: rgb(244 244 245);
+        font-size: 0.6875rem;
+        line-height: 1.35;
+    }
+
+    .tw-graph-protocol-json-accordion {
+        position: relative;
+        z-index: 20;
+    }
+
+    .tw-graph-protocol-json-accordion [data-flux-accordion-content] {
+        position: absolute;
+        top: calc(100% + 0.25rem);
+        right: 0;
+        z-index: 50;
+        width: min(56rem, calc(100vw - 6rem));
+        min-width: min(36rem, calc(100vw - 6rem));
+        max-width: calc(100vw - 6rem);
+    }
+
+    .tw-graph-protocol-json-accordion [data-flux-accordion-content]:not([data-open]) {
+        pointer-events: none;
+    }
+
+    .tw-graph-protocol-json-accordion .tw-graph-protocol-json {
+        max-width: none;
+        width: 100%;
+        box-shadow: 0 1rem 2rem rgb(0 0 0 / 0.28);
+    }
+}

@@ -27,7 +27,7 @@
                         </span>
 
                         <span class="text-sm font-normal text-zinc-500 dark:text-zinc-400">
-                            {{ __('ui.storage') }}:
+                            {{ __('ui.storage.storage') }}:
                             <span class="font-mono tabular-nums">{{ $tableStorageSizeText }}</span>
                         </span>
                     </div>

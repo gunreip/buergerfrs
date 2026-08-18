@@ -18,6 +18,18 @@ return [
                             'dev_playground' => 'DEV-Spielwiese',
                             'dynamic' => 'Dynamisch',
                             'findings' => [
+                                'cleanup_history' => [
+                                    'array_value' => 'Array-Wert',
+                                    'cleanup_history' => 'Bereinigungsverlauf',
+                                    'derived' => 'Abgeleitet',
+                                    'event' => 'Veranstaltung',
+                                    'lang_key' => 'Sprach-Schlüssel',
+                                    'locales' => 'Lokale',
+                                    'moved' => 'Verschoben',
+                                    'moved_to' => 'Verschoben nach',
+                                    'namespace' => 'Namensraum',
+                                    'outcome' => 'Ergebnis',
+                                ],
                                 'code_update_plan' => [
                                     'already_current' => 'Bereits aktuell',
                                     'apply_ready_plan' => 'Antragsfertiger Plan',
@@ -36,9 +48,6 @@ return [
                                     'cell_actions' => [
                                         'edit_translation_values' => 'Übersetzungswerte bearbeiten',
                                         'review_finding' => 'Ergebnis der Überprüfung',
-                                    ],
-                                    'cell_state' => [
-                                        'a_stored_translation_value_exists_for_the_source_language' => 'Für die Ausgangssprache ist ein Übersetzungswert gespeichert.',
                                     ],
                                 ],
                             ],
@@ -67,17 +76,19 @@ return [
                             'show_overview' => 'Übersicht anzeigen',
                         ],
                         'raw_data' => [
-                            'filters' => [
-                                'reviews' => [
-                                    'decision' => [],
-                                ],
-                            ],
                             'filters_event_types' => [
                                 'common_filters' => 'Gängige Filter',
                             ],
                             'table_card' => [
                                 'column' => 'Spalte',
                             ],
+                        ],
+                        'settings' => [
+                            'inspect_and_reset_persisted_translation_workbench_ui_settings_for_the_current_user_an_a06c4c2605' => 'Überprüfen und setzen Sie die gespeicherten Einstellungen der Translation Workbench-Benutzeroberfläche für den aktuellen Benutzer sowie die Paketstandardwerte zurück.',
+                            'reset_all_translation_workbench_ui_settings_for_the_current_user' => 'Alle UI-Einstellungen der Translation Workbench für den aktuellen Benutzer zurücksetzen?',
+                            'reset_these_settings_for_the_current_user' => 'Sollen diese Einstellungen für den aktuellen Benutzer zurückgesetzt werden?',
+                            'settings_overview' => 'Übersicht über die Einstellungen',
+                            'user_settings_are_stored_on_the_user_record_export_files_are_diagnostic_snapshots_tha_d71eaffe64' => 'Die Benutzereinstellungen werden im Benutzerdatensatz gespeichert. Exportdateien sind Diagnose-Snapshots, die später überprüft oder als Standardwerte für Pakete wiederverwendet werden können.',
                         ],
                     ],
                 ],

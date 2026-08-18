@@ -3,6 +3,6 @@
     size="sm"
     variant="subtle"
     color="pink"
-    label="{{ __('ui.badge.not_a_number.not_a_number') }}"
+    label="{{ __('ui.badge.informatic.not_a_number') }}"
     icon="circle-slash-2"
 />

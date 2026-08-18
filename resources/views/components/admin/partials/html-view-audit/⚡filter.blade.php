@@ -43,7 +43,7 @@
                     :title="__('ui.filters.filter-by-status')"
                     :text="__('Select a status to filter the audit history.')"
                 >
-                    {{ __('ui.status') }}
+                    {{ __('ui.state.status') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -61,7 +61,7 @@
                     <flux:select.option value="changed">{{ __('Changed / moved') }}</flux:select.option>
                     <flux:select.option value="resolved">{{ __('Resolved') }}</flux:select.option>
                     <flux:select.option value="ignored">{{ __('Ignored') }}</flux:select.option>
-                    <flux:select.option value="all">{{ __('ui.all-statuses') }}</flux:select.option>
+                    <flux:select.option value="all">{{ __('ui.states.all-statuses') }}</flux:select.option>
                 </flux:select>
             </flux:input.group>
         </div>
@@ -112,7 +112,7 @@
                     name="html-view-audit-filter-type"
                     wire:model.live="typeFilter"
                 >
-                    <flux:select.option value="all">{{ __('ui.all-types') }}</flux:select.option>
+                    <flux:select.option value="all">{{ __('ui.all.all-types') }}</flux:select.option>
                     <flux:select.option value="unclosed">{{ __('Unclosed') }}</flux:select.option>
                     <flux:select.option value="mismatched">{{ __('Mismatched') }}</flux:select.option>
                     <flux:select.option value="unexpected_closing">{{ __('Unexpected closing') }}</flux:select.option>

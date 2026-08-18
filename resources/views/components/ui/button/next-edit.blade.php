@@ -12,7 +12,7 @@
     'label' => false,
     'type' => 'button',
     'size' => 'sm',
-    'title' => __('admin.translation_list.modal_edit.open_next_editable_entry'),
+    'title' => __('ui.button.open.open_next_editable_entry'),
     'ariaLabel' => null,
 ])
 

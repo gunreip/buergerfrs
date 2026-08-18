@@ -4,36 +4,44 @@ return [
     'action' => 'Aktion',
     'actions' => [
         'close' => 'Schließen',
-        'save' => 'Speichern',
         'save_changes' => 'Änderungen speichern',
         'search' => 'Suchen',
     ],
     'active' => 'Aktiv',
-    'active-state' => 'Aktiv / Status',
     'activity-log' => 'Aktivitätsprotokoll',
     'actual' => 'Aktuell',
     'add-document' => 'Dokument hinzufügen',
     'add-primary-language' => 'Hauptsprache hinzufügen',
-    'address' => 'Adresse',
-    'address-line-2' => 'Adresszeile 2',
-    'all-decisions' => 'Alle Entscheidungen',
-    'all-dynamic' => 'Alles dynamisch',
-    'all-entries' => 'All entries',
-    'all-states' => 'Alle Status',
-    'all-statuses' => 'Alle Status',
-    'all-types' => 'Alle Typen',
+    'address' => [
+        'address' => [
+            'address-line-2' => 'Adresszeile 2',
+        ],
+    ],
+    'all' => [
+        'all-decisions' => 'Alle Entscheidungen',
+        'all-dynamic' => 'Alles dynamisch',
+        'all-entries' => 'All entries',
+        'all-types' => 'Alle Typen',
+    ],
     'already-target' => 'Bereits als Ziel festgelegt',
     'app-settings' => 'App-Einstellungen',
     'appearance' => 'Erscheinungsbild',
-    'applied' => 'Angewandt',
-    'apply-conflict' => 'Konflikt anwenden',
-    'approved' => 'Genehmigt',
-    'assignable' => 'Zuweisbar',
+    'apply' => [
+        'applied' => 'Angewandt',
+        'apply-conflict' => 'Konflikt anwenden',
+    ],
+    'assign' => [
+        'assigned' => [
+            'assigned-roles' => 'Zugewiesene Rollen',
+            'assigned-users' => 'Zugewiesene Benutzer',
+        ],
+    ],
+    'assignable' => [
+        'assignable' => 'Zuweisbar',
+        'assignable-through-ui' => 'Über die Benutzeroberfläche zuweisbar',
+    ],
     'assignable-through-ui' => 'Über die Benutzeroberfläche zuweisbar',
-    'assigned-roles' => 'Zugewiesene Rollen',
     'assigned-users' => 'Zugewiesene Benutzer',
-    'audit' => 'Prüfung',
-    'available' => 'Verfügbar',
     'badge' => [
         'bulk-equalized' => 'Bulk equalized',
         'create_person' => [
@@ -51,41 +59,49 @@ return [
                 'person_number_person_number_created_person_id_person_id_created_user_id_user_id' => 'Personennummer: :personNumber | Erstellte Personen-ID: :personId | Erstellte Benutzer-ID: :userId',
             ],
         ],
-        'nil' => [
+        'current' => [
+            'current' => 'Aktuell',
+        ],
+        'informatic' => [
             'nil' => 'NIL',
-        ],
-        'no_date' => [
             'no_date' => 'Kein Datum',
-        ],
-        'no_time' => [
             'no_time' => 'Keine Zeitangabe',
-        ],
-        'no_value' => [
             'no_value' => 'Kein Wert (NV)',
-        ],
-        'not_a_number' => [
             'not_a_number' => 'Keine Zahl (NaN)',
         ],
         'test-data' => 'Testdaten',
+        'timespan' => 'Zeitspanne',
+        'total' => 'Gesamt',
+        'unresolved' => 'Ungelöst',
+        'updated' => 'Aktualisiert',
     ],
     'button' => [
         'activate_deactivate' => [
-            'activate_language' => 'Sprache aktivieren',
-            'deactivate_language' => 'Deaktivieren: Sprache',
+            'activate_language' => ':language aktivieren',
+            'deactivate_language' => 'Deaktivieren: :language',
         ],
-        'cancel' => [
-            'cancel' => 'Abbrechen',
-        ],
+        'cancel' => 'Abbrechen',
         'clear' => [
             'clear' => 'Löschen',
         ],
-        'close' => 'Schließen',
+        'close' => [
+            'close' => 'Schließen',
+        ],
+        'confirm' => [
+            'confirm' => 'Bestätigen',
+        ],
         'copy' => [
             'copy' => 'Kopieren',
         ],
+        'create' => [
+            'create' => 'Erstellen',
+        ],
         'delete' => 'Löschen',
-        'hide' => 'Ausblenden',
-        'prev_edit' => [
+        'edit' => [
+            'edit' => 'Bearbeiten',
+        ],
+        'open' => [
+            'open_next_editable_entry' => 'Nächsten bearbeitbaren Eintrag öffnen',
             'open_previous_editable_entry' => 'Letzten bearbeitbaren Eintrag öffnen',
         ],
         'remove' => [
@@ -93,24 +109,40 @@ return [
         ],
         'reset' => [
             'reset' => 'Zurücksetzen',
+            'reset-the-form-to-its-initial-state' => 'Das Formular in den Ausgangszustand zurücksetzen.',
         ],
         'review' => [
             'review' => 'Rezension',
         ],
         'save' => [
+            'save' => 'Speichern',
             'save_role' => 'Rolle speichern',
         ],
-        'show' => 'Anzeigen',
+        'show-hide' => [
+            'hide' => 'Ausblenden',
+            'hide-overview' => 'Übersicht ausblenden',
+            'show' => 'Anzeigen',
+        ],
+        'tab_scroll' => [
+            'first_tab' => 'Erste Registerkarte',
+            'last_tab' => 'Letzte Registerkarte',
+            'next_tab' => 'Nächste Registerkarte',
+            'previous_tab' => 'Vorherige Registerkarte',
+            'scroll_tabs' => 'Bildlauf-Registerkarten',
+        ],
     ],
-    'cancel' => 'Abbrechen',
     'client-number' => 'Kundennummer',
     'close' => 'Schließen',
-    'created' => 'Erstellt',
-    'current' => 'Aktuell',
+    'count' => [
+        'min' => 'Min',
+    ],
     'date-time' => [
         'ago' => 'Vor',
     ],
-    'delete' => 'Löschen',
+    'filter' => [
+        'filter' => 'Filter',
+        'show-legacy-dynamic-entries-that-were-reactivated-from-stale-audit-state' => 'Alte dynamische Einträge anzeigen, die aus dem Status „veraltet“ wieder aktiviert wurden.',
+    ],
     'filters' => [
         'all-contexts' => 'Alle Kontexte',
         'all-domains' => 'Alle Domains',
@@ -126,7 +158,6 @@ return [
         'filter-by-status' => 'Nach Status filtern',
         'inactive' => 'Inaktiv',
         'missing-capital' => 'Fehlende Hauptstadt',
-        'option' => [],
         'region' => 'Region',
         'yes' => 'Ja',
     ],
@@ -144,13 +175,22 @@ return [
         'suggested-key' => 'Vorgeschlagene Schlüssel',
     ],
     'label' => [
-        'label' => 'Etikett',
         'label-testing-2' => 'Etikettenprüfung 2',
+        'would-apply' => 'Würde gelten',
+        'writing' => 'Schreiben',
+        'written' => 'Geschrieben',
     ],
     'labels' => [
+        'address' => [
+            'address' => 'Adresse',
+        ],
+        'approved' => 'Genehmigt',
+        'audit' => 'Prüfung',
         'category' => 'Kategorie',
+        'created' => 'Erstellt',
         'description' => 'Beschreibung',
         'guard' => 'Guard',
+        'label' => 'Etikett',
         'name' => 'Name',
         'number' => 'Laufende Nummer',
         'number_short' => '#',
@@ -164,21 +204,19 @@ return [
     'languages' => [
         'sub-languages' => 'Sprachvarainten',
     ],
-    'laravel_translation_workbench' => [
-        'resources' => [
-            'views' => [
-                'livewire' => [
-                    'entries' => [
-                        'table_entries' => [],
-                    ],
-                ],
-            ],
-        ],
-    ],
     'literal' => [
+        'dynamic' => [
+            'this-finding-is-treated-as-a-dynamic-multi-entry-multiple-runtime-option-values-may-n' => 'Dieser Eintrag wird als dynamischer Mehrfacheintrag behandelt: Für mehrere Werte der Laufzeitoption sind möglicherweise separate Übersetzungen erforderlich.',
+            'this-finding-is-treated-as-dynamic-the-displayed-value-is-resolved-from-runtime-data' => 'Diese Ermittlung wird als dynamisch behandelt: Der angezeigte Wert wird aus Laufzeitdaten ermittelt und erfordert weiterhin eine strukturierte dynamische Datenverarbeitung.',
+        ],
         'literal' => 'Wörtlich',
         'literal-testing' => 'Literalprüfung',
         'literal-testing-2' => 'Literalprüfung 2',
+    ],
+    'loading' => [
+        'lazy_indicator' => [
+            'loading' => 'Wird geladen',
+        ],
     ],
     'messages' => [
         'no_description_available' => 'Keine Beschreibung verfügbar.',
@@ -188,26 +226,95 @@ return [
         'with-people' => 'Mit Menschen',
         'without-people' => 'Ohne Menschen',
     ],
-    'missing' => 'Fehlt',
-    'nickname' => 'Spitzname',
-    'null' => 'NULL',
+    'names' => [
+        'nickname' => 'Spitzname',
+    ],
+    'nouns' => [
+        'pagination' => 'Paginierung',
+        'summary' => 'Zusammenfassung',
+        'view' => 'Anzeigen',
+        'workflow' => 'Arbeitsablauf',
+    ],
+    'null' => [
+        'null' => 'NULL',
+    ],
+    'obsolete' => [
+        'the-translation-key-was-not-found-during-the-latest-audit-scan-and-was-marked-as-obsolete' => 'Der Übersetzungsschlüssel wurde beim letzten Audit-Scan nicht gefunden und als veraltet markiert.',
+    ],
     'open' => 'Öffnen',
-    'overview' => 'Übersicht',
-    'pagination' => 'Paginierung',
-    'people' => 'Menschen',
-    'save' => 'Speichern',
-    'sort-order' => 'Sortierreihenfolge',
-    'source' => 'Quelle',
-    'source-language' => 'Ausgangssprache',
-    'source-locale-missing' => 'Quelle :locale fehlt',
-    'source-path' => 'Quellpfad',
-    'source-type' => 'Quellentyp',
-    'sources' => 'Quellen',
-    'stale' => 'Abgelaufen',
-    'stale-source' => 'Veraltete Quelle',
-    'state' => 'Zustand',
+    'people' => [
+        'people' => 'Menschen',
+    ],
+    'per_page_selector' => [
+        'per_page' => 'Pro Seite',
+    ],
+    'remove' => [
+        'remove' => [
+            'choose-unlink-to-remove-the-active-relation-or-keep-link-to-leave-the-confirmed-decison' => 'Wählen Sie „Verknüpfung aufheben“, um die aktive Verknüpfung zu entfernen, oder „Verknüpfung beibehalten“, um die bestätigte Entscheidung unverändert zu lassen.',
+            'remove-first-key-segment' => 'Erstes Schlüsselsegment entfernen',
+            'remove-first-value-segment' => 'Erstes Wertsegment entfernen',
+            'remove-hash-suffix' => 'Hash-Suffix entfernen',
+            'remove-or-restore-leading-translation-key-segments-while-the-key-has-not-been-manually-edited' => 'Remove or restore leading translation key segments while the key has not been manually edited.Entfernen oder Wiederherstellen der führenden Segmente eines Übersetzungsschlüssels, solange der Schlüssel nicht manuell bearbeitet wurde.',
+        ],
+        'removed' => [
+            'completed-lang-cleanup-actions-including-removed-or-moved-translation-values' => 'Maßnahmen zur Bereinigung der Sprachdaten abgeschlossen, einschließlich entfernter oder verschobener Übersetzungswerte.',
+            'no-lang-file-values-have-been-removed-yet' => 'Bislang wurden noch keine Werte aus den Lang-Dateien entfernt.',
+            'removed' => 'Entfernt',
+            'removed-at' => 'Entfernt am',
+            'removed-lang-values' => '„lang“-Werte entfernt',
+            'removed-value' => 'Entfernter Wert',
+            'review-whether-this-source-language-value-should-be-removed-from-the-active-export-workflow' => 'Prüfen Sie, ob dieser Wert in der Ausgangssprache aus dem aktiven Export-Workflow entfernt werden sollte.',
+            'shows-lang-file-values-that-were-actually-removed-by-a-write-export-run-source-data' => 'Zeigt die Werte aus der Lang-Datei an, die bei einem Schreib-/Exportvorgang tatsächlich entfernt wurden. Die Quelldaten bleiben zur Überprüfung in der Datenbank und in der Zeitleiste erhalten.',
+            'these-entries-are-present-in-lang-files-but-are-no-longer-active-export-values-in-dry' => 'Diese Einträge sind in den Lang-Dateien vorhanden, stellen jedoch keine aktiven Exportwerte mehr dar. Im Testmodus werden sie als geplante Löschungen gemeldet; im Schreibmodus werden sie aus der generierten Lang-Datei entfernt.',
+            'values-that-would-be-removed' => 'Werte, die entfernt würden',
+            'would-be-removed-from-lang-files' => 'Würde aus den Sprachdateien entfernt werden',
+        ],
+        'removes' => [
+            'keep-leaves-the-lang-values-active-needs-review-only-records-the-decision-mark-obsolete' => '„Beibehalten“ lässt die Sprachwerte aktiv. „Zur Überprüfung“ protokolliert lediglich die Entscheidung. „Als veraltet markieren“ entfernt die aktiven Sprachwerte für diesen Schlüssel aus dem aktiven Export-Workflow; der Datenbankverlauf bleibt weiterhin verfügbar.',
+            'removes-the-first-dot-separated-segment-from-the-current-search-text-useful-when-expo' => 'Entfernt das erste, durch einen Punkt getrennte Segment aus dem aktuellen Suchtext. Dies ist nützlich, wenn sich die Schlüssel für den Berichtsexport in ihren führenden Namespace-/Pfadsegmenten von den Schlüsseln für die Stellensuche unterscheiden.',
+            'removes-the-first-dot-separated-segment-from-the-current-value-search-text-useful-when' => 'Entfernt das erste, durch einen Punkt getrennte Segment aus dem aktuellen Suchtext für Werte. Dies ist nützlich, wenn ein kopierter Wert noch vorangestellte Segmente enthält, die wie Schlüssel aussehen.',
+            'removes-the-selected-findings-from-the-bulk-translation-key-review' => 'Entfernt die ausgewählten Befunde aus der Massenüberprüfung der Übersetzungsschlüssel.',
+            'removes-the-selected-scalar-candidates-from-the-current-review-selection' => 'Entfernt die ausgewählten Skalar-Kandidaten aus der aktuellen Überprüfungsauswahl.',
+        ],
+    ],
+    'sort' => [
+        'sort' => [
+            'sort-order' => 'Sortierreihenfolge',
+        ],
+    ],
+    'source' => [
+        'contains-source-path' => 'Enthält den Quellpfad',
+        'source' => 'Quelle',
+        'source-language' => 'Ausgangssprache',
+        'source-locale-missing' => 'Quelle :locale fehlt',
+        'source-path' => 'Quellpfad',
+        'source-type' => 'Quellentyp',
+        'stale-source' => 'Veraltete Quelle',
+    ],
+    'sources' => [
+        'sources' => 'Quellen',
+    ],
+    'stale' => [
+        'a-previously-stale-or-obsolete-translation-entry-was-found-again-and-reactivated' => 'Ein zuvor veralteter oder überholter Übersetzungseintrag wurde wiedergefunden und reaktiviert.',
+        'marked-stale' => 'Als veraltet markiert',
+        'reactivated-stale' => 'Veraltete Einträge reaktiviert',
+        'stale' => 'Abgelaufen',
+        'stale-usages' => 'Veraltete Verwendungsweisen',
+        'with-stale-usages' => 'Mit veralteten Verwendungsweisen',
+    ],
+    'state' => [
+        'active' => 'Aktiv',
+        'active-state' => 'Aktiv / Status',
+        'available' => 'Verfügbar',
+        'missing' => 'Fehlt',
+        'state' => 'Zustand',
+        'status' => 'Status',
+        'ui-translation-state' => 'Status der UI-Übersetzung',
+    ],
     'states' => [
         'all' => 'Alle',
+        'all-states' => 'Alle Status',
+        'all-statuses' => 'Alle Status',
         'assigned' => 'Zugewiesen',
         'custom' => 'Benutzerdefiniert',
         'no' => 'Nein',
@@ -218,24 +325,22 @@ return [
         'unassigned' => 'Nicht zugewiesen',
         'unsaved_changes' => 'Ungespeicherte Änderungen',
     ],
-    'status' => 'Status',
-    'storage' => 'Lagerung',
-    'structure' => 'Aufbau',
-    'suggested' => 'Vorgeschlagen',
-    'summary' => 'Zusammenfassung',
+    'storage' => [
+        'storage' => 'Lagerung',
+    ],
+    'structure' => [
+        'structure' => 'Aufbau',
+    ],
+    'suggest' => [
+        'suggested' => 'Vorgeschlagen',
+    ],
     'table' => [
-        'header' => [
-            'actions' => 'Aktionen',
-        ],
         'headers' => [
             'actions' => 'Aktionen',
         ],
         'pagination' => [
             'results' => 'Ergebnisse',
-            'to' => 'zu',
-        ],
-        'per_page_selector' => [
-            'per_page' => 'Für Seite',
+            'to' => 'bis',
         ],
     ],
     'target' => [
@@ -248,32 +353,32 @@ return [
             'copy_to_clipboard' => 'In die Zwischenablage kopieren',
         ],
     ],
-    'this-finding-is-treated-as-a-dynamic-multi-entry-multiple-runtime-option-values-may-n' => 'Dieser Eintrag wird als dynamischer Mehrfacheintrag behandelt: Für mehrere Werte der Laufzeitoption sind möglicherweise separate Übersetzungen erforderlich.',
-    'this-finding-is-treated-as-dynamic-the-displayed-value-is-resolved-from-runtime-data' => 'Diese Ermittlung wird als dynamisch behandelt: Der angezeigte Wert wird aus Laufzeitdaten ermittelt und erfordert weiterhin eine strukturierte dynamische Datenverarbeitung.',
     'time' => [
         'timeline' => 'Zeitleiste',
         'timeline-relation-context' => 'Zeitlicher Zusammenhang',
         'timeline-value-context' => 'Zeitachsenwert-Kontext',
     ],
-    'timespan' => 'Zeitspanne',
-    'tooltip' => [
-        'badge_required' => [],
+    'title' => [
+        'filter' => 'Filter',
+        'overview' => 'Übersicht',
     ],
-    'total' => 'Gesamt',
     'translation' => [
         'transform-suggested-key-to-ui-translation-key' => 'Vorgeschlagenen Schlüssel in UI-Übersetzungsschlüssel umwandeln',
         'translation-exists' => 'Es gibt eine Übersetzung',
         'translation-key' => 'Übersetzungsschlüssel',
         'translation-key-state' => 'Status des Übersetzungsschlüssels',
+        'translation-values' => 'Übersetzungswerte',
+        'translation-workbench' => 'Translation Workbench',
     ],
-    'translation-values' => 'Übersetzungswerte',
-    'translation-workbench' => 'Translation Workbench',
     'type' => 'Typ',
-    'ui-candidate' => 'UI-Kandidat',
-    'ui-translation' => 'Übersetzung der Benutzeroberfläche',
-    'ui-translation-state' => 'Status der UI-Übersetzung',
-    'unresolved' => 'Ungelöst',
-    'updated' => 'Aktualisiert',
+    'ui' => [
+        'ui-candidate' => 'UI-Kandidat',
+        'ui-translation' => 'Übersetzung der Benutzeroberfläche',
+    ],
+    'usage' => [
+        'usage-state-after' => 'Nutzungsstatus danach',
+        'usage-state-before' => 'Nutzungsstatus zuvor',
+    ],
     'user' => [
         'user-id' => 'Benutzer-ID',
     ],
@@ -292,10 +397,4 @@ return [
         'variable-missing' => 'Variable fehlt',
         'variables-ok' => 'Variablen OK',
     ],
-    'view' => 'Anzeigen',
-    'welcome' => [],
-    'workflow' => 'Arbeitsablauf',
-    'would-apply' => 'Würde gelten',
-    'writing' => 'Schreiben',
-    'written' => 'Geschrieben',
 ];

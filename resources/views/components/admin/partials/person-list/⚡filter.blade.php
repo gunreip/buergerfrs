@@ -6,7 +6,7 @@
         class="mb-4"
         size="lg"
     >
-        {{ __('admin.permissions.filters.title') }}
+        {{ __('ui.title.filter') }}
     </flux:heading>
 
     <div class="flex w-full items-end gap-3">

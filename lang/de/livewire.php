@@ -9,7 +9,6 @@ return [
                         '2fa_recovery_codes' => '2FA-Wiederherstellungscodes',
                     ],
                 ],
-                'two_factor_setup_modal' => [],
             ],
         ],
     ],

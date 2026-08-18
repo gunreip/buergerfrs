@@ -41,18 +41,18 @@
                     {{-- Column Status --}}
                     <flux:table.column
                         class="w-22"
-                        aria-label="{{ __('ui.status') }}"
+                        aria-label="{{ __('ui.state.status') }}"
                         align="center"
                         sortable
                         wire:click="sortBy('status')"
                     >
                         {{-- Tooltip Status: History status of the finding, open, changed, resolved, or ignored. --}}
                         <x-ui.tooltip.trigger
-                            :title="__('ui.status')"
+                            :title="__('ui.state.status')"
                             :text="$legendTexts['status'] ??
                                 __('History status of the finding: open, changed, resolved, or ignored.')"
                         >
-                            {{ __('ui.status') }}
+                            {{ __('ui.state.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -346,7 +346,7 @@
         @if ($problems->hasPages())
             <flux:separator
                 class="mt-4"
-                text="{{ __('ui.pagination') }}"
+                text="{{ __('ui.nouns.pagination') }}"
             />
 
             <div class="mt-4">

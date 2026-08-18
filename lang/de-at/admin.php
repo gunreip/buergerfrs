@@ -1,9 +1,6 @@
 <?php
 
 return [
-    'permissions' => [
-        'actions' => [],
-    ],
     'translation_list' => [
         'filter' => [
             'status_missing' => 'Status: Fehlend',

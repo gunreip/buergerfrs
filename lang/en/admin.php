@@ -76,7 +76,6 @@ return [
             'enter_a_search_term_to_filter_clients_by_name_legal_name_client_number_or_descri' => 'Enter a search term to filter clients by name, legal name, client number or description. The search is case-sensitive.',
             'filter_by_people' => 'Filter by people',
             'filter_by_type' => 'Filter by type',
-            'filtering' => 'Filtering',
             'refine_the_client_list_with_powerful_filters_search_by_name_legal_name_client_nu' => 'Refine the client list with powerful filters: search by name, legal name, client number or description; filter by type, status, and people associations.',
             'search_by_name_legal_name_client_number_or_description' => 'Search by name, legal name, client number or description',
             'search_clients' => 'Search clients',
@@ -197,7 +196,7 @@ return [
         'filter' => [
             'enter_a_search_term_to_filter_permissions_by_name_guard_category_or_description_' => 'Enter a search term to filter permissions by name, guard, category, or description. The search is case-sensitive.',
             'filter_by_assignment' => 'Filter by assignment',
-            'filter_by_category' => 'v',
+            'filter_by_category' => 'Filter by category',
             'filter_by_guard' => 'Filter by guard',
             'filter_by_role' => 'Filter by role',
             'filter_by_system' => 'Filter by system',
@@ -221,19 +220,12 @@ return [
         ],
     ],
     'permissions' => [
-        'actions' => [],
         'description' => 'Review registered permissions, guards, and role assignments.',
         'filters' => [
-            'assignment' => [],
-            'categories' => [],
             'description' => 'Refine the list of permissions by name, guard, category, role assignment, and system status.',
-            'guards' => [],
-            'roles' => [],
             'search' => [
                 'placeholder' => 'Search by permission name',
             ],
-            'system' => [],
-            'title' => 'Filtering',
         ],
         'labels' => [
             'system_permission' => 'System permission',
@@ -261,7 +253,6 @@ return [
                 'editable_scope' => 'Editable scope',
                 'metadata_only' => 'Metadata only',
                 'metadata_section' => 'Permission Metadata',
-                'title' => 'Edit Permission',
             ],
             'roles' => [
                 'changes' => 'Changes',
@@ -285,7 +276,6 @@ return [
                 'heading' => 'Guards',
                 'text' => 'Distinct guards used by registered permissions.',
             ],
-            'title' => 'Overview',
             'total' => [
                 'heading' => 'Total permissions',
                 'text' => 'The total number of registered permissions.',
@@ -306,13 +296,7 @@ return [
         ],
         'title' => 'Permission Management',
     ],
-    'person_list' => [
-        'filter' => [],
-    ],
     'roles' => [
-        'actions' => [
-            'create' => 'Create',
-        ],
         'badge' => [
             'color' => 'Color',
             'icon' => 'Icon',
@@ -461,7 +445,6 @@ return [
         'modal' => [
             'copy_to_translation_key' => 'Copy to translation key',
             'current_raw' => 'Current raw',
-            'edit' => 'Edit',
             'group' => 'Group',
             'key_obsolete_diff' => 'Key (obsolete diff)',
             'key_suggestion_check' => 'Key suggestion check',
@@ -509,7 +492,6 @@ return [
             'mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work' => 'Mark this obsolete entry as reviewed so it is removed from the default open workflow list.',
             'no_usage_records_available' => 'No usage records available.',
             'only_translation_values_are_editable_keys_native_text_and_usage_metadata_are_rea' => 'Only translation values are editable. Keys, native text and usage metadata are read-only.',
-            'open_next_editable_entry' => 'Open next editable entry',
             'readonly_source_locations_where_this_translation_key_is_currently_used' => 'Readonly source locations where this translation key is currently used.',
             'reviewed' => 'Reviewed',
             'sub_language_values' => 'Sub-language values',

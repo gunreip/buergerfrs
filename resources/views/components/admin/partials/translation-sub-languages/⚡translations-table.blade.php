@@ -13,7 +13,7 @@
                     id="translation-entries-per-page"
                     name="translation-entries-per-page"
                     model="translationRowsPerPage"
-                    :label="__('ui.table.per_page_selector.per_page')"
+                    :label="__('ui.per_page_selector.per_page')"
                 />
             </div>
         @endif
@@ -294,7 +294,7 @@
 
         <flux:separator
             class="mt-4"
-            text="{{ __('ui.pagination') }}"
+            text="{{ __('ui.nouns.pagination') }}"
         />
 
         @if ($translationRows->hasPages())

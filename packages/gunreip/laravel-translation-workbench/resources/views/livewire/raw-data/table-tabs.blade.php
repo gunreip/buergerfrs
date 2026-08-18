@@ -64,6 +64,12 @@
                             data-translation-workbench-table-tab="{{ $tableName }}"
                         >
                             <span>{{ $tableName }}</span>
+
+                            <x-ui.tooltip.simple
+                                :title="$tableName"
+                                :text="$tableDescriptions[$tableName] ?? __('Raw database table used by the Translation Workbench.')"
+                            />
+
                             {{-- Tabs Counter Badge --}}
                             <flux:badge
                                 class="tabular-nums"

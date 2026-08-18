@@ -134,10 +134,10 @@
                     >
                         <x-ui.tooltip.trigger
                             class="ml-3"
-                            :title="__('ui.current')"
+                            :title="__('ui.badge.current.current')"
                             :text="__('Current usages of the translation key')"
                         >
-                            {{ __('ui.current') }}
+                            {{ __('ui.badge.current.current') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -152,10 +152,10 @@
                     >
                         <x-ui.tooltip.trigger
                             class="ml-3"
-                            :title="__('Stale')"
+                            :title="__('ui.stale.stale')"
                             :text="__('Stale usages of the translation key')"
                         >
-                            {{ __('Stale') }}
+                            {{ __('ui.stale.stale') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -304,7 +304,7 @@
                                                 variant="subtle"
                                                 color="amber"
                                             >
-                                                {{ __('stale') }}
+                                                {{ __('ui.stale.stale') }}
                                             </flux:badge>
                                         @endif
 
@@ -525,7 +525,7 @@
                                         icon="pencil"
                                         wire:click="openUsageAuditEditModal('{{ $itemAuditType }}', '{{ $normalizedValueHash }}')"
                                     >
-                                        {{ __('admin.translation_list.modal.edit') }}
+                                        {{ __('ui.button.edit.edit') }}
                                     </x-ui.button.edit>
                                 </div>
                             </flux:table.cell>
@@ -546,7 +546,7 @@
         @if ($translationUsageItems->hasPages())
             <flux:separator
                 class=""
-                text="{{ __('ui.pagination') }}"
+                text="{{ __('ui.nouns.pagination') }}"
             />
 
             {{-- Pagination --}}

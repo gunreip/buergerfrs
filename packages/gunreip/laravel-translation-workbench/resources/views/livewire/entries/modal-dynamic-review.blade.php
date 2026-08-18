@@ -188,7 +188,7 @@
                                     size="sm"
                                     color="red"
                                 >
-                                    {{ __('ui.unresolved') }}: {{ $dynamicReviewUnresolvedCount }}
+                                    {{ __('ui.badge.unresolved') }}: {{ $dynamicReviewUnresolvedCount }}
                                 </flux:badge>
                             </span>
                             <flux:badge
@@ -202,7 +202,7 @@
                                 size="sm"
                                 color="{{ $dynamicReviewUnresolvedCount > 0 ? 'red' : 'green' }}"
                             >
-                                {{ __('ui.unresolved') }}: {{ $dynamicReviewUnresolvedCount }}
+                                {{ __('ui.badge.unresolved') }}: {{ $dynamicReviewUnresolvedCount }}
                             </flux:badge>
                         @endif
 
@@ -260,7 +260,7 @@
                         {{ __('Scanner context that may describe runtime option values.') }}
                     </flux:callout.text>
                     <div class="mt-2 flex flex-wrap gap-1.5">
-                        <flux:badge size="sm">{{ __('ui.sources') }}: {{ $dynamicReviewSourceCount }}</flux:badge>
+                        <flux:badge size="sm">{{ __('ui.sources.sources') }}: {{ $dynamicReviewSourceCount }}</flux:badge>
                         <flux:badge size="sm">{{ __('ui.values.values') }}:
                             {{ (int) ($dynamicReviewFinding->dynamic_source_value_count ?? 0) }}</flux:badge>
                         @foreach ($dynamicReviewSourceTypes as $sourceType)
@@ -512,7 +512,7 @@
                                         {{-- Table Header Column Source --}}
                                         <flux:table.column>
                                             <div class="flex items-center gap-1.5">
-                                                <span>{{ __('ui.source') }}</span>
+                                                <span>{{ __('ui.source.source') }}</span>
                                                 <flux:badge
                                                     size="sm"
                                                     variant="subtle"
@@ -538,7 +538,7 @@
                                             </div>
                                         </flux:table.column>
                                         {{-- Table Header Column State --}}
-                                        <flux:table.column class="w-32">{{ __('ui.state') }}</flux:table.column>
+                                        <flux:table.column class="w-32">{{ __('ui.state.state') }}</flux:table.column>
                                     </flux:table.columns>
 
                                     {{-- Table Body Rows Runtime Options --}}
@@ -687,7 +687,7 @@
                                                             @if ($source['source_path'])
                                                                 <x-ui.tooltip.simple
                                                                     class="wrap-anywhere font-mono text-xs text-zinc-500 dark:text-zinc-400"
-                                                                    :title="__('ui.source-path')"
+                                                                    :title="__('ui.source.source-path')"
                                                                     :text="$source['source_path']"
                                                                 >
                                                                     {{ $source['source_path'] }}@if ($source['source_line'])

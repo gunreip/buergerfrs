@@ -1,7 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/key-values/status.blade.php --}}
 
 <flux:field class="{{ $fieldClass ?? '' }}">
-    <flux:label>{{ __('ui.status') }}</flux:label>
+    <flux:label>{{ __('ui.state.status') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
             <flux:icon.badge-check />
@@ -15,7 +15,7 @@
                 value="all"
                 icon="badge-check"
             >
-                {{ __('ui.all-statuses') }}
+                {{ __('ui.states.all-statuses') }}
             </x-ui.input.select-option>
             @foreach ($keyValueOptions['statuses'] ?? [] as $status)
                 <x-ui.input.select-option

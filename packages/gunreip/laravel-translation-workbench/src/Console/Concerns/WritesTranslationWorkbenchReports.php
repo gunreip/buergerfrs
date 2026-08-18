@@ -36,6 +36,12 @@ trait WritesTranslationWorkbenchReports
         $path = $directory . DIRECTORY_SEPARATOR . $filename;
 
         File::ensureDirectoryExists($directory);
+        @chmod($directory, 0777);
+
+        if (File::exists($path) && ! is_writable($path)) {
+            @unlink($path);
+        }
+
         File::put($path, json_encode([
             'command' => $commandName,
             'generated_at' => now()->toISOString(),
@@ -43,6 +49,7 @@ trait WritesTranslationWorkbenchReports
             'plan_summary' => $planSummary,
             'raw_data' => $this->translationWorkbenchReportRawData(),
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL);
+        @chmod($path, 0666);
 
         $this->line('JSON report: ' . $path);
 
@@ -82,6 +89,8 @@ trait WritesTranslationWorkbenchReports
                             'path_key' => $keyParts['path_key'],
                             'scope' => $keyParts['scope'],
                             'dynamic_scope' => self::translationWorkbenchDynamicScope($item->meta),
+                            'source_context' => $item->meta['source_context'] ?? null,
+                            'comment_type' => $item->meta['comment_type'] ?? null,
                         ];
                     })
                     ->values()

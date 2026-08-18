@@ -62,7 +62,7 @@
                 class="hyphens-auto"
                 color="{{ ($keysByStatus['missing'] ?? 0) > 0 ? 'amber' : 'green' }}"
                 icon="shield-alert"
-                heading="{{ __('ui.missing') }}"
+                heading="{{ __('ui.state.missing') }}"
                 text="{{ __('Keys with missing values.') }}"
             >
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">

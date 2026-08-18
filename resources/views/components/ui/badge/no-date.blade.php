@@ -3,6 +3,6 @@
     size="sm"
     variant="subtle"
     color="red"
-    label="{{ __('ui.badge.no_date.no_date') }}"
+    label="{{ __('ui.badge.informatic.no_date') }}"
     icon="calendar-x"
 />

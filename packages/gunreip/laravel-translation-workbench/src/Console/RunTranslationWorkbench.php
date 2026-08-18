@@ -12,14 +12,19 @@
 // php artisan translation:workbench --paths=resources/views/components
 // php artisan translation:workbench --write-lang-files
 // php artisan translation:workbench --complete
+// php artisan translation:workbench --complete --pipeline-run-id=1
+// php artisan translation:workbench --skip-key-inventory
 // php artisan translation:workbench --skip-lang-node-classification
 // php artisan translation:workbench --skip-shared-key-candidates
+// php artisan translation:workbench --skip-suspicious-keyed-additions
+// php artisan translation:workbench --skip-suspicious-key-restores
 // php artisan translation:workbench --skip-code-update-apply
 
 namespace Gunreip\TranslationWorkbench\Console;
 
 use Gunreip\TranslationWorkbench\Console\Concerns\ConfirmsTranslationWorkbenchTruncate;
 use Gunreip\TranslationWorkbench\Console\Concerns\WritesTranslationWorkbenchReports;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPipelineRunTracker;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -41,14 +46,18 @@ use Throwable;
     {--skip-dynamic-options : Skip discovering dynamic option values.}
     {--skip-duplicates : Skip duplicate candidate detection.}
     {--skip-shared-key-candidates : Skip detecting new findings that may reuse reviewed shared translation keys.}
+    {--skip-suspicious-keyed-additions : Skip detecting code-level translation keys without Workbench/code-update provenance.}
+    {--skip-suspicious-key-restores : Skip applying reviewed suspicious key restore decisions.}
     {--skip-dynamic-classification : Skip classifying dynamic value sources.}
     {--skip-dynamic-resolution : Skip resolving unknown dynamic sources from option discoveries.}
     {--skip-dynamic-source-candidates : Skip discovering reviewable dynamic source candidates.}
     {--skip-lang-file-export : Skip the final lang file export dry-run/report step.}
     {--skip-lang-node-classification : Skip classifying keys as lang-file leaf/container/conflict nodes.}
+    {--skip-key-inventory : Skip established translation-key inventory aggregation.}
     {--skip-code-update-plan : Skip the final code update planning report step.}
     {--skip-code-update-apply : Skip the final code update apply dry-run and patch report step.}
     {--write-lang-files : Write exported lang files as the final pipeline step. Without this option the export step is a dry-run report only.}
+    {--pipeline-run-id= : Existing Translation Workbench pipeline run ID used for UI progress tracking.}
     {--complete : Run the full safe write workflow: mark obsolete, write lang files, apply safe code updates, then refresh reports.}')]
 #[Description('Run the full Translation Workbench scan/import/discovery/diagnostics pipeline.')]
 class RunTranslationWorkbench extends Command
@@ -68,6 +77,8 @@ class RunTranslationWorkbench extends Command
         $markObsolete = (bool) $this->option('mark-obsolete') || $complete;
         $writeLangFiles = ((bool) $this->option('write-lang-files') || $complete) && ! $dryRun;
         $pipelineStartedAt = microtime(true);
+        $pipelineTracker = app(TranslationWorkbenchPipelineRunTracker::class);
+        $pipelineRun = $pipelineTracker->find((int) ($this->option('pipeline-run-id') ?: 0));
         $summary = [
             'steps_planned' => 0,
             'steps_succeeded' => 0,
@@ -93,6 +104,9 @@ class RunTranslationWorkbench extends Command
             $summary['exit_code'] = self::FAILURE;
             $summary['steps_failed'] = 1;
             $this->writePipelineRawDataReport($summary, [], $this->elapsedMilliseconds($pipelineStartedAt));
+            if ($pipelineRun) {
+                $pipelineTracker->fail($pipelineRun, 'Truncate confirmation declined.', $summary);
+            }
             $this->logPipelineActivity(
                 'translation_workbench.pipeline_cancelled',
                 'Translation Workbench pipeline cancelled',
@@ -105,18 +119,32 @@ class RunTranslationWorkbench extends Command
             return self::FAILURE;
         }
 
-        $steps = [
-            [
-                'label' => 'Scan translation-capable source code',
-                'command' => 'translation-workbench:scan',
+        $steps = [];
+
+        if ($complete && ! $dryRun && ! $truncate && ! (bool) $this->option('skip-suspicious-key-restores')) {
+            $steps[] = [
+                'label' => 'Pre-apply reviewed suspicious key restores',
+                'command' => 'translation-workbench:apply-suspicious-key-restores',
                 'arguments' => array_filter([
                     '--paths' => $paths,
-                    '--dry-run' => $dryRun,
-                    '--truncate' => $truncate,
-                    '--force-truncate' => $truncate && ! $dryRun,
-                    '--mark-obsolete' => $markObsolete,
+                    '--source-locale' => $sourceLocale,
+                    '--write' => true,
+                    '--only-apply' => true,
+                    '--suppress-dry-run-warning' => true,
                 ], static fn(mixed $value): bool => $value !== null && $value !== false),
-            ],
+            ];
+        }
+
+        $steps[] = [
+            'label' => 'Scan translation-capable source code',
+            'command' => 'translation-workbench:scan',
+            'arguments' => array_filter([
+                '--paths' => $paths,
+                '--dry-run' => $dryRun,
+                '--truncate' => $truncate,
+                '--force-truncate' => $truncate && ! $dryRun,
+                '--mark-obsolete' => $markObsolete,
+            ], static fn(mixed $value): bool => $value !== null && $value !== false),
         ];
 
         if (! (bool) $this->option('skip-foundation')) {
@@ -192,6 +220,29 @@ class RunTranslationWorkbench extends Command
             ];
         }
 
+        if (! (bool) $this->option('skip-suspicious-keyed-additions')) {
+            $steps[] = [
+                'label' => 'Detect suspicious keyed additions',
+                'command' => 'translation-workbench:detect-suspicious-keyed-additions',
+                'arguments' => array_filter([
+                    '--paths' => $paths,
+                    '--source-locale' => $sourceLocale,
+                ], static fn(mixed $value): bool => $value !== null && $value !== false),
+            ];
+        }
+
+        if (! (bool) $this->option('skip-suspicious-key-restores')) {
+            $steps[] = [
+                'label' => 'Report suspicious key restore dry-run',
+                'command' => 'translation-workbench:apply-suspicious-key-restores',
+                'arguments' => array_filter([
+                    '--paths' => $paths,
+                    '--source-locale' => $sourceLocale,
+                    '--suppress-dry-run-warning' => true,
+                ], static fn(mixed $value): bool => $value !== null && $value !== false),
+            ];
+        }
+
         if (! (bool) $this->option('skip-dynamic-classification')) {
             $steps[] = [
                 'label' => 'Classify dynamic value sources',
@@ -227,6 +278,18 @@ class RunTranslationWorkbench extends Command
                 'label' => 'Classify lang node types',
                 'command' => 'translation-workbench:classify-lang-node-types',
                 'arguments' => array_filter([
+                    '--dry-run' => $dryRun,
+                ], static fn(mixed $value): bool => $value !== null && $value !== false),
+            ];
+        }
+
+        if (! (bool) $this->option('skip-key-inventory')) {
+            $steps[] = [
+                'label' => 'Inventory established translation keys',
+                'command' => 'translation-workbench:inventory-keys',
+                'arguments' => array_filter([
+                    '--source-locale' => $sourceLocale,
+                    '--sync' => ! $dryRun,
                     '--dry-run' => $dryRun,
                 ], static fn(mixed $value): bool => $value !== null && $value !== false),
             ];
@@ -297,6 +360,9 @@ class RunTranslationWorkbench extends Command
         }
 
         $summary['steps_planned'] = count($steps);
+        if ($pipelineRun) {
+            $pipelineTracker->start($pipelineRun, $steps, $summary);
+        }
         $this->logPipelineActivity(
             'translation_workbench.pipeline_started',
             'Translation Workbench pipeline started',
@@ -326,6 +392,9 @@ class RunTranslationWorkbench extends Command
                 sprintf('Translation Workbench step started: %s', $step['command']),
                 $stepProperties,
             );
+            if ($pipelineRun) {
+                $pipelineTracker->startStep($pipelineRun, $index + 1, count($steps), $step);
+            }
 
             try {
                 $exitCode = $this->call($step['command'], $step['arguments']);
@@ -339,6 +408,16 @@ class RunTranslationWorkbench extends Command
                 $summary['exit_code'] = self::FAILURE;
                 $executedSteps[] = $this->pipelineStepExecutionSnapshot($step, $index + 1, count($steps), $stepStartedAt, self::FAILURE);
                 $this->writePipelineRawDataReport($summary, $executedSteps, $this->elapsedMilliseconds($pipelineStartedAt));
+                if ($pipelineRun) {
+                    $pipelineTracker->failStep(
+                        $pipelineRun,
+                        $index + 1,
+                        $exception->getMessage(),
+                        $this->elapsedMilliseconds($stepStartedAt),
+                        $summary,
+                    );
+                    $pipelineTracker->fail($pipelineRun, $exception->getMessage(), $summary);
+                }
                 $this->logPipelineActivity(
                     'translation_workbench.step_failed',
                     sprintf('Translation Workbench step failed: %s', $step['command']),
@@ -373,6 +452,17 @@ class RunTranslationWorkbench extends Command
                 $summary['exit_code'] = $exitCode;
                 $executedSteps[] = $this->pipelineStepExecutionSnapshot($step, $index + 1, count($steps), $stepStartedAt, $exitCode);
                 $this->writePipelineRawDataReport($summary, $executedSteps, $this->elapsedMilliseconds($pipelineStartedAt));
+                if ($pipelineRun) {
+                    $pipelineTracker->finishStep(
+                        $pipelineRun,
+                        $index + 1,
+                        $exitCode,
+                        $this->elapsedMilliseconds($stepStartedAt),
+                        $summary,
+                        ['report' => $this->activityReportSummary($step['command'])],
+                    );
+                    $pipelineTracker->finish($pipelineRun, $exitCode, $summary);
+                }
                 $this->logPipelineActivity(
                     'translation_workbench.step_failed',
                     sprintf('Translation Workbench step failed: %s', $step['command']),
@@ -397,6 +487,16 @@ class RunTranslationWorkbench extends Command
 
             $summary['steps_succeeded']++;
             $executedSteps[] = $this->pipelineStepExecutionSnapshot($step, $index + 1, count($steps), $stepStartedAt, $exitCode);
+            if ($pipelineRun) {
+                $pipelineTracker->finishStep(
+                    $pipelineRun,
+                    $index + 1,
+                    $exitCode,
+                    $this->elapsedMilliseconds($stepStartedAt),
+                    $summary,
+                    ['report' => $this->activityReportSummary($step['command'])],
+                );
+            }
             $this->logPipelineActivity(
                 'translation_workbench.step_finished',
                 sprintf('Translation Workbench step finished: %s', $step['command']),
@@ -412,6 +512,9 @@ class RunTranslationWorkbench extends Command
         $this->newLine();
         $this->components->info('Translation Workbench pipeline finished.');
         $this->writePipelineRawDataReport($summary, $executedSteps, $this->elapsedMilliseconds($pipelineStartedAt));
+        if ($pipelineRun) {
+            $pipelineTracker->finish($pipelineRun, self::SUCCESS, $summary);
+        }
         $this->logPipelineActivity(
             'translation_workbench.pipeline_finished',
             'Translation Workbench pipeline finished',
@@ -438,8 +541,15 @@ class RunTranslationWorkbench extends Command
     private function writePipelineRawDataReport(array $summary = [], array $steps = [], ?int $durationMs = null): void
     {
         $path = $this->translationWorkbenchReportPath((string) $this->getName());
+        $directory = dirname($path);
 
-        File::ensureDirectoryExists(dirname($path));
+        File::ensureDirectoryExists($directory);
+        @chmod($directory, 0777);
+
+        if (File::exists($path) && ! is_writable($path)) {
+            @unlink($path);
+        }
+
         File::put($path, json_encode([
             'command' => $this->getName(),
             'generated_at' => now()->toISOString(),
@@ -449,6 +559,7 @@ class RunTranslationWorkbench extends Command
             'steps' => $steps,
             'raw_data' => $this->translationWorkbenchReportRawData(),
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL);
+        @chmod($path, 0666);
 
         $this->line('JSON report: ' . $path);
     }
@@ -542,6 +653,29 @@ class RunTranslationWorkbench extends Command
             ];
         }
 
+        if (! (bool) $this->option('skip-suspicious-keyed-additions')) {
+            $steps[] = [
+                'label' => 'Refresh suspicious keyed additions',
+                'command' => 'translation-workbench:detect-suspicious-keyed-additions',
+                'arguments' => array_filter([
+                    '--paths' => $paths,
+                    '--source-locale' => $sourceLocale,
+                ], static fn(mixed $value): bool => $value !== null && $value !== false),
+            ];
+        }
+
+        if (! (bool) $this->option('skip-suspicious-key-restores')) {
+            $steps[] = [
+                'label' => 'Refresh suspicious key restore dry-run',
+                'command' => 'translation-workbench:apply-suspicious-key-restores',
+                'arguments' => array_filter([
+                    '--paths' => $paths,
+                    '--source-locale' => $sourceLocale,
+                    '--suppress-dry-run-warning' => true,
+                ], static fn(mixed $value): bool => $value !== null && $value !== false),
+            ];
+        }
+
         if (! (bool) $this->option('skip-dynamic-classification')) {
             $steps[] = [
                 'label' => 'Refresh dynamic value source classification',
@@ -599,6 +733,17 @@ class RunTranslationWorkbench extends Command
                 'label' => 'Refresh lang node types after final lang export',
                 'command' => 'translation-workbench:classify-lang-node-types',
                 'arguments' => [],
+            ];
+        }
+
+        if (! (bool) $this->option('skip-key-inventory')) {
+            $steps[] = [
+                'label' => 'Refresh established key inventory after final lang import',
+                'command' => 'translation-workbench:inventory-keys',
+                'arguments' => [
+                    '--source-locale' => $sourceLocale,
+                    '--sync' => true,
+                ],
             ];
         }
 

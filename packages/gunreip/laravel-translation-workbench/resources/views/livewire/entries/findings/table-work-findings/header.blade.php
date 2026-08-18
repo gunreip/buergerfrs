@@ -1,10 +1,10 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/findings/table-work-findings/header.blade.php --}}
 
 {{-- Table Findings Header Row --}}
-<flux:table.columns class="bg-white dark:bg-zinc-700">
+<flux:table.columns>
     {{-- Table Findings Header Column ID --}}
     <flux:table.column
-        class="w-20 bg-white dark:bg-zinc-700"
+        class="w-20"
         sticky
     >
         <span class="inline-flex items-center gap-1">
@@ -23,7 +23,7 @@
         wire:click="sortFindingsBy('source')"
     >
         <span class="inline-flex items-center gap-1">
-            <span>{{ __('ui.source') }}</span>
+            <span>{{ __('ui.source.source') }}</span>
             <x-ui.tooltip.simple
                 :header="__('Source location')"
                 :text="__('Source file and line where the scanner found this translation-capable code occurrence.')"
@@ -55,7 +55,7 @@
                 </flux:button>
             </x-ui.tooltip.simple>
             <span class="inline-flex items-center justify-center gap-1 text-center">
-                <span>{{ __('ui.status') }}</span>
+                <span>{{ __('ui.state.status') }}</span>
                 <x-ui.tooltip.simple
                     :header="__('Finding status')"
                     :text="__(
@@ -124,7 +124,7 @@
     {{-- Table Findings Header Column State --}}
     <flux:table.column>
         <span class="inline-flex items-center gap-1">
-            <span>{{ __('ui.state') }}</span>
+            <span>{{ __('ui.state.state') }}</span>
             <x-ui.tooltip.simple
                 :header="__('Workflow state')"
                 :text="__('Shows review, source/target translation and saved-to-langfile state for this finding.')"
@@ -195,7 +195,7 @@
                             />
                             {{-- {{ __('Bulk') }} --}}
                             <flux:button
-                                class="{{ $bulkButtonPulseClass }} h-6 text-zinc-900 dark:text-zinc-900"
+                                class="{{ $bulkButtonPulseClass }} h-6"
                                 type="button"
                                 size="xs"
                                 variant="{{ $bulkEqualizeContext['can_confirm'] ?? false ? 'primary' : 'subtle' }}"
@@ -227,7 +227,7 @@
 
                     <x-ui.tooltip.simple
                         :title="__('Clear bulk selection')"
-                        :text="__('Removes the selected findings from the bulk translation-key review.')"
+                        :text="__('ui.remove.removes.removes-the-selected-findings-from-the-bulk-translation-key-review')"
                     >
                         <flux:button
                             class="h-6 w-6"

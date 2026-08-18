@@ -35,10 +35,10 @@
                 {{ __('Evidence') }}
             </flux:table.column>
             <flux:table.column class="w-36">
-                {{ __('ui.state') }}
+                {{ __('ui.state.state') }}
             </flux:table.column>
             <flux:table.column class="w-32">
-                {{ __('Actions') }}
+                {{ __('ui.table.headers.actions') }}
             </flux:table.column>
         </flux:table.columns>
 

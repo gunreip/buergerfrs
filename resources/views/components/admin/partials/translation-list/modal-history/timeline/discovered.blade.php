@@ -157,7 +157,7 @@
                 variant="subtle"
                 color="zinc"
             >
-                {{ __('ui.status') }}: {{ $historyEvent->new_status }}
+                {{ __('ui.state.status') }}: {{ $historyEvent->new_status }}
             </flux:badge>
         @endif
 
@@ -167,7 +167,7 @@
                 variant="subtle"
                 color="zinc"
             >
-                {{ __('ui.workflow') }}: {{ $workflowStatus }}
+                {{ __('ui.nouns.workflow') }}: {{ $workflowStatus }}
             </flux:badge>
         @endif
     </div>

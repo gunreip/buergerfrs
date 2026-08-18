@@ -158,7 +158,7 @@
                 class="col-span-1 hyphens-auto"
                 color="emerald"
                 icon="archive-x"
-                heading="{{ __('ui.audit') }}"
+                heading="{{ __('ui.labels.audit') }}"
             >
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                     {{ __('Language Ballast') }}

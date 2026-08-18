@@ -83,7 +83,7 @@
                 class="col-span-2 hyphens-auto"
                 color="amber"
                 icon="shield-alert"
-                heading="{{ __('ui.missing') }}"
+                heading="{{ __('ui.state.missing') }}"
                 text="{{ __('admin.translation_list.meta.translation_keys_with_missing_values_or_required_follow_up') }}"
             >
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">
@@ -211,7 +211,7 @@
                                 color="amber"
                                 variant="subtle"
                             >
-                                {{ __('ui.status') }}:
+                                {{ __('ui.state.status') }}:
                                 {{ str($status)->headline() }}
                             </flux:badge>
                         @endif
@@ -221,7 +221,7 @@
                                 color="emerald"
                                 variant="subtle"
                             >
-                                {{ __('ui.workflow') }}:
+                                {{ __('ui.nouns.workflow') }}:
                                 {{ str($workflowStatus)->headline() }}
                             </flux:badge>
                         @endif
@@ -292,7 +292,7 @@
                                 color="zinc"
                                 variant="subtle"
                             >
-                                {{ __('ui.table.per_page_selector.per_page') }}: {{ $perPage }}
+                                {{ __('ui.per_page_selector.per_page') }}: {{ $perPage }}
                             </flux:badge>
                         @endif
 

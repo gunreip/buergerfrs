@@ -8,8 +8,8 @@
 
 @props([
     'state',
-    'showLabel' => __('ui.button.show'),
-    'hideLabel' => __('ui.button.hide'),
+    'showLabel' => __('ui.button.show-hide.show'),
+    'hideLabel' => __('ui.button.show-hide.hide'),
     'variant' => 'ghost',
     'size' => 'xs',
     'width' => 'min-w-10 text-left',

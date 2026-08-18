@@ -86,7 +86,7 @@
                     :direction="$sortDirection"
                     wire:click="sortBy('created_at')"
                 >
-                    {{ __('ui.created') }}
+                    {{ __('ui.labels.created') }}
                 </flux:table.column>
 
                 {{-- Table-Header Type --}}
@@ -179,7 +179,7 @@
                         $activityLogTypeLabel = match ($activityLogType) {
                             'app' => __('App'),
                             'artisan' => __('Artisan'),
-                            default => __('ui.label.label'),
+                            default => __('ui.labels.label'),
                         };
 
                         $activityLogTypeColor = match ($activityLogType) {
@@ -416,7 +416,7 @@
                                             variant="subtle"
                                             color="purple"
                                         >
-                                            {{ __('ui.label.label') }}
+                                            {{ __('ui.labels.label') }}
                                         </flux:badge>
                                     @endif
 

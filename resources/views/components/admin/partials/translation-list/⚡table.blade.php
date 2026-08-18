@@ -149,12 +149,12 @@
                     >
                         <x-ui.tooltip.trigger
                             class="ml-3"
-                            :title="__('ui.status')"
+                            :title="__('ui.state.status')"
                             :text="__(
                                 'admin.translation_list.table.current_status_of_the_translation_key_useful_for_identification_and_reference',
                             )"
                         >
-                            {{ __('ui.status') }}
+                            {{ __('ui.state.status') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 
@@ -694,7 +694,7 @@
                                                     color="amber"
                                                     variant="subtle"
                                                 >
-                                                    {{ __('ui.missing') }}
+                                                    {{ __('ui.state.missing') }}
                                                 </flux:badge>
                                             @endif
                                         </div>
@@ -753,7 +753,7 @@
                                                         color="amber"
                                                         variant="subtle"
                                                     >
-                                                        {{ __('ui.missing') }}
+                                                        {{ __('ui.state.missing') }}
                                                     </flux:badge>
                                                 @endif
                                             </div>
@@ -944,7 +944,7 @@
         @if ($translationKeys->hasPages())
             <flux:separator
                 class=""
-                text="{{ __('ui.pagination') }}"
+                text="{{ __('ui.nouns.pagination') }}"
             />
 
             {{-- Pagination --}}

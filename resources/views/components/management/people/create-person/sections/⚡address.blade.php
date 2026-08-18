@@ -252,13 +252,13 @@
             {{-- Address line 2 --}}
             <flux:field class="col-span-2">
                 <x-ui.tooltip.trigger
-                    title="{{ __('ui.address-line-2') }}"
+                    title="{{ __('ui.address.address.address-line-2') }}"
                     field="addressLine2"
                     text="{{ __('Please enter additional address information, such as apartment number, floor, etc. This is optional but can be helpful for correctly delivering mail and for any address-specific validations.') }}"
                     :required="$this->isRequiredField('addressLine2')"
                 >
                     <flux:label for="create-person-address-line-2">
-                        {{ __('ui.address-line-2') }}
+                        {{ __('ui.address.address.address-line-2') }}
                         <x-ui.tooltip.badge-required :required="$this->isRequiredField('addressLine2')" />
                     </flux:label>
                 </x-ui.tooltip.trigger>

@@ -62,7 +62,7 @@
                         variant="subtle"
                         color="zinc"
                     >
-                        {{ __('ui.workflow') }}: {{ $workflowStatus }}
+                        {{ __('ui.nouns.workflow') }}: {{ $workflowStatus }}
                     </flux:badge>
                 </div>
             @endif

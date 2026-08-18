@@ -1,6 +1,6 @@
 {{-- resources/views/components/ui/input/group/suffix-field-edit.blade.php --}}
 
-@props(['field', 'title', 'text', 'label' => __('admin.translation_list.modal.edit'), 'changed' => false])
+@props(['field', 'title', 'text', 'label' => __('ui.button.edit.edit'), 'changed' => false])
 
 @if ($changed)
 <flux:input.group.suffix

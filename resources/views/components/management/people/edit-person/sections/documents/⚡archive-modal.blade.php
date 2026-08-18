@@ -2,7 +2,7 @@
 
 @php
     $archiveFilters = [
-        'current' => __('ui.current'),
+        'current' => __('ui.badge.current.current'),
         'all' => __('ui.states.all'),
         'expired' => __('Expired'),
         'replaced' => __('Replaced'),
@@ -71,7 +71,7 @@
                 <flux:table.columns class="bg-zinc-800 text-zinc-400">
                     {{-- Column Status --}}
                     <flux:table.column>
-                        {{ __('ui.status') }}
+                        {{ __('ui.state.status') }}
                     </flux:table.column>
                     {{-- Column Category --}}
                     <flux:table.column

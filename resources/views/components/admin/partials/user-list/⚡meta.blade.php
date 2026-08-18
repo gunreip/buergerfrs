@@ -7,7 +7,7 @@
     <div class="flex w-full items-center justify-between gap-3">
         <div class="min-w-0">
             <x-ui.headers.card
-                :title="__('admin.permissions.overview.title')"
+                :title="__('ui.title.filter')"
                 :description="__(
                     'admin.user_list.meta.summary_of_users_in_the_system_their_assigned_roles_and_role_categories',
                 )"
@@ -19,7 +19,7 @@
                 size="xs"
                 state="showMeta"
                 show-label="{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.show_overview') }}"
-                hide-label="{{ __('Hide overview') }}"
+                hide-label="{{ __('ui.button.show-hide.hide-overview') }}"
             />
         </div>
     </div>
@@ -57,13 +57,13 @@
                 class="col-span-4 min-h-6 hyphens-auto md:col-span-1"
                 color="green"
                 icon="user-check"
-                heading="{{ __('ui.assigned-users') }}"
+                heading="{{ __('ui.assign.assigned.assigned-users') }}"
                 text="{{ __('admin.user_list.meta.users_grouped_by_assigned_role_category') }}"
             >
                 <flux:field class="space-y-1 text-sm">
                     <div class="-mb-1 flex items-center justify-between gap-3">
                         <span class="text-zinc-300">
-                            {{ __('ui.label.label') }}
+                            {{ __('ui.labels.label') }}
                         </span>
                         <span class="font-semibold tabular-nums text-zinc-100">
                             {{ $summary['assignedUsersByRoleCategory']['system'] ?? 0 }}
@@ -91,7 +91,7 @@
                 <flux:field class="space-y-1 text-sm">
                     <div class="-mb-1 flex items-center justify-between gap-4">
                         <span class="text-zinc-300">
-                            {{ __('ui.label.label') }}
+                            {{ __('ui.labels.label') }}
                         </span>
                         <span class="font-semibold tabular-nums text-zinc-100">
                             {{ $summary['assignableRolesByCategory']['system'] ?? 0 }}

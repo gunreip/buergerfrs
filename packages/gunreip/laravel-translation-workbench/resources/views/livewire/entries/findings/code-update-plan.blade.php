@@ -47,7 +47,7 @@
             ),
         ],
         'stale_source' => [
-            'title' => __('ui.stale-source'),
+            'title' => __('ui.source.stale-source'),
             'color' => 'red',
             'icon' => 'file-exclamation-point',
             'text' => __(
@@ -169,7 +169,7 @@
                                 size="sm"
                                 color="{{ $applyReport['write'] ? 'green' : 'sky' }}"
                             >
-                                {{ $applyReport['write'] ? __('ui.written') : __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.dry_run') }}
+                                {{ $applyReport['write'] ? __('ui.label.written') : __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.dry_run') }}
                             </flux:badge>
                             <flux:badge size="sm">
                                 {{ __('Files') }}: {{ number_format((int) ($applySummary['diff_files'] ?? 0)) }}
@@ -206,9 +206,9 @@
                         </div>
 
                         <div class="flex flex-wrap gap-2">
-                            <flux:badge size="sm">{{ __('ui.would-apply') }}:
+                            <flux:badge size="sm">{{ __('ui.label.would-apply') }}:
                                 {{ number_format((int) ($applySummary['would_apply'] ?? 0)) }}</flux:badge>
-                            <flux:badge size="sm">{{ __('ui.applied') }}:
+                            <flux:badge size="sm">{{ __('ui.apply.applied') }}:
                                 {{ number_format((int) ($applySummary['applied'] ?? 0)) }}</flux:badge>
                             <flux:badge
                                 size="sm"
@@ -278,7 +278,7 @@
 
             @php
                 $applyStateMeta = [
-                    'would_apply' => ['title' => __('ui.would-apply'), 'color' => 'green', 'icon' => 'circle-check'],
+                    'would_apply' => ['title' => __('ui.label.would-apply'), 'color' => 'green', 'icon' => 'circle-check'],
                     'duplicate_expression' => [
                         'title' => __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.duplicate_expressions'),
                         'color' => 'amber',
@@ -290,7 +290,7 @@
                         'icon' => 'badge-check',
                     ],
                     'stale_source' => [
-                        'title' => __('ui.stale-source'),
+                        'title' => __('ui.source.stale-source'),
                         'color' => 'red',
                         'icon' => 'file-exclamation-point',
                     ],
@@ -354,8 +354,8 @@
                                             sticky
                                         >
                                             <flux:table.column class="w-24">{{ __('ID') }}</flux:table.column>
-                                            <flux:table.column>{{ __('ui.source') }}</flux:table.column>
-                                            <flux:table.column class="w-36">{{ __('ui.state') }}</flux:table.column>
+                                            <flux:table.column>{{ __('ui.source.source') }}</flux:table.column>
+                                            <flux:table.column class="w-36">{{ __('ui.state.state') }}</flux:table.column>
                                             <flux:table.column
                                                 class="w-28"
                                                 align="center"
@@ -604,11 +604,11 @@
                             searchable
                             wire:model.live="codeUpdatePlanState"
                         >
-                            <flux:select.option value="all">{{ __('ui.all-states') }}</flux:select.option>
+                            <flux:select.option value="all">{{ __('ui.states.all-states') }}</flux:select.option>
                             <flux:select.option value="safe_update">{{ __('Safe updates') }}</flux:select.option>
                             <flux:select.option value="missing_lang_values">{{ __('Missing lang values') }}</flux:select.option>
                             <flux:select.option value="manual_review">{{ __('Manual review') }}</flux:select.option>
-                            <flux:select.option value="stale_source">{{ __('ui.stale-source') }}</flux:select.option>
+                            <flux:select.option value="stale_source">{{ __('ui.source.stale-source') }}</flux:select.option>
                             <flux:select.option value="already_current">{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.already_current') }}</flux:select.option>
                             <flux:select.option value="unsupported_expression">{{ __('Unsupported expression') }}
                             </flux:select.option>
@@ -677,7 +677,7 @@
                                             ]"
                                         />
                                     </flux:table.column>
-                                    <flux:table.column class="">{{ __('ui.source') }}</flux:table.column>
+                                    <flux:table.column class="">{{ __('ui.source.source') }}</flux:table.column>
                                     <flux:table.column class="">{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.current_expression') }}</flux:table.column>
                                     <flux:table.column class="">
                                         {{ $state === 'safe_update' || $state === 'already_current' ? __('Planned expression') : __('Reason') }}

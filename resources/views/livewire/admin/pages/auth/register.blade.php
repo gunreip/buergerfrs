@@ -60,7 +60,7 @@
         </form>
 
         <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-            <span>{{ __('pages.auth.register.already_have_an_account') }}</span>
+            <span>{{ __('auth.account.already-have-an-account') }}</span>
             <flux:link :href="route('login')" wire:navigate>{{ __('pages.auth.register.log_in') }}</flux:link>
         </div>
     </div>

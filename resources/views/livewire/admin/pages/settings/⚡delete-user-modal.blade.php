@@ -56,7 +56,7 @@ new class extends Component {
                 <flux:button
                     variant="filled"
                     icon="x"
-                >{{ __('ui.button.cancel.cancel') }}</flux:button>
+                >{{ __('ui.button.cancel') }}</flux:button>
             </flux:modal.close>
 
             <x-ui.button.delete

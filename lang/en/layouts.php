@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'header' => [],
     'sidebar' => [
         'administration' => [
             'countries' => 'Countries',

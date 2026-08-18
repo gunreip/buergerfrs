@@ -157,7 +157,7 @@
                 size="sm"
                 color="{{ $reviewFinding->status === 'active' ? 'green' : 'amber' }}"
             >
-                <span class="mr-1">{{ __('ui.status') }}: {{ $reviewFinding->status }}</span>
+                <span class="mr-1">{{ __('ui.state.status') }}: {{ $reviewFinding->status }}</span>
                 <x-ui.tooltip.simple
                     :header="__('Finding status')"
                     :text="__(
@@ -322,7 +322,7 @@
                 >
                     <span class="mr-1">{{ __('isUI') }}</span>
                     <x-ui.tooltip.simple
-                        :header="__('ui.ui-translation')"
+                        :header="__('ui.ui.ui-translation')"
                         :text="__(
                             'This finding is treated as a UI translation: the displayed value is resolved from runtime data and needs structured UI handling.',
                         )"
@@ -608,9 +608,9 @@
             <div class="grid gap-3 self-start md:grid-cols-2 xl:col-span-2">
                 <flux:field>
                     <flux:label>
-                        <span class="mr-1">{{ __('ui.ui-translation-state') }}</span>
+                        <span class="mr-1">{{ __('ui.state.ui-translation-state') }}</span>
                         <x-ui.tooltip.simple
-                            :header="__('ui.ui-translation-state')"
+                            :header="__('ui.state.ui-translation-state')"
                             :text="__(
                                 'UI state is derived from the saved translation key. A key starting with ui. is treated as UI; every other key is not UI.',
                             )"

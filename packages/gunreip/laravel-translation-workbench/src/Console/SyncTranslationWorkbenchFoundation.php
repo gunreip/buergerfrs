@@ -66,10 +66,12 @@ class SyncTranslationWorkbenchFoundation extends Command
         if (! $dryRun) {
             $this->line('Source files created: ' . number_format($summary['source_files_created']));
             $this->line('Findings created: ' . number_format($summary['findings_created']));
+            $this->line('Findings commented out: ' . number_format($summary['findings_commented_out'] ?? 0));
             $this->line('Findings obsoleted: ' . number_format($summary['findings_obsoleted'] ?? 0));
             $this->line('Keys created: ' . number_format($summary['keys_created']));
             $this->line('Keys obsoleted: ' . number_format($summary['keys_obsoleted'] ?? 0));
             $this->line('Relations created: ' . number_format($summary['relations_created']));
+            $this->line('Relations commented out: ' . number_format($summary['relations_commented_out'] ?? 0));
             $this->line('Relations obsoleted: ' . number_format($summary['relations_obsoleted'] ?? 0));
             $this->line('Timeline events created: ' . number_format($summary['timeline_events_created']));
         }

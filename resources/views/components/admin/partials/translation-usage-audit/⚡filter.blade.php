@@ -89,7 +89,7 @@
                             :title="__('All audit types')"
                             :text="__('Show all items regardless of their audit type.')"
                         >
-                            {{ __('ui.audit') }}
+                            {{ __('ui.labels.audit') }}
                         </x-ui.tooltip.trigger>
                     </span>
 
@@ -160,7 +160,7 @@
                 {{-- Decision state filters --}}
                 <div class="flex flex-wrap items-center gap-2 rounded-md bg-zinc-50/50 px-3 py-2 dark:bg-zinc-800/50">
                     <x-ui.tooltip.trigger
-                        :title="__('ui.all-decisions')"
+                        :title="__('ui.all.all-decisions')"
                         :text="__('Show all items regardless of their usage audit decision state.')"
                     >
                         <span
@@ -260,7 +260,7 @@
                             :color="$decisionFilter === 'applied' ? 'sky' : null"
                             wire:click="$set('decisionFilter', 'applied')"
                         >
-                            {{ __('ui.applied') }}
+                            {{ __('ui.apply.applied') }}
                             <span class="ml-1 opacity-70">{{ $appliedDecisionCount }}</span>
                         </flux:button>
                     </x-ui.tooltip.trigger>
@@ -336,7 +336,7 @@
                     class="min-w-58 flex items-center justify-start rounded-md bg-zinc-50/50 px-6 py-2 dark:bg-zinc-800/50">
                     <flux:field variant="inline">
                         <x-ui.tooltip.trigger
-                            :title="__('With stale usages')"
+                            :title="__('ui.stale.with-stale-usages')"
                             :text="__('Show only items that have usages that might be stale and need review.')"
                         >
                             <flux:switch
@@ -349,7 +349,7 @@
                                 class="text-sm opacity-70 hover:cursor-pointer"
                                 wire:click="toggleOnlyWithStaleUsages"
                             >
-                                {{ __('With stale usages') }}
+                                {{ __('ui.stale.with-stale-usages') }}
 
                                 <span class="ml-1 opacity-70">
                                     {{ $withStaleUsagesCount }}

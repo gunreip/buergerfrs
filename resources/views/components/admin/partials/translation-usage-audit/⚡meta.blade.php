@@ -10,14 +10,14 @@
                 'candidate_translation_keys' => __('Translation keys'),
                 'candidate_usages' => __('Usages total'),
                 'candidate_current_usages' => __('Current usages'),
-                'candidate_stale_usages' => __('Stale usages'),
+                'candidate_stale_usages' => __('ui.stale.stale-usages'),
             ]
             : [
                 'reported_literals' => __('Reported literals'),
                 'reported_translation_keys' => __('Translation keys'),
                 'reported_usages' => __('Usages total'),
                 'reported_current_usages' => __('Current usages'),
-                'reported_stale_usages' => __('Stale usages'),
+                'reported_stale_usages' => __('ui.stale.stale-usages'),
             ];
 
     $sourceLocale = data_get($activeSummary, 'options.source_locale', '—');
@@ -56,7 +56,7 @@
             class="col-span-5 hyphens-auto"
             color="emerald"
             icon="scan-search"
-            heading="{{ __('ui.audit') }}"
+            heading="{{ __('ui.labels.audit') }}"
         >
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                 {{ $activeTab === 'duplicate' ? 'duplicate' : 'frequent' }}

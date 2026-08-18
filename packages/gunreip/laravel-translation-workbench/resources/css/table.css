@@ -1,0 +1,60 @@
+/* packages/gunreip/laravel-translation-workbench/resources/css/table.css */
+
+@layer components {
+    /*
+    |--------------------------------------------------------------------------
+    | Translation Workbench Tables
+    |--------------------------------------------------------------------------
+    |
+    | Shared table presentation for Flux tables inside the workbench. The
+    | header row and first column need an opaque background so sticky columns
+    | remain readable while horizontally scrolling table content.
+    |
+    */
+
+    /* .translation-workbench ui-table-scroll-area, */
+    /* .translation-workbench table[data-flux-table],
+    .translation-workbench thead[data-flux-columns],
+    .translation-workbench thead[data-flux-columns] tr,
+    .translation-workbench thead[data-flux-columns] th[data-flux-column] {
+        @apply bg-white dark:bg-zinc-700;
+    } */
+
+    /* .translation-workbench ui-table-scroll-area, */
+    /* .translation-workbench table[data-flux-table],
+    .translation-workbench thead[data-flux-columns] {
+        @apply rounded-t-xl;
+    } */
+
+    /* .translation-workbench ui-table-scroll-area {
+        @apply overflow-auto border-0 shadow-none ring-0;
+        clip-path: inset(0 round 0.75rem 0.75rem 0 0);
+    }
+
+    .translation-workbench .tw-raw-data-table-scroll {
+        max-height: calc(100vh - 24rem);
+        overflow: auto;
+        clip-path: none;
+    } */
+
+    /* .translation-workbench table[data-flux-table] {
+        @apply border-0 shadow-none ring-0;
+    } */
+
+    /* .translation-workbench thead[data-flux-columns] th[data-flux-column]:first-child {
+        @apply rounded-tl-xl;
+    } */
+
+    /* .translation-workbench thead[data-flux-columns] th[data-flux-column]:last-child {
+        @apply rounded-tr-xl;
+    } */
+
+    /* .translation-workbench th[data-flux-column]:first-child,
+    .translation-workbench td[data-flux-cell]:first-child {
+        @apply bg-white dark:bg-zinc-700;
+    } */
+
+    /* .translation-workbench tr[data-flux-row]:hover>td[data-flux-cell]:first-child {
+        @apply bg-white dark:bg-zinc-700;
+    } */
+}

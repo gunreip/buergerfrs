@@ -6,102 +6,106 @@
 @endphp
 
 {{-- Search Filters for Findings --}}
-<div class="grid w-full grid-cols-5 gap-3">
-    {{-- Search Field --}}
-    <flux:field class="col-span-2">
-        {{-- Search Filter --}}
-        <flux:label>
-            <span class="inline-flex items-center gap-1">
-                <span>{{ __('Search') }}</span>
-                <x-ui.tooltip.simple
-                    :header="__('Search')"
-                    :text="__(
-                        'Searches visible text context such as source path, scanned literal, suggested keys and translation keys. IDs are filtered with dedicated ID filters where available.',
-                    )"
-                />
-            </span>
-        </flux:label>
-        <flux:input.group>
-            <flux:input.group.prefix>
-                <flux:icon.magnifying-glass />
-            </flux:input.group.prefix>
-            <flux:input
-                copyable
-                clearable
-                wire:model.live.debounce.300ms="findingSearch"
-                placeholder="{{ __('Path, literal or key') }}"
-            />
-            <flux:input.group.suffix>
-                <div class="flex items-center gap-1">
+<div class="mb-4 grid w-full grid-cols-5 gap-3">
+    {{-- Search Fields --}}
+    <div class="col-span-2 space-y-3">
+        {{-- Search Field --}}
+        <flux:field>
+            {{-- Search Filter --}}
+            <flux:label>
+                <span class="inline-flex items-center gap-1">
+                    <span>{{ __('Search') }}</span>
                     <x-ui.tooltip.simple
-                        :title="__('Remove first key segment')"
+                        :header="__('Search')"
                         :text="__(
-                            'Removes the first dot-separated segment from the current search text. Useful when export-report keys differ from work-finding keys in their leading namespace/path segments.',
+                            'Searches visible text context such as source path, scanned literal, suggested keys and translation keys. IDs are filtered with dedicated ID filters where available.',
                         )"
-                    >
-                        <flux:button
-                            class="h-6 w-6"
-                            type="button"
-                            size="sm"
-                            variant="subtle"
-                            color="zinc"
-                            icon="minus"
-                            :disabled="!str_contains($findingSearch, '.')"
-                            :aria-label="__('Remove first key segment')"
-                            wire:click="reduceFindingSearchFirstSegment"
-                        />
-                    </x-ui.tooltip.simple>
+                    />
+                </span>
+            </flux:label>
+            <flux:input.group>
+                <flux:input.group.prefix>
+                    <flux:icon.magnifying-glass />
+                </flux:input.group.prefix>
+                <flux:input
+                    copyable
+                    clearable
+                    wire:model.live.debounce.300ms="findingSearch"
+                    placeholder="{{ __('Path, literal or key') }}"
+                />
+                <flux:input.group.suffix>
+                    <div class="flex items-center gap-1">
+                        <x-ui.tooltip.simple
+                            :title="__('ui.remove.remove.remove-first-key-segment')"
+                            :text="__(
+                                'Removes the first dot-separated segment from the current search text. Useful when export-report keys differ from work-finding keys in their leading namespace/path segments.',
+                            )"
+                        >
+                            <flux:button
+                                class="h-6 w-6"
+                                type="button"
+                                size="sm"
+                                variant="subtle"
+                                color="zinc"
+                                icon="minus"
+                                :disabled="!str_contains($findingSearch, '.')"
+                                :aria-label="__('ui.remove.remove.remove-first-key-segment')"
+                                wire:click="reduceFindingSearchFirstSegment"
+                            />
+                        </x-ui.tooltip.simple>
 
-                    <x-ui.tooltip.simple
-                        :title="__('Exact search')"
-                        :text="$findingSearchExact
-                            ? __('Search must match the complete value.')
-                            : __('Search matches values that contain the entered text.')"
-                    >
-                        <flux:button
-                            class="h-6 w-6"
-                            type="button"
-                            size="sm"
-                            variant="{{ $findingSearchExact ? 'primary' : 'subtle' }}"
-                            color="{{ $findingSearchExact ? 'green' : 'red' }}"
-                            icon="circle-dot"
-                            :aria-label="__('Toggle exact search')"
-                            wire:click="toggleFindingSearchExact"
-                        />
-                    </x-ui.tooltip.simple>
+                        <x-ui.tooltip.simple
+                            :title="__('Exact search')"
+                            :text="$findingSearchExact
+                                ? __('Search must match the complete value.')
+                                : __('Search matches values that contain the entered text.')"
+                        >
+                            <flux:button
+                                class="h-6 w-6"
+                                type="button"
+                                size="sm"
+                                variant="{{ $findingSearchExact ? 'primary' : 'subtle' }}"
+                                color="{{ $findingSearchExact ? 'green' : 'red' }}"
+                                icon="circle-dot"
+                                :aria-label="__('Toggle exact search')"
+                                wire:click="toggleFindingSearchExact"
+                            />
+                        </x-ui.tooltip.simple>
 
-                    <x-ui.tooltip.simple
-                        :title="__('Case-sensitive search')"
-                        :text="$findingSearchCaseSensitive
-                            ? __('Uppercase and lowercase letters must match exactly.')
-                            : __('Uppercase and lowercase letters are ignored.')"
-                    >
-                        <flux:button
-                            class="h-6 w-6"
-                            type="button"
-                            size="sm"
-                            variant="{{ $findingSearchCaseSensitive ? 'primary' : 'subtle' }}"
-                            color="{{ $findingSearchCaseSensitive ? 'green' : 'red' }}"
-                            icon="case-sensitive"
-                            :aria-label="__('Toggle case-sensitive search')"
-                            wire:click="toggleFindingSearchCaseSensitive"
-                        />
-                    </x-ui.tooltip.simple>
-                </div>
-            </flux:input.group.suffix>
-        </flux:input.group>
-    </flux:field>
+                        <x-ui.tooltip.simple
+                            :title="__('Case-sensitive search')"
+                            :text="$findingSearchCaseSensitive
+                                ? __('Uppercase and lowercase letters must match exactly.')
+                                : __('Uppercase and lowercase letters are ignored.')"
+                        >
+                            <flux:button
+                                class="h-6 w-6"
+                                type="button"
+                                size="sm"
+                                variant="{{ $findingSearchCaseSensitive ? 'primary' : 'subtle' }}"
+                                color="{{ $findingSearchCaseSensitive ? 'green' : 'red' }}"
+                                icon="case-sensitive"
+                                :aria-label="__('Toggle case-sensitive search')"
+                                wire:click="toggleFindingSearchCaseSensitive"
+                            />
+                        </x-ui.tooltip.simple>
+                    </div>
+                </flux:input.group.suffix>
+            </flux:input.group>
+        </flux:field>
+
+    </div>
 
     {{-- Status Field --}}
     <flux:field class="col-span-1">
         {{-- Status Filter --}}
         <flux:label>
             <span class="inline-flex items-center gap-1">
-                <span>{{ __('ui.status') }}</span>
+                <span>{{ __('ui.state.status') }}</span>
                 <x-ui.tooltip.simple
                     :header="__('Finding status')"
                     :text="__(
-                        'Filters scanner lifecycle state: active findings are still present, obsolete findings remain visible for audit and history when explicitly selected.',
+                        'Filters scanner lifecycle state: active findings are executable code, commented out findings are still present but inside comments, and obsolete findings are no longer present in scanned code.',
                     )"
                 />
             </span>
@@ -114,6 +118,7 @@
                 wire:model.live="findingStatus"
                 variant="listbox"
                 searchable
+                {{-- clearable --}}
             >
                 <flux:select.option value="all">
                     <div class="flex items-center gap-2">
@@ -161,6 +166,7 @@
                 wire:model.live="findingKind"
                 variant="listbox"
                 searchable
+                {{-- clearable --}}
             >
                 <flux:select.option value="all">
                     <div class="flex items-center gap-2">
@@ -208,6 +214,7 @@
                 wire:model.live="findingCandidateType"
                 variant="listbox"
                 searchable
+                {{-- clearable --}}
             >
                 <flux:select.option value="all">
                     <div class="flex items-center gap-2">
@@ -375,7 +382,7 @@
                             class="text-zinc-400"
                             variant="mini"
                         />
-                        {{ __('ui.missing') }}
+                        {{ __('ui.state.missing') }}
                     </div>
                 </flux:select.option>
 
@@ -540,11 +547,125 @@
             </flux:select>
         </flux:input.group>
     </flux:field>
+</div>
+
+<flux:separator text="{{ __('Translation search') }}" />
+
+<div class="grid w-full grid-cols-5 gap-3">
+    {{-- Translation Value Search Field --}}
+    <flux:field class="col-span-2">
+        <flux:label>
+            <span class="inline-flex items-center gap-1">
+                <span>{{ __('Translation value search') }}</span>
+                <x-ui.tooltip.simple
+                    :header="__('Translation value search')"
+                    :text="__(
+                        'Searches the scanned literal fallback and stored active source/target language values for the source language and current target language.',
+                    )"
+                />
+            </span>
+        </flux:label>
+        <flux:input.group>
+            <flux:input.group.prefix>
+                <flux:icon.languages />
+            </flux:input.group.prefix>
+            <flux:input
+                copyable
+                clearable
+                wire:model.live.debounce.300ms="findingValueSearch"
+                placeholder="{{ __('Source or target literal') }}"
+            />
+            <flux:input.group.suffix>
+                <div class="flex items-center gap-1">
+                    <x-ui.tooltip.simple
+                        :title="__('ui.remove.remove.remove-first-value-segment')"
+                        :text="__(
+                            'Removes the first dot-separated segment from the current value search text. Useful when a copied value still contains key-like prefix segments.',
+                        )"
+                    >
+                        <flux:button
+                            class="h-6 w-6"
+                            type="button"
+                            size="sm"
+                            variant="subtle"
+                            color="zinc"
+                            icon="minus"
+                            :disabled="!str_contains($findingValueSearch, '.')"
+                            :aria-label="__('ui.remove.remove.remove-first-value-segment')"
+                            wire:click="reduceFindingValueSearchFirstSegment"
+                        />
+                    </x-ui.tooltip.simple>
+
+                    <x-ui.tooltip.simple
+                        :title="__('Exact value search')"
+                        :text="$findingValueSearchExact
+                            ? __('Value search must match the complete value.')
+                            : __('Value search matches values that contain the entered text.')"
+                    >
+                        <flux:button
+                            class="h-6 w-6"
+                            type="button"
+                            size="sm"
+                            variant="{{ $findingValueSearchExact ? 'primary' : 'subtle' }}"
+                            color="{{ $findingValueSearchExact ? 'green' : 'red' }}"
+                            icon="circle-dot"
+                            :aria-label="__('Toggle exact value search')"
+                            wire:click="toggleFindingValueSearchExact"
+                        />
+                    </x-ui.tooltip.simple>
+
+                    <x-ui.tooltip.simple
+                        :title="__('Case-sensitive value search')"
+                        :text="$findingValueSearchCaseSensitive
+                            ? __('Uppercase and lowercase letters must match exactly in value search.')
+                            : __('Uppercase and lowercase letters are ignored in value search.')"
+                    >
+                        <flux:button
+                            class="h-6 w-6"
+                            type="button"
+                            size="sm"
+                            variant="{{ $findingValueSearchCaseSensitive ? 'primary' : 'subtle' }}"
+                            color="{{ $findingValueSearchCaseSensitive ? 'green' : 'red' }}"
+                            icon="case-sensitive"
+                            :aria-label="__('Toggle case-sensitive value search')"
+                            wire:click="toggleFindingValueSearchCaseSensitive"
+                        />
+                    </x-ui.tooltip.simple>
+                </div>
+            </flux:input.group.suffix>
+        </flux:input.group>
+    </flux:field>
+
+    <flux:field class="col-span-2">
+        <flux:label>{{ __('Commented out') }}</flux:label>
+        <div class="flex gap-2 *:items-center">
+            <flux:radio.group
+                class="w-0 shrink-0"
+                variant="segmented"
+                wire:model.live="findingCommentedOutScope"
+            >
+                <flux:radio
+                    value="commentedOutPresentNo"
+                    icon="ban"
+                >
+                    {{ __('NO') }}
+                </flux:radio>
+                <flux:radio
+                    value="commentedOutPresentYes"
+                    icon="plus"
+                >
+                    {{ __('YES') }}
+                </flux:radio>
+            </flux:radio.group>
+        </div>
+    </flux:field>
 
     {{-- PerPage Selector Buttons --}}
-    <x-ui.table.per-page-selector
-        id="translation-workbench-findings-per-page"
-        name="translation-workbench-findings-per-page"
-        model="perPage"
-    />
+    <div class="col-span-1 w-fit justify-self-end">
+        <x-ui.table.per-page-selector
+            id="translation-workbench-findings-per-page"
+            name="translation-workbench-findings-per-page"
+            model="perPage"
+        />
+    </div>
 </div>

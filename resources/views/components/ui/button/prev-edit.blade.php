@@ -12,7 +12,7 @@
     'label' => false,
     'type' => 'button',
     'size' => 'sm',
-    'title' => __('ui.button.prev_edit.open_previous_editable_entry'),
+    'title' => __('ui.button.open.open_previous_editable_entry'),
     'ariaLabel' => null,
 ])
 

@@ -3,7 +3,7 @@
 @props([
     'id' => 'per-page',
     'name' => 'per-page',
-    'label' => __('ui.table.per_page_selector.per_page'),
+    'label' => __('ui.per_page_selector.per_page'),
     'model' => 'perPage',
     'action' => null,
     'options' => [10, 25, 50, 100],

@@ -62,14 +62,20 @@
                             )"
                         >
                             <flux:button
-                                type="button tabular-nums"
+                                class="min-w-10 tabular-nums"
+                                type="button"
                                 size="xs"
                                 variant="{{ $editModalAutoCloseAfterSave ? 'primary' : 'subtle' }}"
-                                color="{{ $editModalAutoCloseAfterSave ? 'cyan' : 'zinc' }}"
-                                icon="clock"
+                                color="{{ $editModalAutoCloseAfterSave ? 'amber' : 'zinc' }}"
                                 wire:click="toggleEditModalAutoCloseAfterSave"
                             >
-                                {{ $editModalAutoCloseCountdown > 0 ? $editModalAutoCloseCountdown . 's' : __('3s') }}
+                                @if ($editModalAutoCloseCountdown > 0)
+                                    {{ $editModalAutoCloseCountdown . 's' }}
+                                @elseif ($editModalAutoCloseAfterSave)
+                                    <flux:icon.check class="text-gray-800" />
+                                @else
+                                    <flux:icon.x class="text-red-500" />
+                                @endif
                             </flux:button>
                         </x-ui.tooltip.simple>
                     </div>
@@ -81,7 +87,7 @@
                         icon="save"
                         wire:click="saveTranslationValue"
                     >
-                        {{ __('ui.save') }}
+                        {{ __('ui.button.save.save') }}
                     </flux:button>
                 @endif
             </div>
@@ -135,7 +141,9 @@
 
                 if (blank($editFinding->translation_key)) {
                     $editWarnings[] = [
-                        'label' => __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing'),
+                        'label' => __(
+                            'packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing',
+                        ),
                         'text' => __('Review this finding and set a translation key before editing values.'),
                         'color' => 'red',
                     ];
@@ -181,15 +189,14 @@
                         $variables = array_merge($variables, $matches[0]);
                     }
 
-                    return collect($variables)
-                        ->unique()
-                        ->values()
-                        ->all();
+                    return collect($variables)->unique()->values()->all();
                 };
                 $sourceTranslationVariables = $extractTranslationVariables($sourceTranslationValue);
                 $targetTranslationVariables = $extractTranslationVariables($targetTranslationValue);
                 $missingTargetTranslationVariables = collect($sourceTranslationVariables)
-                    ->reject(static fn(string $variable): bool => in_array($variable, $targetTranslationVariables, true))
+                    ->reject(
+                        static fn(string $variable): bool => in_array($variable, $targetTranslationVariables, true),
+                    )
                     ->values()
                     ->all();
             @endphp
@@ -218,7 +225,7 @@
                         @endif
 
                         <x-ui.tooltip.simple
-                            :title="__('ui.source-language')"
+                            :title="__('ui.source.source-language')"
                             :text="strtoupper($sourceLocale)"
                         >
                             <span
@@ -271,7 +278,7 @@
 
             <flux:card>
                 <x-ui.headers.card
-                    :title="__('ui.translation-values')"
+                    :title="__('ui.translation.translation-values')"
                     :description="__(
                         'Source value is read-only by default; use the edit button if the source-language value must be corrected explicitly.',
                     )"
@@ -288,7 +295,7 @@
                                         size="lg"
                                         :title="strtoupper($sourceLocale)"
                                     />
-                                    <span class="mb-1">{{ __('ui.source-language') }}</span>
+                                    <span class="mb-1">{{ __('ui.source.source-language') }}</span>
                                     <span class="font-mono text-sm uppercase text-zinc-500 dark:text-zinc-400">
                                         {{ $sourceLocale }}
                                     </span>
@@ -372,7 +379,9 @@
 
                                 @if ($sourceTranslationVariables !== [])
                                     <x-ui.tooltip.simple
-                                        :title="$missingTargetTranslationVariables !== [] ? __('ui.variables.variable-missing') : __('ui.variables.variables-ok')"
+                                        :title="$missingTargetTranslationVariables !== []
+                                            ? __('ui.variables.variable-missing')
+                                            : __('ui.variables.variables-ok')"
                                         :text="$missingTargetTranslationVariables !== []
                                             ? __(
                                                 'The target translation is missing placeholders from the source value: :variables',

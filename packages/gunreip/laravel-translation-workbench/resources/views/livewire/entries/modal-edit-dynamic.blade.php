@@ -54,7 +54,7 @@
                         icon="save"
                         wire:click="saveDynamicTranslationValue"
                     >
-                        {{ __('ui.save') }}
+                        {{ __('ui.button.save.save') }}
                     </flux:button>
                 @endif
             </div>
@@ -98,7 +98,7 @@
 
             <flux:card>
                 <x-ui.headers.card
-                    :title="__('ui.translation-values')"
+                    :title="__('ui.translation.translation-values')"
                     :description="__('Source is editable on purpose; target is the active application language.')"
                 >
                     <div class="wrap-anywhere max-w-3xl text-wrap text-end text-sky-500 dark:text-sky-400">
@@ -117,7 +117,7 @@
                                         size="lg"
                                         :title="strtoupper($sourceLocale)"
                                     />
-                                    <span class="mb-1">{{ __('ui.source-language') }}</span>
+                                    <span class="mb-1">{{ __('ui.source.source-language') }}</span>
                                     <span class="font-semibold uppercase text-zinc-500 dark:text-zinc-400">
                                         {{ $sourceLocale }}
                                     </span>

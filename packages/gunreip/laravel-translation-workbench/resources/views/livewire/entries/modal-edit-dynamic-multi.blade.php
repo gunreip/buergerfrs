@@ -54,7 +54,7 @@
                         icon="save"
                         wire:click="saveDynamicMultiTranslationValues"
                     >
-                        {{ __('ui.save') }}
+                        {{ __('ui.button.save.save') }}
                     </flux:button>
                 @endif
             </div>
@@ -150,7 +150,7 @@
                                     />
                                     <span class="font-mono text-sm font-semibold uppercase">{{ $sourceLocale }}</span>
                                     <x-ui.tooltip.simple
-                                        :header="__('ui.source-language')"
+                                        :header="__('ui.source.source-language')"
                                         :text="__(
                                             'The source language is the default locale of the application, which is used for the original text.',
                                         )"
@@ -193,7 +193,7 @@
                             </flux:table.column>
                             <flux:table.column class="w-40">
                                 <span class="flex items-center gap-2">
-                                    <span>{{ __('ui.state') }}</span>
+                                    <span>{{ __('ui.state.state') }}</span>
 
                                     @if ($overrideButtonCount > 2)
                                         <flux:tooltip :content="__('packages.gunreip.laravel_translation_workbench.resources.bulk.entries.modal_edit_dynamic_multi.accept_all_matching_source_and_target_values')">

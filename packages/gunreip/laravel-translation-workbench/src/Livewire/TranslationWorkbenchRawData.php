@@ -150,6 +150,33 @@ class TranslationWorkbenchRawData extends Component
         'reviewsReviewType',
         'reviewsDecision',
         'reviewsReviewedByUserId',
+        'keyInventorySearch',
+        'keyInventoryId',
+        'keyInventoryTranslationKey',
+        'keyInventoryNamespace',
+        'keyInventoryGroup',
+        'keyInventoryKeyType',
+        'keyInventoryStatus',
+        'keyInventoryIsShared',
+        'keyInventoryIsUi',
+        'keyInventoryIsDynamic',
+        'keyInventoryIsDynamicMulti',
+        'keyInventoryHasActiveCodeUsage',
+        'keyInventoryHasLangValues',
+        'keyInventoryIsOrphanedLangValue',
+        'keyInventoryCandidateForLangDelete',
+        'sharedKeyCandidatesSearch',
+        'sharedKeyCandidatesId',
+        'sharedKeyCandidatesFindingId',
+        'sharedKeyCandidatesKeyId',
+        'sharedKeyCandidatesMatchedKeyId',
+        'sharedKeyCandidatesNormalizedLiteral',
+        'sharedKeyCandidatesCurrentTranslationKey',
+        'sharedKeyCandidatesSuggestedSharedTranslationKey',
+        'sharedKeyCandidatesConfidence',
+        'sharedKeyCandidatesStatus',
+        'sharedKeyCandidatesMinReviewCount',
+        'sharedKeyCandidatesMinFindingCount',
         'timelineEventsSearch',
         'timelineEventsId',
         'timelineEventsEventType',
@@ -422,6 +449,60 @@ class TranslationWorkbenchRawData extends Component
 
     public string $reviewsReviewedByUserId = '';
 
+    public string $keyInventorySearch = '';
+
+    public string $keyInventoryId = '';
+
+    public string $keyInventoryTranslationKey = '';
+
+    public string $keyInventoryNamespace = 'all';
+
+    public string $keyInventoryGroup = 'all';
+
+    public string $keyInventoryKeyType = 'all';
+
+    public string $keyInventoryStatus = 'all';
+
+    public string $keyInventoryIsShared = 'all';
+
+    public string $keyInventoryIsUi = 'all';
+
+    public string $keyInventoryIsDynamic = 'all';
+
+    public string $keyInventoryIsDynamicMulti = 'all';
+
+    public string $keyInventoryHasActiveCodeUsage = 'all';
+
+    public string $keyInventoryHasLangValues = 'all';
+
+    public string $keyInventoryIsOrphanedLangValue = 'all';
+
+    public string $keyInventoryCandidateForLangDelete = 'all';
+
+    public string $sharedKeyCandidatesSearch = '';
+
+    public string $sharedKeyCandidatesId = '';
+
+    public string $sharedKeyCandidatesFindingId = '';
+
+    public string $sharedKeyCandidatesKeyId = '';
+
+    public string $sharedKeyCandidatesMatchedKeyId = '';
+
+    public string $sharedKeyCandidatesNormalizedLiteral = '';
+
+    public string $sharedKeyCandidatesCurrentTranslationKey = '';
+
+    public string $sharedKeyCandidatesSuggestedSharedTranslationKey = '';
+
+    public string $sharedKeyCandidatesConfidence = 'all';
+
+    public string $sharedKeyCandidatesStatus = 'all';
+
+    public string $sharedKeyCandidatesMinReviewCount = '';
+
+    public string $sharedKeyCandidatesMinFindingCount = '';
+
     public string $timelineEventsSearch = '';
 
     public string $timelineEventsId = '';
@@ -488,6 +569,14 @@ class TranslationWorkbenchRawData extends Component
     {
         if (in_array($property, self::PERSISTED_STATE_PROPERTIES, true)) {
             $this->persistUiState();
+        }
+
+        if (str_starts_with($property, 'keyInventory')) {
+            $this->resetPage();
+        }
+
+        if (str_starts_with($property, 'sharedKeyCandidates')) {
+            $this->resetPage();
         }
     }
 
@@ -1400,6 +1489,53 @@ class TranslationWorkbenchRawData extends Component
         $this->persistUiState();
     }
 
+    public function updatedKeyInventoryNamespace(): void
+    {
+        $this->keyInventoryGroup = 'all';
+        $this->resetPage();
+    }
+
+    public function resetKeyInventoryFilters(): void
+    {
+        $this->keyInventorySearch = '';
+        $this->keyInventoryId = '';
+        $this->keyInventoryTranslationKey = '';
+        $this->keyInventoryNamespace = 'all';
+        $this->keyInventoryGroup = 'all';
+        $this->keyInventoryKeyType = 'all';
+        $this->keyInventoryStatus = 'all';
+        $this->keyInventoryIsShared = 'all';
+        $this->keyInventoryIsUi = 'all';
+        $this->keyInventoryIsDynamic = 'all';
+        $this->keyInventoryIsDynamicMulti = 'all';
+        $this->keyInventoryHasActiveCodeUsage = 'all';
+        $this->keyInventoryHasLangValues = 'all';
+        $this->keyInventoryIsOrphanedLangValue = 'all';
+        $this->keyInventoryCandidateForLangDelete = 'all';
+
+        $this->resetPage();
+        $this->persistUiState();
+    }
+
+    public function resetSharedKeyCandidatesFilters(): void
+    {
+        $this->sharedKeyCandidatesSearch = '';
+        $this->sharedKeyCandidatesId = '';
+        $this->sharedKeyCandidatesFindingId = '';
+        $this->sharedKeyCandidatesKeyId = '';
+        $this->sharedKeyCandidatesMatchedKeyId = '';
+        $this->sharedKeyCandidatesNormalizedLiteral = '';
+        $this->sharedKeyCandidatesCurrentTranslationKey = '';
+        $this->sharedKeyCandidatesSuggestedSharedTranslationKey = '';
+        $this->sharedKeyCandidatesConfidence = 'all';
+        $this->sharedKeyCandidatesStatus = 'all';
+        $this->sharedKeyCandidatesMinReviewCount = '';
+        $this->sharedKeyCandidatesMinFindingCount = '';
+
+        $this->resetPage();
+        $this->persistUiState();
+    }
+
     public function updatedReviewsSearch(): void
     {
         $this->resetPage();
@@ -1714,6 +1850,7 @@ class TranslationWorkbenchRawData extends Component
             'rows' => $this->rows($table, $columns),
             'summary' => $this->summary($table, $columns),
             'tableCounts' => $this->tableCounts(),
+            'tableDescriptions' => $this->tableDescriptions(),
             'tableStorageSize' => $this->tableStorageSize($table),
             'sourceFileOptions' => $this->sourceFileOptions($table),
             'sourceFilePathOptions' => $this->sourceFilePathOptions($table),
@@ -1732,6 +1869,8 @@ class TranslationWorkbenchRawData extends Component
             'dynamicSourceValueOptions' => $this->dynamicSourceValueOptions($table),
             'langValueOptions' => $this->langValueOptions($table),
             'reviewOptions' => $this->reviewOptions($table),
+            'sharedKeyCandidateOptions' => $this->sharedKeyCandidateOptions($table),
+            'keyInventoryOptions' => $this->keyInventoryOptions($table),
             'timelineEventOptions' => $this->timelineEventOptions($table),
             'timelineEventsTimePickersDisabled' => ! $this->hasTimelineEventsDateRange(),
             'timelineEventsChangedTimePickerDisabled' => ! $this->hasTimelineEventsChangedRange(),
@@ -1754,7 +1893,38 @@ class TranslationWorkbenchRawData extends Component
             'rawDataSourceFileLookup' => $this->rawDataSourceFileLookup($table),
             'rawDataKeyLookup' => $this->rawDataKeyLookup($table),
             'rawDataFindingLookup' => $this->rawDataFindingLookup($table),
+            'timelineChainMainRow' => $this->timelineChainMainRow($table),
+            'timelineChainRootRows' => $this->timelineChainRootRows($table),
+            'timelineChainOriginRows' => $this->timelineChainOriginRows($table),
+            'timelineChainSampleRows' => $this->timelineChainSampleRows($table),
         ]);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function tableDescriptions(): array
+    {
+        return [
+            'translation_workbench_source_files' => __('Source files scanned by the workbench, including normalized path segments and file-level metadata.'),
+            'translation_workbench_event_types' => __('Timeline event definitions used to classify and present workbench history entries consistently.'),
+            'translation_workbench_findings' => __('Raw translation-capable code findings detected by scanner runs, including literals, keys, source locations and lifecycle state.'),
+            'translation_workbench_keys' => __('Reviewed or candidate translation keys with namespace, group, segments, classification flags and review state.'),
+            'translation_workbench_key_findings' => __('Relation table linking translation keys to the code findings where they were detected or reviewed.'),
+            'translation_workbench_key_values' => __('Workbench-managed translation values for normal translation keys before they are exported to lang files.'),
+            'translation_workbench_dynamic_key_values' => __('Workbench-managed translation values for dynamic or dynamic-multi keys and their option values.'),
+            'translation_workbench_dynamic_sources' => __('Detected or runtime-captured dynamic value sources, including source context and classification details.'),
+            'translation_workbench_dynamic_source_candidates' => __('Candidate links between dynamic sources, findings and keys that still need or document review decisions.'),
+            'translation_workbench_dynamic_source_values' => __('Runtime option values captured for dynamic sources, including origin and status.'),
+            'translation_workbench_lang_values' => __('Current imported or exported lang-file values across source, target and sub locales.'),
+            'translation_workbench_reviews' => __('Review decisions made in the UI, including key edits, classification choices and bulk/shared-key decisions.'),
+            'translation_workbench_shared_key_candidates' => __('Potential follow-up candidates for already shared literal keys, kept separate from normal findings workflow decisions.'),
+            'translation_workbench_key_inventory' => __('Aggregated inventory of established translation keys, code usage, lang values, dynamic values and possible lang-file cleanup candidates.'),
+            'translation_workbench_timeline_chains' => __('Aggregated translation-chain snapshots that collect related keys, findings, reviews, lang values and timeline events for future extended timeline views.'),
+            'translation_workbench_pipeline_runs' => __('Pipeline run headers for UI-started Translation Workbench orchestrator runs, including status, current step, options and summary state.'),
+            'translation_workbench_pipeline_run_steps' => __('Per-step progress rows for Translation Workbench pipeline runs, including command, arguments, status, duration and error details.'),
+            'translation_workbench_timeline_events' => __('Detailed audit trail of scanner, command and UI changes used to build the workbench timeline.'),
+        ];
     }
 
     private function builtSuggestedKey(): string
@@ -1941,6 +2111,34 @@ class TranslationWorkbenchRawData extends Component
             return $this->moveColumnsAfter($columns, 'group_size', ['group_fingerprint', 'matched_entry_ids']);
         }
 
+        if ($table === 'translation_workbench_timeline_chains') {
+            return array_values(array_intersect([
+                'id',
+                'translation_key',
+                'namespace',
+                'group',
+                'chain_type',
+                'chain_status',
+                'root_key_id',
+                'root_finding_id',
+                'key_count',
+                'finding_count',
+                'active_finding_count',
+                'obsolete_finding_count',
+                'commented_out_finding_count',
+                'review_count',
+                'timeline_event_count',
+                'lang_value_count',
+                'shared_candidate_count',
+                'bulk_review_count',
+                'first_seen_at',
+                'last_seen_at',
+                'scan_count',
+                'created_at',
+                'updated_at',
+            ], $columns));
+        }
+
         if ($table !== 'translation_workbench_entries') {
             return $columns;
         }
@@ -2000,7 +2198,7 @@ class TranslationWorkbenchRawData extends Component
             return new LengthAwarePaginator([], 0, $this->normalizedPerPage());
         }
 
-        $query = DB::table($table);
+        $query = DB::table($table)->select($columns);
 
         $this->applyTableFilters($query, $table, $columns);
 
@@ -2086,6 +2284,18 @@ class TranslationWorkbenchRawData extends Component
 
         if ($table === 'translation_workbench_reviews') {
             $this->applyReviewsFilters($query, $columns);
+
+            return;
+        }
+
+        if ($table === 'translation_workbench_shared_key_candidates') {
+            $this->applySharedKeyCandidatesFilters($query, $columns);
+
+            return;
+        }
+
+        if ($table === 'translation_workbench_key_inventory') {
+            $this->applyKeyInventoryFilters($query, $columns);
 
             return;
         }
@@ -2713,6 +2923,124 @@ class TranslationWorkbenchRawData extends Component
             'new_values',
             'meta',
             'reviewed_at',
+            'created_at',
+            'updated_at',
+        ]);
+    }
+
+    /**
+     * @param  array<int, string>  $columns
+     */
+    private function applyKeyInventoryFilters($query, array $columns): void
+    {
+        $this->applyExactNumericFilters($query, $columns, [
+            'id' => $this->keyInventoryId,
+        ]);
+
+        $this->applyExactSelectFilters($query, $columns, [
+            'namespace' => $this->keyInventoryNamespace,
+            'group' => $this->keyInventoryGroup,
+            'key_type' => $this->keyInventoryKeyType,
+            'inventory_status' => $this->keyInventoryStatus,
+        ]);
+
+        $translationKey = trim($this->keyInventoryTranslationKey);
+
+        if ($translationKey !== '') {
+            $query->where(function ($query) use ($columns, $translationKey): void {
+                foreach (['translation_key', 'normalized_translation_key'] as $column) {
+                    if (in_array($column, $columns, true)) {
+                        $query->orWhere($column, 'like', $this->likeFilterValue($translationKey));
+                    }
+                }
+            });
+        }
+
+        foreach ([
+            'is_shared' => $this->keyInventoryIsShared,
+            'is_ui' => $this->keyInventoryIsUi,
+            'is_dynamic' => $this->keyInventoryIsDynamic,
+            'is_dynamic_multi' => $this->keyInventoryIsDynamicMulti,
+            'has_active_code_usage' => $this->keyInventoryHasActiveCodeUsage,
+            'has_lang_values' => $this->keyInventoryHasLangValues,
+            'is_orphaned_lang_value' => $this->keyInventoryIsOrphanedLangValue,
+            'candidate_for_lang_delete' => $this->keyInventoryCandidateForLangDelete,
+        ] as $column => $value) {
+            if (! in_array($column, $columns, true) || ! in_array($value, ['yes', 'no'], true)) {
+                continue;
+            }
+
+            $query->where($column, $value === 'yes');
+        }
+
+        $this->applyTextSearchFilter($query, $columns, $this->keyInventorySearch, ['id'], [
+            'translation_key',
+            'normalized_translation_key',
+            'namespace',
+            'group',
+            'key_type',
+            'inventory_status',
+            'meta',
+            'created_at',
+            'updated_at',
+        ]);
+    }
+
+    /**
+     * @param  array<int, string>  $columns
+     */
+    private function applySharedKeyCandidatesFilters($query, array $columns): void
+    {
+        $this->applyExactNumericFilters($query, $columns, [
+            'id' => $this->sharedKeyCandidatesId,
+            'finding_id' => $this->sharedKeyCandidatesFindingId,
+            'key_id' => $this->sharedKeyCandidatesKeyId,
+            'matched_key_id' => $this->sharedKeyCandidatesMatchedKeyId,
+        ]);
+
+        $this->applyExactSelectFilters($query, $columns, [
+            'confidence' => $this->sharedKeyCandidatesConfidence,
+            'status' => $this->sharedKeyCandidatesStatus,
+        ]);
+
+        $literal = trim($this->sharedKeyCandidatesNormalizedLiteral);
+
+        if ($literal !== '') {
+            $query->where(function ($query) use ($columns, $literal): void {
+                foreach (['normalized_literal', 'literal_text'] as $column) {
+                    if (in_array($column, $columns, true)) {
+                        $query->orWhere($column, 'like', $this->likeFilterValue($literal));
+                    }
+                }
+            });
+        }
+
+        $this->applyLikeFilters($query, $columns, [
+            'current_translation_key' => $this->sharedKeyCandidatesCurrentTranslationKey,
+            'suggested_shared_translation_key' => $this->sharedKeyCandidatesSuggestedSharedTranslationKey,
+        ]);
+
+        foreach ([
+            'matched_review_count' => $this->sharedKeyCandidatesMinReviewCount,
+            'matched_finding_count' => $this->sharedKeyCandidatesMinFindingCount,
+        ] as $column => $value) {
+            if (in_array($column, $columns, true) && trim($value) !== '') {
+                $query->where($column, '>=', max(0, (int) $value));
+            }
+        }
+
+        $this->applyTextSearchFilter($query, $columns, $this->sharedKeyCandidatesSearch, [
+            'id',
+            'finding_id',
+            'key_id',
+            'matched_key_id',
+        ], [
+            'normalized_literal',
+            'literal_text',
+            'current_translation_key',
+            'suggested_shared_translation_key',
+            'confidence',
+            'status',
             'created_at',
             'updated_at',
         ]);
@@ -3407,6 +3735,109 @@ class TranslationWorkbenchRawData extends Component
             ->reject(static fn(string $value): bool => $value === 'all')
             ->values()
             ->all();
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    private function keyInventoryOptions(string $table): array
+    {
+        if ($table !== 'translation_workbench_key_inventory' || ! Schema::hasTable('translation_workbench_key_inventory')) {
+            return [
+                'namespaces' => [],
+                'groups' => [],
+                'key_types' => [],
+                'statuses' => [],
+            ];
+        }
+
+        return [
+            'namespaces' => $this->keyInventoryDistinctOptions('namespace'),
+            'groups' => $this->keyInventoryGroupOptions(),
+            'key_types' => $this->keyInventoryDistinctOptions('key_type'),
+            'statuses' => $this->keyInventoryDistinctOptions('inventory_status'),
+        ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function keyInventoryGroupOptions(): array
+    {
+        if (in_array($this->keyInventoryNamespace, ['', 'all'], true)) {
+            return $this->keyInventoryDistinctOptions('group');
+        }
+
+        if (! Schema::hasTable('translation_workbench_key_inventory') || ! Schema::hasColumn('translation_workbench_key_inventory', 'group')) {
+            return [];
+        }
+
+        return DB::table('translation_workbench_key_inventory')
+            ->where('namespace', $this->keyInventoryNamespace)
+            ->whereNotNull('group')
+            ->where('group', '!=', '')
+            ->distinct()
+            ->orderBy('group')
+            ->pluck('group')
+            ->map(static fn($value): string => (string) $value)
+            ->all();
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function keyInventoryDistinctOptions(string $column): array
+    {
+        return collect($this->distinctColumnOptions('translation_workbench_key_inventory', $column))
+            ->reject(static fn(string $value): bool => $value === 'all')
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    private function sharedKeyCandidateOptions(string $table): array
+    {
+        if ($table !== 'translation_workbench_shared_key_candidates' || ! Schema::hasTable('translation_workbench_shared_key_candidates')) {
+            return [
+                'confidences' => [],
+                'statuses' => [],
+            ];
+        }
+
+        return [
+            'confidences' => $this->sharedKeyCandidateDistinctOptions('confidence'),
+            'statuses' => $this->sharedKeyCandidateDistinctOptions('status'),
+            'min_review_counts' => $this->sharedKeyCandidateMinCountOptions('matched_review_count'),
+            'min_finding_counts' => $this->sharedKeyCandidateMinCountOptions('matched_finding_count'),
+        ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function sharedKeyCandidateDistinctOptions(string $column): array
+    {
+        return collect($this->distinctColumnOptions('translation_workbench_shared_key_candidates', $column))
+            ->reject(static fn(string $value): bool => $value === 'all')
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<int, int>
+     */
+    private function sharedKeyCandidateMinCountOptions(string $column): array
+    {
+        if (! Schema::hasTable('translation_workbench_shared_key_candidates') || ! Schema::hasColumn('translation_workbench_shared_key_candidates', $column)) {
+            return [0];
+        }
+
+        $max = (int) DB::table('translation_workbench_shared_key_candidates')->max($column);
+        $max = min(max($max, 0), 20);
+
+        return range(0, $max);
     }
 
     /**
@@ -4152,9 +4583,43 @@ class TranslationWorkbenchRawData extends Component
                 'literal_text_suggested',
                 'found_translation_key',
                 'translation_key',
+                'normalized_translation_key',
+                'current_translation_key',
+                'suggested_shared_translation_key',
+                'normalized_literal',
                 'key_type',
                 'namespace',
                 'group',
+                'inventory_status',
+                'key_record_count',
+                'reviewed_key_count',
+                'finding_active_count',
+                'finding_commented_out_count',
+                'finding_obsolete_count',
+                'relation_active_count',
+                'relation_commented_out_count',
+                'relation_obsolete_count',
+                'source_value_active_count',
+                'source_value_obsolete_count',
+                'source_value_deleted_count',
+                'target_value_active_count',
+                'target_value_obsolete_count',
+                'target_value_deleted_count',
+                'lang_file_locale_count',
+                'workbench_value_count',
+                'dynamic_value_count',
+                'dynamic_source_count',
+                'shared_finding_count',
+                'matched_review_count',
+                'matched_finding_count',
+                'is_shared',
+                'is_ui',
+                'is_dynamic',
+                'has_active_code_usage',
+                'has_only_obsolete_code_usage',
+                'has_lang_values',
+                'is_orphaned_lang_value',
+                'candidate_for_lang_delete',
                 'path_key',
                 'scope',
                 'key_segment_domain',
@@ -4620,6 +5085,453 @@ class TranslationWorkbenchRawData extends Component
             'bytes' => isset($row->bytes) ? (int) $row->bytes : null,
             'pretty' => (string) ($row->pretty ?? '—'),
         ];
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function timelineChainSampleRows(string $table): array
+    {
+        if ($table !== 'translation_workbench_timeline_chains' || ! Schema::hasTable($table)) {
+            return [];
+        }
+
+        $baseSelect = [
+            'id',
+            'translation_key',
+            'chain_type',
+            'chain_status',
+            'key_count',
+            'finding_count',
+            'active_finding_count',
+            'obsolete_finding_count',
+            'commented_out_finding_count',
+            'review_count',
+            'timeline_event_count',
+            'lang_value_count',
+            'shared_candidate_count',
+            'bulk_review_count',
+            'related_translation_keys',
+            'relation_summary',
+            'timeline_event_summary',
+        ];
+        $rows = collect(['bulk', 'shared', 'moved'])
+            ->flatMap(fn(string $type): array => DB::table($table)
+                ->where('chain_type', $type)
+                ->orderByDesc('timeline_event_count')
+                ->orderByDesc('finding_count')
+                ->limit($type === 'bulk' ? 2 : 1)
+                ->get($baseSelect)
+                ->all())
+            ->unique('id')
+            ->values();
+
+        if ($rows->count() < 5) {
+            $rows = $rows
+                ->merge(DB::table($table)
+                    ->whereNotIn('id', $rows->pluck('id')->all())
+                    ->orderByRaw("CASE WHEN chain_status = 'active' THEN 0 ELSE 1 END")
+                    ->orderByDesc('timeline_event_count')
+                    ->orderByDesc('finding_count')
+                    ->limit(5 - $rows->count())
+                    ->get($baseSelect))
+                ->unique('id')
+                ->values();
+        }
+
+        return $rows
+            ->take(5)
+            ->map(fn(object $row): array => [
+                'id' => (int) $row->id,
+                'translation_key' => (string) $row->translation_key,
+                'chain_type' => (string) $row->chain_type,
+                'chain_status' => (string) $row->chain_status,
+                'key_count' => (int) $row->key_count,
+                'finding_count' => (int) $row->finding_count,
+                'active_finding_count' => (int) $row->active_finding_count,
+                'obsolete_finding_count' => (int) $row->obsolete_finding_count,
+                'commented_out_finding_count' => (int) $row->commented_out_finding_count,
+                'review_count' => (int) $row->review_count,
+                'timeline_event_count' => (int) $row->timeline_event_count,
+                'lang_value_count' => (int) $row->lang_value_count,
+                'shared_candidate_count' => (int) $row->shared_candidate_count,
+                'bulk_review_count' => (int) $row->bulk_review_count,
+                'related_translation_keys' => $this->decodeJsonArray($row->related_translation_keys ?? null),
+                'relation_summary' => $this->decodeJsonArray($row->relation_summary ?? null),
+                'timeline_event_summary' => $this->decodeJsonArray($row->timeline_event_summary ?? null),
+            ])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function timelineChainMainRow(string $table): ?array
+    {
+        if ($table !== 'translation_workbench_timeline_chains' || ! Schema::hasTable($table)) {
+            return null;
+        }
+
+        $row = DB::table($table)
+            ->where('chain_status', 'active')
+            ->whereIn('chain_type', ['bulk', 'shared', 'moved', 'single'])
+            ->orderByRaw("CASE chain_type WHEN 'bulk' THEN 0 WHEN 'shared' THEN 1 WHEN 'moved' THEN 2 ELSE 3 END")
+            ->orderByDesc('timeline_event_count')
+            ->orderByDesc('finding_count')
+            ->first([
+                'id',
+                'translation_key',
+                'chain_type',
+                'chain_status',
+                'root_key_id',
+                'root_finding_id',
+                'key_count',
+                'finding_count',
+                'active_finding_count',
+                'obsolete_finding_count',
+                'commented_out_finding_count',
+                'review_count',
+                'timeline_event_count',
+                'lang_value_count',
+                'shared_candidate_count',
+                'bulk_review_count',
+                'related_translation_keys',
+                'relation_summary',
+                'lang_value_summary',
+                'timeline_event_summary',
+                'timeline_event_ids',
+                'first_seen_at',
+                'last_seen_at',
+                'created_at',
+                'updated_at',
+            ]);
+
+        if (! $row) {
+            return null;
+        }
+
+        return [
+            'id' => (int) $row->id,
+            'translation_key' => (string) $row->translation_key,
+            'chain_type' => (string) $row->chain_type,
+            'chain_status' => (string) $row->chain_status,
+            'root_key_id' => $row->root_key_id !== null ? (int) $row->root_key_id : null,
+            'root_finding_id' => $row->root_finding_id !== null ? (int) $row->root_finding_id : null,
+            'key_count' => (int) $row->key_count,
+            'finding_count' => (int) $row->finding_count,
+            'active_finding_count' => (int) $row->active_finding_count,
+            'obsolete_finding_count' => (int) $row->obsolete_finding_count,
+            'commented_out_finding_count' => (int) $row->commented_out_finding_count,
+            'review_count' => (int) $row->review_count,
+            'timeline_event_count' => (int) $row->timeline_event_count,
+            'lang_value_count' => (int) $row->lang_value_count,
+            'shared_candidate_count' => (int) $row->shared_candidate_count,
+            'bulk_review_count' => (int) $row->bulk_review_count,
+            'related_translation_keys' => $this->decodeJsonArray($row->related_translation_keys ?? null),
+            'relation_summary' => $this->decodeJsonArray($row->relation_summary ?? null),
+            'lang_value_summary' => $this->decodeJsonArray($row->lang_value_summary ?? null),
+            'timeline_event_summary' => $this->decodeJsonArray($row->timeline_event_summary ?? null),
+            'timeline_event_ids' => $this->decodeJsonArray($row->timeline_event_ids ?? null),
+            'first_seen_at' => $row->first_seen_at,
+            'last_seen_at' => $row->last_seen_at,
+            'created_at' => $row->created_at,
+            'updated_at' => $row->updated_at,
+        ];
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function timelineChainOriginRows(string $table): array
+    {
+        $mainRow = $this->timelineChainMainRow($table);
+
+        if (
+            $mainRow === null
+            || empty($mainRow['root_key_id'])
+            || ! Schema::hasTable('translation_workbench_reviews')
+            || ! Schema::hasTable('translation_workbench_findings')
+        ) {
+            return [];
+        }
+
+        $translationKey = (string) $mainRow['translation_key'];
+        $trunk = 'key #' . $mainRow['root_key_id'];
+        $bulkReviews = DB::table('translation_workbench_reviews')
+            ->where('key_id', (int) $mainRow['root_key_id'])
+            ->where('decision', 'translation_key_bulk_equalized')
+            ->orderBy('reviewed_at')
+            ->get(['id', 'finding_id', 'meta', 'reviewed_at', 'created_at']);
+
+        $selectedFindingIds = $bulkReviews
+            ->flatMap(function (object $review): array {
+                $meta = $this->decodeJsonArray($review->meta ?? null);
+                $ids = collect($meta['selected_finding_ids'] ?? [])
+                    ->map(static fn(mixed $id): int => (int) $id)
+                    ->filter(static fn(int $id): bool => $id > 0)
+                    ->values()
+                    ->all();
+
+                if (! empty($review->finding_id)) {
+                    $ids[] = (int) $review->finding_id;
+                }
+
+                return $ids;
+            })
+            ->unique()
+            ->values();
+
+        if ($selectedFindingIds->isEmpty()) {
+            return [];
+        }
+
+        $findings = DB::table('translation_workbench_findings as findings')
+            ->leftJoin('translation_workbench_source_files as source_files', 'source_files.id', '=', 'findings.source_file_id')
+            ->whereIn('findings.id', $selectedFindingIds->all())
+            ->get([
+                'findings.id',
+                'findings.status',
+                'findings.suggested_key',
+                'findings.literal_text',
+                'findings.literal_text_suggested',
+                'findings.first_seen_at',
+                'findings.last_seen_at',
+                'findings.created_at',
+                'findings.updated_at',
+                'source_files.path as source_path',
+                'findings.source_line',
+            ]);
+
+        $edgeFindings = collect([
+            $findings->sortBy(fn(object $finding): string => (string) ($finding->first_seen_at ?: $finding->created_at))->first(),
+            $findings->sortByDesc(fn(object $finding): string => (string) ($finding->first_seen_at ?: $finding->created_at))->first(),
+        ])
+            ->filter()
+            ->unique('id')
+            ->values();
+
+        $bulkReviewByFindingId = collect();
+
+        $bulkReviews->each(function (object $review) use ($bulkReviewByFindingId): void {
+            $meta = $this->decodeJsonArray($review->meta ?? null);
+            $ids = collect($meta['selected_finding_ids'] ?? [])
+                ->map(static fn(mixed $id): int => (int) $id)
+                ->filter(static fn(int $id): bool => $id > 0);
+
+            if (! empty($review->finding_id)) {
+                $ids->push((int) $review->finding_id);
+            }
+
+            $ids
+                ->unique()
+                ->each(static function (int $id) use ($bulkReviewByFindingId, $review): void {
+                    if (! $bulkReviewByFindingId->has($id)) {
+                        $bulkReviewByFindingId->put($id, $review);
+                    }
+                });
+        });
+
+        return $edgeFindings
+            ->map(function (object $finding) use ($bulkReviewByFindingId, $translationKey, $trunk): array {
+                $root = 'finding #' . $finding->id;
+                $literal = trim((string) ($finding->literal_text ?? $finding->literal_text_suggested ?? ''));
+                $source = trim((string) ($finding->source_path ?? ''));
+                $source .= ! empty($finding->source_line) ? ':' . (string) $finding->source_line : '';
+                $bulkReview = $bulkReviewByFindingId->get((int) $finding->id);
+
+                return [
+                    'trunk' => $trunk,
+                    'context' => $literal !== '' ? $literal : $source,
+                    'translation_key' => $translationKey,
+                    'first_timestamp' => $finding->first_seen_at ?: $finding->created_at,
+                    'first_root' => $root,
+                    'first_origin_key' => (string) ($finding->suggested_key ?? ''),
+                    'first_event' => __('First seen as single finding'),
+                    'first_state' => (string) $finding->status,
+                    'first_color' => 'sky',
+                    'last_timestamp' => $bulkReview?->reviewed_at ?: $bulkReview?->created_at,
+                    'last_root' => $root,
+                    'last_origin_key' => (string) ($finding->suggested_key ?? ''),
+                    'last_event' => __('Last single state before shared key'),
+                    'last_state' => $bulkReview ? ('review #' . $bulkReview->id) : __('No bulk review found'),
+                    'last_color' => $bulkReview ? 'amber' : 'zinc',
+                ];
+            })
+            ->filter(static fn(array $row): bool => filled($row['first_timestamp'] ?? null) || filled($row['last_timestamp'] ?? null))
+            ->sortBy('first_timestamp')
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function timelineChainRootRows(string $table): array
+    {
+        $mainRow = $this->timelineChainMainRow($table);
+
+        if ($mainRow === null) {
+            return [];
+        }
+
+        $translationKey = (string) $mainRow['translation_key'];
+        $trunk = ! empty($mainRow['root_key_id'])
+            ? 'key #' . $mainRow['root_key_id']
+            : __('No root key');
+        $rows = collect();
+
+        if (! empty($mainRow['root_key_id'])) {
+            $rows->push([
+                'timestamp' => $mainRow['updated_at'],
+                'trunk' => $trunk,
+                'branch' => __('Root'),
+                'translation_key' => $translationKey,
+                'event' => __('Current canonical root'),
+                'state' => str((string) $mainRow['chain_type'])->headline() . ' / ' . str((string) $mainRow['chain_status'])->headline(),
+                'color' => 'green',
+                'branch_color' => 'green',
+            ]);
+        }
+
+        if (! empty($mainRow['root_key_id']) && Schema::hasTable('translation_workbench_keys')) {
+            $key = DB::table('translation_workbench_keys')->find((int) $mainRow['root_key_id']);
+
+            if ($key) {
+                $rows->push([
+                    'timestamp' => $key->created_at,
+                    'trunk' => $trunk,
+                    'branch' => __('Root key'),
+                    'translation_key' => $translationKey,
+                    'event' => __('Key created'),
+                    'state' => (string) $key->status,
+                    'color' => 'violet',
+                    'branch_color' => 'violet',
+                ]);
+
+                if ($key->reviewed_at) {
+                    $rows->push([
+                        'timestamp' => $key->reviewed_at,
+                        'trunk' => $trunk,
+                        'branch' => __('Root key'),
+                        'translation_key' => $translationKey,
+                        'event' => __('Key reviewed'),
+                        'state' => (string) $key->review_status,
+                        'color' => 'green',
+                        'branch_color' => 'violet',
+                    ]);
+                }
+
+                if ($key->updated_at && (string) $key->updated_at !== (string) $key->created_at) {
+                    $rows->push([
+                        'timestamp' => $key->updated_at,
+                        'trunk' => $trunk,
+                        'branch' => __('Root key'),
+                        'translation_key' => $translationKey,
+                        'event' => __('Key updated'),
+                        'state' => (string) $key->review_status,
+                        'color' => 'cyan',
+                        'branch_color' => 'violet',
+                    ]);
+                }
+            }
+        }
+
+        if (! empty($mainRow['root_finding_id']) && Schema::hasTable('translation_workbench_findings')) {
+            $finding = DB::table('translation_workbench_findings')->find((int) $mainRow['root_finding_id']);
+
+            if ($finding) {
+                $rows->push([
+                    'timestamp' => $finding->created_at,
+                    'trunk' => $trunk,
+                    'branch' => 'finding #' . $finding->id,
+                    'translation_key' => $translationKey,
+                    'event' => __('Finding created'),
+                    'state' => (string) $finding->status,
+                    'color' => 'sky',
+                    'branch_color' => 'sky',
+                ]);
+            }
+        }
+
+        if (Schema::hasTable('translation_workbench_lang_values')) {
+            DB::table('translation_workbench_lang_values')
+                ->where('translation_key', $translationKey)
+                ->orderBy('locale')
+                ->get(['id', 'locale', 'status', 'created_at', 'updated_at'])
+                ->each(function (object $langValue) use ($rows, $translationKey, $trunk): void {
+                    $rows->push([
+                        'timestamp' => $langValue->updated_at ?: $langValue->created_at,
+                        'trunk' => $trunk,
+                        'branch' => 'lang value #' . $langValue->id,
+                        'translation_key' => $translationKey,
+                        'event' => __('Lang value'),
+                        'state' => trim((string) $langValue->locale . ' / ' . (string) $langValue->status),
+                        'color' => $langValue->status === 'active' ? 'emerald' : 'zinc',
+                        'branch_color' => $langValue->status === 'active' ? 'emerald' : 'zinc',
+                    ]);
+                });
+        }
+
+        if (! empty($mainRow['root_key_id']) && Schema::hasTable('translation_workbench_reviews')) {
+            DB::table('translation_workbench_reviews')
+                ->where('key_id', (int) $mainRow['root_key_id'])
+                ->when(
+                    ! empty($mainRow['root_finding_id']),
+                    fn($query) => $query->where('finding_id', (int) $mainRow['root_finding_id']),
+                )
+                ->whereIn('decision', [
+                    'translation_key_updated',
+                    'translation_key_bulk_equalized',
+                    'translation_values_saved',
+                ])
+                ->orderByDesc('reviewed_at')
+                ->limit(12)
+                ->get(['id', 'review_type', 'decision', 'reviewed_at', 'created_at'])
+                ->each(function (object $review) use ($rows, $translationKey, $trunk): void {
+                    $rows->push([
+                        'timestamp' => $review->reviewed_at ?: $review->created_at,
+                        'trunk' => $trunk,
+                        'branch' => 'review #' . $review->id,
+                        'translation_key' => $translationKey,
+                        'event' => str((string) $review->decision)->replace('_', ' ')->headline()->toString(),
+                        'state' => (string) $review->review_type,
+                        'color' => 'amber',
+                        'branch_color' => 'amber',
+                    ]);
+                });
+        }
+
+        return $rows
+            ->filter(static fn(array $row): bool => filled($row['timestamp'] ?? null))
+            ->unique(static fn(array $row): string => implode('|', [
+                (string) $row['timestamp'],
+                (string) $row['trunk'],
+                (string) $row['branch'],
+                (string) $row['event'],
+                (string) $row['state'],
+            ]))
+            ->sortByDesc('timestamp')
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function decodeJsonArray(mixed $value): array
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        if (! is_string($value) || trim($value) === '') {
+            return [];
+        }
+
+        $decoded = json_decode($value, true);
+
+        return is_array($decoded) ? $decoded : [];
     }
 
     private function normalizedActiveTable(): string

@@ -76,7 +76,6 @@ return [
             'enter_a_search_term_to_filter_clients_by_name_legal_name_client_number_or_descri' => 'Geben Sie einen Suchbegriff ein, um Kunden nach Name, offizieller Bezeichnung, Kundennummer oder Beschreibung zu filtern. Bei der Suche wird zwischen Groß- und Kleinschreibung unterschieden.',
             'filter_by_people' => 'Nach Personen filtern',
             'filter_by_type' => 'Nach Typ filtern',
-            'filtering' => 'Filtern',
             'refine_the_client_list_with_powerful_filters_search_by_name_legal_name_client_nu' => 'Verfeinern Sie die Kundenliste mit leistungsstarken Filtern: Suchen Sie nach Name, offizieller Bezeichnung, Kundennummer oder Beschreibung; filtern Sie nach Typ, Status und zugehörigen Personen.',
             'search_by_name_legal_name_client_number_or_description' => 'Suche nach Name, rechtlichem Namen, Kundennummer oder Beschreibung',
             'search_clients' => 'Kunden suchen',
@@ -221,19 +220,12 @@ return [
         ],
     ],
     'permissions' => [
-        'actions' => [],
         'description' => 'Registrierte Berechtigungen, Guards und Rollenzuweisungen prüfen.',
         'filters' => [
-            'assignment' => [],
-            'categories' => [],
             'description' => 'Liste der Berechtigungen nach Name, Guard, Kategorie, Rollenzuweisung und Systemstatus eingrenzen.',
-            'guards' => [],
-            'roles' => [],
             'search' => [
                 'placeholder' => 'Nach Berechtigungsname suchen',
             ],
-            'system' => [],
-            'title' => 'Filter',
         ],
         'labels' => [
             'system_permission' => 'Systemberechtigung',
@@ -261,7 +253,6 @@ return [
                 'editable_scope' => 'Bearbeitbarer Bereich',
                 'metadata_only' => 'Nur Metadaten',
                 'metadata_section' => 'Berechtigungsmetadaten',
-                'title' => 'Berechtigung bearbeiten',
             ],
             'roles' => [
                 'changes' => 'Änderungen',
@@ -285,7 +276,6 @@ return [
                 'heading' => 'Guards',
                 'text' => 'Unterschiedliche Guards der registrierten Berechtigungen.',
             ],
-            'title' => 'Übersicht',
             'total' => [
                 'heading' => 'Berechtigungen gesamt',
                 'text' => 'Gesamtzahl der registrierten Berechtigungen.',
@@ -307,9 +297,6 @@ return [
         'title' => 'Berechtigungsverwaltung',
     ],
     'roles' => [
-        'actions' => [
-            'create' => 'Erstellen',
-        ],
         'badge' => [
             'color' => 'Farbe',
             'icon' => 'Symbol',
@@ -458,7 +445,6 @@ return [
         'modal' => [
             'copy_to_translation_key' => 'In den Übersetzungsschlüssel kopieren',
             'current_raw' => 'Aktuelle Rohdaten',
-            'edit' => 'Bearbeiten',
             'group' => 'Gruppe',
             'key_obsolete_diff' => 'Schlüssel (veraltete Diff)',
             'key_suggestion_check' => 'Überprüfung der wichtigsten Vorschläge',
@@ -506,7 +492,6 @@ return [
             'mark_this_obsolete_entry_as_reviewed_so_it_is_removed_from_the_default_open_work' => 'Markiere diesen veralteten Eintrag als geprüft, damit er aus der Standardliste der offenen Workflows entfernt wird.',
             'no_usage_records_available' => 'Es liegen keine Nutzungsdaten vor.',
             'only_translation_values_are_editable_keys_native_text_and_usage_metadata_are_rea' => 'Nur die Übersetzungswerte können bearbeitet werden. Schlüssel, Originaltext und Verwendungsmetadaten sind schreibgeschützt.',
-            'open_next_editable_entry' => 'Nächsten bearbeitbaren Eintrag öffnen',
             'readonly_source_locations_where_this_translation_key_is_currently_used' => 'Schreibgeschützte Speicherorte, an denen dieser Übersetzungsschlüssel derzeit verwendet wird.',
             'reviewed' => 'Überprüft',
             'sub_language_values' => 'Werte der Unter-Sprache',

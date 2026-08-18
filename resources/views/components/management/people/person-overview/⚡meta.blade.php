@@ -6,7 +6,7 @@
 >
     <div class="flex w-full items-center justify-between gap-3">
         <x-ui.headers.card
-            :title="__('admin.permissions.overview.title')"
+            :title="__('ui.title.filter')"
             :description="__('Current person data volume and relation coverage.')"
         />
 
@@ -24,7 +24,7 @@
             <flux:callout
                 color="sky"
                 icon="users"
-                heading="{{ __('ui.total') }}"
+                heading="{{ __('ui.badge.total') }}"
                 text="{{ __('All person records.') }}"
             >
                 <flux:callout.text class="text-2xl! font-semibold tabular-nums">

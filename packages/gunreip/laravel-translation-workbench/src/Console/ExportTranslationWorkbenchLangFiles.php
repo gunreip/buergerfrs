@@ -76,8 +76,15 @@ class ExportTranslationWorkbenchLangFiles extends Command
     private function writeReport(array $summary): string
     {
         $path = storage_path('translation-workbench/' . Str::of((string) $this->getName())->replace(':', '-') . '.json');
+        $directory = dirname($path);
 
-        File::ensureDirectoryExists(dirname($path));
+        File::ensureDirectoryExists($directory);
+        @chmod($directory, 0777);
+
+        if (File::exists($path) && ! is_writable($path)) {
+            @unlink($path);
+        }
+
         File::put($path, json_encode([
             'command' => $this->getName(),
             'generated_at' => now()->toISOString(),
@@ -86,6 +93,7 @@ class ExportTranslationWorkbenchLangFiles extends Command
             'summary' => collect($summary)->except('plans')->all(),
             'plans' => $summary['plans'],
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        @chmod($path, 0666);
 
         return $path;
     }

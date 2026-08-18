@@ -1,7 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/event-types/label.blade.php --}}
 
 <flux:field class="{{ $fieldClass ?? '' }}">
-    <flux:label>{{ __('ui.label.label') }}</flux:label>
+    <flux:label>{{ __('ui.labels.label') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
             <flux:icon.tag />

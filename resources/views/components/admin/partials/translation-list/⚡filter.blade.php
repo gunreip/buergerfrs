@@ -8,7 +8,7 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
 <flux:card class="mt-6">
 
     <x-ui.headers.card
-        :title="__('admin.permissions.filters.title')"
+        :title="__('ui.title.filter')"
         :description="__(
             'admin.translation_list.filter.refine_the_translation_list_by_key_value_language_and_translation_file',
         )"
@@ -156,14 +156,14 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
             ];
             $dynamicTooltips = [
                 'none' => [
-                    'title' => __('ui.all-entries'),
+                    'title' => __('ui.all.all-entries'),
                     'text' => __(
                         'Show all current translation entries without a dynamic focus filter.',
                     ),
                     'color' => 'sky',
                 ],
                 'all' => [
-                    'title' => __('ui.all-dynamic'),
+                    'title' => __('ui.all.all-dynamic'),
                     'text' => __(
                         'Show all dynamic translation entries including dynamic multi entries.',
                     ),
@@ -191,7 +191,7 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                     'color' => 'rose',
                 ],
                 'reactivated_stale' => [
-                    'title' => __('Reactivated stale'),
+                    'title' => __('ui.stale.reactivated-stale'),
                     'text' => __(
                         'Show legacy dynamic entries that were reactivated from stale audit state.',
                     ),
@@ -226,7 +226,7 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                     <span
                         class="mr-2 w-36 shrink-0 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
                     >
-                        {{ __('ui.workflow') }}
+                        {{ __('ui.nouns.workflow') }}
                     </span>
 
                     @php
@@ -380,7 +380,7 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                     <span
                         class="mr-2 w-36 shrink-0 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
                     >
-                        {{ __('ui.status') }}
+                        {{ __('ui.state.status') }}
                     </span>
 
                     @foreach ($statusOptions as $option)
@@ -422,12 +422,12 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                         @php
                             $count = $dynamicFilterCounts[$option] ?? 0;
                             $label = match ($option) {
-                                'none' => __('ui.all-entries'),
-                                'all' => __('ui.all-dynamic'),
+                                'none' => __('ui.all.all-entries'),
+                                'all' => __('ui.all.all-dynamic'),
                                 'candidate' => __('Candidates'),
                                 'multi' => __('Dynamic multi'),
                                 'without_suggested_key' => __('Without suggested key'),
-                                'reactivated_stale' => __('Reactivated stale'),
+                                'reactivated_stale' => __('ui.stale.reactivated-stale'),
                                 default => str($option)->headline(),
                             };
                             $dynamicTooltip = $dynamicTooltips[$option] ?? $dynamicTooltips['none'];
@@ -467,7 +467,7 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                             $count =
                                 $option === 'all' ? $activeTypeTotal ?? 0 : $activeClassificationCounts[$option] ?? 0;
                             $label = match ($option) {
-                                'all' => __('ui.all-types'),
+                                'all' => __('ui.all.all-types'),
                                 'backfill_by_translation' => __('admin.translation_list.meta.backfill'),
                                 default => str($option)->headline(),
                             };

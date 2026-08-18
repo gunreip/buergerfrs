@@ -2,7 +2,7 @@
 
 <flux:card>
     <x-ui.headers.page
-        :title="__('ui.people')"
+        :title="__('ui.people.people')"
         :description="__('Review, filter and inspect person records.')"
     />
 

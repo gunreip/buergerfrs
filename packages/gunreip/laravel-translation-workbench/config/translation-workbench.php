@@ -127,6 +127,7 @@ return [
             'findingSortDirection' => 'desc',
             'showOverviewTabs' => true,
             'showObsoleteFindings' => false,
+            'exportReportLastEditedLimit' => 50,
             'search' => '',
             'kind' => '',
             'status' => '',

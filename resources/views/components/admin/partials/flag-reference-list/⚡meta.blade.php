@@ -2,7 +2,7 @@
 
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('admin.permissions.overview.title')"
+        :title="__('ui.title.filter')"
         :description="__('Current audit status and data source for this flag reference page.')"
     />
 

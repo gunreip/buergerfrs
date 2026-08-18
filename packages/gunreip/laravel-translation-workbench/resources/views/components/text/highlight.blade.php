@@ -15,8 +15,9 @@
     $highlightExact = (bool) $exact;
     $highlightCaseSensitive = (bool) $caseSensitive;
     $highlighted = $escapedValue;
+    $canHighlight = mb_strlen($highlightValue) <= 10000;
 
-    if (mb_strlen($highlightSearch) >= 2) {
+    if ($canHighlight && mb_strlen($highlightSearch) >= 2) {
         if ($highlightExact) {
             $matches = $highlightCaseSensitive
                 ? $highlightValue === $highlightSearch

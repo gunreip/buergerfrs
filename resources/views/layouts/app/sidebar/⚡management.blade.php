@@ -22,7 +22,7 @@
             :current="request()->routeIs('management.people.index')"
             wire:navigate
         >
-            {{ __('admin.permissions.overview.title') }}
+            {{ __('ui.title.filter') }}
         </flux:sidebar.item>
 
         {{-- Management -> person -> create --}}
@@ -32,7 +32,7 @@
             :current="request()->routeIs('management.people.create')"
             wire:navigate
         >
-            {{ __('admin.roles.actions.create') }}
+            {{ __('ui.button.create.create') }}
         </flux:sidebar.item>
     </flux:sidebar.group>
 

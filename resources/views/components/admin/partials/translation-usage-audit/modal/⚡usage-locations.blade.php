@@ -90,7 +90,7 @@
                                         variant="subtle"
                                         color="{{ $isStaleUsage ? 'amber' : 'emerald' }}"
                                     >
-                                        {{ $isStaleUsage ? __('Stale') : __('ui.current') }}
+                                        {{ $isStaleUsage ? __('ui.stale.stale') : __('ui.badge.current.current') }}
                                     </flux:badge>
 
                                     @if ($usageFunction !== '')

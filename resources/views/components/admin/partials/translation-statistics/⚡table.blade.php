@@ -74,12 +74,12 @@
                         >
                             <x-ui.tooltip.trigger
                                 class="ml-3"
-                                :title="__('ui.active-state')"
+                                :title="__('ui.state.active-state')"
                                 :text="__(
                                     'Shows whether this language is active, current, or the source language.',
                                 )"
                             >
-                                {{ __('ui.active-state') }}
+                                {{ __('ui.state.active-state') }}
                             </x-ui.tooltip.trigger>
                         </flux:table.column>
 
@@ -130,10 +130,10 @@
                         >
                             <x-ui.tooltip.trigger
                                 class="mr-3"
-                                :title="__('ui.missing')"
+                                :title="__('ui.state.missing')"
                                 :text="__('Keys that are not translated yet in this language combination.')"
                             >
-                                {{ __('ui.missing') }}
+                                {{ __('ui.state.missing') }}
                             </x-ui.tooltip.trigger>
                         </flux:table.column>
 
@@ -249,7 +249,7 @@
                                                 variant="subtle"
                                                 color="lime"
                                             >
-                                                {{ __('ui.active') }}
+                                                {{ __('ui.state.active') }}
                                             </flux:badge>
                                         @endif
                                         {{-- Source Badge --}}
@@ -269,7 +269,7 @@
                                                 variant="subtle"
                                                 color="emerald"
                                             >
-                                                {{ __('ui.current') }}
+                                                {{ __('ui.badge.current.current') }}
                                             </flux:badge>
                                         @endif
                                     </div>

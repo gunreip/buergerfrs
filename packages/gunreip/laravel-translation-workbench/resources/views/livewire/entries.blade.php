@@ -3,7 +3,7 @@
 {{-- View Entries of the new Translation Workbench data model. --}}
 <div class="translation-workbench space-y-6">
     <x-ui.headers.page
-        :title="__('ui.translation-workbench')"
+        :title="__('ui.translation.translation-workbench')"
         :description="__('Foundation overview based on the new Translation Workbench data model.')"
     >
         <x-slot:meta>
@@ -17,14 +17,6 @@
         </x-slot:meta>
     </x-ui.headers.page>
 
-    {{-- Card DEV-Playground --}}
-    {{-- <flux:card class="mt-6">
-        <x-ui.headers.card
-            :title="__('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.dev_playground')"
-            :description="__('This is a sample Text for DEV-playground, testing the review, edit and timline-part.')"
-        />
-    </flux:card> --}}
-
     {{-- Card Overview Tabs --}}
     <flux:card
         id="translation-workbench-overview"
@@ -32,7 +24,7 @@
         x-on:buergerfrs:refresh-show-hide-layout.window="$wire.set('showOverviewTabs', showOverviewTabs)"
     >
         <x-ui.headers.card
-            :title="__('ui.overview')"
+            :title="__('ui.title.overview')"
             :description="__('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.compact_read_only_foundation_dashboard_for_scanner_data_keys_lang_files_and_coverage')"
         >
             <div class="flex flex-col items-stretch gap-2">
@@ -50,7 +42,7 @@
                     size="xs"
                     state="showOverviewTabs"
                     show-label="{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.show_overview') }}"
-                    hide-label="{{ __('Hide overview') }}"
+                    hide-label="{{ __('ui.button.show-hide.hide-overview') }}"
                     width="min-w-28 text-left"
                 />
             </div>
@@ -79,7 +71,7 @@
                 </flux:tab>
                 {{-- Tab Source --}}
                 <flux:tab name="source">
-                    {{ __('ui.source') }}
+                    {{ __('ui.source.source') }}
                 </flux:tab>
                 {{-- Tab Lang Files --}}
                 <flux:tab name="lang-files">
@@ -107,7 +99,7 @@
                 </flux:tab>
                 {{-- Tab Summary --}}
                 <flux:tab name="summary">
-                    {{ __('ui.summary') }}
+                    {{ __('ui.nouns.summary') }}
                 </flux:tab>
             </flux:tabs>
 
@@ -174,7 +166,10 @@
     @include('translation-workbench::livewire.entries.modal-dynamic-source-link-confirm')
     @include('translation-workbench::livewire.entries.modal-code-update-conflict-review')
     @include('translation-workbench::livewire.entries.modal-resolve-export-conflict')
+    @include('translation-workbench::livewire.entries.modal-suspicious-key-review')
     @include('translation-workbench::livewire.entries.modal-obsolete-source-value-review')
+    @include('translation-workbench::livewire.entries.modal-lang-cleanup-review')
+    @include('translation-workbench::livewire.entries.modal-scalar-transform-translation-key')
     @include('translation-workbench::livewire.entries.modal-edit')
     @include('translation-workbench::livewire.entries.modal-edit-dynamic')
     @include('translation-workbench::livewire.entries.modal-edit-dynamic-multi')

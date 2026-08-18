@@ -18,7 +18,7 @@
                         <div class="flex flex-wrap items-start gap-1.5">
                             <x-ui.tooltip.simple
                                 class="wrap-anywhere text-wrap font-mono text-xs text-zinc-700 dark:text-zinc-300"
-                                :title="__('ui.source-path')"
+                                :title="__('ui.source.source-path')"
                                 :text="$finding->source_path"
                             >
                                 <x-translation-workbench::text.highlight

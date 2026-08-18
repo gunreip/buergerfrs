@@ -21,7 +21,7 @@
             />
 
             <flux:button variant="primary" type="submit" class="w-full" data-test="confirm-password-button">
-                {{ __('pages.settings.two_factor_setup_modal.confirm') }}
+                {{ __('ui.button.confirm.confirm') }}
             </flux:button>
         </form>
     </div>

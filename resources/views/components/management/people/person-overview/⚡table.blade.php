@@ -2,7 +2,7 @@
 
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('ui.people')"
+        :title="__('ui.people.people')"
         :description="__('Person records with core metadata and relationship state.')"
     />
 
@@ -33,7 +33,7 @@
 
                 {{-- Status Column --}}
                 <flux:table.column align="center">
-                    {{ __('ui.status') }}
+                    {{ __('ui.state.status') }}
                 </flux:table.column>
 
                 {{-- Date of Birth Column --}}
@@ -76,7 +76,7 @@
                     sortable
                     wire:click="sortBy('created_at')"
                 >
-                    {{ __('ui.created') }}
+                    {{ __('ui.labels.created') }}
                 </flux:table.column>
 
                 {{-- Actions Column --}}
@@ -237,7 +237,7 @@
                             <x-ui.button.edit
                                 size="sm"
                                 icon="pencil-square"
-                                :label="__('admin.translation_list.modal.edit')"
+                                :label="__('ui.button.edit.edit')"
                                 :href="route('management.people.edit', $person)"
                                 wire:navigate
                             />
@@ -258,7 +258,7 @@
     @if ($people->hasPages())
         <flux:separator
             class="mt-4"
-            text="{{ __('ui.pagination') }}"
+            text="{{ __('ui.nouns.pagination') }}"
         />
 
         <x-ui.table.pagination :paginator="$people" />

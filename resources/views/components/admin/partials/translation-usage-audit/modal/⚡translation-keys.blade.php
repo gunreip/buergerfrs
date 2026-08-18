@@ -114,7 +114,7 @@
                                 variant="subtle"
                                 color="emerald"
                             >
-                                {{ __('ui.current') }} {{ $keyUsageCurrent }}
+                                {{ __('ui.badge.current.current') }} {{ $keyUsageCurrent }}
                             </flux:badge>
 
                             <flux:badge
@@ -122,7 +122,7 @@
                                 variant="subtle"
                                 color="amber"
                             >
-                                {{ __('Stale') }} {{ $keyUsageStale }}
+                                {{ __('ui.stale.stale') }} {{ $keyUsageStale }}
                             </flux:badge>
                         </div>
                     </div>

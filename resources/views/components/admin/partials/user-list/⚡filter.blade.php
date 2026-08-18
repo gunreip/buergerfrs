@@ -2,7 +2,7 @@
 
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('admin.permissions.filters.title')"
+        :title="__('ui.title.filter')"
         :description="__('Filter the list of users by name, email or assigned roles.')"
     />
 

@@ -21,7 +21,7 @@
                 $typeMeta = $tableLegend['type'][$selectedFinding->type] ?? [];
             @endphp
 
-            <flux:separator text="{{ __('admin.permissions.overview.title') }}" />
+            <flux:separator text="{{ __('ui.title.filter') }}" />
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -36,7 +36,7 @@
 
                 <div>
                     <flux:text class="text-zinc-400">
-                        {{ __('ui.status') }}
+                        {{ __('ui.state.status') }}
                     </flux:text>
 
                     <div class="flex items-center gap-2">
@@ -231,7 +231,7 @@
 
                     <div>
                         <flux:text class="text-zinc-400">
-                            {{ __('ui.status') }}
+                            {{ __('ui.state.status') }}
                         </flux:text>
 
                         <div class="font-mono text-sm">
@@ -304,7 +304,7 @@
                             </span>
 
                             <span class="text-xs text-zinc-500 group-open:hidden">
-                                {{ __('ui.button.show') }}
+                                {{ __('ui.button.show-hide.show') }}
                             </span>
 
                             <span class="hidden text-xs text-zinc-500 group-open:inline">

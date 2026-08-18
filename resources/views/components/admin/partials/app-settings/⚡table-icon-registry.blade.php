@@ -21,18 +21,18 @@
                 </flux:table.column>
 
                 <flux:table.column sortable>
-                    {{ __('ui.label.label') }}
+                    {{ __('ui.labels.label') }}
                 </flux:table.column>
 
                 <flux:table.column sortable>
-                    {{ __('ui.view') }}
+                    {{ __('ui.nouns.view') }}
                 </flux:table.column>
 
                 <flux:table.column
                     align="center"
                     sortable
                 >
-                    {{ __('ui.status') }}
+                    {{ __('ui.state.status') }}
                 </flux:table.column>
             </flux:table.columns>
 
@@ -76,14 +76,14 @@
                                     color="green"
                                     variant="subtle"
                                 >
-                                    {{ __('ui.available') }}
+                                    {{ __('ui.state.available') }}
                                 </flux:badge>
                             @else
                                 <flux:badge
                                     color="red"
                                     variant="subtle"
                                 >
-                                    {{ __('ui.missing') }}
+                                    {{ __('ui.state.missing') }}
                                 </flux:badge>
                             @endif
                         </flux:table.cell>

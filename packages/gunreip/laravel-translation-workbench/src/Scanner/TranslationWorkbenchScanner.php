@@ -91,19 +91,21 @@ class TranslationWorkbenchScanner
 
         $contents = File::get($path);
         $relativePath = $this->relativePath($path);
+        $commentRanges = $this->commentRanges($contents);
 
         return collect()
-            ->merge($this->extractLiteralTranslationCalls($contents, $relativePath))
-            ->merge($this->extractDynamicTranslationCalls($contents, $relativePath))
-            ->merge($this->extractDynamicLabelCalls($contents, $relativePath))
+            ->merge($this->extractLiteralTranslationCalls($contents, $relativePath, $commentRanges))
+            ->merge($this->extractDynamicTranslationCalls($contents, $relativePath, $commentRanges))
+            ->merge($this->extractDynamicLabelCalls($contents, $relativePath, $commentRanges))
             ->unique(static fn (DiscoveredTranslation $item): string => $item->sourceSignature)
             ->values();
     }
 
     /**
+     * @param  array<int, array{start: int, end: int, type: string}>  $commentRanges
      * @return array<int, DiscoveredTranslation>
      */
-    private function extractLiteralTranslationCalls(string $contents, string $relativePath): array
+    private function extractLiteralTranslationCalls(string $contents, string $relativePath, array $commentRanges): array
     {
         $items = [];
         $patterns = [
@@ -120,14 +122,16 @@ class TranslationWorkbenchScanner
             foreach ($matches as $match) {
                 $function = (string) $match['function'][0];
                 $value = stripcslashes((string) $match['value'][0]);
-                $raw = $this->rawCallAt($contents, (int) $match[0][1]);
-                $line = $this->lineNumberForOffset($contents, (int) $match[0][1]);
+                $offset = (int) $match[0][1];
+                $raw = $this->rawCallAt($contents, $offset);
+                $line = $this->lineNumberForOffset($contents, $offset);
                 $kind = $this->findingNormalizer->looksLikeTranslationKey($value) ? 'key' : 'literal';
                 $existingKey = $kind === 'key' ? $value : null;
                 $translationKey = $kind === 'key' ? $value : null;
                 $suggestedKey = $kind === 'literal'
                     ? $this->suggestedKeyFactory->forLiteral($value, $relativePath)
                     : $this->suggestedKeyFactory->forExistingKeyAtSource($value, $relativePath);
+                $commentContext = $this->commentContextForOffset($commentRanges, $offset);
 
                 $items[] = $this->makeDiscoveredTranslation(
                     kind: $kind,
@@ -150,6 +154,7 @@ class TranslationWorkbenchScanner
                         'suggested_key_path' => $suggestedKey?->pathSegments,
                         'suggested_key_name' => $suggestedKey?->keyName,
                         'suggested_key_source' => $kind === 'key' ? 'existing_key_at_source' : 'literal',
+                        ...$commentContext,
                     ],
                 );
             }
@@ -159,9 +164,10 @@ class TranslationWorkbenchScanner
     }
 
     /**
+     * @param  array<int, array{start: int, end: int, type: string}>  $commentRanges
      * @return array<int, DiscoveredTranslation>
      */
-    private function extractDynamicTranslationCalls(string $contents, string $relativePath): array
+    private function extractDynamicTranslationCalls(string $contents, string $relativePath, array $commentRanges): array
     {
         $items = [];
         $translatedPropDefaults = $this->translatedPropDefaults($contents);
@@ -188,6 +194,7 @@ class TranslationWorkbenchScanner
                 $offset = (int) $match[0][1];
                 $raw = $this->rawCallAt($contents, (int) $match[0][1]);
                 $line = $this->lineNumberForOffset($contents, (int) $match[0][1]);
+                $commentContext = $this->commentContextForOffset($commentRanges, $offset);
                 $optionLoopContext = $this->optionLoopContextForDynamicArgument($contents, $offset, $argument);
                 $isNumericDynamic = $this->findingNormalizer->isDynamicNumericArgument($argument, $raw);
                 $resolvedStaticProp = $this->resolvedStaticTranslatedProp($argument, $translatedPropDefaults);
@@ -223,6 +230,7 @@ class TranslationWorkbenchScanner
                         'dynamic_option_context' => $optionLoopContext,
                         'suggested_key_path' => $suggestedKey->pathSegments,
                         'suggested_key_name' => $suggestedKey->keyName,
+                        ...$commentContext,
                     ],
                 );
             }
@@ -291,9 +299,10 @@ class TranslationWorkbenchScanner
     }
 
     /**
+     * @param  array<int, array{start: int, end: int, type: string}>  $commentRanges
      * @return array<int, DiscoveredTranslation>
      */
-    private function extractDynamicLabelCalls(string $contents, string $relativePath): array
+    private function extractDynamicLabelCalls(string $contents, string $relativePath, array $commentRanges): array
     {
         $items = [];
         $pattern = '/dynamic_label\(\s*(?P<quote>[\'"])(?P<scope>(?:\\\\.|(?!\k<quote>).)*)\k<quote>\s*,(?P<args>.*?)\)/su';
@@ -304,8 +313,10 @@ class TranslationWorkbenchScanner
 
         foreach ($matches as $match) {
             $scope = stripcslashes((string) $match['scope'][0]);
-            $raw = $this->rawCallAt($contents, (int) $match[0][1]);
-            $line = $this->lineNumberForOffset($contents, (int) $match[0][1]);
+            $offset = (int) $match[0][1];
+            $raw = $this->rawCallAt($contents, $offset);
+            $line = $this->lineNumberForOffset($contents, $offset);
+            $commentContext = $this->commentContextForOffset($commentRanges, $offset);
             $suggestedKey = $this->suggestedKeyFactory->forDynamicExpressionAtSource($scope, $relativePath);
 
             $items[] = $this->makeDiscoveredTranslation(
@@ -327,6 +338,7 @@ class TranslationWorkbenchScanner
                     'suggested_key_path' => $suggestedKey->pathSegments,
                     'suggested_key_name' => $suggestedKey->keyName,
                     'arguments' => trim((string) $match['args'][0]),
+                    ...$commentContext,
                 ],
             );
         }
@@ -428,6 +440,62 @@ class TranslationWorkbenchScanner
             candidateType: $classification['candidate_type'],
             candidateReason: $classification['candidate_reason'],
         );
+    }
+
+    /**
+     * @return array<int, array{start: int, end: int, type: string}>
+     */
+    private function commentRanges(string $contents): array
+    {
+        $ranges = [];
+        $patterns = [
+            'blade_comment' => '/\{\{--.*?--\}\}/su',
+            'html_comment' => '/<!--.*?-->/su',
+            'php_block_comment' => '/\/\*.*?\*\//su',
+            'php_line_comment' => '/^[ \t]*(?:\/\/|#).*$/mu',
+        ];
+
+        foreach ($patterns as $type => $pattern) {
+            if (! preg_match_all($pattern, $contents, $matches, PREG_OFFSET_CAPTURE)) {
+                continue;
+            }
+
+            foreach ($matches[0] as $match) {
+                $start = (int) $match[1];
+                $ranges[] = [
+                    'start' => $start,
+                    'end' => $start + strlen((string) $match[0]),
+                    'type' => $type,
+                ];
+            }
+        }
+
+        usort($ranges, static fn(array $left, array $right): int => $left['start'] <=> $right['start']);
+
+        return $ranges;
+    }
+
+    /**
+     * @param  array<int, array{start: int, end: int, type: string}>  $commentRanges
+     * @return array<string, mixed>
+     */
+    private function commentContextForOffset(array $commentRanges, int $offset): array
+    {
+        foreach ($commentRanges as $range) {
+            if ($offset < $range['start']) {
+                return [];
+            }
+
+            if ($offset >= $range['start'] && $offset < $range['end']) {
+                return [
+                    'source_context' => 'commented_out',
+                    'comment_type' => $range['type'],
+                    'translation_relevant' => false,
+                ];
+            }
+        }
+
+        return [];
     }
 
     /**

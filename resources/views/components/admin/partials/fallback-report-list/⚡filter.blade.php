@@ -6,7 +6,7 @@
         class="mb-4"
         size="lg"
     >
-        {{ __('admin.permissions.filters.title') }}
+        {{ __('ui.title.filter') }}
     </flux:heading>
 
     <div class="flex w-full items-end gap-3">
@@ -46,7 +46,7 @@
                     :title="__('ui.filters.filter-by-status')"
                     :text="__('Select a status to filter the list of fallback reports.')"
                 >
-                    {{ __('ui.status') }}
+                    {{ __('ui.state.status') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 

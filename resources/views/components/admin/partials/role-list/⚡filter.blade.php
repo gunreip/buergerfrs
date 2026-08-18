@@ -3,7 +3,7 @@
 {{-- Filter part --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('admin.permissions.filters.title')"
+        :title="__('ui.title.filter')"
         :description="__('Refine the role list by name, category, assignability, and system status.')"
     />
 
@@ -78,7 +78,7 @@
                     :title="__('Filter by assignable')"
                     :text="__('Select an assignable status to filter the list of roles.')"
                 >
-                    {{ __('ui.assignable') }}
+                    {{ __('ui.assignable.assignable') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -100,7 +100,7 @@
                     </flux:select.option>
 
                     <flux:select.option value="yes">
-                        {{ __('ui.assignable') }}
+                        {{ __('ui.assignable.assignable') }}
                     </flux:select.option>
 
                     <flux:select.option value="no">
@@ -116,7 +116,7 @@
                     :title="__('admin.permission_list.filter.filter_by_system')"
                     :text="__('Select a system status to filter the list of roles.')"
                 >
-                    {{ __('ui.label.label') }}
+                    {{ __('ui.labels.label') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 

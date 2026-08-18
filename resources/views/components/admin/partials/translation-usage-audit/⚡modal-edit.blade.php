@@ -145,7 +145,7 @@
                                                     <x-ui.button.save
                                                         type="button"
                                                         size="sm"
-                                                        :label="__('admin.roles.actions.create')"
+                                                        :label="__('ui.button.create.create')"
                                                         :disabled="trim($createTranslationKeyInput) === ''"
                                                         wire:click="createTranslationKeyFromUsageAudit"
                                                         wire:loading.attr="disabled"
@@ -344,7 +344,7 @@
                                                 variant="subtle"
                                                 color="{{ (bool) ($usageRow['is_stale'] ?? false) ? 'amber' : 'emerald' }}"
                                             >
-                                                {{ (bool) ($usageRow['is_stale'] ?? false) ? __('Stale') : __('ui.current') }}
+                                                {{ (bool) ($usageRow['is_stale'] ?? false) ? __('ui.stale.stale') : __('ui.badge.current.current') }}
                                             </flux:badge>
 
                                             @if (trim((string) ($usageRow['detected_function'] ?? '')) !== '')
@@ -443,7 +443,7 @@
                                                             {{ __('Skipped') }}
                                                         </flux:select.option>
                                                         <flux:select.option value="applied">
-                                                            {{ __('ui.applied') }}
+                                                            {{ __('ui.apply.applied') }}
                                                         </flux:select.option>
                                                         <flux:select.option value="already_target">
                                                             {{ __('ui.already-target') }}

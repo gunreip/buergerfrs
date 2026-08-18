@@ -2,6 +2,9 @@
     "findingSearch": "",
     "findingSearchExact": false,
     "findingSearchCaseSensitive": false,
+    "findingValueSearch": "",
+    "findingValueSearchExact": false,
+    "findingValueSearchCaseSensitive": false,
     "findingStatus": "all",
     "findingKind": "all",
     "findingCandidateType": "all",
@@ -9,10 +12,16 @@
     "findingGroup": "all",
     "findingKeyRelation": "all",
     "findingLiteralState": "all",
+    "findingCommentedOutScope": "commentedOutPresentNo",
+    "scalarReviewSearch": "",
+    "scalarReviewRisk": "all",
+    "scalarReviewNamespace": "all",
+    "scalarReviewProposal": "all",
     "perPage": 25,
     "findingSortField": "last_seen",
     "findingSortDirection": "desc",
     "showOverviewTabs": true,
     "showObsoleteFindings": false,
-    "editModalAutoCloseAfterSave": true
+    "editModalAutoCloseAfterSave": true,
+    "exportReportLastEditedLimit": 50
 }

@@ -3,6 +3,6 @@
     size="sm"
     variant="subtle"
     color="red"
-    label="{{ __('ui.badge.no_time.no_time') }}"
+    label="{{ __('ui.badge.informatic.no_time') }}"
     icon="clock-alert"
 />

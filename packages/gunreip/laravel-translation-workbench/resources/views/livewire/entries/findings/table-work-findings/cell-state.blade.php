@@ -3,6 +3,23 @@
 {{-- Table Findings Cell State --}}
                 <flux:table.cell>
                     <div class="flex flex-wrap gap-1">
+                        @if (($findingLifecycleStatus ?? '') === 'commented_out')
+                            <x-ui.tooltip.simple
+                                :title="__('Commented out')"
+                                :text="__(
+                                    'This finding is still present in the source file, but the scanned expression currently sits inside a code comment. It is kept for context and history, but should not be processed as an active translation finding until the code is uncommented.',
+                                )"
+                            >
+                                {{-- Badge Commented Out --}}
+                                <flux:badge
+                                    size="sm"
+                                    color="zinc"
+                                >
+                                    {{ __('Commented out') }}
+                                </flux:badge>
+                            </x-ui.tooltip.simple>
+                        @endif
+
                         @if ($translationWorkflowEdited)
                             <x-ui.tooltip.simple
                                 :title="__('Translation workflow complete')"
@@ -97,7 +114,7 @@
                                             ? __('Source translation not stored yet')
                                             : __('Source translation missing'))"
                                     :text="$hasSourceValue
-                                        ? __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.table_work_findings.cell_state.a_stored_translation_value_exists_for_the_source_language')
+                                        ? __('A stored translation value exists for the source language.')
                                         : ($hasSourceLiteral
                                             ? __(
                                                 'No stored source-language translation value exists yet, but a scanned source literal is available and can be saved from the edit workflow.',
@@ -109,7 +126,7 @@
                                         size="sm"
                                         color="{{ $hasSourceValue ? 'green' : ($hasSourceLiteral ? 'amber' : 'red') }}"
                                     >
-                                        {{ $hasSourceValue ? __('Source :locale ready', ['locale' => $sourceLocaleLabel]) : __('ui.source-locale-missing', ['locale' => $sourceLocaleLabel]) }}
+                                        {{ $hasSourceValue ? __('Source :locale ready', ['locale' => $sourceLocaleLabel]) : __('ui.source.source-locale-missing', ['locale' => $sourceLocaleLabel]) }}
                                     </flux:badge>
                                 </x-ui.tooltip.simple>
                             @endif
@@ -170,7 +187,7 @@
                                         size="sm"
                                         color="red"
                                     >
-                                        {{ __('ui.source-locale-missing', ['locale' => $sourceLocaleLabel]) }}
+                                        {{ __('ui.source.source-locale-missing', ['locale' => $sourceLocaleLabel]) }}
                                     </flux:badge>
                                 </x-ui.tooltip.simple>
                             @endif

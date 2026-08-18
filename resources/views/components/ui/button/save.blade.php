@@ -10,7 +10,7 @@
 {{-- save    → green/primary, check, Save --}}
 
 @props([
-    'label' => __('ui.actions.save'),
+    'label' => __('ui.button.save.save'),
     'icon' => true,
     'type' => 'button',
     'size' => null,

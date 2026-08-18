@@ -2,7 +2,7 @@
 
 <flux:card class="mt-6">
         <x-ui.headers.card
-            :title="__('ui.summary')"
+            :title="__('ui.nouns.summary')"
             :description="__('Raw aggregate overview for the active database table.')"
         />
 
@@ -127,7 +127,7 @@
                     <flux:table.columns sticky>
                         <flux:table.column>{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.table_card.column') }}</flux:table.column>
                         <flux:table.column align="end">{{ __('Filled') }}</flux:table.column>
-                        <flux:table.column align="end">{{ __('ui.null') }}</flux:table.column>
+                        <flux:table.column align="end">{{ __('ui.null.null') }}</flux:table.column>
                         <flux:table.column align="end">{{ __('Empty') }}</flux:table.column>
                     </flux:table.columns>
 
@@ -179,7 +179,7 @@
                         <flux:table.column align="end">{{ __('translation_key') }}</flux:table.column>
                         <flux:table.column align="end">{{ __('existing_key') }}</flux:table.column>
                         <flux:table.column align="end">{{ __('suggested_key') }}</flux:table.column>
-                        <flux:table.column align="end">{{ __('ui.total') }}</flux:table.column>
+                        <flux:table.column align="end">{{ __('ui.badge.total') }}</flux:table.column>
                     </flux:table.columns>
 
                     <flux:table.rows>

@@ -179,6 +179,16 @@
         >
             {{ __('Raw-Data New') }}
         </flux:sidebar.item>
+
+        {{-- Admin -> translation workbench -> settings --}}
+        <flux:sidebar.item
+            icon="settings"
+            :href="route('admin.translation-workbench.settings')"
+            :current="request()->routeIs('admin.translation-workbench.settings')"
+            wire:navigate
+        >
+            {{ __('Settings') }}
+        </flux:sidebar.item>
     </flux:sidebar.group>
 
     {{-- Admin -> app settings --}}
@@ -229,7 +239,7 @@
             :current="request()->routeIs('admin.country-references')"
             wire:navigate
         >
-            {{ __('layouts.sidebar.administration.countries') }}
+            {{ __('Countries') }}
         </flux:sidebar.item>
 
         {{-- Admin -> reference -> flags --}}
@@ -239,7 +249,7 @@
             :current="request()->routeIs('admin.flag-references')"
             wire:navigate
         >
-            {{ __('admin.permissions.table.columns.flags') }}
+            {{ __('Flags') }}
         </flux:sidebar.item>
 
         {{-- Admin -> reference -> HTML tags check --}}
@@ -267,7 +277,7 @@
         :current="request()->routeIs('admin.fallback-reports')"
         wire:navigate
     >
-        {{ __('layouts.sidebar.administration.fallback_reports') }}
+        {{ __('Fallback Reports') }}
     </flux:sidebar.item>
 
     @role('Super-Admin')

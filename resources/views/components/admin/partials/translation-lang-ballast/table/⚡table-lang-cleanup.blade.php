@@ -99,7 +99,7 @@
                     default => 'amber',
                 };
                 $decisionLabel = match ($decisionStatus) {
-                    'approved' => __('ui.approved'),
+                    'approved' => __('ui.labels.approved'),
                     'reviewed' => __('admin.translation_list.modal_edit.reviewed'),
                     'ignored' => __('Ignored'),
                     default => __('ui.open'),
@@ -320,7 +320,7 @@
                                 variant="subtle"
                                 color="{{ $workflowStatus === 'reviewed' ? 'emerald' : 'zinc' }}"
                             >
-                                {{ __('ui.workflow') }}:
+                                {{ __('ui.nouns.workflow') }}:
                                 {{ $workflowStatus }}
                             </flux:badge>
                         @endif

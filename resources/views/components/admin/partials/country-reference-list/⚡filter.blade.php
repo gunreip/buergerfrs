@@ -3,7 +3,7 @@
 {{-- Filter --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('admin.permissions.filters.title')"
+        :title="__('ui.title.filter')"
         :description="__('admin.country_reference_list.filter.refine_the_list_of_reference_countries_by_searching_for_specific_attributes_or_a',
         )"
     />
@@ -70,7 +70,7 @@
                     :title="__('ui.filters.filter-by-status')"
                     :text="__('admin.country_reference_list.filter.select_a_status_to_filter_the_list_of_reference_countries')"
                 >
-                    {{ __('ui.status') }}
+                    {{ __('ui.state.status') }}
                 </x-ui.tooltip.trigger>
             </flux:label>
 
@@ -84,7 +84,7 @@
                 </flux:select.option>
 
                 <flux:select.option value="active">
-                    {{ __('ui.active') }}
+                    {{ __('ui.state.active') }}
                 </flux:select.option>
 
                 <flux:select.option value="inactive">

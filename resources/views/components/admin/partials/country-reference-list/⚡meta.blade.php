@@ -3,7 +3,7 @@
 {{-- Overview / Meta --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('admin.permissions.overview.title')"
+        :title="__('ui.title.filter')"
         :description="__(
             'admin.country_reference_list.meta.summary_of_imported_country_reference_data_address_formats_and_available_subdivi',
         )"
@@ -56,7 +56,7 @@
             class="hyphens-auto"
             color="green"
             icon="check-circle"
-            heading="{{ __('ui.active') }}"
+            heading="{{ __('ui.state.active') }}"
         >
             <flux:callout.text class="text-2xl! font-semibold tabular-nums">
                 {{ $summary['active'] }}

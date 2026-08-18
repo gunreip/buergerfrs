@@ -29,7 +29,7 @@
         ],
         [
             'key' => 'approved',
-            'label' => __('ui.approved'),
+            'label' => __('ui.labels.approved'),
             'count' => (int) data_get($summary, 'decision_approved_entries', 0),
             'color' => 'emerald',
         ],
@@ -95,12 +95,12 @@
                     class="mr-2 w-36 shrink-0 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
                 >
                     <x-ui.tooltip.trigger
-                        :title="__('ui.view')"
+                        :title="__('ui.nouns.view')"
                         :text="__(
                             'Switch between affected lang files, lang cleanup candidates, missing lang entries, redundant sub-language values, and entries that need review.',
                         )"
                     >
-                        {{ __('ui.view') }}
+                        {{ __('ui.nouns.view') }}
                     </x-ui.tooltip.trigger>
                 </span>
 

@@ -46,7 +46,7 @@
                     :direction="$sortDirection"
                     wire:click="sortBy('created_at')"
                 >
-                    {{ __('ui.created') }}
+                    {{ __('ui.labels.created') }}
                 </flux:table.column>
 
                 {{-- Table-Header Log --}}
