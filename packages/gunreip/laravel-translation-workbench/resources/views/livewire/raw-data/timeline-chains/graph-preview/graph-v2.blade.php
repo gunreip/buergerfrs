@@ -36,7 +36,6 @@
                 @include('translation-workbench::livewire.raw-data.timeline-chains.graph-preview.graph-v2.path-catalog')
                 @include('translation-workbench::livewire.raw-data.timeline-chains.graph-preview.graph-v2.strang-catalog')
                 @include('translation-workbench::livewire.raw-data.timeline-chains.graph-preview.graph-v2.composition-catalog')
-                @include('translation-workbench::livewire.raw-data.timeline-chains.graph-preview.graph-v2.renderer')
 
                 {{-- Frozen graph references live in git history only. --}}
             </div>

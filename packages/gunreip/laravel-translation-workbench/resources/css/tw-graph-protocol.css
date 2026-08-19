@@ -40,6 +40,10 @@
         border-radius: 0.5rem;
     }
 
+    .tw-graph-protocol-canvas-slot {
+        height: auto;
+    }
+
     .tw-graph-protocol-catalog-preview {
         position: relative;
         width: 12rem;
