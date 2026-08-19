@@ -499,33 +499,63 @@
                                         {{-- Component strang.branch-left --}}
                                         <x-translation-workbench::ui.tw-graph-protocol.strangs.branch-left
                                             id="catalog.strang.branch-left"
+                                            {{-- Identity / rendering state --}}
                                             :dev="true"
+                                            {{-- Base anchor / shared geometry --}}
                                             :anchor-start="['x' => '8rem', 'y' => '0.75rem']"
+                                            color="pink"
+                                            {{-- Main branch: paths.branch left --}}
                                             connector-length="5rem"
                                             vertical-length="5rem"
-                                            color="pink"
                                             branch-end-path-length="2rem"
+                                            :branch-continuation-node-labels="[
+                                                ['text' => 'Main return', 'side' => 'right', 'badgeColor' => 'pink'],
+                                                null,
+                                            ]"
+                                            {{-- Main branch return: paths.branch-return left from branch.vertical.continuation --}}
                                             :branch-return="true"
                                             branch-return-vertical-length="3rem"
                                             branch-return-connector-length="5rem"
                                             branch-return-color="pink"
+                                            {{-- Branch extensions: paths.branch-extension left[] --}}
                                             extension-count="2"
-                                            :extension-connector-lengths="[1 => '8rem', 2 => '8rem']"
+                                            :extension-connector-lengths="[1 => '10rem', 2 => '10rem']"
                                             :extension-vertical-lengths="[1 => '5rem', 2 => '5rem']"
                                             :extension-end-path-lengths="[1 => '4rem', 2 => '5.425rem']"
+                                            :extension-continuation-node-labels="[
+                                                1 => [
+                                                    [
+                                                        'text' => 'Ext 1 return',
+                                                        'side' => 'right',
+                                                        'badgeColor' => 'blue',
+                                                    ],
+                                                    null,
+                                                ],
+                                                2 => [
+                                                    [
+                                                        'text' => 'Ext 2 return',
+                                                        'side' => 'right',
+                                                        'badgeColor' => 'teal',
+                                                    ],
+                                                    null,
+                                                ],
+                                            ]"
+                                            :extension-colors="[1 => 'blue', 2 => 'teal']"
+                                            {{-- Branches from extension vertical endpoints: paths.branch left[] --}}
                                             :extension-branch-indexes="[2]"
-                                            :extension-branch-connector-lengths="[2 => '4rem']"
-                                            :extension-branch-vertical-lengths="[2 => '5.4rem']"
-                                            :extension-branch-colors="[2 => 'red']"
+                                            :extension-branch-connector-lengths="[1 => null, 2 => '4rem']"
+                                            :extension-branch-vertical-lengths="[1 => null, 2 => '5.4rem']"
+                                            :extension-branch-colors="[1 => null, 2 => 'red']"
+                                            {{-- Returns from extension branch endpoints: paths.branch-return-extension left[] --}}
                                             :extension-branch-return-indexes="[2]"
-                                            :extension-branch-return-vertical-lengths="[2 => '5rem']"
-                                            :extension-branch-return-connector-lengths="[2 => '17.5rem']"
-                                            :extension-branch-return-colors="[2 => 'red']"
+                                            :extension-branch-return-vertical-lengths="[1 => null, 2 => '5rem']"
+                                            :extension-branch-return-connector-lengths="[1 => null, 2 => '19.5rem']"
+                                            :extension-branch-return-colors="[1 => null, 2 => 'red']"
+                                            {{-- Returns from extension continuations: paths.branch-return left[] --}}
                                             :extension-return-indexes="[1, 2]"
                                             :extension-return-vertical-lengths="[1 => '11.9rem', 2 => '5.0rem']"
-                                            :extension-return-connector-lengths="[1 => '13rem', 2 => '2.5rem']"
+                                            :extension-return-connector-lengths="[1 => '13rem', 2 => '4.5rem']"
                                             :extension-return-colors="[1 => 'blue', 2 => 'teal']"
-                                            :extension-colors="[1 => 'blue', 2 => 'teal']"
                                         />
                                     </div>
                                 </div>
@@ -598,6 +628,7 @@
                                                 <div>{{ __('connectorLength') }}</div>
                                                 <div>{{ __('verticalLength') }}</div>
                                                 <div>{{ __('branchEndPathLength') }}</div>
+                                                <div>{{ __('branchContinuationNodeLabels') }}</div>
                                                 <div>{{ __('branchReturn') }}</div>
                                                 <div>{{ __('branchReturnVerticalLength') }}</div>
                                                 <div>{{ __('branchReturnConnectorLength') }}</div>
@@ -606,6 +637,8 @@
                                                 <div>{{ __('extensionConnectorLengths[]') }}</div>
                                                 <div>{{ __('extensionVerticalLengths[]') }}</div>
                                                 <div>{{ __('extensionEndPathLengths[]') }}</div>
+                                                <div>{{ __('extensionContinuationNodeLabels[]') }}</div>
+                                                <div>{{ __('extensionColors[]') }}</div>
                                                 <div>{{ __('extensionBranchIndexes[]') }}</div>
                                                 <div>{{ __('extensionBranchConnectorLengths[]') }}</div>
                                                 <div>{{ __('extensionBranchVerticalLengths[]') }}</div>
@@ -618,7 +651,6 @@
                                                 <div>{{ __('extensionReturnVerticalLengths[]') }}</div>
                                                 <div>{{ __('extensionReturnConnectorLengths[]') }}</div>
                                                 <div>{{ __('extensionReturnColors[]') }}</div>
-                                                <div>{{ __('extensionColors[]') }}</div>
                                                 <div>{{ __('color') }}</div>
                                                 <div>{{ __('dev') }}</div>
                                             </div>

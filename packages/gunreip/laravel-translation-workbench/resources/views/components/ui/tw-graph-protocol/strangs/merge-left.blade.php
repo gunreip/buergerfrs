@@ -44,7 +44,6 @@
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn (string $value): string => 'calc(' . $value . ' * -1)';
     $subtract = fn (string $value, string $delta): string => $add($value, $neg($delta));
-    $diff = fn (string $max, string $min): string => 'calc(' . $max . ' - ' . $min . ')';
     $mergeAnchor = [
         'x' => data_get($anchorStart, 'x', '0rem'),
         'y' => data_get($anchorStart, 'y', '0rem'),
@@ -110,11 +109,15 @@
         'x' => $add($mergeAnchorPoint4['x'], $add($connectorLength, $arcSize)),
         'y' => $add($mergeAnchorPoint4['y'], $arcSize),
     ];
-    $strangBorderPadding = '1rem';
-    $strangBorderLeft = $subtract($outermostExtensionAnchor['x'], $strangBorderPadding);
-    $strangBorderBottom = $subtract($lowestExtensionAnchor['y'], $strangBorderPadding);
-    $strangBorderWidth = $add($diff($mergeTopAnchor['x'], $outermostExtensionAnchor['x']), $add($strangBorderPadding, $strangBorderPadding));
-    $strangBorderHeight = $add($diff($mergeTopAnchor['y'], $lowestExtensionAnchor['y']), $add($strangBorderPadding, $strangBorderPadding));
+    $strangBounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([
+        $outermostExtensionAnchor,
+        $lowestExtensionAnchor,
+        $mergeTopAnchor,
+    ], '1rem');
+    $strangBorderLeft = $strangBounds['left'];
+    $strangBorderBottom = $strangBounds['bottom'];
+    $strangBorderWidth = $strangBounds['width'];
+    $strangBorderHeight = $strangBounds['height'];
 @endphp
 
 @if ($dev)

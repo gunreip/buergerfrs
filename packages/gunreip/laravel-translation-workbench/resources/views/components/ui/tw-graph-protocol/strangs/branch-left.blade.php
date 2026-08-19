@@ -25,46 +25,66 @@
     Keeps the left branch layer explicit and passes its geometry intent to
     paths.branch left. Branch extensions attach to the horizontal connector
     nodeEnd, not to the final vertical branch end.
+
+    DEV bounds are resolved through the shared TwGraphProtocol GeometryBounds
+    helper so the visible protocol box follows the same point list that can
+    later be written to/read from the graph protocol cache.
 --}}
 
 @props([
+    // Identity / rendering state
     'id' => 'strang.branch-left',
+    'dev' => false,
+
+    // Base anchor / shared geometry
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcSize' => '2.75rem',
+    'color' => 'pink',
+    'zIndex' => 40,
+
+    // Main branch: paths.branch left
     'connectorLength' => '3rem',
     'verticalLength' => '2rem',
-    'extensionCount' => 0,
-    'extensionConnectorLengths' => [],
-    'extensionVerticalLengths' => [],
     'branchEndPathLength' => null,
-    'extensionEndPathLengths' => [],
-    'extensionBranchIndexes' => [],
-    'extensionBranchConnectorLengths' => [],
-    'extensionBranchVerticalLengths' => [],
-    'extensionBranchColors' => [],
-    'extensionBranchReturnIndexes' => [],
-    'extensionBranchReturnVerticalLengths' => [],
-    'extensionBranchReturnConnectorLengths' => [],
-    'extensionBranchReturnColors' => [],
-    'extensionColors' => [],
-    'extensionReturnIndexes' => [],
-    'extensionReturnVerticalLengths' => [],
-    'extensionReturnConnectorLengths' => [],
-    'extensionReturnColors' => [],
+    'branchContinuationNodeLabels' => true,
+
+    // Main branch return: paths.branch-return left from branch.vertical.continuation
     'branchReturn' => false,
     'branchReturnVerticalLength' => '3rem',
     'branchReturnConnectorLength' => '5rem',
     'branchReturnColor' => null,
-    'color' => 'pink',
-    'zIndex' => 40,
-    'dev' => false,
+
+    // Branch extensions: paths.branch-extension left[]
+    'extensionCount' => 0,
+    'extensionConnectorLengths' => [],
+    'extensionVerticalLengths' => [],
+    'extensionEndPathLengths' => [],
+    'extensionContinuationNodeLabels' => [],
+    'extensionColors' => [],
+
+    // Branches from extension vertical endpoints: paths.branch left[]
+    'extensionBranchIndexes' => [],
+    'extensionBranchConnectorLengths' => [],
+    'extensionBranchVerticalLengths' => [],
+    'extensionBranchColors' => [],
+
+    // Returns from extension branch endpoints: paths.branch-return-extension left[]
+    'extensionBranchReturnIndexes' => [],
+    'extensionBranchReturnVerticalLengths' => [],
+    'extensionBranchReturnConnectorLengths' => [],
+    'extensionBranchReturnColors' => [],
+
+    // Returns from extension continuations: paths.branch-return left[]
+    'extensionReturnIndexes' => [],
+    'extensionReturnVerticalLengths' => [],
+    'extensionReturnConnectorLengths' => [],
+    'extensionReturnColors' => [],
 ])
 
 @php
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn (string $value): string => 'calc(' . $value . ' * -1)';
     $subtract = fn (string $value, string $delta): string => $add($value, $neg($delta));
-    $diff = fn (string $max, string $min): string => 'calc(' . $max . ' - ' . $min . ')';
     $anchor = [
         'x' => data_get($anchorStart, 'x', '0rem'),
         'y' => data_get($anchorStart, 'y', '0rem'),
@@ -75,6 +95,7 @@
     $extensionResolvedZIndexes = [];
     $extensionAnchors = [];
     $extensionEnds = [];
+    $strangPoints = [$anchor];
     $currentExtensionAnchor = null;
 
     $branchConnectorEnd = [
@@ -88,6 +109,11 @@
     $branchContinuationEnd = filled($branchEndPathLength)
         ? ['x' => $branchEnd['x'], 'y' => $add($branchEnd['y'], (string) $branchEndPathLength)]
         : null;
+    $strangPoints[] = $branchConnectorEnd;
+    $strangPoints[] = $branchEnd;
+    if (filled($branchContinuationEnd)) {
+        $strangPoints[] = $branchContinuationEnd;
+    }
 
     $hasBranchReturn = (bool) $branchReturn && filled($branchContinuationEnd);
     $branchReturnColor = filled($branchReturnColor) ? (string) $branchReturnColor : $color;
@@ -109,15 +135,23 @@
             'x' => $add($branchReturnConnectorEnd['x'], $arcSize),
             'y' => $add($branchReturnConnectorEnd['y'], $arcSize),
         ];
+        $strangPoints[] = $branchReturnVerticalEnd;
+        $strangPoints[] = $branchReturnArcInEnd;
+        $strangPoints[] = $branchReturnConnectorEnd;
+        $strangPoints[] = $branchReturnEnd;
     }
 
-    $strangEnd = $branchContinuationEnd ?? $branchEnd;
-    $strangEnd = $branchReturnEnd ?? $strangEnd;
     $currentExtensionAnchor = $branchConnectorEnd;
     for ($extensionIndex = 1; $extensionIndex <= $extensionCount; $extensionIndex++) {
         $extensionConnectorLength = (string) data_get($extensionConnectorLengths, $extensionIndex, $connectorLength);
         $extensionVerticalLength = (string) data_get($extensionVerticalLengths, $extensionIndex, $verticalLength);
         $extensionEndPathLength = data_get($extensionEndPathLengths, $extensionIndex);
+        $extensionColor = (string) data_get($extensionColors, $extensionIndex, $color);
+        $hasExtensionBranch = in_array($extensionIndex, collect($extensionBranchIndexes)->map(fn (mixed $index): int => (int) $index)->all(), true);
+        $hasExtensionReturn = in_array($extensionIndex, collect($extensionReturnIndexes)->map(fn (mixed $index): int => (int) $index)->all(), true);
+        $hasExtensionBranchReturn = in_array($extensionIndex, collect($extensionBranchReturnIndexes)->map(fn (mixed $index): int => (int) $index)->all(), true);
+        $extensionBranchConnectorLength = (string) data_get($extensionBranchConnectorLengths, $extensionIndex, $connectorLength);
+        $extensionBranchVerticalLength = (string) data_get($extensionBranchVerticalLengths, $extensionIndex, $verticalLength);
         $extensionResolvedConnectorLengths[$extensionIndex] = $extensionConnectorLength;
         $extensionResolvedVerticalLengths[$extensionIndex] = $extensionVerticalLength;
         $extensionResolvedZIndexes[$extensionIndex] = max(1, (int) $zIndex - ($extensionIndex * 5));
@@ -134,18 +168,82 @@
         $extensionContinuationEnd = filled($extensionEndPathLength)
             ? ['x' => $extensionEnd['x'], 'y' => $add($extensionEnd['y'], (string) $extensionEndPathLength)]
             : null;
-        $strangEnd = $extensionContinuationEnd ?? $extensionEnd;
+        $strangPoints[] = $currentExtensionAnchor;
+        $strangPoints[] = $extensionConnectorEnd;
+        $strangPoints[] = $extensionEnd;
+        if (filled($extensionContinuationEnd)) {
+            $strangPoints[] = $extensionContinuationEnd;
+        }
+
+        if ($hasExtensionBranch) {
+            $extensionBranchConnectorEnd = [
+                'x' => $subtract($subtract($extensionEnd['x'], $arcSize), $extensionBranchConnectorLength),
+                'y' => $add($extensionEnd['y'], $arcSize),
+            ];
+            $extensionBranchEnd = [
+                'x' => $subtract($extensionBranchConnectorEnd['x'], $arcSize),
+                'y' => $add($add($extensionBranchConnectorEnd['y'], $arcSize), $extensionBranchVerticalLength),
+            ];
+            $strangPoints[] = $extensionBranchConnectorEnd;
+            $strangPoints[] = $extensionBranchEnd;
+
+            if ($hasExtensionBranchReturn) {
+                $extensionBranchReturnVerticalLength = (string) data_get($extensionBranchReturnVerticalLengths, $extensionIndex, $branchReturnVerticalLength);
+                $extensionBranchReturnConnectorLength = (string) data_get($extensionBranchReturnConnectorLengths, $extensionIndex, $branchReturnConnectorLength);
+                $extensionBranchReturnVerticalEnd = [
+                    'x' => $extensionBranchEnd['x'],
+                    'y' => $add($extensionBranchEnd['y'], $extensionBranchReturnVerticalLength),
+                ];
+                $extensionBranchReturnArcEnd = [
+                    'x' => $add($extensionBranchReturnVerticalEnd['x'], $arcSize),
+                    'y' => $add($extensionBranchReturnVerticalEnd['y'], $arcSize),
+                ];
+                $extensionBranchReturnEnd = [
+                    'x' => $add($extensionBranchReturnArcEnd['x'], $extensionBranchReturnConnectorLength),
+                    'y' => $extensionBranchReturnArcEnd['y'],
+                ];
+                $strangPoints[] = $extensionBranchReturnVerticalEnd;
+                $strangPoints[] = $extensionBranchReturnArcEnd;
+                $strangPoints[] = $extensionBranchReturnEnd;
+            }
+        }
+
+        if ($hasExtensionReturn && filled($extensionContinuationEnd)) {
+            $extensionReturnVerticalLength = (string) data_get($extensionReturnVerticalLengths, $extensionIndex, $branchReturnVerticalLength);
+            $extensionReturnConnectorLength = (string) data_get($extensionReturnConnectorLengths, $extensionIndex, $branchReturnConnectorLength);
+            $extensionReturnVerticalEnd = [
+                'x' => $extensionContinuationEnd['x'],
+                'y' => $add($extensionContinuationEnd['y'], $extensionReturnVerticalLength),
+            ];
+            $extensionReturnArcInEnd = [
+                'x' => $add($extensionReturnVerticalEnd['x'], $arcSize),
+                'y' => $add($extensionReturnVerticalEnd['y'], $arcSize),
+            ];
+            $extensionReturnConnectorEnd = [
+                'x' => $add($extensionReturnArcInEnd['x'], $extensionReturnConnectorLength),
+                'y' => $extensionReturnArcInEnd['y'],
+            ];
+            $extensionReturnEnd = [
+                'x' => $add($extensionReturnConnectorEnd['x'], $arcSize),
+                'y' => $add($extensionReturnConnectorEnd['y'], $arcSize),
+            ];
+            $strangPoints[] = $extensionReturnVerticalEnd;
+            $strangPoints[] = $extensionReturnArcInEnd;
+            $strangPoints[] = $extensionReturnConnectorEnd;
+            $strangPoints[] = $extensionReturnEnd;
+        }
+
         $currentExtensionAnchor = [
             'x' => $extensionConnectorEnd['x'],
             'y' => $extensionConnectorEnd['y'],
         ];
     }
 
-    $strangBorderPadding = '1rem';
-    $strangBorderLeft = $subtract($strangEnd['x'], $strangBorderPadding);
-    $strangBorderBottom = $subtract($anchor['y'], $strangBorderPadding);
-    $strangBorderWidth = $add($diff($anchor['x'], $strangEnd['x']), $add($strangBorderPadding, $strangBorderPadding));
-    $strangBorderHeight = $add($diff($strangEnd['y'], $anchor['y']), $add($strangBorderPadding, $strangBorderPadding));
+    $strangBounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints($strangPoints, '1rem');
+    $strangBorderLeft = $strangBounds['left'];
+    $strangBorderBottom = $strangBounds['bottom'];
+    $strangBorderWidth = $strangBounds['width'];
+    $strangBorderHeight = $strangBounds['height'];
     $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '236 72 153');
 @endphp
 
@@ -193,7 +291,7 @@
             'anchorStart' => $branchEnd,
             'anchorEnd' => $branchContinuationEnd,
             'nodeStart' => false,
-            'nodeEnd' => true,
+            'nodeEnd' => $branchContinuationNodeLabels,
             'devCounterEnd' => 5,
             'devCounterColor' => $color,
             'color' => $color,
@@ -258,7 +356,7 @@
                 'anchorStart' => $extensionEnd,
                 'anchorEnd' => $extensionContinuationEnd,
                 'nodeStart' => false,
-                'nodeEnd' => true,
+                'nodeEnd' => data_get($extensionContinuationNodeLabels, $extensionIndex, true),
                 'devCounterEnd' => 4,
                 'devCounterColor' => $extensionColor,
                 'color' => $extensionColor,

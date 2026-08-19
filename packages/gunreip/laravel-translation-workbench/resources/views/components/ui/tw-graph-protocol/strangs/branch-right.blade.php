@@ -43,8 +43,6 @@
 
 @php
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
-    $subtract = fn (string $value, string $delta): string => $add($value, 'calc(' . $delta . ' * -1)');
-    $diff = fn (string $max, string $min): string => 'calc(' . $max . ' - ' . $min . ')';
     $anchor = [
         'x' => data_get($anchorStart, 'x', '0rem'),
         'y' => data_get($anchorStart, 'y', '0rem'),
@@ -55,6 +53,7 @@
     $extensionResolvedZIndexes = [];
     $extensionAnchors = [];
     $extensionEnds = [];
+    $strangPoints = [$anchor];
     $currentExtensionAnchor = null;
 
     $branchConnectorEnd = [
@@ -68,8 +67,12 @@
     $branchContinuationEnd = filled($branchEndPathLength)
         ? ['x' => $branchEnd['x'], 'y' => $add($branchEnd['y'], (string) $branchEndPathLength)]
         : null;
+    $strangPoints[] = $branchConnectorEnd;
+    $strangPoints[] = $branchEnd;
+    if (filled($branchContinuationEnd)) {
+        $strangPoints[] = $branchContinuationEnd;
+    }
 
-    $strangEnd = $branchContinuationEnd ?? $branchEnd;
     $currentExtensionAnchor = $branchConnectorEnd;
     for ($extensionIndex = 1; $extensionIndex <= $extensionCount; $extensionIndex++) {
         $extensionConnectorLength = (string) data_get($extensionConnectorLengths, $extensionIndex, $connectorLength);
@@ -91,18 +94,37 @@
         $extensionContinuationEnd = filled($extensionEndPathLength)
             ? ['x' => $extensionEnd['x'], 'y' => $add($extensionEnd['y'], (string) $extensionEndPathLength)]
             : null;
-        $strangEnd = $extensionContinuationEnd ?? $extensionEnd;
+        $strangPoints[] = $currentExtensionAnchor;
+        $strangPoints[] = $extensionConnectorEnd;
+        $strangPoints[] = $extensionEnd;
+        if (filled($extensionContinuationEnd)) {
+            $strangPoints[] = $extensionContinuationEnd;
+        }
+        if (in_array($extensionIndex, collect($extensionBranchIndexes)->map(fn (mixed $index): int => (int) $index)->all(), true)) {
+            $extensionBranchConnectorLength = (string) data_get($extensionBranchConnectorLengths, $extensionIndex, $connectorLength);
+            $extensionBranchVerticalLength = (string) data_get($extensionBranchVerticalLengths, $extensionIndex, $verticalLength);
+            $extensionBranchConnectorEnd = [
+                'x' => $add($add($extensionEnd['x'], $arcSize), $extensionBranchConnectorLength),
+                'y' => $add($extensionEnd['y'], $arcSize),
+            ];
+            $extensionBranchEnd = [
+                'x' => $add($extensionBranchConnectorEnd['x'], $arcSize),
+                'y' => $add($add($extensionBranchConnectorEnd['y'], $arcSize), $extensionBranchVerticalLength),
+            ];
+            $strangPoints[] = $extensionBranchConnectorEnd;
+            $strangPoints[] = $extensionBranchEnd;
+        }
         $currentExtensionAnchor = [
             'x' => $extensionConnectorEnd['x'],
             'y' => $extensionConnectorEnd['y'],
         ];
     }
 
-    $strangBorderPadding = '1rem';
-    $strangBorderLeft = $subtract($anchor['x'], $strangBorderPadding);
-    $strangBorderBottom = $subtract($anchor['y'], $strangBorderPadding);
-    $strangBorderWidth = $add($diff($strangEnd['x'], $anchor['x']), $add($strangBorderPadding, $strangBorderPadding));
-    $strangBorderHeight = $add($diff($strangEnd['y'], $anchor['y']), $add($strangBorderPadding, $strangBorderPadding));
+    $strangBounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints($strangPoints, '1rem');
+    $strangBorderLeft = $strangBounds['left'];
+    $strangBorderBottom = $strangBounds['bottom'];
+    $strangBorderWidth = $strangBounds['width'];
+    $strangBorderHeight = $strangBounds['height'];
     $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '139 92 246');
 @endphp
 
