@@ -828,7 +828,7 @@
     ]);
     /*
      * TODO TW-GRAPH cleanup:
-     * Old fallback variables for inactive x-ui.tw-graph-protocol segment cases.
+     * Old fallback variables for removed App-level segment cases.
      *
      * $mergeEndSegment = [
      *     'id' => 'catalog.segment.merge-end.1.top-bottom',
@@ -895,7 +895,7 @@
     ];
     /*
      * TODO: TW-GRAPH cleanup:
-     * Old merge fallback data for inactive x-ui.tw-graph-protocol segment cases.
+     * Old merge fallback data for removed App-level segment cases.
      *
      * $mergeEndPath = [
      *     'textEnd' => ['Merge end', 'segment'],

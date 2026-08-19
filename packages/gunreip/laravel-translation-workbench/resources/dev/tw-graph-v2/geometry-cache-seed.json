@@ -1,106 +1,701 @@
 {
-  "meta": {
-    "id": "geometry-cache-dev-preview",
-    "version": "0.1",
-    "description": "Seed geometry cache for the graph protocol dev preview."
-  },
-  "geometry": {
-    "unit": "rem",
-    "color": "cyan",
-    "pathWidth": "0.25rem",
-    "nodeSize": "1rem",
-    "arcSize": "2.75rem"
-  },
-  "twGraph": {
-    "strang": {
-      "trunk": {
-        "trunk": {
-          "paths": [
-            {
-              "id": "trunk.path.1",
-              "type": "trunk",
-              "segments": {
-                "start": {
-                  "id": "trunk.path.1.start",
-                  "segment": "trunk-start",
-                  "type": "path",
-                  "direction": "bottom-top",
-                  "length": "8rem",
-                  "anchorStart": { "x": "0rem", "y": "0rem" },
-                  "anchorEnd": { "x": "0rem", "y": "8rem" },
-                  "nodeStart": false,
-                  "nodeEnd": true,
-                  "color": "green"
+    "meta": {
+        "id": "geometry-cache-dev-preview",
+        "version": "0.2",
+        "description": "Component-authored graph plan. JSON caches coordinates only."
+    },
+    "geometry": {
+        "unit": "rem",
+        "color": "cyan",
+        "direction": "bottom-top",
+        "pathWidth": "0.25rem",
+        "nodeSize": "0.95rem",
+        "arcSize": "2.75rem"
+    },
+    "twGraph": {
+        "strang": {
+            "trunk": {
+                "trunk": {
+                    "paths": [
+                        {
+                            "id": "trunk.path.1",
+                            "type": "trunk",
+                            "direction": "bottom-top",
+                            "textStart": [
+                                "Root",
+                                "direction=bottom-top",
+                                "Test-ID: #701"
+                            ],
+                            "textStartConnectorPlacement": "bottom",
+                            "textStartConnectorLength": "2.25rem",
+                            "textStartConnectorGap": "1.0rem",
+                            "textEnd": [
+                                "Shared key",
+                                "direction=bottom-top",
+                                "Test-ID: #5"
+                            ],
+                            "textEndConnectorPlacement": "top",
+                            "textEndConnectorLength": "2.25rem",
+                            "textEndConnectorGap": "1.0rem",
+                            "segments": {
+                                "start": {
+                                    "id": "trunk.path.1.start",
+                                    "segment": "trunk-start",
+                                    "type": "path",
+                                    "direction": "bottom-top",
+                                    "length": "8rem",
+                                    "nodeStart": false,
+                                    "nodeEnd": true,
+                                    "color": "green",
+                                    "anchorStart": {
+                                        "x": "0rem",
+                                        "y": "0rem"
+                                    },
+                                    "anchorEnd": {
+                                        "x": "0rem",
+                                        "y": "8rem"
+                                    },
+                                    "_fingerprint": "7ea2883de98a23efb8953f2b81d66d0e96d03fd2"
+                                },
+                                "paths": [
+                                    {
+                                        "id": "trunk.path.1.path.1",
+                                        "segment": "trunk-path",
+                                        "type": "path",
+                                        "direction": "bottom-top",
+                                        "length": "3rem",
+                                        "nodeStart": false,
+                                        "nodeEnd": true,
+                                        "color": "green",
+                                        "anchorStart": {
+                                            "x": "0rem",
+                                            "y": "8rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "0rem",
+                                            "y": "11rem"
+                                        },
+                                        "_fingerprint": "56e6db4ca2de77f8135caa064f87cf6980ee039f"
+                                    },
+                                    {
+                                        "id": "trunk.path.1.path.2",
+                                        "segment": "trunk-path",
+                                        "type": "path",
+                                        "direction": "bottom-top",
+                                        "length": "4rem",
+                                        "nodeStart": false,
+                                        "nodeEnd": true,
+                                        "color": "green",
+                                        "textLabels": [
+                                            {
+                                                "id": "trunk.path.1.path.2.text-label.left",
+                                                "side": "left",
+                                                "text": [
+                                                    "Left",
+                                                    "label an Node 2"
+                                                ],
+                                                "connectorLength": "2rem",
+                                                "connectorGap": "0.25rem",
+                                                "color": "sky",
+                                                "badgeColor": "sky"
+                                            },
+                                            {
+                                                "id": "trunk.path.1.path.2.text-label.right",
+                                                "side": "right",
+                                                "text": [
+                                                    "Right",
+                                                    "label an Node 2"
+                                                ],
+                                                "connectorLength": "2rem",
+                                                "connectorGap": "0.25rem",
+                                                "color": "sky",
+                                                "badgeColor": "sky"
+                                            }
+                                        ],
+                                        "anchorStart": {
+                                            "x": "0rem",
+                                            "y": "11rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "0rem",
+                                            "y": "15rem"
+                                        },
+                                        "_fingerprint": "23dcb85a7aecac9e0d2bee0c1b8e6899c9bd6046"
+                                    },
+                                    {
+                                        "id": "trunk.path.1.path.3",
+                                        "segment": "trunk-path",
+                                        "type": "path",
+                                        "direction": "bottom-top",
+                                        "length": "3rem",
+                                        "nodeStart": false,
+                                        "nodeEnd": true,
+                                        "color": "green",
+                                        "anchorStart": {
+                                            "x": "0rem",
+                                            "y": "15rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "0rem",
+                                            "y": "18rem"
+                                        },
+                                        "_fingerprint": "de5cc91f5c45afedcdfef0ead1e38d442b3f7bdf"
+                                    },
+                                    {
+                                        "id": "trunk.path.1.path.4",
+                                        "segment": "trunk-path",
+                                        "type": "path",
+                                        "direction": "bottom-top",
+                                        "length": "4rem",
+                                        "nodeStart": false,
+                                        "nodeEnd": true,
+                                        "color": "green",
+                                        "anchorStart": {
+                                            "x": "0rem",
+                                            "y": "18rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "0rem",
+                                            "y": "22rem"
+                                        },
+                                        "_fingerprint": "bc5631667c3b7657479dbc2c0dd7bd2e5014a226"
+                                    },
+                                    {
+                                        "id": "trunk.path.1.path.5",
+                                        "segment": "trunk-path",
+                                        "type": "path",
+                                        "direction": "bottom-top",
+                                        "length": "4rem",
+                                        "nodeStart": false,
+                                        "nodeEnd": true,
+                                        "color": "green",
+                                        "anchorStart": {
+                                            "x": "0rem",
+                                            "y": "22rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "0rem",
+                                            "y": "26rem"
+                                        },
+                                        "_fingerprint": "0ca5f73791f8bb4f031e200a53a6e45b39842c82"
+                                    },
+                                    {
+                                        "id": "trunk.path.1.path.6",
+                                        "segment": "trunk-path",
+                                        "type": "path",
+                                        "direction": "bottom-top",
+                                        "length": "10rem",
+                                        "nodeStart": false,
+                                        "nodeEnd": true,
+                                        "color": "green",
+                                        "anchorStart": {
+                                            "x": "0rem",
+                                            "y": "26rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "0rem",
+                                            "y": "36rem"
+                                        },
+                                        "_fingerprint": "71f7d30bf8c64127cbaf452a4b189df1443fef60"
+                                    },
+                                    {
+                                        "id": "trunk.path.1.path.7",
+                                        "segment": "trunk-path",
+                                        "type": "path",
+                                        "direction": "bottom-top",
+                                        "length": "4rem",
+                                        "nodeStart": false,
+                                        "nodeEnd": true,
+                                        "color": "green",
+                                        "anchorStart": {
+                                            "x": "0rem",
+                                            "y": "36rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "0rem",
+                                            "y": "40rem"
+                                        },
+                                        "_fingerprint": "6eec508a72b4602245788f11cae5d3c6822cec2a"
+                                    },
+                                    {
+                                        "id": "trunk.path.1.path.8",
+                                        "segment": "trunk-path",
+                                        "type": "path",
+                                        "direction": "bottom-top",
+                                        "length": "4rem",
+                                        "nodeStart": false,
+                                        "nodeEnd": true,
+                                        "color": "green",
+                                        "anchorStart": {
+                                            "x": "0rem",
+                                            "y": "40rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "0rem",
+                                            "y": "44rem"
+                                        },
+                                        "_fingerprint": "baca31a37de7fc6d762d35fe5d604b9d060491ea"
+                                    },
+                                    {
+                                        "id": "trunk.path.1.path.9",
+                                        "segment": "trunk-path",
+                                        "type": "path",
+                                        "direction": "bottom-top",
+                                        "length": "6rem",
+                                        "nodeStart": false,
+                                        "nodeEnd": true,
+                                        "color": "green",
+                                        "anchorStart": {
+                                            "x": "0rem",
+                                            "y": "44rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "0rem",
+                                            "y": "50rem"
+                                        },
+                                        "_fingerprint": "36cdd30a16d7a9243e280fe261c34fb37f27f92a"
+                                    },
+                                    {
+                                        "id": "trunk.path.1.path.10",
+                                        "segment": "trunk-path",
+                                        "type": "path",
+                                        "direction": "bottom-top",
+                                        "length": "4rem",
+                                        "nodeStart": false,
+                                        "nodeEnd": true,
+                                        "color": "green",
+                                        "textLabels": [
+                                            {
+                                                "id": "trunk.path.1.path.10.text-label.left",
+                                                "side": "left",
+                                                "text": [
+                                                    "Left",
+                                                    "label an Node 10"
+                                                ],
+                                                "connectorLength": "2rem",
+                                                "connectorGap": "0.25rem",
+                                                "color": "sky",
+                                                "badgeColor": "sky"
+                                            },
+                                            {
+                                                "id": "trunk.path.1.path.10.text-label.right",
+                                                "side": "right",
+                                                "text": [
+                                                    "Right",
+                                                    "label an Node 10"
+                                                ],
+                                                "connectorLength": "2rem",
+                                                "connectorGap": "0.25rem",
+                                                "color": "sky",
+                                                "badgeColor": "sky"
+                                            }
+                                        ],
+                                        "anchorStart": {
+                                            "x": "0rem",
+                                            "y": "50rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "0rem",
+                                            "y": "54rem"
+                                        },
+                                        "_fingerprint": "3b834176c122f944494d841dbeea6011c3c8626b"
+                                    }
+                                ],
+                                "end": {
+                                    "id": "trunk.path.1.end",
+                                    "segment": "trunk-end",
+                                    "type": "path",
+                                    "direction": "bottom-top",
+                                    "length": "2.5rem",
+                                    "nodeStart": false,
+                                    "nodeEnd": false,
+                                    "capLength": "1.75rem",
+                                    "color": "green",
+                                    "anchorStart": {
+                                        "x": "0rem",
+                                        "y": "54rem"
+                                    },
+                                    "anchorEnd": {
+                                        "x": "0rem",
+                                        "y": "56.5rem"
+                                    },
+                                    "_fingerprint": "99c746a665ee12449f7b64166d5220e76b41cb14"
+                                }
+                            },
+                            "_fingerprint": "493f2b60dfc8e49c72a740026e3f507e100cb34a"
+                        }
+                    ],
+                    "end": null
+                }
+            },
+            "merge": {
+                "left": {
+                    "merge": {
+                        "id": "merge.left",
+                        "anchorFrom": {
+                            "segmentId": "trunk.path.1.start",
+                            "anchor": "anchorEnd"
+                        },
+                        "paths": {
+                            "merge": {
+                                "id": "merge.left.path.merge",
+                                "type": "merge",
+                                "segments": [
+                                    {
+                                        "id": "merge.left.path.merge.1.arc-se",
+                                        "type": "arc",
+                                        "direction": "se",
+                                        "arcSpan": "2.5rem",
+                                        "color": "amber",
+                                        "anchorStart": {
+                                            "x": "0rem",
+                                            "y": "8rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "-2.5rem",
+                                            "y": "5.5rem"
+                                        },
+                                        "_fingerprint": "695c80440d37e254ed996f386a541c93d023edb7"
+                                    },
+                                    {
+                                        "id": "merge.left.path.merge.2.right-left",
+                                        "type": "path",
+                                        "direction": "right-left",
+                                        "length": "6rem",
+                                        "nodeStart": false,
+                                        "nodeEnd": false,
+                                        "color": "amber",
+                                        "anchorStart": {
+                                            "x": "-2.5rem",
+                                            "y": "5.5rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "-8.5rem",
+                                            "y": "5.5rem"
+                                        },
+                                        "_fingerprint": "f29b6f7d67930b8bcd641e4c62a30207b4adf1de"
+                                    },
+                                    {
+                                        "id": "merge.left.path.merge.3.arc-nw",
+                                        "type": "arc",
+                                        "direction": "nw",
+                                        "arcSpan": "2.5rem",
+                                        "color": "amber",
+                                        "anchorStart": {
+                                            "x": "-8.5rem",
+                                            "y": "5.5rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "-11rem",
+                                            "y": "3rem"
+                                        },
+                                        "_fingerprint": "a3bb36c3be08574bc63ebdccf21ea0612ffaf137"
+                                    }
+                                ]
+                            },
+                            "mergeEnd": {
+                                "id": "merge.left.path.merge-end",
+                                "type": "merge-end",
+                                "textEnd": [
+                                    "Merge end",
+                                    "left"
+                                ],
+                                "textEndAnchor": "anchorEnd",
+                                "textEndConnectorPlacement": "bottom",
+                                "textEndConnectorLength": "1.5rem",
+                                "textEndConnectorGap": "0.35rem",
+                                "segment": {
+                                    "id": "merge.left.path.merge-end.1.top-bottom",
+                                    "type": "path",
+                                    "direction": "top-bottom",
+                                    "length": "2rem",
+                                    "nodeStart": false,
+                                    "nodeEnd": true,
+                                    "color": "amber",
+                                    "anchorStart": {
+                                        "x": "-11rem",
+                                        "y": "3rem"
+                                    },
+                                    "anchorEnd": {
+                                        "x": "-11rem",
+                                        "y": "1rem"
+                                    },
+                                    "_fingerprint": "94a1e119307c29a2927dd638ad28cbe357397ef9"
+                                }
+                            }
+                        }
+                    }
                 },
-                "paths": [],
-                "end": null
-              }
+                "right": {
+                    "merge": {
+                        "id": "merge.right",
+                        "anchorFrom": {
+                            "segmentId": "trunk.path.1.start",
+                            "anchor": "anchorEnd"
+                        },
+                        "paths": {
+                            "merge": {
+                                "id": "merge.right.path.merge",
+                                "type": "merge",
+                                "segments": [
+                                    {
+                                        "id": "merge.right.path.merge.1.arc-sw",
+                                        "type": "arc",
+                                        "direction": "sw",
+                                        "arcSpan": "2.5rem",
+                                        "color": "amber",
+                                        "anchorStart": {
+                                            "x": "0rem",
+                                            "y": "8rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "2.5rem",
+                                            "y": "5.5rem"
+                                        },
+                                        "_fingerprint": "fd0b671f6faf060ac9af43cd503a52b327dc999c"
+                                    },
+                                    {
+                                        "id": "merge.right.path.merge.2.left-right",
+                                        "type": "path",
+                                        "direction": "left-right",
+                                        "length": "6rem",
+                                        "nodeStart": false,
+                                        "nodeEnd": false,
+                                        "color": "amber",
+                                        "anchorStart": {
+                                            "x": "2.5rem",
+                                            "y": "5.5rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "8.5rem",
+                                            "y": "5.5rem"
+                                        },
+                                        "_fingerprint": "8a97c82671042b8aa18c54bdff63a2b54607ea16"
+                                    },
+                                    {
+                                        "id": "merge.right.path.merge.3.arc-ne",
+                                        "type": "arc",
+                                        "direction": "ne",
+                                        "arcSpan": "2.5rem",
+                                        "color": "amber",
+                                        "anchorStart": {
+                                            "x": "8.5rem",
+                                            "y": "5.5rem"
+                                        },
+                                        "anchorEnd": {
+                                            "x": "11rem",
+                                            "y": "3rem"
+                                        },
+                                        "_fingerprint": "26c0d324767b00acc6f50ad2d74d7af35fc54cb6"
+                                    }
+                                ]
+                            },
+                            "mergeEnd": {
+                                "id": "merge.right.path.merge-end",
+                                "type": "merge-end",
+                                "textEnd": [
+                                    "Merge end",
+                                    "right"
+                                ],
+                                "textEndAnchor": "anchorEnd",
+                                "textEndConnectorPlacement": "bottom",
+                                "textEndConnectorLength": "1.5rem",
+                                "textEndConnectorGap": "0.35rem",
+                                "segment": {
+                                    "id": "merge.right.path.merge-end.1.top-bottom",
+                                    "type": "path",
+                                    "direction": "top-bottom",
+                                    "length": "2rem",
+                                    "nodeStart": false,
+                                    "nodeEnd": true,
+                                    "color": "amber",
+                                    "anchorStart": {
+                                        "x": "11rem",
+                                        "y": "3rem"
+                                    },
+                                    "anchorEnd": {
+                                        "x": "11rem",
+                                        "y": "1rem"
+                                    },
+                                    "_fingerprint": "8f01e2bfb0f22b5dc8ea9e3d502ca77dbcd43cda"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "branch": {
+                "left": {
+                    "branch": {
+                        "id": "branch.left.path.branch",
+                        "anchorFrom": {
+                            "segmentId": "trunk.path.1.path.3",
+                            "anchor": "anchorEnd"
+                        },
+                        "segments": [
+                            {
+                                "id": "branch.left.path.branch.1.arc-east-north",
+                                "type": "arc",
+                                "startAnchor": "e",
+                                "endAnchor": "n",
+                                "arcSpan": "2.5rem",
+                                "nodeStart": false,
+                                "nodeEnd": true,
+                                "color": "pink",
+                                "anchorStart": {
+                                    "x": "0rem",
+                                    "y": "18rem"
+                                },
+                                "anchorEnd": {
+                                    "x": "-2.5rem",
+                                    "y": "20.5rem"
+                                },
+                                "_fingerprint": "3df7bf9cbf5dc6acd924f464cdcf29b2cf160b6b"
+                            },
+                            {
+                                "id": "branch.left.path.branch.2.right-left",
+                                "type": "path",
+                                "direction": "right-left",
+                                "length": "5rem",
+                                "nodeStart": false,
+                                "nodeEnd": true,
+                                "color": "pink",
+                                "anchorStart": {
+                                    "x": "-2.5rem",
+                                    "y": "20.5rem"
+                                },
+                                "anchorEnd": {
+                                    "x": "-7.5rem",
+                                    "y": "20.5rem"
+                                },
+                                "_fingerprint": "4ee708bed70b1c143b86fd4a5e8ae92eaf247eeb"
+                            },
+                            {
+                                "id": "branch.left.path.branch.3.arc-south-west",
+                                "type": "arc",
+                                "startAnchor": "s",
+                                "endAnchor": "w",
+                                "arcSpan": "2.5rem",
+                                "nodeStart": false,
+                                "nodeEnd": true,
+                                "color": "pink",
+                                "anchorStart": {
+                                    "x": "-7.5rem",
+                                    "y": "20.5rem"
+                                },
+                                "anchorEnd": {
+                                    "x": "-10rem",
+                                    "y": "23rem"
+                                },
+                                "_fingerprint": "fb3a1b1be71afc96239de4b38c89218fe7ec291e"
+                            },
+                            {
+                                "id": "branch.left.path.branch.4.bottom-top",
+                                "type": "path",
+                                "direction": "bottom-top",
+                                "length": "2rem",
+                                "nodeStart": false,
+                                "nodeEnd": true,
+                                "color": "pink",
+                                "anchorStart": {
+                                    "x": "-10rem",
+                                    "y": "23rem"
+                                },
+                                "anchorEnd": {
+                                    "x": "-10rem",
+                                    "y": "25rem"
+                                },
+                                "_fingerprint": "5bdd9e9e67ff26078513e8270c7cf74ee05e5c74"
+                            }
+                        ]
+                    }
+                },
+                "right": {
+                    "branch": {
+                        "id": "branch.right.path.branch",
+                        "anchorFrom": {
+                            "segmentId": "trunk.path.1.path.3",
+                            "anchor": "anchorEnd"
+                        },
+                        "segments": [
+                            {
+                                "id": "branch.right.path.branch.1.arc-west-north",
+                                "type": "arc",
+                                "startAnchor": "w",
+                                "endAnchor": "n",
+                                "arcSpan": "2.5rem",
+                                "nodeStart": false,
+                                "nodeEnd": true,
+                                "color": "pink",
+                                "anchorStart": {
+                                    "x": "0rem",
+                                    "y": "18rem"
+                                },
+                                "anchorEnd": {
+                                    "x": "2.5rem",
+                                    "y": "20.5rem"
+                                },
+                                "_fingerprint": "2e6d8b1d75b01b5e2e3c6f513807ac38e2d6cc99"
+                            },
+                            {
+                                "id": "branch.right.path.branch.2.left-right",
+                                "type": "path",
+                                "direction": "left-right",
+                                "length": "5rem",
+                                "nodeStart": false,
+                                "nodeEnd": true,
+                                "color": "pink",
+                                "anchorStart": {
+                                    "x": "2.5rem",
+                                    "y": "20.5rem"
+                                },
+                                "anchorEnd": {
+                                    "x": "7.5rem",
+                                    "y": "20.5rem"
+                                },
+                                "_fingerprint": "1ccc5e28d527b11593288605c63e751b73287467"
+                            },
+                            {
+                                "id": "branch.right.path.branch.3.arc-south-east",
+                                "type": "arc",
+                                "startAnchor": "s",
+                                "endAnchor": "e",
+                                "arcSpan": "2.5rem",
+                                "nodeStart": false,
+                                "nodeEnd": true,
+                                "color": "pink",
+                                "anchorStart": {
+                                    "x": "7.5rem",
+                                    "y": "20.5rem"
+                                },
+                                "anchorEnd": {
+                                    "x": "10rem",
+                                    "y": "23rem"
+                                },
+                                "_fingerprint": "3f212db1c4e9dde72094c1b656976a9fd17783f4"
+                            },
+                            {
+                                "id": "branch.right.path.branch.4.bottom-top",
+                                "type": "path",
+                                "direction": "bottom-top",
+                                "length": "2rem",
+                                "nodeStart": false,
+                                "nodeEnd": true,
+                                "color": "pink",
+                                "anchorStart": {
+                                    "x": "10rem",
+                                    "y": "23rem"
+                                },
+                                "anchorEnd": {
+                                    "x": "10rem",
+                                    "y": "25rem"
+                                },
+                                "_fingerprint": "83c76a218304bac8c875282c3b154e5d63fbbd58"
+                            }
+                        ]
+                    }
+                }
             }
-          ],
-          "end": null
         }
-      },
-      "merge": {
-        "left": {
-          "merge": {
-            "id": "merge.left",
-            "segments": [
-              {
-                "id": "merge.left.1.arc-se",
-                "type": "arc",
-                "direction": "se",
-                "anchorStart": { "x": "0rem", "y": "8rem" },
-                "anchorEnd": { "x": "-2.5rem", "y": "5.5rem" },
-                "color": "amber"
-              },
-              {
-                "id": "merge.left.2.right-left",
-                "type": "path",
-                "direction": "right-left",
-                "length": "6rem",
-                "anchorStart": { "x": "-2.5rem", "y": "5.5rem" },
-                "anchorEnd": { "x": "-8.5rem", "y": "5.5rem" },
-                "color": "amber"
-              },
-              {
-                "id": "merge.left.3.arc-nw",
-                "type": "arc",
-                "direction": "nw",
-                "anchorStart": { "x": "-8.5rem", "y": "5.5rem" },
-                "anchorEnd": { "x": "-11rem", "y": "3rem" },
-                "color": "amber"
-              },
-              {
-                "id": "merge.left.4.top-bottom",
-                "type": "path",
-                "direction": "top-bottom",
-                "length": "2rem",
-                "anchorStart": { "x": "-11rem", "y": "3rem" },
-                "anchorEnd": { "x": "-11rem", "y": "1rem" },
-                "color": "amber"
-              },
-              {
-                "id": "merge.left.5.start-south",
-                "type": "path",
-                "direction": "top-bottom",
-                "length": "1rem",
-                "anchorStart": { "x": "-11rem", "y": "1rem" },
-                "anchorEnd": { "x": "-11rem", "y": "0rem" },
-                "color": "amber"
-              },
-              {
-                "id": "merge.left.node.end",
-                "type": "node",
-                "anchorStart": { "x": "-11rem", "y": "1rem" },
-                "anchorEnd": { "x": "-11rem", "y": "1rem" },
-                "label": "merge end",
-                "color": "amber"
-              }
-            ]
-          }
-        },
-        "right": null
-      }
     }
-  }
 }

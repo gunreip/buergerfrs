@@ -725,7 +725,7 @@
                                             :anchor-start="['x' => '-8rem', 'y' => '0.75rem']"
                                             color="violet"
                                             connector-length="5rem"
-                                            vertical-length="4rem"
+                                            vertical-length="2rem"
                                             branch-end-path-length="3rem"
                                             :branch-continuation-node-labels="true"
                                             :branch-return="true"
@@ -748,7 +748,7 @@
                                             :extension-branch-return-colors="[1 => null, 2 => 'red']"
                                             :extension-return-indexes="[1, 2]"
                                             :extension-return-vertical-lengths="[1 => '7rem', 2 => '5rem']"
-                                            :extension-return-connector-lengths="[1 => '8rem', 2 => '4rem']"
+                                            :extension-return-connector-lengths="[1 => '9.0rem', 2 => '4rem']"
                                             :extension-return-colors="[1 => 'sky', 2 => 'cyan']"
                                         />
                                     </div>

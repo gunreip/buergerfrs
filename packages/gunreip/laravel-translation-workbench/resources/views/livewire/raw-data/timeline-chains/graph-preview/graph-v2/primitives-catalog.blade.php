@@ -28,7 +28,7 @@
         ],
         [
             'name' => 'arc',
-            'component' => '<x-ui.tw-graph-protocol.primitives.arc',
+            'component' => '<x-translation-workbench::ui.tw-graph-protocol.primitives.arc',
             'purpose' => 'Neutral quarter-circle primitive. Segments decide the start/end anchor pair.',
             'props' => [
                 $tab . 'id="arc"',
@@ -76,7 +76,7 @@
         ],
         [
             'name' => 'node',
-            'component' => '<x-ui.tw-graph-protocol.primitives.node',
+            'component' => '<x-translation-workbench::ui.tw-graph-protocol.primitives.node',
             'purpose' => 'Neutral point marker. Segments decide whether a node is rendered at start/end/dev anchors.',
             'props' => [
                 $tab . 'id="node"',
@@ -221,7 +221,7 @@
                                                 @break
 
                                                 @case('arc')
-                                                    <x-ui.tw-graph-protocol.primitives.arc
+                                                    <x-translation-workbench::ui.tw-graph-protocol.primitives.arc
                                                         id="catalog.primitive.arc"
                                                         start-anchor="e"
                                                         end-anchor="s"
@@ -258,7 +258,7 @@
                                                 @break
 
                                                 @case('node')
-                                                    <x-ui.tw-graph-protocol.primitives.node
+                                                    <x-translation-workbench::ui.tw-graph-protocol.primitives.node
                                                         id="catalog.primitive.node"
                                                         anchor-x="0rem"
                                                         anchor-y="3rem"

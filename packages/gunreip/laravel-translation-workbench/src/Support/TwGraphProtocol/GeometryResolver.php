@@ -93,6 +93,26 @@ final class GeometryResolver
             );
         }
 
+        $resolvedSegments = $this->segmentsById($protocol);
+
+        foreach (['left', 'right'] as $side) {
+            foreach (data_get($plan, "twGraph.strang.branch.{$side}", []) as $branchKey => $branch) {
+                if (! is_array($branch)) {
+                    $protocol['twGraph']['strang']['branch'][$side][$branchKey] = $branch;
+                    continue;
+                }
+
+                $resolvedBranch = $this->resolveSegmentChain($branch, $cachedSegments, $resolvedSegments);
+                $protocol['twGraph']['strang']['branch'][$side][$branchKey] = $resolvedBranch;
+
+                foreach (data_get($resolvedBranch, 'segments', []) as $segment) {
+                    if (is_array($segment) && filled(data_get($segment, 'id'))) {
+                        $resolvedSegments[(string) data_get($segment, 'id')] = $segment;
+                    }
+                }
+            }
+        }
+
         return $protocol;
     }
 
@@ -200,6 +220,10 @@ final class GeometryResolver
 
     private function calculateAnchorEnd(array $segment, array $start): array
     {
+        if (data_get($segment, 'type') === 'arc' && filled(data_get($segment, 'startAnchor')) && filled(data_get($segment, 'endAnchor'))) {
+            return $this->calculateSemanticArcAnchorEnd($segment, $start);
+        }
+
         $length = $this->toRem(data_get($segment, 'length', '0rem'));
         $x = $this->toRem(data_get($start, 'x', '0rem'));
         $y = $this->toRem(data_get($start, 'y', '0rem'));
@@ -213,6 +237,26 @@ final class GeometryResolver
             'sw' => ['x' => $this->rem($x + $this->arcSpan($segment)), 'y' => $this->rem($y - $this->arcSpan($segment))],
             'nw' => ['x' => $this->rem($x - $this->arcSpan($segment)), 'y' => $this->rem($y - $this->arcSpan($segment))],
             'ne' => ['x' => $this->rem($x + $this->arcSpan($segment)), 'y' => $this->rem($y - $this->arcSpan($segment))],
+            default => data_get($segment, 'anchorEnd', $start),
+        };
+    }
+
+    private function calculateSemanticArcAnchorEnd(array $segment, array $start): array
+    {
+        $span = $this->arcSpan($segment);
+        $x = $this->toRem(data_get($start, 'x', '0rem'));
+        $y = $this->toRem(data_get($start, 'y', '0rem'));
+        $pair = data_get($segment, 'startAnchor') . '-' . data_get($segment, 'endAnchor');
+
+        return match ($pair) {
+            'n-e' => ['x' => $this->rem($x + $span), 'y' => $this->rem($y - $span)],
+            'e-n' => ['x' => $this->rem($x - $span), 'y' => $this->rem($y + $span)],
+            'n-w' => ['x' => $this->rem($x - $span), 'y' => $this->rem($y - $span)],
+            'w-n' => ['x' => $this->rem($x + $span), 'y' => $this->rem($y + $span)],
+            's-e' => ['x' => $this->rem($x + $span), 'y' => $this->rem($y + $span)],
+            'e-s' => ['x' => $this->rem($x - $span), 'y' => $this->rem($y - $span)],
+            's-w' => ['x' => $this->rem($x - $span), 'y' => $this->rem($y + $span)],
+            'w-s' => ['x' => $this->rem($x + $span), 'y' => $this->rem($y - $span)],
             default => data_get($segment, 'anchorEnd', $start),
         };
     }
@@ -268,6 +312,14 @@ final class GeometryResolver
             if (is_array($mergeEndSegment) && filled(data_get($mergeEndSegment, 'id'))) {
                 $segments[(string) data_get($mergeEndSegment, 'id')] = $mergeEndSegment;
             }
+
+            foreach (data_get($protocol, "twGraph.strang.branch.{$side}", []) as $branch) {
+                foreach (data_get($branch, 'segments', []) as $segment) {
+                    if (is_array($segment) && filled(data_get($segment, 'id'))) {
+                        $segments[(string) data_get($segment, 'id')] = $segment;
+                    }
+                }
+            }
         }
 
         return $segments;
@@ -280,6 +332,8 @@ final class GeometryResolver
             'segment' => data_get($segment, 'segment'),
             'type' => data_get($segment, 'type'),
             'direction' => data_get($segment, 'direction'),
+            'startAnchor' => data_get($segment, 'startAnchor'),
+            'endAnchor' => data_get($segment, 'endAnchor'),
             'length' => data_get($segment, 'length'),
             'arcSpan' => data_get($segment, 'arcSpan'),
             'nodeStart' => data_get($segment, 'nodeStart'),

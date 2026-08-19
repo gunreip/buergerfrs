@@ -42,6 +42,11 @@
     $mergeArcSpan = '2.5rem';
     $mergeHorizontalLength = '6rem';
     $mergeVerticalLength = '2rem';
+    $branchColor = 'pink';
+    $branchAttachSegmentId = 'trunk.path.1.path.3';
+    $branchArcSpan = '2.5rem';
+    $branchHorizontalLength = '5rem';
+    $branchVerticalLength = '2rem';
     $mergePath = function (string $side) use (
         $mergeArcSpan,
         $mergeColor,
@@ -103,6 +108,62 @@
                         'nodeEnd' => true,
                         'color' => $mergeColor,
                     ],
+                ],
+            ],
+        ];
+    };
+    $branchPath = function (string $side) use (
+        $branchArcSpan,
+        $branchColor,
+        $branchHorizontalLength,
+        $branchVerticalLength,
+    ): array {
+        $left = $side === 'left';
+
+        return [
+            'id' => "branch.{$side}.path.branch",
+            'anchorFrom' => [
+                'segmentId' => null,
+                'anchor' => 'anchorEnd',
+            ],
+            'segments' => [
+                [
+                    'id' => "branch.{$side}.path.branch.1.arc-" . ($left ? 'east-north' : 'west-north'),
+                    'type' => 'arc',
+                    'startAnchor' => $left ? 'e' : 'w',
+                    'endAnchor' => 'n',
+                    'arcSpan' => $branchArcSpan,
+                    'nodeStart' => false,
+                    'nodeEnd' => true,
+                    'color' => $branchColor,
+                ],
+                [
+                    'id' => "branch.{$side}.path.branch.2." . ($left ? 'right-left' : 'left-right'),
+                    'type' => 'path',
+                    'direction' => $left ? 'right-left' : 'left-right',
+                    'length' => $branchHorizontalLength,
+                    'nodeStart' => false,
+                    'nodeEnd' => true,
+                    'color' => $branchColor,
+                ],
+                [
+                    'id' => "branch.{$side}.path.branch.3.arc-" . ($left ? 'south-west' : 'south-east'),
+                    'type' => 'arc',
+                    'startAnchor' => 's',
+                    'endAnchor' => $left ? 'w' : 'e',
+                    'arcSpan' => $branchArcSpan,
+                    'nodeStart' => false,
+                    'nodeEnd' => true,
+                    'color' => $branchColor,
+                ],
+                [
+                    'id' => "branch.{$side}.path.branch.4.bottom-top",
+                    'type' => 'path',
+                    'direction' => 'bottom-top',
+                    'length' => $branchVerticalLength,
+                    'nodeStart' => false,
+                    'nodeEnd' => true,
+                    'color' => $branchColor,
                 ],
             ],
         ];
@@ -268,6 +329,26 @@
                         ],
                     ],
                 ],
+                'branch' => [
+                    'left' => [
+                        'branch' => [
+                            ...$branchPath('left'),
+                            'anchorFrom' => [
+                                'segmentId' => $branchAttachSegmentId,
+                                'anchor' => 'anchorEnd',
+                            ],
+                        ],
+                    ],
+                    'right' => [
+                        'branch' => [
+                            ...$branchPath('right'),
+                            'anchorFrom' => [
+                                'segmentId' => $branchAttachSegmentId,
+                                'anchor' => 'anchorEnd',
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ],
     ];
@@ -286,6 +367,11 @@
         collect(['left', 'right'])->sum(function (string $side) use ($pathProtocol): int {
             return count(data_get($pathProtocol, "twGraph.strang.merge.{$side}.merge.paths.merge.segments", [])) +
                 count(data_get($pathProtocol, "twGraph.strang.merge.{$side}.merge.paths.mergeEnd.segment") ? [data_get($pathProtocol, "twGraph.strang.merge.{$side}.merge.paths.mergeEnd.segment")] : []);
+        }) +
+        collect(['left', 'right'])->sum(function (string $side) use ($pathProtocol): int {
+            return collect(data_get($pathProtocol, "twGraph.strang.branch.{$side}", []))->sum(
+                fn(array $branch): int => count(data_get($branch, 'segments', [])),
+            );
         });
 
     $graphV2 = [
