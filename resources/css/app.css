@@ -144,6 +144,4 @@ option::checkmark {
 @import './animations.css';
 @import '../../packages/gunreip/laravel-translation-workbench/resources/css/tabs.css';
 @import '../../packages/gunreip/laravel-translation-workbench/resources/css/table.css';
-@import '../../packages/gunreip/laravel-translation-workbench/resources/css/tw-graph.css';
-@import '../../packages/gunreip/laravel-translation-workbench/resources/css/tw-graph-v2.css';
 @import '../../packages/gunreip/laravel-translation-workbench/resources/css/tw-graph-protocol.css';

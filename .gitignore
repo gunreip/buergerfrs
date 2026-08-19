@@ -26,6 +26,7 @@
 /.phpdoc/cache/
 /docs/phpdoc
 /public/docs/phpdoc
+/public/hardcopys/
 /storage/audits/
 /database/dumps/
 /database/results/

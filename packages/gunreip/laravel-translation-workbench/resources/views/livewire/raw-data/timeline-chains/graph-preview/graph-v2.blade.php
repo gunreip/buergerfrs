@@ -38,11 +38,7 @@
                 @include('translation-workbench::livewire.raw-data.timeline-chains.graph-preview.graph-v2.composition-catalog')
                 @include('translation-workbench::livewire.raw-data.timeline-chains.graph-preview.graph-v2.renderer')
 
-                {{--
-                    Frozen reference removed from active markup.
-                    The old anchor-points comparison still lives in git history
-                    and in resources/views/components/ui/tw-graph-v2/*.
-                --}}
+                {{-- Frozen graph references live in git history only. --}}
             </div>
         </div>
     @else
