@@ -25,6 +25,7 @@
     'pathLengths' => [],
     'endLength' => null,
     'color' => 'emerald',
+    'counterStart' => 1,
     'dev' => false,
 ])
 
@@ -89,7 +90,7 @@
         return ['length' => $length, 'labels' => $labels];
     };
     $segments = [];
-    $counter = 1;
+    $counter = (int) $counterStart;
     $currentAnchor = [
         'x' => data_get($anchorStart, 'x', '0rem'),
         'y' => data_get($anchorStart, 'y', '0rem'),

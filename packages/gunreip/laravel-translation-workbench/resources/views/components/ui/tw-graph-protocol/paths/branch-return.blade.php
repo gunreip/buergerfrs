@@ -24,6 +24,8 @@
     'verticalLength' => '2rem',
     'connectorLength' => '3rem',
     'color' => 'orange',
+    'zIndex' => null,
+    'counterStart' => 1,
     'dev' => false,
 ])
 
@@ -34,7 +36,7 @@
         'x' => data_get($anchorStart, 'x', '0rem'),
         'y' => data_get($anchorStart, 'y', '0rem'),
     ];
-    $counter = 1;
+    $counter = (int) $counterStart;
     $isLeft = $side === 'left';
 
     $arcInStartAnchor = $isLeft ? 'w' : 'e';
@@ -83,6 +85,7 @@
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
                 'color' => $color,
+                'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
         ],
@@ -99,6 +102,7 @@
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
                 'color' => $color,
+                'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
         ],
@@ -115,6 +119,7 @@
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
                 'color' => $color,
+                'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
         ],
@@ -131,6 +136,7 @@
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
                 'color' => $color,
+                'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
         ],

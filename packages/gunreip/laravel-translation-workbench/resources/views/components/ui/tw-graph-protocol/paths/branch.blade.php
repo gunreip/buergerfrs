@@ -25,6 +25,7 @@
     'verticalLength' => '2rem',
     'color' => 'pink',
     'zIndex' => null,
+    'counterStart' => 1,
     'dev' => false,
 ])
 
@@ -35,7 +36,7 @@
         'x' => data_get($anchorStart, 'x', '0rem'),
         'y' => data_get($anchorStart, 'y', '0rem'),
     ];
-    $counter = 1;
+    $counter = (int) $counterStart;
     $isLeft = $side === 'left';
 
     $arcInStartAnchor = $isLeft ? 'e' : 'w';

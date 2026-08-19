@@ -23,21 +23,28 @@
 --}}
 
 @props([
+    // Identity / rendering state
     'id' => 'strang.merge-right',
+    'dev' => false,
+
+    // Base anchor / shared geometry
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
-    'extensionCount' => 2,
-    'startLength' => null,
     'arcSize' => '2.75rem',
+    'color' => 'green',
+
+    // Trunk-nearest merge path: paths.merge right
+    'startLength' => null,
     'verticalLength' => '2rem',
     'connectorLength' => '3rem',
+
+    // Outward merge extensions: paths.merge-extension right[]
+    'extensionCount' => 2,
     'extensionStartLength' => null,
     'extensionVerticalLength' => null,
     'extensionVerticalLengths' => [],
     'extensionConnectorLength' => null,
     'extensionConnectorLengths' => [],
     'extensionLabels' => [],
-    'color' => 'green',
-    'dev' => false,
 ])
 
 @php

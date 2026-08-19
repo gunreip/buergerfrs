@@ -97,6 +97,12 @@
     $extensionEnds = [];
     $strangPoints = [$anchor];
     $currentExtensionAnchor = null;
+    $branchContinuationCounter = 5;
+    $branchReturnCounterStart = $branchContinuationCounter + 1;
+    $extensionContinuationCounter = 4;
+    $extensionBranchCounterStart = $extensionContinuationCounter + 1;
+    $extensionBranchReturnCounterStart = $extensionBranchCounterStart + 4;
+    $extensionReturnCounterStart = $extensionContinuationCounter + 1;
 
     $branchConnectorEnd = [
         'x' => $subtract($subtract($anchor['x'], $arcSize), $connectorLength),
@@ -292,7 +298,7 @@
             'anchorEnd' => $branchContinuationEnd,
             'nodeStart' => false,
             'nodeEnd' => $branchContinuationNodeLabels,
-            'devCounterEnd' => 5,
+            'devCounterEnd' => $branchContinuationCounter,
             'devCounterColor' => $color,
             'color' => $color,
             'zIndex' => $zIndex,
@@ -310,6 +316,8 @@
         :connector-length="$branchReturnConnectorLength"
         :arc-size="$arcSize"
         :color="$branchReturnColor"
+        :z-index="$zIndex"
+        :counter-start="$branchReturnCounterStart"
         :dev="$dev"
     />
 @endif
@@ -357,7 +365,7 @@
                 'anchorEnd' => $extensionContinuationEnd,
                 'nodeStart' => false,
                 'nodeEnd' => data_get($extensionContinuationNodeLabels, $extensionIndex, true),
-                'devCounterEnd' => 4,
+                'devCounterEnd' => $extensionContinuationCounter,
                 'devCounterColor' => $extensionColor,
                 'color' => $extensionColor,
                 'zIndex' => $extensionResolvedZIndexes[$extensionIndex],
@@ -376,6 +384,7 @@
             :arc-size="$arcSize"
             :color="(string) data_get($extensionBranchColors, $extensionIndex, 'red')"
             :z-index="max(1, $extensionResolvedZIndexes[$extensionIndex] - 2)"
+            :counter-start="$extensionBranchCounterStart"
             :dev="$dev"
         />
     @endif
@@ -389,6 +398,8 @@
             :connector-length="(string) data_get($extensionBranchReturnConnectorLengths, $extensionIndex, $branchReturnConnectorLength)"
             :arc-size="$arcSize"
             :color="(string) data_get($extensionBranchReturnColors, $extensionIndex, data_get($extensionBranchColors, $extensionIndex, 'red'))"
+            :z-index="max(1, $extensionResolvedZIndexes[$extensionIndex] - 4)"
+            :counter-start="$extensionBranchReturnCounterStart"
             :dev="$dev"
         />
     @endif
@@ -402,6 +413,8 @@
             :connector-length="(string) data_get($extensionReturnConnectorLengths, $extensionIndex, $branchReturnConnectorLength)"
             :arc-size="$arcSize"
             :color="(string) data_get($extensionReturnColors, $extensionIndex, $extensionColor)"
+            :z-index="max(1, $extensionResolvedZIndexes[$extensionIndex] - 1)"
+            :counter-start="$extensionReturnCounterStart"
             :dev="$dev"
         />
     @endif

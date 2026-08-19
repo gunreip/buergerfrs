@@ -18,14 +18,19 @@
 --}}
 
 @props([
+    // Identity / rendering state
     'id' => 'strang.trunk',
+    'dev' => false,
+
+    // Base anchor / shared geometry
     'direction' => 'bottom-top',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
+    'color' => 'emerald',
+
+    // Trunk path: paths.trunk
     'startLength' => null,
     'pathLengths' => [],
     'endLength' => null,
-    'color' => 'emerald',
-    'dev' => false,
 ])
 
 @php

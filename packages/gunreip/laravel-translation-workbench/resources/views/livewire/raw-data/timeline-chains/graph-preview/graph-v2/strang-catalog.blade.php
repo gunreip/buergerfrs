@@ -222,7 +222,12 @@
                                         {{-- component strang.merge-left --}}
                                         <x-translation-workbench::ui.tw-graph-protocol.strangs.merge-left
                                             id="catalog.strang.merge-left"
+                                            :dev="true"
                                             :anchor-start="['x' => '-2rem', 'y' => '6.5rem']"
+                                            color="amber"
+                                            start-length="2.8rem"
+                                            vertical-length="2rem"
+                                            connector-length="6.5rem"
                                             extension-count="7"
                                             :extension-vertical-lengths="[
                                                 1 => '6rem',
@@ -233,19 +238,26 @@
                                                 6 => '12rem',
                                                 7 => '5rem',
                                             ]"
-                                            start-length="2.8rem"
-                                            vertical-length="2rem"
-                                            connector-length="6.5rem"
-                                            :extension-connector-lengths="[1 => '5rem', 3 => '7.5rem', 3 => '7rem', 4 => '6rem']"
+                                            :extension-connector-lengths="[
+                                                1 => '5rem',
+                                                2 => null,
+                                                3 => '7rem',
+                                                4 => '6rem',
+                                                5 => null,
+                                                6 => null,
+                                                7 => null,
+                                            ]"
                                             :extension-labels="[
                                                 1 => ['connectorEnd' => [['text' => 'Root #1', 'side' => 'top'], null]],
+                                                2 => null,
                                                 3 => ['arcEnd' => ['text' => 'Arc #3', 'side' => 'left']],
+                                                4 => null,
+                                                5 => null,
                                                 6 => [
                                                     'verticalEnd' => [null, ['text' => 'Long root', 'side' => 'left']],
                                                 ],
+                                                7 => null,
                                             ]"
-                                            color="amber"
-                                            :dev="true"
                                         />
                                     </div>
                                 </div>
@@ -311,14 +323,18 @@
                                         <flux:callout.text>
                                             <div class="mt-2 space-y-1 font-mono text-xs">
                                                 <div>{{ __('anchorStart{x,y}') }}</div>
-                                                <div>{{ __('extensionCount=2') }}</div>
-                                                <div>{{ __('extensionVerticalLengths[]') }}</div>
-                                                <div>{{ __('extensionConnectorLengths[]') }}</div>
-                                                <div>{{ __('extensionLabels[]') }}</div>
+                                                <div>{{ __('arcSize=2.75rem') }}</div>
+                                                <div>{{ __('color=amber') }}</div>
                                                 <div>{{ __('startLength') }}</div>
                                                 <div>{{ __('verticalLength') }}</div>
                                                 <div>{{ __('connectorLength') }}</div>
-                                                <div>{{ __('color') }}</div>
+                                                <div>{{ __('extensionCount') }}</div>
+                                                <div>{{ __('extensionStartLength=null') }}</div>
+                                                <div>{{ __('extensionVerticalLength=null') }}</div>
+                                                <div>{{ __('extensionVerticalLengths[]') }}</div>
+                                                <div>{{ __('extensionConnectorLength=null') }}</div>
+                                                <div>{{ __('extensionConnectorLengths[]') }}</div>
+                                                <div>{{ __('extensionLabels[]') }}</div>
                                                 <div>{{ __('dev') }}</div>
                                             </div>
                                         </flux:callout.text>
@@ -366,19 +382,21 @@
                                         {{-- Component strang.merge-right --}}
                                         <x-translation-workbench::ui.tw-graph-protocol.strangs.merge-right
                                             id="catalog.strang.merge-right"
+                                            :dev="true"
                                             :anchor-start="['x' => '2rem', 'y' => '6.5rem']"
+                                            color="green"
                                             start-length="2.8rem"
                                             vertical-length="2rem"
                                             connector-length="4.5rem"
                                             extension-count="4"
-                                            :extension-connector-lengths="[1 => '4rem', 2 => '7.5rem', 3 => '6rem']"
                                             :extension-vertical-lengths="[1 => '6rem', 2 => '2rem', 3 => '7rem', 4 => '3rem']"
+                                            :extension-connector-lengths="[1 => '4rem', 2 => '7.5rem', 3 => '6rem', 4 => null]"
                                             :extension-labels="[
                                                 1 => ['connectorEnd' => [['text' => 'Root #1', 'side' => 'top'], null]],
+                                                2 => null,
                                                 3 => ['arcEnd' => ['text' => 'Arc #3', 'side' => 'right']],
+                                                4 => null,
                                             ]"
-                                            color="green"
-                                            :dev="true"
                                         />
                                     </div>
                                 </div>
@@ -444,14 +462,18 @@
                                         <flux:callout.text>
                                             <div class="mt-2 space-y-1 font-mono text-xs">
                                                 <div>{{ __('anchorStart{x,y}') }}</div>
-                                                <div>{{ __('extensionCount=4') }}</div>
-                                                <div>{{ __('extensionVerticalLengths[]') }}</div>
-                                                <div>{{ __('extensionConnectorLengths[]') }}</div>
-                                                <div>{{ __('extensionLabels[]') }}</div>
+                                                <div>{{ __('arcSize=2.75rem') }}</div>
+                                                <div>{{ __('color=green') }}</div>
                                                 <div>{{ __('startLength') }}</div>
                                                 <div>{{ __('verticalLength') }}</div>
                                                 <div>{{ __('connectorLength') }}</div>
-                                                <div>{{ __('color') }}</div>
+                                                <div>{{ __('extensionCount') }}</div>
+                                                <div>{{ __('extensionStartLength=null') }}</div>
+                                                <div>{{ __('extensionVerticalLength=null') }}</div>
+                                                <div>{{ __('extensionVerticalLengths[]') }}</div>
+                                                <div>{{ __('extensionConnectorLength=null') }}</div>
+                                                <div>{{ __('extensionConnectorLengths[]') }}</div>
+                                                <div>{{ __('extensionLabels[]') }}</div>
                                                 <div>{{ __('dev') }}</div>
                                             </div>
                                         </flux:callout.text>
@@ -690,26 +712,44 @@
                                     --tw-graph-protocol-arc-size: 2.75rem;
                                     --tw-graph-protocol-arc-radius: var(--tw-graph-protocol-arc-size);
                                     --tw-graph-protocol-trunk-x: 50%;
-                                    width: 46rem;
-                                    min-width: 46rem;
-                                    height: 26rem;
-                                    min-height: 26rem;
+                                    width: 58rem;
+                                    min-width: 58rem;
+                                    height: 34rem;
+                                    min-height: 34rem;
                                 "
                                     >
                                         {{-- Component strang.branch-right --}}
                                         <x-translation-workbench::ui.tw-graph-protocol.strangs.branch-right
                                             id="catalog.strang.branch-right"
+                                            :dev="true"
                                             :anchor-start="['x' => '-8rem', 'y' => '0.75rem']"
+                                            color="violet"
                                             connector-length="5rem"
                                             vertical-length="4rem"
                                             branch-end-path-length="3rem"
+                                            :branch-continuation-node-labels="true"
+                                            :branch-return="true"
+                                            branch-return-vertical-length="3rem"
+                                            branch-return-connector-length="5rem"
+                                            branch-return-color="violet"
                                             extension-count="2"
                                             :extension-connector-lengths="[1 => '4rem', 2 => '6rem']"
                                             :extension-vertical-lengths="[1 => '3rem', 2 => '5rem']"
                                             :extension-end-path-lengths="[1 => '3rem', 2 => '3rem']"
+                                            :extension-continuation-node-labels="[1 => true, 2 => true]"
                                             :extension-colors="[1 => 'sky', 2 => 'cyan']"
-                                            color="violet"
-                                            :dev="true"
+                                            :extension-branch-indexes="[2]"
+                                            :extension-branch-connector-lengths="[1 => null, 2 => '4rem']"
+                                            :extension-branch-vertical-lengths="[1 => null, 2 => '5.4rem']"
+                                            :extension-branch-colors="[1 => null, 2 => 'red']"
+                                            :extension-branch-return-indexes="[2]"
+                                            :extension-branch-return-vertical-lengths="[1 => null, 2 => '5rem']"
+                                            :extension-branch-return-connector-lengths="[1 => null, 2 => '12rem']"
+                                            :extension-branch-return-colors="[1 => null, 2 => 'red']"
+                                            :extension-return-indexes="[1, 2]"
+                                            :extension-return-vertical-lengths="[1 => '7rem', 2 => '5rem']"
+                                            :extension-return-connector-lengths="[1 => '8rem', 2 => '4rem']"
+                                            :extension-return-colors="[1 => 'sky', 2 => 'cyan']"
                                         />
                                     </div>
                                 </div>
@@ -746,7 +786,10 @@
                                             <div class="mt-2 space-y-1 font-mono text-xs">
                                                 <div>{{ __('strangs.branch-right') }}</div>
                                                 <div>{{ __('|-- paths.branch right') }}</div>
+                                                <div>{{ __('|-- paths.branch-return right') }}</div>
                                                 <div>{{ __('|-- paths.branch-extension right[]') }}</div>
+                                                <div>{{ __('|-- paths.branch-return right[]') }}</div>
+                                                <div>{{ __('|-- paths.branch-return-extension right[]') }}</div>
                                             </div>
                                         </flux:callout.text>
                                     </flux:callout>
@@ -779,12 +822,31 @@
                                                 <div>{{ __('connectorLength') }}</div>
                                                 <div>{{ __('verticalLength') }}</div>
                                                 <div>{{ __('branchEndPathLength') }}</div>
+                                                <div>{{ __('branchContinuationNodeLabels') }}</div>
+                                                <div>{{ __('branchReturn') }}</div>
+                                                <div>{{ __('branchReturnVerticalLength') }}</div>
+                                                <div>{{ __('branchReturnConnectorLength') }}</div>
+                                                <div>{{ __('branchReturnColor') }}</div>
                                                 <div>{{ __('extensionCount') }}</div>
                                                 <div>{{ __('extensionConnectorLengths[]') }}</div>
                                                 <div>{{ __('extensionVerticalLengths[]') }}</div>
                                                 <div>{{ __('extensionEndPathLengths[]') }}</div>
+                                                <div>{{ __('extensionContinuationNodeLabels[]') }}</div>
                                                 <div>{{ __('extensionColors[]') }}</div>
+                                                <div>{{ __('extensionBranchIndexes[]') }}</div>
+                                                <div>{{ __('extensionBranchConnectorLengths[]') }}</div>
+                                                <div>{{ __('extensionBranchVerticalLengths[]') }}</div>
+                                                <div>{{ __('extensionBranchColors[]') }}</div>
+                                                <div>{{ __('extensionBranchReturnIndexes[]') }}</div>
+                                                <div>{{ __('extensionBranchReturnVerticalLengths[]') }}</div>
+                                                <div>{{ __('extensionBranchReturnConnectorLengths[]') }}</div>
+                                                <div>{{ __('extensionBranchReturnColors[]') }}</div>
+                                                <div>{{ __('extensionReturnIndexes[]') }}</div>
+                                                <div>{{ __('extensionReturnVerticalLengths[]') }}</div>
+                                                <div>{{ __('extensionReturnConnectorLengths[]') }}</div>
+                                                <div>{{ __('extensionReturnColors[]') }}</div>
                                                 <div>{{ __('color') }}</div>
+                                                <div>{{ __('zIndex') }}</div>
                                                 <div>{{ __('dev') }}</div>
                                             </div>
                                         </flux:callout.text>
