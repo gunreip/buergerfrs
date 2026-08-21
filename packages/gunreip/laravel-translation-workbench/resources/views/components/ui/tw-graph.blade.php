@@ -24,6 +24,10 @@
     'nodeSize' => '0.95rem',
     'arcSize' => '2.75rem',
     'capLength' => '1.75rem',
+    'bridgeLength' => null,
+    'stemHeight' => null,
+    'connectorLength' => '2rem',
+    'connectorGap' => '0.25rem',
     'slotMinHeight' => '52rem',
     'minWidth' => null,
     'minHeight' => null,
@@ -129,6 +133,11 @@
     @if ($slot->isNotEmpty())
         <div class="tw-graph-protocol-canvas tw-graph-protocol-canvas-slot content-center">
             {{ $slot }}
+
+            <x-translation-workbench::ui.tw-graph.canvas-metrics
+                :graph-id="$resolvedGraphId"
+                :dev="$dev"
+            />
         </div>
     @else
         <x-translation-workbench::ui.tw-graph.canvas

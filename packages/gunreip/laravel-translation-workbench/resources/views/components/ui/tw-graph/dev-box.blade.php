@@ -17,6 +17,10 @@
     This is a pure diagnostic overlay. It must not affect graph geometry.
 --}}
 
+@aware([
+    'graphId' => null,
+])
+
 @props([
     'id' => 'tw-graph.dev-box',
     'x' => '0rem',
@@ -26,10 +30,22 @@
     'color' => 'sky',
     'label' => null,
     'dev' => false,
+    'metricsScope' => null,
 ])
 
 @php
     $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '14 165 233');
+
+    if ($dev && filled($graphId ?? null) && $metricsScope === 'canvas') {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
+            (string) $graphId,
+            (string) $id,
+            (string) $x,
+            (string) $y,
+            (string) $width,
+            (string) $height,
+        );
+    }
 @endphp
 
 @if ($dev)
@@ -37,7 +53,7 @@
         class="tw-graph-protocol-dev-only group pointer-events-none absolute rounded border border-dashed"
         style="
             left: calc(var(--tw-graph-protocol-trunk-x) + {{ $x }});
-            bottom: {{ $y }};
+            bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ $y }});
             width: {{ $width }};
             height: {{ $height }};
             border-color: rgb({{ $colorRgb }} / 0.35);

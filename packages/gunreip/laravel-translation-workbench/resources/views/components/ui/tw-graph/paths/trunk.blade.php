@@ -46,6 +46,7 @@
     'startLabel' => null,
     'endLabel' => null,
     'color' => null,
+    'zIndex' => null,
     'counterStart' => 1,
     'devMode' => null,
     'showDevBox' => true,
@@ -58,11 +59,11 @@
     $id = filled($id)
         ? (string) $id
         : $resolvedGraphId . '.paths.trunk.' . $resolvedComponentCounter;
-    $resolvedColor = $color ?: ($defaultColor ?: 'zinc');
-    $resolvedLineLength = filled($lineLength) ? (string) $lineLength : '4rem';
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'zinc');
+    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
     $resolvedPathCount = max(0, (int) ($pathCount ?? $defaultPathSegments));
     $resolvedDev = $devMode ?? $dev;
-    $startLength = filled($startLength) ? $startLength : $resolvedLineLength;
+    $startLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedLineLength, '4rem');
     $pathLengthOverrides = is_array($pathLengths) ? $pathLengths : [];
     $pathLengthOverridesAreList = array_is_list($pathLengthOverrides);
     $pathNumbers = $resolvedPathCount > 0 ? range(1, $resolvedPathCount) : [];
@@ -83,8 +84,8 @@
             return $override;
         })
         ->all();
-    $endLength = filled($endLength) ? $endLength : $resolvedLineLength;
-    $endCapLength = filled($endCapLength) ? $endCapLength : $capLength;
+    $endLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($endLength, $resolvedLineLength, '4rem');
+    $endCapLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($endCapLength, $capLength ?? null, '1.75rem');
     $startLabelSide = match ($direction) {
         'left-right' => 'left',
         'right-left' => 'right',
@@ -205,6 +206,7 @@
                 'devCounterColor' => $resolvedColor,
                 'startLabel' => $resolvedStartLabel,
                 'color' => $resolvedColor,
+                'zIndex' => $zIndex,
                 'dev' => $resolvedDev,
             ],
         ];
@@ -229,6 +231,7 @@
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
+                'zIndex' => $zIndex,
                 'dev' => $resolvedDev,
             ],
         ];
@@ -251,6 +254,7 @@
                 'devCounterColor' => $resolvedColor,
                 'endLabel' => $resolvedEndLabel,
                 'color' => $resolvedColor,
+                'zIndex' => $zIndex,
                 'dev' => $resolvedDev,
             ],
         ];

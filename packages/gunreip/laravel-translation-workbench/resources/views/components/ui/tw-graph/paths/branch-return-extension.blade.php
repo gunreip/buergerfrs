@@ -7,7 +7,7 @@
         side="left"
         :anchor-start="['x' => '0rem', 'y' => '0rem']"
         vertical-length="2rem"
-        connector-length="3rem"
+        bridge-length="3rem"
     />
 
     Path role:
@@ -22,7 +22,7 @@
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcSize' => '2.75rem',
     'verticalLength' => '2rem',
-    'connectorLength' => '3rem',
+    'bridgeLength' => '3rem',
     'color' => 'yellow',
     'zIndex' => null,
     'counterStart' => 1,
@@ -41,9 +41,9 @@
 
     $arcStartAnchor = $isLeft ? 'w' : 'e';
     $arcEndAnchor = 'n';
-    $connectorDirection = $isLeft ? 'left-right' : 'right-left';
+    $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
     $arcDelta = $isLeft ? $arcSize : $neg($arcSize);
-    $connectorDelta = $isLeft ? $connectorLength : $neg($connectorLength);
+    $bridgeDelta = $isLeft ? $bridgeLength : $neg($bridgeLength);
 
     $verticalEnd = [
         'x' => $currentAnchor['x'],
@@ -53,17 +53,17 @@
         'x' => $add($verticalEnd['x'], $arcDelta),
         'y' => $add($verticalEnd['y'], $arcSize),
     ];
-    $connectorEnd = [
-        'x' => $add($arcEnd['x'], $connectorDelta),
+    $bridgeEnd = [
+        'x' => $add($arcEnd['x'], $bridgeDelta),
         'y' => $arcEnd['y'],
     ];
     $pathBoxPadding = '0.75rem';
-    $pathBoxX = $isLeft ? $currentAnchor['x'] : $connectorEnd['x'];
+    $pathBoxX = $isLeft ? $currentAnchor['x'] : $bridgeEnd['x'];
     $pathBoxY = $currentAnchor['y'];
     $pathBoxWidth = $isLeft
-        ? 'calc(' . $connectorEnd['x'] . ' - ' . $currentAnchor['x'] . ')'
-        : 'calc(' . $currentAnchor['x'] . ' - ' . $connectorEnd['x'] . ')';
-    $pathBoxHeight = 'calc(' . $connectorEnd['y'] . ' - ' . $currentAnchor['y'] . ')';
+        ? 'calc(' . $bridgeEnd['x'] . ' - ' . $currentAnchor['x'] . ')'
+        : 'calc(' . $currentAnchor['x'] . ' - ' . $bridgeEnd['x'] . ')';
+    $pathBoxHeight = 'calc(' . $bridgeEnd['y'] . ' - ' . $currentAnchor['y'] . ')';
 
     $segments = [
         [
@@ -103,11 +103,11 @@
         [
             'component' => 'path',
             'segment' => [
-                'id' => $id . '.connector',
-                'direction' => $connectorDirection,
-                'length' => $connectorLength,
+                'id' => $id . '.bridge',
+                'direction' => $bridgeDirection,
+                'length' => $bridgeLength,
                 'anchorStart' => $arcEnd,
-                'anchorEnd' => $connectorEnd,
+                'anchorEnd' => $bridgeEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,

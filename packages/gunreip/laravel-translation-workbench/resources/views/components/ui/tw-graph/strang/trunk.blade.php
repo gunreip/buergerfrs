@@ -45,6 +45,7 @@
     'startLabel' => null,
     'endLabel' => null,
     'startLabelSpace' => '3rem',
+    'zIndex' => 20,
     'counterStart' => 1,
     'devMode' => null,
 ])
@@ -55,12 +56,12 @@
     $id = filled($id)
         ? (string) $id
         : $resolvedGraphId . '.strang.trunk.' . $resolvedComponentCounter;
-    $resolvedColor = $color ?: ($defaultColor ?: 'zinc');
-    $resolvedLineLength = filled($lineLength) ? (string) $lineLength : '4rem';
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'zinc');
+    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
     $resolvedPathCount = max(0, (int) ($pathCount ?? $defaultPathSegments));
     $resolvedDev = $devMode ?? $dev;
-    $resolvedStartLength = filled($startLength) ? (string) $startLength : $resolvedLineLength;
-    $resolvedEndLength = filled($endLength) ? (string) $endLength : $resolvedLineLength;
+    $resolvedStartLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedLineLength, '4rem');
+    $resolvedEndLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($endLength, $resolvedLineLength, '4rem');
 
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $axisDelta = function (string $length) use ($direction): array {
@@ -150,6 +151,10 @@
         'x' => data_get($anchorStart, 'x', '0rem'),
         'y' => data_get($anchorStart, 'y', '0rem'),
     ];
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::forgetGraph($resolvedGraphId);
+    \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::forgetGraph($resolvedGraphId);
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.start', $pathStartAnchor);
+
     $pathEndAnchor = collect([
         $resolvedStartLength,
         ...$resolvedPathLengths,
@@ -158,6 +163,23 @@
         fn (array $anchor, string $length): array => $addAnchor($anchor, $axisDelta($length)),
         $pathStartAnchor,
     );
+    $nodeAnchor = $addAnchor($pathStartAnchor, $axisDelta($resolvedStartLength));
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.node.1', $nodeAnchor);
+
+    foreach ($resolvedPathLengths as $nodeIndex => $pathLength) {
+        $pathNumber = $nodeIndex + 1;
+        $pathAnchorStart = $nodeAnchor;
+        $nodeAnchor = $addAnchor($nodeAnchor, $axisDelta($pathLength));
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put(
+            $resolvedGraphId,
+            'strang.trunk.node.' . ($pathNumber + 1),
+            $nodeAnchor,
+        );
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.path.' . $pathNumber . '.start', $pathAnchorStart);
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.path.' . $pathNumber . '.end', $nodeAnchor);
+    }
+
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.end', $pathEndAnchor);
 
     $pathBoxPadding = '1rem';
     $resolvedStartLabelSpace = filled($startLabelSpace) ? (string) $startLabelSpace : '0rem';
@@ -201,6 +223,7 @@
     :color="$resolvedColor"
     :label="$id"
     :dev="$resolvedDev"
+    metrics-scope="canvas"
 />
 
 <span
@@ -225,6 +248,7 @@
     :start-label="$startLabel"
     :end-label="$endLabel"
     :color="$resolvedColor"
+    :z-index="$zIndex"
     :counter-start="$counterStart"
     :dev-mode="$resolvedDev"
     :show-dev-box="false"

@@ -5,6 +5,15 @@
     Usage:
     <x-translation-workbench::ui.tw-graph.segments.path :segment="$segment" />
 
+    <x-translation-workbench::ui.tw-graph.segments.path
+        id="example.path"
+        direction="bottom-top"
+        length="3rem"
+        :anchor-start="$start"
+        :anchor-end="$end"
+        :node-end="true"
+    />
+
     Segment role:
     A concrete graph path segment built from the neutral line primitive.
     Paths decide direction, length, anchors, optional path nodes, gradient,
@@ -31,10 +40,46 @@
 
 @props([
     'segment' => [],
+    'id' => 'segment.path',
+    'direction' => 'bottom-top',
+    'length' => '4rem',
+    'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
+    'anchorEnd' => ['x' => '0rem', 'y' => '4rem'],
+    'nodeStart' => false,
+    'nodeEnd' => false,
+    'devCounterStart' => 'S',
+    'devCounterEnd' => 'E',
+    'devCounterColor' => 'zinc',
+    'gradient' => false,
+    'cap' => false,
+    'capLength' => '1.25rem',
+    'color' => 'cyan',
+    'zIndex' => null,
     'dev' => null,
 ])
 
 @php
+    if ($segment === []) {
+        $segment = [
+            'id' => $id,
+            'direction' => $direction,
+            'length' => $length,
+            'anchorStart' => $anchorStart,
+            'anchorEnd' => $anchorEnd,
+            'nodeStart' => $nodeStart,
+            'nodeEnd' => $nodeEnd,
+            'devCounterStart' => $devCounterStart,
+            'devCounterEnd' => $devCounterEnd,
+            'devCounterColor' => $devCounterColor,
+            'gradient' => $gradient,
+            'cap' => $cap,
+            'capLength' => $capLength,
+            'color' => $color,
+            'zIndex' => $zIndex,
+            'dev' => $dev,
+        ];
+    }
+
     $id = data_get($segment, 'id', 'segment.path');
     $direction = data_get($segment, 'direction', 'bottom-top');
     $color = data_get($segment, 'color', 'cyan');

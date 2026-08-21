@@ -6,8 +6,9 @@
     <x-translation-workbench::ui.tw-graph.paths.branch
         side="left"
         :anchor-start="['x' => '0rem', 'y' => '0rem']"
-        connector-length="3rem"
-        vertical-length="2rem"
+        bridge-length="3rem"
+        :node-labels="[3 => ['top' => 'Branch turn']]"
+        :continuation-stem="[1 => ['2rem'], 2 => ['3rem', 'left' => 'Left label', 'right' => 'Right label']]"
     />
 
     Path role:
@@ -20,11 +21,14 @@
     'id' => 'path.branch',
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
+    'lineLength' => '4rem',
     'arcSize' => '2.75rem',
-    'connectorLength' => '3rem',
-    'verticalLength' => '2rem',
+    'bridgeLength' => null,
+    'stemHeight' => null,
     'color' => 'pink',
     'zIndex' => null,
+    'nodeLabels' => [],
+    'continuationStem' => [],
     'counterStart' => 1,
     'dev' => false,
 ])
@@ -38,38 +42,159 @@
     ];
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
+    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
+    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($arcSize ?? null, '2.75rem');
+    $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, $resolvedLineLength, '4rem');
+    $resolvedStemHeight = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemHeight, $resolvedLineLength, '4rem');
+    $normalizeLabel = function (mixed $label, ?string $side = null) use ($color): ?array {
+        if (blank($label)) {
+            return null;
+        }
+
+        if (is_array($label)) {
+            $text = data_get($label, 'text');
+            $left = data_get($label, 'left');
+            $right = data_get($label, 'right');
+            $top = data_get($label, 'top');
+            $bottom = data_get($label, 'bottom');
+
+            if (filled($left)) {
+                $text = $left;
+                $side = 'left';
+            } elseif (filled($right)) {
+                $text = $right;
+                $side = 'right';
+            } elseif (filled($top)) {
+                $text = $top;
+                $side = 'top';
+            } elseif (filled($bottom)) {
+                $text = $bottom;
+                $side = 'bottom';
+            }
+
+            if (blank($text)) {
+                return null;
+            }
+
+            return array_replace([
+                'text' => $text,
+                'side' => $side,
+                'badgeColor' => $color,
+            ], collect($label)->except(['left', 'right', 'top', 'bottom'])->all());
+        }
+
+        return [
+            'text' => $label,
+            'side' => $side,
+            'badgeColor' => $color,
+        ];
+    };
+    $arcNodeLabel = fn (int $nodeNumber, string $defaultSide): ?array => $normalizeLabel(
+        data_get($nodeLabels, $nodeNumber),
+        $defaultSide,
+    );
+    $continuationNodeLabels = function (mixed $entry) use ($normalizeLabel): array {
+        if (! is_array($entry)) {
+            return [null, null];
+        }
+
+        $left = data_get($entry, 'left');
+        $right = data_get($entry, 'right');
+        $top = data_get($entry, 'top');
+        $bottom = data_get($entry, 'bottom');
+
+        if (filled($left) || filled($right) || filled($top) || filled($bottom)) {
+            return [
+                filled($right) ? $normalizeLabel(['right' => $right]) : (filled($top) ? $normalizeLabel(['top' => $top]) : null),
+                filled($left) ? $normalizeLabel(['left' => $left]) : (filled($bottom) ? $normalizeLabel(['bottom' => $bottom]) : null),
+            ];
+        }
+
+        $labels = data_get($entry, 'labels');
+        if (is_array($labels)) {
+            return [
+                $normalizeLabel(data_get($labels, 'right', data_get($labels, 'top', data_get($labels, 0)))),
+                $normalizeLabel(data_get($labels, 'left', data_get($labels, 'bottom', data_get($labels, 1)))),
+            ];
+        }
+
+        return [
+            $normalizeLabel(data_get($entry, 'labelA', data_get($entry, 'label', data_get($entry, 1)))),
+            $normalizeLabel(data_get($entry, 'labelB', data_get($entry, 2))),
+        ];
+    };
 
     $arcInStartAnchor = $isLeft ? 'e' : 'w';
     $arcInEndAnchor = 'n';
-    $connectorDirection = $isLeft ? 'right-left' : 'left-right';
+    $bridgeDirection = $isLeft ? 'right-left' : 'left-right';
     $arcOutStartAnchor = 's';
     $arcOutEndAnchor = $isLeft ? 'w' : 'e';
-    $arcDelta = $isLeft ? $neg($arcSize) : $arcSize;
-    $connectorDelta = $isLeft ? $neg($connectorLength) : $connectorLength;
+    $arcDelta = $isLeft ? $neg($resolvedArcSize) : $resolvedArcSize;
+    $bridgeDelta = $isLeft ? $neg($resolvedBridgeLength) : $resolvedBridgeLength;
 
     $arcInEnd = [
         'x' => $add($currentAnchor['x'], $arcDelta),
-        'y' => $add($currentAnchor['y'], $arcSize),
+        'y' => $add($currentAnchor['y'], $resolvedArcSize),
     ];
-    $connectorEnd = [
-        'x' => $add($arcInEnd['x'], $connectorDelta),
+    $bridgeEnd = [
+        'x' => $add($arcInEnd['x'], $bridgeDelta),
         'y' => $arcInEnd['y'],
     ];
     $arcOutEnd = [
-        'x' => $add($connectorEnd['x'], $arcDelta),
-        'y' => $add($connectorEnd['y'], $arcSize),
+        'x' => $add($bridgeEnd['x'], $arcDelta),
+        'y' => $add($bridgeEnd['y'], $resolvedArcSize),
     ];
-    $verticalEnd = [
-        'x' => $arcOutEnd['x'],
-        'y' => $add($arcOutEnd['y'], $verticalLength),
-    ];
+    $pathEndAnchor = $arcOutEnd;
+    $continuationEntries = is_array($continuationStem) ? $continuationStem : [];
+    if ($continuationEntries === [] && filled($stemHeight)) {
+        $continuationEntries = [1 => [$resolvedStemHeight]];
+    }
+    $continuationEntriesAreList = array_is_list($continuationEntries);
+    $continuationSegments = [];
+    $baseNodeCounterCount = 3; // arc.in, bridge, arc.out
+    $continuationCounter = $counter + $baseNodeCounterCount;
+
+    foreach ($continuationEntries as $continuationIndex => $continuationEntry) {
+        $continuationNumber = $continuationEntriesAreList ? ((int) $continuationIndex + 1) : (int) $continuationIndex;
+        $continuationLength = is_array($continuationEntry)
+            ? (string) (data_get($continuationEntry, 'length', data_get($continuationEntry, 0)) ?: $resolvedLineLength)
+            : (filled($continuationEntry) ? (string) $continuationEntry : $resolvedLineLength);
+        $continuationEnd = [
+            'x' => $pathEndAnchor['x'],
+            'y' => $add($pathEndAnchor['y'], $continuationLength),
+        ];
+        $continuationLabels = $continuationNodeLabels($continuationEntry);
+        $continuationNodeEnd = collect($continuationLabels)->filter(fn (mixed $label): bool => filled($label))->isNotEmpty()
+            ? $continuationLabels
+            : true;
+
+        $continuationSegments[] = [
+            'component' => 'path',
+            'segment' => [
+                'id' => $id . '.continuation.' . $continuationNumber,
+                'direction' => 'bottom-top',
+                'length' => $continuationLength,
+                'anchorStart' => $pathEndAnchor,
+                'anchorEnd' => $continuationEnd,
+                'nodeStart' => false,
+                'nodeEnd' => $continuationNodeEnd,
+                'devCounterEnd' => $continuationCounter++,
+                'devCounterColor' => $color,
+                'color' => $color,
+                'zIndex' => $zIndex,
+                'dev' => $dev,
+            ],
+        ];
+
+        $pathEndAnchor = $continuationEnd;
+    }
     $pathBoxPadding = '0.75rem';
-    $pathBoxX = $isLeft ? $verticalEnd['x'] : $currentAnchor['x'];
+    $pathBoxX = $isLeft ? $pathEndAnchor['x'] : $currentAnchor['x'];
     $pathBoxY = $currentAnchor['y'];
     $pathBoxWidth = $isLeft
-        ? 'calc(' . $currentAnchor['x'] . ' - ' . $verticalEnd['x'] . ')'
-        : 'calc(' . $verticalEnd['x'] . ' - ' . $currentAnchor['x'] . ')';
-    $pathBoxHeight = 'calc(' . $verticalEnd['y'] . ' - ' . $currentAnchor['y'] . ')';
+        ? 'calc(' . $currentAnchor['x'] . ' - ' . $pathEndAnchor['x'] . ')'
+        : 'calc(' . $pathEndAnchor['x'] . ' - ' . $currentAnchor['x'] . ')';
+    $pathBoxHeight = 'calc(' . $pathEndAnchor['y'] . ' - ' . $currentAnchor['y'] . ')';
 
     $segments = [
         [
@@ -92,11 +217,11 @@
         [
             'component' => 'path',
             'segment' => [
-                'id' => $id . '.connector',
-                'direction' => $connectorDirection,
-                'length' => $connectorLength,
+                'id' => $id . '.bridge',
+                'direction' => $bridgeDirection,
+                'length' => $resolvedBridgeLength,
                 'anchorStart' => $arcInEnd,
-                'anchorEnd' => $connectorEnd,
+                'anchorEnd' => $bridgeEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
@@ -112,10 +237,11 @@
                 'id' => $id . '.arc.out',
                 'startAnchor' => $arcOutStartAnchor,
                 'endAnchor' => $arcOutEndAnchor,
-                'anchorStart' => $connectorEnd,
+                'anchorStart' => $bridgeEnd,
                 'anchorEnd' => $arcOutEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
+                'endLabel' => $arcNodeLabel(3, 'top'),
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
                 'color' => $color,
@@ -123,23 +249,7 @@
                 'dev' => $dev,
             ],
         ],
-        [
-            'component' => 'path',
-            'segment' => [
-                'id' => $id . '.vertical',
-                'direction' => 'bottom-top',
-                'length' => $verticalLength,
-                'anchorStart' => $arcOutEnd,
-                'anchorEnd' => $verticalEnd,
-                'nodeStart' => false,
-                'nodeEnd' => true,
-                'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'color' => $color,
-                'zIndex' => $zIndex,
-                'dev' => $dev,
-            ],
-        ],
+        ...$continuationSegments,
     ];
 @endphp
 

@@ -21,7 +21,7 @@
             <flux:callout.heading>{{ __('Component chain') }}</flux:callout.heading>
             <flux:callout.text>
                 <span class="font-mono text-xs">
-                    {{ __('tw-graph->strangs.*->paths.*->segments.*->primitives.*') }}
+                    {{ __('tw-graph->strang.*->paths.*->segments.*->primitives.*') }}
                 </span>
             </flux:callout.text>
         </flux:callout>
@@ -56,6 +56,10 @@
             'nodeSize' => '0.95rem',
             'arcSize' => '2.75rem',
             'capLength' => '1.75rem',
+            'bridgeLength' => 'lineLength',
+            'stemHeight' => 'lineLength',
+            'connectorLength' => '2rem',
+            'connectorGap' => '0.25rem',
             'pathCount' => '10',
         ];
     @endphp
@@ -118,19 +122,115 @@
                 :graph-id="$twGraphAuthoringGraphId"
                 :dev="true"
             >
+                {{-- strang.trunk --}}
                 <x-translation-workbench::ui.tw-graph.strang.trunk
                     color="sky"
-                    :path-count="15"
+                    :path-count="11"
                     :start-label="['text' => ['Trunk', 'start']]"
                     :end-label="['text' => ['Trunk', 'end']]"
                     :pathLengths="[
-                        7 => '3rem',
-                        9 => '3rem',
-                        11 => '3rem',
+                        7 => '4rem',
+                        9 => '4rem',
+                        11 => '5rem',
                     ]"
                     :node-labels="[
                         3 => ['left' => 'left node', 'right' => 'right node'],
                         8 => ['right' => 'review point'],
+                    ]"
+                />
+                {{-- strang.merge-left --}}
+                <x-translation-workbench::ui.tw-graph.strang.merge-left
+                    color="amber"
+                    attach-to="strang.trunk.node.3"
+                    bridge-length="11rem"
+                    :node-labels="[
+                        1 => [
+                            'right' => ['merge', 'left start'],
+                            'connectorLength' => '4.5rem',
+                        ],
+                        5 => ['left' => ['trunk attach', 'strang.merge-left']],
+                    ]"
+                    {{-- strang.merge-left Extensions --}}
+                    :extension-count="2"
+                    :extension-bridge-lengths="[
+                        1 => '12rem',
+                        2 => '14rem',
+                    ]"
+                    :extension-stem-heights="[
+                        1 => '5rem',
+                        2 => '3.5rem',
+                    ]"
+                    :extension-node-labels="[
+                        1 => [
+                            1 => ['right' => ['left extension', 'start']],
+                            4 => ['top' => ['left extension', 'end']],
+                        ],
+                        2 => [
+                            1 => ['right' => ['left extension 2', 'start']],
+                            4 => ['top' => ['left extension 2', 'end']],
+                        ],
+                    ]"
+                >
+                </x-translation-workbench::ui.tw-graph.strang.merge-left>
+                {{-- merge-right --}}
+                <x-translation-workbench::ui.tw-graph.strang.merge-right
+                    color="green"
+                    attach-to="strang.trunk.node.3"
+                    bridge-length="10rem"
+                    stem-height="2rem"
+                    :node-labels="[
+                        1 => ['left' => 'merge right start'],
+                        5 => ['right' => ['trunk', 'attach']],
+                    ]"
+                    {{-- strang.merge-right Extensions --}}
+                    :extension-count="2"
+                    :extension-bridge-lengths="[
+                        1 => '12rem',
+                        2 => '14rem',
+                    ]"
+                    :extension-stem-heights="[
+                        2 => '3.5rem',
+                    ]"
+                    :extension-node-labels="[
+                        1 => [
+                            1 => ['left' => ['right extension', 'start']],
+                            4 => ['top' => ['right extension', 'end']],
+                        ],
+                        2 => [
+                            1 => ['left' => ['right extension 2', 'start']],
+                            4 => ['top' => ['right extension 2', 'end']],
+                        ],
+                    ]"
+                >
+                </x-translation-workbench::ui.tw-graph.strang.merge-right>
+                {{-- strang.branch-left --}}
+                <x-translation-workbench::ui.tw-graph.strang.branch-left
+                    color="fuchsia"
+                    attach-to="strang.trunk.node.5"
+                    bridge-length="8rem"
+                    :node-labels="[
+                        3 => ['left' => ['branch left', 'node 3']],
+                    ]"
+                    :continuation-stem="[
+                        1 => ['4rem', 'left' => 'branch left', 'continuation'],
+                        2 => ['3rem'],
+                        3 => ['3rem'],
+                        4 => ['3rem'],
+                        5 => ['3rem'],
+                        6 => ['5rem', 'left' => ['Left label', '2te Zeile'], 'right' => 'Right label'],
+                    ]"
+                />
+                {{-- strang.branch-right --}}
+                <x-translation-workbench::ui.tw-graph.strang.branch-right
+                    color="violet"
+                    attach-to="strang.trunk.node.6"
+                    bridge-length="8rem"
+                    :node-labels="[
+                        3 => ['right' => ['branch right', 'node 3']],
+                    ]"
+                    :continuation-stem="[
+                        1 => ['4rem'],
+                        2 => ['3rem'],
                     ]"
                 />
             </x-translation-workbench::ui.tw-graph>

@@ -1,4 +1,4 @@
-{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph-protocol/paths/merge-extension.blade.php --}}
+{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/paths/merge-extension.blade.php --}}
 {{--
     Path: merge-extension
 
@@ -7,8 +7,9 @@
         side="left"
         :anchor-start="['x' => '0rem', 'y' => '0rem']"
         start-length="2rem"
-        connector-length="3rem"
-        :labels="['connectorEnd' => [['text' => 'Root #1', 'side' => 'top'], null]]"
+        stem-height="2rem"
+        bridge-length="3rem"
+        :node-labels="[4 => ['top' => 'Root #1']]"
     />
 
     Path role:
@@ -22,13 +23,16 @@
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'startLength' => null,
+    'lineLength' => '4rem',
     'arcSize' => '2.75rem',
-    'verticalLength' => '2rem',
-    'connectorLength' => '3rem',
-    'labels' => [],
+    'stemHeight' => null,
+    'bridgeLength' => null,
+    'nodeLabels' => [],
     'color' => 'sky',
+    'zIndex' => null,
     'counterStart' => 1,
     'dev' => false,
+    'showDevBox' => true,
 ])
 
 @php
@@ -40,75 +44,98 @@
     ];
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
+    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
+    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($arcSize ?? null, '2.75rem');
+    $resolvedStemHeight = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemHeight, $resolvedLineLength, '4rem');
+    $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, $resolvedLineLength, '4rem');
 
     $arcStartAnchor = $isLeft ? 'w' : 'e';
     $arcEndAnchor = 'n';
-    $connectorDirection = $isLeft ? 'left-right' : 'right-left';
-    $arcDelta = $isLeft ? $arcSize : $neg($arcSize);
-    $connectorDelta = $isLeft ? $connectorLength : $neg($connectorLength);
-    $startLength = $startLength ?? $arcSize;
+    $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
+    $arcDelta = $isLeft ? $resolvedArcSize : $neg($resolvedArcSize);
+    $bridgeDelta = $isLeft ? $resolvedBridgeLength : $neg($resolvedBridgeLength);
+    $startLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedArcSize, '2.75rem');
     $startEnd = [
         'x' => $currentAnchor['x'],
         'y' => $add($currentAnchor['y'], $startLength),
     ];
-    $verticalEnd = [
+    $stemEnd = [
         'x' => $startEnd['x'],
-        'y' => $add($startEnd['y'], $verticalLength),
+        'y' => $add($startEnd['y'], $resolvedStemHeight),
     ];
     $arcEnd = [
-        'x' => $add($verticalEnd['x'], $arcDelta),
-        'y' => $add($verticalEnd['y'], $arcSize),
+        'x' => $add($stemEnd['x'], $arcDelta),
+        'y' => $add($stemEnd['y'], $resolvedArcSize),
     ];
-    $connectorEnd = [
-        'x' => $add($arcEnd['x'], $connectorDelta),
+    $bridgeEnd = [
+        'x' => $add($arcEnd['x'], $bridgeDelta),
         'y' => $arcEnd['y'],
     ];
     $pathBoxPadding = '0.75rem';
-    $pathBoxX = $isLeft ? $currentAnchor['x'] : $connectorEnd['x'];
+    $pathBoxX = $isLeft ? $currentAnchor['x'] : $bridgeEnd['x'];
     $pathBoxY = $currentAnchor['y'];
     $pathBoxWidth = $isLeft
-        ? 'calc(' . $connectorEnd['x'] . ' - ' . $currentAnchor['x'] . ')'
-        : 'calc(' . $currentAnchor['x'] . ' - ' . $connectorEnd['x'] . ')';
-    $pathBoxHeight = 'calc(' . $connectorEnd['y'] . ' - ' . $currentAnchor['y'] . ')';
-    $labelSlots = function (string $key, mixed $default = true) use ($labels): mixed {
-        $label = data_get($labels, $key);
-
-        if (blank($label)) {
-            return $default;
-        }
-
-        if (is_array($label) && array_key_exists('text', $label)) {
-            return [$label, null];
-        }
-
-        return $label;
-    };
-    $singleLabel = function (string $key) use ($labels): ?array {
-        $label = data_get($labels, $key);
-
+        ? 'calc(' . $bridgeEnd['x'] . ' - ' . $currentAnchor['x'] . ')'
+        : 'calc(' . $currentAnchor['x'] . ' - ' . $bridgeEnd['x'] . ')';
+    $pathBoxHeight = 'calc(' . $bridgeEnd['y'] . ' - ' . $currentAnchor['y'] . ')';
+    $normalizeLabel = function (mixed $label, ?string $side = null) use ($color): ?array {
         if (blank($label)) {
             return null;
         }
 
-        if (is_array($label) && array_key_exists('text', $label)) {
-            return $label;
-        }
-
         if (is_array($label)) {
-            return collect($label)
-                ->filter()
-                ->first();
+            $text = data_get($label, 'text');
+            $left = data_get($label, 'left');
+            $right = data_get($label, 'right');
+            $top = data_get($label, 'top');
+            $bottom = data_get($label, 'bottom');
+
+            if (filled($left)) {
+                $text = $left;
+                $side = 'left';
+            } elseif (filled($right)) {
+                $text = $right;
+                $side = 'right';
+            } elseif (filled($top)) {
+                $text = $top;
+                $side = 'top';
+            } elseif (filled($bottom)) {
+                $text = $bottom;
+                $side = 'bottom';
+            }
+
+            if (blank($text)) {
+                return null;
+            }
+
+            return array_replace([
+                'text' => $text,
+                'side' => $side,
+                'badgeColor' => $color,
+            ], collect($label)->except(['left', 'right', 'top', 'bottom'])->all());
         }
 
-        return ['text' => $label];
+        return [
+            'text' => $label,
+            'side' => $side,
+            'badgeColor' => $color,
+        ];
     };
-    $startLabel = $singleLabel('start') ?? [
+    $pathNodeLabels = function (int $nodeNumber, string $defaultSide) use ($nodeLabels, $normalizeLabel): mixed {
+        $label = $normalizeLabel(data_get($nodeLabels, $nodeNumber), $defaultSide);
+
+        return $label ? [$label, null] : true;
+    };
+    $arcNodeLabel = fn (int $nodeNumber, string $defaultSide): ?array => $normalizeLabel(
+        data_get($nodeLabels, $nodeNumber),
+        $defaultSide,
+    );
+    $startLabel = $normalizeLabel(data_get($nodeLabels, 'start'), 'bottom') ?? [
         'text' => ['Merge extension', 'start'],
         'side' => 'bottom',
         'offset' => '0.75rem',
         'badgeColor' => $color,
     ];
-    $arcEndLabel = $singleLabel('arcEnd');
 
     $segments = [
         [
@@ -119,27 +146,29 @@
                 'length' => $startLength,
                 'anchorStart' => $currentAnchor,
                 'anchorEnd' => $startEnd,
-                'nodeEnd' => true,
+                'nodeEnd' => $pathNodeLabels(1, $isLeft ? 'right' : 'left'),
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
                 'startLabel' => $startLabel,
                 'color' => $color,
+                'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
         ],
         [
             'component' => 'path',
             'segment' => [
-                'id' => $id . '.vertical',
+                'id' => $id . '.stem',
                 'direction' => 'bottom-top',
-                'length' => $verticalLength,
+                'length' => $resolvedStemHeight,
                 'anchorStart' => $startEnd,
-                'anchorEnd' => $verticalEnd,
+                'anchorEnd' => $stemEnd,
                 'nodeStart' => false,
-                'nodeEnd' => $labelSlots('verticalEnd'),
+                'nodeEnd' => $pathNodeLabels(2, $isLeft ? 'right' : 'left'),
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
                 'color' => $color,
+                'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
         ],
@@ -149,46 +178,50 @@
                 'id' => $id . '.arc',
                 'startAnchor' => $arcStartAnchor,
                 'endAnchor' => $arcEndAnchor,
-                'anchorStart' => $verticalEnd,
+                'anchorStart' => $stemEnd,
                 'anchorEnd' => $arcEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
-                'endLabel' => $arcEndLabel,
+                'endLabel' => $arcNodeLabel(3, 'top'),
                 'color' => $color,
+                'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
         ],
         [
             'component' => 'path',
             'segment' => [
-                'id' => $id . '.connector',
-                'direction' => $connectorDirection,
-                'length' => $connectorLength,
+                'id' => $id . '.bridge',
+                'direction' => $bridgeDirection,
+                'length' => $resolvedBridgeLength,
                 'anchorStart' => $arcEnd,
-                'anchorEnd' => $connectorEnd,
+                'anchorEnd' => $bridgeEnd,
                 'nodeStart' => false,
-                'nodeEnd' => $labelSlots('connectorEnd'),
+                'nodeEnd' => $pathNodeLabels(4, 'top'),
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
                 'color' => $color,
+                'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
         ],
     ];
 @endphp
 
-<x-translation-workbench::ui.tw-graph.dev-box
-    :id="$id . '.dev-box'"
-    :x="'calc(' . $pathBoxX . ' - ' . $pathBoxPadding . ')'"
-    :y="'calc(' . $pathBoxY . ' - ' . $pathBoxPadding . ')'"
-    :width="'calc(' . $pathBoxWidth . ' + (' . $pathBoxPadding . ' * 2))'"
-    :height="'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2))'"
-    color="amber"
-    :label="$id"
-    :dev="$dev"
-/>
+@if ($showDevBox)
+    <x-translation-workbench::ui.tw-graph.dev-box
+        :id="$id . '.dev-box'"
+        :x="'calc(' . $pathBoxX . ' - ' . $pathBoxPadding . ')'"
+        :y="'calc(' . $pathBoxY . ' - ' . $pathBoxPadding . ')'"
+        :width="'calc(' . $pathBoxWidth . ' + (' . $pathBoxPadding . ' * 2))'"
+        :height="'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2))'"
+        color="amber"
+        :label="$id"
+        :dev="$dev"
+    />
+@endif
 
 @foreach ($segments as $segment)
     @if ($segment['component'] === 'start')

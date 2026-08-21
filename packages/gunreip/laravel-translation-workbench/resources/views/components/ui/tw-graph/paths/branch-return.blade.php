@@ -7,7 +7,7 @@
         side="left"
         :anchor-start="['x' => '0rem', 'y' => '0rem']"
         vertical-length="2rem"
-        connector-length="3rem"
+        bridge-length="3rem"
     />
 
     Path role:
@@ -22,7 +22,7 @@
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcSize' => '2.75rem',
     'verticalLength' => '2rem',
-    'connectorLength' => '3rem',
+    'bridgeLength' => '3rem',
     'color' => 'orange',
     'zIndex' => null,
     'counterStart' => 1,
@@ -41,11 +41,11 @@
 
     $arcInStartAnchor = $isLeft ? 'w' : 'e';
     $arcInEndAnchor = 'n';
-    $connectorDirection = $isLeft ? 'left-right' : 'right-left';
+    $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
     $arcOutStartAnchor = 's';
     $arcOutEndAnchor = $isLeft ? 'e' : 'w';
     $arcDelta = $isLeft ? $arcSize : $neg($arcSize);
-    $connectorDelta = $isLeft ? $connectorLength : $neg($connectorLength);
+    $bridgeDelta = $isLeft ? $bridgeLength : $neg($bridgeLength);
 
     $verticalEnd = [
         'x' => $currentAnchor['x'],
@@ -55,13 +55,13 @@
         'x' => $add($verticalEnd['x'], $arcDelta),
         'y' => $add($verticalEnd['y'], $arcSize),
     ];
-    $connectorEnd = [
-        'x' => $add($arcInEnd['x'], $connectorDelta),
+    $bridgeEnd = [
+        'x' => $add($arcInEnd['x'], $bridgeDelta),
         'y' => $arcInEnd['y'],
     ];
     $arcOutEnd = [
-        'x' => $add($connectorEnd['x'], $arcDelta),
-        'y' => $add($connectorEnd['y'], $arcSize),
+        'x' => $add($bridgeEnd['x'], $arcDelta),
+        'y' => $add($bridgeEnd['y'], $arcSize),
     ];
     $pathBoxPadding = '0.75rem';
     $pathBoxX = $isLeft ? $currentAnchor['x'] : $arcOutEnd['x'];
@@ -109,11 +109,11 @@
         [
             'component' => 'path',
             'segment' => [
-                'id' => $id . '.connector',
-                'direction' => $connectorDirection,
-                'length' => $connectorLength,
+                'id' => $id . '.bridge',
+                'direction' => $bridgeDirection,
+                'length' => $bridgeLength,
                 'anchorStart' => $arcInEnd,
-                'anchorEnd' => $connectorEnd,
+                'anchorEnd' => $bridgeEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
@@ -129,7 +129,7 @@
                 'id' => $id . '.arc.out',
                 'startAnchor' => $arcOutStartAnchor,
                 'endAnchor' => $arcOutEndAnchor,
-                'anchorStart' => $connectorEnd,
+                'anchorStart' => $bridgeEnd,
                 'anchorEnd' => $arcOutEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,

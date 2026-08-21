@@ -6,7 +6,7 @@
     <x-translation-workbench::ui.tw-graph.paths.branch-extension
         side="left"
         :anchor-start="['x' => '0rem', 'y' => '0rem']"
-        connector-length="3rem"
+        bridge-length="3rem"
         vertical-length="2rem"
     />
 
@@ -21,7 +21,7 @@
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcSize' => '2.75rem',
-    'connectorLength' => '3rem',
+    'bridgeLength' => '3rem',
     'verticalLength' => '2rem',
     'color' => 'rose',
     'zIndex' => null,
@@ -39,19 +39,19 @@
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
 
-    $connectorDirection = $isLeft ? 'right-left' : 'left-right';
+    $bridgeDirection = $isLeft ? 'right-left' : 'left-right';
     $arcStartAnchor = 's';
     $arcEndAnchor = $isLeft ? 'w' : 'e';
-    $connectorDelta = $isLeft ? $neg($connectorLength) : $connectorLength;
+    $bridgeDelta = $isLeft ? $neg($bridgeLength) : $bridgeLength;
     $arcDelta = $isLeft ? $neg($arcSize) : $arcSize;
 
-    $connectorEnd = [
-        'x' => $add($currentAnchor['x'], $connectorDelta),
+    $bridgeEnd = [
+        'x' => $add($currentAnchor['x'], $bridgeDelta),
         'y' => $currentAnchor['y'],
     ];
     $arcEnd = [
-        'x' => $add($connectorEnd['x'], $arcDelta),
-        'y' => $add($connectorEnd['y'], $arcSize),
+        'x' => $add($bridgeEnd['x'], $arcDelta),
+        'y' => $add($bridgeEnd['y'], $arcSize),
     ];
     $verticalEnd = [
         'x' => $arcEnd['x'],
@@ -69,11 +69,11 @@
         [
             'component' => 'path',
             'segment' => [
-                'id' => $id . '.connector',
-                'direction' => $connectorDirection,
-                'length' => $connectorLength,
+                'id' => $id . '.bridge',
+                'direction' => $bridgeDirection,
+                'length' => $bridgeLength,
                 'anchorStart' => $currentAnchor,
-                'anchorEnd' => $connectorEnd,
+                'anchorEnd' => $bridgeEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
@@ -89,7 +89,7 @@
                 'id' => $id . '.arc',
                 'startAnchor' => $arcStartAnchor,
                 'endAnchor' => $arcEndAnchor,
-                'anchorStart' => $connectorEnd,
+                'anchorStart' => $bridgeEnd,
                 'anchorEnd' => $arcEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
