@@ -163,6 +163,8 @@
             'x' => $pathEndAnchor['x'],
             'y' => $add($pathEndAnchor['y'], $continuationLength),
         ];
+        $continuationId = $id . '.continuation.' . $continuationNumber;
+
         $continuationLabels = $continuationNodeLabels($continuationEntry);
         $continuationNodeEnd = collect($continuationLabels)->filter(fn (mixed $label): bool => filled($label))->isNotEmpty()
             ? $continuationLabels
@@ -171,7 +173,7 @@
         $continuationSegments[] = [
             'component' => 'path',
             'segment' => [
-                'id' => $id . '.continuation.' . $continuationNumber,
+                'id' => $continuationId,
                 'direction' => 'bottom-top',
                 'length' => $continuationLength,
                 'anchorStart' => $pathEndAnchor,

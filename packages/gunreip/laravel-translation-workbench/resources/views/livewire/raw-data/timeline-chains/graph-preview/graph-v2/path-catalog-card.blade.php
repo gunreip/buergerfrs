@@ -38,7 +38,7 @@
             {{-- Component Calls / Props --}}
             @switch($row['view'])
                 @case('path-trunk-bottom-top')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.trunk
+                    <x-translation-workbench::ui.tw-graph.paths.trunk
                         id="catalog.path.trunk.bottom-top"
                         direction="bottom-top"
                         :anchor-start="['x' => '0rem', 'y' => '0.75rem']"
@@ -51,7 +51,7 @@
                 @break
 
                 @case('path-trunk-left-right')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.trunk
+                    <x-translation-workbench::ui.tw-graph.paths.trunk
                         id="catalog.path.trunk.left-right"
                         direction="left-right"
                         :anchor-start="['x' => '-7rem', 'y' => '4.75rem']"
@@ -68,7 +68,7 @@
                 @break
 
                 @case('path-merge-left')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.merge
+                    <x-translation-workbench::ui.tw-graph.paths.merge
                         id="catalog.path.merge.left"
                         side="left"
                         :anchor-start="['x' => '-8.5rem', 'y' => '0.75rem']"
@@ -81,7 +81,7 @@
                 @break
 
                 @case('path-merge-right')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.merge
+                    <x-translation-workbench::ui.tw-graph.paths.merge
                         id="catalog.path.merge.right"
                         side="right"
                         :anchor-start="['x' => '8.5rem', 'y' => '0.75rem']"
@@ -94,7 +94,7 @@
                 @break
 
                 @case('path-merge-extension-left')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.merge-extension
+                    <x-translation-workbench::ui.tw-graph.paths.merge-extension
                         id="catalog.path.merge-extension.left"
                         side="left"
                         :anchor-start="['x' => '-7rem', 'y' => '0.75rem']"
@@ -107,7 +107,7 @@
                 @break
 
                 @case('path-merge-extension-right')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.merge-extension
+                    <x-translation-workbench::ui.tw-graph.paths.merge-extension
                         id="catalog.path.merge-extension.right"
                         side="right"
                         :anchor-start="['x' => '7rem', 'y' => '0.75rem']"
@@ -120,7 +120,7 @@
                 @break
 
                 @case('path-branch-left')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.branch
+                    <x-translation-workbench::ui.tw-graph.paths.branch
                         id="catalog.path.branch.left"
                         side="left"
                         :anchor-start="['x' => '7rem', 'y' => '0.75rem']"
@@ -132,7 +132,7 @@
                 @break
 
                 @case('path-branch-right')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.branch
+                    <x-translation-workbench::ui.tw-graph.paths.branch
                         id="catalog.path.branch.right"
                         side="right"
                         :anchor-start="['x' => '-7rem', 'y' => '0.75rem']"
@@ -144,7 +144,7 @@
                 @break
 
                 @case('path-branch-extension-left')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.branch-extension
+                    <x-translation-workbench::ui.tw-graph.paths.branch-extension
                         id="catalog.path.branch-extension.left"
                         side="left"
                         :anchor-start="['x' => '6rem', 'y' => '2rem']"
@@ -156,7 +156,7 @@
                 @break
 
                 @case('path-branch-extension-right')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.branch-extension
+                    <x-translation-workbench::ui.tw-graph.paths.branch-extension
                         id="catalog.path.branch-extension.right"
                         side="right"
                         :anchor-start="['x' => '-6rem', 'y' => '2rem']"
@@ -168,7 +168,7 @@
                 @break
 
                 @case('path-branch-return-left')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.branch-return
+                    <x-translation-workbench::ui.tw-graph.paths.branch-return
                         id="catalog.path.branch-return.left"
                         side="left"
                         :anchor-start="['x' => '-7rem', 'y' => '0.75rem']"
@@ -180,7 +180,7 @@
                 @break
 
                 @case('path-branch-return-right')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.branch-return
+                    <x-translation-workbench::ui.tw-graph.paths.branch-return
                         id="catalog.path.branch-return.right"
                         side="right"
                         :anchor-start="['x' => '7rem', 'y' => '0.75rem']"
@@ -192,7 +192,7 @@
                 @break
 
                 @case('path-branch-return-extension-left')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.branch-return-extension
+                    <x-translation-workbench::ui.tw-graph.paths.branch-return-extension
                         id="catalog.path.branch-return-extension.left"
                         side="left"
                         :anchor-start="['x' => '-6rem', 'y' => '0.75rem']"
@@ -204,7 +204,7 @@
                 @break
 
                 @case('path-branch-return-extension-right')
-                    <x-translation-workbench::ui.tw-graph-protocol.paths.branch-return-extension
+                    <x-translation-workbench::ui.tw-graph.paths.branch-return-extension
                         id="catalog.path.branch-return-extension.right"
                         side="right"
                         :anchor-start="['x' => '6rem', 'y' => '0.75rem']"

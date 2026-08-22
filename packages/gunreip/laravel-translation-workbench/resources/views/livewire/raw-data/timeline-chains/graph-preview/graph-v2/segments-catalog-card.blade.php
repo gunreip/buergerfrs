@@ -33,64 +33,64 @@
         >
             @switch($row['view'])
                 @case('path')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.path :segment="$pathSegment" />
+                    <x-translation-workbench::ui.tw-graph.segments.path :segment="$pathSegment" />
                 @break
 
                 @case('path-top-bottom')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.path :segment="$pathSegmentTopBottom" />
+                    <x-translation-workbench::ui.tw-graph.segments.path :segment="$pathSegmentTopBottom" />
                 @break
 
                 @case('start')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.start :segment="$startSegment" />
+                    <x-translation-workbench::ui.tw-graph.segments.start :segment="$startSegment" />
                 @break
 
                 @case('start-right-left')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.start :segment="$startSegmentRightLeft" />
+                    <x-translation-workbench::ui.tw-graph.segments.start :segment="$startSegmentRightLeft" />
                 @break
 
                 @case('end')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.end :segment="$endSegment" />
+                    <x-translation-workbench::ui.tw-graph.segments.end :segment="$endSegment" />
                 @break
 
                 @case('end-left-right')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.end :segment="$endSegmentLeftRight" />
+                    <x-translation-workbench::ui.tw-graph.segments.end :segment="$endSegmentLeftRight" />
                 @break
 
                 @case('arc-north-west')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.arc :segment="$arcNorthWestSegment" />
+                    <x-translation-workbench::ui.tw-graph.segments.arc :segment="$arcNorthWestSegment" />
                 @break
 
                 @case('arc-west-north')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.arc :segment="$arcWestNorthSegment" />
+                    <x-translation-workbench::ui.tw-graph.segments.arc :segment="$arcWestNorthSegment" />
                 @break
 
                 @case('arc-north-east')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.arc :segment="$arcNorthEastSegment" />
+                    <x-translation-workbench::ui.tw-graph.segments.arc :segment="$arcNorthEastSegment" />
                 @break
 
                 @case('arc-east-north')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.arc :segment="$arcEastNorthSegment" />
+                    <x-translation-workbench::ui.tw-graph.segments.arc :segment="$arcEastNorthSegment" />
                 @break
 
                 @case('arc-west-south')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.arc :segment="$arcWestSouthSegment" />
+                    <x-translation-workbench::ui.tw-graph.segments.arc :segment="$arcWestSouthSegment" />
                 @break
 
                 @case('arc-south-west')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.arc :segment="$arcSouthWestSegment" />
+                    <x-translation-workbench::ui.tw-graph.segments.arc :segment="$arcSouthWestSegment" />
                 @break
 
                 @case('arc-east-south')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.arc :segment="$arcEastSouthSegment" />
+                    <x-translation-workbench::ui.tw-graph.segments.arc :segment="$arcEastSouthSegment" />
                 @break
 
                 @case('arc-south-east')
-                    <x-translation-workbench::ui.tw-graph-protocol.segments.arc :segment="$arcSouthEastSegment" />
+                    <x-translation-workbench::ui.tw-graph.segments.arc :segment="$arcSouthEastSegment" />
                 @break
 
                 @case('label')
                     @foreach ($packageLabelDirections as $directionLabel)
-                        <x-translation-workbench::ui.tw-graph-protocol.segments.label
+                        <x-translation-workbench::ui.tw-graph.segments.label
                             :id="$directionLabel['id']"
                             :label="$directionLabel"
                             anchor-x="0rem"
@@ -99,7 +99,7 @@
                             :color="$directionLabel['color']"
                         />
                     @endforeach
-                    <x-translation-workbench::ui.tw-graph-protocol.primitives.line
+                    <x-translation-workbench::ui.tw-graph.primitives.line
                         id="catalog.segment.label.anchor"
                         direction="bottom-top"
                         length="0.1rem"

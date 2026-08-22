@@ -114,11 +114,11 @@
         </div>
 
         <div
-            class="mt-4 overflow-x-auto overflow-y-visible pb-10"
+            class="my-4 overflow-x-auto overflow-y-clip"
             x-bind:class="{ 'tw-graph-protocol-dev-disabled': !twGraphAuthoringDev }"
         >
             <x-translation-workbench::ui.tw-graph
-                class="mb-8 mt-8 rounded-lg border border-zinc-300 pb-10 dark:border-zinc-700"
+                class="rounded-lg border border-zinc-300 py-12 dark:border-zinc-700"
                 :graph-id="$twGraphAuthoringGraphId"
                 :dev="true"
             >
@@ -214,10 +214,65 @@
                     :continuation-stem="[
                         1 => ['4rem', 'left' => 'branch left', 'continuation'],
                         2 => ['3rem'],
-                        3 => ['3rem'],
-                        4 => ['3rem'],
-                        5 => ['3rem'],
-                        6 => ['5rem', 'left' => ['Left label', '2te Zeile'], 'right' => 'Right label'],
+                        3 => ['6rem', 'left' => ['Left label', '2te Zeile'], 'right' => 'Right label'],
+                        4 => ['6rem'],
+                        5 => ['5rem'],
+                        // 6 => ['8rem'],
+                        // 7 => ['8rem'],
+                        // 8 => ['8rem'],
+                        // 9 => ['8rem'],
+                        // 10 => ['8rem'],
+                        // 11 => ['8rem'],
+                        // 12 => ['8rem'],
+                    ]"
+                    :branch-extension="[
+                        'node.2' => [
+                            1 => [
+                                'bridgeLength' => '35rem',
+                                'stemHeight' => '13rem',
+                                'color' => 'cyan',
+                            ],
+                        ],
+                        'continuation.1' => [
+                            1 => [
+                                'bridgeLength' => '10rem',
+                                'stemHeight' => '4rem',
+                                'color' => 'rose',
+                            ],
+                            2 => [
+                                'bridgeLength' => '9rem',
+                                'stemHeight' => '9rem',
+                                'color' => 'blue',
+                            ],
+                        ],
+                    ]"
+                    :branch-return="[
+                        1 => [
+                            'attachTo' => 'continuation.3',
+                            'bridgeLength' => '8rem',
+                            'color' => 'orange',
+                        ],
+                        2 => [
+                            'attachTo' => 'extension.2.stem.end',
+                            'bridgeLength' => '10rem',
+                            'color' => 'red',
+                        ],
+                        3 => [
+                            'attachTo' => 'extension.3.stem.end',
+                            'bridgeLength' => '19rem',
+                            'color' => 'blue',
+                        ],
+                        4 => [
+                            // DEV: intentionally invalid attach target to verify the visible fallback marker.
+                            'attachTo' => 'extension.99.stem.end',
+                            'bridgeLength' => '6rem',
+                            'color' => 'red',
+                        ],
+                        5 => [
+                            'attachTo' => 'extension.1.stem.end',
+                            'bridgeLength' => '5rem',
+                            'color' => 'cyan',
+                        ],
                     ]"
                 />
                 {{-- strang.branch-right --}}
@@ -230,7 +285,31 @@
                     ]"
                     :continuation-stem="[
                         1 => ['4rem'],
-                        2 => ['3rem'],
+                        2 => ['5rem'],
+                        3 => ['5rem'],
+                        // 4 => ['12rem'],
+                        // 5 => ['12rem'],
+                        // 6 => ['12rem'],
+                        // 7 => ['12rem'],
+                        // 8 => ['12rem'],
+                        // 9 => ['12rem'],
+                        // 10 => ['12rem'],
+                    ]"
+                    :branch-extension="[
+                        'continuation.1' => [
+                            1 => [
+                                'bridgeLength' => '11rem',
+                                'stemHeight' => '4rem',
+                                'color' => 'emerald',
+                            ],
+                        ],
+                    ]"
+                    :branch-return="[
+                        1 => [
+                            'attachTo' => 'continuation.3',
+                            'bridgeLength' => '8rem',
+                            'color' => 'violet',
+                        ],
                     ]"
                 />
             </x-translation-workbench::ui.tw-graph>

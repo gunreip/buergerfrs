@@ -31,10 +31,12 @@
     'label' => null,
     'dev' => false,
     'metricsScope' => null,
+    'metricsSide' => null,
 ])
 
 @php
     $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '14 165 233');
+    $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($label ?? $id);
 
     if ($dev && filled($graphId ?? null) && $metricsScope === 'canvas') {
         \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
@@ -44,6 +46,7 @@
             (string) $y,
             (string) $width,
             (string) $height,
+            filled($metricsSide) ? (string) $metricsSide : null,
         );
     }
 @endphp
@@ -58,7 +61,7 @@
             height: {{ $height }};
             border-color: rgb({{ $colorRgb }} / 0.35);
         "
-        title="{{ $label ?? $id }}"
+        title="{{ $devIdentifier }}"
     >
         <span
             class="absolute left-1 top-0 -translate-y-full rounded-sm px-1 py-0.5 font-mono text-[0.6rem] leading-none opacity-0 transition-opacity group-hover:opacity-100"
@@ -67,7 +70,7 @@
                 color: rgb(24 24 27);
             "
         >
-            {{ $label ?? $id }}
+            {{ $devIdentifier }}
         </span>
     </span>
 @endif

@@ -29,6 +29,7 @@
     'endY' => '0rem',
     'nodeStart' => false,
     'nodeEnd' => false,
+    'dashed' => false,
     'color' => 'cyan',
     'zIndex' => null,
 ])
@@ -64,6 +65,9 @@
         default => $endY,
     };
     $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '6 182 212');
+    $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id);
+    $devNodeStartIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id . '.node.start');
+    $devNodeEndIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id . '.node.end');
 @endphp
 
 <span
@@ -71,6 +75,7 @@
         'tw-graph-protocol-primitive',
         'tw-graph-protocol-primitive-arc',
         'tw-graph-protocol-primitive-arc-' . $corner,
+        'tw-graph-protocol-primitive-arc-dashed' => (bool) $dashed,
     ])->style([
         '--tw-graph-protocol-start-x: ' . $styleStartX,
         '--tw-graph-protocol-start-y: ' . $styleStartY,
@@ -79,8 +84,8 @@
         '--tw-graph-protocol-local-color-rgb: ' . $colorRgb,
         '--tw-graph-protocol-z-index: ' . $zIndex => filled($zIndex),
     ]) }}
-    title="{{ $id }} | arc {{ $startAnchor }}-{{ $endAnchor }}"
-    data-tw-graph-path="{{ $id }}"
+    title="{{ $devIdentifier }}"
+    data-tw-graph-path="{{ $devIdentifier }}"
     x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
 ></span>
 
@@ -95,8 +100,8 @@
                 --tw-graph-protocol-z-index: {{ $zIndex }};
             @endif
         "
-        title="{{ $id }} | nodeStart"
-        data-tw-graph-path="{{ $id }}.node.start"
+        title="{{ $devNodeStartIdentifier }}"
+        data-tw-graph-path="{{ $devNodeStartIdentifier }}"
         x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
     ></span>
 @endif
@@ -112,8 +117,8 @@
                 --tw-graph-protocol-z-index: {{ $zIndex }};
             @endif
         "
-        title="{{ $id }} | nodeEnd"
-        data-tw-graph-path="{{ $id }}.node.end"
+        title="{{ $devNodeEndIdentifier }}"
+        data-tw-graph-path="{{ $devNodeEndIdentifier }}"
         x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
     ></span>
 @endif

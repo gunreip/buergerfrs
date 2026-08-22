@@ -6,14 +6,13 @@
     <x-translation-workbench::ui.tw-graph.paths.branch-return
         side="left"
         :anchor-start="['x' => '0rem', 'y' => '0rem']"
-        vertical-length="2rem"
         bridge-length="3rem"
     />
 
     Path role:
     Branch-return routes an outbound branch chain back toward the trunk:
-    left:  segments.path bottom-top -> segments.arc west-north -> segments.path left-right -> segments.arc south-east
-    right: segments.path bottom-top -> segments.arc east-north -> segments.path right-left -> segments.arc south-west
+    left:  segments.arc west-north -> segments.path left-right -> segments.arc south-east
+    right: segments.arc east-north -> segments.path right-left -> segments.arc south-west
 --}}
 
 @props([
@@ -21,11 +20,11 @@
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcSize' => '2.75rem',
-    'verticalLength' => '2rem',
     'bridgeLength' => '3rem',
     'color' => 'orange',
     'zIndex' => null,
     'counterStart' => 1,
+    'fallbackUsed' => false,
     'dev' => false,
 ])
 
@@ -47,13 +46,9 @@
     $arcDelta = $isLeft ? $arcSize : $neg($arcSize);
     $bridgeDelta = $isLeft ? $bridgeLength : $neg($bridgeLength);
 
-    $verticalEnd = [
-        'x' => $currentAnchor['x'],
-        'y' => $add($currentAnchor['y'], $verticalLength),
-    ];
     $arcInEnd = [
-        'x' => $add($verticalEnd['x'], $arcDelta),
-        'y' => $add($verticalEnd['y'], $arcSize),
+        'x' => $add($currentAnchor['x'], $arcDelta),
+        'y' => $add($currentAnchor['y'], $arcSize),
     ];
     $bridgeEnd = [
         'x' => $add($arcInEnd['x'], $bridgeDelta),
@@ -73,34 +68,18 @@
 
     $segments = [
         [
-            'component' => 'path',
-            'segment' => [
-                'id' => $id . '.vertical',
-                'direction' => 'bottom-top',
-                'length' => $verticalLength,
-                'anchorStart' => $currentAnchor,
-                'anchorEnd' => $verticalEnd,
-                'nodeStart' => false,
-                'nodeEnd' => true,
-                'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'color' => $color,
-                'zIndex' => $zIndex,
-                'dev' => $dev,
-            ],
-        ],
-        [
             'component' => 'arc',
             'segment' => [
                 'id' => $id . '.arc.in',
                 'startAnchor' => $arcInStartAnchor,
                 'endAnchor' => $arcInEndAnchor,
-                'anchorStart' => $verticalEnd,
+                'anchorStart' => $currentAnchor,
                 'anchorEnd' => $arcInEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
+                'dashed' => $fallbackUsed,
                 'color' => $color,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
@@ -118,6 +97,7 @@
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
+                'dashed' => $fallbackUsed,
                 'color' => $color,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
@@ -135,6 +115,7 @@
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
+                'dashed' => $fallbackUsed,
                 'color' => $color,
                 'zIndex' => $zIndex,
                 'dev' => $dev,

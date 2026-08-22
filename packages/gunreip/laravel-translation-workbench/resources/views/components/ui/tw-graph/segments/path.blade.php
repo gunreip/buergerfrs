@@ -53,6 +53,7 @@
     'gradient' => false,
     'cap' => false,
     'capLength' => '1.25rem',
+    'dashed' => false,
     'color' => 'cyan',
     'zIndex' => null,
     'dev' => null,
@@ -74,6 +75,7 @@
             'gradient' => $gradient,
             'cap' => $cap,
             'capLength' => $capLength,
+            'dashed' => $dashed,
             'color' => $color,
             'zIndex' => $zIndex,
             'dev' => $dev,
@@ -222,6 +224,7 @@
     :gradient="data_get($segment, 'gradient', false)"
     :cap="data_get($segment, 'cap', false)"
     :cap-length="data_get($segment, 'capLength', '1.25rem')"
+    :dashed="data_get($segment, 'dashed', false)"
     :color="$color"
     :z-index="$zIndex"
 />

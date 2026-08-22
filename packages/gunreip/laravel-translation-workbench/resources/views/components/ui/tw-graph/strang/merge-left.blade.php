@@ -136,6 +136,7 @@
         );
     };
     $extensionAnchors = [];
+    $extensionBoundsPoints = [];
     $extensionResolvedStemHeights = [];
     $extensionResolvedBridgeLengths = [];
     $nextExtensionTarget = $node3;
@@ -150,6 +151,7 @@
             'y' => $subtract($nextExtensionTarget['y'], $extensionDeltaY),
         ];
         $extensionAnchors[$extensionIndex] = $extensionAnchor;
+        $extensionBoundsPoints[] = $extensionAnchor;
         $extensionResolvedStemHeights[$extensionIndex] = $currentExtensionStemHeight;
         $extensionResolvedBridgeLengths[$extensionIndex] = $currentExtensionBridgeLength;
 
@@ -169,6 +171,7 @@
             'x' => $add($extensionNode3['x'], $currentExtensionBridgeLength),
             'y' => $extensionNode3['y'],
         ];
+        array_push($extensionBoundsPoints, $extensionNode1, $extensionNode2, $extensionNode3, $extensionNode4);
 
         \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.start', $extensionAnchor);
         \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.node.1', $extensionNode1);
@@ -186,7 +189,7 @@
     $bounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([
         $anchor,
         $attachAnchor,
-        ...$extensionAnchors,
+        ...$extensionBoundsPoints,
     ], '1rem');
 
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.start', $anchor);
@@ -227,16 +230,8 @@
     :label="$id"
     :dev="$resolvedDev"
     metrics-scope="canvas"
+    metrics-side="left"
 />
-
-<span
-    aria-hidden="true"
-    class="block pointer-events-none invisible"
-    style="
-        width: {{ $bounds['width'] }};
-        height: {{ $bounds['height'] }};
-    "
-></span>
 
 @foreach (array_reverse($extensionAnchors, true) as $extensionIndex => $extensionAnchor)
     <x-translation-workbench::ui.tw-graph.paths.merge-extension

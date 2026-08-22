@@ -7,7 +7,7 @@ namespace Gunreip\TranslationWorkbench\Support\TwGraph;
 final class AnchorRegistry
 {
     /**
-     * @var array<string, array<string, array{x: string, y: string}>>
+     * @var array<string, array<string, array<string, string>>>
      */
     private static array $anchors = [];
 
@@ -17,18 +17,26 @@ final class AnchorRegistry
     }
 
     /**
-     * @param  array{x?: string, y?: string}  $anchor
+     * @param  array<string, mixed>  $anchor
      */
     public static function put(string $graphId, string $key, array $anchor): void
     {
-        self::$anchors[$graphId][$key] = [
+        $storedAnchor = [
             'x' => (string) ($anchor['x'] ?? '0rem'),
             'y' => (string) ($anchor['y'] ?? '0rem'),
         ];
+
+        foreach (['source', 'sourceType', 'sourceAnchor', 'direction'] as $metadataKey) {
+            if (isset($anchor[$metadataKey])) {
+                $storedAnchor[$metadataKey] = (string) $anchor[$metadataKey];
+            }
+        }
+
+        self::$anchors[$graphId][$key] = $storedAnchor;
     }
 
     /**
-     * @return array{x: string, y: string}|null
+     * @return array<string, string>|null
      */
     public static function get(string $graphId, string $key): ?array
     {

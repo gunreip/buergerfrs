@@ -41,10 +41,6 @@
         border-radius: 0.5rem;
     }
 
-    .tw-graph-protocol-canvas-slot {
-        height: auto;
-    }
-
     .tw-graph-protocol-catalog-preview {
         position: relative;
         width: 12rem;
@@ -75,6 +71,31 @@
     .tw-graph-protocol-primitive-line {
         z-index: var(--tw-graph-protocol-z-index, 1);
         background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+    }
+
+    .tw-graph-protocol-primitive-line-dashed {
+        background-color: transparent;
+        background-image: repeating-linear-gradient(to top,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 0 0.45rem,
+                transparent 0.45rem 0.75rem);
+    }
+
+    .tw-graph-protocol-primitive-line-dashed.tw-graph-protocol-primitive-line-top-bottom {
+        background-image: repeating-linear-gradient(to bottom,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 0 0.45rem,
+                transparent 0.45rem 0.75rem);
+    }
+
+    .tw-graph-protocol-primitive-line-dashed.tw-graph-protocol-primitive-line-left-right {
+        background-image: repeating-linear-gradient(to right,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 0 0.45rem,
+                transparent 0.45rem 0.75rem);
+    }
+
+    .tw-graph-protocol-primitive-line-dashed.tw-graph-protocol-primitive-line-right-left {
+        background-image: repeating-linear-gradient(to left,
+                rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha)) 0 0.45rem,
+                transparent 0.45rem 0.75rem);
     }
 
     .tw-graph-protocol-segment-trunk {
@@ -531,6 +552,10 @@
         z-index: var(--tw-graph-protocol-z-index, 2);
         width: var(--tw-graph-protocol-arc-size);
         height: var(--tw-graph-protocol-arc-size);
+    }
+
+    .tw-graph-protocol-primitive-arc-dashed {
+        border-style: dashed !important;
     }
 
     .tw-graph-protocol-primitive-arc-se {

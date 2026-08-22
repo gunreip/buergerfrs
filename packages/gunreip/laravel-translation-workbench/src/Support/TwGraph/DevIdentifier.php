@@ -1,0 +1,289 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Gunreip\TranslationWorkbench\Support\TwGraph;
+
+final class DevIdentifier
+{
+    public static function label(mixed $id): string
+    {
+        $id = trim((string) $id);
+
+        if ($id === '') {
+            return 'tw-graph';
+        }
+
+        if (preg_match('/(?:^|\.)strang\.([^.]+)(?:\.(.*))?$/', $id, $matches) === 1) {
+            $strang = $matches[1];
+            $tail = self::withoutStrangCounter((string) ($matches[2] ?? ''));
+            $section = self::section($tail);
+            $segment = self::segment($strang, $tail);
+
+            if ($segment !== null) {
+                $labelElement = self::labelElement($tail);
+                $path = self::path($strang, $tail);
+
+                if ($labelElement !== null) {
+                    return 'strang.' . $strang . '.' . $section . '.' . $path . '.' . $segment . '.' . $labelElement;
+                }
+
+                return 'strang.' . $strang . '.' . $section . '.' . $path . '.' . $segment . self::anchor($tail);
+            }
+
+            return 'strang.' . $strang . '.' . $section . '.' . self::element($tail);
+        }
+
+        return $id;
+    }
+
+    private static function withoutStrangCounter(string $tail): string
+    {
+        $tail = trim($tail, '.');
+
+        if ($tail === '') {
+            return '';
+        }
+
+        $segments = explode('.', $tail);
+
+        if (isset($segments[0]) && ctype_digit($segments[0])) {
+            array_shift($segments);
+        }
+
+        return implode('.', $segments);
+    }
+
+    private static function section(string $tail): string
+    {
+        if (str_starts_with($tail, 'extension.')) {
+            return 'extension' . self::extensionNumber(substr($tail, strlen('extension.')));
+        }
+
+        if (str_starts_with($tail, 'branch-return.')) {
+            return 'return' . self::extensionNumber(substr($tail, strlen('branch-return.')));
+        }
+
+        return 'main';
+    }
+
+    private static function extensionNumber(string $tail): int
+    {
+        $markers = [
+            'arc',
+            'bridge',
+            'connector',
+            'dev-box',
+            'end',
+            'label',
+            'path',
+            'paths',
+            'start',
+            'stem',
+            'text',
+        ];
+        $number = 1;
+
+        foreach (explode('.', trim($tail, '.')) as $segment) {
+            if (in_array($segment, $markers, true)) {
+                break;
+            }
+
+            if (ctype_digit($segment)) {
+                $number = (int) $segment;
+            }
+        }
+
+        return max(1, $number);
+    }
+
+    private static function element(string $tail): string
+    {
+        $segments = explode('.', trim($tail, '.'));
+
+        if (in_array('connector', $segments, true)) {
+            return 'connector';
+        }
+
+        if (in_array('dev-box', $segments, true)) {
+            return 'devBox';
+        }
+
+        if (in_array('text', $segments, true) || in_array('label', $segments, true)) {
+            return 'label';
+        }
+
+        $segmentIndex = self::lastIndexOfAny($segments, ['arc', 'bridge', 'path', 'paths', 'stem']);
+        $nodeIndex = self::lastIndexOfAny($segments, ['dev-node-counter', 'node']);
+
+        if ($nodeIndex !== null && ($segmentIndex === null || $nodeIndex > $segmentIndex)) {
+            return 'node';
+        }
+
+        if ($segmentIndex !== null) {
+            return 'segment';
+        }
+
+        return 'element';
+    }
+
+    private static function segment(string $strang, string $tail): ?string
+    {
+        if (preg_match('/(?:^|\.)arc\.in(?:\.|$)/', $tail) === 1) {
+            return 'arc1-' . self::arcDirection($strang, $tail, 'in');
+        }
+
+        if (preg_match('/(?:^|\.)arc\.out(?:\.|$)/', $tail) === 1) {
+            return 'arc2-' . self::arcDirection($strang, $tail, 'out');
+        }
+
+        if (preg_match('/(?:^|\.)arc(?:\.|$)/', $tail) === 1) {
+            return 'arc1-' . self::arcDirection($strang, $tail, 'single');
+        }
+
+        if (preg_match('/(?:^|\.)bridge(?:\.|$)/', $tail) === 1) {
+            return 'bridge1';
+        }
+
+        if (preg_match('/(?:^|\.)stem(?:\.|$)/', $tail) === 1) {
+            return 'stem1';
+        }
+
+        if (preg_match('/(?:^|\.)continuation\.(\d+)(?:\.|$)/', $tail, $matches) === 1) {
+            return 'stem' . max(1, (int) $matches[1]);
+        }
+
+        if (preg_match('/(?:^|\.)path\.(\d+)(?:\.|$)/', $tail, $matches) === 1) {
+            return 'path' . max(1, (int) $matches[1]);
+        }
+
+        if (preg_match('/(?:^|\.)start(?:\.|$)/', $tail) === 1) {
+            return 'start';
+        }
+
+        if (preg_match('/(?:^|\.)end(?:\.|$)/', $tail) === 1) {
+            return 'end';
+        }
+
+        return null;
+    }
+
+    private static function path(string $strang, string $tail): string
+    {
+        if (str_contains($tail, 'merge-extension')) {
+            return 'path.merge-extension';
+        }
+
+        if (str_contains($tail, 'branch-return-extension')) {
+            return 'path.branch-return-extension';
+        }
+
+        if (str_contains($tail, 'branch-return')) {
+            return 'path.branch-return';
+        }
+
+        if (str_contains($tail, 'paths.trunk')) {
+            return 'path.trunk';
+        }
+
+        if (str_contains($strang, 'merge') && str_starts_with($tail, 'extension.')) {
+            return 'path.merge-extension';
+        }
+
+        if (str_contains($tail, 'paths.merge') || str_contains($strang, 'merge')) {
+            return 'path.merge';
+        }
+
+        if (str_contains($tail, 'branch-extension') || str_starts_with($tail, 'extension.')) {
+            return 'path.branch-extension';
+        }
+
+        if (str_contains($tail, 'paths.branch') || str_contains($strang, 'branch')) {
+            return 'path.branch';
+        }
+
+        return 'path';
+    }
+
+    private static function anchor(string $tail): string
+    {
+        if (preg_match('/(?:^|\.)node\.start(?:\.|$)/', $tail) === 1) {
+            return '.anchorStart';
+        }
+
+        if (preg_match('/(?:^|\.)node\.end(?:\.|$)/', $tail) === 1) {
+            return '.anchorEnd';
+        }
+
+        return '';
+    }
+
+    private static function labelElement(string $tail): ?string
+    {
+        if (preg_match('/(?:^|\.)(?:label|start-label|end-label)(?:\.|$)/', $tail) !== 1) {
+            return null;
+        }
+
+        if (preg_match('/(?:^|\.)connector(?:\.|$)/', $tail) === 1) {
+            return 'connector';
+        }
+
+        if (preg_match('/(?:^|\.)text(?:\.|$)/', $tail) === 1 || preg_match('/(?:^|\.)(?:label|start-label|end-label)(?:\.|$)/', $tail) === 1) {
+            return 'label';
+        }
+
+        return null;
+    }
+
+    private static function arcDirection(string $strang, string $tail, string $role): string
+    {
+        $isLeft = str_ends_with($strang, '-left');
+        $isBranch = str_contains($strang, 'branch');
+        $isMerge = str_contains($strang, 'merge');
+        $isReturn = str_contains($tail, 'branch-return');
+        $isExtension = str_starts_with($tail, 'extension.') || str_contains($tail, 'merge-extension') || str_contains($tail, 'branch-extension');
+
+        if ($isBranch && ! $isReturn) {
+            if ($role === 'in') {
+                return $isLeft ? 'east-north' : 'west-north';
+            }
+
+            return $isLeft ? 'south-west' : 'south-east';
+        }
+
+        if ($isMerge || $isReturn) {
+            if ($role === 'out') {
+                return $isLeft ? 'south-east' : 'south-west';
+            }
+
+            return $isLeft ? 'west-north' : 'east-north';
+        }
+
+        if ($isExtension) {
+            return $isLeft ? 'west-north' : 'east-north';
+        }
+
+        return 'arc';
+    }
+
+    /**
+     * Extension keys may contain words like "node" as part of the attach group.
+     * The last semantic marker decides whether the rendered primitive is a
+     * segment or an actual node.
+     *
+     * @param  list<string>  $segments
+     * @param  list<string>  $needles
+     */
+    private static function lastIndexOfAny(array $segments, array $needles): ?int
+    {
+        $lastIndex = null;
+
+        foreach ($segments as $index => $segment) {
+            if (in_array($segment, $needles, true)) {
+                $lastIndex = $index;
+            }
+        }
+
+        return $lastIndex;
+    }
+}

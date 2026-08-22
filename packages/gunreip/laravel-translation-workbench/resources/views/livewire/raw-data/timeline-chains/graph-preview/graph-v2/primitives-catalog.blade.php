@@ -6,7 +6,7 @@
     $primitiveRows = [
         [
             'name' => 'line',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.primitives.line',
+            'component' => '<x-translation-workbench::ui.tw-graph.primitives.line',
             'purpose' =>
                 'Neutral line primitive. Segments decide whether it becomes path.top-bottom, path-start, path-end, merge-path, etc.',
             'props' => [
@@ -28,7 +28,7 @@
         ],
         [
             'name' => 'arc',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.primitives.arc',
+            'component' => '<x-translation-workbench::ui.tw-graph.primitives.arc',
             'purpose' => 'Neutral quarter-circle primitive. Segments decide the start/end anchor pair.',
             'props' => [
                 $tab . 'id="arc"',
@@ -44,7 +44,7 @@
         ],
         [
             'name' => 'connector',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.primitives.connector',
+            'component' => '<x-translation-workbench::ui.tw-graph.primitives.connector',
             'purpose' => 'Neutral helper connector. Segments decide which text/node it belongs to.',
             'props' => [
                 $tab . 'id="connector"',
@@ -59,7 +59,7 @@
         ],
         [
             'name' => 'text',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.primitives.text',
+            'component' => '<x-translation-workbench::ui.tw-graph.primitives.text',
             'purpose' =>
                 'Neutral text primitive. Segments decide whether it is a label, start/end text, name, or DEV marker.',
             'props' => [
@@ -76,7 +76,7 @@
         ],
         [
             'name' => 'node',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.primitives.node',
+            'component' => '<x-translation-workbench::ui.tw-graph.primitives.node',
             'purpose' => 'Neutral point marker. Segments decide whether a node is rendered at start/end/dev anchors.',
             'props' => [
                 $tab . 'id="node"',
@@ -89,7 +89,7 @@
         ],
         [
             'name' => 'dev-node-counter',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.primitives.dev-node-counter',
+            'component' => '<x-translation-workbench::ui.tw-graph.primitives.dev-node-counter',
             'purpose' =>
                 'DEV-only start-anchor marker for a segment. Horizontal segments render above, vertical segments beside.',
             'props' => [
@@ -206,7 +206,7 @@
                                             {{-- Component Calls / Props --}}
                                             @switch($row['view'])
                                                 @case('line')
-                                                    <x-translation-workbench::ui.tw-graph-protocol.primitives.line
+                                                    <x-translation-workbench::ui.tw-graph.primitives.line
                                                         id="catalog.primitive.line"
                                                         direction="bottom-top"
                                                         length="4rem"
@@ -221,7 +221,7 @@
                                                 @break
 
                                                 @case('arc')
-                                                    <x-translation-workbench::ui.tw-graph-protocol.primitives.arc
+                                                    <x-translation-workbench::ui.tw-graph.primitives.arc
                                                         id="catalog.primitive.arc"
                                                         start-anchor="e"
                                                         end-anchor="s"
@@ -234,7 +234,7 @@
                                                 @break
 
                                                 @case('connector')
-                                                    <x-translation-workbench::ui.tw-graph-protocol.primitives.connector
+                                                    <x-translation-workbench::ui.tw-graph.primitives.connector
                                                         id="catalog.primitive.connector"
                                                         placement="right"
                                                         anchor-x="-1.5rem"
@@ -246,7 +246,7 @@
                                                 @break
 
                                                 @case('text')
-                                                    <x-translation-workbench::ui.tw-graph-protocol.primitives.text
+                                                    <x-translation-workbench::ui.tw-graph.primitives.text
                                                         id="catalog.primitive.text"
                                                         text="Text"
                                                         side="right"
@@ -258,7 +258,7 @@
                                                 @break
 
                                                 @case('node')
-                                                    <x-translation-workbench::ui.tw-graph-protocol.primitives.node
+                                                    <x-translation-workbench::ui.tw-graph.primitives.node
                                                         id="catalog.primitive.node"
                                                         anchor-x="0rem"
                                                         anchor-y="3rem"
@@ -267,7 +267,7 @@
                                                 @break
 
                                                 @case('dev-node-counter')
-                                                    <x-translation-workbench::ui.tw-graph-protocol.primitives.line
+                                                    <x-translation-workbench::ui.tw-graph.primitives.line
                                                         id="catalog.primitive.dev-counter.horizontal.line"
                                                         direction="left-right"
                                                         length="4rem"
@@ -279,7 +279,7 @@
                                                         :node-end="false"
                                                         color="zinc"
                                                     />
-                                                    <x-translation-workbench::ui.tw-graph-protocol.primitives.dev-node-counter
+                                                    <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
                                                         id="catalog.primitive.dev-counter.horizontal"
                                                         :dev="true"
                                                         :segment="$devCounterHorizontalSegment"
@@ -287,7 +287,7 @@
                                                         color="amber"
                                                     />
 
-                                                    <x-translation-workbench::ui.tw-graph-protocol.primitives.line
+                                                    <x-translation-workbench::ui.tw-graph.primitives.line
                                                         id="catalog.primitive.dev-counter.vertical.line"
                                                         direction="bottom-top"
                                                         length="3rem"
@@ -299,7 +299,7 @@
                                                         :node-end="false"
                                                         color="zinc"
                                                     />
-                                                    <x-translation-workbench::ui.tw-graph-protocol.primitives.dev-node-counter
+                                                    <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
                                                         id="catalog.primitive.dev-counter.vertical"
                                                         :dev="true"
                                                         :segment="$devCounterVerticalSegment"

@@ -95,7 +95,7 @@
                                 "
                                     >
                                         {{-- Component strang.trunk bottom-top --}}
-                                        <x-translation-workbench::ui.tw-graph-protocol.strangs.trunk
+                                        <x-translation-workbench::ui.tw-graph.strang.trunk
                                             id="catalog.strang.trunk.bottom-top"
                                             direction="bottom-top"
                                             :anchor-start="['x' => '0rem', 'y' => '0.75rem']"
@@ -125,7 +125,7 @@
                                                 class="mt-2 font-mono"
                                                 color="sky"
                                             >
-                                                {{ __('<x-translation-workbench::ui.tw-graph-protocol.strangs.trunk') }}
+                                                {{ __('<x-translation-workbench::ui.tw-graph.strang.trunk') }}
                                             </flux:text>
                                         </flux:callout.text>
                                     </flux:callout>
@@ -220,7 +220,7 @@
                                 "
                                     >
                                         {{-- component strang.merge-left --}}
-                                        <x-translation-workbench::ui.tw-graph-protocol.strangs.merge-left
+                                        <x-translation-workbench::ui.tw-graph.strang.merge-left
                                             id="catalog.strang.merge-left"
                                             :dev="true"
                                             :anchor-start="['x' => '-2rem', 'y' => '6.5rem']"
@@ -276,7 +276,7 @@
                                                 class="mt-2 font-mono"
                                                 color="sky"
                                             >
-                                                {{ __('<x-translation-workbench::ui.tw-graph-protocol.strangs.merge-left') }}
+                                                {{ __('<x-translation-workbench::ui.tw-graph.strang.merge-left') }}
                                             </flux:text>
                                         </flux:callout.text>
                                     </flux:callout>
@@ -380,7 +380,7 @@
                                 "
                                     >
                                         {{-- Component strang.merge-right --}}
-                                        <x-translation-workbench::ui.tw-graph-protocol.strangs.merge-right
+                                        <x-translation-workbench::ui.tw-graph.strang.merge-right
                                             id="catalog.strang.merge-right"
                                             :dev="true"
                                             :anchor-start="['x' => '2rem', 'y' => '6.5rem']"
@@ -415,7 +415,7 @@
                                                 class="mt-2 font-mono"
                                                 color="sky"
                                             >
-                                                {{ __('<x-translation-workbench::ui.tw-graph-protocol.strangs.merge-right') }}
+                                                {{ __('<x-translation-workbench::ui.tw-graph.strang.merge-right') }}
                                             </flux:text>
                                         </flux:callout.text>
                                     </flux:callout>
@@ -519,7 +519,7 @@
                                 "
                                     >
                                         {{-- Component strang.branch-left --}}
-                                        <x-translation-workbench::ui.tw-graph-protocol.strangs.branch-left
+                                        <x-translation-workbench::ui.tw-graph.strang.branch-left
                                             id="catalog.strang.branch-left"
                                             {{-- Identity / rendering state --}}
                                             :dev="true"
@@ -597,7 +597,7 @@
                                                 class="mt-2 font-mono"
                                                 color="sky"
                                             >
-                                                {{ __('<x-translation-workbench::ui.tw-graph-protocol.strangs.branch-left') }}
+                                                {{ __('<x-translation-workbench::ui.tw-graph.strang.branch-left') }}
                                             </flux:text>
                                         </flux:callout.text>
                                     </flux:callout>
@@ -719,7 +719,7 @@
                                 "
                                     >
                                         {{-- Component strang.branch-right --}}
-                                        <x-translation-workbench::ui.tw-graph-protocol.strangs.branch-right
+                                        <x-translation-workbench::ui.tw-graph.strang.branch-right
                                             id="catalog.strang.branch-right"
                                             :dev="true"
                                             :anchor-start="['x' => '-8rem', 'y' => '0.75rem']"
@@ -769,7 +769,7 @@
                                                 class="mt-2 font-mono"
                                                 color="sky"
                                             >
-                                                {{ __('<x-translation-workbench::ui.tw-graph-protocol.strangs.branch-right') }}
+                                                {{ __('<x-translation-workbench::ui.tw-graph.strang.branch-right') }}
                                             </flux:text>
                                         </flux:callout.text>
                                     </flux:callout>

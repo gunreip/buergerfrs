@@ -116,7 +116,7 @@
             '--tw-graph-protocol-arc-size: ' . data_get($geometry, 'arcSize', '2.75rem'),
         ]) }}
 >
-    <x-translation-workbench::ui.tw-graph-protocol.canvas
+    <x-translation-workbench::ui.tw-graph.canvas
         :protocol="$protocol"
         :direction="$resolvedDirection"
         :dev="$dev"

@@ -109,19 +109,20 @@
     :dev="$devMode"
 />
 
-<x-translation-workbench::ui.tw-graph.primitives.arc
-    :id="$id"
-    :start-anchor="$startAnchor"
-    :end-anchor="$endAnchor"
+    <x-translation-workbench::ui.tw-graph.primitives.arc
+        :id="$id"
+        :start-anchor="$startAnchor"
+        :end-anchor="$endAnchor"
     :start-x="data_get($segment, 'anchorStart.x', '0rem')"
     :start-y="data_get($segment, 'anchorStart.y', '0rem')"
     :end-x="data_get($segment, 'anchorEnd.x', '0rem')"
     :end-y="data_get($segment, 'anchorEnd.y', '0rem')"
-    :node-start="$nodeStart"
-    :node-end="$nodeEnd"
-    :color="$color"
-    :z-index="$zIndex"
-/>
+        :node-start="$nodeStart"
+        :node-end="$nodeEnd"
+        :dashed="data_get($segment, 'dashed', false)"
+        :color="$color"
+        :z-index="$zIndex"
+    />
 
 @if ($nodeStart)
     <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter

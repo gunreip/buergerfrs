@@ -26,6 +26,7 @@
 
 @php
     $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '6 182 212');
+    $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id);
 @endphp
 
 <span
@@ -40,7 +41,7 @@
         '--tw-graph-protocol-connector-anchor-gap: ' . $gap => filled($gap),
         '--tw-graph-protocol-local-color-rgb: ' . $colorRgb,
     ]) }}
-    title="{{ $id }} | connector {{ $placement }}"
-    data-tw-graph-path="{{ $id }}"
+    title="{{ $devIdentifier }}"
+    data-tw-graph-path="{{ $devIdentifier }}"
     x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
 ></span>

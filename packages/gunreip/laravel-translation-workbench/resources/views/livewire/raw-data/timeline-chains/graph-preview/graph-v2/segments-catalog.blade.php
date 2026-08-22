@@ -9,7 +9,7 @@
     $segmentRowsReordered = [
         [
             'name' => 'label',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.label',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.label',
             'structure' => ['segments.label', $tree . 'primitives.connector', $tree . 'primitives.text'],
             'composition' => ['primitives.connector', 'primitives.text'],
             'props' => [
@@ -23,7 +23,7 @@
         ],
         [
             'name' => 'path left-right',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.path',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.path',
             'structure' => [
                 'segments.path',
                 $tree . 'primitives.line',
@@ -54,7 +54,7 @@
         ],
         [
             'name' => 'path top-bottom',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.path',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.path',
             'structure' => [
                 'segments.path',
                 $tree . 'primitives.line',
@@ -85,7 +85,7 @@
         ],
         [
             'name' => 'start bottom-top',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.start',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.start',
             'structure' => [
                 'segments.start',
                 $tree . 'segments.path',
@@ -115,7 +115,7 @@
         ],
         [
             'name' => 'start right-left',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.start',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.start',
             'structure' => [
                 'segments.start',
                 $tree . 'segments.path',
@@ -146,7 +146,7 @@
         ],
         [
             'name' => 'end bottom-top',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.end',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.end',
             'structure' => [
                 'segments.end',
                 $tree . 'segments.path',
@@ -180,7 +180,7 @@
         ],
         [
             'name' => 'end left-right',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.end',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.end',
             'structure' => [
                 'segments.end',
                 $tree . 'segments.path',
@@ -214,7 +214,7 @@
         ],
         [
             'name' => 'arc north-west',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.arc',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.arc',
             'structure' => [
                 'segments.arc',
                 $tree . 'primitives.arc',
@@ -251,7 +251,7 @@
         ],
         [
             'name' => 'arc west-north',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.arc',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.arc',
             'structure' => [
                 'segments.arc',
                 $tree . 'primitives.arc',
@@ -288,7 +288,7 @@
         ],
         [
             'name' => 'arc north-east',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.arc',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.arc',
             'structure' => [
                 'segments.arc',
                 $tree . 'primitives.arc',
@@ -325,7 +325,7 @@
         ],
         [
             'name' => 'arc east-north',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.arc',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.arc',
             'structure' => [
                 'segments.arc',
                 $tree . 'primitives.arc',
@@ -362,7 +362,7 @@
         ],
         [
             'name' => 'arc west-south',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.arc',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.arc',
             'structure' => [
                 'segments.arc',
                 $tree . 'primitives.arc',
@@ -399,7 +399,7 @@
         ],
         [
             'name' => 'arc south-west',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.arc',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.arc',
             'structure' => [
                 'segments.arc',
                 $tree . 'primitives.arc',
@@ -436,7 +436,7 @@
         ],
         [
             'name' => 'arc east-south',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.arc',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.arc',
             'structure' => [
                 'segments.arc',
                 $tree . 'primitives.arc',
@@ -473,7 +473,7 @@
         ],
         [
             'name' => 'arc south-east',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.segments.arc',
+            'component' => '<x-translation-workbench::ui.tw-graph.segments.arc',
             'structure' => [
                 'segments.arc',
                 $tree . 'primitives.arc',

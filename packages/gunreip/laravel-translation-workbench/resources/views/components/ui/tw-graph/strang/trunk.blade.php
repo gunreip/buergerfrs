@@ -224,16 +224,8 @@
     :label="$id"
     :dev="$resolvedDev"
     metrics-scope="canvas"
+    metrics-side="center"
 />
-
-<span
-    aria-hidden="true"
-    class="block pointer-events-none invisible"
-    style="
-        width: calc({{ $pathBoxWidth }} + ({{ $pathBoxPadding }} * 2) + {{ $pathBoxStartPadding['width'] }});
-        height: calc({{ $pathBoxHeight }} + ({{ $pathBoxPadding }} * 2) + {{ $pathBoxStartPadding['height'] }});
-    "
-></span>
 
 <x-translation-workbench::ui.tw-graph.paths.trunk
     :id="$id . '.paths.trunk'"

@@ -7,7 +7,7 @@
     $pathRows = [
         [
             'name' => 'trunk bottom-top',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.trunk',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.trunk',
             'structure' => [
                 'paths.trunk',
                 $tree . 'calculates anchor chain',
@@ -37,7 +37,7 @@
         ],
         [
             'name' => 'trunk left-right',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.trunk',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.trunk',
             'structure' => [
                 'paths.trunk',
                 $tree . 'calculates anchor chain',
@@ -67,7 +67,7 @@
         ],
         [
             'name' => 'merge left',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.merge side="left"',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.merge side="left"',
             'structure' => [
                 'paths.merge.left',
                 $tree . 'calculates anchor chain',
@@ -97,7 +97,7 @@
         ],
         [
             'name' => 'merge right',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.merge side="right"',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.merge side="right"',
             'structure' => [
                 'paths.merge.right',
                 $tree . 'calculates anchor chain',
@@ -127,7 +127,7 @@
         ],
         [
             'name' => 'merge-extension left',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.merge-extension side="left"',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.merge-extension side="left"',
             'structure' => [
                 'paths.merge-extension.left',
                 $tree . 'calculates anchor chain',
@@ -155,7 +155,7 @@
         ],
         [
             'name' => 'merge-extension right',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.merge-extension side="right"',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.merge-extension side="right"',
             'structure' => [
                 'paths.merge-extension.right',
                 $tree . 'calculates anchor chain',
@@ -183,7 +183,7 @@
         ],
         [
             'name' => 'branch left',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.branch side="left"',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.branch side="left"',
             'structure' => [
                 'paths.branch.left',
                 $tree . 'calculates anchor chain',
@@ -211,7 +211,7 @@
         ],
         [
             'name' => 'branch right',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.branch side="right"',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.branch side="right"',
             'structure' => [
                 'paths.branch.right',
                 $tree . 'calculates anchor chain',
@@ -239,7 +239,7 @@
         ],
         [
             'name' => 'branch-extension left',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.branch-extension side="left"',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.branch-extension side="left"',
             'structure' => [
                 'paths.branch-extension.left',
                 $tree . 'calculates anchor chain',
@@ -266,7 +266,7 @@
         ],
         [
             'name' => 'branch-extension right',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.branch-extension side="right"',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.branch-extension side="right"',
             'structure' => [
                 'paths.branch-extension.right',
                 $tree . 'calculates anchor chain',
@@ -293,7 +293,7 @@
         ],
         [
             'name' => 'branch-return left',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.branch-return side="left"',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.branch-return side="left"',
             'structure' => [
                 'paths.branch-return.left',
                 $tree . 'calculates anchor chain',
@@ -321,7 +321,7 @@
         ],
         [
             'name' => 'branch-return right',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.branch-return side="right"',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.branch-return side="right"',
             'structure' => [
                 'paths.branch-return.right',
                 $tree . 'calculates anchor chain',
@@ -349,7 +349,7 @@
         ],
         [
             'name' => 'branch-return-extension left',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.branch-return-extension side="left"',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.branch-return-extension side="left"',
             'structure' => [
                 'paths.branch-return-extension.left',
                 $tree . 'calculates anchor chain',
@@ -376,7 +376,7 @@
         ],
         [
             'name' => 'branch-return-extension right',
-            'component' => '<x-translation-workbench::ui.tw-graph-protocol.paths.branch-return-extension side="right"',
+            'component' => '<x-translation-workbench::ui.tw-graph.paths.branch-return-extension side="right"',
             'structure' => [
                 'paths.branch-return-extension.right',
                 $tree . 'calculates anchor chain',

@@ -37,6 +37,7 @@
     $resolvedOffsetX = $offsetX ?? data_get($segment, 'devCounterOffset.x');
     $resolvedOffsetY = $offsetY ?? data_get($segment, 'devCounterOffset.y');
     $resolvedId = filled($id) ? $id : data_get($segment, 'id', 'dev-node-counter');
+    $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($resolvedId);
     $resolvedPlacement = $placement ?: $side;
     $hasOffset = filled($resolvedOffsetX) || filled($resolvedOffsetY);
 @endphp
@@ -54,8 +55,8 @@
             '--tw-graph-protocol-dev-node-counter-offset-x: ' . ($resolvedOffsetX ?: '0rem'),
             '--tw-graph-protocol-dev-node-counter-offset-y: ' . ($resolvedOffsetY ?: '0rem'),
         ]) }}
-        title="{{ $resolvedId }} | dev-node-counter {{ $counter }}"
-        data-tw-graph-path="{{ $resolvedId }}"
+        title="{{ $devIdentifier }}"
+        data-tw-graph-path="{{ $devIdentifier }}"
         x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
     >
         <flux:badge

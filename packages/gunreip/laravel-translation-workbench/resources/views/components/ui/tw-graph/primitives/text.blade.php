@@ -26,6 +26,7 @@
 ])
 
 @php
+    $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id);
     $lines = collect(is_iterable($text) && ! is_string($text) ? $text : [$text])
         ->filter(fn ($line) => filled($line))
         ->take(2)
@@ -47,8 +48,8 @@
             '--tw-graph-protocol-anchor-y: ' . $anchorY,
             '--tw-graph-protocol-text-label-offset: ' . $offset,
         ]) }}
-        title="{{ $id }} | text"
-        data-tw-graph-path="{{ $id }}"
+        title="{{ $devIdentifier }}"
+        data-tw-graph-path="{{ $devIdentifier }}"
         x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
     >
         @if ($badge)

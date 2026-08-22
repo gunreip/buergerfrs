@@ -27,12 +27,14 @@
     'gradient' => false,
     'cap' => false,
     'capLength' => '1.25rem',
+    'dashed' => false,
     'color' => 'cyan',
     'zIndex' => null,
 ])
 
 @php
     $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '6 182 212');
+    $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id);
 @endphp
 
 <span
@@ -42,6 +44,7 @@
         'tw-graph-protocol-primitive-line-' . $direction,
         'tw-graph-protocol-primitive-line-start' => (bool) $gradient,
         'tw-graph-protocol-primitive-line-end' => (bool) $cap,
+        'tw-graph-protocol-primitive-line-dashed' => (bool) $dashed,
         'tw-graph-protocol-primitive-line-node-start' => (bool) $nodeStart,
         'tw-graph-protocol-primitive-line-node-end' => (bool) $nodeEnd,
     ])->style([
@@ -54,7 +57,7 @@
         '--tw-graph-protocol-line-end-cap-length: ' . $capLength,
         '--tw-graph-protocol-z-index: ' . $zIndex => filled($zIndex),
     ]) }}
-    title="{{ $id }} | {{ $direction }}"
-    data-tw-graph-path="{{ $id }}"
+    title="{{ $devIdentifier }}"
+    data-tw-graph-path="{{ $devIdentifier }}"
     x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
 ></span>
