@@ -1,4 +1,4 @@
-{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph-protocol/primitives/line.blade.php --}}
+{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/primitives/line.blade.php --}}
 {{--
     Primitive: line
 

@@ -6,7 +6,7 @@
     <x-translation-workbench::ui.tw-graph.strang.merge-right
         attach-to="strang.trunk.node.3"
         bridge-length="3rem"
-        stem-height="2rem"
+        stem-length="2rem"
         :node-labels="[1 => ['left' => 'Source'], 5 => ['right' => 'Attach']]"
         :extension-count="2"
         :extension-node-labels="[1 => [4 => ['top' => 'Root #1']]]"
@@ -28,7 +28,7 @@
     'lineWidth' => '0.25rem',
     'arcSize' => '2.75rem',
     'bridgeLength' => null,
-    'stemHeight' => null,
+    'stemLength' => null,
 ])
 
 @props([
@@ -41,8 +41,8 @@
     'nodeLabels' => [],
     'extensionCount' => 0,
     'extensionStartLength' => null,
-    'extensionStemHeight' => null,
-    'extensionStemHeights' => [],
+    'extensionStemLength' => null,
+    'extensionStemLengths' => [],
     'extensionBridgeLength' => null,
     'extensionBridgeLengths' => [],
     'extensionNodeLabels' => [],
@@ -64,15 +64,15 @@
     $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($arcSize ?? null, '2.75rem');
     $resolvedStartLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedArcSize, '2.75rem');
     $localBridgeLength = $attributes->get('bridge-length');
-    $localStemHeight = $attributes->get('stem-height');
+    $localStemLength = $attributes->get('stem-length');
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
         $localBridgeLength,
         $bridgeLength ?? null,
         $resolvedLineLength,
     );
-    $resolvedStemHeight = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
-        $localStemHeight,
-        $stemHeight ?? null,
+    $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
+        $localStemLength,
+        $stemLength ?? null,
         $resolvedLineLength,
     );
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
@@ -83,7 +83,7 @@
         : null;
     $missingAttachTarget = filled($attachTo) && $attachTarget === null;
     $mergeWidth = $add($add($resolvedArcSize, $resolvedBridgeLength), $resolvedArcSize);
-    $mergeHeight = $add($add($add($resolvedStartLength, $resolvedStemHeight), $resolvedArcSize), $resolvedArcSize);
+    $mergeHeight = $add($add($add($resolvedStartLength, $resolvedStemLength), $resolvedArcSize), $resolvedArcSize);
     $anchor = [
         'x' => $attachTarget ? $add($attachTarget['x'], $mergeWidth) : data_get($anchorStart, 'x', '0rem'),
         'y' => $attachTarget ? $subtract($attachTarget['y'], $mergeHeight) : data_get($anchorStart, 'y', '0rem'),
@@ -103,7 +103,7 @@
     ];
     $node2 = [
         'x' => $node1['x'],
-        'y' => $add($node1['y'], $resolvedStemHeight),
+        'y' => $add($node1['y'], $resolvedStemLength),
     ];
     $node3 = [
         'x' => $add($node2['x'], $neg($resolvedArcSize)),
@@ -119,13 +119,13 @@
     ];
     $resolvedExtensionCount = max(0, (int) $extensionCount);
     $resolvedExtensionStartLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($extensionStartLength, $resolvedArcSize, '2.75rem');
-    $resolvedExtensionStemHeight = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($extensionStemHeight, $resolvedStemHeight, '4rem');
+    $resolvedExtensionStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($extensionStemLength, $resolvedStemLength, '4rem');
     $resolvedExtensionBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($extensionBridgeLength, $resolvedBridgeLength, '4rem');
-    $extensionStemHeightFor = function (int $extensionIndex) use ($extensionStemHeights, $resolvedExtensionStemHeight): string {
+    $extensionStemLengthFor = function (int $extensionIndex) use ($extensionStemLengths, $resolvedExtensionStemLength): string {
         return (string) (
-            data_get($extensionStemHeights, $extensionIndex)
-            ?? data_get($extensionStemHeights, $extensionIndex - 1)
-            ?? $resolvedExtensionStemHeight
+            data_get($extensionStemLengths, $extensionIndex)
+            ?? data_get($extensionStemLengths, $extensionIndex - 1)
+            ?? $resolvedExtensionStemLength
         );
     };
     $extensionBridgeLengthFor = function (int $extensionIndex) use ($extensionBridgeLengths, $resolvedExtensionBridgeLength): string {
@@ -137,22 +137,22 @@
     };
     $extensionAnchors = [];
     $extensionBoundsPoints = [];
-    $extensionResolvedStemHeights = [];
+    $extensionResolvedStemLengths = [];
     $extensionResolvedBridgeLengths = [];
     $nextExtensionTarget = $node3;
 
     for ($extensionIndex = 1; $extensionIndex <= $resolvedExtensionCount; $extensionIndex++) {
-        $currentExtensionStemHeight = $extensionStemHeightFor($extensionIndex);
+        $currentExtensionStemLength = $extensionStemLengthFor($extensionIndex);
         $currentExtensionBridgeLength = $extensionBridgeLengthFor($extensionIndex);
         $extensionDeltaX = $add($resolvedArcSize, $currentExtensionBridgeLength);
-        $extensionDeltaY = $add($add($resolvedExtensionStartLength, $currentExtensionStemHeight), $resolvedArcSize);
+        $extensionDeltaY = $add($add($resolvedExtensionStartLength, $currentExtensionStemLength), $resolvedArcSize);
         $extensionAnchor = [
             'x' => $add($nextExtensionTarget['x'], $extensionDeltaX),
             'y' => $subtract($nextExtensionTarget['y'], $extensionDeltaY),
         ];
         $extensionAnchors[$extensionIndex] = $extensionAnchor;
         $extensionBoundsPoints[] = $extensionAnchor;
-        $extensionResolvedStemHeights[$extensionIndex] = $currentExtensionStemHeight;
+        $extensionResolvedStemLengths[$extensionIndex] = $currentExtensionStemLength;
         $extensionResolvedBridgeLengths[$extensionIndex] = $currentExtensionBridgeLength;
 
         $extensionNode1 = [
@@ -161,7 +161,7 @@
         ];
         $extensionNode2 = [
             'x' => $extensionNode1['x'],
-            'y' => $add($extensionNode1['y'], $currentExtensionStemHeight),
+            'y' => $add($extensionNode1['y'], $currentExtensionStemLength),
         ];
         $extensionNode3 = [
             'x' => $add($extensionNode2['x'], $neg($resolvedArcSize)),
@@ -239,7 +239,7 @@
         side="right"
         :anchor-start="$extensionAnchor"
         :start-length="$resolvedExtensionStartLength"
-        :stem-height="$extensionResolvedStemHeights[$extensionIndex]"
+        :stem-length="$extensionResolvedStemLengths[$extensionIndex]"
         :bridge-length="$extensionResolvedBridgeLengths[$extensionIndex]"
         :arc-size="$resolvedArcSize"
         :node-labels="data_get($extensionNodeLabels, $extensionIndex, data_get($extensionNodeLabels, $extensionIndex - 1, []))"
@@ -258,7 +258,7 @@
     :start-length="$resolvedStartLength"
     :line-width="$resolvedLineWidth"
     :bridge-length="$resolvedBridgeLength"
-    :stem-height="$resolvedStemHeight"
+    :stem-length="$resolvedStemLength"
     :arc-size="$resolvedArcSize"
     :color="$resolvedColor"
     :z-index="$zIndex"

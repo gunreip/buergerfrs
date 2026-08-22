@@ -1,4 +1,4 @@
-{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph-protocol/segments/label.blade.php --}}
+{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/segments/label.blade.php --}}
 {{--
     Segment: label
 

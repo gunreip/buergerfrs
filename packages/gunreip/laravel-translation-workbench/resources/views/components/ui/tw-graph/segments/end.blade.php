@@ -1,4 +1,4 @@
-{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph-protocol/segments/end.blade.php --}}
+{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/segments/end.blade.php --}}
 {{--
     Segment: end
 

@@ -83,8 +83,8 @@ strang.merge-left.extension.N.end
 
 The same pattern applies to `strang.merge-right.extension.N`.
 Extension-specific lengths are configured through `extensionBridgeLength`,
-`extensionBridgeLengths`, `extensionStemHeight`, and
-`extensionStemHeights`.
+`extensionBridgeLengths`, `extensionStemLength`, and
+`extensionStemLengths`.
 Extension labels follow the same node-numbered shape through
 `extensionNodeLabels`:
 
@@ -120,6 +120,43 @@ strang.branch-left.end
 
 The same pattern applies to `strang.branch-right`.
 
+Branch extension entries may define `returnBridge` when only an open
+`arc -> bridge` section is needed instead of a complete branch-return path.
+The value can be a simple bridge length or an indexed configuration array:
+
+```blade
+:branch-extension="[
+    'stem.1' => [
+        1 => [
+            'bridgeLength' => '8rem',
+            'stemLength' => '4rem',
+            'returnBridge' => [
+                1 => [
+                    'bridgeLength' => '7rem',
+                    'color' => 'amber',
+                    'nodeLabels' => [
+                        1 => ['top' => 'Return arc'],
+                        2 => ['bottom' => 'Bridge end'],
+                    ],
+                ],
+            ],
+        ],
+    ],
+]"
+```
+
+`returnBridge.nodeLabels` follows the path node numbering:
+
+```text
+1 = arc end
+2 = bridge end
+```
+
+For `strang.branch-left`, this renders
+`paths.branch-return-bridge left`: `arc west-north -> bridge left-right`.
+For `strang.branch-right`, it renders
+`paths.branch-return-bridge right`: `arc east-north -> bridge right-left`.
+
 The registry is scoped by `graph-id`. The current authoring layer resets the
 registry when `strang.trunk` renders, because Blade child slots are evaluated
 before the root component body.
@@ -131,6 +168,34 @@ before the root component body.
 `primitives.*` are neutral drawing primitives only: line, arc, connector, text, node, and dev markers.
 
 Naming rule:
+
+Props and local variables follow the `whoWhat` pattern. The component subject
+comes first, the property comes second. This keeps context-specific props
+grouped when reading, sorting, and searching.
+
+```text
+stemLength
+stemContinuation
+bridgeLength
+bridgeContinuation
+nodeLabels
+nodeLabelConnectorLength
+labelConnectorGap
+devCounterColor
+extensionStemLengths
+extensionBridgeLengths
+branchReturnBridgeLengths
+```
+
+Avoid reversed names such as `lengthStem`, `heightStem`, `labelNode`, or
+`colorDevCounter`.
+
+Short primitive props may stay neutral when the primitive itself already owns
+the subject. For example, `primitives.line` may use `length`, because it is
+already inside the `line` primitive. As soon as a higher layer configures a
+specific graph concept, use `whoWhat`, such as `stemLength` or `bridgeLength`.
+
+Graph vocabulary:
 
 ```text
 bridge
@@ -178,7 +243,7 @@ dev
 anchorStart
 anchorEnd
 bridgeLength
-stemHeight
+stemLength
 connectorLength
 connectorGap
 ```
@@ -197,7 +262,7 @@ nodeSize=0.95rem
 arcSize=2.75rem
 capLength=1.75rem
 bridgeLength=lineLength
-stemHeight=lineLength
+stemLength=lineLength
 connectorLength=2rem
 connectorGap=0.25rem
 ```
@@ -214,7 +279,7 @@ For merge authoring, the effective length precedence is:
 local strang prop -> inherited tw-graph default -> lineLength
 ```
 
-This applies to `bridgeLength` and `stemHeight`.
+This applies to `bridgeLength` and `stemLength`.
 
 `strang.trunk` renders ten path sections by default through its owned `paths.trunk`.
 `path-count` controls how many path sections are rendered. `path-lengths` may override individual 1-based sections; missing or `null` values use `lineLength`.

@@ -1,31 +1,32 @@
-{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/paths/branch-return-extension.blade.php --}}
+{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/paths/branch-return-bridge.blade.php --}}
 {{--
-    Path: branch-return-extension
+    Path: branch-return-bridge
 
     Usage:
-    <x-translation-workbench::ui.tw-graph.paths.branch-return-extension
+    <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
         side="left"
         :anchor-start="['x' => '0rem', 'y' => '0rem']"
-        stem-length="2rem"
         bridge-length="3rem"
+        :node-labels="[1 => ['top' => 'Arc'], 2 => ['bottom' => 'Bridge']]"
     />
 
     Path role:
-    Branch-return-extension continues a branch-return chain outward:
-    left:  segments.path bottom-top -> segments.arc west-north -> segments.path left-right
-    right: segments.path bottom-top -> segments.arc east-north -> segments.path right-left
+    Branch-return-bridge starts an open return path from a branch extension:
+    left:  segments.arc west-north -> segments.path left-right
+    right: segments.arc east-north -> segments.path right-left
 --}}
 
 @props([
-    'id' => 'path.branch-return-extension',
+    'id' => 'path.branch-return-bridge',
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcSize' => '2.75rem',
-    'stemLength' => '2rem',
     'bridgeLength' => '3rem',
-    'color' => 'yellow',
+    'color' => 'orange',
     'zIndex' => null,
     'counterStart' => 1,
+    'nodeLabels' => [],
+    'fallbackUsed' => false,
     'dev' => false,
 ])
 
@@ -44,14 +45,79 @@
     $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
     $arcDelta = $isLeft ? $arcSize : $neg($arcSize);
     $bridgeDelta = $isLeft ? $bridgeLength : $neg($bridgeLength);
+    $normalizeLabel = function (mixed $label, ?string $side = null) use ($color): ?array {
+        if (blank($label)) {
+            return null;
+        }
 
-    $verticalEnd = [
-        'x' => $currentAnchor['x'],
-        'y' => $add($currentAnchor['y'], $stemLength),
-    ];
+        if (is_array($label)) {
+            $text = data_get($label, 'text');
+            $left = data_get($label, 'left');
+            $right = data_get($label, 'right');
+            $top = data_get($label, 'top');
+            $bottom = data_get($label, 'bottom');
+
+            if (filled($left)) {
+                $text = $left;
+                $side = 'left';
+            } elseif (filled($right)) {
+                $text = $right;
+                $side = 'right';
+            } elseif (filled($top)) {
+                $text = $top;
+                $side = 'top';
+            } elseif (filled($bottom)) {
+                $text = $bottom;
+                $side = 'bottom';
+            }
+
+            if (blank($text)) {
+                return null;
+            }
+
+            return array_replace([
+                'text' => $text,
+                'side' => $side,
+                'badgeColor' => $color,
+            ], collect($label)->except(['left', 'right', 'top', 'bottom'])->all());
+        }
+
+        return [
+            'text' => $label,
+            'side' => $side,
+            'badgeColor' => $color,
+        ];
+    };
+    $pathNodeLabels = function (mixed $label): array {
+        if (! is_array($label)) {
+            return filled($label) ? [$label, null] : [null, null];
+        }
+
+        $top = data_get($label, 'top');
+        $bottom = data_get($label, 'bottom');
+        if (filled($top) || filled($bottom)) {
+            return [$top ?: null, $bottom ?: null];
+        }
+        if (filled(data_get($label, 'text'))) {
+            return [$label, null];
+        }
+
+        return [
+            data_get($label, 'labelA', data_get($label, 'label', data_get($label, 0))),
+            data_get($label, 'labelB', data_get($label, 1)),
+        ];
+    };
+    $arcEndLabel = $normalizeLabel(data_get($nodeLabels, 1), 'top');
+    $bridgeEndLabels = collect($pathNodeLabels(data_get($nodeLabels, 2)))
+        ->map(fn (mixed $label): ?array => $normalizeLabel($label))
+        ->all();
+    $bridgeEndNode = collect($bridgeEndLabels)->filter(fn (mixed $label): bool => filled($label))->isNotEmpty()
+        ? $bridgeEndLabels
+        : true;
+
     $arcEnd = [
-        'x' => $add($verticalEnd['x'], $arcDelta),
-        'y' => $add($verticalEnd['y'], $arcSize),
+        'x' => $add($currentAnchor['x'], $arcDelta),
+        'y' => $add($currentAnchor['y'], $arcSize),
     ];
     $bridgeEnd = [
         'x' => $add($arcEnd['x'], $bridgeDelta),
@@ -67,34 +133,19 @@
 
     $segments = [
         [
-            'component' => 'path',
-            'segment' => [
-                'id' => $id . '.stem',
-                'direction' => 'bottom-top',
-                'length' => $stemLength,
-                'anchorStart' => $currentAnchor,
-                'anchorEnd' => $verticalEnd,
-                'nodeStart' => false,
-                'nodeEnd' => true,
-                'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'color' => $color,
-                'zIndex' => $zIndex,
-                'dev' => $dev,
-            ],
-        ],
-        [
             'component' => 'arc',
             'segment' => [
                 'id' => $id . '.arc',
                 'startAnchor' => $arcStartAnchor,
                 'endAnchor' => $arcEndAnchor,
-                'anchorStart' => $verticalEnd,
+                'anchorStart' => $currentAnchor,
                 'anchorEnd' => $arcEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
+                'endLabel' => $arcEndLabel,
+                'dashed' => $fallbackUsed,
                 'color' => $color,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
@@ -109,9 +160,10 @@
                 'anchorStart' => $arcEnd,
                 'anchorEnd' => $bridgeEnd,
                 'nodeStart' => false,
-                'nodeEnd' => true,
+                'nodeEnd' => $bridgeEndNode,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
+                'dashed' => $fallbackUsed,
                 'color' => $color,
                 'zIndex' => $zIndex,
                 'dev' => $dev,

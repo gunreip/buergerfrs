@@ -1,4 +1,4 @@
-{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph-protocol/primitives/arc.blade.php --}}
+{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/primitives/arc.blade.php --}}
 {{--
     Primitive: arc
 

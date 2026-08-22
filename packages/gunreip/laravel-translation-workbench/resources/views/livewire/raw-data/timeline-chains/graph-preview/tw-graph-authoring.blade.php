@@ -57,7 +57,7 @@
             'arcSize' => '2.75rem',
             'capLength' => '1.75rem',
             'bridgeLength' => 'lineLength',
-            'stemHeight' => 'lineLength',
+            'stemLength' => 'lineLength',
             'connectorLength' => '2rem',
             'connectorGap' => '0.25rem',
             'pathCount' => '10',
@@ -156,7 +156,7 @@
                         1 => '12rem',
                         2 => '14rem',
                     ]"
-                    :extension-stem-heights="[
+                    :extension-stem-lengths="[
                         1 => '5rem',
                         2 => '3.5rem',
                     ]"
@@ -177,7 +177,7 @@
                     color="green"
                     attach-to="strang.trunk.node.3"
                     bridge-length="10rem"
-                    stem-height="2rem"
+                    stem-length="2rem"
                     :node-labels="[
                         1 => ['left' => 'merge right start'],
                         5 => ['right' => ['trunk', 'attach']],
@@ -188,7 +188,7 @@
                         1 => '12rem',
                         2 => '14rem',
                     ]"
-                    :extension-stem-heights="[
+                    :extension-stem-lengths="[
                         2 => '3.5rem',
                     ]"
                     :extension-node-labels="[
@@ -208,10 +208,15 @@
                     color="fuchsia"
                     attach-to="strang.trunk.node.5"
                     bridge-length="8rem"
+                    :bridge-continuation="[
+                        1 => ['5rem'],
+                        2 => ['3rem', 'bottom' => ['bridge left', '2']],
+                    ]"
                     :node-labels="[
                         3 => ['left' => ['branch left', 'node 3']],
                     ]"
-                    :continuation-stem="[
+                    stem-length="8rem"
+                    :stem-continuation="[
                         1 => ['4rem', 'left' => 'branch left', 'continuation'],
                         2 => ['3rem'],
                         3 => ['6rem', 'left' => ['Left label', '2te Zeile'], 'right' => 'Right label'],
@@ -229,26 +234,33 @@
                         'node.2' => [
                             1 => [
                                 'bridgeLength' => '35rem',
-                                'stemHeight' => '13rem',
+                                'stemLength' => '13rem',
+                                'returnBridge' => [
+                                    'bridgeLength' => '8rem',
+                                    'nodeLabels' => [
+                                        1 => ['top' => 'open return'],
+                                        2 => ['bottom' => 'bridge end'],
+                                    ],
+                                ],
                                 'color' => 'cyan',
                             ],
                         ],
-                        'continuation.1' => [
+                        'stem.1' => [
                             1 => [
                                 'bridgeLength' => '10rem',
-                                'stemHeight' => '4rem',
+                                'stemLength' => '4rem',
                                 'color' => 'rose',
                             ],
                             2 => [
                                 'bridgeLength' => '9rem',
-                                'stemHeight' => '9rem',
+                                'stemLength' => '9rem',
                                 'color' => 'blue',
                             ],
                         ],
                     ]"
                     :branch-return="[
                         1 => [
-                            'attachTo' => 'continuation.3',
+                            'attachTo' => 'stem.3',
                             'bridgeLength' => '8rem',
                             'color' => 'orange',
                         ],
@@ -280,10 +292,14 @@
                     color="violet"
                     attach-to="strang.trunk.node.6"
                     bridge-length="8rem"
+                    :bridge-continuation="[
+                        1 => ['5rem'],
+                        2 => ['3rem', 'top' => ['bridge right', '2']],
+                    ]"
                     :node-labels="[
                         3 => ['right' => ['branch right', 'node 3']],
                     ]"
-                    :continuation-stem="[
+                    :stem-continuation="[
                         1 => ['4rem'],
                         2 => ['5rem'],
                         3 => ['5rem'],
@@ -296,17 +312,27 @@
                         // 10 => ['12rem'],
                     ]"
                     :branch-extension="[
-                        'continuation.1' => [
+                        'stem.1' => [
                             1 => [
                                 'bridgeLength' => '11rem',
-                                'stemHeight' => '4rem',
+                                'stemLength' => '4.5rem',
                                 'color' => 'emerald',
+                                'returnBridge' => [
+                                    1 => [
+                                        'bridgeLength' => '16.5rem',
+                                        'color' => 'emerald',
+                                        'nodeLabels' => [
+                                            1 => ['top' => 'return arc'],
+                                            2 => ['top' => 'open end'],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
                     ]"
                     :branch-return="[
                         1 => [
-                            'attachTo' => 'continuation.3',
+                            'attachTo' => 'stem.3',
                             'bridgeLength' => '8rem',
                             'color' => 'violet',
                         ],

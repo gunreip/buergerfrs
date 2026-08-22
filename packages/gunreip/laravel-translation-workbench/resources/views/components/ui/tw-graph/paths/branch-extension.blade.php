@@ -1,4 +1,4 @@
-{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph-protocol/paths/branch-extension.blade.php --}}
+{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/paths/branch-extension.blade.php --}}
 {{--
     Path: branch-extension
 
@@ -7,7 +7,7 @@
         side="left"
         :anchor-start="['x' => '0rem', 'y' => '0rem']"
         bridge-length="3rem"
-        stem-height="2rem"
+        stem-length="2rem"
     />
 
     Path role:
@@ -27,7 +27,7 @@
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcSize' => '2.75rem',
     'bridgeLength' => '3rem',
-    'stemHeight' => '2rem',
+    'stemLength' => '2rem',
     'color' => 'rose',
     'zIndex' => null,
     'counterStart' => 1,
@@ -78,7 +78,7 @@
     ];
     $verticalEnd = [
         'x' => $arcEnd['x'],
-        'y' => $add($arcEnd['y'], $stemHeight),
+        'y' => $add($arcEnd['y'], $stemLength),
     ];
     $pathBoxPadding = '0.75rem';
     $pathBoxX = $isLeft ? $verticalEnd['x'] : $currentAnchor['x'];
@@ -151,7 +151,7 @@
             'segment' => [
                 'id' => $id . '.stem',
                 'direction' => 'bottom-top',
-                'length' => $stemHeight,
+                'length' => $stemLength,
                 'anchorStart' => $arcEnd,
                 'anchorEnd' => $verticalEnd,
                 'nodeStart' => false,

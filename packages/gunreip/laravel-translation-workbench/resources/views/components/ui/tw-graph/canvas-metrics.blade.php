@@ -13,9 +13,11 @@
 @props([
     'graphId' => null,
     'dev' => false,
+    'coordinates' => true,
 ])
 
 @php
+    $showCoordinates = filter_var($coordinates, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? (bool) $coordinates;
     $summary = filled($graphId)
         ? \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::summary((string) $graphId)
         : ['left' => [], 'center' => [], 'right' => []];
@@ -81,62 +83,64 @@
             ?? (strlen($canvasHeight) > 24 ? 'calc(...)' : $canvasHeight);
     @endphp
 
-    <span
-        class="tw-graph-protocol-dev-only pointer-events-none absolute left-0 right-0 z-40 h-px"
-        style="
-            bottom: {{ $originBottom }};
-            background-color: rgb(239 68 68 / 0.75);
-        "
-    ></span>
-
-    @foreach (['left', 'center', 'right'] as $side)
-        @php
-            $sideSummary = $summary[$side] ?? ['count' => 0, 'height' => '0rem', 'items' => []];
-            $height = (string) data_get($sideSummary, 'height', '0rem');
-            $top = (string) data_get($sideSummary, 'top', '0rem');
-            $displayHeight = strlen($height) > 28 ? 'max(...)' : $height;
-            $displayTop = strlen($top) > 24 ? 'max(...)' : $top;
-            $resultHeight = $formatRem(data_get($sideSummary, 'heightRem')) ?? $displayHeight;
-            $resultTop = $formatRem(data_get($sideSummary, 'topRem')) ?? $displayTop;
-        @endphp
-
+    @if ($showCoordinates)
         <span
-            class="tw-graph-protocol-dev-only pointer-events-none absolute z-40 h-px"
+            class="tw-graph-protocol-dev-only pointer-events-none absolute left-0 right-0 z-40 h-px"
             style="
-                {{ $linePositions[$side] }}
-                bottom: calc({{ $originBottom }} + {{ $top }});
-                background-color: rgb({{ $lineColors[$side] }} / 0.85);
+                bottom: {{ $originBottom }};
+                background-color: rgb(239 68 68 / 0.75);
             "
         ></span>
 
-        <span
-            class="tw-graph-protocol-dev-only pointer-events-auto absolute z-50 rounded border border-zinc-400/50 bg-white/90 px-2 py-1 font-mono text-[0.65rem] leading-tight text-zinc-800 shadow-sm dark:border-zinc-500/50 dark:bg-zinc-900/90 dark:text-zinc-100 {{ $positions[$side] }}"
-        >
-            <span class="block uppercase tracking-wide">
-                {{ $labels[$side] }}
-            </span>
-            <span class="block">
-                top={{ $resultTop }}
-            </span>
-            <span class="block">
-                h={{ $resultHeight }}
-            </span>
-            <span class="block">
-                n={{ data_get($sideSummary, 'count', 0) }}
-            </span>
-            @if ($largestSide === $side)
-                <span class="mt-0.5 block rounded bg-red-500/15 px-1 text-red-700 dark:text-red-300">
-                    largest
+        @foreach (['left', 'center', 'right'] as $side)
+            @php
+                $sideSummary = $summary[$side] ?? ['count' => 0, 'height' => '0rem', 'items' => []];
+                $height = (string) data_get($sideSummary, 'height', '0rem');
+                $top = (string) data_get($sideSummary, 'top', '0rem');
+                $displayHeight = strlen($height) > 28 ? 'max(...)' : $height;
+                $displayTop = strlen($top) > 24 ? 'max(...)' : $top;
+                $resultHeight = $formatRem(data_get($sideSummary, 'heightRem')) ?? $displayHeight;
+                $resultTop = $formatRem(data_get($sideSummary, 'topRem')) ?? $displayTop;
+            @endphp
+
+            <span
+                class="tw-graph-protocol-dev-only pointer-events-none absolute z-40 h-px"
+                style="
+                    {{ $linePositions[$side] }}
+                    bottom: calc({{ $originBottom }} + {{ $top }});
+                    background-color: rgb({{ $lineColors[$side] }} / 0.85);
+                "
+            ></span>
+
+            <span
+                class="tw-graph-protocol-dev-only pointer-events-auto absolute z-50 rounded border border-zinc-400/50 bg-white/90 px-2 py-1 font-mono text-[0.65rem] leading-tight text-zinc-800 shadow-sm dark:border-zinc-500/50 dark:bg-zinc-900/90 dark:text-zinc-100 {{ $positions[$side] }}"
+            >
+                <span class="block uppercase tracking-wide">
+                    {{ $labels[$side] }}
                 </span>
-            @endif
-            @if ($side === 'center')
                 <span class="block">
-                    bottom={{ $displayOriginBottom }}
+                    top={{ $resultTop }}
                 </span>
                 <span class="block">
-                    height={{ $displayCanvasHeight }}
+                    h={{ $resultHeight }}
                 </span>
-            @endif
-        </span>
-    @endforeach
+                <span class="block">
+                    n={{ data_get($sideSummary, 'count', 0) }}
+                </span>
+                @if ($largestSide === $side)
+                    <span class="mt-0.5 block rounded bg-red-500/15 px-1 text-red-700 dark:text-red-300">
+                        largest
+                    </span>
+                @endif
+                @if ($side === 'center')
+                    <span class="block">
+                        bottom={{ $displayOriginBottom }}
+                    </span>
+                    <span class="block">
+                        height={{ $displayCanvasHeight }}
+                    </span>
+                @endif
+            </span>
+        @endforeach
+    @endif
 @endif

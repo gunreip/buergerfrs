@@ -73,8 +73,8 @@
                         side="left"
                         :anchor-start="['x' => '-8.5rem', 'y' => '0.75rem']"
                         start-length="2rem"
-                        vertical-length="2rem"
-                        connector-length="3rem"
+                        stem-length="2rem"
+                        bridge-length="3rem"
                         color="amber"
                         :dev="true"
                     />
@@ -86,8 +86,8 @@
                         side="right"
                         :anchor-start="['x' => '8.5rem', 'y' => '0.75rem']"
                         start-length="2rem"
-                        vertical-length="2rem"
-                        connector-length="3rem"
+                        stem-length="2rem"
+                        bridge-length="3rem"
                         color="green"
                         :dev="true"
                     />
@@ -99,8 +99,8 @@
                         side="left"
                         :anchor-start="['x' => '-7rem', 'y' => '0.75rem']"
                         start-length="2rem"
-                        vertical-length="2rem"
-                        connector-length="4rem"
+                        stem-length="2rem"
+                        bridge-length="4rem"
                         color="sky"
                         :dev="true"
                     />
@@ -112,8 +112,8 @@
                         side="right"
                         :anchor-start="['x' => '7rem', 'y' => '0.75rem']"
                         start-length="2rem"
-                        vertical-length="2rem"
-                        connector-length="4rem"
+                        stem-length="2rem"
+                        bridge-length="4rem"
                         color="rose"
                         :dev="true"
                     />
@@ -124,8 +124,8 @@
                         id="catalog.path.branch.left"
                         side="left"
                         :anchor-start="['x' => '7rem', 'y' => '0.75rem']"
-                        connector-length="3rem"
-                        vertical-length="4rem"
+                        bridge-length="3rem"
+                        stem-length="4rem"
                         color="pink"
                         :dev="true"
                     />
@@ -136,8 +136,8 @@
                         id="catalog.path.branch.right"
                         side="right"
                         :anchor-start="['x' => '-7rem', 'y' => '0.75rem']"
-                        connector-length="3rem"
-                        vertical-length="4rem"
+                        bridge-length="3rem"
+                        stem-length="4rem"
                         color="violet"
                         :dev="true"
                     />
@@ -148,8 +148,8 @@
                         id="catalog.path.branch-extension.left"
                         side="left"
                         :anchor-start="['x' => '6rem', 'y' => '2rem']"
-                        connector-length="3rem"
-                        vertical-length="4rem"
+                        bridge-length="3rem"
+                        stem-length="4rem"
                         color="rose"
                         :dev="true"
                     />
@@ -160,8 +160,8 @@
                         id="catalog.path.branch-extension.right"
                         side="right"
                         :anchor-start="['x' => '-6rem', 'y' => '2rem']"
-                        connector-length="3rem"
-                        vertical-length="4rem"
+                        bridge-length="3rem"
+                        stem-length="4rem"
                         color="indigo"
                         :dev="true"
                     />
@@ -172,8 +172,7 @@
                         id="catalog.path.branch-return.left"
                         side="left"
                         :anchor-start="['x' => '-7rem', 'y' => '0.75rem']"
-                        vertical-length="2rem"
-                        connector-length="3rem"
+                        bridge-length="3rem"
                         color="orange"
                         :dev="true"
                     />
@@ -184,9 +183,32 @@
                         id="catalog.path.branch-return.right"
                         side="right"
                         :anchor-start="['x' => '7rem', 'y' => '0.75rem']"
-                        vertical-length="2rem"
-                        connector-length="3rem"
+                        bridge-length="3rem"
                         color="teal"
+                        :dev="true"
+                    />
+                @break
+
+                @case('path-branch-return-bridge-left')
+                    <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
+                        id="catalog.path.branch-return-bridge.left"
+                        side="left"
+                        :anchor-start="['x' => '-6rem', 'y' => '1rem']"
+                        bridge-length="4rem"
+                        :node-labels="[1 => ['top' => 'Arc'], 2 => ['bottom' => 'Bridge']]"
+                        color="amber"
+                        :dev="true"
+                    />
+                @break
+
+                @case('path-branch-return-bridge-right')
+                    <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
+                        id="catalog.path.branch-return-bridge.right"
+                        side="right"
+                        :anchor-start="['x' => '6rem', 'y' => '1rem']"
+                        bridge-length="4rem"
+                        :node-labels="[1 => ['top' => 'Arc'], 2 => ['bottom' => 'Bridge']]"
+                        color="emerald"
                         :dev="true"
                     />
                 @break
@@ -196,8 +218,8 @@
                         id="catalog.path.branch-return-extension.left"
                         side="left"
                         :anchor-start="['x' => '-6rem', 'y' => '0.75rem']"
-                        vertical-length="2rem"
-                        connector-length="3rem"
+                        stem-length="2rem"
+                        bridge-length="3rem"
                         color="yellow"
                         :dev="true"
                     />
@@ -208,8 +230,8 @@
                         id="catalog.path.branch-return-extension.right"
                         side="right"
                         :anchor-start="['x' => '6rem', 'y' => '0.75rem']"
-                        vertical-length="2rem"
-                        connector-length="3rem"
+                        stem-length="2rem"
+                        bridge-length="3rem"
                         color="lime"
                         :dev="true"
                     />

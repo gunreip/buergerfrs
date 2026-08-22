@@ -7,7 +7,7 @@
         side="left"
         :anchor-start="['x' => '0rem', 'y' => '0rem']"
         start-length="2rem"
-        stem-height="2rem"
+        stem-length="2rem"
         bridge-length="3rem"
         :node-labels="[4 => ['top' => 'Root #1']]"
     />
@@ -25,7 +25,7 @@
     'startLength' => null,
     'lineLength' => '4rem',
     'arcSize' => '2.75rem',
-    'stemHeight' => null,
+    'stemLength' => null,
     'bridgeLength' => null,
     'nodeLabels' => [],
     'color' => 'sky',
@@ -46,7 +46,7 @@
     $isLeft = $side === 'left';
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
     $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($arcSize ?? null, '2.75rem');
-    $resolvedStemHeight = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemHeight, $resolvedLineLength, '4rem');
+    $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, $resolvedLineLength, '4rem');
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, $resolvedLineLength, '4rem');
 
     $arcStartAnchor = $isLeft ? 'w' : 'e';
@@ -61,7 +61,7 @@
     ];
     $stemEnd = [
         'x' => $startEnd['x'],
-        'y' => $add($startEnd['y'], $resolvedStemHeight),
+        'y' => $add($startEnd['y'], $resolvedStemLength),
     ];
     $arcEnd = [
         'x' => $add($stemEnd['x'], $arcDelta),
@@ -160,7 +160,7 @@
             'segment' => [
                 'id' => $id . '.stem',
                 'direction' => 'bottom-top',
-                'length' => $resolvedStemHeight,
+                'length' => $resolvedStemLength,
                 'anchorStart' => $startEnd,
                 'anchorEnd' => $stemEnd,
                 'nodeStart' => false,

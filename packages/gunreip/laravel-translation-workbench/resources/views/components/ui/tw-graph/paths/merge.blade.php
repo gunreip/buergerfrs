@@ -1,4 +1,4 @@
-{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph-protocol/paths/merge.blade.php --}}
+{{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/paths/merge.blade.php --}}
 {{--
     Path: merge
 
@@ -7,7 +7,7 @@
         side="left"
         :anchor-start="['x' => '0rem', 'y' => '0.75rem']"
         bridge-length="3rem"
-        stem-height="2rem"
+        stem-length="2rem"
         :node-labels="[1 => ['right' => 'Source'], 5 => ['left' => 'Attach']]"
     />
 
@@ -26,7 +26,7 @@
     'lineWidth' => '0.25rem',
     'arcSize' => '2.75rem',
     'bridgeLength' => null,
-    'stemHeight' => null,
+    'stemLength' => null,
     'color' => 'amber',
     'zIndex' => null,
     'nodeLabels' => [],
@@ -48,7 +48,7 @@
     $resolvedLineWidth = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineWidth ?? null, '0.25rem');
     $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($arcSize ?? null, '2.75rem');
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, $resolvedLineLength, '4rem');
-    $resolvedStemHeight = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemHeight, $resolvedLineLength, '4rem');
+    $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, $resolvedLineLength, '4rem');
     $normalizeLabel = function (mixed $label, ?string $side = null) use ($color): ?array {
         if (blank($label)) {
             return null;
@@ -115,7 +115,7 @@
     ];
     $stemEnd = [
         'x' => $startEnd['x'],
-        'y' => $add($startEnd['y'], $resolvedStemHeight),
+        'y' => $add($startEnd['y'], $resolvedStemLength),
     ];
     $arcInEnd = [
         'x' => $add($stemEnd['x'], $isLeft ? $resolvedArcSize : $neg($resolvedArcSize)),
@@ -165,7 +165,7 @@
             'segment' => [
                 'id' => $id . '.stem',
                 'direction' => 'bottom-top',
-                'length' => $resolvedStemHeight,
+                'length' => $resolvedStemLength,
                 'anchorStart' => $startEnd,
                 'anchorEnd' => $stemEnd,
                 'nodeStart' => false,
