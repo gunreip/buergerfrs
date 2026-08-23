@@ -22,8 +22,16 @@
         ? \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::summary((string) $graphId)
         : ['left' => [], 'center' => [], 'right' => []];
     $canvasMetrics = filled($graphId)
-        ? \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::canvasMetrics((string) $graphId)
+        ? \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::canvasMetrics((string) $graphId, '2rem', '12rem')
         : [
+            'minX' => '0rem',
+            'minXRem' => 0.0,
+            'maxX' => '0rem',
+            'maxXRem' => 0.0,
+            'originLeft' => '0rem',
+            'originLeftRem' => 0.0,
+            'width' => '0rem',
+            'widthRem' => 0.0,
             'minY' => '0rem',
             'minYRem' => 0.0,
             'maxY' => '0rem',
@@ -33,6 +41,10 @@
             'height' => '0rem',
             'heightRem' => 0.0,
         ];
+    $originLeft = (string) data_get($canvasMetrics, 'originLeft', '0rem');
+    $canvasWidth = (string) data_get($canvasMetrics, 'width', '0rem');
+    $minX = (string) data_get($canvasMetrics, 'minX', '0rem');
+    $maxX = (string) data_get($canvasMetrics, 'maxX', '0rem');
     $originBottom = (string) data_get($canvasMetrics, 'originBottom', '0rem');
     $canvasHeight = (string) data_get($canvasMetrics, 'height', '0rem');
     $positions = [
@@ -70,6 +82,8 @@
     @if (filled($graphId))
         <style>
             #{{ $graphId }} {
+                --tw-graph-protocol-trunk-x: {{ $originLeft }};
+                --tw-graph-protocol-calculated-width: {{ $canvasWidth }};
                 --tw-graph-protocol-origin-bottom: {{ $originBottom }};
                 --tw-graph-protocol-calculated-height: {{ $canvasHeight }};
             }
@@ -81,11 +95,41 @@
             ?? (strlen($originBottom) > 24 ? 'calc(...)' : $originBottom);
         $displayCanvasHeight = $formatRem(data_get($canvasMetrics, 'heightRem'))
             ?? (strlen($canvasHeight) > 24 ? 'calc(...)' : $canvasHeight);
+        $displayOriginLeft = $formatRem(data_get($canvasMetrics, 'originLeftRem'))
+            ?? (strlen($originLeft) > 24 ? 'calc(...)' : $originLeft);
+        $displayCanvasWidth = $formatRem(data_get($canvasMetrics, 'widthRem'))
+            ?? (strlen($canvasWidth) > 24 ? 'calc(...)' : $canvasWidth);
+        $displayMinX = $formatRem(data_get($canvasMetrics, 'minXRem'))
+            ?? (strlen($minX) > 24 ? 'min(...)' : $minX);
+        $displayMaxX = $formatRem(data_get($canvasMetrics, 'maxXRem'))
+            ?? (strlen($maxX) > 24 ? 'max(...)' : $maxX);
     @endphp
 
     @if ($showCoordinates)
         <span
-            class="tw-graph-protocol-dev-only pointer-events-none absolute left-0 right-0 z-40 h-px"
+            class="tw-graph-protocol-dev-only tw-graph-protocol-coordinate-only pointer-events-none absolute bottom-0 top-0 z-40 w-px"
+            style="
+                left: calc(var(--tw-graph-protocol-trunk-x) + {{ $minX }});
+                background-color: rgb(244 114 182 / 0.8);
+            "
+        ></span>
+        <span
+            class="tw-graph-protocol-dev-only tw-graph-protocol-coordinate-only pointer-events-none absolute bottom-0 top-0 z-40 w-px"
+            style="
+                left: var(--tw-graph-protocol-trunk-x);
+                background-color: rgb(56 189 248 / 0.8);
+            "
+        ></span>
+        <span
+            class="tw-graph-protocol-dev-only tw-graph-protocol-coordinate-only pointer-events-none absolute bottom-0 top-0 z-40 w-px"
+            style="
+                left: calc(var(--tw-graph-protocol-trunk-x) + {{ $maxX }});
+                background-color: rgb(168 85 247 / 0.8);
+            "
+        ></span>
+
+        <span
+            class="tw-graph-protocol-dev-only tw-graph-protocol-coordinate-only pointer-events-none absolute left-0 right-0 z-40 h-px"
             style="
                 bottom: {{ $originBottom }};
                 background-color: rgb(239 68 68 / 0.75);
@@ -104,7 +148,7 @@
             @endphp
 
             <span
-                class="tw-graph-protocol-dev-only pointer-events-none absolute z-40 h-px"
+                class="tw-graph-protocol-dev-only tw-graph-protocol-coordinate-only pointer-events-none absolute z-40 h-px"
                 style="
                     {{ $linePositions[$side] }}
                     bottom: calc({{ $originBottom }} + {{ $top }});
@@ -113,7 +157,7 @@
             ></span>
 
             <span
-                class="tw-graph-protocol-dev-only pointer-events-auto absolute z-50 rounded border border-zinc-400/50 bg-white/90 px-2 py-1 font-mono text-[0.65rem] leading-tight text-zinc-800 shadow-sm dark:border-zinc-500/50 dark:bg-zinc-900/90 dark:text-zinc-100 {{ $positions[$side] }}"
+                class="tw-graph-protocol-dev-only tw-graph-protocol-coordinate-only pointer-events-auto absolute z-50 rounded border border-zinc-400/50 bg-white/90 px-2 py-1 font-mono text-[0.65rem] leading-tight text-zinc-800 shadow-sm dark:border-zinc-500/50 dark:bg-zinc-900/90 dark:text-zinc-100 {{ $positions[$side] }}"
             >
                 <span class="block uppercase tracking-wide">
                     {{ $labels[$side] }}
@@ -133,6 +177,18 @@
                     </span>
                 @endif
                 @if ($side === 'center')
+                    <span class="block">
+                        left={{ $displayOriginLeft }}
+                    </span>
+                    <span class="block">
+                        width={{ $displayCanvasWidth }}
+                    </span>
+                    <span class="block">
+                        minX={{ $displayMinX }}
+                    </span>
+                    <span class="block">
+                        maxX={{ $displayMaxX }}
+                    </span>
                     <span class="block">
                         bottom={{ $displayOriginBottom }}
                     </span>

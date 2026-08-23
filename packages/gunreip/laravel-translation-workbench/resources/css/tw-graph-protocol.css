@@ -26,19 +26,47 @@
         --tw-graph-protocol-origin-bottom: 0rem;
 
         position: relative;
-        min-width: max-content;
+        width: 100%;
+        max-width: 100%;
         overflow: visible;
+    }
+
+    /*
+     * The graph is drawn with absolutely positioned children, so a wide canvas
+     * can otherwise leak into the page layout instead of scrolling locally.
+     * Keep this viewport as the horizontal scroll boundary: it contains the
+     * inline-size, while the inner graph/canvas may grow to its calculated width.
+     */
+    .tw-graph-protocol-viewport {
+        contain: inline-size;
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        border: 1px solid rgb(212 212 216 / 0.75);
+        border-radius: 0.5rem;
+    }
+
+    .dark .tw-graph-protocol-viewport {
+        border-color: rgb(63 63 70 / 0.9);
+    }
+
+    .tw-graph-protocol-viewport>.tw-graph-protocol {
+        width: max-content;
+        max-width: none;
+        min-width: 100%;
     }
 
     .tw-graph-protocol-canvas {
         position: relative;
-        width: max(100%, var(--tw-graph-protocol-min-width, 40rem));
-        min-width: var(--tw-graph-protocol-min-width, 40rem);
+        width: max(100%, var(--tw-graph-protocol-min-width, 40rem), var(--tw-graph-protocol-calculated-width, 0rem));
+        min-width: max(var(--tw-graph-protocol-min-width, 40rem), var(--tw-graph-protocol-calculated-width, 0rem));
         height: max(var(--tw-graph-protocol-min-height, 18rem), var(--tw-graph-protocol-calculated-height, 0rem));
         min-height: max(var(--tw-graph-protocol-min-height, 18rem), var(--tw-graph-protocol-calculated-height, 0rem));
         overflow: visible;
-        border: 1px dashed rgb(113 113 122 / 0.35);
-        border-radius: 0.5rem;
     }
 
     .tw-graph-protocol-catalog-preview {
@@ -52,6 +80,10 @@
 
     .tw-graph-protocol-dev-disabled .tw-graph-protocol-dev-only,
     .tw-graph-protocol-dev-disabled .tw-graph-protocol-primitive-dev-node-counter {
+        display: none;
+    }
+
+    .tw-graph-protocol-coordinates-disabled .tw-graph-protocol-coordinate-only {
         display: none;
     }
 

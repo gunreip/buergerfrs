@@ -224,6 +224,25 @@ final class DevIdentifier
             return null;
         }
 
+        if (preg_match('/(?:^|\.)label\.(start|end)\.(\d+)(?:\.|$)/', $tail, $matches) === 1) {
+            $anchor = $matches[1] === 'start' ? 'Start' : 'End';
+            $index = max(1, (int) $matches[2]);
+
+            if (preg_match('/(?:^|\.)connector(?:\.|$)/', $tail) === 1) {
+                return 'node' . $anchor . 'Label' . $index . '.connector';
+            }
+
+            return 'node' . $anchor . 'Label' . $index;
+        }
+
+        if (preg_match('/(?:^|\.)start-label(?:\.|$)/', $tail) === 1) {
+            return 'startLabel';
+        }
+
+        if (preg_match('/(?:^|\.)end-label(?:\.|$)/', $tail) === 1) {
+            return 'endLabel';
+        }
+
         if (preg_match('/(?:^|\.)connector(?:\.|$)/', $tail) === 1) {
             return 'connector';
         }

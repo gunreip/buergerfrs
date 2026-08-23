@@ -543,6 +543,8 @@ class TranslationWorkbenchRawData extends Component
 
     public ?string $timelineEventsTimeSpan = '02:00';
 
+    public string $timelineChainPreviewId = 'auto';
+
     public function mount(): void
     {
         $state = $this->userSetting($this->uiStateSettingKey(), $this->uiStateDefaults());
@@ -1897,6 +1899,7 @@ class TranslationWorkbenchRawData extends Component
             'timelineChainRootRows' => $this->timelineChainRootRows($table),
             'timelineChainOriginRows' => $this->timelineChainOriginRows($table),
             'timelineChainSampleRows' => $this->timelineChainSampleRows($table),
+            'timelineChainPreviewOptions' => $this->timelineChainPreviewOptions($table),
         ]);
     }
 
@@ -5087,6 +5090,19 @@ class TranslationWorkbenchRawData extends Component
         ];
     }
 
+    private function selectedTimelineChainPreviewId(): ?int
+    {
+        $selected = trim($this->timelineChainPreviewId);
+
+        if ($selected === '' || $selected === 'auto') {
+            return null;
+        }
+
+        $id = (int) $selected;
+
+        return $id > 0 ? $id : null;
+    }
+
     /**
      * @return array<int, array<string, mixed>>
      */
@@ -5165,6 +5181,62 @@ class TranslationWorkbenchRawData extends Component
     }
 
     /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function timelineChainPreviewOptions(string $table): array
+    {
+        if ($table !== 'translation_workbench_timeline_chains' || ! Schema::hasTable($table)) {
+            return [];
+        }
+
+        $select = [
+            'id',
+            'translation_key',
+            'chain_type',
+            'chain_status',
+            'finding_count',
+            'timeline_event_count',
+            'shared_candidate_count',
+            'bulk_review_count',
+        ];
+
+        $typeOrder = [
+            'bulk' => 0,
+            'shared' => 1,
+            'moved' => 2,
+            'single' => 3,
+        ];
+
+        return collect(array_keys($typeOrder))
+            ->flatMap(fn(string $type): array => DB::table($table)
+                ->where('chain_type', $type)
+                ->orderByRaw("CASE WHEN chain_status = 'active' THEN 0 ELSE 1 END")
+                ->orderByDesc('timeline_event_count')
+                ->orderByDesc('finding_count')
+                ->limit(3)
+                ->get($select)
+                ->all())
+            ->unique('id')
+            ->sortBy([
+                fn(object $a, object $b): int => ($typeOrder[(string) $a->chain_type] ?? 99)
+                    <=> ($typeOrder[(string) $b->chain_type] ?? 99),
+                fn(object $a, object $b): int => ((int) $b->timeline_event_count) <=> ((int) $a->timeline_event_count),
+            ])
+            ->values()
+            ->map(static fn(object $row): array => [
+                'id' => (int) $row->id,
+                'translation_key' => (string) $row->translation_key,
+                'chain_type' => (string) $row->chain_type,
+                'chain_status' => (string) $row->chain_status,
+                'finding_count' => (int) $row->finding_count,
+                'timeline_event_count' => (int) $row->timeline_event_count,
+                'shared_candidate_count' => (int) $row->shared_candidate_count,
+                'bulk_review_count' => (int) $row->bulk_review_count,
+            ])
+            ->all();
+    }
+
+    /**
      * @return array<string, mixed>|null
      */
     private function timelineChainMainRow(string $table): ?array
@@ -5173,39 +5245,56 @@ class TranslationWorkbenchRawData extends Component
             return null;
         }
 
-        $row = DB::table($table)
-            ->where('chain_status', 'active')
-            ->whereIn('chain_type', ['bulk', 'shared', 'moved', 'single'])
-            ->orderByRaw("CASE chain_type WHEN 'bulk' THEN 0 WHEN 'shared' THEN 1 WHEN 'moved' THEN 2 ELSE 3 END")
-            ->orderByDesc('timeline_event_count')
-            ->orderByDesc('finding_count')
-            ->first([
-                'id',
-                'translation_key',
-                'chain_type',
-                'chain_status',
-                'root_key_id',
-                'root_finding_id',
-                'key_count',
-                'finding_count',
-                'active_finding_count',
-                'obsolete_finding_count',
-                'commented_out_finding_count',
-                'review_count',
-                'timeline_event_count',
-                'lang_value_count',
-                'shared_candidate_count',
-                'bulk_review_count',
-                'related_translation_keys',
-                'relation_summary',
-                'lang_value_summary',
-                'timeline_event_summary',
-                'timeline_event_ids',
-                'first_seen_at',
-                'last_seen_at',
-                'created_at',
-                'updated_at',
-            ]);
+        $select = [
+            'id',
+            'translation_key',
+            'chain_type',
+            'chain_status',
+            'root_key_id',
+            'root_finding_id',
+            'key_count',
+            'finding_count',
+            'active_finding_count',
+            'obsolete_finding_count',
+            'commented_out_finding_count',
+            'review_count',
+            'timeline_event_count',
+            'lang_value_count',
+            'shared_candidate_count',
+            'bulk_review_count',
+            'key_ids',
+            'finding_ids',
+            'review_ids',
+            'lang_value_ids',
+            'related_translation_keys',
+            'relation_summary',
+            'lang_value_summary',
+            'timeline_event_summary',
+            'timeline_event_ids',
+            'meta',
+            'first_seen_at',
+            'last_seen_at',
+            'created_at',
+            'updated_at',
+        ];
+        $selectedId = $this->selectedTimelineChainPreviewId();
+        $row = $selectedId
+            ? DB::table($table)->where('id', $selectedId)->first($select)
+            : null;
+
+        if (! $row) {
+            if ($selectedId !== null) {
+                $this->timelineChainPreviewId = 'auto';
+            }
+
+            $row = DB::table($table)
+                ->where('chain_status', 'active')
+                ->whereIn('chain_type', ['bulk', 'shared', 'moved', 'single'])
+                ->orderByRaw("CASE chain_type WHEN 'bulk' THEN 0 WHEN 'shared' THEN 1 WHEN 'moved' THEN 2 ELSE 3 END")
+                ->orderByDesc('timeline_event_count')
+                ->orderByDesc('finding_count')
+                ->first($select);
+        }
 
         if (! $row) {
             return null;
@@ -5228,11 +5317,16 @@ class TranslationWorkbenchRawData extends Component
             'lang_value_count' => (int) $row->lang_value_count,
             'shared_candidate_count' => (int) $row->shared_candidate_count,
             'bulk_review_count' => (int) $row->bulk_review_count,
+            'key_ids' => $this->decodeJsonArray($row->key_ids ?? null),
+            'finding_ids' => $this->decodeJsonArray($row->finding_ids ?? null),
+            'review_ids' => $this->decodeJsonArray($row->review_ids ?? null),
+            'lang_value_ids' => $this->decodeJsonArray($row->lang_value_ids ?? null),
             'related_translation_keys' => $this->decodeJsonArray($row->related_translation_keys ?? null),
             'relation_summary' => $this->decodeJsonArray($row->relation_summary ?? null),
             'lang_value_summary' => $this->decodeJsonArray($row->lang_value_summary ?? null),
             'timeline_event_summary' => $this->decodeJsonArray($row->timeline_event_summary ?? null),
             'timeline_event_ids' => $this->decodeJsonArray($row->timeline_event_ids ?? null),
+            'meta' => $this->decodeJsonArray($row->meta ?? null),
             'first_seen_at' => $row->first_seen_at,
             'last_seen_at' => $row->last_seen_at,
             'created_at' => $row->created_at,
@@ -5250,7 +5344,6 @@ class TranslationWorkbenchRawData extends Component
         if (
             $mainRow === null
             || empty($mainRow['root_key_id'])
-            || ! Schema::hasTable('translation_workbench_reviews')
             || ! Schema::hasTable('translation_workbench_findings')
         ) {
             return [];
@@ -5258,11 +5351,13 @@ class TranslationWorkbenchRawData extends Component
 
         $translationKey = (string) $mainRow['translation_key'];
         $trunk = 'key #' . $mainRow['root_key_id'];
-        $bulkReviews = DB::table('translation_workbench_reviews')
-            ->where('key_id', (int) $mainRow['root_key_id'])
-            ->where('decision', 'translation_key_bulk_equalized')
-            ->orderBy('reviewed_at')
-            ->get(['id', 'finding_id', 'meta', 'reviewed_at', 'created_at']);
+        $bulkReviews = Schema::hasTable('translation_workbench_reviews')
+            ? DB::table('translation_workbench_reviews')
+                ->where('key_id', (int) $mainRow['root_key_id'])
+                ->where('decision', 'translation_key_bulk_equalized')
+                ->orderBy('reviewed_at')
+                ->get(['id', 'finding_id', 'meta', 'reviewed_at', 'created_at'])
+            : collect();
 
         $selectedFindingIds = $bulkReviews
             ->flatMap(function (object $review): array {
@@ -5282,26 +5377,9 @@ class TranslationWorkbenchRawData extends Component
             ->unique()
             ->values();
 
-        if ($selectedFindingIds->isEmpty()) {
-            return [];
-        }
-
-        $findings = DB::table('translation_workbench_findings as findings')
-            ->leftJoin('translation_workbench_source_files as source_files', 'source_files.id', '=', 'findings.source_file_id')
-            ->whereIn('findings.id', $selectedFindingIds->all())
-            ->get([
-                'findings.id',
-                'findings.status',
-                'findings.suggested_key',
-                'findings.literal_text',
-                'findings.literal_text_suggested',
-                'findings.first_seen_at',
-                'findings.last_seen_at',
-                'findings.created_at',
-                'findings.updated_at',
-                'source_files.path as source_path',
-                'findings.source_line',
-            ]);
+        $findings = $selectedFindingIds->isNotEmpty()
+            ? $this->timelineChainFindings($selectedFindingIds->all())
+            : collect();
 
         $edgeFindings = collect([
             $findings->sortBy(fn(object $finding): string => (string) ($finding->first_seen_at ?: $finding->created_at))->first(),
@@ -5332,7 +5410,7 @@ class TranslationWorkbenchRawData extends Component
                 });
         });
 
-        return $edgeFindings
+        $bulkOriginRows = $edgeFindings
             ->map(function (object $finding) use ($bulkReviewByFindingId, $translationKey, $trunk): array {
                 $root = 'finding #' . $finding->id;
                 $literal = trim((string) ($finding->literal_text ?? $finding->literal_text_suggested ?? ''));
@@ -5358,10 +5436,108 @@ class TranslationWorkbenchRawData extends Component
                     'last_color' => $bulkReview ? 'amber' : 'zinc',
                 ];
             })
-            ->filter(static fn(array $row): bool => filled($row['first_timestamp'] ?? null) || filled($row['last_timestamp'] ?? null))
+            ->filter(static fn(array $row): bool => filled($row['first_timestamp'] ?? null) || filled($row['last_timestamp'] ?? null));
+
+        return $bulkOriginRows
+            ->merge($this->timelineChainSharedOriginRows($mainRow, $trunk))
+            ->unique(static fn(array $row): string => implode('|', [
+                (string) ($row['first_root'] ?? ''),
+                (string) ($row['first_origin_key'] ?? ''),
+                (string) ($row['last_state'] ?? ''),
+            ]))
             ->sortBy('first_timestamp')
             ->values()
             ->all();
+    }
+
+    private function timelineChainFindings(array $findingIds)
+    {
+        $ids = collect($findingIds)
+            ->map(static fn(mixed $id): int => (int) $id)
+            ->filter(static fn(int $id): bool => $id > 0)
+            ->unique()
+            ->values();
+
+        if ($ids->isEmpty()) {
+            return collect();
+        }
+
+        return DB::table('translation_workbench_findings as findings')
+            ->leftJoin('translation_workbench_source_files as source_files', 'source_files.id', '=', 'findings.source_file_id')
+            ->whereIn('findings.id', $ids->all())
+            ->get([
+                'findings.id',
+                'findings.status',
+                'findings.suggested_key',
+                'findings.literal_text',
+                'findings.literal_text_suggested',
+                'findings.first_seen_at',
+                'findings.last_seen_at',
+                'findings.created_at',
+                'findings.updated_at',
+                'source_files.path as source_path',
+                'findings.source_line',
+            ]);
+    }
+
+    private function timelineChainSharedOriginRows(array $mainRow, string $trunk)
+    {
+        $translationKey = (string) ($mainRow['translation_key'] ?? '');
+        $sharedCandidates = collect(data_get($mainRow, 'meta.shared_candidates', []))
+            ->filter(static fn(mixed $candidate): bool => is_array($candidate))
+            ->values();
+
+        if ($sharedCandidates->isEmpty()) {
+            return collect();
+        }
+
+        $findingsById = $this->timelineChainFindings(
+            $sharedCandidates
+                ->pluck('finding_id')
+                ->filter()
+                ->all()
+        )->keyBy('id');
+
+        return $sharedCandidates
+            ->map(function (array $candidate) use ($findingsById, $translationKey, $trunk): ?array {
+                $findingId = (int) ($candidate['finding_id'] ?? 0);
+                $finding = $findingId > 0 ? $findingsById->get($findingId) : null;
+                $originKey = collect([
+                    $candidate['current_translation_key'] ?? null,
+                    $candidate['matched_translation_key'] ?? null,
+                    $finding?->suggested_key ?? null,
+                ])
+                    ->map(static fn(mixed $key): string => trim((string) $key))
+                    ->first(static fn(string $key): bool => $key !== '' && $key !== $translationKey);
+
+                if (! filled($originKey)) {
+                    return null;
+                }
+
+                $literal = trim((string) ($finding?->literal_text ?? $finding?->literal_text_suggested ?? ''));
+                $source = trim((string) ($finding?->source_path ?? ''));
+                $source .= ! empty($finding?->source_line) ? ':' . (string) $finding->source_line : '';
+
+                return [
+                    'trunk' => $trunk,
+                    'context' => $literal !== '' ? $literal : $source,
+                    'translation_key' => $translationKey,
+                    'first_timestamp' => $finding?->first_seen_at ?: $finding?->created_at ?: ($mainRow['first_seen_at'] ?? null),
+                    'first_root' => $findingId > 0 ? ('finding #' . $findingId) : ('candidate #' . (string) ($candidate['id'] ?? '?')),
+                    'first_origin_key' => $originKey,
+                    'first_event' => __('First seen as shared candidate origin'),
+                    'first_state' => (string) ($finding?->status ?? $candidate['status'] ?? ''),
+                    'first_color' => 'sky',
+                    'last_timestamp' => $finding?->last_seen_at ?: $finding?->updated_at ?: ($mainRow['updated_at'] ?? null),
+                    'last_root' => 'key #' . (string) ($candidate['matched_key_id'] ?? $mainRow['root_key_id'] ?? '?'),
+                    'last_origin_key' => $originKey,
+                    'last_event' => __('Mapped to shared key'),
+                    'last_state' => 'candidate #' . (string) ($candidate['id'] ?? '?') . ' / ' . (string) ($candidate['status'] ?? ''),
+                    'last_color' => 'amber',
+                ];
+            })
+            ->filter()
+            ->values();
     }
 
     /**

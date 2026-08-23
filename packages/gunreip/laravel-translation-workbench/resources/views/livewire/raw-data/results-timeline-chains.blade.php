@@ -5,7 +5,56 @@
     $mainRow = $timelineChainMainRow ?? null;
     $rootRows = collect($timelineChainRootRows ?? []);
     $originRows = collect($timelineChainOriginRows ?? []);
+    $previewOptions = collect($timelineChainPreviewOptions ?? []);
 @endphp
+
+<flux:callout
+    class="mt-4"
+    color="zinc"
+    icon="flask-conical"
+>
+    <flux:callout.heading>
+        <span class="flex w-full flex-wrap items-center justify-between gap-3">
+            <span>{{ __('Timeline chain graph preview dataset') }}</span>
+
+            <flux:field
+                class="min-w-120"
+                variant="inline"
+            >
+                <flux:select
+                    wire:model.live="timelineChainPreviewId"
+                    variant="combobox"
+                >
+                    <flux:select.option value="auto">
+                        {{ __('Auto sample') }}
+                    </flux:select.option>
+
+                    @foreach ($previewOptions as $option)
+                        @php
+                            $optionLabel = trim(
+                                '#' .
+                                    (string) $option['id'] .
+                                    ' · ' .
+                                    str((string) $option['chain_type'])->headline() .
+                                    ' · ' .
+                                    str((string) $option['chain_status'])->headline() .
+                                    ' · ' .
+                                    str((string) $option['translation_key'])->limit(80),
+                            );
+                        @endphp
+                        <flux:select.option value="{{ (string) $option['id'] }}">
+                            {{ $optionLabel }}
+                        </flux:select.option>
+                    @endforeach
+                </flux:select>
+            </flux:field>
+        </span>
+    </flux:callout.heading>
+
+    <flux:callout.text>
+        {{ __('Temporary review selector for testing the data-driven graph against different timeline-chain constellations before the renderer becomes more automatic.') }}
+    </flux:callout.text>
+</flux:callout>
 
 @if ($mainRow)
     @php

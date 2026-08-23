@@ -118,9 +118,10 @@
             x-bind:class="{ 'tw-graph-protocol-dev-disabled': !twGraphAuthoringDev }"
         >
             <x-translation-workbench::ui.tw-graph
-                class="rounded-lg border border-zinc-300 py-12 dark:border-zinc-700"
+                class="py-12"
                 :graph-id="$twGraphAuthoringGraphId"
                 :dev="true"
+                :coordinates="false"
             >
                 {{-- strang.trunk --}}
                 <x-translation-workbench::ui.tw-graph.strang.trunk
@@ -235,13 +236,6 @@
                             1 => [
                                 'bridgeLength' => '35rem',
                                 'stemLength' => '13rem',
-                                'returnBridge' => [
-                                    'bridgeLength' => '8rem',
-                                    'nodeLabels' => [
-                                        1 => ['top' => 'open return'],
-                                        2 => ['bottom' => 'bridge end'],
-                                    ],
-                                ],
                                 'color' => 'cyan',
                             ],
                         ],

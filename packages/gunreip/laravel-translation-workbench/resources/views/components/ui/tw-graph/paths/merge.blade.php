@@ -27,6 +27,7 @@
     'arcSize' => '2.75rem',
     'bridgeLength' => null,
     'stemLength' => null,
+    'startLabel' => null,
     'color' => 'amber',
     'zIndex' => null,
     'nodeLabels' => [],
@@ -109,6 +110,14 @@
     $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
     $bridgeDelta = $isLeft ? $resolvedBridgeLength : $neg($resolvedBridgeLength);
     $startLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedArcSize, '2.75rem');
+    $resolvedStartLabel = $normalizeLabel($startLabel, 'bottom')
+        ?? $normalizeLabel(data_get($nodeLabels, 'start'), 'bottom')
+        ?? [
+            'text' => ['Merge', 'start'],
+            'side' => 'bottom',
+            'offset' => '0.75rem',
+            'badgeColor' => $color,
+        ];
     $startEnd = [
         'x' => $currentAnchor['x'],
         'y' => $add($currentAnchor['y'], $startLength),
@@ -149,12 +158,7 @@
                 'nodeEnd' => $pathNodeLabels(1, $isLeft ? 'right' : 'left'),
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
-                'startLabel' => [
-                    'text' => ['Merge', 'start'],
-                    'side' => 'bottom',
-                    'offset' => '0.75rem',
-                'badgeColor' => $color,
-                ],
+                'startLabel' => $resolvedStartLabel,
                 'color' => $color,
                 'zIndex' => $zIndex,
                 'dev' => $dev,

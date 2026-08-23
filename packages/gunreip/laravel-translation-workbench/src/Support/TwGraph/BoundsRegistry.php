@@ -58,11 +58,38 @@ final class BoundsRegistry
     }
 
     /**
-     * @return array{minY: string, minYRem: float|null, maxY: string, maxYRem: float|null, originBottom: string, originBottomRem: float|null, height: string, heightRem: float|null}
+     * @return array{
+     *     minX: string,
+     *     minXRem: float|null,
+     *     maxX: string,
+     *     maxXRem: float|null,
+     *     originLeft: string,
+     *     originLeftRem: float|null,
+     *     width: string,
+     *     widthRem: float|null,
+     *     minY: string,
+     *     minYRem: float|null,
+     *     maxY: string,
+     *     maxYRem: float|null,
+     *     originBottom: string,
+     *     originBottomRem: float|null,
+     *     height: string,
+     *     heightRem: float|null
+     * }
      */
-    public static function canvasMetrics(string $graphId, string $padding = '2rem'): array
+    public static function canvasMetrics(string $graphId, string $padding = '2rem', ?string $horizontalPadding = null): array
     {
+        $horizontalPadding ??= $padding;
         $items = collect(self::$bounds[$graphId] ?? []);
+        $lefts = $items
+            ->pluck('x')
+            ->filter(fn (mixed $value): bool => is_string($value) && trim($value) !== '')
+            ->values()
+            ->all();
+        $rights = $items
+            ->map(fn (array $item): string => 'calc(' . $item['x'] . ' + ' . $item['width'] . ')')
+            ->values()
+            ->all();
         $bottoms = $items
             ->pluck('y')
             ->filter(fn (mixed $value): bool => is_string($value) && trim($value) !== '')
@@ -73,12 +100,32 @@ final class BoundsRegistry
             ->values()
             ->all();
 
+        $minX = self::cssMin(['0rem', ...$lefts]);
+        $maxX = self::cssMax(['0rem', ...$rights]);
+        $minXRem = self::minRem(['0rem', ...$lefts]);
+        $maxXRem = self::maxRem(['0rem', ...$rights]);
+        $widthRem = $minXRem !== null && $maxXRem !== null
+            ? round($maxXRem - $minXRem + (self::evaluateRemExpression($horizontalPadding) ?? 0.0) * 2, 3)
+            : null;
+        $originLeftRem = $minXRem !== null
+            ? round(($minXRem * -1) + (self::evaluateRemExpression($horizontalPadding) ?? 0.0), 3)
+            : null;
+        $originLeft = 'calc((' . $minX . ') * -1 + ' . $horizontalPadding . ')';
+        $width = 'calc(' . $maxX . ' - ' . $minX . ' + (' . $horizontalPadding . ' * 2))';
         $minY = self::cssMin(['0rem', ...$bottoms]);
         $maxY = self::cssMax(['0rem', ...$tops]);
         $originBottom = 'calc((' . $minY . ') * -1 + ' . $padding . ')';
         $height = 'calc(' . $maxY . ' - ' . $minY . ' + (' . $padding . ' * 2))';
 
         return [
+            'minX' => $minX,
+            'minXRem' => $minXRem,
+            'maxX' => $maxX,
+            'maxXRem' => $maxXRem,
+            'originLeft' => $originLeft,
+            'originLeftRem' => $originLeftRem,
+            'width' => $width,
+            'widthRem' => $widthRem,
             'minY' => $minY,
             'minYRem' => self::evaluateRemExpression($minY),
             'maxY' => $maxY,

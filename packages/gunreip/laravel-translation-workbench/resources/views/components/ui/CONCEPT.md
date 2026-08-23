@@ -4,12 +4,9 @@ This folder contains package-owned UI components for graph-like timeline visuali
 
 ## Component Families
 
-`tw-graph-protocol` is the frozen reference renderer for the current graph-v2 prototype. It renders resolved protocol data and should not be used as the place for new authoring API changes.
+`tw-graph-protocol` is the frozen reference renderer from the earlier graph-v2 prototype. It renders resolved protocol data and should not be used as the place for new authoring API changes.
 
 `tw-graph` is the new authoring component family. All future graph component changes belong here first. The goal is to normalize defaults, prop names, and data flow without disturbing the working protocol reference.
-
-Older copied authoring prototypes live below `tw-graph/old`. They are kept as
-temporary reference only and are not part of the active authoring API.
 
 Every rendered `tw-graph` needs its own protocol identity. The component `graph-id` is that identity. Multiple graphs on one page must never silently share one protocol.
 
@@ -222,6 +219,26 @@ Graph construction must use `bridge` / `bridgeLength` for path-to-path lines.
 ## Data Flow
 
 Component calls are the source of authoring intent and the render source. Props define what should be rendered.
+
+Data-driven graph building has its own neutral preparation layer under:
+
+```text
+Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven
+```
+
+That layer may read aggregated workbench data and produce graph intent such as
+`strang.trunk`, `strang.merge-left/right`, and `strang.branch-left/right`.
+It must not render geometry directly and must not become a second component
+tree. The intended flow is:
+
+```text
+timeline/workbench data
+-> data-driven graph intent
+-> tw-graph strang.* component calls
+-> paths.*
+-> segments.*
+-> primitives.*
+```
 
 The JSON protocol is a debug/review artifact. It stores calculated coordinates such as anchor start/end points so the generated graph can be inspected and reproduced during development.
 

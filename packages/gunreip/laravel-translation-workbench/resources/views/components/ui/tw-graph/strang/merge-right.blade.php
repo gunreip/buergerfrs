@@ -38,6 +38,7 @@
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'color' => null,
     'startLength' => null,
+    'startLabel' => null,
     'nodeLabels' => [],
     'extensionCount' => 0,
     'extensionStartLength' => null,
@@ -260,6 +261,7 @@
     :bridge-length="$resolvedBridgeLength"
     :stem-length="$resolvedStemLength"
     :arc-size="$resolvedArcSize"
+    :start-label="$startLabel"
     :color="$resolvedColor"
     :z-index="$zIndex"
     :node-labels="$nodeLabels"

@@ -51,33 +51,35 @@
     );
 @endphp
 
-<div
-    data-tw-graph-direction="{{ $context['direction'] }}"
-    {{ $attributes->merge(['id' => $context['graphId']])->class(['tw-graph-protocol', 'tw-graph-protocol-coordinates-disabled' => !$showCoordinates])->style([
-            '--tw-graph-protocol-color-rgb: ' . $context['colorRgb'],
-            '--tw-graph-protocol-color-alpha: ' . ($dev ? '0.5' : '1'),
-            '--tw-graph-protocol-min-width: ' . $context['minWidth'],
-            '--tw-graph-protocol-min-height: ' . $context['minHeight'],
-            '--tw-graph-protocol-path-width: ' . $context['pathWidth'],
-            '--tw-graph-protocol-node-size: ' . $context['nodeSize'],
-            '--tw-graph-protocol-arc-size: ' . $context['arcSize'],
-        ]) }}
+<div class="tw-graph-protocol-viewport">
+    <div
+        data-tw-graph-direction="{{ $context['direction'] }}"
+        {{ $attributes->merge(['id' => $context['graphId']])->class(['tw-graph-protocol', 'tw-graph-protocol-coordinates-disabled' => !$showCoordinates])->style([
+                '--tw-graph-protocol-color-rgb: ' . $context['colorRgb'],
+                '--tw-graph-protocol-color-alpha: ' . ($dev ? '0.5' : '1'),
+                '--tw-graph-protocol-min-width: ' . $context['minWidth'],
+                '--tw-graph-protocol-min-height: ' . $context['minHeight'],
+                '--tw-graph-protocol-path-width: ' . $context['pathWidth'],
+                '--tw-graph-protocol-node-size: ' . $context['nodeSize'],
+                '--tw-graph-protocol-arc-size: ' . $context['arcSize'],
+            ]) }}
 >
     @if ($slot->isNotEmpty())
         <div class="tw-graph-protocol-canvas tw-graph-protocol-canvas-slot content-center">
             {{ $slot }}
 
-            <x-translation-workbench::ui.tw-graph.canvas-metrics
-                :graph-id="$context['graphId']"
-                :dev="$dev"
+                <x-translation-workbench::ui.tw-graph.canvas-metrics
+                    :graph-id="$context['graphId']"
+                    :dev="$dev"
                 :coordinates="$showCoordinates"
             />
         </div>
     @else
         <x-translation-workbench::ui.tw-graph.canvas
-            :protocol="$protocol"
-            :direction="$context['direction']"
-            :dev="$dev"
-        />
-    @endif
+                :protocol="$protocol"
+                :direction="$context['direction']"
+                :dev="$dev"
+            />
+        @endif
+    </div>
 </div>
