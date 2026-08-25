@@ -23,13 +23,14 @@
     'offset' => '0rem',
     'badge' => true,
     'badgeColor' => 'cyan',
+    'long' => false,
 ])
 
 @php
     $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id);
     $lines = collect(is_iterable($text) && !is_string($text) ? $text : [$text])
         ->filter(fn($line) => filled($line))
-        ->take(2)
+        ->take(3)
         ->values();
 @endphp
 
@@ -41,10 +42,11 @@
                 'tw-graph-protocol-primitive',
                 'tw-graph-protocol-primitive-text',
                 'tw-graph-protocol-primitive-text-label',
+                'tw-graph-protocol-primitive-text-label-center' => $side === 'center',
                 'tw-graph-protocol-primitive-text-label-left' => $side === 'left',
                 'tw-graph-protocol-primitive-text-label-top' => $side === 'top',
                 'tw-graph-protocol-primitive-text-label-bottom' => $side === 'bottom',
-                'tw-graph-protocol-primitive-text-label-right' => !in_array($side, ['left', 'top', 'bottom'], true),
+                'tw-graph-protocol-primitive-text-label-right' => !in_array($side, ['center', 'left', 'top', 'bottom'], true),
             ])->style([
                 '--tw-graph-protocol-anchor-x: ' . $anchorX,
                 '--tw-graph-protocol-anchor-y: ' . $anchorY,
@@ -55,10 +57,14 @@
         @if ($badge)
             <flux:badge color="{{ $badgeColor }}">
                 <span
-                    class="wrap-anywhere inline-flex max-w-48 flex-col items-center gap-0.5 whitespace-normal text-center leading-tight"
+                    @class([
+                        'tw-graph-protocol-primitive-text-badge wrap-anywhere inline-flex flex-col items-center gap-0.5 whitespace-normal text-center leading-tight',
+                        'w-96' => (bool) $long,
+                        'w-48' => ! (bool) $long,
+                    ])
                 >
                     @foreach ($lines as $line)
-                        <span @class(['wrap-anywhere text-wrap', 'text-xs' => !$loop->first])>
+                        <span @class(['tw-graph-protocol-primitive-text-line wrap-anywhere text-wrap', 'text-xs' => !$loop->first])>
                             {{ $line }}
                         </span>
                     @endforeach

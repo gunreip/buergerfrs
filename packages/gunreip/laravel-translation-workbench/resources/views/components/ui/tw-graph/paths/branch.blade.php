@@ -8,6 +8,7 @@
         :anchor-start="['x' => '0rem', 'y' => '0rem']"
         bridge-length="3rem"
         :bridge-continuation="[1 => ['3rem'], 2 => ['2rem', 'top' => 'Bridge label']]"
+        :step="['stepLabel' => ['text' => ['Source inactive', 'shared obsolete', '9 rows']]]"
         stem-length="2rem"
         :stem-continuation="[1 => ['2rem'], 2 => ['3rem', 'left' => 'Left label', 'right' => 'Right label']]"
         :node-labels="[3 => ['top' => 'Branch turn']]"
@@ -27,6 +28,7 @@
     'arcSize' => '2.75rem',
     'bridgeLength' => null,
     'bridgeContinuation' => [],
+    'step' => null,
     'stemLength' => null,
     'stemContinuation' => [],
     'color' => 'pink',
@@ -215,7 +217,31 @@
         'x' => $add($bridgeEnd['x'], $arcDelta),
         'y' => $add($bridgeEnd['y'], $resolvedArcSize),
     ];
-    $pathEndAnchor = $arcOutEnd;
+    $stepConfig = is_array($step)
+        ? $step
+        : (filled($step) ? ['stepLabel' => ['text' => $step]] : null);
+    if (is_array($stepConfig) && filled(data_get($stepConfig, 'text')) && blank(data_get($stepConfig, 'stepLabel.text'))) {
+        $stepConfig['stepLabel'] = ['text' => data_get($stepConfig, 'text')];
+    }
+    $hasStep = is_array($stepConfig) && filled(data_get($stepConfig, 'stepLabel.text'));
+    $stepLabelLines = collect(is_iterable(data_get($stepConfig, 'stepLabel.text')) && ! is_string(data_get($stepConfig, 'stepLabel.text')) ? data_get($stepConfig, 'stepLabel.text') : [data_get($stepConfig, 'stepLabel.text')])
+        ->filter(fn (mixed $line): bool => filled($line))
+        ->take(3)
+        ->count();
+    $autoStepLabelGap = match ($stepLabelLines) {
+        1 => '2.75rem',
+        2 => '3.75rem',
+        3 => '4.75rem',
+        default => '3.75rem',
+    };
+    $stepBeforeLength = (string) data_get($stepConfig, 'beforeLength', '1.5rem');
+    $stepLabelGap = (string) (data_get($stepConfig, 'labelGap') ?: $autoStepLabelGap);
+    $stepAfterLength = (string) data_get($stepConfig, 'afterLength', '1.5rem');
+    $stepAnchorEnd = [
+        'x' => $arcOutEnd['x'],
+        'y' => $add($add($add($arcOutEnd['y'], $stepBeforeLength), $stepLabelGap), $stepAfterLength),
+    ];
+    $pathEndAnchor = $hasStep ? $stepAnchorEnd : $arcOutEnd;
     $stemEntries = is_array($stemContinuation) ? $stemContinuation : [];
     if ($stemEntries === [] && filled($stemLength)) {
         $stemEntries = [1 => [$resolvedStemLength]];
@@ -223,8 +249,9 @@
     $stemEntriesAreList = array_is_list($stemEntries);
     $stemSegments = [];
     $baseNodeCounterCount = 2 + count($bridgeSegments); // arc.in, bridge-continuation, arc.out
-    $stemCounter = $counter + $baseNodeCounterCount;
+    $stemCounter = $counter + $baseNodeCounterCount + ($hasStep ? 1 : 0);
     $arcOutCounter = $counter + 1 + count($bridgeSegments);
+    $stepCounter = $arcOutCounter + 1;
 
     foreach ($stemEntries as $stemIndex => $stemEntry) {
         $stemNumber = $stemEntriesAreList ? ((int) $stemIndex + 1) : (int) $stemIndex;
@@ -307,6 +334,26 @@
                 'dev' => $dev,
             ],
         ],
+        ...($hasStep ? [[
+            'component' => 'step',
+            'segment' => [
+                'id' => $id . '.step',
+                'direction' => 'bottom-top',
+                'beforeLength' => $stepBeforeLength,
+                'labelGap' => $stepLabelGap,
+                'afterLength' => $stepAfterLength,
+                'anchorStart' => $arcOutEnd,
+                'anchorEnd' => $stepAnchorEnd,
+                'nodeStart' => false,
+                'nodeEnd' => true,
+                'stepLabel' => data_get($stepConfig, 'stepLabel'),
+                'devCounterEnd' => $stepCounter,
+                'devCounterColor' => $color,
+                'color' => $color,
+                'zIndex' => $zIndex,
+                'dev' => $dev,
+            ],
+        ]] : []),
         ...$stemSegments,
     ];
 @endphp
@@ -325,6 +372,11 @@
 @foreach ($segments as $segment)
     @if ($segment['component'] === 'arc')
         <x-translation-workbench::ui.tw-graph.segments.arc :segment="$segment['segment']" />
+    @elseif ($segment['component'] === 'step')
+        <x-translation-workbench::ui.tw-graph.segments.step
+            :segment="$segment['segment']"
+            :dev="$dev"
+        />
     @else
         <x-translation-workbench::ui.tw-graph.segments.path :segment="$segment['segment']" />
     @endif

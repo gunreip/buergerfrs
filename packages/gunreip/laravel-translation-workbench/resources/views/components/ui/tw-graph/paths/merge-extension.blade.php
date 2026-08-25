@@ -8,14 +8,15 @@
         :anchor-start="['x' => '0rem', 'y' => '0rem']"
         start-length="2rem"
         stem-length="2rem"
+        :stem-continuation="[1 => '2rem']"
         bridge-length="3rem"
         :node-labels="[4 => ['top' => 'Root #1']]"
     />
 
     Path role:
     Merge-extension continues a merge side chain outward:
-    left:  segments.start -> segments.path bottom-top -> segments.arc west-north -> segments.path left-right
-    right: segments.start -> segments.path bottom-top -> segments.arc east-north -> segments.path right-left
+    left:  segments.start -> segments.path stem1 bottom-top -> optional stem2/stem3/... -> segments.arc west-north -> segments.path left-right
+    right: segments.start -> segments.path stem1 bottom-top -> optional stem2/stem3/... -> segments.arc east-north -> segments.path right-left
 --}}
 
 @props([
@@ -26,6 +27,7 @@
     'lineLength' => '4rem',
     'arcSize' => '2.75rem',
     'stemLength' => null,
+    'stemContinuation' => [],
     'bridgeLength' => null,
     'nodeLabels' => [],
     'color' => 'sky',
@@ -48,6 +50,7 @@
     $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($arcSize ?? null, '2.75rem');
     $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, $resolvedLineLength, '4rem');
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, $resolvedLineLength, '4rem');
+    $stemContinuationEntries = is_array($stemContinuation) ? $stemContinuation : [];
 
     $arcStartAnchor = $isLeft ? 'w' : 'e';
     $arcEndAnchor = 'n';
@@ -63,9 +66,51 @@
         'x' => $startEnd['x'],
         'y' => $add($startEnd['y'], $resolvedStemLength),
     ];
+    $stemContinuationBlueprints = [];
+    $stemContinuationStart = $stemEnd;
+    $stemContinuationEnd = $stemEnd;
+
+    foreach ($stemContinuationEntries as $stemContinuationIndex => $stemContinuationEntry) {
+        $stemContinuationNumber = is_int($stemContinuationIndex)
+            ? ($stemContinuationIndex + (array_is_list($stemContinuationEntries) ? 1 : 0))
+            : (int) $stemContinuationIndex;
+        $stemContinuationNumber = max(1, $stemContinuationNumber);
+        $stemNumber = $stemContinuationNumber + 1;
+        $stemNodeNumber = $stemContinuationNumber + 2;
+        $stemContinuationLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
+            is_array($stemContinuationEntry)
+                ? data_get($stemContinuationEntry, 'length', data_get($stemContinuationEntry, 0))
+                : $stemContinuationEntry,
+            $resolvedStemLength,
+            '4rem',
+        );
+        $stemContinuationEnd = [
+            'x' => $stemContinuationStart['x'],
+            'y' => $add($stemContinuationStart['y'], $stemContinuationLength),
+        ];
+        $stemContinuationBlueprints[] = [
+            'component' => 'path',
+            'segment' => [
+                'id' => $id . '.stem' . $stemNumber,
+                'direction' => 'bottom-top',
+                'length' => $stemContinuationLength,
+                'anchorStart' => $stemContinuationStart,
+                'anchorEnd' => $stemContinuationEnd,
+                'nodeStart' => false,
+                'nodeEnd' => true,
+                'nodeEndLabelNumber' => $stemNodeNumber,
+                'devCounterColor' => $color,
+                'color' => $color,
+                'zIndex' => $zIndex,
+                'dev' => $dev,
+            ],
+        ];
+        $stemContinuationStart = $stemContinuationEnd;
+    }
+
     $arcEnd = [
-        'x' => $add($stemEnd['x'], $arcDelta),
-        'y' => $add($stemEnd['y'], $resolvedArcSize),
+        'x' => $add($stemContinuationEnd['x'], $arcDelta),
+        'y' => $add($stemContinuationEnd['y'], $resolvedArcSize),
     ];
     $bridgeEnd = [
         'x' => $add($arcEnd['x'], $bridgeDelta),
@@ -121,8 +166,34 @@
             'badgeColor' => $color,
         ];
     };
-    $pathNodeLabels = function (int $nodeNumber, string $defaultSide) use ($nodeLabels, $normalizeLabel): mixed {
-        $label = $normalizeLabel(data_get($nodeLabels, $nodeNumber), $defaultSide);
+    $pathNodeLabels = function (int|array $nodeNumber, string $defaultSide) use ($nodeLabels, $normalizeLabel): mixed {
+        $rawLabel = is_array($nodeNumber)
+            ? $nodeNumber
+            : data_get($nodeLabels, $nodeNumber);
+
+        if (is_array($rawLabel)) {
+            $sharedLabelProps = collect($rawLabel)->except(['left', 'right', 'top', 'bottom'])->all();
+            $directedLabels = collect(['left', 'right', 'top', 'bottom'])
+                ->map(static function (string $side) use ($rawLabel, $sharedLabelProps, $normalizeLabel): ?array {
+                    if (! array_key_exists($side, $rawLabel) || blank($rawLabel[$side])) {
+                        return null;
+                    }
+
+                    return $normalizeLabel([
+                        $side => $rawLabel[$side],
+                        ...$sharedLabelProps,
+                    ], $side);
+                })
+                ->filter()
+                ->values()
+                ->all();
+
+            if ($directedLabels !== []) {
+                return array_pad(array_slice($directedLabels, 0, 2), 2, null);
+            }
+        }
+
+        $label = $normalizeLabel($rawLabel, $defaultSide);
 
         return $label ? [$label, null] : true;
     };
@@ -136,6 +207,11 @@
         'offset' => '0.75rem',
         'badgeColor' => $color,
     ];
+
+    $stemContinuationSegments = [];
+    $stemContinuationCount = count($stemContinuationEntries);
+    $arcNodeNumber = 3 + $stemContinuationCount;
+    $bridgeNodeNumber = 4 + $stemContinuationCount;
 
     $segments = [
         [
@@ -158,7 +234,7 @@
         [
             'component' => 'path',
             'segment' => [
-                'id' => $id . '.stem',
+                'id' => $id . '.stem1',
                 'direction' => 'bottom-top',
                 'length' => $resolvedStemLength,
                 'anchorStart' => $startEnd,
@@ -172,19 +248,35 @@
                 'dev' => $dev,
             ],
         ],
+    ];
+
+    foreach ($stemContinuationBlueprints as $stemContinuationBlueprint) {
+        $stemContinuationBlueprint['segment']['devCounterEnd'] = $counter++;
+        $stemContinuationBlueprint['segment']['nodeEnd'] = $pathNodeLabels(
+            (int) data_get($stemContinuationBlueprint, 'segment.nodeEndLabelNumber'),
+            $isLeft ? 'right' : 'left',
+        );
+        unset($stemContinuationBlueprint['segment']['nodeEndLabelNumber']);
+        $stemContinuationSegments[] = $stemContinuationBlueprint;
+    }
+
+    $segments = [
+        ...$segments,
+        ...$stemContinuationSegments,
         [
             'component' => 'arc',
             'segment' => [
                 'id' => $id . '.arc',
                 'startAnchor' => $arcStartAnchor,
                 'endAnchor' => $arcEndAnchor,
-                'anchorStart' => $stemEnd,
+                'arcSize' => $resolvedArcSize,
+                'anchorStart' => $stemContinuationEnd,
                 'anchorEnd' => $arcEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
-                'endLabel' => $arcNodeLabel(3, 'top'),
+                'endLabel' => $arcNodeLabel($arcNodeNumber, 'top'),
                 'color' => $color,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
@@ -199,7 +291,7 @@
                 'anchorStart' => $arcEnd,
                 'anchorEnd' => $bridgeEnd,
                 'nodeStart' => false,
-                'nodeEnd' => $pathNodeLabels(4, 'top'),
+                'nodeEnd' => $pathNodeLabels($bridgeNodeNumber, 'top'),
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
                 'color' => $color,

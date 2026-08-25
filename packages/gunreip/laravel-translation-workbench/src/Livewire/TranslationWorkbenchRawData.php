@@ -5421,6 +5421,7 @@ class TranslationWorkbenchRawData extends Component
                 return [
                     'trunk' => $trunk,
                     'context' => $literal !== '' ? $literal : $source,
+                    'source_path' => $source,
                     'translation_key' => $translationKey,
                     'first_timestamp' => $finding->first_seen_at ?: $finding->created_at,
                     'first_root' => $root,
@@ -5521,6 +5522,7 @@ class TranslationWorkbenchRawData extends Component
                 return [
                     'trunk' => $trunk,
                     'context' => $literal !== '' ? $literal : $source,
+                    'source_path' => $source,
                     'translation_key' => $translationKey,
                     'first_timestamp' => $finding?->first_seen_at ?: $finding?->created_at ?: ($mainRow['first_seen_at'] ?? null),
                     'first_root' => $findingId > 0 ? ('finding #' . $findingId) : ('candidate #' . (string) ($candidate['id'] ?? '?')),

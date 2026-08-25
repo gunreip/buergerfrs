@@ -55,5 +55,6 @@
         :offset="data_get($startSegment, 'startLabel.offset', '0.75rem')"
         :badge="data_get($startSegment, 'startLabel.badge', true)"
         :badge-color="data_get($startSegment, 'startLabel.badgeColor', data_get($startSegment, 'color', 'green'))"
+        :long="data_get($startSegment, 'startLabel.long', false)"
     />
 @endif

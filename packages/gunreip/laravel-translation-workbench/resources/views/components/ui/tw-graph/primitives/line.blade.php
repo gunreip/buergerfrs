@@ -26,6 +26,8 @@
     'nodeEnd' => false,
     'gradient' => false,
     'cap' => false,
+    'capStart' => false,
+    'capEnd' => null,
     'capLength' => '1.25rem',
     'dashed' => false,
     'color' => 'cyan',
@@ -35,6 +37,7 @@
 @php
     $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '6 182 212');
     $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id);
+    $resolvedCapEnd = $capEnd ?? $cap;
 @endphp
 
 <span
@@ -43,7 +46,8 @@
         'tw-graph-protocol-primitive-line',
         'tw-graph-protocol-primitive-line-' . $direction,
         'tw-graph-protocol-primitive-line-start' => (bool) $gradient,
-        'tw-graph-protocol-primitive-line-end' => (bool) $cap,
+        'tw-graph-protocol-primitive-line-cap-start' => (bool) $capStart,
+        'tw-graph-protocol-primitive-line-end' => (bool) $resolvedCapEnd,
         'tw-graph-protocol-primitive-line-dashed' => (bool) $dashed,
         'tw-graph-protocol-primitive-line-node-start' => (bool) $nodeStart,
         'tw-graph-protocol-primitive-line-node-end' => (bool) $nodeEnd,

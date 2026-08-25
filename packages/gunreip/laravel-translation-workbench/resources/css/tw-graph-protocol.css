@@ -167,6 +167,7 @@
         background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
     }
 
+    .tw-graph-protocol-primitive-line-cap-start::before,
     .tw-graph-protocol-primitive-line-end::after {
         pointer-events: none;
         position: absolute;
@@ -179,7 +180,19 @@
         content: "";
     }
 
+    .tw-graph-protocol-primitive-line-cap-start.tw-graph-protocol-primitive-line-bottom-top::before {
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 50%);
+    }
+
     .tw-graph-protocol-primitive-line-end.tw-graph-protocol-primitive-line-bottom-top::after {
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .tw-graph-protocol-primitive-line-cap-start.tw-graph-protocol-primitive-line-top-bottom::before {
         top: 0;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -191,7 +204,23 @@
         transform: translate(-50%, 50%);
     }
 
+    .tw-graph-protocol-primitive-line-cap-start.tw-graph-protocol-primitive-line-left-right::before {
+        top: 50%;
+        left: 0;
+        width: var(--tw-graph-protocol-path-width);
+        height: var(--tw-graph-protocol-line-end-cap-length, 1.25rem);
+        transform: translate(-50%, -50%);
+    }
+
     .tw-graph-protocol-primitive-line-end.tw-graph-protocol-primitive-line-left-right::after {
+        top: 50%;
+        right: 0;
+        width: var(--tw-graph-protocol-path-width);
+        height: var(--tw-graph-protocol-line-end-cap-length, 1.25rem);
+        transform: translate(50%, -50%);
+    }
+
+    .tw-graph-protocol-primitive-line-cap-start.tw-graph-protocol-primitive-line-right-left::before {
         top: 50%;
         right: 0;
         width: var(--tw-graph-protocol-path-width);
@@ -415,8 +444,20 @@
         bottom: calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-anchor-y));
     }
 
+    .tw-graph-protocol-primitive-text-line {
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
     .tw-graph-protocol-primitive-text-label-right {
         transform: translate(var(--tw-graph-protocol-text-label-offset, 0rem), 50%);
+    }
+
+    .tw-graph-protocol-primitive-text-label-center {
+        transform: translate(-50%, 50%);
     }
 
     .tw-graph-protocol-primitive-text-label-left {
@@ -580,10 +621,12 @@
     }
 
     .tw-graph-protocol-primitive-arc {
+        --tw-graph-protocol-effective-arc-size: var(--tw-graph-protocol-local-arc-size, var(--tw-graph-protocol-arc-size));
+        --tw-graph-protocol-effective-arc-radius: var(--tw-graph-protocol-local-arc-size, var(--tw-graph-protocol-arc-radius));
         box-sizing: border-box;
         z-index: var(--tw-graph-protocol-z-index, 2);
-        width: var(--tw-graph-protocol-arc-size);
-        height: var(--tw-graph-protocol-arc-size);
+        width: var(--tw-graph-protocol-effective-arc-size);
+        height: var(--tw-graph-protocol-effective-arc-size);
     }
 
     .tw-graph-protocol-primitive-arc-dashed {
@@ -591,11 +634,11 @@
     }
 
     .tw-graph-protocol-primitive-arc-se {
-        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-start-x) - var(--tw-graph-protocol-arc-size) + var(--tw-graph-protocol-path-half));
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-start-x) - var(--tw-graph-protocol-effective-arc-size) + var(--tw-graph-protocol-path-half));
         bottom: calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-end-y) - var(--tw-graph-protocol-path-half));
         border-right: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
         border-bottom: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
-        border-bottom-right-radius: var(--tw-graph-protocol-arc-radius);
+        border-bottom-right-radius: var(--tw-graph-protocol-effective-arc-radius);
     }
 
     .tw-graph-protocol-primitive-arc-sw {
@@ -603,23 +646,23 @@
         bottom: calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-end-y) - var(--tw-graph-protocol-path-half));
         border-bottom: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
         border-left: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
-        border-bottom-left-radius: var(--tw-graph-protocol-arc-radius);
+        border-bottom-left-radius: var(--tw-graph-protocol-effective-arc-radius);
     }
 
     .tw-graph-protocol-primitive-arc-nw {
         left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-end-x) - var(--tw-graph-protocol-path-half));
-        bottom: calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-start-y) - var(--tw-graph-protocol-arc-size) + var(--tw-graph-protocol-path-half));
+        bottom: calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-start-y) - var(--tw-graph-protocol-effective-arc-size) + var(--tw-graph-protocol-path-half));
         border-top: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
         border-left: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
-        border-top-left-radius: var(--tw-graph-protocol-arc-radius);
+        border-top-left-radius: var(--tw-graph-protocol-effective-arc-radius);
     }
 
     .tw-graph-protocol-primitive-arc-ne {
-        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-end-x) - var(--tw-graph-protocol-arc-size) + var(--tw-graph-protocol-path-half));
-        bottom: calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-start-y) - var(--tw-graph-protocol-arc-size) + var(--tw-graph-protocol-path-half));
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-end-x) - var(--tw-graph-protocol-effective-arc-size) + var(--tw-graph-protocol-path-half));
+        bottom: calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-start-y) - var(--tw-graph-protocol-effective-arc-size) + var(--tw-graph-protocol-path-half));
         border-top: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
         border-right: var(--tw-graph-protocol-path-width) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
-        border-top-right-radius: var(--tw-graph-protocol-arc-radius);
+        border-top-right-radius: var(--tw-graph-protocol-effective-arc-radius);
     }
 
     .tw-graph-protocol-json {

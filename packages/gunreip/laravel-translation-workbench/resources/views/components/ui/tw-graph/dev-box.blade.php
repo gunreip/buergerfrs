@@ -38,7 +38,7 @@
     $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '14 165 233');
     $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($label ?? $id);
 
-    if ($dev && filled($graphId ?? null) && $metricsScope === 'canvas') {
+    if (filled($graphId ?? null) && $metricsScope === 'canvas') {
         \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
             (string) $graphId,
             (string) $id,

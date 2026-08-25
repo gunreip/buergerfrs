@@ -11,6 +11,7 @@
         :path-lengths="[1 => '2rem', 2 => null, 3 => '3rem']"
         end-length="1rem"
         start-label="Path start"
+        :start-node-labels="['left' => 'Source', 'right' => 'Target']"
         end-label="Path end"
     />
 
@@ -45,6 +46,7 @@
     'endCapLength' => null,
     'startLabel' => null,
     'endLabel' => null,
+    'startNodeLabels' => [],
     'color' => null,
     'zIndex' => null,
     'counterStart' => 1,
@@ -193,6 +195,24 @@
 
     if (filled($startLength)) {
         $nextAnchor = $addAnchor($currentAnchor, $axisDelta($startLength));
+        $normalizedStartNodeLabels = is_array($startNodeLabels)
+            ? collect(['left', 'right', 'top', 'bottom'])
+            ->map(static function (string $side) use ($startNodeLabels, $normalizeLabel): ?array {
+                if (! array_key_exists($side, $startNodeLabels) || blank($startNodeLabels[$side])) {
+                    return null;
+                }
+
+                return array_replace([
+                    'side' => $side,
+                ], $normalizeLabel([
+                    'text' => $startNodeLabels[$side],
+                    'side' => $side,
+                ]) ?? []);
+            })
+            ->filter()
+            ->values()
+            ->all()
+            : [];
         $segments[] = [
             'component' => 'start',
             'segment' => [
@@ -201,7 +221,7 @@
                 'length' => $startLength,
                 'anchorStart' => $currentAnchor,
                 'anchorEnd' => $nextAnchor,
-                'nodeEnd' => true,
+                'nodeEnd' => $normalizedStartNodeLabels !== [] ? $normalizedStartNodeLabels : true,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $resolvedColor,
                 'startLabel' => $resolvedStartLabel,

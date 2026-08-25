@@ -27,6 +27,7 @@
     'startY' => '0rem',
     'endX' => '0rem',
     'endY' => '0rem',
+    'arcSize' => null,
     'nodeStart' => false,
     'nodeEnd' => false,
     'dashed' => false,
@@ -81,6 +82,7 @@
         '--tw-graph-protocol-start-y: ' . $styleStartY,
         '--tw-graph-protocol-end-x: ' . $styleEndX,
         '--tw-graph-protocol-end-y: ' . $styleEndY,
+        '--tw-graph-protocol-local-arc-size: ' . $arcSize => filled($arcSize),
         '--tw-graph-protocol-local-color-rgb: ' . $colorRgb,
         '--tw-graph-protocol-z-index: ' . $zIndex => filled($zIndex),
     ]) }}

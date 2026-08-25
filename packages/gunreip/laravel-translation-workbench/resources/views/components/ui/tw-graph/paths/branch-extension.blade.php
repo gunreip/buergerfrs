@@ -31,10 +31,23 @@
     'color' => 'rose',
     'zIndex' => null,
     'counterStart' => 1,
+    'nodeLabels' => [],
+    'endLabel' => null,
+    'endLength' => '0rem',
+    'capLength' => '1.75rem',
     'dev' => false,
 ])
 
 @php
+    $normalLabels = function (mixed $labels): array {
+        if (! is_array($labels)) {
+            return [];
+        }
+
+        return array_is_list($labels)
+            ? array_values($labels)
+            : [$labels];
+    };
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn (string $value): string => 'calc(' . $value . ' * -1)';
     $currentAnchor = [
@@ -86,7 +99,17 @@
     $pathBoxWidth = $isLeft
         ? 'calc(' . $currentAnchor['x'] . ' - ' . $verticalEnd['x'] . ')'
         : 'calc(' . $verticalEnd['x'] . ' - ' . $currentAnchor['x'] . ')';
-    $pathBoxHeight = 'calc(' . $verticalEnd['y'] . ' - ' . $currentAnchor['y'] . ')';
+    $endNodeLabels = $normalLabels(data_get($nodeLabels, 3, []));
+    $endLabelConfig = is_array($endLabel)
+        ? $endLabel
+        : (filled($endLabel) ? ['text' => $endLabel] : null);
+    $hasEndSegment = $endLabelConfig !== null || filled($endLength);
+    $resolvedEndLength = filled($endLength) ? (string) $endLength : '0rem';
+    $endAnchor = [
+        'x' => $verticalEnd['x'],
+        'y' => $add($verticalEnd['y'], $resolvedEndLength),
+    ];
+    $pathBoxHeight = 'calc(' . ($hasEndSegment ? $endAnchor['y'] : $verticalEnd['y']) . ' - ' . $currentAnchor['y'] . ')';
 
     $segments = [];
 
@@ -155,7 +178,7 @@
                 'anchorStart' => $arcEnd,
                 'anchorEnd' => $verticalEnd,
                 'nodeStart' => false,
-                'nodeEnd' => true,
+                'nodeEnd' => $endNodeLabels !== [] ? $endNodeLabels : true,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
                 'color' => $color,
@@ -164,6 +187,29 @@
             ],
         ],
     ];
+
+    if ($hasEndSegment) {
+        $segments[] = [
+            'component' => 'end',
+            'segment' => [
+                'id' => $id . '.end',
+                'direction' => 'bottom-top',
+                'length' => $resolvedEndLength,
+                'anchorStart' => $verticalEnd,
+                'anchorEnd' => $endAnchor,
+                'nodeStart' => false,
+                'nodeEnd' => false,
+                'cap' => true,
+                'capLength' => $capLength,
+                'devCounterEnd' => $counter++,
+                'devCounterColor' => $color,
+                'color' => $color,
+                'zIndex' => $zIndex,
+                'dev' => $dev,
+                'endLabel' => $endLabelConfig,
+            ],
+        ];
+    }
 @endphp
 
 <x-translation-workbench::ui.tw-graph.dev-box
@@ -180,6 +226,11 @@
 @foreach ($segments as $segment)
     @if ($segment['component'] === 'arc')
         <x-translation-workbench::ui.tw-graph.segments.arc :segment="$segment['segment']" />
+    @elseif ($segment['component'] === 'end')
+        <x-translation-workbench::ui.tw-graph.segments.end
+            :segment="$segment['segment']"
+            :dev="$dev"
+        />
     @else
         <x-translation-workbench::ui.tw-graph.segments.path :segment="$segment['segment']" />
     @endif

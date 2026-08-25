@@ -8,6 +8,7 @@
         bridge-length="4rem"
         :node-labels="[3 => ['top' => 'Branch turn']]"
         :bridge-continuation="[1 => ['4rem'], 2 => ['2rem', 'top' => 'Bridge label']]"
+        :step="['stepLabel' => ['text' => ['Source inactive', 'shared obsolete']]]"
         stem-length="3rem"
         :stem-continuation="[1 => ['3rem']]"
         :branch-extension="[
@@ -46,6 +47,7 @@
     'stemLength' => null,
     'nodeLabels' => [],
     'bridgeContinuation' => [],
+    'step' => null,
     'stemContinuation' => [],
     'branchExtension' => [],
     'branchReturn' => [],
@@ -129,13 +131,41 @@
         'sourceAnchor' => 'end',
         'direction' => 'south-east',
     ];
+    $stepConfig = is_array($step)
+        ? $step
+        : (filled($step) ? ['stepLabel' => ['text' => $step]] : null);
+    if (is_array($stepConfig) && filled(data_get($stepConfig, 'text')) && blank(data_get($stepConfig, 'stepLabel.text'))) {
+        $stepConfig['stepLabel'] = ['text' => data_get($stepConfig, 'text')];
+    }
+    $hasStep = is_array($stepConfig) && filled(data_get($stepConfig, 'stepLabel.text'));
+    $stepLabelLines = collect(is_iterable(data_get($stepConfig, 'stepLabel.text')) && ! is_string(data_get($stepConfig, 'stepLabel.text')) ? data_get($stepConfig, 'stepLabel.text') : [data_get($stepConfig, 'stepLabel.text')])
+        ->filter(fn (mixed $line): bool => filled($line))
+        ->take(3)
+        ->count();
+    $autoStepLabelGap = match ($stepLabelLines) {
+        1 => '2.75rem',
+        2 => '3.75rem',
+        3 => '4.75rem',
+        default => '3.75rem',
+    };
+    $stepBeforeLength = (string) data_get($stepConfig, 'beforeLength', '1.5rem');
+    $stepLabelGap = (string) (data_get($stepConfig, 'labelGap') ?: $autoStepLabelGap);
+    $stepAfterLength = (string) data_get($stepConfig, 'afterLength', '1.5rem');
+    $stepEnd = [
+        'x' => $node3['x'],
+        'y' => $add($add($add($node3['y'], $stepBeforeLength), $stepLabelGap), $stepAfterLength),
+        'source' => $id . '.paths.branch.step',
+        'sourceType' => 'step',
+        'sourceAnchor' => 'end',
+        'direction' => 'bottom-top',
+    ];
     $stemEntries = is_array($stemContinuation) ? $stemContinuation : [];
     if ($stemEntries === [] && (filled($localStemLength) || filled($stemLength ?? null))) {
         $stemEntries = [1 => [$resolvedStemLength]];
     }
     $stemEntriesAreList = array_is_list($stemEntries);
     $stemAnchors = [];
-    $stemEnd = $node3;
+    $stemEnd = $hasStep ? $stepEnd : $node3;
 
     foreach ($stemEntries as $stemIndex => $stemEntry) {
         $stemNumber = $stemEntriesAreList ? ((int) $stemIndex + 1) : (int) $stemIndex;
@@ -177,7 +207,7 @@
     $branchExtensionReturnBridgeBoundsPoints = [];
     $branchExtensionReturnBridgeConfigs = [];
     $fallbackWarnings = [];
-    $branchExtensionCounterStart = $counterStart + 2 + count($bridgeAnchors) + count($stemAnchors);
+    $branchExtensionCounterStart = $counterStart + 2 + count($bridgeAnchors) + count($stemAnchors) + ($hasStep ? 1 : 0);
     $branchExtensionRenderIndex = 0;
     $resolveBranchRightAnchor = function (?string $attachTo, array $fallback) use (
         $resolvedGraphId,
@@ -322,6 +352,18 @@
             $extensionReturnBridge = is_array($extensionEntry)
                 ? data_get($extensionEntry, 'returnBridge')
                 : null;
+            $extensionNodeLabels = is_array($extensionEntry)
+                ? data_get($extensionEntry, 'nodeLabels', [])
+                : [];
+            $extensionEndLabel = is_array($extensionEntry)
+                ? data_get($extensionEntry, 'endLabel')
+                : null;
+            $extensionEndLength = is_array($extensionEntry)
+                ? data_get($extensionEntry, 'endLength')
+                : null;
+            $extensionCapLength = is_array($extensionEntry)
+                ? data_get($extensionEntry, 'capLength')
+                : null;
             $extensionStartsFromStem = data_get($extensionAnchor, 'sourceType') === 'stem';
             $extensionBridgeStart = $extensionAnchor;
 
@@ -371,6 +413,10 @@
                 'stemLength' => $extensionStemLength,
                 'color' => $extensionColor,
                 'returnBridge' => $extensionReturnBridge,
+                'nodeLabels' => is_array($extensionNodeLabels) ? $extensionNodeLabels : [],
+                'endLabel' => $extensionEndLabel,
+                'endLength' => $extensionEndLength,
+                'capLength' => $extensionCapLength,
                 'bridgeEnd' => $extensionBridgeEnd,
                 'arcEnd' => $extensionArcEnd,
                 'end' => $extensionVerticalEnd,
@@ -516,6 +562,7 @@
         $node1,
         $node2,
         $node3,
+        ...($hasStep ? [$stepEnd] : []),
         $stemEnd,
         ...$branchExtensionBoundsPoints,
         ...$branchExtensionReturnBridgeBoundsPoints,
@@ -526,6 +573,9 @@
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.node.1', $node1);
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.node.2', $node2);
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.node.3', $node3);
+    if ($hasStep) {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.step.end', $stepEnd);
+    }
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.bridge.start', $node1);
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.bridge.end', $node2);
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.end', $stemEnd);
@@ -608,6 +658,7 @@
     :anchor-start="$anchor"
     :bridge-length="$resolvedBridgeLength"
     :bridge-continuation="$bridgeContinuation"
+    :step="$step"
     :stem-length="$resolvedStemLength"
     :stem-continuation="$stemContinuation"
     :arc-size="$resolvedArcSize"
@@ -629,6 +680,10 @@
         :color="$extensionConfig['color']"
         :z-index="$zIndex - (2 + (int) $extensionConfig['renderIndex'])"
         :counter-start="$extensionConfig['counterStart']"
+        :node-labels="$extensionConfig['nodeLabels']"
+        :end-label="$extensionConfig['endLabel']"
+        :end-length="$extensionConfig['endLength']"
+        :cap-length="$extensionConfig['capLength']"
         :dev="$resolvedDev"
     />
 @endforeach

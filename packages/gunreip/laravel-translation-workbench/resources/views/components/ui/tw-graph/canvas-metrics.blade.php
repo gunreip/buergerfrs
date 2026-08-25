@@ -78,18 +78,18 @@
         ->first();
 @endphp
 
-@if ($dev)
-    @if (filled($graphId))
-        <style>
-            #{{ $graphId }} {
-                --tw-graph-protocol-trunk-x: {{ $originLeft }};
-                --tw-graph-protocol-calculated-width: {{ $canvasWidth }};
-                --tw-graph-protocol-origin-bottom: {{ $originBottom }};
-                --tw-graph-protocol-calculated-height: {{ $canvasHeight }};
-            }
-        </style>
-    @endif
+@if (filled($graphId))
+    <style>
+        #{{ $graphId }} {
+            --tw-graph-protocol-trunk-x: {{ $originLeft }};
+            --tw-graph-protocol-calculated-width: {{ $canvasWidth }};
+            --tw-graph-protocol-origin-bottom: {{ $originBottom }};
+            --tw-graph-protocol-calculated-height: {{ $canvasHeight }};
+        }
+    </style>
+@endif
 
+@if ($dev)
     @php
         $displayOriginBottom = $formatRem(data_get($canvasMetrics, 'originBottomRem'))
             ?? (strlen($originBottom) > 24 ? 'calc(...)' : $originBottom);

@@ -52,6 +52,8 @@
     'devCounterColor' => 'zinc',
     'gradient' => false,
     'cap' => false,
+    'capStart' => false,
+    'capEnd' => null,
     'capLength' => '1.25rem',
     'dashed' => false,
     'color' => 'cyan',
@@ -74,6 +76,8 @@
             'devCounterColor' => $devCounterColor,
             'gradient' => $gradient,
             'cap' => $cap,
+            'capStart' => $capStart,
+            'capEnd' => $capEnd,
             'capLength' => $capLength,
             'dashed' => $dashed,
             'color' => $color,
@@ -223,6 +227,8 @@
     :node-end="$nodeEnd"
     :gradient="data_get($segment, 'gradient', false)"
     :cap="data_get($segment, 'cap', false)"
+    :cap-start="data_get($segment, 'capStart', false)"
+    :cap-end="data_get($segment, 'capEnd')"
     :cap-length="data_get($segment, 'capLength', '1.25rem')"
     :dashed="data_get($segment, 'dashed', false)"
     :color="$color"

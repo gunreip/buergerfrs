@@ -31,6 +31,10 @@ final class DevIdentifier
                 return 'strang.' . $strang . '.' . $section . '.' . $path . '.' . $segment . self::anchor($tail);
             }
 
+            if (str_starts_with($tail, 'extension.') || str_starts_with($tail, 'branch-return.')) {
+                return 'strang.' . $strang . '.' . $section . '.' . self::path($strang, $tail);
+            }
+
             return 'strang.' . $strang . '.' . $section . '.' . self::element($tail);
         }
 
@@ -141,12 +145,16 @@ final class DevIdentifier
             return 'arc1-' . self::arcDirection($strang, $tail, 'single');
         }
 
-        if (preg_match('/(?:^|\.)bridge(?:\.|$)/', $tail) === 1) {
-            return 'bridge1';
+        if (preg_match('/(?:^|\.)bridge(\d*)(?:\.|$)/', $tail, $matches) === 1) {
+            return 'bridge' . max(1, (int) ($matches[1] !== '' ? $matches[1] : 1));
         }
 
-        if (preg_match('/(?:^|\.)stem(?:\.|$)/', $tail) === 1) {
-            return 'stem1';
+        if (preg_match('/(?:^|\.)stem(?:\.(\d+)|(\d*))?(?:\.|$)/', $tail, $matches) === 1) {
+            $stemNumber = (string) ($matches[1] ?? '') !== ''
+                ? (int) $matches[1]
+                : (int) (($matches[2] ?? '') !== '' ? $matches[2] : 1);
+
+            return 'stem' . max(1, $stemNumber);
         }
 
         if (preg_match('/(?:^|\.)continuation\.(\d+)(?:\.|$)/', $tail, $matches) === 1) {

@@ -10,6 +10,7 @@
         start-label-space="3rem"
         start-label="Trunk start"
         end-label="Trunk end"
+        :start-node-labels="['left' => 'Source', 'right' => 'Target']"
         :node-labels="[2 => ['left' => 'Left label', 'right' => 'Right label']]"
     />
 
@@ -44,6 +45,7 @@
     'endCapLength' => null,
     'startLabel' => null,
     'endLabel' => null,
+    'startNodeLabels' => [],
     'startLabelSpace' => '3rem',
     'zIndex' => 20,
     'counterStart' => 1,
@@ -239,6 +241,7 @@
     :end-cap-length="$endCapLength"
     :start-label="$startLabel"
     :end-label="$endLabel"
+    :start-node-labels="$startNodeLabels"
     :color="$resolvedColor"
     :z-index="$zIndex"
     :counter-start="$counterStart"

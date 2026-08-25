@@ -153,13 +153,13 @@
                     ]"
                     {{-- strang.merge-left Extensions --}}
                     :extension-count="2"
-                    :extension-bridge-lengths="[
+                    extension-stem-length="3.5rem"
+                    :extension-bridge-continuations="[
                         1 => '12rem',
                         2 => '14rem',
                     ]"
-                    :extension-stem-lengths="[
-                        1 => '5rem',
-                        2 => '3.5rem',
+                    :extension-stem-continuations="[
+                        1 => [1 => '1.5rem'],
                     ]"
                     :extension-node-labels="[
                         1 => [
@@ -185,12 +185,10 @@
                     ]"
                     {{-- strang.merge-right Extensions --}}
                     :extension-count="2"
-                    :extension-bridge-lengths="[
+                    extension-stem-length="3.5rem"
+                    :extension-bridge-continuations="[
                         1 => '12rem',
                         2 => '14rem',
-                    ]"
-                    :extension-stem-lengths="[
-                        2 => '3.5rem',
                     ]"
                     :extension-node-labels="[
                         1 => [
