@@ -105,6 +105,42 @@
         background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
     }
 
+    .tw-graph-protocol-primitive-wavy-line {
+        z-index: var(--tw-graph-protocol-z-index, 1);
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-start-x));
+        bottom: calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-start-y));
+        width: var(--tw-graph-protocol-local-length);
+        height: calc(var(--tw-graph-protocol-path-width) * 6);
+        overflow: hidden;
+        color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: calc(var(--tw-graph-protocol-path-width) * 5);
+        line-height: calc(var(--tw-graph-protocol-path-width) * 5);
+        text-decoration-line: underline;
+        text-decoration-style: wavy;
+        text-decoration-thickness: calc(var(--tw-graph-protocol-path-width) * 1.25);
+        text-underline-offset: calc(var(--tw-graph-protocol-path-width) * -1.5);
+        white-space: nowrap;
+    }
+
+    .tw-graph-protocol-primitive-wavy-line-bottom-top {
+        transform: translate(calc(var(--tw-graph-protocol-path-half) * -1), var(--tw-graph-protocol-path-half)) rotate(-90deg);
+        transform-origin: left center;
+    }
+
+    .tw-graph-protocol-primitive-wavy-line-top-bottom {
+        transform: translate(calc(var(--tw-graph-protocol-path-half) * -1), calc(var(--tw-graph-protocol-path-half) * -1)) rotate(90deg);
+        transform-origin: left center;
+    }
+
+    .tw-graph-protocol-primitive-wavy-line-left-right {
+        transform: translate(0, calc(var(--tw-graph-protocol-path-half) * -1));
+    }
+
+    .tw-graph-protocol-primitive-wavy-line-right-left {
+        transform: translate(calc(var(--tw-graph-protocol-local-length) * -1), calc(var(--tw-graph-protocol-path-half) * -1));
+    }
+
     .tw-graph-protocol-primitive-line-dashed {
         background-color: transparent;
         background-image: repeating-linear-gradient(to top,

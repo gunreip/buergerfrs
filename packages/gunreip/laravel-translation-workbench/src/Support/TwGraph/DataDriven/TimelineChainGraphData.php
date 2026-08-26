@@ -71,6 +71,7 @@ final class TimelineChainGraphData
                 'trunk' => self::trunk($mainRow, $roots),
                 'merge' => self::merge($origins),
                 'branch' => self::branch($roots),
+                'rekey' => self::rekey($mainRow),
             ],
             'component_intent' => self::componentIntent($mainRow, $roots, $origins),
             'render_preview' => self::renderPreview($mainRow, $roots, $origins, $mergeOutcomes),
@@ -209,6 +210,12 @@ final class TimelineChainGraphData
                 'required' => $rootRows->isNotEmpty(),
                 'count' => $rootRows->count(),
             ],
+            [
+                'component' => 'tw-graph.strang.rekey-source-left/right + tw-graph.strang.rekey-target-left/right',
+                'from' => 'timelineChainMainRow.meta.moved_relations',
+                'required' => (string) ($mainRow['chain_type'] ?? '') === 'moved',
+                'count' => collect(data_get($mainRow, 'meta.moved_relations', []))->count(),
+            ],
         ];
     }
 
@@ -229,38 +236,83 @@ final class TimelineChainGraphData
             ->filter(static fn(array $row): bool => filled($row['timestamp'] ?? null) || filled($row['event'] ?? null))
             ->sortBy(static fn(array $row): string => (string) ($row['timestamp'] ?? ''))
             ->values();
-        $pathCount = min(7, max(4, $eventRows->count() + 1));
-        $nodeLabels = $eventRows
+        $eventLabelRows = $eventRows
             ->take($maxEventLabels)
-            ->mapWithKeys(static function (array $row, int $index): array {
-                $nodeIndex = $index + 2;
-                $side = $index % 2 === 0 ? 'left' : 'right';
-                $event = trim((string) ($row['event'] ?? ''));
-                $state = trim((string) ($row['state'] ?? ''));
+            ->values()
+            ->map(static function (array $row, int $index): array {
                 $timestamp = self::graphTimestampLabel($row['timestamp'] ?? null);
-                $stateLine = trim($timestamp . ' · ' . $state, ' ·');
-
-                if ($nodeIndex === 2 && $stateLine !== '') {
-                    $stateLine .= ' Dings';
-                }
 
                 return [
-                    $nodeIndex => [
-                        $side => array_values(array_filter([
-                            $event,
-                            $stateLine,
-                        ])),
-                    ],
+                    ...$row,
+                    '_timestamp_label' => $timestamp,
+                    '_timestamp_group' => filled($timestamp) ? $timestamp : 'event-row-' . $index,
                 ];
-            })
-            ->all();
+            });
+        $nodeLabels = [];
+        $nodeIndex = 2;
+
+        $eventLabelRows
+            ->groupBy('_timestamp_group')
+            ->each(static function (Collection $timestampRows) use (&$nodeLabels, &$nodeIndex): void {
+                $timestampRows
+                    ->values()
+                    ->chunk(2)
+                    ->each(static function (Collection $chunk) use (&$nodeLabels, &$nodeIndex): void {
+                        $labels = [];
+
+                        foreach ($chunk->values() as $labelIndex => $row) {
+                            $side = $labelIndex === 0 ? 'left' : 'right';
+                            $event = trim((string) ($row['event'] ?? ''));
+                            $state = trim((string) ($row['state'] ?? ''));
+                            $timestamp = (string) ($row['_timestamp_label'] ?? '');
+                            $stateLine = trim($timestamp . ' · ' . $state, ' ·');
+
+                            $labels[$side] = array_values(array_filter([
+                                $event,
+                                $stateLine,
+                            ]));
+                        }
+
+                        if ($labels !== []) {
+                            $nodeLabels[$nodeIndex] = $labels;
+                            $nodeIndex++;
+                        }
+                    });
+            });
+        $lastLabelNodeIndex = $nodeLabels !== [] ? max(array_keys($nodeLabels)) : 1;
         $langValueLabels = self::activeLangValueLabels($mainRow);
         $mergePreviewHeadCandidates = 6;
         $mergePreviews = self::mergePreviewStrangs($originRows, $mergePreviewHeadCandidates);
         $branchPreviews = self::branchPreviewStrangs($mergeOutcomes);
+        $rekeyPreviews = self::rekeyPreviewStrangs($mainRow);
+        $hasRekeyTargetPreview = collect($rekeyPreviews)->contains(static fn(array $preview): bool => (string) ($preview['kind'] ?? '') === 'target');
+        $rekeyTargetPreview = collect($rekeyPreviews)->first(static fn(array $preview): bool => (string) ($preview['kind'] ?? '') === 'target');
+        $rekeyTargetKeyId = data_get($rekeyTargetPreview, 'source.target_key_id');
+        $rekeyTargetSourceKey = (string) data_get($rekeyTargetPreview, 'source.source_key', '');
+        $rekeyTargetTargetKey = (string) data_get($rekeyTargetPreview, 'source.target_key', '');
+        $rekeyTargetRelationLine = trim(
+            self::graphKeyLabelText($rekeyTargetSourceKey, 44)
+                . ' -> '
+                . self::graphKeyLabelText($rekeyTargetTargetKey, 44),
+            ' ->',
+        );
+        $rekeyTargetTrunkLabel = $hasRekeyTargetPreview
+            ? [
+                'text' => array_values(array_filter([
+                    'rekeyed to this key ID #' . (string) ($rekeyTargetKeyId ?: '?'),
+                    $rekeyTargetRelationLine,
+                ])),
+                'side' => 'right',
+                'connectorLength' => '5rem',
+                'badgeColor' => 'sky',
+                'long' => true,
+            ]
+            : null;
+        $pathCount = min(7, max($hasRekeyTargetPreview ? 7 : 4, $lastLabelNodeIndex));
         $mergePreviewCount = count($mergePreviews);
         $branchPreviewCount = collect($branchPreviews)->sum(static fn(array $preview): int => (int) ($preview['finding_count'] ?? 0));
-        $previewMode = $mergePreviewCount > 0 ? 'trunk_with_limited_merge' : 'trunk_only';
+        $rekeyPreviewCount = count($rekeyPreviews);
+        $previewMode = $mergePreviewCount > 0 || $rekeyPreviewCount > 0 ? 'trunk_with_limited_merge' : 'trunk_only';
         $renderedMergeCandidates = collect($mergePreviews)
             ->sum(static fn(array $preview): int => 1 + (int) ($preview['extension_count'] ?? 0));
         $trunkStartTimestamp = self::graphTimestampLabel(
@@ -271,7 +323,13 @@ final class TimelineChainGraphData
         );
         $mergeOutcomeSummary = collect($mergeOutcomes['summary'] ?? []);
         $mergeOriginCountLabel = self::mergeOriginCountLabel($mergeOutcomeSummary);
-        $mergeOutcomeLine = self::mergeOutcomeResultLine($mergeOutcomeSummary);
+        $trunkEndStateLine = trim(
+            (int) $mergeOutcomeSummary->get('source_active', 0)
+                . ' active - '
+                . (int) $mergeOutcomeSummary->get('source_inactive', 0)
+                . ' ended',
+        );
+        $trunkEndLabelLines = self::trunkEndLabelLines($mainRow, $trunkEndStateLine);
 
         return [
             'mode' => $previewMode,
@@ -293,9 +351,22 @@ final class TimelineChainGraphData
                 'available_branch_findings' => (int) ($mergeOutcomes['summary']['branch_candidate_findings'] ?? 0),
                 'available_ended_after_merge_rows' => (int) ($mergeOutcomes['summary']['ended_after_merge_rows'] ?? 0),
                 'available_ended_after_merge_findings' => (int) ($mergeOutcomes['summary']['ended_after_merge_findings'] ?? 0),
+                'rendered_rekey_strangs' => $rekeyPreviewCount,
+                'available_rekey_relations' => collect(data_get($mainRow, 'meta.moved_relations', []))->count(),
             ],
             'graph' => [
                 'graph_id' => 'timeline-chain-' . (int) ($mainRow['id'] ?? 0) . '-data-preview',
+                'header' => [
+                    'text' => [
+                        'Timeline chain ID #' . (string) ($mainRow['id'] ?? '?'),
+                        str((string) ($mainRow['chain_type'] ?? ''))->headline()
+                            . ' · '
+                            . str((string) ($mainRow['chain_status'] ?? ''))->headline()
+                            . ' · '
+                            . (string) ($mainRow['translation_key'] ?? ''),
+                    ],
+                    'badgeColor' => 'cyan',
+                ],
                 'color' => 'cyan',
                 'line_length' => '3.5rem',
                 'slot_min_height' => max(
@@ -309,11 +380,22 @@ final class TimelineChainGraphData
                 'color' => 'green',
                 'path_count' => $pathCount,
                 'path_lengths' => collect(range(1, $pathCount))
-                    ->mapWithKeys(static fn(int $pathNumber): array => [
-                        $pathNumber => $pathNumber === 1
+                    ->mapWithKeys(static function (int $pathNumber) use ($rekeyTargetTrunkLabel): array {
+                        $length = $pathNumber === 1
                             ? '24.5rem'
-                            : '5.5rem',
-                    ])
+                            : ($pathNumber === 2 ? '7.5rem' : '5.5rem');
+
+                        if ($pathNumber === 7 && $rekeyTargetTrunkLabel !== null) {
+                            return [
+                                $pathNumber => [
+                                    'length' => $length,
+                                    'labels' => [$rekeyTargetTrunkLabel, null],
+                                ],
+                            ];
+                        }
+
+                        return [$pathNumber => $length];
+                    })
                     ->all(),
                 'end_length' => '6rem',
                 'start_label' => [
@@ -323,17 +405,32 @@ final class TimelineChainGraphData
                     ])),
                 ],
                 'end_label' => [
-                    'text' => array_values(array_filter([
-                        'timeline chain ID #' . (string) ($mainRow['id'] ?? '?'),
-                        $mergeOutcomeLine,
-                    ])),
+                    'text' => $trunkEndLabelLines,
+                    'long' => true,
                 ],
                 'start_node_labels' => $langValueLabels,
                 'node_labels' => $nodeLabels,
             ],
             'merge' => $mergePreviews[0] ?? null,
             'merges' => $mergePreviews,
+            'rekeys' => $rekeyPreviews,
             'branches' => $branchPreviews,
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $mainRow
+     * @return array<string, mixed>
+     */
+    private static function rekey(array $mainRow): array
+    {
+        $relations = self::movedRelationsForCurrentKey($mainRow);
+
+        return [
+            'component_family' => 'tw-graph.strang.rekey-source-* / tw-graph.strang.rekey-target-*',
+            'role' => 'direct key identity transition into or out of the current trunk',
+            'count' => $relations->count(),
+            'strangs' => $relations->values()->all(),
         ];
     }
 
@@ -495,6 +592,368 @@ final class TimelineChainGraphData
     }
 
     /**
+     * @param  array<string, mixed>  $mainRow
+     * @return array<int, array<string, mixed>>
+     */
+    private static function rekeyPreviewStrangs(array $mainRow): array
+    {
+        $relations = self::movedRelationsForCurrentKey($mainRow);
+
+        if ($relations->isEmpty()) {
+            return [];
+        }
+
+        $sourceRelations = $relations
+            ->filter(static fn(array $relation): bool => (string) ($relation['direction'] ?? '') === 'source')
+            ->values();
+        $targetRelations = $relations
+            ->filter(static fn(array $relation): bool => (string) ($relation['direction'] ?? '') === 'target')
+            ->values();
+        $previews = [];
+
+        if ($sourceRelations->isNotEmpty()) {
+            $previews[] = self::rekeyPreview($sourceRelations, 'source', 'left', 1, $mainRow);
+        }
+
+        if ($targetRelations->isNotEmpty()) {
+            $previews[] = self::rekeyPreview($targetRelations, 'target', 'right', 1, $mainRow);
+        }
+
+        return $previews;
+    }
+
+    /**
+     * Direction naming is from the current trunk's perspective:
+     * source = the current key was rekeyed from another key,
+     * target = the current key was rekeyed to another key.
+     *
+     * @param  array<string, mixed>  $mainRow
+     * @return Collection<int, array<string, mixed>>
+     */
+    private static function movedRelationsForCurrentKey(array $mainRow): Collection
+    {
+        if ((string) ($mainRow['chain_type'] ?? '') !== 'moved') {
+            return collect();
+        }
+
+        $currentKey = trim((string) ($mainRow['translation_key'] ?? ''));
+        $chainTimestamp = $mainRow['updated_at'] ?? $mainRow['last_seen_at'] ?? $mainRow['created_at'] ?? null;
+        $relations = collect(data_get($mainRow, 'meta.moved_relations', []))
+            ->filter(static fn(mixed $relation): bool => is_array($relation))
+            ->map(static function (array $relation) use ($chainTimestamp, $currentKey): array {
+                $sourceKey = trim((string) ($relation['translation_key'] ?? ''));
+                $targetKey = trim((string) ($relation['rekeyed_to_translation_key'] ?? ''));
+                $direction = null;
+
+                if ($currentKey !== '' && $targetKey === $currentKey && $sourceKey !== '') {
+                    $direction = 'source';
+                } elseif ($currentKey !== '' && $sourceKey === $currentKey && $targetKey !== '') {
+                    $direction = 'target';
+                }
+
+                return [
+                    ...$relation,
+                    'direction' => $direction,
+                    'source_key' => $sourceKey,
+                    'target_key' => $targetKey,
+                    'chain_timestamp' => $chainTimestamp,
+                ];
+            })
+            ->filter(static fn(array $relation): bool => filled($relation['direction'] ?? null))
+            ->values();
+
+        if ($relations->isEmpty()) {
+            return collect();
+        }
+
+        $keyIds = self::translationKeyIds(
+            $relations
+                ->flatMap(static fn(array $relation): array => [
+                    $relation['source_key'] ?? null,
+                    $relation['target_key'] ?? null,
+                ])
+                ->filter()
+                ->unique()
+                ->values()
+                ->all(),
+        );
+        $langValues = self::langValueFacts(
+            $relations
+                ->flatMap(static fn(array $relation): array => [
+                    $relation['lang_value_id'] ?? null,
+                    $relation['rekeyed_to_lang_value_id'] ?? null,
+                ])
+                ->filter()
+                ->unique()
+                ->values()
+                ->all(),
+        );
+        $events = self::rekeyEventFacts($mainRow);
+
+        return $relations
+            ->map(static fn(array $relation): array => [
+                ...$relation,
+                'source_key_id' => $keyIds[(string) ($relation['source_key'] ?? '')] ?? null,
+                'target_key_id' => $keyIds[(string) ($relation['target_key'] ?? '')] ?? null,
+                'source_lang_value' => $langValues[(int) ($relation['lang_value_id'] ?? 0)] ?? null,
+                'target_lang_value' => $langValues[(int) ($relation['rekeyed_to_lang_value_id'] ?? 0)] ?? null,
+                'event' => $events[(string) ($relation['source_key'] ?? '') . '->' . (string) ($relation['target_key'] ?? '')] ?? null,
+            ])
+            ->values();
+    }
+
+    /**
+     * @param  Collection<int, array<string, mixed>>  $relations
+     * @return array<string, mixed>
+     */
+    private static function rekeyPreview(Collection $relations, string $kind, string $side, int $componentCounter, array $mainRow): array
+    {
+        $first = self::displayRekeyRelation($relations);
+        $sourceKey = (string) ($first['source_key'] ?? '');
+        $targetKey = (string) ($first['target_key'] ?? '');
+        $sourceKeyId = $first['source_key_id'] ?? null;
+        $targetKeyId = $first['target_key_id'] ?? null;
+        $currentKeyId = $mainRow['root_key_id'] ?? null;
+        $sourceLangValueId = $first['lang_value_id'] ?? $first['id'] ?? null;
+        $targetLangValueId = $first['rekeyed_to_lang_value_id'] ?? null;
+        $sourceLangValue = is_array($first['source_lang_value'] ?? null) ? $first['source_lang_value'] : [];
+        $targetLangValue = is_array($first['target_lang_value'] ?? null) ? $first['target_lang_value'] : [];
+        $event = is_array($first['event'] ?? null) ? $first['event'] : [];
+        $timestamp = self::graphTimestampLabel($event['created_at'] ?? $sourceLangValue['first_seen_at'] ?? $first['updated_at'] ?? $first['last_seen_at'] ?? $first['chain_timestamp'] ?? null);
+        $literal = self::graphLabelText((string) ($sourceLangValue['value'] ?? $targetLangValue['value'] ?? ''));
+        $sourcePath = self::graphSourceLabelText((string) ($sourceLangValue['source_path'] ?? $targetLangValue['source_path'] ?? ''));
+        $relationLine = trim(
+            self::graphKeyLabelText($sourceKey, 44)
+                . ' -> '
+                . self::graphKeyLabelText($targetKey, 44),
+            ' ->',
+        );
+        $isSource = $kind === 'source';
+        $component = 'tw-graph.strang.rekey-' . $kind . '-' . $side;
+        $outerLabelSide = $side === 'left' ? 'left' : 'right';
+        $innerLabelSide = $side === 'left' ? 'right' : 'left';
+        $firstSeenLabel = array_values(array_filter(['First seen', $timestamp]));
+        $literalLabel = array_values(array_filter(['Literal', $literal]));
+        $originKeyLabel = array_values(array_filter(['Origin key', self::graphKeyLabelText($sourceKey, 52)]));
+        $targetKeyLabel = array_values(array_filter(['Target key', self::graphKeyLabelText($targetKey, 52)]));
+        $sourceLabel = array_values(array_filter(['Source', $sourcePath]));
+        $sourceStemContinuation = $isSource
+            ? [
+                1 => [
+                    'length' => '5rem',
+                    'compressed' => true,
+                    'beforeLength' => '0.75rem',
+                    'gapLength' => '1rem',
+                ],
+            ]
+            : [];
+        $targetStemContinuation = $isSource
+            ? []
+            : [
+                1 => [
+                    'length' => '5rem',
+                    'compressed' => true,
+                    'beforeLength' => '0.75rem',
+                    'gapLength' => '1rem',
+                    $outerLabelSide => $literalLabel,
+                    $innerLabelSide => $firstSeenLabel,
+                ],
+                2 => [
+                    'length' => '5rem',
+                    $outerLabelSide => array_values(array_filter([
+                        ...$sourceLabel,
+                        $sourceLangValueId ? 'source lang value ID #' . (string) $sourceLangValueId : null,
+                        $targetLangValueId ? 'target lang value ID #' . (string) $targetLangValueId : null,
+                    ])),
+                    $innerLabelSide => $targetKeyLabel,
+                ],
+            ];
+        $sourceRekeyEndNode = 5 + count($sourceStemContinuation);
+
+        return [
+            'component' => $component,
+            'kind' => $kind,
+            'side' => $side,
+            'component_counter' => $componentCounter,
+            'color' => 'sky',
+            'attach_to' => $isSource ? 'strang.trunk.path.1.end' : 'strang.trunk.path.7.end',
+            'bridge_length' => $isSource ? '18rem' : '26rem',
+            'stem_length' => $isSource ? '4rem' : '5rem',
+            'stem_continuation' => $isSource ? $sourceStemContinuation : $targetStemContinuation,
+            'end_length' => $isSource ? null : '4rem',
+            'cap_length' => $isSource ? null : '1.75rem',
+            'end_label' => $isSource
+                ? null
+                : [
+                    'text' => [
+                        'rekey target to ID #' . (string) ($targetKeyId ?: '?'),
+                        $timestamp,
+                    ],
+                    'badgeColor' => 'sky',
+                    'long' => true,
+                ],
+            'start_label' => [
+                'text' => array_values(array_filter([
+                    $isSource
+                        ? 'rekey source from ID #' . (string) ($sourceKeyId ?: '?')
+                        : 'rekey target to ID #' . (string) ($targetKeyId ?: '?'),
+                    $timestamp,
+                ])),
+                'side' => 'bottom',
+                'offset' => '0.75rem',
+                'badgeColor' => 'sky',
+            ],
+            'node_labels' => $isSource
+                ? [
+                    1 => [
+                        $outerLabelSide => $firstSeenLabel,
+                        $innerLabelSide => $literalLabel,
+                    ],
+                    2 => [
+                        $outerLabelSide => array_values(array_filter([
+                            'source key ID #' . (string) ($sourceKeyId ?: '?'),
+                            ...$originKeyLabel,
+                        ])),
+                        $innerLabelSide => array_values(array_filter([
+                            ...$sourceLabel,
+                            $sourceLangValueId ? 'source lang value ID #' . (string) $sourceLangValueId : null,
+                        ])),
+                    ],
+                    $sourceRekeyEndNode => [
+                        $outerLabelSide => array_values(array_filter([
+                            'rekeyed into this key ID #' . (string) ($currentKeyId ?: '?'),
+                            $relationLine,
+                        ])),
+                        'connectorLength' => '5rem',
+                        'long' => true,
+                    ],
+                ]
+                : [],
+            'source' => [
+                'relation_count' => $relations->count(),
+                'source_key' => $sourceKey,
+                'target_key' => $targetKey,
+                'target_key_id' => $targetKeyId,
+            ],
+        ];
+    }
+
+    /**
+     * Prefer the active UI target locale so the graph follows the current UI
+     * perspective. Fall back to source locale, then to the first relation.
+     *
+     * @param  Collection<int, array<string, mixed>>  $relations
+     * @return array<string, mixed>
+     */
+    private static function displayRekeyRelation(Collection $relations): array
+    {
+        $activeLocale = self::activeTargetMainLocale();
+        $sourceLocale = LocaleCode::normalize((string) config('translation-workbench.source_locale', 'en')) ?: 'en';
+
+        return (array) (
+            $relations->first(static fn(array $relation): bool => LocaleCode::normalize((string) ($relation['locale'] ?? '')) === $activeLocale)
+            ?? $relations->first(static fn(array $relation): bool => LocaleCode::normalize((string) ($relation['locale'] ?? '')) === $sourceLocale)
+            ?? $relations->first()
+            ?? []
+        );
+    }
+
+    /**
+     * @param  array<int, mixed>  $langValueIds
+     * @return array<int, array<string, mixed>>
+     */
+    private static function langValueFacts(array $langValueIds): array
+    {
+        $ids = collect($langValueIds)
+            ->map(static fn(mixed $id): int => (int) $id)
+            ->filter()
+            ->unique()
+            ->values();
+
+        if ($ids->isEmpty() || ! Schema::hasTable('translation_workbench_lang_values')) {
+            return [];
+        }
+
+        return DB::table('translation_workbench_lang_values')
+            ->whereIn('id', $ids->all())
+            ->get(['id', 'locale', 'translation_key', 'value', 'source_path', 'status', 'first_seen_at', 'last_seen_at', 'updated_at'])
+            ->mapWithKeys(static fn(object $row): array => [
+                (int) $row->id => [
+                    'id' => (int) $row->id,
+                    'locale' => (string) $row->locale,
+                    'translation_key' => (string) $row->translation_key,
+                    'value' => (string) $row->value,
+                    'source_path' => (string) ($row->source_path ?? ''),
+                    'status' => (string) $row->status,
+                    'first_seen_at' => $row->first_seen_at,
+                    'last_seen_at' => $row->last_seen_at,
+                    'updated_at' => $row->updated_at,
+                ],
+            ])
+            ->all();
+    }
+
+    /**
+     * @param  array<string, mixed>  $mainRow
+     * @return array<string, array<string, mixed>>
+     */
+    private static function rekeyEventFacts(array $mainRow): array
+    {
+        $eventIds = self::integerList($mainRow['timeline_event_ids'] ?? []);
+
+        if ($eventIds === [] || ! Schema::hasTable('translation_workbench_timeline_events')) {
+            return [];
+        }
+
+        return DB::table('translation_workbench_timeline_events')
+            ->whereIn('id', $eventIds)
+            ->where('event_type', 'translation_lang_values_rekeyed')
+            ->get(['id', 'old_values', 'new_values', 'created_at', 'updated_at'])
+            ->mapWithKeys(static function (object $event): array {
+                $oldValues = is_string($event->old_values) ? (json_decode($event->old_values, true) ?: []) : (array) $event->old_values;
+                $newValues = is_string($event->new_values) ? (json_decode($event->new_values, true) ?: []) : (array) $event->new_values;
+                $sourceKey = trim((string) ($oldValues['translation_key'] ?? ''));
+                $targetKey = trim((string) ($newValues['translation_key'] ?? ''));
+
+                if ($sourceKey === '' || $targetKey === '') {
+                    return [];
+                }
+
+                return [
+                    $sourceKey . '->' . $targetKey => [
+                        'id' => (int) $event->id,
+                        'created_at' => $event->created_at,
+                        'updated_at' => $event->updated_at,
+                    ],
+                ];
+            })
+            ->all();
+    }
+
+    /**
+     * @param  array<int, string>  $translationKeys
+     * @return array<string, int>
+     */
+    private static function translationKeyIds(array $translationKeys): array
+    {
+        $keys = collect($translationKeys)
+            ->map(static fn(mixed $key): string => trim((string) $key))
+            ->filter()
+            ->unique()
+            ->values();
+
+        if ($keys->isEmpty() || ! Schema::hasTable('translation_workbench_keys')) {
+            return [];
+        }
+
+        return DB::table('translation_workbench_keys')
+            ->whereIn('translation_key', $keys->all())
+            ->get(['id', 'translation_key'])
+            ->mapWithKeys(static fn(object $row): array => [(string) $row->translation_key => (int) $row->id])
+            ->all();
+    }
+
+    /**
      * Declarative outcome-to-graph mapping. Data-driven graph code consumes
      * these specs and converts them into generic strang/path props.
      *
@@ -508,6 +967,7 @@ final class TimelineChainGraphData
                 'placement' => 'branch',
                 'color' => 'red',
                 'end_label' => ['Ended after merge', 'shared obsolete'],
+                'step_label' => ['Source inactive', 'shared obsolete'],
                 'component_counter_offset' => 0,
             ],
             [
@@ -517,10 +977,11 @@ final class TimelineChainGraphData
                 'attach_to' => 'bridge.end',
                 'color' => 'rose',
                 'end_label' => ['Ended before target', 'not shared obsolete'],
+                'step_label' => ['Source inactive', 'not shared obsolete'],
                 'end_length' => '4rem',
                 'cap_length' => '2rem',
                 'bridge_length' => '28rem',
-                'stem_length' => '4.25rem',
+                'stem_length' => '5.25rem',
             ],
         ];
     }
@@ -535,6 +996,7 @@ final class TimelineChainGraphData
         $outcomeGroup = (string) ($spec['outcome_group'] ?? '');
         $color = (string) ($spec['color'] ?? 'red');
         $endLabel = array_values((array) ($spec['end_label'] ?? [$outcomeGroup]));
+        $stepLabel = array_values((array) ($spec['step_label'] ?? []));
         $componentCounterOffset = (int) ($spec['component_counter_offset'] ?? 0);
         $endedRows = $rows
             ->filter(static fn(array $row): bool => (string) ($row['outcome_group'] ?? '') === $outcomeGroup)
@@ -546,7 +1008,7 @@ final class TimelineChainGraphData
                 'side' => $index % 2 === 0 ? 'left' : 'right',
             ])
             ->groupBy('side')
-            ->map(static function (Collection $sideRows, string $side) use ($color, $componentCounterOffset, $endLabel, $outcomeGroup): array {
+            ->map(static function (Collection $sideRows, string $side) use ($color, $componentCounterOffset, $endLabel, $outcomeGroup, $stepLabel): array {
                 $labelSide = $side === 'left' ? 'left' : 'right';
                 $insideLabelSide = $side === 'left' ? 'right' : 'left';
                 $rows = $sideRows->pluck('row')->values();
@@ -555,7 +1017,7 @@ final class TimelineChainGraphData
                     ->mapWithKeys(static function (Collection $stemRows, int $index) use ($labelSide, $insideLabelSide): array {
                         $stemRows = $stemRows->values();
                         $entry = [
-                            'length' => '4.25rem',
+                            'length' => '5.25rem',
                         ];
 
                         if ($stemRows->has(0)) {
@@ -570,20 +1032,17 @@ final class TimelineChainGraphData
                     })
                     ->all();
                 $stemCount = count($stemContinuation);
-                $step = $side === 'left'
-                    ? [
-                        'beforeLength' => '1.5rem',
-                        'afterLength' => '1.5rem',
-                        'stepLabel' => [
-                            'text' => [
-                                'Source inactive',
-                                'shared obsolete',
-                                $rows->count() . ' rows',
-                            ],
-                            'badgeColor' => $color,
+                $step = [
+                    'beforeLength' => '1.5rem',
+                    'afterLength' => '1.5rem',
+                    'stepLabel' => [
+                        'text' => [
+                            ...$stepLabel,
+                            $rows->count() . ' rows',
                         ],
-                    ]
-                    : null;
+                        'badgeColor' => $color,
+                    ],
+                ];
 
                 return [
                     'component' => 'tw-graph.strang.branch-' . $side,
@@ -594,7 +1053,7 @@ final class TimelineChainGraphData
                         ? 'strang.merge-left.end'
                         : 'strang.merge-right.end',
                     'bridge_length' => '30rem',
-                    'stem_length' => '4.25rem',
+                    'stem_length' => '5.25rem',
                     'step' => $step,
                     'stem_continuation' => $stemContinuation,
                     'branch_extension' => [],
@@ -642,10 +1101,11 @@ final class TimelineChainGraphData
         $attachTo = (string) ($spec['attach_to'] ?? 'bridge.end');
         $color = (string) ($spec['color'] ?? 'rose');
         $endLabel = array_values((array) ($spec['end_label'] ?? [$outcomeGroup]));
+        $stepLabel = array_values((array) ($spec['step_label'] ?? []));
         $endLength = (string) ($spec['end_length'] ?? '0rem');
         $capLength = (string) ($spec['cap_length'] ?? '1.75rem');
         $bridgeLength = (string) ($spec['bridge_length'] ?? '12rem');
-        $stemLength = (string) ($spec['stem_length'] ?? '4.25rem');
+        $stemLength = (string) ($spec['stem_length'] ?? '5.25rem');
         $extensionRows = $rows
             ->filter(static fn(array $row): bool => (string) ($row['outcome_group'] ?? '') === $outcomeGroup)
             ->values();
@@ -654,7 +1114,7 @@ final class TimelineChainGraphData
             return $branches;
         }
 
-        return $branches->map(static function (array $branch) use ($attachTo, $bridgeLength, $capLength, $color, $endLabel, $endLength, $extensionRows, $parentOutcomeGroup, $stemLength): array {
+        return $branches->map(static function (array $branch) use ($attachTo, $bridgeLength, $capLength, $color, $endLabel, $endLength, $extensionRows, $parentOutcomeGroup, $stemLength, $stepLabel): array {
             $side = (string) ($branch['side'] ?? 'left');
 
             if ((string) data_get($branch, 'source.outcome_group') !== $parentOutcomeGroup) {
@@ -679,6 +1139,17 @@ final class TimelineChainGraphData
                             'bridgeLength' => $bridgeLength,
                             'stemLength' => $stemLength,
                             'color' => $color,
+                            'step' => [
+                                'beforeLength' => '1.5rem',
+                                'afterLength' => '1.5rem',
+                                'stepLabel' => [
+                                    'text' => [
+                                        ...$stepLabel,
+                                        '1 row',
+                                    ],
+                                    'badgeColor' => $color,
+                                ],
+                            ],
                             'endLength' => $endLength,
                             'capLength' => $capLength,
                             'endLabel' => [
@@ -991,6 +1462,69 @@ final class TimelineChainGraphData
         $localeValue = trim((string) $row->locale . ' · ' . self::graphLabelText((string) $row->value, 30));
 
         return trim(implode(' · ', array_filter([$timestamp, $localeValue])));
+    }
+
+    /**
+     * @param  array<string, mixed>  $mainRow
+     * @return array<int, string>
+     */
+    private static function trunkEndLabelLines(array $mainRow, string $defaultStateLine): array
+    {
+        $keyIdLine = 'key ID #' . (string) ($mainRow['root_key_id'] ?? '?');
+        $chainEndLine = '- TIMELINE CHAIN END -';
+
+        if ((string) ($mainRow['chain_type'] ?? '') !== 'moved') {
+            return array_values(array_filter([
+                $keyIdLine,
+                $defaultStateLine,
+                $chainEndLine,
+            ]));
+        }
+
+        $currentKey = trim((string) ($mainRow['translation_key'] ?? ''));
+        $movedRelations = collect(data_get($mainRow, 'meta.moved_relations', []))
+            ->filter(static fn(mixed $relation): bool => is_array($relation))
+            ->values();
+        $sourceKeys = $movedRelations
+            ->pluck('translation_key')
+            ->map(static fn(mixed $key): string => trim((string) $key))
+            ->filter()
+            ->unique()
+            ->values();
+        $targetKeys = $movedRelations
+            ->pluck('rekeyed_to_translation_key')
+            ->map(static fn(mixed $key): string => trim((string) $key))
+            ->filter()
+            ->unique()
+            ->values();
+        $relationText = '';
+        $stateText = 'moved / rekeyed';
+
+        if ($currentKey !== '' && $targetKeys->contains($currentKey) && $sourceKeys->isNotEmpty()) {
+            $stateText = 'moved / merged into this key';
+            $relationText = self::graphKeyLabelText($sourceKeys->implode(', '), 54)
+                . ' -> '
+                . self::graphKeyLabelText($currentKey, 54);
+        } elseif ($currentKey !== '' && $sourceKeys->contains($currentKey) && $targetKeys->isNotEmpty()) {
+            $stateText = 'moved / merged to target key';
+            $relationText = self::graphKeyLabelText($currentKey, 54)
+                . ' -> '
+                . self::graphKeyLabelText($targetKeys->implode(', '), 54);
+        } elseif ($sourceKeys->isNotEmpty() || $targetKeys->isNotEmpty()) {
+            $relationText = trim(
+                self::graphKeyLabelText($sourceKeys->implode(', '), 54)
+                    . ' -> '
+                    . self::graphKeyLabelText($targetKeys->implode(', '), 54),
+                ' ->',
+            );
+        }
+
+        return array_values(array_filter([
+            $keyIdLine,
+            $stateText,
+            $relationText,
+            $chainEndLine,
+        ]));
     }
 
     private static function findingLabel(string $value): string

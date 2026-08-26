@@ -17,6 +17,7 @@
     $twGraphDataDrivenPreviewTrunk = collect($twGraphDataDrivenPreview->get('trunk', []));
     $twGraphDataDrivenPreviewMerge = collect($twGraphDataDrivenPreview->get('merge', []));
     $twGraphDataDrivenPreviewMerges = collect($twGraphDataDrivenPreview->get('merges', []));
+    $twGraphDataDrivenPreviewRekeys = collect($twGraphDataDrivenPreview->get('rekeys', []));
     $twGraphDataDrivenPreviewBranches = collect($twGraphDataDrivenPreview->get('branches', []));
     $twGraphDataDrivenPreviewLimits = collect($twGraphDataDrivenPreview->get('limits', []));
     $twGraphDataDrivenFindingInspect = \Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData::inspectFinding(
@@ -209,6 +210,15 @@
                             {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('available_branch_candidates', 0)) }}
                             {{ __('branch findings') }}
                         </flux:badge>
+                        <flux:badge
+                            size="sm"
+                            color="{{ (int) $twGraphDataDrivenPreviewLimits->get('rendered_rekey_strangs', 0) > 0 ? 'sky' : 'zinc' }}"
+                        >
+                            {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('rendered_rekey_strangs', 0)) }}
+                            /
+                            {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('available_rekey_relations', 0)) }}
+                            {{ __('rekey') }}
+                        </flux:badge>
                     </span>
 
                     <span class="flex flex-wrap items-center justify-end gap-3">
@@ -254,6 +264,14 @@
                     'tw-graph-protocol-coordinates-disabled': !twGraphDataDrivenCoordinates,
                 }"
             >
+                @if (filled(data_get($twGraphDataDrivenPreviewGraph->get('header'), 'text')))
+                    <flux:callout.heading class="mb-2">
+                        @foreach ((array) data_get($twGraphDataDrivenPreviewGraph->get('header'), 'text', []) as $graphHeaderLine)
+                            <span>{{ $graphHeaderLine }}</span>
+                        @endforeach
+                    </flux:callout.heading>
+                @endif
+
                 <x-translation-workbench::ui.tw-graph
                     class="px-24 py-12"
                     :graph-id="$twGraphDataDrivenPreviewGraph->get('graph_id')"
@@ -273,6 +291,68 @@
                         :start-node-labels="$twGraphDataDrivenPreviewTrunk->get('start_node_labels', [])"
                         :node-labels="$twGraphDataDrivenPreviewTrunk->get('node_labels', [])"
                     />
+
+                    @foreach ($twGraphDataDrivenPreviewRekeys as $rekeyIndex => $rekeyPreview)
+                        @php
+                            $rekeyPreview = collect($rekeyPreview);
+                            $rekeyKind = $rekeyPreview->get('kind');
+                            $rekeySide = $rekeyPreview->get('side');
+                        @endphp
+
+                        @if ($rekeyKind === 'source' && $rekeySide === 'right')
+                            <x-translation-workbench::ui.tw-graph.strang.rekey-source-right
+                                :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
+                                :color="$rekeyPreview->get('color', 'sky')"
+                                :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.1.end')"
+                                :bridge-length="$rekeyPreview->get('bridge_length', '12rem')"
+                                :stem-length="$rekeyPreview->get('stem_length', '4rem')"
+                                :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
+                                :start-label="$rekeyPreview->get('start_label')"
+                                :node-labels="$rekeyPreview->get('node_labels', [])"
+                                :z-index="8"
+                            />
+                        @elseif ($rekeyKind === 'source')
+                            <x-translation-workbench::ui.tw-graph.strang.rekey-source-left
+                                :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
+                                :color="$rekeyPreview->get('color', 'sky')"
+                                :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.1.end')"
+                                :bridge-length="$rekeyPreview->get('bridge_length', '12rem')"
+                                :stem-length="$rekeyPreview->get('stem_length', '4rem')"
+                                :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
+                                :start-label="$rekeyPreview->get('start_label')"
+                                :node-labels="$rekeyPreview->get('node_labels', [])"
+                                :z-index="8"
+                            />
+                        @elseif ($rekeyKind === 'target' && $rekeySide === 'left')
+                            <x-translation-workbench::ui.tw-graph.strang.rekey-target-left
+                                :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
+                                :color="$rekeyPreview->get('color', 'sky')"
+                                :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.3.end')"
+                                :bridge-length="$rekeyPreview->get('bridge_length', '12rem')"
+                                :stem-length="$rekeyPreview->get('stem_length', '5rem')"
+                                :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
+                                :end-length="$rekeyPreview->get('end_length')"
+                                :cap-length="$rekeyPreview->get('cap_length')"
+                                :end-label="$rekeyPreview->get('end_label')"
+                                :node-labels="$rekeyPreview->get('node_labels', [])"
+                                :z-index="7"
+                            />
+                        @else
+                            <x-translation-workbench::ui.tw-graph.strang.rekey-target-right
+                                :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
+                                :color="$rekeyPreview->get('color', 'sky')"
+                                :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.3.end')"
+                                :bridge-length="$rekeyPreview->get('bridge_length', '12rem')"
+                                :stem-length="$rekeyPreview->get('stem_length', '5rem')"
+                                :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
+                                :end-length="$rekeyPreview->get('end_length')"
+                                :cap-length="$rekeyPreview->get('cap_length')"
+                                :end-label="$rekeyPreview->get('end_label')"
+                                :node-labels="$rekeyPreview->get('node_labels', [])"
+                                :z-index="7"
+                            />
+                        @endif
+                    @endforeach
 
                     @if ($twGraphDataDrivenPreviewMerge->isNotEmpty())
                         @foreach ($twGraphDataDrivenPreviewMerges as $mergeIndex => $mergePreview)
@@ -378,6 +458,15 @@
                         @endif
                     @endforeach
                 </x-translation-workbench::ui.tw-graph>
+
+                @if (filled(data_get($twGraphDataDrivenPreviewGraph->get('header'), 'text')))
+                    <flux:callout.heading class="mt-2 flex items-center justify-center gap-2">
+                        @foreach ((array) data_get($twGraphDataDrivenPreviewGraph->get('header'), 'text', []) as $graphHeaderLine)
+                            <span>{{ $graphHeaderLine }}</span>
+                        @endforeach
+                    </flux:callout.heading>
+                @endif
+
             </div>
         </flux:callout>
     @endif
@@ -394,17 +483,20 @@
                     <flux:badge
                         size="sm"
                         color="zinc"
-                    >{{ __('Total') }}: {{ number_format((int) $twGraphDataDrivenMergeOutcomeSummary->get('total', 0)) }}</flux:badge>
+                    >{{ __('Total') }}:
+                        {{ number_format((int) $twGraphDataDrivenMergeOutcomeSummary->get('total', 0)) }}</flux:badge>
                     <flux:badge
                         size="sm"
                         color="green"
                     >{{ __('Source active') }}:
-                        {{ number_format((int) $twGraphDataDrivenMergeOutcomeSummary->get('source_active', 0)) }}</flux:badge>
+                        {{ number_format((int) $twGraphDataDrivenMergeOutcomeSummary->get('source_active', 0)) }}
+                    </flux:badge>
                     <flux:badge
                         size="sm"
                         color="red"
                     >{{ __('Branch candidates') }}:
-                        {{ number_format((int) $twGraphDataDrivenMergeOutcomeSummary->get('branch_candidates', 0)) }}</flux:badge>
+                        {{ number_format((int) $twGraphDataDrivenMergeOutcomeSummary->get('branch_candidates', 0)) }}
+                    </flux:badge>
                     @foreach (collect($twGraphDataDrivenMergeOutcomeSummary->get('groups', [])) as $group => $count)
                         <flux:badge
                             size="sm"
@@ -492,7 +584,8 @@
                             </td>
                             <td class="px-3 py-2 align-top">
                                 <div class="flex flex-col gap-1 text-zinc-700 dark:text-zinc-200">
-                                    <span>{{ __('first') }}: {{ $outcome->get('first_seen_at') ?: __('n/a') }}</span>
+                                    <span>{{ __('first') }}:
+                                        {{ $outcome->get('first_seen_at') ?: __('n/a') }}</span>
                                     <span>{{ __('last') }}: {{ $outcome->get('last_seen_at') ?: __('n/a') }}</span>
                                 </div>
                             </td>
@@ -628,7 +721,8 @@
                             </dd>
                         </div>
                         <div>
-                            <dt class="font-medium text-zinc-500 dark:text-zinc-400">{{ __('Shared candidate') }}</dt>
+                            <dt class="font-medium text-zinc-500 dark:text-zinc-400">{{ __('Shared candidate') }}
+                            </dt>
                             <dd class="wrap-anywhere font-mono text-zinc-900 dark:text-zinc-100">
                                 {{ $twGraphDataDrivenInspectShared->get('current_translation_key') ?: __('n/a') }}
                                 @if ($twGraphDataDrivenInspectShared->get('suggested_shared_translation_key'))
@@ -700,7 +794,8 @@
                             <flux:badge
                                 size="sm"
                                 color="purple"
-                            >{{ __('Lang values') }}: {{ $twGraphDataDrivenInspectLangValues->count() }}</flux:badge>
+                            >{{ __('Lang values') }}: {{ $twGraphDataDrivenInspectLangValues->count() }}
+                            </flux:badge>
                         </div>
                     </div>
                 </flux:callout.text>

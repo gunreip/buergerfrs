@@ -198,9 +198,17 @@ final class DevIdentifier
             return 'path.merge-extension';
         }
 
-        if (str_contains($tail, 'paths.merge') || str_contains($strang, 'merge')) {
-            return 'path.merge';
-        }
+            if (str_contains($tail, 'rekey-source') || str_contains($strang, 'rekey-source')) {
+                return 'path.rekey-source';
+            }
+
+            if (str_contains($tail, 'rekey-target') || str_contains($strang, 'rekey-target')) {
+                return 'path.rekey-target';
+            }
+
+            if (str_contains($tail, 'paths.merge') || str_contains($strang, 'merge')) {
+                return 'path.merge';
+            }
 
         if (str_contains($tail, 'branch-extension') || str_starts_with($tail, 'extension.')) {
             return 'path.branch-extension';
@@ -265,8 +273,8 @@ final class DevIdentifier
     private static function arcDirection(string $strang, string $tail, string $role): string
     {
         $isLeft = str_ends_with($strang, '-left');
-        $isBranch = str_contains($strang, 'branch');
-        $isMerge = str_contains($strang, 'merge');
+        $isBranch = str_contains($strang, 'branch') || str_contains($strang, 'rekey-target');
+        $isMerge = str_contains($strang, 'merge') || str_contains($strang, 'rekey-source');
         $isReturn = str_contains($tail, 'branch-return');
         $isExtension = str_starts_with($tail, 'extension.') || str_contains($tail, 'merge-extension') || str_contains($tail, 'branch-extension');
 

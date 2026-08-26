@@ -31,8 +31,10 @@
 
                     @foreach ($previewOptions as $option)
                         @php
+                            $previewGroup = trim((string) ($option['preview_group'] ?? __('Sample')));
                             $optionLabel = trim(
-                                '#' .
+                                $previewGroup .
+                                    ' · #' .
                                     (string) $option['id'] .
                                     ' · ' .
                                     str((string) $option['chain_type'])->headline() .

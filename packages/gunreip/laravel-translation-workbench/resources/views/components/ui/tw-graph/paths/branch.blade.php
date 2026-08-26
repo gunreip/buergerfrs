@@ -269,12 +269,17 @@
             ? $stemLabels
             : true;
 
+        $compressedStem = is_array($stemEntry) && (bool) data_get($stemEntry, 'compressed', false);
         $stemSegments[] = [
-            'component' => 'path',
+            'component' => $compressedStem ? 'stem-compressed' : 'path',
             'segment' => [
                 'id' => $stemId,
                 'direction' => 'bottom-top',
                 'length' => $stemLengthValue,
+                'beforeLength' => is_array($stemEntry) ? data_get($stemEntry, 'beforeLength', '1rem') : '1rem',
+                'gapLength' => is_array($stemEntry) ? data_get($stemEntry, 'gapLength', '1rem') : '1rem',
+                'afterLength' => is_array($stemEntry) ? data_get($stemEntry, 'afterLength', '1rem') : '1rem',
+                'capLength' => is_array($stemEntry) ? data_get($stemEntry, 'capLength', '1.25rem') : '1.25rem',
                 'anchorStart' => $pathEndAnchor,
                 'anchorEnd' => $stemEnd,
                 'nodeStart' => false,
@@ -308,6 +313,7 @@
                 'anchorEnd' => $arcInEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
+                'endLabel' => $arcNodeLabel(1, 'top'),
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
                 'color' => $color,
@@ -374,6 +380,11 @@
         <x-translation-workbench::ui.tw-graph.segments.arc :segment="$segment['segment']" />
     @elseif ($segment['component'] === 'step')
         <x-translation-workbench::ui.tw-graph.segments.step
+            :segment="$segment['segment']"
+            :dev="$dev"
+        />
+    @elseif ($segment['component'] === 'stem-compressed')
+        <x-translation-workbench::ui.tw-graph.segments.stem-compressed
             :segment="$segment['segment']"
             :dev="$dev"
         />

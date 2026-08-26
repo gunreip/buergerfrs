@@ -352,6 +352,9 @@
             $extensionReturnBridge = is_array($extensionEntry)
                 ? data_get($extensionEntry, 'returnBridge')
                 : null;
+            $extensionStep = is_array($extensionEntry)
+                ? data_get($extensionEntry, 'step')
+                : null;
             $extensionNodeLabels = is_array($extensionEntry)
                 ? data_get($extensionEntry, 'nodeLabels', [])
                 : [];
@@ -394,16 +397,53 @@
                 'sourceAnchor' => 'end',
                 'direction' => 'south-east',
             ];
-            $extensionVerticalEnd = [
+            $extensionStepConfig = is_array($extensionStep)
+                ? $extensionStep
+                : (filled($extensionStep) ? ['stepLabel' => ['text' => $extensionStep]] : null);
+            if (is_array($extensionStepConfig) && filled(data_get($extensionStepConfig, 'text')) && blank(data_get($extensionStepConfig, 'stepLabel.text'))) {
+                $extensionStepConfig['stepLabel'] = ['text' => data_get($extensionStepConfig, 'text')];
+            }
+            $extensionHasStep = is_array($extensionStepConfig) && filled(data_get($extensionStepConfig, 'stepLabel.text'));
+            $extensionStepLabelLines = collect(is_iterable(data_get($extensionStepConfig, 'stepLabel.text')) && ! is_string(data_get($extensionStepConfig, 'stepLabel.text')) ? data_get($extensionStepConfig, 'stepLabel.text') : [data_get($extensionStepConfig, 'stepLabel.text')])
+                ->filter(fn (mixed $line): bool => filled($line))
+                ->take(3)
+                ->count();
+            $extensionAutoStepLabelGap = match ($extensionStepLabelLines) {
+                1 => '2.75rem',
+                2 => '3.75rem',
+                3 => '4.75rem',
+                default => '3.75rem',
+            };
+            $extensionStepBeforeLength = (string) data_get($extensionStepConfig, 'beforeLength', '1.5rem');
+            $extensionStepLabelGap = (string) (data_get($extensionStepConfig, 'labelGap') ?: $extensionAutoStepLabelGap);
+            $extensionStepAfterLength = (string) data_get($extensionStepConfig, 'afterLength', '1.5rem');
+            $extensionStepEnd = [
                 'x' => $extensionArcEnd['x'],
-                'y' => $add($extensionArcEnd['y'], $extensionStemLength),
+                'y' => $add($add($add($extensionArcEnd['y'], $extensionStepBeforeLength), $extensionStepLabelGap), $extensionStepAfterLength),
+                'source' => $id . '.extension.' . ($branchExtensionRenderIndex + 1) . '.step',
+                'sourceType' => 'step',
+                'sourceAnchor' => 'end',
+                'direction' => 'bottom-top',
+            ];
+            $extensionStemStart = $extensionHasStep ? $extensionStepEnd : $extensionArcEnd;
+            $extensionVerticalEnd = [
+                'x' => $extensionStemStart['x'],
+                'y' => $add($extensionStemStart['y'], $extensionStemLength),
                 'source' => $id . '.extension.' . ($branchExtensionRenderIndex + 1) . '.stem',
                 'sourceType' => 'stem',
                 'sourceAnchor' => 'end',
                 'direction' => 'bottom-top',
             ];
 
-            array_push($branchExtensionBoundsPoints, $extensionAnchor, $extensionBridgeStart, $extensionBridgeEnd, $extensionArcEnd, $extensionVerticalEnd);
+            $extensionBoundsPoints = [
+                $extensionAnchor,
+                $extensionBridgeStart,
+                $extensionBridgeEnd,
+                $extensionArcEnd,
+                ...($extensionHasStep ? [$extensionStepEnd] : []),
+                $extensionVerticalEnd,
+            ];
+            array_push($branchExtensionBoundsPoints, ...$extensionBoundsPoints);
             $branchExtensionRenderIndex++;
             $extensionKey = (string) $branchExtensionRenderIndex;
             $branchExtensionAliases[$legacyExtensionKey] = $extensionKey;
@@ -413,19 +453,21 @@
                 'stemLength' => $extensionStemLength,
                 'color' => $extensionColor,
                 'returnBridge' => $extensionReturnBridge,
+                'step' => $extensionStepConfig,
                 'nodeLabels' => is_array($extensionNodeLabels) ? $extensionNodeLabels : [],
                 'endLabel' => $extensionEndLabel,
                 'endLength' => $extensionEndLength,
                 'capLength' => $extensionCapLength,
                 'bridgeEnd' => $extensionBridgeEnd,
                 'arcEnd' => $extensionArcEnd,
+                'stepEnd' => $extensionHasStep ? $extensionStepEnd : null,
                 'end' => $extensionVerticalEnd,
                 'counterStart' => $branchExtensionCounterStart,
-                'nodeCount' => $extensionStartsFromStem ? 4 : 3,
+                'nodeCount' => ($extensionStartsFromStem ? 4 : 3) + ($extensionHasStep ? 1 : 0),
                 'renderIndex' => $branchExtensionRenderIndex,
             ];
             $branchExtensionAnchor = $extensionBridgeEnd;
-            $branchExtensionCounterStart += $extensionStartsFromStem ? 4 : 3;
+            $branchExtensionCounterStart += ($extensionStartsFromStem ? 4 : 3) + ($extensionHasStep ? 1 : 0);
         }
     }
 
@@ -675,6 +717,7 @@
         side="right"
         :anchor-start="$extensionConfig['anchor']"
         :bridge-length="$extensionConfig['bridgeLength']"
+        :step="$extensionConfig['step']"
         :stem-length="$extensionConfig['stemLength']"
         :arc-size="$resolvedArcSize"
         :color="$extensionConfig['color']"

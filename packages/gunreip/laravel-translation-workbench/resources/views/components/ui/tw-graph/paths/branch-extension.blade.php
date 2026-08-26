@@ -19,6 +19,9 @@
     from stem end:
     left:  segments.arc east-north -> segments.path right-left -> segments.arc south-west -> segments.path bottom-top
     right: segments.arc west-north -> segments.path left-right -> segments.arc south-east -> segments.path bottom-top
+
+    Optional step:
+    Inserted between the outer arc and the final stem.
 --}}
 
 @props([
@@ -27,6 +30,7 @@
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcSize' => '2.75rem',
     'bridgeLength' => '3rem',
+    'step' => null,
     'stemLength' => '2rem',
     'color' => 'rose',
     'zIndex' => null,
@@ -89,9 +93,34 @@
         'x' => $add($bridgeEnd['x'], $arcDelta),
         'y' => $add($bridgeEnd['y'], $arcSize),
     ];
-    $verticalEnd = [
+    $stepConfig = is_array($step)
+        ? $step
+        : (filled($step) ? ['stepLabel' => ['text' => $step]] : null);
+    if (is_array($stepConfig) && filled(data_get($stepConfig, 'text')) && blank(data_get($stepConfig, 'stepLabel.text'))) {
+        $stepConfig['stepLabel'] = ['text' => data_get($stepConfig, 'text')];
+    }
+    $hasStep = is_array($stepConfig) && filled(data_get($stepConfig, 'stepLabel.text'));
+    $stepLabelLines = collect(is_iterable(data_get($stepConfig, 'stepLabel.text')) && ! is_string(data_get($stepConfig, 'stepLabel.text')) ? data_get($stepConfig, 'stepLabel.text') : [data_get($stepConfig, 'stepLabel.text')])
+        ->filter(fn (mixed $line): bool => filled($line))
+        ->take(3)
+        ->count();
+    $autoStepLabelGap = match ($stepLabelLines) {
+        1 => '2.75rem',
+        2 => '3.75rem',
+        3 => '4.75rem',
+        default => '3.75rem',
+    };
+    $stepBeforeLength = (string) data_get($stepConfig, 'beforeLength', '1.5rem');
+    $stepLabelGap = (string) (data_get($stepConfig, 'labelGap') ?: $autoStepLabelGap);
+    $stepAfterLength = (string) data_get($stepConfig, 'afterLength', '1.5rem');
+    $stepAnchorEnd = [
         'x' => $arcEnd['x'],
-        'y' => $add($arcEnd['y'], $stemLength),
+        'y' => $add($add($add($arcEnd['y'], $stepBeforeLength), $stepLabelGap), $stepAfterLength),
+    ];
+    $stemStart = $hasStep ? $stepAnchorEnd : $arcEnd;
+    $verticalEnd = [
+        'x' => $stemStart['x'],
+        'y' => $add($stemStart['y'], $stemLength),
     ];
     $pathBoxPadding = '0.75rem';
     $pathBoxX = $isLeft ? $verticalEnd['x'] : $currentAnchor['x'];
@@ -169,13 +198,33 @@
                 'dev' => $dev,
             ],
         ],
+        ...($hasStep ? [[
+            'component' => 'step',
+            'segment' => [
+                'id' => $id . '.step',
+                'direction' => 'bottom-top',
+                'beforeLength' => $stepBeforeLength,
+                'labelGap' => $stepLabelGap,
+                'afterLength' => $stepAfterLength,
+                'anchorStart' => $arcEnd,
+                'anchorEnd' => $stepAnchorEnd,
+                'nodeStart' => false,
+                'nodeEnd' => true,
+                'stepLabel' => data_get($stepConfig, 'stepLabel'),
+                'devCounterEnd' => $counter++,
+                'devCounterColor' => $color,
+                'color' => $color,
+                'zIndex' => $zIndex,
+                'dev' => $dev,
+            ],
+        ]] : []),
         [
             'component' => 'path',
             'segment' => [
                 'id' => $id . '.stem',
                 'direction' => 'bottom-top',
                 'length' => $stemLength,
-                'anchorStart' => $arcEnd,
+                'anchorStart' => $stemStart,
                 'anchorEnd' => $verticalEnd,
                 'nodeStart' => false,
                 'nodeEnd' => $endNodeLabels !== [] ? $endNodeLabels : true,
@@ -228,6 +277,11 @@
         <x-translation-workbench::ui.tw-graph.segments.arc :segment="$segment['segment']" />
     @elseif ($segment['component'] === 'end')
         <x-translation-workbench::ui.tw-graph.segments.end
+            :segment="$segment['segment']"
+            :dev="$dev"
+        />
+    @elseif ($segment['component'] === 'step')
+        <x-translation-workbench::ui.tw-graph.segments.step
             :segment="$segment['segment']"
             :dev="$dev"
         />

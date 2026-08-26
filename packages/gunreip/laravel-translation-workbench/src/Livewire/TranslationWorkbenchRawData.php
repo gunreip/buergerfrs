@@ -5200,31 +5200,87 @@ class TranslationWorkbenchRawData extends Component
             'bulk_review_count',
         ];
 
-        $typeOrder = [
-            'bulk' => 0,
-            'shared' => 1,
-            'moved' => 2,
-            'single' => 3,
-        ];
+        $optionRows = collect();
+        $appendRows = function (string $group, $query) use ($select, $optionRows): void {
+            $query
+                ->get($select)
+                ->each(static function (object $row) use ($group, $optionRows): void {
+                    $row->preview_group = $group;
+                    $optionRows->push($row);
+                });
+        };
 
-        return collect(array_keys($typeOrder))
-            ->flatMap(fn(string $type): array => DB::table($table)
-                ->where('chain_type', $type)
+        if (Schema::hasTable('translation_workbench_shared_key_candidates')) {
+            $pendingChainIds = DB::table('translation_workbench_shared_key_candidates as candidates')
+                ->join($table . ' as chains', 'chains.translation_key', '=', 'candidates.suggested_shared_translation_key')
+                ->where('candidates.status', 'pending')
+                ->selectRaw('chains.id, count(*) as pending_count')
+                ->groupBy('chains.id')
+                ->orderByDesc('pending_count')
+                ->limit(8)
+                ->pluck('chains.id')
+                ->map(static fn(mixed $id): int => (int) $id)
+                ->all();
+
+            if ($pendingChainIds !== []) {
+                $pendingOrderSql = collect($pendingChainIds)
+                    ->values()
+                    ->map(static fn(int $id, int $index): string => 'WHEN ' . $id . ' THEN ' . $index)
+                    ->implode(' ');
+
+                $appendRows(
+                    'Shared review pending',
+                    DB::table($table)
+                        ->whereIn('id', $pendingChainIds)
+                        ->orderByRaw('CASE id ' . $pendingOrderSql . ' ELSE 999 END')
+                );
+            }
+        }
+
+        $appendRows(
+            'Single active',
+            DB::table($table)
+                ->where('chain_type', 'single')
+                ->where('chain_status', 'active')
+                ->orderByDesc('timeline_event_count')
+                ->orderByDesc('finding_count')
+                ->limit(5)
+        );
+        $appendRows(
+            'Single inactive',
+            DB::table($table)
+                ->where('chain_type', 'single')
+                ->where('chain_status', 'inactive')
+                ->orderByDesc('timeline_event_count')
+                ->orderByDesc('finding_count')
+                ->limit(5)
+        );
+        $appendRows(
+            'Moved',
+            DB::table($table)
+                ->where('chain_type', 'moved')
                 ->orderByRaw("CASE WHEN chain_status = 'active' THEN 0 ELSE 1 END")
                 ->orderByDesc('timeline_event_count')
                 ->orderByDesc('finding_count')
-                ->limit(3)
-                ->get($select)
-                ->all())
+                ->limit(5)
+        );
+        $appendRows(
+            'Bulk/shared samples',
+            DB::table($table)
+                ->whereIn('chain_type', ['bulk', 'shared'])
+                ->orderByRaw("CASE chain_type WHEN 'bulk' THEN 0 WHEN 'shared' THEN 1 ELSE 2 END")
+                ->orderByRaw("CASE WHEN chain_status = 'active' THEN 0 ELSE 1 END")
+                ->orderByDesc('timeline_event_count')
+                ->orderByDesc('finding_count')
+                ->limit(10)
+        );
+
+        return $optionRows
             ->unique('id')
-            ->sortBy([
-                fn(object $a, object $b): int => ($typeOrder[(string) $a->chain_type] ?? 99)
-                    <=> ($typeOrder[(string) $b->chain_type] ?? 99),
-                fn(object $a, object $b): int => ((int) $b->timeline_event_count) <=> ((int) $a->timeline_event_count),
-            ])
             ->values()
             ->map(static fn(object $row): array => [
                 'id' => (int) $row->id,
+                'preview_group' => (string) ($row->preview_group ?? 'Sample'),
                 'translation_key' => (string) $row->translation_key,
                 'chain_type' => (string) $row->chain_type,
                 'chain_status' => (string) $row->chain_status,

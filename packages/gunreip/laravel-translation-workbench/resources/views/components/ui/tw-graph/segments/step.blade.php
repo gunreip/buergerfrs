@@ -110,7 +110,7 @@
     $stepLabelSide = 'center';
 
     $beforeSegment = array_replace($stepSegment, [
-        'id' => data_get($stepSegment, 'id', 'segment.step') . '.before',
+        'id' => data_get($stepSegment, 'id', 'segment.step') . '.stem.before',
         'length' => $beforeLength,
         'anchorStart' => $anchorStart,
         'anchorEnd' => $anchorBeforeEnd,
@@ -124,7 +124,7 @@
     ]);
 
     $afterSegment = array_replace($stepSegment, [
-        'id' => data_get($stepSegment, 'id', 'segment.step') . '.after',
+        'id' => data_get($stepSegment, 'id', 'segment.step') . '.stem.after',
         'length' => $afterLength,
         'anchorStart' => $anchorAfterStart,
         'anchorEnd' => $anchorEnd,
@@ -146,7 +146,7 @@
 
 @if (is_array($stepLabelConfig) && filled(data_get($stepLabelConfig, 'text')))
     <x-translation-workbench::ui.tw-graph.primitives.text
-        :id="data_get($stepSegment, 'id', 'segment.step') . '.step-label'"
+        :id="data_get($stepSegment, 'id', 'segment.step') . '.label'"
         :text="data_get($stepLabelConfig, 'text')"
         :anchor-x="data_get($anchorMiddle, 'x', '0rem')"
         :anchor-y="data_get($anchorMiddle, 'y', '0rem')"

@@ -8,7 +8,7 @@
         :anchor-start="['x' => '0rem', 'y' => '0.75rem']"
         bridge-length="3rem"
         stem-length="2rem"
-        :stem-continuation="[1 => '2rem']"
+        :stem-continuation="[1 => ['length' => '5rem', 'compressed' => true]]"
         :node-labels="[1 => ['right' => 'Source'], 5 => ['left' => 'Attach']]"
     />
 
@@ -16,6 +16,8 @@
     Merge owns one inbound side path and calculates its anchor chain from
     branch origin to trunk attach point:
     start -> stem1 -> optional stem2/stem3/... -> arc-in -> bridge -> arc-out.
+    A compressed lifecycle marker is a property of a concrete stem continuation,
+    e.g. stem2 after anchorNode2, not of the whole merge path.
 --}}
 
 @props([
@@ -30,6 +32,7 @@
     'bridgeLength' => null,
     'stemLength' => null,
     'stemContinuation' => [],
+    'compressedStemParts' => [],
     'startLabel' => null,
     'color' => 'amber',
     'zIndex' => null,
@@ -63,6 +66,7 @@
     );
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, $resolvedLineLength, '4rem');
     $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, $resolvedLineLength, '4rem');
+    $compressedStemParts = is_array($compressedStemParts) ? $compressedStemParts : [];
     $stemContinuationEntries = is_array($stemContinuation) ? $stemContinuation : [];
     $normalizeLabel = function (mixed $label, ?string $side = null) use ($color): ?array {
         if (blank($label)) {
@@ -185,12 +189,17 @@
             'x' => $stemContinuationStart['x'],
             'y' => $add($stemContinuationStart['y'], $stemContinuationLength),
         ];
+        $compressedStemContinuation = is_array($stemContinuationEntry)
+            && (bool) data_get($stemContinuationEntry, 'compressed', false);
         $stemContinuationBlueprints[] = [
-            'component' => 'path',
+            'component' => $compressedStemContinuation ? 'stem-compressed' : 'path',
             'segment' => [
                 'id' => $id . '.stem' . $stemNumber,
                 'direction' => 'bottom-top',
                 'length' => $stemContinuationLength,
+                'beforeLength' => is_array($stemContinuationEntry) ? data_get($stemContinuationEntry, 'beforeLength', data_get($compressedStemParts, 'beforeLength', '1rem')) : data_get($compressedStemParts, 'beforeLength', '1rem'),
+                'gapLength' => is_array($stemContinuationEntry) ? data_get($stemContinuationEntry, 'gapLength', data_get($compressedStemParts, 'gapLength', '1rem')) : data_get($compressedStemParts, 'gapLength', '1rem'),
+                'afterLength' => is_array($stemContinuationEntry) ? data_get($stemContinuationEntry, 'afterLength', data_get($compressedStemParts, 'afterLength', '1rem')) : data_get($compressedStemParts, 'afterLength', '1rem'),
                 'anchorStart' => $stemContinuationStart,
                 'anchorEnd' => $stemContinuationEnd,
                 'nodeStart' => false,
@@ -349,6 +358,11 @@
         <x-translation-workbench::ui.tw-graph.segments.start :segment="$segment['segment']" />
     @elseif ($segment['component'] === 'arc')
         <x-translation-workbench::ui.tw-graph.segments.arc :segment="$segment['segment']" />
+    @elseif ($segment['component'] === 'stem-compressed')
+        <x-translation-workbench::ui.tw-graph.segments.stem-compressed
+            :segment="$segment['segment']"
+            :dev="$dev"
+        />
     @else
         <x-translation-workbench::ui.tw-graph.segments.path :segment="$segment['segment']" />
     @endif
