@@ -5238,6 +5238,21 @@ class TranslationWorkbenchRawData extends Component
         }
 
         $appendRows(
+            'Graph stress',
+            DB::table($table)
+                ->whereIn('chain_type', ['bulk', 'shared', 'moved'])
+                ->orderByRaw('((finding_count * 3) + (shared_candidate_count * 3) + (timeline_event_count * 2) + key_count + review_count + lang_value_count + bulk_review_count) desc')
+                ->orderByDesc('finding_count')
+                ->limit(8)
+        );
+        $appendRows(
+            'Event stress',
+            DB::table($table)
+                ->orderByDesc('timeline_event_count')
+                ->orderByDesc('finding_count')
+                ->limit(5)
+        );
+        $appendRows(
             'Single active',
             DB::table($table)
                 ->where('chain_type', 'single')
