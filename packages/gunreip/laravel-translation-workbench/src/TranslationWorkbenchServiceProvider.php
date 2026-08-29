@@ -6,6 +6,7 @@ use Gunreip\TranslationWorkbench\Console\ApplySuspiciousKeyRestores;
 use Gunreip\TranslationWorkbench\Console\ApplyTranslationWorkbenchCodeUpdates;
 use Gunreip\TranslationWorkbench\Console\ClassifyDynamicValues;
 use Gunreip\TranslationWorkbench\Console\ClassifyLangNodeTypes;
+use Gunreip\TranslationWorkbench\Console\ClassifyTimelineEventNoise;
 use Gunreip\TranslationWorkbench\Console\CleanupExcludedTranslationWorkbenchPaths;
 use Gunreip\TranslationWorkbench\Console\CollectTimelineChains;
 use Gunreip\TranslationWorkbench\Console\DetectDuplicateCandidates;
@@ -62,6 +63,7 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
             ApplyTranslationWorkbenchCodeUpdates::class,
             ClassifyDynamicValues::class,
             ClassifyLangNodeTypes::class,
+            ClassifyTimelineEventNoise::class,
             CleanupExcludedTranslationWorkbenchPaths::class,
             CollectTimelineChains::class,
             DetectDuplicateCandidates::class,

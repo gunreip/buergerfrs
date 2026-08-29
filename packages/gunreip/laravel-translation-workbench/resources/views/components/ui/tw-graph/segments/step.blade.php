@@ -155,6 +155,7 @@
         :badge="data_get($stepLabelConfig, 'badge', true)"
         :badge-color="data_get($stepLabelConfig, 'badgeColor', data_get($stepSegment, 'color', 'green'))"
         :long="data_get($stepLabelConfig, 'long', false)"
+        :half-long="data_get($stepLabelConfig, 'halfLong', false)"
     />
 @endif
 

@@ -30,6 +30,7 @@
     'connectorLength' => '2rem',
     'connectorGap' => '0.25rem',
     'slotMinHeight' => '52rem',
+    'horizontalPadding' => '12rem',
     'minWidth' => null,
     'minHeight' => null,
 ])
@@ -71,7 +72,8 @@
                 <x-translation-workbench::ui.tw-graph.canvas-metrics
                     :graph-id="$context['graphId']"
                     :dev="$dev"
-                :coordinates="$showCoordinates"
+                    :coordinates="$showCoordinates"
+                    :horizontal-padding="$horizontalPadding"
             />
         </div>
     @else

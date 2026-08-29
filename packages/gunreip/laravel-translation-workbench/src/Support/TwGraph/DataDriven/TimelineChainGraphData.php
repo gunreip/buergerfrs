@@ -25,6 +25,7 @@ use Illuminate\Support\Collection;
  * - RenderPreviewBuilder: complete preview payload consumed by the Blade view.
  * - MergePreviewBuilder: data-driven merge and merge-extension strang props.
  * - BranchPreviewBuilder: data-driven branch and branch-extension strang props.
+ * - BranchLabelCollisionResolver: branch stem-label overlap detection and bridge spacing.
  * - RekeyPreviewBuilder: rekey-source/rekey-target facts and preview props.
  * - LangValueLabels: active source/target lang value node labels.
  * - LabelFormatter: shared graph label/timestamp/key formatting.

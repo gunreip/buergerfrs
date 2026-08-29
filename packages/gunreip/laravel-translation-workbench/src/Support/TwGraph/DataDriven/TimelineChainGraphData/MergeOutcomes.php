@@ -106,6 +106,8 @@ final class MergeOutcomes
                 $sourceActive = $finding !== null && $findingStatus === 'active';
                 $branchCandidate = $finding === null || ! $sourceActive;
                 $outcomeGroup = self::mergeOutcomeGroup($findingStatus, $sharedStatus, $originKeyStatus);
+                $firstSeenAt = $row['first_timestamp'] ?? $finding?->first_seen_at ?? null;
+                $lastSeenAt = $row['last_timestamp'] ?? $finding?->last_seen_at ?? $candidate?->last_seen_at ?? null;
 
                 return [
                     'index' => $index + 1,
@@ -119,8 +121,10 @@ final class MergeOutcomes
                     'shared_candidate_id' => $candidate->id ?? null,
                     'shared_candidate_status' => $sharedStatus,
                     'matched_key_id' => $candidate->matched_key_id ?? null,
-                    'first_seen_at' => LabelFormatter::graphTimestampLabel($row['first_timestamp'] ?? $finding?->first_seen_at ?? null),
-                    'last_seen_at' => LabelFormatter::graphTimestampLabel($row['last_timestamp'] ?? $finding?->last_seen_at ?? $candidate?->last_seen_at ?? null),
+                    'first_seen_at' => LabelFormatter::graphTimestampLabel($firstSeenAt),
+                    'first_seen_at_raw' => $firstSeenAt,
+                    'last_seen_at' => LabelFormatter::graphTimestampLabel($lastSeenAt),
+                    'last_seen_at_raw' => $lastSeenAt,
                     'source_path' => (string) ($finding->source_path ?? $row['source_path'] ?? ''),
                     'outcome' => $finding === null
                         ? 'unknown finding'

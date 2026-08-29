@@ -9,6 +9,7 @@
         :node-labels="[3 => ['top' => 'Branch turn']]"
         :bridge-continuation="[1 => ['4rem'], 2 => ['2rem', 'top' => 'Bridge label']]"
         :step="['stepLabel' => ['text' => ['Source inactive', 'shared obsolete']]]"
+        entry-stem-length="1rem"
         stem-length="3rem"
         :stem-continuation="[1 => ['3rem'], 2 => ['3rem']]"
         :branch-extension="[
@@ -46,6 +47,7 @@
     'attachTo' => null,
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'color' => null,
+    'entryStemLength' => null,
     'bridgeLength' => null,
     'stemLength' => null,
     'nodeLabels' => [],
@@ -69,8 +71,14 @@
     $resolvedDev = $devMode ?? $dev;
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
     $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($arcSize ?? null, '2.75rem');
+    $localEntryStemLength = $attributes->get('entry-stem-length');
     $localBridgeLength = $attributes->get('bridge-length');
     $localStemLength = $attributes->get('stem-length');
+    $resolvedEntryStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
+        $localEntryStemLength,
+        $entryStemLength ?? null,
+        '0rem',
+    );
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
         $localBridgeLength,
         $bridgeLength ?? null,
@@ -93,10 +101,14 @@
         'x' => data_get($anchorStart, 'x', '0rem'),
         'y' => data_get($anchorStart, 'y', '0rem'),
     ];
+    $branchStartAnchor = [
+        'x' => $anchor['x'],
+        'y' => $add($anchor['y'], $resolvedEntryStemLength),
+    ];
 
     $node1 = [
-        'x' => $subtract($anchor['x'], $resolvedArcSize),
-        'y' => $add($anchor['y'], $resolvedArcSize),
+        'x' => $subtract($branchStartAnchor['x'], $resolvedArcSize),
+        'y' => $add($branchStartAnchor['y'], $resolvedArcSize),
         'source' => $id . '.paths.branch.arc.in',
         'sourceType' => 'arc',
         'sourceAnchor' => 'end',
@@ -153,7 +165,7 @@
     };
     $stepBeforeLength = (string) data_get($stepConfig, 'beforeLength', '1.5rem');
     $stepLabelGap = (string) (data_get($stepConfig, 'labelGap') ?: $autoStepLabelGap);
-    $stepAfterLength = (string) data_get($stepConfig, 'afterLength', '1.5rem');
+    $stepAfterLength = (string) data_get($stepConfig, 'afterLength', '2.5rem');
     $stepEnd = [
         'x' => $node3['x'],
         'y' => $add($add($add($node3['y'], $stepBeforeLength), $stepLabelGap), $stepAfterLength),
@@ -165,6 +177,37 @@
     $stemEntries = is_array($stemContinuation) ? $stemContinuation : [];
     if ($stemEntries === [] && (filled($localStemLength) || filled($stemLength ?? null))) {
         $stemEntries = [1 => [$resolvedStemLength]];
+    }
+    $stemEntryHasLabels = static function (mixed $entry): bool {
+        if (! is_array($entry)) {
+            return false;
+        }
+
+        $labelKeys = ['left', 'right', 'top', 'bottom', 'label', 'labelA', 'labelB'];
+        foreach ($labelKeys as $labelKey) {
+            if (filled(data_get($entry, $labelKey))) {
+                return true;
+            }
+        }
+
+        $labels = data_get($entry, 'labels');
+
+        return is_array($labels)
+            && collect($labels)->filter(fn (mixed $label): bool => filled($label))->isNotEmpty();
+    };
+    if ($hasStep && $stemEntries !== []) {
+        $firstStemKey = array_key_first($stemEntries);
+        $firstStemEntry = $stemEntries[$firstStemKey];
+        $firstStemIsPromotable = is_array($firstStemEntry)
+            && $stemEntryHasLabels($firstStemEntry)
+            && ! (bool) data_get($firstStemEntry, 'compressed', false)
+            && ! (bool) data_get($firstStemEntry, 'force', false)
+            && ! (bool) data_get($firstStemEntry, 'render', false)
+            && ! (bool) data_get($firstStemEntry, 'spacer', false);
+
+        if ($firstStemIsPromotable) {
+            unset($stemEntries[$firstStemKey]);
+        }
     }
     $stemEntriesAreList = array_is_list($stemEntries);
     $stemAnchors = [];
@@ -419,7 +462,7 @@
             };
             $extensionStepBeforeLength = (string) data_get($extensionStepConfig, 'beforeLength', '1.5rem');
             $extensionStepLabelGap = (string) (data_get($extensionStepConfig, 'labelGap') ?: $extensionAutoStepLabelGap);
-            $extensionStepAfterLength = (string) data_get($extensionStepConfig, 'afterLength', '1.5rem');
+            $extensionStepAfterLength = (string) data_get($extensionStepConfig, 'afterLength', '2.5rem');
             $extensionStepEnd = [
                 'x' => $extensionArcEnd['x'],
                 'y' => $add($add($add($extensionArcEnd['y'], $extensionStepBeforeLength), $extensionStepLabelGap), $extensionStepAfterLength),
@@ -604,6 +647,7 @@
 
     $bounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([
         $anchor,
+        $branchStartAnchor,
         $node1,
         $node2,
         $node3,
@@ -701,6 +745,7 @@
     :id="$id . '.paths.branch'"
     side="left"
     :anchor-start="$anchor"
+    :entry-stem-length="$resolvedEntryStemLength"
     :bridge-length="$resolvedBridgeLength"
     :bridge-continuation="$bridgeContinuation"
     :step="$step"

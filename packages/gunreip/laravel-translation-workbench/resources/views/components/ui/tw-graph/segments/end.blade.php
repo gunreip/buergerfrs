@@ -87,5 +87,6 @@
         :badge="data_get($endSegment, 'endLabel.badge', true)"
         :badge-color="data_get($endSegment, 'endLabel.badgeColor', data_get($endSegment, 'color', 'green'))"
         :long="data_get($endSegment, 'endLabel.long', false)"
+        :half-long="data_get($endSegment, 'endLabel.halfLong', false)"
     />
 @endif

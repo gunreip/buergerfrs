@@ -8,6 +8,13 @@ use Illuminate\Support\Collection;
 
 final class MergePreviewBuilder
 {
+    private const STEM_LENGTHS = [
+        'default' => '2rem',
+        'long' => '18rem',
+        'aggregate' => '3.5rem',
+        'aggregateTail' => '17rem',
+    ];
+
     /**
      * @param  Collection<int, array<string, mixed>>  $originRows
      * @return array<int, array<string, mixed>>
@@ -28,19 +35,11 @@ final class MergePreviewBuilder
                 $extensions = self::extensionRows($sideRows, max(0, intdiv($maxMergeCandidates, 2) - 1));
 
                 $mainPreview['extension_count'] = $extensions->count();
-                $mainPreview['extension_stem_lengths'] = $extensions->isNotEmpty()
-                    ? $extensions
-                    ->mapWithKeys(static function (array $extension, int $extensionOffset) use ($side): array {
-                        $extensionIndex = $extensionOffset + 1;
-
-                        if ($side !== 'left' || $extensionIndex !== 3 || ($extension['type'] ?? null) !== 'aggregate') {
-                            return [];
-                        }
-
-                        return [$extensionIndex => '3.5rem'];
-                    })
-                    ->all()
-                    : [];
+                $mainPreview['extension_stem_lengths'] = $extensions
+                    ->mapWithKeys(static fn(array $extension, int $extensionOffset): array => filled($extension['stem_length'] ?? null)
+                        ? [$extensionOffset + 1 => (string) $extension['stem_length']]
+                        : [])
+                    ->all();
                 $mainPreview['extension_bridge_continuations'] = $extensions->isNotEmpty()
                     ? $extensions
                     ->mapWithKeys(static fn(array $extension, int $extensionOffset): array => [
@@ -83,11 +82,11 @@ final class MergePreviewBuilder
 
         if ($extensionRows->count() <= $headExtensionCount + 1) {
             return $extensionRows
-                ->map(static fn(array $row): array => [
+                ->map(static fn(array $row, int $index): array => [
                     'type' => 'real',
                     'row' => $row['row'],
                     'bridge_length' => '19rem',
-                    'stem_continuation' => [],
+                    'stem_continuation' => self::realExtensionStemContinuation($index),
                 ]);
         }
 
@@ -99,9 +98,7 @@ final class MergePreviewBuilder
                     'type' => 'real',
                     'row' => $row['row'],
                     'bridge_length' => in_array($index, [0, 1], true) ? '20.75rem' : '17rem',
-                    'stem_continuation' => $index === 0
-                        ? [1 => '18rem']
-                        : [1 => '2rem'],
+                    'stem_continuation' => self::realExtensionStemContinuation($index),
                 ];
             });
         $tailRow = $extensionRows->last();
@@ -115,13 +112,8 @@ final class MergePreviewBuilder
                 'type' => 'aggregate',
                 'rows' => $hiddenRows->map(static fn(array $row): array => $row['row'])->all(),
                 'bridge_length' => '21rem',
-                'stem_continuation' => collect(range(1, $hiddenStemContinuationCount + 1))
-                    ->mapWithKeys(static fn(int $index): array => [
-                        $index => $index === $hiddenStemContinuationCount + 1
-                            ? '17rem'
-                            : '3.5rem',
-                    ])
-                    ->all(),
+                'stem_length' => self::STEM_LENGTHS['aggregate'],
+                'stem_continuation' => self::aggregateStemContinuation($hiddenStemContinuationCount),
             ],
         ];
         $tail = [
@@ -129,11 +121,41 @@ final class MergePreviewBuilder
                 'type' => 'real',
                 'row' => $tailRow['row'],
                 'bridge_length' => '21rem',
-                'stem_continuation' => [1 => '2rem'],
+                'stem_continuation' => [1 => self::STEM_LENGTHS['default']],
             ],
         ];
 
         return collect([...$head->all(), ...$aggregate, ...$tail]);
+    }
+
+    /**
+     * Merge origins use alternating stem slots: default/long/default/long...
+     * Two sides may share the same visual rhythm, but each side receives only
+     * its own row sequence here.
+     *
+     * @return array<int, string>
+     */
+    private static function realExtensionStemContinuation(int $extensionIndex): array
+    {
+        return [
+            1 => $extensionIndex % 2 === 0
+                ? self::STEM_LENGTHS['long']
+                : self::STEM_LENGTHS['default'],
+        ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private static function aggregateStemContinuation(int $hiddenStemContinuationCount): array
+    {
+        return collect(range(1, $hiddenStemContinuationCount + 1))
+            ->mapWithKeys(static fn(int $index): array => [
+                $index => $index === $hiddenStemContinuationCount + 1
+                    ? self::STEM_LENGTHS['aggregateTail']
+                    : self::STEM_LENGTHS['aggregate'],
+            ])
+            ->all();
     }
 
     /**

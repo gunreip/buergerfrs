@@ -6,6 +6,7 @@
     <x-translation-workbench::ui.tw-graph.paths.branch
         side="left"
         :anchor-start="['x' => '0rem', 'y' => '0rem']"
+        entry-stem-length="1rem"
         bridge-length="3rem"
         :bridge-continuation="[1 => ['3rem'], 2 => ['2rem', 'top' => 'Bridge label']]"
         :step="['stepLabel' => ['text' => ['Source inactive', 'shared obsolete', '9 rows']]]"
@@ -26,6 +27,7 @@
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'lineLength' => '4rem',
     'arcSize' => '2.75rem',
+    'entryStemLength' => '0rem',
     'bridgeLength' => null,
     'bridgeContinuation' => [],
     'step' => null,
@@ -49,6 +51,7 @@
     $isLeft = $side === 'left';
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
     $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($arcSize ?? null, '2.75rem');
+    $resolvedEntryStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($entryStemLength, null, '0rem');
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, $resolvedLineLength, '4rem');
     $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, $resolvedLineLength, '4rem');
     $normalizeLabel = function (mixed $label, ?string $side = null) use ($color): ?array {
@@ -66,15 +69,23 @@
             if (filled($left)) {
                 $text = $left;
                 $side = 'left';
+                $label = is_array($left) ? array_replace($label, $left) : $label;
             } elseif (filled($right)) {
                 $text = $right;
                 $side = 'right';
+                $label = is_array($right) ? array_replace($label, $right) : $label;
             } elseif (filled($top)) {
                 $text = $top;
                 $side = 'top';
+                $label = is_array($top) ? array_replace($label, $top) : $label;
             } elseif (filled($bottom)) {
                 $text = $bottom;
                 $side = 'bottom';
+                $label = is_array($bottom) ? array_replace($label, $bottom) : $label;
+            }
+
+            if (is_array($text) && array_key_exists('text', $text)) {
+                $text = data_get($text, 'text');
             }
 
             if (blank($text)) {
@@ -158,6 +169,21 @@
             $normalizeLabel(data_get($entry, 'labelB', data_get($entry, 2))),
         ];
     };
+    $hasVisibleStemPayload = function (mixed $entry, array $labels): bool {
+        if (! is_array($entry)) {
+            return false;
+        }
+
+        $hasLabels = collect($labels)
+            ->filter(fn (mixed $label): bool => filled($label))
+            ->isNotEmpty();
+
+        return $hasLabels
+            || (bool) data_get($entry, 'compressed', false)
+            || (bool) data_get($entry, 'force', false)
+            || (bool) data_get($entry, 'render', false)
+            || (bool) data_get($entry, 'spacer', false);
+    };
 
     $arcInStartAnchor = $isLeft ? 'e' : 'w';
     $arcInEndAnchor = 'n';
@@ -165,9 +191,13 @@
     $arcOutStartAnchor = 's';
     $arcOutEndAnchor = $isLeft ? 'w' : 'e';
     $arcDelta = $isLeft ? $neg($resolvedArcSize) : $resolvedArcSize;
+    $branchStartAnchor = [
+        'x' => $currentAnchor['x'],
+        'y' => $add($currentAnchor['y'], $resolvedEntryStemLength),
+    ];
     $arcInEnd = [
-        'x' => $add($currentAnchor['x'], $arcDelta),
-        'y' => $add($currentAnchor['y'], $resolvedArcSize),
+        'x' => $add($branchStartAnchor['x'], $arcDelta),
+        'y' => $add($branchStartAnchor['y'], $resolvedArcSize),
     ];
     $bridgeEntries = is_array($bridgeContinuation) && $bridgeContinuation !== []
         ? $bridgeContinuation
@@ -236,7 +266,7 @@
     };
     $stepBeforeLength = (string) data_get($stepConfig, 'beforeLength', '1.5rem');
     $stepLabelGap = (string) (data_get($stepConfig, 'labelGap') ?: $autoStepLabelGap);
-    $stepAfterLength = (string) data_get($stepConfig, 'afterLength', '1.5rem');
+    $stepAfterLength = (string) data_get($stepConfig, 'afterLength', '2.5rem');
     $stepAnchorEnd = [
         'x' => $arcOutEnd['x'],
         'y' => $add($add($add($arcOutEnd['y'], $stepBeforeLength), $stepLabelGap), $stepAfterLength),
@@ -252,6 +282,27 @@
     $stemCounter = $counter + $baseNodeCounterCount + ($hasStep ? 1 : 0);
     $arcOutCounter = $counter + 1 + count($bridgeSegments);
     $stepCounter = $arcOutCounter + 1;
+    $stepNodeEnd = true;
+
+    if ($hasStep && $stemEntries !== []) {
+        $firstStemKey = array_key_first($stemEntries);
+        $firstStemEntry = $stemEntries[$firstStemKey];
+        $firstStemLabels = $stemNodeLabels($firstStemEntry);
+        $firstStemHasLabels = collect($firstStemLabels)
+            ->filter(fn (mixed $label): bool => filled($label))
+            ->isNotEmpty();
+        $firstStemIsPromotable = is_array($firstStemEntry)
+            && $firstStemHasLabels
+            && ! (bool) data_get($firstStemEntry, 'compressed', false)
+            && ! (bool) data_get($firstStemEntry, 'force', false)
+            && ! (bool) data_get($firstStemEntry, 'render', false)
+            && ! (bool) data_get($firstStemEntry, 'spacer', false);
+
+        if ($firstStemIsPromotable) {
+            $stepNodeEnd = $firstStemLabels;
+            unset($stemEntries[$firstStemKey]);
+        }
+    }
 
     foreach ($stemEntries as $stemIndex => $stemEntry) {
         $stemNumber = $stemEntriesAreList ? ((int) $stemIndex + 1) : (int) $stemIndex;
@@ -265,6 +316,10 @@
         $stemId = $id . '.stem.' . $stemNumber;
 
         $stemLabels = $stemNodeLabels($stemEntry);
+        if (! $hasVisibleStemPayload($stemEntry, $stemLabels)) {
+            continue;
+        }
+
         $stemNodeEnd = collect($stemLabels)->filter(fn (mixed $label): bool => filled($label))->isNotEmpty()
             ? $stemLabels
             : true;
@@ -303,13 +358,29 @@
     $pathBoxHeight = 'calc(' . $pathEndAnchor['y'] . ' - ' . $currentAnchor['y'] . ')';
 
     $segments = [
+        ...($resolvedEntryStemLength !== '0rem' ? [[
+            'component' => 'path',
+            'segment' => [
+                'id' => $id . '.entry-stem',
+                'direction' => 'bottom-top',
+                'length' => $resolvedEntryStemLength,
+                'anchorStart' => $currentAnchor,
+                'anchorEnd' => $branchStartAnchor,
+                'nodeStart' => false,
+                'nodeEnd' => false,
+                'devCounterColor' => $color,
+                'color' => $color,
+                'zIndex' => $zIndex,
+                'dev' => $dev,
+            ],
+        ]] : []),
         [
             'component' => 'arc',
             'segment' => [
                 'id' => $id . '.arc.in',
                 'startAnchor' => $arcInStartAnchor,
                 'endAnchor' => $arcInEndAnchor,
-                'anchorStart' => $currentAnchor,
+                'anchorStart' => $branchStartAnchor,
                 'anchorEnd' => $arcInEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
@@ -351,7 +422,7 @@
                 'anchorStart' => $arcOutEnd,
                 'anchorEnd' => $stepAnchorEnd,
                 'nodeStart' => false,
-                'nodeEnd' => true,
+                'nodeEnd' => $stepNodeEnd,
                 'stepLabel' => data_get($stepConfig, 'stepLabel'),
                 'devCounterEnd' => $stepCounter,
                 'devCounterColor' => $color,

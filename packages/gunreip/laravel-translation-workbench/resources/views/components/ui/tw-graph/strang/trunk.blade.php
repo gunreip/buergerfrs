@@ -92,12 +92,23 @@
             return $labels;
         }
 
+        $normalizeLabelForSide = static function (mixed $label, string $side): ?array {
+            if (blank($label)) {
+                return null;
+            }
+
+            if (is_array($label) && array_key_exists('text', $label)) {
+                return array_replace(['side' => $side], $label);
+            }
+
+            return ['text' => $label, 'side' => $side];
+        };
         $left = data_get($labels, 'left', data_get($labels, 0));
         $right = data_get($labels, 'right', data_get($labels, 1));
 
         return [
-            filled($right) ? ['text' => $right, 'side' => 'right'] : null,
-            filled($left) ? ['text' => $left, 'side' => 'left'] : null,
+            $normalizeLabelForSide($right, 'right'),
+            $normalizeLabelForSide($left, 'left'),
         ];
     };
     $pathLengthWithLabels = function (mixed $entry, mixed $labels) use ($resolvedLineLength, $normalizeNodeLabels): mixed {

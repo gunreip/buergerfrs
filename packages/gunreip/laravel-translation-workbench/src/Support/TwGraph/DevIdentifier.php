@@ -16,29 +16,45 @@ final class DevIdentifier
 
         if (preg_match('/(?:^|\.)strang\.([^.]+)(?:\.(.*))?$/', $id, $matches) === 1) {
             $strang = $matches[1];
-            $tail = self::withoutStrangCounter((string) ($matches[2] ?? ''));
+            $rawTail = (string) ($matches[2] ?? '');
+            $strangCounter = self::strangCounter($rawTail);
+            $tail = self::withoutStrangCounter($rawTail);
             $section = self::section($tail);
             $segment = self::segment($strang, $tail);
+            $prefix = 'strang.' . $strang . ($strangCounter !== null ? '.' . $strangCounter : '') . '.' . $section;
 
             if ($segment !== null) {
                 $labelElement = self::labelElement($tail);
                 $path = self::path($strang, $tail);
 
                 if ($labelElement !== null) {
-                    return 'strang.' . $strang . '.' . $section . '.' . $path . '.' . $segment . '.' . $labelElement;
+                    return $prefix . '.' . $path . '.' . $segment . '.' . $labelElement;
                 }
 
-                return 'strang.' . $strang . '.' . $section . '.' . $path . '.' . $segment . self::anchor($tail);
+                return $prefix . '.' . $path . '.' . $segment . self::anchor($tail);
             }
 
             if (str_starts_with($tail, 'extension.') || str_starts_with($tail, 'branch-return.')) {
-                return 'strang.' . $strang . '.' . $section . '.' . self::path($strang, $tail);
+                return $prefix . '.' . self::path($strang, $tail);
             }
 
-            return 'strang.' . $strang . '.' . $section . '.' . self::element($tail);
+            return $prefix . '.' . self::element($tail);
         }
 
         return $id;
+    }
+
+    private static function strangCounter(string $tail): ?int
+    {
+        $tail = trim($tail, '.');
+
+        if ($tail === '') {
+            return null;
+        }
+
+        $firstSegment = explode('.', $tail)[0] ?? '';
+
+        return ctype_digit($firstSegment) ? max(1, (int) $firstSegment) : null;
     }
 
     private static function withoutStrangCounter(string $tail): string

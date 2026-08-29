@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TranslationWorkbenchTimelineEvent extends Model
 {
+    public const CLASSIFICATION_NORMAL = 'normal';
+
+    public const CLASSIFICATION_DEAD_DEV_EVENT = 'dead_dev_event';
+
     protected $table = 'translation_workbench_timeline_events';
 
     protected $guarded = [];

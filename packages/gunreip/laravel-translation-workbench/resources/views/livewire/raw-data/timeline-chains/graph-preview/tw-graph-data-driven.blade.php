@@ -20,6 +20,9 @@
     $twGraphDataDrivenPreviewRekeys = collect($twGraphDataDrivenPreview->get('rekeys', []));
     $twGraphDataDrivenPreviewBranches = collect($twGraphDataDrivenPreview->get('branches', []));
     $twGraphDataDrivenPreviewLimits = collect($twGraphDataDrivenPreview->get('limits', []));
+    $twGraphDataDrivenClassificationNoiseReport = collect(
+        $twGraphDataDrivenPreviewLimits->get('classification_noise_report', []),
+    );
     $twGraphDataDrivenFindingInspect = \Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData::inspectFinding(
         5486,
         $mainRow ?? null,
@@ -66,7 +69,7 @@
         {{ __('First neutral graph data model derived from the selected timeline-chain row. This does not render geometry yet; it only describes the trunk, merge and branch intent that the authoring components can consume later.') }}
     </flux:callout.text>
 
-    <div class="mt-3 grid gap-3 xl:grid-cols-3">
+    <div class="mt-3 grid gap-3 xl:grid-cols-4">
         <flux:callout
             color="green"
             icon="git-branch"
@@ -93,6 +96,99 @@
                             {{ number_format((int) $twGraphDataDrivenTrunk->get('event_count', 0)) }}
                         </flux:badge>
                     </div>
+                </div>
+            </flux:callout.text>
+        </flux:callout>
+
+        <flux:callout
+            color="{{ (int) $twGraphDataDrivenPreviewLimits->get('potential_dead_dev_events', 0) > 0 ? 'amber' : 'zinc' }}"
+            icon="list-tree"
+        >
+            <flux:callout.heading>{{ __('Event compaction') }}</flux:callout.heading>
+            <flux:callout.text>
+                <div class="space-y-2 text-xs">
+                    <div class="flex flex-wrap gap-1">
+                        <flux:badge
+                            size="sm"
+                            color="zinc"
+                        >
+                            {{ __('Events') }}:
+                            {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('available_events', 0)) }}
+                        </flux:badge>
+                        <flux:badge
+                            size="sm"
+                            color="green"
+                        >
+                            {{ __('Normal') }}:
+                            {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('normal_events', 0)) }}
+                        </flux:badge>
+                        <flux:badge
+                            size="sm"
+                            color="cyan"
+                        >
+                            {{ __('Types') }}:
+                            {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('available_event_types', 0)) }}
+                        </flux:badge>
+                        @if ((int) $twGraphDataDrivenPreviewLimits->get('potential_dead_dev_events', 0) > 0)
+                            <flux:badge
+                                size="sm"
+                                color="amber"
+                            >
+                                {{ __('dead DEV?') }}:
+                                {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('potential_dead_dev_events', 0)) }}
+                            </flux:badge>
+                        @endif
+                    </div>
+
+                    @if ((int) $twGraphDataDrivenPreviewLimits->get('potential_dead_dev_events', 0) > 0)
+                        <flux:text class="text-xs text-zinc-600 dark:text-zinc-300">
+                            {{ __('Potential historical classification noise. Suggested retained classification events: :count.', ['count' => number_format((int) $twGraphDataDrivenPreviewLimits->get('retained_classification_events', 0))]) }}
+                        </flux:text>
+
+                        @if ($twGraphDataDrivenClassificationNoiseReport->isNotEmpty())
+                            <div class="space-y-1">
+                                <div class="flex flex-wrap gap-1">
+                                    <flux:badge
+                                        size="sm"
+                                        color="amber"
+                                    >
+                                        {{ $twGraphDataDrivenClassificationNoiseReport->get('first_seen') }}
+                                        ->
+                                        {{ $twGraphDataDrivenClassificationNoiseReport->get('last_seen') }}
+                                    </flux:badge>
+                                    <flux:badge
+                                        size="sm"
+                                        color="zinc"
+                                    >
+                                        {{ __('variants') }}:
+                                        {{ number_format((int) $twGraphDataDrivenClassificationNoiseReport->get('state_variant_count', 0)) }}
+                                    </flux:badge>
+                                    <flux:badge
+                                        size="sm"
+                                        color="zinc"
+                                    >
+                                        {{ __('keys/findings') }}:
+                                        {{ number_format((int) $twGraphDataDrivenClassificationNoiseReport->get('key_count', 0)) }}
+                                        /
+                                        {{ number_format((int) $twGraphDataDrivenClassificationNoiseReport->get('finding_count', 0)) }}
+                                    </flux:badge>
+                                </div>
+
+                                @foreach (collect($twGraphDataDrivenClassificationNoiseReport->get('top_sources', []))->take(2) as $noiseSource)
+                                    <div
+                                        class="wrap-anywhere font-mono text-[0.68rem] leading-tight text-zinc-600 dark:text-zinc-300">
+                                        {{ number_format((int) data_get($noiseSource, 'total', 0)) }}
+                                        x
+                                        {{ data_get($noiseSource, 'source_path') }}:{{ data_get($noiseSource, 'source_line') }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    @else
+                        <flux:text class="text-xs text-zinc-500">
+                            {{ __('No high-volume DEV classification noise detected.') }}
+                        </flux:text>
+                    @endif
                 </div>
             </flux:callout.text>
         </flux:callout>
@@ -189,9 +285,28 @@
                         >
                             {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('rendered_event_labels', 0)) }}
                             /
-                            {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('available_events', 0)) }}
-                            {{ __('events') }}
+                            {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('normal_events', $twGraphDataDrivenPreviewLimits->get('available_events', 0))) }}
+                            {{ __('normal events') }}
                         </flux:badge>
+                        @if ((int) $twGraphDataDrivenPreviewLimits->get('compacted_events', 0) > 0)
+                            <flux:badge
+                                size="sm"
+                                color="cyan"
+                            >
+                                +{{ number_format((int) $twGraphDataDrivenPreviewLimits->get('compacted_events', 0)) }}
+                                {{ __('compacted') }}
+                            </flux:badge>
+                        @endif
+                        @if ((int) $twGraphDataDrivenPreviewLimits->get('potential_dead_dev_events', 0) > 0)
+                            <flux:badge
+                                title="{{ __('Potential historical DEV classification noise. These events are not deleted here; this badge only marks candidates that could later be classified as dead_dev_event and excluded from normal timeline views.') }}"
+                                size="sm"
+                                color="amber"
+                            >
+                                {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('potential_dead_dev_events', 0)) }}
+                                {{ __('dead DEV?') }}
+                            </flux:badge>
+                        @endif
                         <flux:badge
                             size="sm"
                             color="{{ (int) $twGraphDataDrivenPreviewLimits->get('rendered_merge_candidates', 0) > 0 ? 'amber' : 'zinc' }}"
@@ -218,6 +333,14 @@
                             /
                             {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('available_rekey_relations', 0)) }}
                             {{ __('rekey') }}
+                        </flux:badge>
+                        <flux:badge
+                            size="sm"
+                            color="{{ in_array(data_get($twGraphDataDrivenPreviewGraph->get('horizontal_padding_debug', []), 'trunk_label_level'), ['halfLong', 'long'], true) ? 'lime' : 'zinc' }}"
+                            title="trunk label padding {{ data_get($twGraphDataDrivenPreviewGraph->get('horizontal_padding_debug', []), 'trunk_label_level', 'default') }} | left strangs: {{ data_get($twGraphDataDrivenPreviewGraph->get('horizontal_padding_debug', []), 'has_left_strangs') ? 'yes' : 'no' }} | padding: {{ data_get($twGraphDataDrivenPreviewGraph->get('horizontal_padding_debug', []), 'horizontal_padding', '12rem') }}"
+                        >
+                            {{ __('trunk label padding') }}:
+                            {{ data_get($twGraphDataDrivenPreviewGraph->get('horizontal_padding_debug', []), 'trunk_label_level', 'default') }}
                         </flux:badge>
                     </span>
 
@@ -280,6 +403,7 @@
                     :color="$twGraphDataDrivenPreviewGraph->get('color', 'cyan')"
                     :line-length="$twGraphDataDrivenPreviewGraph->get('line_length', '3.5rem')"
                     :slot-min-height="$twGraphDataDrivenPreviewGraph->get('slot_min_height', '34rem')"
+                    :horizontal-padding="$twGraphDataDrivenPreviewGraph->get('horizontal_padding', '12rem')"
                 >
                     <x-translation-workbench::ui.tw-graph.strang.trunk
                         :color="$twGraphDataDrivenPreviewTrunk->get('color', 'green')"
@@ -409,9 +533,11 @@
 
                         @if ($branchPreview->get('side') === 'right')
                             <x-translation-workbench::ui.tw-graph.strang.branch-right
+                                :id="$branchPreview->get('id')"
                                 :component-counter="$branchPreview->get('component_counter', $branchIndex + 1)"
                                 :color="$branchPreview->get('color', 'red')"
                                 :attach-to="$branchPreview->get('attach_to', 'strang.trunk.path.1.end')"
+                                :entry-stem-length="$branchPreview->get('entry_stem_length', '0rem')"
                                 :bridge-length="$branchPreview->get('bridge_length', '12rem')"
                                 :step="$branchPreview->get('step')"
                                 :stem-length="$branchPreview->get('stem_length', '4rem')"
@@ -433,9 +559,11 @@
                             />
                         @else
                             <x-translation-workbench::ui.tw-graph.strang.branch-left
+                                :id="$branchPreview->get('id')"
                                 :component-counter="$branchPreview->get('component_counter', $branchIndex + 1)"
                                 :color="$branchPreview->get('color', 'red')"
                                 :attach-to="$branchPreview->get('attach_to', 'strang.trunk.path.1.end')"
+                                :entry-stem-length="$branchPreview->get('entry_stem_length', '0rem')"
                                 :bridge-length="$branchPreview->get('bridge_length', '12rem')"
                                 :step="$branchPreview->get('step')"
                                 :stem-length="$branchPreview->get('stem_length', '4rem')"
@@ -456,6 +584,58 @@
                                 :z-index="5 - ($branchIndex % 4)"
                             />
                         @endif
+
+                        @foreach (collect(data_get($branchPreview, 'layout.warnings', [])) as $layoutWarning)
+                            @foreach ((array) data_get($layoutWarning, 'boxes', []) as $collisionBox)
+                                @php
+                                    $collisionBoxTooltip = data_get($layoutWarning, 'message')
+                                        . ' | ' . data_get($collisionBox, 'type') . ': ' . data_get($collisionBox, 'id')
+                                        . ' | x=' . data_get($collisionBox, 'x', '0rem')
+                                        . ' y=' . data_get($collisionBox, 'y', '0rem')
+                                        . ' width=' . data_get($collisionBox, 'width', '0rem')
+                                        . ' height=' . data_get($collisionBox, 'height', '0rem');
+                                @endphp
+
+                                <span
+                                    class="tw-graph-protocol-dev-only absolute z-40 cursor-copy rounded-sm border border-dashed border-lime-400/80 bg-lime-300/5"
+                                    data-tw-graph-path="{{ $collisionBoxTooltip }}"
+                                    title="{{ $collisionBoxTooltip }}"
+                                    style="
+                                        left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($collisionBox, 'x', '0rem') }});
+                                        bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($collisionBox, 'y', '0rem') }});
+                                        width: {{ data_get($collisionBox, 'width', '0rem') }};
+                                        height: {{ data_get($collisionBox, 'height', '0rem') }};
+                                    "
+                                    x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
+                                ></span>
+                            @endforeach
+
+                            @php
+                                $layoutWarningTooltip = data_get($layoutWarning, 'message')
+                                    . ' | segment: ' . data_get($layoutWarning, 'label')
+                                    . ' | bridge: ' . data_get($layoutWarning, 'bridge')
+                                    . ' | suggestion: ' . data_get($layoutWarning, 'suggestion');
+                            @endphp
+
+                            <span
+                                class="tw-graph-protocol-dev-only absolute z-50 cursor-copy"
+                                data-tw-graph-path="{{ $layoutWarningTooltip }}"
+                                title="{{ $layoutWarningTooltip }}"
+                                style="
+                                    left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($layoutWarning, 'anchor.x', '0rem') }});
+                                    bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($layoutWarning, 'anchor.y', '0rem') }});
+                                    transform: translate(0.75rem, -0.75rem);
+                                "
+                                x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
+                            >
+                                <flux:badge
+                                    size="sm"
+                                    color="lime"
+                                >
+                                    {{ __('End/bridge') }}
+                                </flux:badge>
+                            </span>
+                        @endforeach
                     @endforeach
                 </x-translation-workbench::ui.tw-graph>
 
@@ -586,7 +766,8 @@
                                 <div class="flex flex-col gap-1 text-zinc-700 dark:text-zinc-200">
                                     <span>{{ __('first') }}:
                                         {{ $outcome->get('first_seen_at') ?: __('n/a') }}</span>
-                                    <span>{{ __('last') }}: {{ $outcome->get('last_seen_at') ?: __('n/a') }}</span>
+                                    <span>{{ __('last') }}:
+                                        {{ $outcome->get('last_seen_at') ?: __('n/a') }}</span>
                                 </div>
                             </td>
                             <td class="wrap-anywhere px-3 py-2 align-top font-mono text-zinc-600 dark:text-zinc-300">

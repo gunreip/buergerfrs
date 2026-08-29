@@ -57,4 +57,6 @@
     :badge="data_get($label, 'badge', true)"
     :badge-color="$badgeColor"
     :long="data_get($label, 'long', false)"
+    :half-long="data_get($label, 'halfLong', false)"
+    :max-lines="data_get($label, 'maxLines', 3)"
 />

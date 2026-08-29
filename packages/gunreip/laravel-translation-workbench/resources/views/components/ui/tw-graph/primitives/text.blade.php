@@ -24,13 +24,16 @@
     'badge' => true,
     'badgeColor' => 'cyan',
     'long' => false,
+    'halfLong' => false,
+    'maxLines' => 3,
 ])
 
 @php
     $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id);
+    $resolvedMaxLines = max(1, (int) $maxLines);
     $lines = collect(is_iterable($text) && !is_string($text) ? $text : [$text])
         ->filter(fn($line) => filled($line))
-        ->take(3)
+        ->take($resolvedMaxLines)
         ->values();
 @endphp
 
@@ -60,12 +63,18 @@
                     @class([
                         'tw-graph-protocol-primitive-text-badge wrap-anywhere inline-flex flex-col items-center gap-0.5 whitespace-normal text-center leading-tight',
                         'w-96' => (bool) $long,
-                        'w-48' => ! (bool) $long,
+                        'w-72' => ! (bool) $long && (bool) $halfLong,
+                        'w-48' => ! (bool) $long && ! (bool) $halfLong,
                     ])
                 >
                     @foreach ($lines as $line)
                         <span @class(['tw-graph-protocol-primitive-text-line wrap-anywhere text-wrap', 'text-xs' => !$loop->first])>
-                            {{ $line }}
+                            @if (is_array($line) && data_get($line, 'ordinal'))
+                                <span>{{ data_get($line, 'ordinal.number') }}</span><sup class="text-[0.58em] leading-none">{{ data_get($line, 'ordinal.suffix') }}</sup>
+                                <span>{{ data_get($line, 'text') }}</span>
+                            @else
+                                {{ $line }}
+                            @endif
                         </span>
                     @endforeach
                 </span>

@@ -158,7 +158,7 @@
     };
     $normalizePathLength = function (mixed $pathLength) use ($normalizeLabel): array {
         if (! is_array($pathLength)) {
-            return ['length' => $pathLength, 'labels' => true];
+            return ['component' => 'path', 'length' => $pathLength, 'labels' => true];
         }
 
         $length = data_get($pathLength, 'length', data_get($pathLength, 0));
@@ -171,7 +171,15 @@
                 ->all();
         }
 
-        return ['length' => $length, 'labels' => $labels];
+        return [
+            'component' => data_get($pathLength, 'component', 'path'),
+            'length' => $length,
+            'labels' => $labels,
+            'beforeLength' => data_get($pathLength, 'beforeLength'),
+            'gapLength' => data_get($pathLength, 'gapLength'),
+            'afterLength' => data_get($pathLength, 'afterLength'),
+            'capLength' => data_get($pathLength, 'capLength'),
+        ];
     };
     $segments = [];
     $counter = (int) $counterStart;
@@ -235,15 +243,20 @@
 
     foreach (collect($pathLengths)->values() as $pathIndex => $pathLengthEntry) {
         $normalizedPathLength = $normalizePathLength($pathLengthEntry);
+        $pathComponent = data_get($normalizedPathLength, 'component', 'path');
         $pathLength = data_get($normalizedPathLength, 'length', '0rem');
         $nodeEnd = data_get($normalizedPathLength, 'labels', true);
         $nextAnchor = $addAnchor($currentAnchor, $axisDelta($pathLength));
         $segments[] = [
-            'component' => 'path',
+            'component' => $pathComponent,
             'segment' => [
                 'id' => $id . '.path.' . ($pathIndex + 1),
                 'direction' => $direction,
                 'length' => $pathLength,
+                'beforeLength' => data_get($normalizedPathLength, 'beforeLength'),
+                'gapLength' => data_get($normalizedPathLength, 'gapLength'),
+                'afterLength' => data_get($normalizedPathLength, 'afterLength'),
+                'capLength' => data_get($normalizedPathLength, 'capLength', $endCapLength),
                 'anchorStart' => $currentAnchor,
                 'anchorEnd' => $nextAnchor,
                 'nodeStart' => false,
@@ -337,6 +350,8 @@
         <x-translation-workbench::ui.tw-graph.segments.start :segment="$segment['segment']" />
     @elseif ($segment['component'] === 'end')
         <x-translation-workbench::ui.tw-graph.segments.end :segment="$segment['segment']" />
+    @elseif ($segment['component'] === 'stem-compressed')
+        <x-translation-workbench::ui.tw-graph.segments.stem-compressed :segment="$segment['segment']" />
     @else
         <x-translation-workbench::ui.tw-graph.segments.path :segment="$segment['segment']" />
     @endif

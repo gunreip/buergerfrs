@@ -14,6 +14,7 @@
     'graphId' => null,
     'dev' => false,
     'coordinates' => true,
+    'horizontalPadding' => '12rem',
 ])
 
 @php
@@ -22,7 +23,11 @@
         ? \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::summary((string) $graphId)
         : ['left' => [], 'center' => [], 'right' => []];
     $canvasMetrics = filled($graphId)
-        ? \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::canvasMetrics((string) $graphId, '2rem', '12rem')
+        ? \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::canvasMetrics(
+            (string) $graphId,
+            '2rem',
+            (string) $horizontalPadding,
+        )
         : [
             'minX' => '0rem',
             'minXRem' => 0.0,
@@ -67,12 +72,12 @@
         'center' => '56 189 248',
         'right' => '168 85 247',
     ];
-    $formatRem = fn (mixed $value): ?string => is_numeric($value)
+    $formatRem = fn(mixed $value): ?string => is_numeric($value)
         ? rtrim(rtrim(number_format((float) $value, 2, '.', ''), '0'), '.') . 'rem'
         : null;
     $largestSide = collect(['left', 'center', 'right'])
-        ->mapWithKeys(fn (string $side): array => [$side => data_get($summary, $side . '.heightRem')])
-        ->filter(fn (mixed $value): bool => is_numeric($value))
+        ->mapWithKeys(fn(string $side): array => [$side => data_get($summary, $side . '.heightRem')])
+        ->filter(fn(mixed $value): bool => is_numeric($value))
         ->sortDesc()
         ->keys()
         ->first();
@@ -91,18 +96,20 @@
 
 @if ($dev)
     @php
-        $displayOriginBottom = $formatRem(data_get($canvasMetrics, 'originBottomRem'))
-            ?? (strlen($originBottom) > 24 ? 'calc(...)' : $originBottom);
-        $displayCanvasHeight = $formatRem(data_get($canvasMetrics, 'heightRem'))
-            ?? (strlen($canvasHeight) > 24 ? 'calc(...)' : $canvasHeight);
-        $displayOriginLeft = $formatRem(data_get($canvasMetrics, 'originLeftRem'))
-            ?? (strlen($originLeft) > 24 ? 'calc(...)' : $originLeft);
-        $displayCanvasWidth = $formatRem(data_get($canvasMetrics, 'widthRem'))
-            ?? (strlen($canvasWidth) > 24 ? 'calc(...)' : $canvasWidth);
-        $displayMinX = $formatRem(data_get($canvasMetrics, 'minXRem'))
-            ?? (strlen($minX) > 24 ? 'min(...)' : $minX);
-        $displayMaxX = $formatRem(data_get($canvasMetrics, 'maxXRem'))
-            ?? (strlen($maxX) > 24 ? 'max(...)' : $maxX);
+        $displayOriginBottom =
+            $formatRem(data_get($canvasMetrics, 'originBottomRem')) ??
+            (strlen($originBottom) > 24 ? 'calc(...)' : $originBottom);
+        $displayCanvasHeight =
+            $formatRem(data_get($canvasMetrics, 'heightRem')) ??
+            (strlen($canvasHeight) > 24 ? 'calc(...)' : $canvasHeight);
+        $displayOriginLeft =
+            $formatRem(data_get($canvasMetrics, 'originLeftRem')) ??
+            (strlen($originLeft) > 24 ? 'calc(...)' : $originLeft);
+        $displayCanvasWidth =
+            $formatRem(data_get($canvasMetrics, 'widthRem')) ??
+            (strlen($canvasWidth) > 24 ? 'calc(...)' : $canvasWidth);
+        $displayMinX = $formatRem(data_get($canvasMetrics, 'minXRem')) ?? (strlen($minX) > 24 ? 'min(...)' : $minX);
+        $displayMaxX = $formatRem(data_get($canvasMetrics, 'maxXRem')) ?? (strlen($maxX) > 24 ? 'max(...)' : $maxX);
     @endphp
 
     @if ($showCoordinates)
@@ -157,7 +164,7 @@
             ></span>
 
             <span
-                class="tw-graph-protocol-dev-only tw-graph-protocol-coordinate-only pointer-events-auto absolute z-50 rounded border border-zinc-400/50 bg-white/90 px-2 py-1 font-mono text-[0.65rem] leading-tight text-zinc-800 shadow-sm dark:border-zinc-500/50 dark:bg-zinc-900/90 dark:text-zinc-100 {{ $positions[$side] }}"
+                class="tw-graph-protocol-dev-only tw-graph-protocol-coordinate-only {{ $positions[$side] }} pointer-events-auto absolute z-50 rounded border border-zinc-400/50 bg-white/90 px-2 py-1 font-mono text-[0.65rem] leading-tight text-zinc-800 shadow-sm dark:border-zinc-500/50 dark:bg-zinc-900/90 dark:text-zinc-100"
             >
                 <span class="block uppercase tracking-wide">
                     {{ $labels[$side] }}

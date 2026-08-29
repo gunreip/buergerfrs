@@ -213,7 +213,7 @@ final class RekeyPreviewBuilder
             'component_counter' => $componentCounter,
             'color' => 'sky',
             'attach_to' => $isSource ? 'strang.trunk.path.1.end' : 'strang.trunk.path.7.end',
-            'bridge_length' => $isSource ? '18rem' : '26rem',
+            'bridge_length' => $isSource ? '18rem' : '30rem',
             'stem_length' => $isSource ? '4rem' : '5rem',
             'stem_continuation' => $isSource ? $sourceStemContinuation : $targetStemContinuation,
             'end_length' => $isSource ? null : '4rem',

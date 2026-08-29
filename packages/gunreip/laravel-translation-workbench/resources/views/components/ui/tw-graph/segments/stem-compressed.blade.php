@@ -75,9 +75,9 @@
         'x' => data_get($compressedSegment, 'anchorStart.x', '0rem'),
         'y' => data_get($compressedSegment, 'anchorStart.y', '0rem'),
     ];
-    $beforeLength = (string) data_get($compressedSegment, 'beforeLength', '1rem');
-    $gapLength = (string) data_get($compressedSegment, 'gapLength', '1rem');
-    $afterLength = (string) data_get($compressedSegment, 'afterLength', '1rem');
+    $beforeLength = (string) (data_get($compressedSegment, 'beforeLength') ?: '1rem');
+    $gapLength = (string) (data_get($compressedSegment, 'gapLength') ?: '1rem');
+    $afterLength = (string) (data_get($compressedSegment, 'afterLength') ?: '1rem');
     $configuredAnchorEnd = data_get($compressedSegment, 'anchorEnd');
     $anchorEnd = is_array($configuredAnchorEnd)
         ? ['x' => data_get($configuredAnchorEnd, 'x', '0rem'), 'y' => data_get($configuredAnchorEnd, 'y', '0rem')]

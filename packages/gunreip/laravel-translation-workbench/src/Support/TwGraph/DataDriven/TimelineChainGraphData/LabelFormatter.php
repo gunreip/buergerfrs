@@ -30,6 +30,36 @@ final class LabelFormatter
         return mb_substr($value, 0, 16);
     }
 
+    public static function ordinalSampleLabel(int $number): string
+    {
+        $number = max(1, $number);
+        $suffix = match (true) {
+            $number % 100 >= 11 && $number % 100 <= 13 => 'th',
+            $number % 10 === 1 => 'st',
+            $number % 10 === 2 => 'nd',
+            $number % 10 === 3 => 'rd',
+            default => 'th',
+        };
+
+        return $number . $suffix . ' sample:';
+    }
+
+    /**
+     * @return array{ordinal: array{number: int, suffix: string}, text: string}
+     */
+    public static function ordinalSampleLine(int $number): array
+    {
+        $label = self::ordinalSampleLabel($number);
+
+        return [
+            'ordinal' => [
+                'number' => max(1, $number),
+                'suffix' => preg_replace('/^\d+([a-z]+).*$/', '$1', $label) ?: 'th',
+            ],
+            'text' => 'sample:',
+        ];
+    }
+
     public static function langValueTimestampLine(object $row): string
     {
         $timestamp = self::graphTimestampLabel($row->last_seen_at ?? $row->updated_at ?? $row->created_at ?? null);
