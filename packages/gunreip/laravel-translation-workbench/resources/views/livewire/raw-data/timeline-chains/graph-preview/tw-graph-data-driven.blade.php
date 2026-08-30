@@ -812,24 +812,39 @@
                 </x-translation-workbench::ui.tw-graph>
 
                 @php
-                    $twGraphDebugCollisionIds = collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkCollisionDebug', []))
-                        ->flatMap(fn ($collision) => [
-                            data_get($collision, 'trunk'),
-                            data_get($collision, 'against'),
-                        ])
-                        ->filter()
-                        ->values();
-                    $twGraphDebugBoundRows = collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkBoundsDebug', []))
+                    $twGraphDebugBoundLevel = static function (string $type): string {
+                        return str_ends_with($type, '-start')
+                            || str_ends_with($type, '-labels')
+                            || str_ends_with($type, '-tail')
+                            || in_array($type, [
+                                'start-label-inclusive',
+                                'middle-label-inclusive',
+                                'end-label-inclusive',
+                                'branch-start',
+                                'branch-body',
+                                'branch-end',
+                                'rekey-target-body',
+                                'rekey-target-end',
+                            ], true)
+                                ? 'sub'
+                                : 'main';
+                    };
+                    $twGraphDebugCollisionType = static function (string $firstLevel, string $secondLevel): string {
+                        return $firstLevel === 'sub' && $secondLevel === 'sub'
+                            ? 'sub'
+                            : ($firstLevel === 'main' && $secondLevel === 'main' ? 'main' : 'main-sub');
+                    };
+                    $twGraphDebugBaseBoundRows = collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkBoundsDebug', []))
                         ->map(fn ($debugBox) => [
                             'scope' => 'trunk',
                             'side' => data_get($debugBox, 'side', 'center'),
                             'type' => data_get($debugBox, 'type', 'n/a'),
+                            'level' => $twGraphDebugBoundLevel((string) data_get($debugBox, 'type', 'n/a')),
                             'id' => data_get($debugBox, 'id', 'n/a'),
                             'x' => data_get($debugBox, 'x', '0rem'),
                             'y' => data_get($debugBox, 'y', '0rem'),
                             'width' => data_get($debugBox, 'width', '0rem'),
                             'height' => data_get($debugBox, 'height', '0rem'),
-                            'collision' => $twGraphDebugCollisionIds->contains(data_get($debugBox, 'id')),
                         ])
                         ->merge(
                             $twGraphDataDrivenPreviewMerges
@@ -838,12 +853,12 @@
                                     'scope' => 'merge',
                                     'side' => data_get($debugBox, 'side', ''),
                                     'type' => data_get($debugBox, 'type', 'n/a'),
+                                    'level' => $twGraphDebugBoundLevel((string) data_get($debugBox, 'type', 'n/a')),
                                     'id' => data_get($debugBox, 'id', 'n/a'),
                                     'x' => data_get($debugBox, 'x', '0rem'),
                                     'y' => data_get($debugBox, 'y', '0rem'),
                                     'width' => data_get($debugBox, 'width', '0rem'),
                                     'height' => data_get($debugBox, 'height', '0rem'),
-                                    'collision' => $twGraphDebugCollisionIds->contains(data_get($debugBox, 'id')),
                                 ])
                         )
                         ->merge(
@@ -853,12 +868,12 @@
                                     'scope' => 'rekey',
                                     'side' => data_get($debugBox, 'side', ''),
                                     'type' => data_get($debugBox, 'type', 'n/a'),
+                                    'level' => $twGraphDebugBoundLevel((string) data_get($debugBox, 'type', 'n/a')),
                                     'id' => data_get($debugBox, 'id', 'n/a'),
                                     'x' => data_get($debugBox, 'x', '0rem'),
                                     'y' => data_get($debugBox, 'y', '0rem'),
                                     'width' => data_get($debugBox, 'width', '0rem'),
                                     'height' => data_get($debugBox, 'height', '0rem'),
-                                    'collision' => $twGraphDebugCollisionIds->contains(data_get($debugBox, 'id')),
                                 ])
                         )
                         ->merge(
@@ -868,14 +883,42 @@
                                     'scope' => 'branch',
                                     'side' => data_get($debugBox, 'side', ''),
                                     'type' => data_get($debugBox, 'type', 'n/a'),
+                                    'level' => $twGraphDebugBoundLevel((string) data_get($debugBox, 'type', 'n/a')),
                                     'id' => data_get($debugBox, 'id', 'n/a'),
                                     'x' => data_get($debugBox, 'x', '0rem'),
                                     'y' => data_get($debugBox, 'y', '0rem'),
                                     'width' => data_get($debugBox, 'width', '0rem'),
                                     'height' => data_get($debugBox, 'height', '0rem'),
-                                    'collision' => $twGraphDebugCollisionIds->contains(data_get($debugBox, 'id')),
                                 ])
                         )
+                        ->values();
+                    $twGraphDebugLevelById = $twGraphDebugBaseBoundRows
+                        ->mapWithKeys(fn ($debugBoundRow) => [(string) data_get($debugBoundRow, 'id') => (string) data_get($debugBoundRow, 'level', 'main')]);
+                    $twGraphDebugCollisionTypeById = collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkCollisionDebug', []))
+                        ->reduce(function (array $collisionTypes, array $collision) use ($twGraphDebugLevelById, $twGraphDebugCollisionType): array {
+                            $trunkId = (string) data_get($collision, 'trunk', '');
+                            $againstId = (string) data_get($collision, 'against', '');
+
+                            if ($trunkId === '' || $againstId === '') {
+                                return $collisionTypes;
+                            }
+
+                            $collisionType = $twGraphDebugCollisionType(
+                                (string) $twGraphDebugLevelById->get($trunkId, 'main'),
+                                (string) $twGraphDebugLevelById->get($againstId, 'main'),
+                            );
+
+                            $collisionTypes[$trunkId] = $collisionType;
+                            $collisionTypes[$againstId] = $collisionType;
+
+                            return $collisionTypes;
+                        }, []);
+                    $twGraphDebugBoundRows = $twGraphDebugBaseBoundRows
+                        ->map(fn ($debugBoundRow) => [
+                            ...$debugBoundRow,
+                            'collision' => array_key_exists((string) data_get($debugBoundRow, 'id'), $twGraphDebugCollisionTypeById),
+                            'collision_type' => $twGraphDebugCollisionTypeById[(string) data_get($debugBoundRow, 'id')] ?? 'none',
+                        ])
                         ->values();
                     $twGraphDebugCollisionBoundRows = $twGraphDebugBoundRows
                         ->where('collision', true)
@@ -920,6 +963,7 @@
                                     <th class="px-3 py-2 font-medium">{{ __('Debug bound box') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Coordinates') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Dimension') }}</th>
+                                    <th class="px-3 py-2 font-medium">{{ __('Collision Type') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Collision') }}</th>
                                 </tr>
                             </thead>
@@ -956,6 +1000,14 @@
                                         <td class="px-3 py-2 align-top">
                                             <flux:badge
                                                 size="sm"
+                                                color="{{ data_get($debugBoundRow, 'collision_type') === 'sub' ? 'red' : (data_get($debugBoundRow, 'collision_type') === 'main-sub' ? 'amber' : (data_get($debugBoundRow, 'collision_type') === 'main' ? 'zinc' : 'zinc')) }}"
+                                            >
+                                                {{ data_get($debugBoundRow, 'collision_type') }}
+                                            </flux:badge>
+                                        </td>
+                                        <td class="px-3 py-2 align-top">
+                                            <flux:badge
+                                                size="sm"
                                                 color="{{ data_get($debugBoundRow, 'collision') ? 'red' : 'zinc' }}"
                                             >
                                                 {{ data_get($debugBoundRow, 'collision') ? __('yes') : __('no') }}
@@ -966,7 +1018,7 @@
                                     <tr>
                                         <td
                                             class="px-3 py-4 text-center text-zinc-500"
-                                            colspan="7"
+                                            colspan="8"
                                         >
                                             {{ __('No debug bound boxes available.') }}
                                         </td>
@@ -976,7 +1028,7 @@
                                     <tr x-show="twGraphDebugBoundsCollisionOnly">
                                         <td
                                             class="px-3 py-4 text-center text-zinc-500"
-                                            colspan="7"
+                                            colspan="8"
                                         >
                                             {{ __('No collision debug bound boxes available.') }}
                                         </td>
