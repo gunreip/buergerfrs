@@ -40,7 +40,7 @@ final class BranchPreviewBuilder
                 $branch['component_counter'] = $index + 1;
                 $branch['id'] = 'strang.branch-' . (string) ($branch['side'] ?? 'left') . '.' . $branch['component_counter'];
 
-                return self::applyBranchInstanceTunings($branch);
+                return $branch;
             })
             ->all();
 
@@ -97,6 +97,7 @@ final class BranchPreviewBuilder
             ->filter(static fn(array $row): bool => (string) ($row['outcome_group'] ?? '') === $outcomeGroup)
             ->map(static function (array $row) use ($trunkTimelineAnchors): array {
                 $row['attach_to'] = self::attachToForRow($row, $trunkTimelineAnchors);
+                $row['anchor_y_rem'] = self::anchorYForAttachTo((string) $row['attach_to'], $trunkTimelineAnchors);
 
                 return $row;
             })
@@ -163,8 +164,9 @@ final class BranchPreviewBuilder
                     'component_counter' => $componentCounterOffset + $groupIndex + 1,
                     'color' => $pathColor,
                     'attach_to' => $attachTo,
+                    'anchor_y_rem' => data_get($rows->first(), 'anchor_y_rem'),
                     'entry_stem_length' => '0.25rem',
-                    'bridge_length' => self::branchBridgeLength($side, $attachTo),
+                    'bridge_length' => '28rem',
                     'stem_length' => '5.25rem',
                     'step' => $step,
                     'stem_continuation' => $stemContinuation,
@@ -196,46 +198,6 @@ final class BranchPreviewBuilder
             })
             ->values()
             ->all();
-    }
-
-    private static function branchBridgeLength(string $side, string $attachTo): string
-    {
-        if ($side === 'right' && $attachTo === 'strang.trunk.path.12.end') {
-            return '58rem';
-        }
-
-        return '28rem';
-    }
-
-    /**
-     * Keep visual one-off tunings tied to the final, visible strang instance
-     * identifier. This avoids broad side/attach rules while we are still
-     * shaping the data-driven layout rules.
-     *
-     * @param  array<string, mixed>  $branch
-     * @return array<string, mixed>
-     */
-    private static function applyBranchInstanceTunings(array $branch): array
-    {
-        if (
-            (string) ($branch['side'] ?? '') === 'left'
-            && in_array((int) ($branch['component_counter'] ?? 0), [1, 3], true)
-        ) {
-            $branch['bridge_length'] = self::addRem($branch['bridge_length'] ?? '28rem', 5.0);
-        }
-
-        return $branch;
-    }
-
-    private static function addRem(mixed $value, float $delta): string
-    {
-        if (preg_match('/-?\d+(?:\.\d+)?/', (string) $value, $matches) !== 1) {
-            return rtrim(rtrim(number_format($delta, 2, '.', ''), '0'), '.') . 'rem';
-        }
-
-        $result = (float) $matches[0] + $delta;
-
-        return rtrim(rtrim(number_format($result, 2, '.', ''), '0'), '.') . 'rem';
     }
 
     /**
@@ -392,6 +354,19 @@ final class BranchPreviewBuilder
         return is_array($anchor)
             ? (string) ($anchor['anchor'] ?? $fallback)
             : $fallback;
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $trunkTimelineAnchors
+     */
+    private static function anchorYForAttachTo(string $attachTo, array $trunkTimelineAnchors): ?float
+    {
+        $anchor = collect($trunkTimelineAnchors)
+            ->first(static fn(array $anchor): bool => (string) ($anchor['anchor'] ?? '') === $attachTo);
+
+        return is_array($anchor) && is_numeric($anchor['y_rem'] ?? null)
+            ? (float) $anchor['y_rem']
+            : null;
     }
 
     private static function timestampValue(mixed $timestamp): ?int

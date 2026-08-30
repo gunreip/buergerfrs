@@ -71,7 +71,7 @@
     @endphp
 
     @include('translation-workbench::livewire.raw-data.timeline-chains.canonical-root')
-    @include('translation-workbench::livewire.raw-data.timeline-chains.canonical-roots')
+    {{-- @include('translation-workbench::livewire.raw-data.timeline-chains.canonical-roots') --}}
     @include('translation-workbench::livewire.raw-data.timeline-chains.graph-preview')
     @include('translation-workbench::livewire.raw-data.timeline-chains.canonical-focus')
 @endif

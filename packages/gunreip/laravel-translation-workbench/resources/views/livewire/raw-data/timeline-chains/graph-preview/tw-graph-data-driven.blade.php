@@ -37,7 +37,22 @@
     $twGraphDataDrivenInspectLangValues = collect($twGraphDataDrivenFindingInspect['lang_values'] ?? []);
     $twGraphDataDrivenInspectKeys = collect($twGraphDataDrivenFindingInspect['related_translation_keys'] ?? []);
     $twGraphDataDrivenJson = json_encode(
-        $twGraphDataDriven,
+        [
+            'meta' => $twGraphDataDriven['meta'] ?? [],
+            'facts' => [
+                'key_ids' => data_get($twGraphDataDriven, 'facts.key_ids', []),
+                'finding_ids' => data_get($twGraphDataDriven, 'facts.finding_ids', []),
+                'review_ids' => data_get($twGraphDataDriven, 'facts.review_ids', []),
+                'lang_value_ids' => data_get($twGraphDataDriven, 'facts.lang_value_ids', []),
+                'timeline_event_count' => count((array) data_get($twGraphDataDriven, 'facts.timeline_event_ids', [])),
+                'related_translation_keys' => data_get($twGraphDataDriven, 'facts.related_translation_keys', []),
+            ],
+            'render_preview' => $twGraphDataDriven['render_preview'] ?? [],
+            'merge_outcomes' => [
+                'summary' => data_get($twGraphDataDriven, 'merge_outcomes.summary', []),
+                'row_count' => count((array) data_get($twGraphDataDriven, 'merge_outcomes.rows', [])),
+            ],
+        ],
         JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
     );
 @endphp
@@ -267,7 +282,7 @@
             class="mt-3"
             color="green"
             icon="git-branch"
-            x-data="{ twGraphDataDrivenDev: true, twGraphDataDrivenCoordinates: true }"
+            x-data="{ twGraphDataDrivenDev: true, twGraphDataDrivenCoordinates: true, twGraphDebugBoundsCollisionOnly: false }"
         >
             <flux:callout.heading>
                 <span class="flex w-full flex-wrap items-center justify-between gap-3">
@@ -324,6 +339,43 @@
                             /
                             {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('available_branch_candidates', 0)) }}
                             {{ __('branch findings') }}
+                        </flux:badge>
+                        @php
+                            $twGraphBranchCollisionDebug = $twGraphDataDrivenPreviewBranches
+                                ->flatMap(fn ($branch) => (array) data_get($branch, 'layout.branchCollisionDebug', []))
+                                ->values();
+                            $twGraphBranchCollisionLeft = $twGraphBranchCollisionDebug
+                                ->filter(fn ($debug) => data_get($debug, 'side') === 'left')
+                                ->values();
+                            $twGraphBranchCollisionRight = $twGraphBranchCollisionDebug
+                                ->filter(fn ($debug) => data_get($debug, 'side') === 'right')
+                                ->values();
+                            $twGraphTrunkCollisionDebug = collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkCollisionDebug', []))
+                                ->values();
+                        @endphp
+                        <flux:badge
+                            size="sm"
+                            color="{{ $twGraphBranchCollisionLeft->isNotEmpty() ? 'lime' : 'zinc' }}"
+                            title="{{ $twGraphBranchCollisionLeft->map(fn ($debug) => data_get($debug, 'type') . ': ' . data_get($debug, 'branch') . ' -> ' . data_get($debug, 'against') . ' +' . data_get($debug, 'requiredIncrement'))->join(' | ') ?: __('no left branch collision detected') }}"
+                        >
+                            {{ __('branch collision L') }}:
+                            {{ $twGraphBranchCollisionLeft->count() }}
+                        </flux:badge>
+                        <flux:badge
+                            size="sm"
+                            color="{{ $twGraphBranchCollisionRight->isNotEmpty() ? 'lime' : 'zinc' }}"
+                            title="{{ $twGraphBranchCollisionRight->map(fn ($debug) => data_get($debug, 'type') . ': ' . data_get($debug, 'branch') . ' -> ' . data_get($debug, 'against') . ' +' . data_get($debug, 'requiredIncrement'))->join(' | ') ?: __('no right branch collision detected') }}"
+                        >
+                            {{ __('branch collision R') }}:
+                            {{ $twGraphBranchCollisionRight->count() }}
+                        </flux:badge>
+                        <flux:badge
+                            size="sm"
+                            color="{{ $twGraphTrunkCollisionDebug->isNotEmpty() ? 'red' : 'zinc' }}"
+                            title="{{ $twGraphTrunkCollisionDebug->map(fn ($debug) => data_get($debug, 'trunk') . ' -> ' . data_get($debug, 'against') . ' ' . data_get($debug, 'overlapWidth') . ' x ' . data_get($debug, 'overlapHeight'))->join(' | ') ?: __('no trunk collision detected') }}"
+                        >
+                            {{ __('trunk collision') }}:
+                            {{ $twGraphTrunkCollisionDebug->count() }}
                         </flux:badge>
                         <flux:badge
                             size="sm"
@@ -416,6 +468,31 @@
                         :node-labels="$twGraphDataDrivenPreviewTrunk->get('node_labels', [])"
                     />
 
+                    @foreach (collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkBoundsDebug', [])) as $trunkBoundsDebug)
+                        @php
+                            $trunkBoundsDebugTooltip = 'Trunk bounds'
+                                . ' | ' . data_get($trunkBoundsDebug, 'type')
+                                . ': ' . data_get($trunkBoundsDebug, 'id')
+                                . ' | x=' . data_get($trunkBoundsDebug, 'x', '0rem')
+                                . ' y=' . data_get($trunkBoundsDebug, 'y', '0rem')
+                                . ' width=' . data_get($trunkBoundsDebug, 'width', '0rem')
+                                . ' height=' . data_get($trunkBoundsDebug, 'height', '0rem');
+                        @endphp
+
+                        <span
+                            class="tw-graph-protocol-dev-only absolute z-[1] cursor-copy rounded-sm border border-dashed border-green-400/80 bg-green-300/5"
+                            data-tw-graph-path="{{ $trunkBoundsDebugTooltip }}"
+                            title="{{ $trunkBoundsDebugTooltip }}"
+                            style="
+                                left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($trunkBoundsDebug, 'x', '0rem') }});
+                                bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($trunkBoundsDebug, 'y', '0rem') }});
+                                width: {{ data_get($trunkBoundsDebug, 'width', '0rem') }};
+                                height: {{ data_get($trunkBoundsDebug, 'height', '0rem') }};
+                            "
+                            x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
+                        ></span>
+                    @endforeach
+
                     @foreach ($twGraphDataDrivenPreviewRekeys as $rekeyIndex => $rekeyPreview)
                         @php
                             $rekeyPreview = collect($rekeyPreview);
@@ -476,6 +553,42 @@
                                 :z-index="7"
                             />
                         @endif
+
+                            @foreach (collect(data_get($rekeyPreview, 'layout.rekeyBoundsDebug', [])) as $rekeyBoundsDebug)
+                                @php
+                                    $rekeyBoundsDebugType = (string) data_get($rekeyBoundsDebug, 'type', '');
+                                    $rekeyBoundsDebugIsSubBox = str_ends_with($rekeyBoundsDebugType, '-start')
+                                        || str_ends_with($rekeyBoundsDebugType, '-labels')
+                                        || str_ends_with($rekeyBoundsDebugType, '-tail')
+                                        || $rekeyBoundsDebugType === 'rekey-target-body'
+                                        || $rekeyBoundsDebugType === 'rekey-target-end';
+                                    $rekeyBoundsDebugTooltip = 'Rekey bounds'
+                                        . ' | ' . data_get($rekeyBoundsDebug, 'side', 'n/a')
+                                        . ' | ' . $rekeyBoundsDebugType
+                                        . ': ' . data_get($rekeyBoundsDebug, 'id')
+                                        . ' | x=' . data_get($rekeyBoundsDebug, 'x', '0rem')
+                                        . ' y=' . data_get($rekeyBoundsDebug, 'y', '0rem')
+                                    . ' width=' . data_get($rekeyBoundsDebug, 'width', '0rem')
+                                    . ' height=' . data_get($rekeyBoundsDebug, 'height', '0rem');
+                            @endphp
+
+                                <span
+                                    @class([
+                                        'tw-graph-protocol-dev-only absolute cursor-copy rounded-sm border border-dashed',
+                                        'z-[2] border-lime-400/80 bg-lime-300/5' => $rekeyBoundsDebugIsSubBox,
+                                        'z-[1] border-sky-400/75 bg-sky-300/5' => ! $rekeyBoundsDebugIsSubBox,
+                                    ])
+                                    data-tw-graph-path="{{ $rekeyBoundsDebugTooltip }}"
+                                    title="{{ $rekeyBoundsDebugTooltip }}"
+                                    style="
+                                    left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($rekeyBoundsDebug, 'x', '0rem') }});
+                                    bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($rekeyBoundsDebug, 'y', '0rem') }});
+                                    width: {{ data_get($rekeyBoundsDebug, 'width', '0rem') }};
+                                    height: {{ data_get($rekeyBoundsDebug, 'height', '0rem') }};
+                                "
+                                x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
+                            ></span>
+                        @endforeach
                     @endforeach
 
                     @if ($twGraphDataDrivenPreviewMerge->isNotEmpty())
@@ -523,6 +636,40 @@
                                     :extension-node-labels="$mergePreview->get('extension_node_labels', [])"
                                 />
                             @endif
+
+                            @foreach (collect(data_get($mergePreview, 'layout.mergeBoundsDebug', [])) as $mergeBoundsDebug)
+                                @php
+                                    $mergeBoundsDebugType = (string) data_get($mergeBoundsDebug, 'type', '');
+                                    $mergeBoundsDebugIsSubBox = str_ends_with($mergeBoundsDebugType, '-start')
+                                        || str_ends_with($mergeBoundsDebugType, '-labels')
+                                        || str_ends_with($mergeBoundsDebugType, '-tail');
+                                    $mergeBoundsDebugTooltip = 'Merge bounds'
+                                        . ' | ' . data_get($mergeBoundsDebug, 'side', 'n/a')
+                                        . ' | ' . $mergeBoundsDebugType
+                                        . ': ' . data_get($mergeBoundsDebug, 'id')
+                                        . ' | x=' . data_get($mergeBoundsDebug, 'x', '0rem')
+                                        . ' y=' . data_get($mergeBoundsDebug, 'y', '0rem')
+                                        . ' width=' . data_get($mergeBoundsDebug, 'width', '0rem')
+                                        . ' height=' . data_get($mergeBoundsDebug, 'height', '0rem');
+                                @endphp
+
+                                <span
+                                    @class([
+                                        'tw-graph-protocol-dev-only absolute cursor-copy rounded-sm border border-dashed',
+                                        'z-[2] border-lime-400/80 bg-lime-300/5' => $mergeBoundsDebugIsSubBox,
+                                        'z-[1] border-amber-400/75 bg-amber-300/5' => ! $mergeBoundsDebugIsSubBox,
+                                    ])
+                                    data-tw-graph-path="{{ $mergeBoundsDebugTooltip }}"
+                                    title="{{ $mergeBoundsDebugTooltip }}"
+                                    style="
+                                        left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($mergeBoundsDebug, 'x', '0rem') }});
+                                        bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($mergeBoundsDebug, 'y', '0rem') }});
+                                        width: {{ data_get($mergeBoundsDebug, 'width', '0rem') }};
+                                        height: {{ data_get($mergeBoundsDebug, 'height', '0rem') }};
+                                    "
+                                    x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
+                                ></span>
+                            @endforeach
                         @endforeach
                     @endif
 
@@ -585,6 +732,31 @@
                             />
                         @endif
 
+                        @foreach (collect(data_get($branchPreview, 'layout.branchBoundsDebug', [])) as $branchBoundsDebug)
+                            @php
+                                $branchBoundsDebugTooltip = 'Branch bounds'
+                                    . ' | ' . data_get($branchBoundsDebug, 'type')
+                                    . ': ' . data_get($branchBoundsDebug, 'id')
+                                    . ' | x=' . data_get($branchBoundsDebug, 'x', '0rem')
+                                    . ' y=' . data_get($branchBoundsDebug, 'y', '0rem')
+                                    . ' width=' . data_get($branchBoundsDebug, 'width', '0rem')
+                                    . ' height=' . data_get($branchBoundsDebug, 'height', '0rem');
+                            @endphp
+
+                            <span
+                                class="tw-graph-protocol-dev-only absolute z-[1] cursor-copy rounded-sm border border-dashed border-sky-400/70 bg-sky-300/5"
+                                data-tw-graph-path="{{ $branchBoundsDebugTooltip }}"
+                                title="{{ $branchBoundsDebugTooltip }}"
+                                style="
+                                    left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($branchBoundsDebug, 'x', '0rem') }});
+                                    bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($branchBoundsDebug, 'y', '0rem') }});
+                                    width: {{ data_get($branchBoundsDebug, 'width', '0rem') }};
+                                    height: {{ data_get($branchBoundsDebug, 'height', '0rem') }};
+                                "
+                                x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
+                            ></span>
+                        @endforeach
+
                         @foreach (collect(data_get($branchPreview, 'layout.warnings', [])) as $layoutWarning)
                             @foreach ((array) data_get($layoutWarning, 'boxes', []) as $collisionBox)
                                 @php
@@ -597,7 +769,7 @@
                                 @endphp
 
                                 <span
-                                    class="tw-graph-protocol-dev-only absolute z-40 cursor-copy rounded-sm border border-dashed border-lime-400/80 bg-lime-300/5"
+                                    class="tw-graph-protocol-dev-only absolute z-[1] cursor-copy rounded-sm border border-dashed border-lime-400/80 bg-lime-300/5"
                                     data-tw-graph-path="{{ $collisionBoxTooltip }}"
                                     title="{{ $collisionBoxTooltip }}"
                                     style="
@@ -638,6 +810,182 @@
                         @endforeach
                     @endforeach
                 </x-translation-workbench::ui.tw-graph>
+
+                @php
+                    $twGraphDebugCollisionIds = collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkCollisionDebug', []))
+                        ->flatMap(fn ($collision) => [
+                            data_get($collision, 'trunk'),
+                            data_get($collision, 'against'),
+                        ])
+                        ->filter()
+                        ->values();
+                    $twGraphDebugBoundRows = collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkBoundsDebug', []))
+                        ->map(fn ($debugBox) => [
+                            'scope' => 'trunk',
+                            'side' => data_get($debugBox, 'side', 'center'),
+                            'type' => data_get($debugBox, 'type', 'n/a'),
+                            'id' => data_get($debugBox, 'id', 'n/a'),
+                            'x' => data_get($debugBox, 'x', '0rem'),
+                            'y' => data_get($debugBox, 'y', '0rem'),
+                            'width' => data_get($debugBox, 'width', '0rem'),
+                            'height' => data_get($debugBox, 'height', '0rem'),
+                            'collision' => $twGraphDebugCollisionIds->contains(data_get($debugBox, 'id')),
+                        ])
+                        ->merge(
+                            $twGraphDataDrivenPreviewMerges
+                                ->flatMap(fn ($merge) => (array) data_get($merge, 'layout.mergeBoundsDebug', []))
+                                ->map(fn ($debugBox) => [
+                                    'scope' => 'merge',
+                                    'side' => data_get($debugBox, 'side', ''),
+                                    'type' => data_get($debugBox, 'type', 'n/a'),
+                                    'id' => data_get($debugBox, 'id', 'n/a'),
+                                    'x' => data_get($debugBox, 'x', '0rem'),
+                                    'y' => data_get($debugBox, 'y', '0rem'),
+                                    'width' => data_get($debugBox, 'width', '0rem'),
+                                    'height' => data_get($debugBox, 'height', '0rem'),
+                                    'collision' => $twGraphDebugCollisionIds->contains(data_get($debugBox, 'id')),
+                                ])
+                        )
+                        ->merge(
+                            $twGraphDataDrivenPreviewRekeys
+                                ->flatMap(fn ($rekey) => (array) data_get($rekey, 'layout.rekeyBoundsDebug', []))
+                                ->map(fn ($debugBox) => [
+                                    'scope' => 'rekey',
+                                    'side' => data_get($debugBox, 'side', ''),
+                                    'type' => data_get($debugBox, 'type', 'n/a'),
+                                    'id' => data_get($debugBox, 'id', 'n/a'),
+                                    'x' => data_get($debugBox, 'x', '0rem'),
+                                    'y' => data_get($debugBox, 'y', '0rem'),
+                                    'width' => data_get($debugBox, 'width', '0rem'),
+                                    'height' => data_get($debugBox, 'height', '0rem'),
+                                    'collision' => $twGraphDebugCollisionIds->contains(data_get($debugBox, 'id')),
+                                ])
+                        )
+                        ->merge(
+                            $twGraphDataDrivenPreviewBranches
+                                ->flatMap(fn ($branch) => (array) data_get($branch, 'layout.branchBoundsDebug', []))
+                                ->map(fn ($debugBox) => [
+                                    'scope' => 'branch',
+                                    'side' => data_get($debugBox, 'side', ''),
+                                    'type' => data_get($debugBox, 'type', 'n/a'),
+                                    'id' => data_get($debugBox, 'id', 'n/a'),
+                                    'x' => data_get($debugBox, 'x', '0rem'),
+                                    'y' => data_get($debugBox, 'y', '0rem'),
+                                    'width' => data_get($debugBox, 'width', '0rem'),
+                                    'height' => data_get($debugBox, 'height', '0rem'),
+                                    'collision' => $twGraphDebugCollisionIds->contains(data_get($debugBox, 'id')),
+                                ])
+                        )
+                        ->values();
+                    $twGraphDebugCollisionBoundRows = $twGraphDebugBoundRows
+                        ->where('collision', true)
+                        ->values();
+                @endphp
+
+                <div class="tw-graph-protocol-dev-only mt-4 overflow-hidden rounded-lg border border-zinc-200 bg-white/75 dark:border-zinc-700 dark:bg-zinc-900/45">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-200 px-3 py-2 dark:border-zinc-700">
+                        <flux:heading size="sm">{{ __('Debug bounds') }}</flux:heading>
+                        <div class="flex flex-wrap items-center justify-end gap-3">
+                            <flux:field
+                                class="items-center gap-2"
+                                variant="inline"
+                                x-on:click.stop
+                            >
+                                <flux:switch
+                                    class="switch-colored hover:cursor-pointer"
+                                    x-model="twGraphDebugBoundsCollisionOnly"
+                                />
+                                <flux:label class="text-xs opacity-70 hover:cursor-pointer">
+                                    {{ __('Collisions only') }}
+                                </flux:label>
+                            </flux:field>
+
+                            <flux:badge
+                                size="sm"
+                                color="{{ $twGraphDebugCollisionBoundRows->isNotEmpty() ? 'red' : 'zinc' }}"
+                            >
+                                {{ __('collisions') }}:
+                                {{ $twGraphDebugCollisionBoundRows->count() }}
+                            </flux:badge>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-left text-xs">
+                            <thead class="bg-zinc-50 text-zinc-600 dark:bg-zinc-950/60 dark:text-zinc-300">
+                                <tr>
+                                    <th class="px-3 py-2 font-medium">{{ __('Scope') }}</th>
+                                    <th class="px-3 py-2 font-medium">{{ __('Side') }}</th>
+                                    <th class="px-3 py-2 font-medium">{{ __('Type') }}</th>
+                                    <th class="px-3 py-2 font-medium">{{ __('Debug bound box') }}</th>
+                                    <th class="px-3 py-2 font-medium">{{ __('Coordinates') }}</th>
+                                    <th class="px-3 py-2 font-medium">{{ __('Dimension') }}</th>
+                                    <th class="px-3 py-2 font-medium">{{ __('Collision') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-zinc-200/70 dark:divide-zinc-700/70">
+                                @forelse ($twGraphDebugBoundRows as $debugBoundRow)
+                                    <tr x-show="!twGraphDebugBoundsCollisionOnly || @js((bool) data_get($debugBoundRow, 'collision'))">
+                                        <td class="px-3 py-2 align-top">
+                                            <flux:badge
+                                                size="sm"
+                                                color="{{ data_get($debugBoundRow, 'scope') === 'trunk' ? 'green' : (data_get($debugBoundRow, 'scope') === 'merge' ? 'amber' : 'sky') }}"
+                                            >
+                                                {{ data_get($debugBoundRow, 'scope') }}
+                                            </flux:badge>
+                                        </td>
+                                        <td class="px-3 py-2 align-top text-zinc-700 dark:text-zinc-200">
+                                            {{ filled(data_get($debugBoundRow, 'side')) ? data_get($debugBoundRow, 'side') : 'center' }}
+                                        </td>
+                                        <td class="px-3 py-2 align-top text-zinc-700 dark:text-zinc-200">
+                                            {{ data_get($debugBoundRow, 'type') }}
+                                        </td>
+                                        <td class="wrap-anywhere px-3 py-2 align-top font-mono text-zinc-900 dark:text-zinc-100">
+                                            {{ data_get($debugBoundRow, 'id') }}
+                                        </td>
+                                        <td class="px-3 py-2 align-top font-mono text-zinc-700 dark:text-zinc-200">
+                                            x={{ data_get($debugBoundRow, 'x') }}
+                                            <span class="text-zinc-400">/</span>
+                                            y={{ data_get($debugBoundRow, 'y') }}
+                                        </td>
+                                        <td class="px-3 py-2 align-top font-mono text-zinc-700 dark:text-zinc-200">
+                                            w={{ data_get($debugBoundRow, 'width') }}
+                                            <span class="text-zinc-400">/</span>
+                                            h={{ data_get($debugBoundRow, 'height') }}
+                                        </td>
+                                        <td class="px-3 py-2 align-top">
+                                            <flux:badge
+                                                size="sm"
+                                                color="{{ data_get($debugBoundRow, 'collision') ? 'red' : 'zinc' }}"
+                                            >
+                                                {{ data_get($debugBoundRow, 'collision') ? __('yes') : __('no') }}
+                                            </flux:badge>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td
+                                            class="px-3 py-4 text-center text-zinc-500"
+                                            colspan="7"
+                                        >
+                                            {{ __('No debug bound boxes available.') }}
+                                        </td>
+                                    </tr>
+                                @endforelse
+                                @if ($twGraphDebugBoundRows->isNotEmpty() && $twGraphDebugCollisionBoundRows->isEmpty())
+                                    <tr x-show="twGraphDebugBoundsCollisionOnly">
+                                        <td
+                                            class="px-3 py-4 text-center text-zinc-500"
+                                            colspan="7"
+                                        >
+                                            {{ __('No collision debug bound boxes available.') }}
+                                        </td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
                 @if (filled(data_get($twGraphDataDrivenPreviewGraph->get('header'), 'text')))
                     <flux:callout.heading class="mt-2 flex items-center justify-center gap-2">
