@@ -11,7 +11,6 @@ final class BranchLabelCollisionResolver
     private const LABEL_GAP_REM = 2.0;
     private const BRIDGE_HEIGHT_REM = 1.5;
     private const END_SEGMENT_WIDTH_REM = 1.5;
-    private const MAX_BRANCH_LAYOUT_PASSES = 6;
 
     /**
      * @param  array<int, array<string, mixed>>  $branches
@@ -44,10 +43,9 @@ final class BranchLabelCollisionResolver
     }
 
     /**
-     * Branches on the same side can overlap when their stem labels occupy the
-     * same vertical band. Move the inner/earlier branch outward by increasing
-     * its bridge length; this keeps the semantic side stable and leaves the
-     * lower-level path components untouched.
+     * Branches on the same side can overlap when their stem labels or bridge
+     * boxes occupy the same band. This pass is report-only: it records the
+     * collision delta but must not mutate bridge/stem props.
      *
      * @param  array<int, array<string, mixed>>  $branches
      * @return array<int, array<string, mixed>>
@@ -56,93 +54,66 @@ final class BranchLabelCollisionResolver
     {
         $debugEntries = [];
 
-        for ($pass = 0; $pass < self::MAX_BRANCH_LAYOUT_PASSES; $pass++) {
-            $updates = [];
+        foreach (['left', 'right'] as $side) {
+            $sideBranches = self::indexedBranchBounds($branches, $side, 'label');
 
-            foreach (['left', 'right'] as $side) {
-                $sideBranches = self::indexedBranchBounds($branches, $side, 'label');
-
-                foreach ($sideBranches as $position => $entry) {
-                    foreach ($sideBranches->slice($position + 1) as $next) {
-                        if (! self::overlaps($entry['bounds'], $next['bounds'])) {
-                            continue;
-                        }
-
-                        $index = (int) $entry['index'];
-                        $currentLength = self::toRem(data_get($branches, "{$index}.bridge_length", '28rem'));
-                        $requiredIncrement = self::requiredOutwardBridgeIncrement(
-                            (string) $side,
-                            (array) $entry['bounds'],
-                            (array) $next['bounds'],
-                        );
-                        $debugEntries[$index][] = self::collisionDebugEntry(
-                            (string) $side,
-                            'label',
-                            (array) $entry['branch'],
-                            (array) $next['branch'],
-                            $pass + 1,
-                            $requiredIncrement,
-                        );
-
-                        $updates[$index] = max(
-                            (float) ($updates[$index] ?? $currentLength),
-                            $currentLength + $requiredIncrement,
-                        );
+            foreach ($sideBranches as $position => $entry) {
+                foreach ($sideBranches->slice($position + 1) as $next) {
+                    if (! self::overlaps($entry['bounds'], $next['bounds'])) {
+                        continue;
                     }
-                }
 
-                $sideBridges = self::indexedBranchBounds($branches, $side, 'bridge');
-
-                foreach ($sideBridges as $position => $entry) {
-                    foreach ($sideBridges->slice($position + 1) as $next) {
-                        if (! self::overlaps($entry['bounds'], $next['bounds'])) {
-                            continue;
-                        }
-
-                        $index = (int) $entry['index'];
-                        $currentLength = self::toRem(data_get($branches, "{$index}.bridge_length", '28rem'));
-                        $requiredIncrement = self::requiredOutwardBridgeIncrement(
-                            (string) $side,
-                            (array) $entry['bounds'],
-                            (array) $next['bounds'],
-                        );
-                        $debugEntries[$index][] = self::collisionDebugEntry(
-                            (string) $side,
-                            'bridge',
-                            (array) $entry['branch'],
-                            (array) $next['branch'],
-                            $pass + 1,
-                            $requiredIncrement,
-                        );
-
-                        $updates[$index] = max(
-                            (float) ($updates[$index] ?? $currentLength),
-                            $currentLength + $requiredIncrement,
-                        );
-                    }
+                    $index = (int) $entry['index'];
+                    $debugEntries[$index][] = self::collisionDebugEntry(
+                        (string) $side,
+                        'label',
+                        (array) $entry['branch'],
+                        (array) $next['branch'],
+                        1,
+                        self::requiredOutwardBridgeIncrement((string) $side, (array) $entry['bounds'], (array) $next['bounds']),
+                    );
                 }
             }
 
-            if ($updates === []) {
-                break;
-            }
+            $sideBridges = self::indexedBranchBounds($branches, $side, 'bridge');
 
-            foreach ($updates as $index => $length) {
-                $currentLength = self::toRem(data_get($branches, "{$index}.bridge_length", '28rem'));
-                $increment = max(0.0, (float) $length - $currentLength);
-                $branches[$index]['bridge_length'] = self::rem((float) $length);
-                $branches[$index]['layout'] = [
-                    ...((array) ($branches[$index]['layout'] ?? [])),
-                    'branchCollisionDebug' => [
-                        ...((array) data_get($branches[$index], 'layout.branchCollisionDebug', [])),
-                        ...((array) ($debugEntries[$index] ?? [])),
-                    ],
-                    'branchLabelCollision' => [
-                        'bridgeIncrement' => self::rem($increment),
-                        'reason' => 'stem label bounds overlap another branch on the same side',
-                    ],
-                ];
+            foreach ($sideBridges as $position => $entry) {
+                foreach ($sideBridges->slice($position + 1) as $next) {
+                    if (! self::overlaps($entry['bounds'], $next['bounds'])) {
+                        continue;
+                    }
+
+                    $index = (int) $entry['index'];
+                    $debugEntries[$index][] = self::collisionDebugEntry(
+                        (string) $side,
+                        'bridge',
+                        (array) $entry['branch'],
+                        (array) $next['branch'],
+                        1,
+                        self::requiredOutwardBridgeIncrement((string) $side, (array) $entry['bounds'], (array) $next['bounds']),
+                    );
+                }
             }
+        }
+
+        foreach ($debugEntries as $index => $entries) {
+            $branches[$index]['layout'] = [
+                ...((array) ($branches[$index]['layout'] ?? [])),
+                'branchCollisionDebug' => [
+                    ...((array) data_get($branches[$index], 'layout.branchCollisionDebug', [])),
+                    ...$entries,
+                ],
+                'branchCollisionReport' => [
+                    'collisionDelta' => collect($entries)
+                        ->pluck('requiredIncrement')
+                        ->filter()
+                        ->unique()
+                        ->values()
+                        ->all(),
+                    'appliedCorrection' => '',
+                    'reason' => 'raw collision report only; bridge-length correction is intentionally not applied',
+                ],
+            ];
         }
 
         return $branches;
@@ -241,6 +212,10 @@ final class BranchLabelCollisionResolver
     }
 
     /**
+     * Calculate potential trunk spacing adjustments for branch-end/bridge
+     * overlaps. The returned values are diagnostic deltas only unless a caller
+     * explicitly applies them and reports that in Applied Correction.
+     *
      * @param  array<int, array<string, mixed>>  $branches
      * @return array<int, float>
      */
@@ -378,7 +353,7 @@ final class BranchLabelCollisionResolver
         $boxes = self::bridgeBoxes($branch, $branchIndex);
         $side = (string) ($branch['side'] ?? 'left');
         $anchorY = self::anchorY($branch);
-        $bridgeLength = self::toRem($branch['bridge_length'] ?? '28rem');
+        $bridgeLength = self::toRem($branch['bridge_length'] ?? '3.5rem');
         $entryStemLength = self::toRem($branch['entry_stem_length'] ?? '0rem');
         $arcSize = self::toRem($branch['arc_size'] ?? '2.75rem') ?: 2.75;
         $direction = $side === 'left' ? -1.0 : 1.0;
@@ -426,7 +401,7 @@ final class BranchLabelCollisionResolver
         $stemY = $stepEndY;
 
         foreach ($stemEntries as $stemEntry) {
-            $stemY += self::toRem(data_get($stemEntry, 'length', is_array($stemEntry) ? data_get($stemEntry, 0, $branch['stem_length'] ?? '5.25rem') : $stemEntry));
+            $stemY += self::toRem(data_get($stemEntry, 'length', is_array($stemEntry) ? data_get($stemEntry, 0, $branch['stem_length'] ?? '3.5rem') : $stemEntry));
 
             foreach (self::labelsFromStemEntry($stemEntry) as $label) {
                 $stemBounds = self::expandBoxForLabelAt($stemBounds, $label, $stemX, $stemY);
@@ -517,7 +492,7 @@ final class BranchLabelCollisionResolver
     {
         $side = (string) ($branch['side'] ?? 'left');
         $anchorY = self::anchorY($branch);
-        $bridgeLength = self::toRem($branch['bridge_length'] ?? '28rem');
+        $bridgeLength = self::toRem($branch['bridge_length'] ?? '3.5rem');
         $entryStemLength = self::toRem($branch['entry_stem_length'] ?? '0rem');
         $arcSize = self::toRem($branch['arc_size'] ?? '2.75rem') ?: 2.75;
         $direction = $side === 'left' ? -1.0 : 1.0;
@@ -545,7 +520,7 @@ final class BranchLabelCollisionResolver
     {
         $side = (string) ($branch['side'] ?? 'left');
         $anchorY = self::anchorY($branch);
-        $bridgeLength = self::toRem($branch['bridge_length'] ?? '28rem');
+        $bridgeLength = self::toRem($branch['bridge_length'] ?? '3.5rem');
         $entryStemLength = self::toRem($branch['entry_stem_length'] ?? '0rem');
         $arcSize = self::toRem($branch['arc_size'] ?? '2.75rem') ?: 2.75;
         $endLength = self::toRem($branch['end_length'] ?? '3rem');
@@ -873,7 +848,7 @@ final class BranchLabelCollisionResolver
     private static function stemLabelHeight(array $stemContinuation): float
     {
         return collect($stemContinuation)
-            ->map(static fn(mixed $entry): float => self::toRem(data_get($entry, 'length', is_array($entry) ? data_get($entry, 0, '5.25rem') : $entry)))
+            ->map(static fn(mixed $entry): float => self::toRem(data_get($entry, 'length', is_array($entry) ? data_get($entry, 0, '3.5rem') : $entry)))
             ->sum() ?: 5.25;
     }
 

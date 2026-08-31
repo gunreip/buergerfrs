@@ -8,13 +8,6 @@ use Illuminate\Support\Collection;
 
 final class MergePreviewBuilder
 {
-    private const STEM_LENGTHS = [
-        'default' => '2rem',
-        'long' => '18rem',
-        'aggregate' => '3.5rem',
-        'aggregateTail' => '17rem',
-    ];
-
     /**
      * @param  Collection<int, array<string, mixed>>  $originRows
      * @return array<int, array<string, mixed>>
@@ -35,18 +28,8 @@ final class MergePreviewBuilder
                 $extensions = self::extensionRows($sideRows, max(0, intdiv($maxMergeCandidates, 2) - 1));
 
                 $mainPreview['extension_count'] = $extensions->count();
-                $mainPreview['extension_stem_lengths'] = $extensions
-                    ->mapWithKeys(static fn(array $extension, int $extensionOffset): array => filled($extension['stem_length'] ?? null)
-                        ? [$extensionOffset + 1 => (string) $extension['stem_length']]
-                        : [])
-                    ->all();
-                $mainPreview['extension_bridge_continuations'] = $extensions->isNotEmpty()
-                    ? $extensions
-                    ->mapWithKeys(static fn(array $extension, int $extensionOffset): array => [
-                        $extensionOffset + 1 => (string) ($extension['bridge_length'] ?? '19rem'),
-                    ])
-                    ->all()
-                    : [];
+                $mainPreview['extension_stem_lengths'] = [];
+                $mainPreview['extension_bridge_continuations'] = [];
                 $mainPreview['extension_stem_continuations'] = $extensions->isNotEmpty()
                     ? $extensions
                     ->mapWithKeys(static fn(array $extension, int $extensionOffset): array => [
@@ -85,7 +68,6 @@ final class MergePreviewBuilder
                 ->map(static fn(array $row, int $index): array => [
                     'type' => 'real',
                     'row' => $row['row'],
-                    'bridge_length' => '19rem',
                     'stem_continuation' => self::realExtensionStemContinuation($index),
                 ]);
         }
@@ -97,7 +79,6 @@ final class MergePreviewBuilder
                 return [
                     'type' => 'real',
                     'row' => $row['row'],
-                    'bridge_length' => in_array($index, [0, 1], true) ? '20.75rem' : '17rem',
                     'stem_continuation' => self::realExtensionStemContinuation($index),
                 ];
             });
@@ -111,8 +92,6 @@ final class MergePreviewBuilder
             [
                 'type' => 'aggregate',
                 'rows' => $hiddenRows->map(static fn(array $row): array => $row['row'])->all(),
-                'bridge_length' => '21rem',
-                'stem_length' => self::STEM_LENGTHS['aggregate'],
                 'stem_continuation' => self::aggregateStemContinuation($hiddenStemContinuationCount),
             ],
         ];
@@ -120,8 +99,7 @@ final class MergePreviewBuilder
             [
                 'type' => 'real',
                 'row' => $tailRow['row'],
-                'bridge_length' => '21rem',
-                'stem_continuation' => [1 => self::STEM_LENGTHS['default']],
+                'stem_continuation' => [1 => []],
             ],
         ];
 
@@ -137,11 +115,7 @@ final class MergePreviewBuilder
      */
     private static function realExtensionStemContinuation(int $extensionIndex): array
     {
-        return [
-            1 => $extensionIndex % 2 === 0
-                ? self::STEM_LENGTHS['long']
-                : self::STEM_LENGTHS['default'],
-        ];
+        return [1 => []];
     }
 
     /**
@@ -151,9 +125,7 @@ final class MergePreviewBuilder
     {
         return collect(range(1, $hiddenStemContinuationCount + 1))
             ->mapWithKeys(static fn(int $index): array => [
-                $index => $index === $hiddenStemContinuationCount + 1
-                    ? self::STEM_LENGTHS['aggregateTail']
-                    : self::STEM_LENGTHS['aggregate'],
+                $index => [],
             ])
             ->all();
     }
@@ -276,7 +248,7 @@ final class MergePreviewBuilder
             'Source',
             LabelFormatter::graphSourceLabelText($sourcePath),
         ]));
-        $stemContinuation = [1 => '2rem'];
+        $stemContinuation = [1 => []];
         $attachNodeNumber = 5 + count($stemContinuation);
 
         return [
@@ -284,8 +256,6 @@ final class MergePreviewBuilder
             'side' => $side,
             'color' => 'amber',
             'attach_to' => 'strang.trunk.path.1.end',
-            'bridge_length' => '15rem',
-            'stem_length' => '5rem',
             'stem_continuation' => $stemContinuation,
             'arc_sizes' => [],
             'start_label' => [

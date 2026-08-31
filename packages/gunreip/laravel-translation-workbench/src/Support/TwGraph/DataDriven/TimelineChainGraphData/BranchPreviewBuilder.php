@@ -73,8 +73,6 @@ final class BranchPreviewBuilder
                 'step_label' => ['Source inactive', 'not shared obsolete'],
                 'end_length' => '3rem',
                 'cap_length' => '2rem',
-                'bridge_length' => '28rem',
-                'stem_length' => '5.25rem',
             ],
         ];
     }
@@ -124,9 +122,7 @@ final class BranchPreviewBuilder
                     ->chunk(2)
                     ->mapWithKeys(static function (Collection $stemRows, int $index) use ($badgeColor, $labelSide, $insideLabelSide): array {
                         $stemRows = $stemRows->values();
-                        $entry = [
-                            'length' => '5.25rem',
-                        ];
+                        $entry = [];
 
                         if ($stemRows->has(0)) {
                             $entry[$labelSide] = [
@@ -165,9 +161,6 @@ final class BranchPreviewBuilder
                     'color' => $pathColor,
                     'attach_to' => $attachTo,
                     'anchor_y_rem' => data_get($rows->first(), 'anchor_y_rem'),
-                    'entry_stem_length' => '0.25rem',
-                    'bridge_length' => '28rem',
-                    'stem_length' => '5.25rem',
                     'step' => $step,
                     'stem_continuation' => $stemContinuation,
                     'branch_extension' => [],
@@ -219,8 +212,8 @@ final class BranchPreviewBuilder
         $stepLabel = array_values((array) ($spec['step_label'] ?? []));
         $endLength = (string) ($spec['end_length'] ?? '0rem');
         $capLength = (string) ($spec['cap_length'] ?? '1.75rem');
-        $bridgeLength = (string) ($spec['bridge_length'] ?? '12rem');
-        $stemLength = (string) ($spec['stem_length'] ?? '5.25rem');
+        $bridgeLength = $spec['bridge_length'] ?? null;
+        $stemLength = $spec['stem_length'] ?? null;
         $extensionRows = $rows
             ->filter(static fn(array $row): bool => (string) ($row['outcome_group'] ?? '') === $outcomeGroup)
             ->values();
@@ -251,8 +244,6 @@ final class BranchPreviewBuilder
                 ...$sideRows
                     ->mapWithKeys(static fn(array $row, int $index): array => [
                         $index + 1 => [
-                            'bridgeLength' => $bridgeLength,
-                            'stemLength' => $stemLength,
                             'color' => $color,
                             'step' => [
                                 'beforeLength' => '1.5rem',
@@ -283,6 +274,8 @@ final class BranchPreviewBuilder
                                     ],
                                 ],
                             ],
+                            ...($bridgeLength !== null ? ['bridgeLength' => (string) $bridgeLength] : []),
+                            ...($stemLength !== null ? ['stemLength' => (string) $stemLength] : []),
                         ],
                     ])
                     ->all(),

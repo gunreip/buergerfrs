@@ -125,7 +125,10 @@ final class RenderPreviewBuilder
         $mergePreviewHeadCandidates = 6;
         $mergePreviews = MergePreviewBuilder::previews($originRows, $mergePreviewHeadCandidates);
         $branchPreviews = BranchPreviewBuilder::previews($mergeOutcomes, $trunkTimelineAnchors);
-        $trunkPathSpacingAdjustments = BranchLabelCollisionResolver::trunkPathSpacingAdjustments($branchPreviews);
+        // Collision compensation is intentionally not applied in this pass;
+        // debug bounds report the raw delta until an explicit correction layer
+        // writes Applied Correction values and forwards adjusted props.
+        $trunkPathSpacingAdjustments = [];
         $rekeyPreviews = RekeyPreviewBuilder::previews($mainRow);
         $hasRekeyTargetPreview = collect($rekeyPreviews)->contains(static fn(array $preview): bool => (string) ($preview['kind'] ?? '') === 'target');
         $rekeyTargetPreview = collect($rekeyPreviews)->first(static fn(array $preview): bool => (string) ($preview['kind'] ?? '') === 'target');

@@ -505,8 +505,8 @@
                                 :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
                                 :color="$rekeyPreview->get('color', 'sky')"
                                 :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.1.end')"
-                                :bridge-length="$rekeyPreview->get('bridge_length', '12rem')"
-                                :stem-length="$rekeyPreview->get('stem_length', '4rem')"
+                                :bridge-length="$rekeyPreview->get('bridge_length')"
+                                :stem-length="$rekeyPreview->get('stem_length')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
                                 :start-label="$rekeyPreview->get('start_label')"
                                 :node-labels="$rekeyPreview->get('node_labels', [])"
@@ -517,8 +517,8 @@
                                 :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
                                 :color="$rekeyPreview->get('color', 'sky')"
                                 :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.1.end')"
-                                :bridge-length="$rekeyPreview->get('bridge_length', '12rem')"
-                                :stem-length="$rekeyPreview->get('stem_length', '4rem')"
+                                :bridge-length="$rekeyPreview->get('bridge_length')"
+                                :stem-length="$rekeyPreview->get('stem_length')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
                                 :start-label="$rekeyPreview->get('start_label')"
                                 :node-labels="$rekeyPreview->get('node_labels', [])"
@@ -529,8 +529,8 @@
                                 :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
                                 :color="$rekeyPreview->get('color', 'sky')"
                                 :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.3.end')"
-                                :bridge-length="$rekeyPreview->get('bridge_length', '12rem')"
-                                :stem-length="$rekeyPreview->get('stem_length', '5rem')"
+                                :bridge-length="$rekeyPreview->get('bridge_length')"
+                                :stem-length="$rekeyPreview->get('stem_length')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
                                 :end-length="$rekeyPreview->get('end_length')"
                                 :cap-length="$rekeyPreview->get('cap_length')"
@@ -543,8 +543,8 @@
                                 :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
                                 :color="$rekeyPreview->get('color', 'sky')"
                                 :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.3.end')"
-                                :bridge-length="$rekeyPreview->get('bridge_length', '12rem')"
-                                :stem-length="$rekeyPreview->get('stem_length', '5rem')"
+                                :bridge-length="$rekeyPreview->get('bridge_length')"
+                                :stem-length="$rekeyPreview->get('stem_length')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
                                 :end-length="$rekeyPreview->get('end_length')"
                                 :cap-length="$rekeyPreview->get('cap_length')"
@@ -602,14 +602,13 @@
                                     :component-counter="$mergeIndex + 1"
                                     :color="$mergePreview->get('color', 'amber')"
                                     :attach-to="$mergePreview->get('attach_to', 'strang.trunk.path.1.end')"
-                                    :bridge-length="$mergePreview->get('bridge_length', '6rem')"
-                                    :stem-length="$mergePreview->get('stem_length', '5rem')"
+                                    :bridge-length="$mergePreview->get('bridge_length')"
+                                    :stem-length="$mergePreview->get('stem_length')"
                                     :stem-continuation="$mergePreview->get('stem_continuation', [])"
                                     :arc-sizes="$mergePreview->get('arc_sizes', [])"
                                     :start-label="$mergePreview->get('start_label')"
                                     :node-labels="$mergePreview->get('node_labels', [])"
                                     :extension-count="$mergePreview->get('extension_count', 0)"
-                                    extension-bridge-length="30rem"
                                     :extension-stem-lengths="$mergePreview->get('extension_stem_lengths', [])"
                                     :extension-stem-continuations="$mergePreview->get('extension_stem_continuations', [])"
                                     :extension-bridge-continuations="$mergePreview->get('extension_bridge_continuations', [])"
@@ -621,14 +620,13 @@
                                     :component-counter="$mergeIndex + 1"
                                     :color="$mergePreview->get('color', 'amber')"
                                     :attach-to="$mergePreview->get('attach_to', 'strang.trunk.path.1.end')"
-                                    :bridge-length="$mergePreview->get('bridge_length', '6rem')"
-                                    :stem-length="$mergePreview->get('stem_length', '5rem')"
+                                    :bridge-length="$mergePreview->get('bridge_length')"
+                                    :stem-length="$mergePreview->get('stem_length')"
                                     :stem-continuation="$mergePreview->get('stem_continuation', [])"
                                     :arc-sizes="$mergePreview->get('arc_sizes', [])"
                                     :start-label="$mergePreview->get('start_label')"
                                     :node-labels="$mergePreview->get('node_labels', [])"
                                     :extension-count="$mergePreview->get('extension_count', 0)"
-                                    extension-bridge-length="30rem"
                                     :extension-stem-lengths="$mergePreview->get('extension_stem_lengths', [])"
                                     :extension-stem-continuations="$mergePreview->get('extension_stem_continuations', [])"
                                     :extension-bridge-continuations="$mergePreview->get('extension_bridge_continuations', [])"
@@ -684,10 +682,10 @@
                                 :component-counter="$branchPreview->get('component_counter', $branchIndex + 1)"
                                 :color="$branchPreview->get('color', 'red')"
                                 :attach-to="$branchPreview->get('attach_to', 'strang.trunk.path.1.end')"
-                                :entry-stem-length="$branchPreview->get('entry_stem_length', '0rem')"
-                                :bridge-length="$branchPreview->get('bridge_length', '12rem')"
+                                :entry-stem-length="$branchPreview->get('entry_stem_length')"
+                                :bridge-length="$branchPreview->get('bridge_length')"
                                 :step="$branchPreview->get('step')"
-                                :stem-length="$branchPreview->get('stem_length', '4rem')"
+                                :stem-length="$branchPreview->get('stem_length')"
                                 :stem-continuation="$branchPreview->get('stem_continuation', [])"
                                 :branch-extension="$branchPreview->get('branch_extension', [])"
                                 :node-labels="$branchPreview->get('node_labels', [])"
@@ -710,10 +708,10 @@
                                 :component-counter="$branchPreview->get('component_counter', $branchIndex + 1)"
                                 :color="$branchPreview->get('color', 'red')"
                                 :attach-to="$branchPreview->get('attach_to', 'strang.trunk.path.1.end')"
-                                :entry-stem-length="$branchPreview->get('entry_stem_length', '0rem')"
-                                :bridge-length="$branchPreview->get('bridge_length', '12rem')"
+                                :entry-stem-length="$branchPreview->get('entry_stem_length')"
+                                :bridge-length="$branchPreview->get('bridge_length')"
                                 :step="$branchPreview->get('step')"
-                                :stem-length="$branchPreview->get('stem_length', '4rem')"
+                                :stem-length="$branchPreview->get('stem_length')"
                                 :stem-continuation="$branchPreview->get('stem_continuation', [])"
                                 :branch-extension="$branchPreview->get('branch_extension', [])"
                                 :node-labels="$branchPreview->get('node_labels', [])"
@@ -913,12 +911,96 @@
 
                             return $collisionTypes;
                         }, []);
+                    $twGraphBranchCollisionBoundId = static function (string $branchId, string $type): string {
+                        if ($branchId === '') {
+                            return '';
+                        }
+
+                        return $type === 'bridge'
+                            ? $branchId . '.main.path.branch.bridge1'
+                            : $branchId . '.label-bounds';
+                    };
+
+                    foreach ($twGraphDataDrivenPreviewBranches as $branchPreview) {
+                        foreach ((array) data_get($branchPreview, 'layout.branchCollisionDebug', []) as $collision) {
+                            $type = (string) data_get($collision, 'type', 'label');
+                            $branchId = $twGraphBranchCollisionBoundId((string) data_get($collision, 'branch', ''), $type);
+                            $againstId = $twGraphBranchCollisionBoundId((string) data_get($collision, 'against', ''), $type);
+
+                            if ($branchId === '' || $againstId === '') {
+                                continue;
+                            }
+
+                            $collisionType = $twGraphDebugCollisionType(
+                                (string) $twGraphDebugLevelById->get($branchId, 'main'),
+                                (string) $twGraphDebugLevelById->get($againstId, 'main'),
+                            );
+
+                            $twGraphDebugCollisionTypeById[$branchId] = $collisionType;
+                            $twGraphDebugCollisionTypeById[$againstId] = $collisionType;
+                        }
+                    }
+
+                    $twGraphDebugCollisionDeltaById = collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkCollisionDebug', []))
+                        ->reduce(function (array $collisionDeltas, array $collision): array {
+                            $trunkId = (string) data_get($collision, 'trunk', '');
+                            $againstId = (string) data_get($collision, 'against', '');
+                            $value = trim('y +' . (string) data_get($collision, 'overlapHeight', '0rem') . ' / x ' . (string) data_get($collision, 'overlapWidth', '0rem'));
+
+                            foreach ([$trunkId, $againstId] as $id) {
+                                if ($id === '') {
+                                    continue;
+                                }
+
+                                $collisionDeltas[$id] = collect([
+                                    ...((array) ($collisionDeltas[$id] ?? [])),
+                                    $value,
+                                ])
+                                    ->unique()
+                                    ->values()
+                                    ->all();
+                            }
+
+                            return $collisionDeltas;
+                        }, []);
+
+                    foreach ($twGraphDataDrivenPreviewBranches as $branchPreview) {
+                        foreach ((array) data_get($branchPreview, 'layout.branchCollisionDebug', []) as $collision) {
+                            $type = (string) data_get($collision, 'type', 'label');
+                            $branchId = $twGraphBranchCollisionBoundId((string) data_get($collision, 'branch', ''), $type);
+                            $againstId = $twGraphBranchCollisionBoundId((string) data_get($collision, 'against', ''), $type);
+                            $side = (string) data_get($collision, 'side', '');
+                            $direction = $side === 'left' ? 'left' : ($side === 'right' ? 'right' : 'x');
+                            $value = $direction . ' +' . (string) data_get($collision, 'requiredIncrement', '0rem');
+
+                            foreach ([$branchId, $againstId] as $id) {
+                                if ($id === '') {
+                                    continue;
+                                }
+
+                                $twGraphDebugCollisionDeltaById[$id] = collect([
+                                    ...((array) ($twGraphDebugCollisionDeltaById[$id] ?? [])),
+                                    $value,
+                                ])
+                                    ->unique()
+                                    ->values()
+                                    ->all();
+                            }
+                        }
+                    }
+
                     $twGraphDebugBoundRows = $twGraphDebugBaseBoundRows
-                        ->map(fn ($debugBoundRow) => [
-                            ...$debugBoundRow,
-                            'collision' => array_key_exists((string) data_get($debugBoundRow, 'id'), $twGraphDebugCollisionTypeById),
-                            'collision_type' => $twGraphDebugCollisionTypeById[(string) data_get($debugBoundRow, 'id')] ?? 'none',
-                        ])
+                        ->map(function ($debugBoundRow) use ($twGraphDebugCollisionTypeById, $twGraphDebugCollisionDeltaById) {
+                            $debugBoundId = (string) data_get($debugBoundRow, 'id');
+
+                            return [
+                                ...$debugBoundRow,
+                                'collision' => array_key_exists($debugBoundId, $twGraphDebugCollisionTypeById),
+                                'collision_type' => $twGraphDebugCollisionTypeById[$debugBoundId] ?? 'none',
+                                'collision_delta' => collect((array) ($twGraphDebugCollisionDeltaById[$debugBoundId] ?? []))->join(' | '),
+                                'applied_correction' => '',
+                            ];
+                        })
                         ->values();
                     $twGraphDebugCollisionBoundRows = $twGraphDebugBoundRows
                         ->where('collision', true)
@@ -965,6 +1047,8 @@
                                     <th class="px-3 py-2 font-medium">{{ __('Dimension') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Collision Type') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Collision') }}</th>
+                                    <th class="px-3 py-2 font-medium">{{ __('Collision Delta') }}</th>
+                                    <th class="px-3 py-2 font-medium">{{ __('Applied Correction') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-zinc-200/70 dark:divide-zinc-700/70">
@@ -1013,12 +1097,18 @@
                                                 {{ data_get($debugBoundRow, 'collision') ? __('yes') : __('no') }}
                                             </flux:badge>
                                         </td>
+                                        <td class="px-3 py-2 align-top font-mono text-zinc-700 dark:text-zinc-200">
+                                            {{ data_get($debugBoundRow, 'collision_delta') }}
+                                        </td>
+                                        <td class="px-3 py-2 align-top font-mono text-zinc-700 dark:text-zinc-200">
+                                            {{ data_get($debugBoundRow, 'applied_correction') }}
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
                                         <td
                                             class="px-3 py-4 text-center text-zinc-500"
-                                            colspan="8"
+                                            colspan="10"
                                         >
                                             {{ __('No debug bound boxes available.') }}
                                         </td>
@@ -1028,7 +1118,7 @@
                                     <tr x-show="twGraphDebugBoundsCollisionOnly">
                                         <td
                                             class="px-3 py-4 text-center text-zinc-500"
-                                            colspan="8"
+                                            colspan="10"
                                         >
                                             {{ __('No collision debug bound boxes available.') }}
                                         </td>
