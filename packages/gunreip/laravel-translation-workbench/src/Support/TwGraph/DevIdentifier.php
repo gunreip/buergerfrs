@@ -14,6 +14,8 @@ final class DevIdentifier
             return 'tw-graph';
         }
 
+        $label = $id;
+
         if (preg_match('/(?:^|\.)strang\.([^.]+)(?:\.(.*))?$/', $id, $matches) === 1) {
             $strang = $matches[1];
             $rawTail = (string) ($matches[2] ?? '');
@@ -28,20 +30,31 @@ final class DevIdentifier
                 $path = self::path($strang, $tail);
 
                 if ($labelElement !== null) {
-                    return $prefix . '.' . $path . '.' . $segment . '.' . $labelElement;
+                    $label = $prefix . '.' . $path . '.' . $segment . '.' . $labelElement;
+
+                    return self::canonical($label);
                 }
 
-                return $prefix . '.' . $path . '.' . $segment . self::anchor($tail);
+                $label = $prefix . '.' . $path . '.' . $segment . self::anchor($tail);
+
+                return self::canonical($label);
             }
 
             if (str_starts_with($tail, 'extension.') || str_starts_with($tail, 'branch-return.')) {
-                return $prefix . '.' . self::path($strang, $tail);
+                $label = $prefix . '.' . self::path($strang, $tail);
+
+                return self::canonical($label);
             }
 
-            return $prefix . '.' . self::element($tail);
+            $label = $prefix . '.' . self::element($tail);
         }
 
-        return $id;
+        return self::canonical($label);
+    }
+
+    private static function canonical(string $label): string
+    {
+        return ElementIdentifier::normalize($label);
     }
 
     private static function strangCounter(string $tail): ?int
@@ -78,6 +91,10 @@ final class DevIdentifier
     {
         if (str_starts_with($tail, 'extension.')) {
             return 'extension' . self::extensionNumber(substr($tail, strlen('extension.')));
+        }
+
+        if (preg_match('/^extension(\d+)(?:\.|$)/', $tail, $matches) === 1) {
+            return 'extension' . max(1, (int) $matches[1]);
         }
 
         if (str_starts_with($tail, 'branch-return.')) {
@@ -177,7 +194,15 @@ final class DevIdentifier
             return 'stem' . max(1, (int) $matches[1]);
         }
 
+        if (preg_match('/(?:^|\.)start-stem(?:\.|$)/', $tail) === 1) {
+            return 'start.stem';
+        }
+
         if (preg_match('/(?:^|\.)path\.(\d+)(?:\.|$)/', $tail, $matches) === 1) {
+            return 'path' . max(1, (int) $matches[1]);
+        }
+
+        if (preg_match('/(?:^|\.)path(\d+)(?:\.|$)/', $tail, $matches) === 1) {
             return 'path' . max(1, (int) $matches[1]);
         }
 
@@ -206,11 +231,11 @@ final class DevIdentifier
             return 'path.branch-return';
         }
 
-        if (str_contains($tail, 'paths.trunk')) {
+        if (str_contains($tail, 'paths.trunk') || str_contains($tail, 'path.trunk')) {
             return 'path.trunk';
         }
 
-        if (str_contains($strang, 'merge') && str_starts_with($tail, 'extension.')) {
+        if (str_contains($strang, 'merge') && (str_starts_with($tail, 'extension.') || preg_match('/^extension\d+(?:\.|$)/', $tail) === 1)) {
             return 'path.merge-extension';
         }
 

@@ -13,8 +13,8 @@
     'graphId' => null,
     'dev' => false,
     'defaultColor' => null,
-    'lineLength' => '4rem',
-    'arcSize' => '2.75rem',
+    'lineLength' => null,
+    'arcSize' => null,
     'bridgeLength' => null,
     'stemLength' => null,
 ])
@@ -43,12 +43,12 @@
     $id = filled($id) ? (string) $id : $resolvedGraphId . '.strang.rekey-target-right.' . $resolvedComponentCounter;
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'sky');
     $resolvedDev = $devMode ?? $dev;
-    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
-    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($arcSize ?? null, '2.75rem');
-    $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, $bridgeLength ?? null, $resolvedLineLength);
-    $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, $stemLength ?? null, $resolvedLineLength);
+    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
+    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
+    $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $resolvedLineLength));
+    $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', $resolvedLineLength));
     $resolvedEndLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($endLength, $resolvedLineLength, '4rem');
-    $resolvedCapLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($capLength, $capLength ?? null, '1.75rem');
+    $resolvedCapLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor($capLength, null, 'cap_length', '1.75rem');
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $stemContinuationEntries = is_array($stemContinuation) ? $stemContinuation : [];
     $stemTotal = '0rem';
@@ -106,7 +106,7 @@
     <span
         class="tw-graph-protocol-dev-only absolute z-50"
         style="left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($anchorStart, 'x', '0rem') }}); bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($anchorStart, 'y', '0rem') }});"
-        title="{{ $id }} | missing attach-to: {{ $attachTo }}"
+        title="{{ \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id) }} | missing attach-to: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize($attachTo) }}"
     >
         <flux:badge color="red">{{ __('Missing anchor') }}: {{ $attachTo }}</flux:badge>
     </span>

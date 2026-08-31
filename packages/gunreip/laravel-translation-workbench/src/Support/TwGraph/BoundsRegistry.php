@@ -7,7 +7,7 @@ namespace Gunreip\TranslationWorkbench\Support\TwGraph;
 final class BoundsRegistry
 {
     /**
-     * @var array<string, array<string, array{id: string, side: string, x: string, y: string, width: string, height: string}>>
+     * @var array<string, array<string, array{id: string, renderId: string, side: string, x: string, y: string, width: string, height: string}>>
      */
     private static array $bounds = [];
 
@@ -25,9 +25,12 @@ final class BoundsRegistry
         string $height,
         ?string $side = null,
     ): void {
+        $canonicalId = ElementIdentifier::normalize($id);
+
         self::$bounds[$graphId][$id] = [
-            'id' => $id,
-            'side' => $side ?: self::inferSide($id),
+            'id' => $canonicalId,
+            'renderId' => $id,
+            'side' => $side ?: self::inferSide($canonicalId),
             'x' => $x,
             'y' => $y,
             'width' => $width,
@@ -151,8 +154,8 @@ final class BoundsRegistry
     }
 
     /**
-     * @param  array<int, array{id: string, side: string, x: string, y: string, width: string, height: string}>  $items
-     * @return array{count: int, top: string, topRem: float|null, height: string, heightRem: float|null, winner: string|null, items: array<int, array{id: string, side: string, x: string, y: string, width: string, height: string}>}
+     * @param  array<int, array{id: string, renderId: string, side: string, x: string, y: string, width: string, height: string}>  $items
+     * @return array{count: int, top: string, topRem: float|null, height: string, heightRem: float|null, winner: string|null, items: array<int, array{id: string, renderId: string, side: string, x: string, y: string, width: string, height: string}>}
      */
     private static function sideSummary(array $items): array
     {

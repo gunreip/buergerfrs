@@ -25,13 +25,31 @@
 ])
 
 @aware([
-    'connectorLength' => '2rem',
-    'connectorGap' => '0.25rem',
+    'connectorLength' => null,
+    'connectorGap' => null,
 ])
 
 @php
-    $connectorLength = data_get($label, 'connectorLength', $connectorLength ?? '2rem');
-    $connectorGap = data_get($label, 'connectorGap', $connectorGap ?? '0.25rem');
+    $connectorLength = data_get(
+        $label,
+        'connectorLength',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor(
+            $connectorLength ?? null,
+            null,
+            'connector_length',
+            '2rem',
+        ),
+    );
+    $connectorGap = data_get(
+        $label,
+        'connectorGap',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor(
+            $connectorGap ?? null,
+            null,
+            'connector_gap',
+            '0.25rem',
+        ),
+    );
     $labelOffset = 'calc(var(--tw-graph-protocol-node-half) + ' . $connectorLength . ' + ' . $connectorGap . ')';
     $labelColor = data_get($label, 'color', $color);
     $badgeColor = data_get($label, 'badgeColor', $labelColor);

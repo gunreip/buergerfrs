@@ -20,23 +20,34 @@
     'coordinates' => false,
     'color' => null,
     'defaultColor' => null,
-    'lineLength' => '4rem',
-    'lineWidth' => '0.25rem',
-    'nodeSize' => '0.95rem',
-    'arcSize' => '2.75rem',
-    'capLength' => '1.75rem',
+    'lineLength' => null,
+    'lineWidth' => null,
+    'nodeSize' => null,
+    'arcSize' => null,
+    'capLength' => null,
     'bridgeLength' => null,
     'stemLength' => null,
-    'connectorLength' => '2rem',
-    'connectorGap' => '0.25rem',
-    'slotMinHeight' => '52rem',
-    'horizontalPadding' => '12rem',
+    'connectorLength' => null,
+    'connectorGap' => null,
+    'slotMinHeight' => null,
+    'horizontalPadding' => null,
     'minWidth' => null,
     'minHeight' => null,
 ])
 
 @php
     $showCoordinates = filter_var($coordinates, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? (bool) $coordinates;
+    $lineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($lineLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('line_length', '4rem'));
+    $lineWidth = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($lineWidth, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('line_width', '0.25rem'));
+    $nodeSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($nodeSize, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('node_size', '0.95rem'));
+    $arcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($arcSize, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('arc_size', '2.75rem'));
+    $capLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($capLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('cap_length', '1.75rem'));
+    $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $lineLength));
+    $stemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', $lineLength));
+    $connectorLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($connectorLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('connector_length', '2rem'));
+    $connectorGap = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($connectorGap, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('connector_gap', '0.25rem'));
+    $slotMinHeight = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($slotMinHeight, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('slot_min_height', '52rem'));
+    $horizontalPadding = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($horizontalPadding, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('horizontal_padding', '12rem'));
     $context = \Gunreip\TranslationWorkbench\Support\TwGraph\RenderContext::make(
         (array) $protocol,
         $graphId,

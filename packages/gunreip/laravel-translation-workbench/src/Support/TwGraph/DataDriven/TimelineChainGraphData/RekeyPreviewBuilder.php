@@ -177,8 +177,6 @@ final class RekeyPreviewBuilder
             ? [
                 1 => [
                     'compressed' => true,
-                    'beforeLength' => '0.75rem',
-                    'gapLength' => '1rem',
                 ],
             ]
             : [];
@@ -187,8 +185,6 @@ final class RekeyPreviewBuilder
             : [
                 1 => [
                     'compressed' => true,
-                    'beforeLength' => '0.75rem',
-                    'gapLength' => '1rem',
                     $outerLabelSide => $literalLabel,
                     $innerLabelSide => $firstSeenLabel,
                 ],
@@ -211,8 +207,6 @@ final class RekeyPreviewBuilder
             'color' => 'sky',
             'attach_to' => $isSource ? 'strang.trunk.path.1.end' : 'strang.trunk.path.7.end',
             'stem_continuation' => $isSource ? $sourceStemContinuation : $targetStemContinuation,
-            'end_length' => $isSource ? null : '4rem',
-            'cap_length' => $isSource ? null : '1.75rem',
             'end_label' => $isSource
                 ? null
                 : [

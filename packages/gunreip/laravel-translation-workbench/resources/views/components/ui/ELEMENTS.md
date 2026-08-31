@@ -3,6 +3,11 @@
 Concrete DEV tooltip/copy identifiers for the current authoring sandbox graph.
 This file is a snapshot of real rendered identifiers, not a pattern catalogue.
 
+The identifiers below are the current render/component identifiers. New debug,
+collision and correction targets should move toward the shorter element-id
+scheme documented in
+`packages/gunreip/laravel-translation-workbench/docs/tw-praph-concept.md`.
+
 Graph ID: `tw-graph-authoring-sandbox`
 
 ## Active Identifiers

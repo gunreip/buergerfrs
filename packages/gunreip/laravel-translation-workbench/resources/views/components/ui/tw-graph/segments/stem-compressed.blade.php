@@ -42,7 +42,7 @@
             'beforeLength' => '2.5rem',
             'gapLength' => '0.5rem',
             'afterLength' => '1.5rem',
-            'capLength' => '1.75rem',
+            'capLength' => null,
             'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
             'nodeStart' => false,
             'nodeEnd' => true,

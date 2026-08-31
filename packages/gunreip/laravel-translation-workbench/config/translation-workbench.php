@@ -107,6 +107,17 @@ return [
         ],
     ],
 
+    'tw_graph' => [
+        /*
+         * Graph-specific layout corrections are deliberate, visually reviewed
+         * overrides. Collision detection may report a Collision Delta, but only
+         * explicitly listed entries become Applied Correction values. Keep this
+         * empty while auditing raw/default graph collisions; do not migrate old
+         * hand-tuned length or width values into this list.
+         */
+        'layout_corrections' => [],
+    ],
+
     'ui_state' => [
         'setting_key' => 'ui.pages.translation_workbench.entries',
         'defaults_file' => 'packages/gunreip/laravel-translation-workbench/resources/ui-state/entries-defaults.json',

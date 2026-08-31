@@ -340,43 +340,6 @@
                             {{ number_format((int) $twGraphDataDrivenPreviewLimits->get('available_branch_candidates', 0)) }}
                             {{ __('branch findings') }}
                         </flux:badge>
-                        @php
-                            $twGraphBranchCollisionDebug = $twGraphDataDrivenPreviewBranches
-                                ->flatMap(fn ($branch) => (array) data_get($branch, 'layout.branchCollisionDebug', []))
-                                ->values();
-                            $twGraphBranchCollisionLeft = $twGraphBranchCollisionDebug
-                                ->filter(fn ($debug) => data_get($debug, 'side') === 'left')
-                                ->values();
-                            $twGraphBranchCollisionRight = $twGraphBranchCollisionDebug
-                                ->filter(fn ($debug) => data_get($debug, 'side') === 'right')
-                                ->values();
-                            $twGraphTrunkCollisionDebug = collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkCollisionDebug', []))
-                                ->values();
-                        @endphp
-                        <flux:badge
-                            size="sm"
-                            color="{{ $twGraphBranchCollisionLeft->isNotEmpty() ? 'lime' : 'zinc' }}"
-                            title="{{ $twGraphBranchCollisionLeft->map(fn ($debug) => data_get($debug, 'type') . ': ' . data_get($debug, 'branch') . ' -> ' . data_get($debug, 'against') . ' +' . data_get($debug, 'requiredIncrement'))->join(' | ') ?: __('no left branch collision detected') }}"
-                        >
-                            {{ __('branch collision L') }}:
-                            {{ $twGraphBranchCollisionLeft->count() }}
-                        </flux:badge>
-                        <flux:badge
-                            size="sm"
-                            color="{{ $twGraphBranchCollisionRight->isNotEmpty() ? 'lime' : 'zinc' }}"
-                            title="{{ $twGraphBranchCollisionRight->map(fn ($debug) => data_get($debug, 'type') . ': ' . data_get($debug, 'branch') . ' -> ' . data_get($debug, 'against') . ' +' . data_get($debug, 'requiredIncrement'))->join(' | ') ?: __('no right branch collision detected') }}"
-                        >
-                            {{ __('branch collision R') }}:
-                            {{ $twGraphBranchCollisionRight->count() }}
-                        </flux:badge>
-                        <flux:badge
-                            size="sm"
-                            color="{{ $twGraphTrunkCollisionDebug->isNotEmpty() ? 'red' : 'zinc' }}"
-                            title="{{ $twGraphTrunkCollisionDebug->map(fn ($debug) => data_get($debug, 'trunk') . ' -> ' . data_get($debug, 'against') . ' ' . data_get($debug, 'overlapWidth') . ' x ' . data_get($debug, 'overlapHeight'))->join(' | ') ?: __('no trunk collision detected') }}"
-                        >
-                            {{ __('trunk collision') }}:
-                            {{ $twGraphTrunkCollisionDebug->count() }}
-                        </flux:badge>
                         <flux:badge
                             size="sm"
                             color="{{ (int) $twGraphDataDrivenPreviewLimits->get('rendered_rekey_strangs', 0) > 0 ? 'sky' : 'zinc' }}"
@@ -387,9 +350,9 @@
                             {{ __('rekey') }}
                         </flux:badge>
                         <flux:badge
+                            title="trunk label padding {{ data_get($twGraphDataDrivenPreviewGraph->get('horizontal_padding_debug', []), 'trunk_label_level', 'default') }} | left strangs: {{ data_get($twGraphDataDrivenPreviewGraph->get('horizontal_padding_debug', []), 'has_left_strangs') ? 'yes' : 'no' }} | padding: {{ data_get($twGraphDataDrivenPreviewGraph->get('horizontal_padding_debug', []), 'horizontal_padding', '12rem') }}"
                             size="sm"
                             color="{{ in_array(data_get($twGraphDataDrivenPreviewGraph->get('horizontal_padding_debug', []), 'trunk_label_level'), ['halfLong', 'long'], true) ? 'lime' : 'zinc' }}"
-                            title="trunk label padding {{ data_get($twGraphDataDrivenPreviewGraph->get('horizontal_padding_debug', []), 'trunk_label_level', 'default') }} | left strangs: {{ data_get($twGraphDataDrivenPreviewGraph->get('horizontal_padding_debug', []), 'has_left_strangs') ? 'yes' : 'no' }} | padding: {{ data_get($twGraphDataDrivenPreviewGraph->get('horizontal_padding_debug', []), 'horizontal_padding', '12rem') }}"
                         >
                             {{ __('trunk label padding') }}:
                             {{ data_get($twGraphDataDrivenPreviewGraph->get('horizontal_padding_debug', []), 'trunk_label_level', 'default') }}
@@ -453,12 +416,21 @@
                     :dev="true"
                     :coordinates="false"
                     :color="$twGraphDataDrivenPreviewGraph->get('color', 'cyan')"
-                    :line-length="$twGraphDataDrivenPreviewGraph->get('line_length', '3.5rem')"
+                    :line-length="$twGraphDataDrivenPreviewGraph->get('line_length', '4rem')"
+                    :line-width="$twGraphDataDrivenPreviewGraph->get('line_width', '0.25rem')"
+                    :node-size="$twGraphDataDrivenPreviewGraph->get('node_size', '0.95rem')"
+                    :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size', '2.75rem')"
+                    :cap-length="$twGraphDataDrivenPreviewGraph->get('cap_length', '1.75rem')"
+                    :bridge-length="$twGraphDataDrivenPreviewGraph->get('bridge_length', '4rem')"
+                    :stem-length="$twGraphDataDrivenPreviewGraph->get('stem_length', '4rem')"
+                    :connector-length="$twGraphDataDrivenPreviewGraph->get('connector_length', '2rem')"
+                    :connector-gap="$twGraphDataDrivenPreviewGraph->get('connector_gap', '0.25rem')"
                     :slot-min-height="$twGraphDataDrivenPreviewGraph->get('slot_min_height', '34rem')"
                     :horizontal-padding="$twGraphDataDrivenPreviewGraph->get('horizontal_padding', '12rem')"
                 >
                     <x-translation-workbench::ui.tw-graph.strang.trunk
                         :color="$twGraphDataDrivenPreviewTrunk->get('color', 'green')"
+                        :stem-length="$twGraphDataDrivenPreviewGraph->get('stem_length')"
                         :path-count="$twGraphDataDrivenPreviewTrunk->get('path_count', 4)"
                         :path-lengths="$twGraphDataDrivenPreviewTrunk->get('path_lengths', [])"
                         :end-length="$twGraphDataDrivenPreviewTrunk->get('end_length')"
@@ -470,13 +442,20 @@
 
                     @foreach (collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkBoundsDebug', [])) as $trunkBoundsDebug)
                         @php
-                            $trunkBoundsDebugTooltip = 'Trunk bounds'
-                                . ' | ' . data_get($trunkBoundsDebug, 'type')
-                                . ': ' . data_get($trunkBoundsDebug, 'id')
-                                . ' | x=' . data_get($trunkBoundsDebug, 'x', '0rem')
-                                . ' y=' . data_get($trunkBoundsDebug, 'y', '0rem')
-                                . ' width=' . data_get($trunkBoundsDebug, 'width', '0rem')
-                                . ' height=' . data_get($trunkBoundsDebug, 'height', '0rem');
+                            $trunkBoundsDebugTooltip =
+                                'Trunk bounds' .
+                                ' | ' .
+                                data_get($trunkBoundsDebug, 'type') .
+                                ': ' .
+                                data_get($trunkBoundsDebug, 'id') .
+                                ' | x=' .
+                                data_get($trunkBoundsDebug, 'x', '0rem') .
+                                ' y=' .
+                                data_get($trunkBoundsDebug, 'y', '0rem') .
+                                ' width=' .
+                                data_get($trunkBoundsDebug, 'width', '0rem') .
+                                ' height=' .
+                                data_get($trunkBoundsDebug, 'height', '0rem');
                         @endphp
 
                         <span
@@ -505,8 +484,11 @@
                                 :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
                                 :color="$rekeyPreview->get('color', 'sky')"
                                 :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.1.end')"
-                                :bridge-length="$rekeyPreview->get('bridge_length')"
-                                :stem-length="$rekeyPreview->get('stem_length')"
+                                :bridge-length="$rekeyPreview->get('bridge_length') ??
+                                    $twGraphDataDrivenPreviewGraph->get('bridge_length')"
+                                :stem-length="$rekeyPreview->get('stem_length') ??
+                                    $twGraphDataDrivenPreviewGraph->get('stem_length')"
+                                :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
                                 :start-label="$rekeyPreview->get('start_label')"
                                 :node-labels="$rekeyPreview->get('node_labels', [])"
@@ -517,8 +499,11 @@
                                 :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
                                 :color="$rekeyPreview->get('color', 'sky')"
                                 :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.1.end')"
-                                :bridge-length="$rekeyPreview->get('bridge_length')"
-                                :stem-length="$rekeyPreview->get('stem_length')"
+                                :bridge-length="$rekeyPreview->get('bridge_length') ??
+                                    $twGraphDataDrivenPreviewGraph->get('bridge_length')"
+                                :stem-length="$rekeyPreview->get('stem_length') ??
+                                    $twGraphDataDrivenPreviewGraph->get('stem_length')"
+                                :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
                                 :start-label="$rekeyPreview->get('start_label')"
                                 :node-labels="$rekeyPreview->get('node_labels', [])"
@@ -529,8 +514,11 @@
                                 :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
                                 :color="$rekeyPreview->get('color', 'sky')"
                                 :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.3.end')"
-                                :bridge-length="$rekeyPreview->get('bridge_length')"
-                                :stem-length="$rekeyPreview->get('stem_length')"
+                                :bridge-length="$rekeyPreview->get('bridge_length') ??
+                                    $twGraphDataDrivenPreviewGraph->get('bridge_length')"
+                                :stem-length="$rekeyPreview->get('stem_length') ??
+                                    $twGraphDataDrivenPreviewGraph->get('stem_length')"
+                                :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
                                 :end-length="$rekeyPreview->get('end_length')"
                                 :cap-length="$rekeyPreview->get('cap_length')"
@@ -543,8 +531,11 @@
                                 :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
                                 :color="$rekeyPreview->get('color', 'sky')"
                                 :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.3.end')"
-                                :bridge-length="$rekeyPreview->get('bridge_length')"
-                                :stem-length="$rekeyPreview->get('stem_length')"
+                                :bridge-length="$rekeyPreview->get('bridge_length') ??
+                                    $twGraphDataDrivenPreviewGraph->get('bridge_length')"
+                                :stem-length="$rekeyPreview->get('stem_length') ??
+                                    $twGraphDataDrivenPreviewGraph->get('stem_length')"
+                                :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
                                 :end-length="$rekeyPreview->get('end_length')"
                                 :cap-length="$rekeyPreview->get('cap_length')"
@@ -554,38 +545,47 @@
                             />
                         @endif
 
-                            @foreach (collect(data_get($rekeyPreview, 'layout.rekeyBoundsDebug', [])) as $rekeyBoundsDebug)
-                                @php
-                                    $rekeyBoundsDebugType = (string) data_get($rekeyBoundsDebug, 'type', '');
-                                    $rekeyBoundsDebugIsSubBox = str_ends_with($rekeyBoundsDebugType, '-start')
-                                        || str_ends_with($rekeyBoundsDebugType, '-labels')
-                                        || str_ends_with($rekeyBoundsDebugType, '-tail')
-                                        || $rekeyBoundsDebugType === 'rekey-target-body'
-                                        || $rekeyBoundsDebugType === 'rekey-target-end';
-                                    $rekeyBoundsDebugTooltip = 'Rekey bounds'
-                                        . ' | ' . data_get($rekeyBoundsDebug, 'side', 'n/a')
-                                        . ' | ' . $rekeyBoundsDebugType
-                                        . ': ' . data_get($rekeyBoundsDebug, 'id')
-                                        . ' | x=' . data_get($rekeyBoundsDebug, 'x', '0rem')
-                                        . ' y=' . data_get($rekeyBoundsDebug, 'y', '0rem')
-                                    . ' width=' . data_get($rekeyBoundsDebug, 'width', '0rem')
-                                    . ' height=' . data_get($rekeyBoundsDebug, 'height', '0rem');
+                        @foreach (collect(data_get($rekeyPreview, 'layout.rekeyBoundsDebug', [])) as $rekeyBoundsDebug)
+                            @php
+                                $rekeyBoundsDebugType = (string) data_get($rekeyBoundsDebug, 'type', '');
+                                $rekeyBoundsDebugIsSubBox =
+                                    str_ends_with($rekeyBoundsDebugType, '-start') ||
+                                    str_ends_with($rekeyBoundsDebugType, '-labels') ||
+                                    str_ends_with($rekeyBoundsDebugType, '-tail') ||
+                                    $rekeyBoundsDebugType === 'rekey-target-body' ||
+                                    $rekeyBoundsDebugType === 'rekey-target-end';
+                                $rekeyBoundsDebugTooltip =
+                                    'Rekey bounds' .
+                                    ' | ' .
+                                    data_get($rekeyBoundsDebug, 'side', 'n/a') .
+                                    ' | ' .
+                                    $rekeyBoundsDebugType .
+                                    ': ' .
+                                    data_get($rekeyBoundsDebug, 'id') .
+                                    ' | x=' .
+                                    data_get($rekeyBoundsDebug, 'x', '0rem') .
+                                    ' y=' .
+                                    data_get($rekeyBoundsDebug, 'y', '0rem') .
+                                    ' width=' .
+                                    data_get($rekeyBoundsDebug, 'width', '0rem') .
+                                    ' height=' .
+                                    data_get($rekeyBoundsDebug, 'height', '0rem');
                             @endphp
 
-                                <span
-                                    @class([
-                                        'tw-graph-protocol-dev-only absolute cursor-copy rounded-sm border border-dashed',
-                                        'z-[2] border-lime-400/80 bg-lime-300/5' => $rekeyBoundsDebugIsSubBox,
-                                        'z-[1] border-sky-400/75 bg-sky-300/5' => ! $rekeyBoundsDebugIsSubBox,
-                                    ])
-                                    data-tw-graph-path="{{ $rekeyBoundsDebugTooltip }}"
-                                    title="{{ $rekeyBoundsDebugTooltip }}"
-                                    style="
+                            <span
+                                data-tw-graph-path="{{ $rekeyBoundsDebugTooltip }}"
+                                title="{{ $rekeyBoundsDebugTooltip }}"
+                                style="
                                     left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($rekeyBoundsDebug, 'x', '0rem') }});
                                     bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($rekeyBoundsDebug, 'y', '0rem') }});
                                     width: {{ data_get($rekeyBoundsDebug, 'width', '0rem') }};
                                     height: {{ data_get($rekeyBoundsDebug, 'height', '0rem') }};
                                 "
+                                @class([
+                                    'tw-graph-protocol-dev-only absolute cursor-copy rounded-sm border border-dashed',
+                                    'z-[2] border-lime-400/80 bg-lime-300/5' => $rekeyBoundsDebugIsSubBox,
+                                    'z-[1] border-sky-400/75 bg-sky-300/5' => !$rekeyBoundsDebugIsSubBox,
+                                ])
                                 x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
                             ></span>
                         @endforeach
@@ -602,8 +602,11 @@
                                     :component-counter="$mergeIndex + 1"
                                     :color="$mergePreview->get('color', 'amber')"
                                     :attach-to="$mergePreview->get('attach_to', 'strang.trunk.path.1.end')"
-                                    :bridge-length="$mergePreview->get('bridge_length')"
-                                    :stem-length="$mergePreview->get('stem_length')"
+                                    :bridge-length="$mergePreview->get('bridge_length') ??
+                                        $twGraphDataDrivenPreviewGraph->get('bridge_length')"
+                                    :stem-length="$mergePreview->get('stem_length') ??
+                                        $twGraphDataDrivenPreviewGraph->get('stem_length')"
+                                    :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
                                     :stem-continuation="$mergePreview->get('stem_continuation', [])"
                                     :arc-sizes="$mergePreview->get('arc_sizes', [])"
                                     :start-label="$mergePreview->get('start_label')"
@@ -620,8 +623,11 @@
                                     :component-counter="$mergeIndex + 1"
                                     :color="$mergePreview->get('color', 'amber')"
                                     :attach-to="$mergePreview->get('attach_to', 'strang.trunk.path.1.end')"
-                                    :bridge-length="$mergePreview->get('bridge_length')"
-                                    :stem-length="$mergePreview->get('stem_length')"
+                                    :bridge-length="$mergePreview->get('bridge_length') ??
+                                        $twGraphDataDrivenPreviewGraph->get('bridge_length')"
+                                    :stem-length="$mergePreview->get('stem_length') ??
+                                        $twGraphDataDrivenPreviewGraph->get('stem_length')"
+                                    :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
                                     :stem-continuation="$mergePreview->get('stem_continuation', [])"
                                     :arc-sizes="$mergePreview->get('arc_sizes', [])"
                                     :start-label="$mergePreview->get('start_label')"
@@ -638,25 +644,29 @@
                             @foreach (collect(data_get($mergePreview, 'layout.mergeBoundsDebug', [])) as $mergeBoundsDebug)
                                 @php
                                     $mergeBoundsDebugType = (string) data_get($mergeBoundsDebug, 'type', '');
-                                    $mergeBoundsDebugIsSubBox = str_ends_with($mergeBoundsDebugType, '-start')
-                                        || str_ends_with($mergeBoundsDebugType, '-labels')
-                                        || str_ends_with($mergeBoundsDebugType, '-tail');
-                                    $mergeBoundsDebugTooltip = 'Merge bounds'
-                                        . ' | ' . data_get($mergeBoundsDebug, 'side', 'n/a')
-                                        . ' | ' . $mergeBoundsDebugType
-                                        . ': ' . data_get($mergeBoundsDebug, 'id')
-                                        . ' | x=' . data_get($mergeBoundsDebug, 'x', '0rem')
-                                        . ' y=' . data_get($mergeBoundsDebug, 'y', '0rem')
-                                        . ' width=' . data_get($mergeBoundsDebug, 'width', '0rem')
-                                        . ' height=' . data_get($mergeBoundsDebug, 'height', '0rem');
+                                    $mergeBoundsDebugIsSubBox =
+                                        str_ends_with($mergeBoundsDebugType, '-start') ||
+                                        str_ends_with($mergeBoundsDebugType, '-labels') ||
+                                        str_ends_with($mergeBoundsDebugType, '-tail');
+                                    $mergeBoundsDebugTooltip =
+                                        'Merge bounds' .
+                                        ' | ' .
+                                        data_get($mergeBoundsDebug, 'side', 'n/a') .
+                                        ' | ' .
+                                        $mergeBoundsDebugType .
+                                        ': ' .
+                                        data_get($mergeBoundsDebug, 'id') .
+                                        ' | x=' .
+                                        data_get($mergeBoundsDebug, 'x', '0rem') .
+                                        ' y=' .
+                                        data_get($mergeBoundsDebug, 'y', '0rem') .
+                                        ' width=' .
+                                        data_get($mergeBoundsDebug, 'width', '0rem') .
+                                        ' height=' .
+                                        data_get($mergeBoundsDebug, 'height', '0rem');
                                 @endphp
 
                                 <span
-                                    @class([
-                                        'tw-graph-protocol-dev-only absolute cursor-copy rounded-sm border border-dashed',
-                                        'z-[2] border-lime-400/80 bg-lime-300/5' => $mergeBoundsDebugIsSubBox,
-                                        'z-[1] border-amber-400/75 bg-amber-300/5' => ! $mergeBoundsDebugIsSubBox,
-                                    ])
                                     data-tw-graph-path="{{ $mergeBoundsDebugTooltip }}"
                                     title="{{ $mergeBoundsDebugTooltip }}"
                                     style="
@@ -665,6 +675,11 @@
                                         width: {{ data_get($mergeBoundsDebug, 'width', '0rem') }};
                                         height: {{ data_get($mergeBoundsDebug, 'height', '0rem') }};
                                     "
+                                    @class([
+                                        'tw-graph-protocol-dev-only absolute cursor-copy rounded-sm border border-dashed',
+                                        'z-[2] border-lime-400/80 bg-lime-300/5' => $mergeBoundsDebugIsSubBox,
+                                        'z-[1] border-amber-400/75 bg-amber-300/5' => !$mergeBoundsDebugIsSubBox,
+                                    ])
                                     x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
                                 ></span>
                             @endforeach
@@ -683,9 +698,12 @@
                                 :color="$branchPreview->get('color', 'red')"
                                 :attach-to="$branchPreview->get('attach_to', 'strang.trunk.path.1.end')"
                                 :entry-stem-length="$branchPreview->get('entry_stem_length')"
-                                :bridge-length="$branchPreview->get('bridge_length')"
+                                :bridge-length="$branchPreview->get('bridge_length') ??
+                                    $twGraphDataDrivenPreviewGraph->get('bridge_length')"
                                 :step="$branchPreview->get('step')"
-                                :stem-length="$branchPreview->get('stem_length')"
+                                :stem-length="$branchPreview->get('stem_length') ??
+                                    $twGraphDataDrivenPreviewGraph->get('stem_length')"
+                                :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
                                 :stem-continuation="$branchPreview->get('stem_continuation', [])"
                                 :branch-extension="$branchPreview->get('branch_extension', [])"
                                 :node-labels="$branchPreview->get('node_labels', [])"
@@ -696,8 +714,8 @@
                                 :component-counter="$branchPreview->get('component_counter', $branchIndex + 1)"
                                 :color="$branchPreview->get('color', 'red')"
                                 attach-to="strang.branch-right.end"
-                                :length="$branchPreview->get('end_length', '2rem')"
-                                :cap-length="$branchPreview->get('end_cap_length', '2rem')"
+                                :length="$branchPreview->get('end_length')"
+                                :cap-length="$branchPreview->get('end_cap_length')"
                                 :end-label="$branchPreview->get('end_label')"
                                 :counter-start="$branchPreview->get('end_counter_start')"
                                 :z-index="5 - ($branchIndex % 4)"
@@ -709,9 +727,12 @@
                                 :color="$branchPreview->get('color', 'red')"
                                 :attach-to="$branchPreview->get('attach_to', 'strang.trunk.path.1.end')"
                                 :entry-stem-length="$branchPreview->get('entry_stem_length')"
-                                :bridge-length="$branchPreview->get('bridge_length')"
+                                :bridge-length="$branchPreview->get('bridge_length') ??
+                                    $twGraphDataDrivenPreviewGraph->get('bridge_length')"
                                 :step="$branchPreview->get('step')"
-                                :stem-length="$branchPreview->get('stem_length')"
+                                :stem-length="$branchPreview->get('stem_length') ??
+                                    $twGraphDataDrivenPreviewGraph->get('stem_length')"
+                                :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
                                 :stem-continuation="$branchPreview->get('stem_continuation', [])"
                                 :branch-extension="$branchPreview->get('branch_extension', [])"
                                 :node-labels="$branchPreview->get('node_labels', [])"
@@ -722,8 +743,8 @@
                                 :component-counter="$branchPreview->get('component_counter', $branchIndex + 1)"
                                 :color="$branchPreview->get('color', 'red')"
                                 attach-to="strang.branch-left.end"
-                                :length="$branchPreview->get('end_length', '2rem')"
-                                :cap-length="$branchPreview->get('end_cap_length', '2rem')"
+                                :length="$branchPreview->get('end_length')"
+                                :cap-length="$branchPreview->get('end_cap_length')"
                                 :end-label="$branchPreview->get('end_label')"
                                 :counter-start="$branchPreview->get('end_counter_start')"
                                 :z-index="5 - ($branchIndex % 4)"
@@ -732,13 +753,20 @@
 
                         @foreach (collect(data_get($branchPreview, 'layout.branchBoundsDebug', [])) as $branchBoundsDebug)
                             @php
-                                $branchBoundsDebugTooltip = 'Branch bounds'
-                                    . ' | ' . data_get($branchBoundsDebug, 'type')
-                                    . ': ' . data_get($branchBoundsDebug, 'id')
-                                    . ' | x=' . data_get($branchBoundsDebug, 'x', '0rem')
-                                    . ' y=' . data_get($branchBoundsDebug, 'y', '0rem')
-                                    . ' width=' . data_get($branchBoundsDebug, 'width', '0rem')
-                                    . ' height=' . data_get($branchBoundsDebug, 'height', '0rem');
+                                $branchBoundsDebugTooltip =
+                                    'Branch bounds' .
+                                    ' | ' .
+                                    data_get($branchBoundsDebug, 'type') .
+                                    ': ' .
+                                    data_get($branchBoundsDebug, 'id') .
+                                    ' | x=' .
+                                    data_get($branchBoundsDebug, 'x', '0rem') .
+                                    ' y=' .
+                                    data_get($branchBoundsDebug, 'y', '0rem') .
+                                    ' width=' .
+                                    data_get($branchBoundsDebug, 'width', '0rem') .
+                                    ' height=' .
+                                    data_get($branchBoundsDebug, 'height', '0rem');
                             @endphp
 
                             <span
@@ -754,178 +782,138 @@
                                 x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
                             ></span>
                         @endforeach
-
-                        @foreach (collect(data_get($branchPreview, 'layout.warnings', [])) as $layoutWarning)
-                            @foreach ((array) data_get($layoutWarning, 'boxes', []) as $collisionBox)
-                                @php
-                                    $collisionBoxTooltip = data_get($layoutWarning, 'message')
-                                        . ' | ' . data_get($collisionBox, 'type') . ': ' . data_get($collisionBox, 'id')
-                                        . ' | x=' . data_get($collisionBox, 'x', '0rem')
-                                        . ' y=' . data_get($collisionBox, 'y', '0rem')
-                                        . ' width=' . data_get($collisionBox, 'width', '0rem')
-                                        . ' height=' . data_get($collisionBox, 'height', '0rem');
-                                @endphp
-
-                                <span
-                                    class="tw-graph-protocol-dev-only absolute z-[1] cursor-copy rounded-sm border border-dashed border-lime-400/80 bg-lime-300/5"
-                                    data-tw-graph-path="{{ $collisionBoxTooltip }}"
-                                    title="{{ $collisionBoxTooltip }}"
-                                    style="
-                                        left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($collisionBox, 'x', '0rem') }});
-                                        bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($collisionBox, 'y', '0rem') }});
-                                        width: {{ data_get($collisionBox, 'width', '0rem') }};
-                                        height: {{ data_get($collisionBox, 'height', '0rem') }};
-                                    "
-                                    x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
-                                ></span>
-                            @endforeach
-
-                            @php
-                                $layoutWarningTooltip = data_get($layoutWarning, 'message')
-                                    . ' | segment: ' . data_get($layoutWarning, 'label')
-                                    . ' | bridge: ' . data_get($layoutWarning, 'bridge')
-                                    . ' | suggestion: ' . data_get($layoutWarning, 'suggestion');
-                            @endphp
-
-                            <span
-                                class="tw-graph-protocol-dev-only absolute z-50 cursor-copy"
-                                data-tw-graph-path="{{ $layoutWarningTooltip }}"
-                                title="{{ $layoutWarningTooltip }}"
-                                style="
-                                    left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($layoutWarning, 'anchor.x', '0rem') }});
-                                    bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($layoutWarning, 'anchor.y', '0rem') }});
-                                    transform: translate(0.75rem, -0.75rem);
-                                "
-                                x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
-                            >
-                                <flux:badge
-                                    size="sm"
-                                    color="lime"
-                                >
-                                    {{ __('End/bridge') }}
-                                </flux:badge>
-                            </span>
-                        @endforeach
                     @endforeach
                 </x-translation-workbench::ui.tw-graph>
 
                 @php
                     $twGraphDebugBoundLevel = static function (string $type): string {
-                        return str_ends_with($type, '-start')
-                            || str_ends_with($type, '-labels')
-                            || str_ends_with($type, '-tail')
-                            || in_array($type, [
-                                'start-label-inclusive',
-                                'middle-label-inclusive',
-                                'end-label-inclusive',
-                                'branch-start',
-                                'branch-body',
-                                'branch-end',
-                                'rekey-target-body',
-                                'rekey-target-end',
-                            ], true)
-                                ? 'sub'
-                                : 'main';
+                        return str_ends_with($type, '-start') ||
+                            str_ends_with($type, '-labels') ||
+                            str_ends_with($type, '-tail') ||
+                            in_array(
+                                $type,
+                                [
+                                    'start-label-inclusive',
+                                    'middle-label-inclusive',
+                                    'end-label-inclusive',
+                                    'branch-start',
+                                    'branch-body',
+                                    'branch-end',
+                                    'rekey-target-body',
+                                    'rekey-target-end',
+                                ],
+                                true,
+                            )
+                            ? 'sub'
+                            : 'main';
                     };
                     $twGraphDebugCollisionType = static function (string $firstLevel, string $secondLevel): string {
                         return $firstLevel === 'sub' && $secondLevel === 'sub'
                             ? 'sub'
-                            : ($firstLevel === 'main' && $secondLevel === 'main' ? 'main' : 'main-sub');
+                            : ($firstLevel === 'main' && $secondLevel === 'main'
+                                ? 'main'
+                                : 'main-sub');
                     };
-                    $twGraphDebugBaseBoundRows = collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkBoundsDebug', []))
-                        ->map(fn ($debugBox) => [
-                            'scope' => 'trunk',
-                            'side' => data_get($debugBox, 'side', 'center'),
+                    $twGraphElementId = static fn(
+                        mixed $id,
+                    ): string => \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize($id);
+                    $twGraphDebugBoundRow = static function (
+                        array $debugBox,
+                        string $scope,
+                        string $sideDefault = '',
+                    ) use ($twGraphDebugBoundLevel, $twGraphElementId): array {
+                        $renderId = (string) data_get($debugBox, 'renderId', data_get($debugBox, 'id', 'n/a'));
+
+                        return [
+                            'scope' => $scope,
+                            'side' => data_get($debugBox, 'side', $sideDefault),
                             'type' => data_get($debugBox, 'type', 'n/a'),
                             'level' => $twGraphDebugBoundLevel((string) data_get($debugBox, 'type', 'n/a')),
-                            'id' => data_get($debugBox, 'id', 'n/a'),
+                            'id' => $twGraphElementId(data_get($debugBox, 'id', $renderId)),
+                            'render_id' => $renderId,
                             'x' => data_get($debugBox, 'x', '0rem'),
                             'y' => data_get($debugBox, 'y', '0rem'),
                             'width' => data_get($debugBox, 'width', '0rem'),
                             'height' => data_get($debugBox, 'height', '0rem'),
-                        ])
+                        ];
+                    };
+                    $twGraphDebugBaseBoundRows = collect(
+                        data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkBoundsDebug', []),
+                    )
+                        ->map(fn($debugBox) => $twGraphDebugBoundRow((array) $debugBox, 'trunk', 'center'))
                         ->merge(
                             $twGraphDataDrivenPreviewMerges
-                                ->flatMap(fn ($merge) => (array) data_get($merge, 'layout.mergeBoundsDebug', []))
-                                ->map(fn ($debugBox) => [
-                                    'scope' => 'merge',
-                                    'side' => data_get($debugBox, 'side', ''),
-                                    'type' => data_get($debugBox, 'type', 'n/a'),
-                                    'level' => $twGraphDebugBoundLevel((string) data_get($debugBox, 'type', 'n/a')),
-                                    'id' => data_get($debugBox, 'id', 'n/a'),
-                                    'x' => data_get($debugBox, 'x', '0rem'),
-                                    'y' => data_get($debugBox, 'y', '0rem'),
-                                    'width' => data_get($debugBox, 'width', '0rem'),
-                                    'height' => data_get($debugBox, 'height', '0rem'),
-                                ])
+                                ->flatMap(fn($merge) => (array) data_get($merge, 'layout.mergeBoundsDebug', []))
+                                ->map(fn($debugBox) => $twGraphDebugBoundRow((array) $debugBox, 'merge')),
                         )
                         ->merge(
                             $twGraphDataDrivenPreviewRekeys
-                                ->flatMap(fn ($rekey) => (array) data_get($rekey, 'layout.rekeyBoundsDebug', []))
-                                ->map(fn ($debugBox) => [
-                                    'scope' => 'rekey',
-                                    'side' => data_get($debugBox, 'side', ''),
-                                    'type' => data_get($debugBox, 'type', 'n/a'),
-                                    'level' => $twGraphDebugBoundLevel((string) data_get($debugBox, 'type', 'n/a')),
-                                    'id' => data_get($debugBox, 'id', 'n/a'),
-                                    'x' => data_get($debugBox, 'x', '0rem'),
-                                    'y' => data_get($debugBox, 'y', '0rem'),
-                                    'width' => data_get($debugBox, 'width', '0rem'),
-                                    'height' => data_get($debugBox, 'height', '0rem'),
-                                ])
+                                ->flatMap(fn($rekey) => (array) data_get($rekey, 'layout.rekeyBoundsDebug', []))
+                                ->map(fn($debugBox) => $twGraphDebugBoundRow((array) $debugBox, 'rekey')),
                         )
                         ->merge(
                             $twGraphDataDrivenPreviewBranches
-                                ->flatMap(fn ($branch) => (array) data_get($branch, 'layout.branchBoundsDebug', []))
-                                ->map(fn ($debugBox) => [
-                                    'scope' => 'branch',
-                                    'side' => data_get($debugBox, 'side', ''),
-                                    'type' => data_get($debugBox, 'type', 'n/a'),
-                                    'level' => $twGraphDebugBoundLevel((string) data_get($debugBox, 'type', 'n/a')),
-                                    'id' => data_get($debugBox, 'id', 'n/a'),
-                                    'x' => data_get($debugBox, 'x', '0rem'),
-                                    'y' => data_get($debugBox, 'y', '0rem'),
-                                    'width' => data_get($debugBox, 'width', '0rem'),
-                                    'height' => data_get($debugBox, 'height', '0rem'),
-                                ])
+                                ->flatMap(fn($branch) => (array) data_get($branch, 'layout.branchBoundsDebug', []))
+                                ->map(fn($debugBox) => $twGraphDebugBoundRow((array) $debugBox, 'branch')),
                         )
                         ->values();
-                    $twGraphDebugLevelById = $twGraphDebugBaseBoundRows
-                        ->mapWithKeys(fn ($debugBoundRow) => [(string) data_get($debugBoundRow, 'id') => (string) data_get($debugBoundRow, 'level', 'main')]);
-                    $twGraphDebugCollisionTypeById = collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkCollisionDebug', []))
-                        ->reduce(function (array $collisionTypes, array $collision) use ($twGraphDebugLevelById, $twGraphDebugCollisionType): array {
-                            $trunkId = (string) data_get($collision, 'trunk', '');
-                            $againstId = (string) data_get($collision, 'against', '');
+                    $twGraphDebugLevelById = $twGraphDebugBaseBoundRows->mapWithKeys(
+                        fn($debugBoundRow) => [
+                            (string) data_get($debugBoundRow, 'id') => (string) data_get(
+                                $debugBoundRow,
+                                'level',
+                                'main',
+                            ),
+                        ],
+                    );
+                    $twGraphDebugCollisionTypeById = collect(
+                        data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkCollisionDebug', []),
+                    )->reduce(function (array $collisionTypes, array $collision) use (
+                        $twGraphDebugLevelById,
+                        $twGraphDebugCollisionType,
+                        $twGraphElementId,
+                    ): array {
+                        $trunkId = $twGraphElementId(data_get($collision, 'trunk', ''));
+                        $againstId = $twGraphElementId(data_get($collision, 'against', ''));
 
-                            if ($trunkId === '' || $againstId === '') {
-                                return $collisionTypes;
-                            }
-
-                            $collisionType = $twGraphDebugCollisionType(
-                                (string) $twGraphDebugLevelById->get($trunkId, 'main'),
-                                (string) $twGraphDebugLevelById->get($againstId, 'main'),
-                            );
-
-                            $collisionTypes[$trunkId] = $collisionType;
-                            $collisionTypes[$againstId] = $collisionType;
-
+                        if ($trunkId === '' || $againstId === '') {
                             return $collisionTypes;
-                        }, []);
-                    $twGraphBranchCollisionBoundId = static function (string $branchId, string $type): string {
+                        }
+
+                        $collisionType = $twGraphDebugCollisionType(
+                            (string) $twGraphDebugLevelById->get($trunkId, 'main'),
+                            (string) $twGraphDebugLevelById->get($againstId, 'main'),
+                        );
+
+                        $collisionTypes[$trunkId] = $collisionType;
+                        $collisionTypes[$againstId] = $collisionType;
+
+                        return $collisionTypes;
+                    }, []);
+                    $twGraphBranchCollisionBoundId = static function (string $branchId, string $type) use (
+                        $twGraphElementId,
+                    ): string {
                         if ($branchId === '') {
                             return '';
                         }
 
-                        return $type === 'bridge'
-                            ? $branchId . '.main.path.branch.bridge1'
-                            : $branchId . '.label-bounds';
+                        $boundId =
+                            $type === 'bridge' ? $branchId . '.main.path.branch.bridge1' : $branchId . '.label-bounds';
+
+                        return $twGraphElementId($boundId);
                     };
 
                     foreach ($twGraphDataDrivenPreviewBranches as $branchPreview) {
                         foreach ((array) data_get($branchPreview, 'layout.branchCollisionDebug', []) as $collision) {
                             $type = (string) data_get($collision, 'type', 'label');
-                            $branchId = $twGraphBranchCollisionBoundId((string) data_get($collision, 'branch', ''), $type);
-                            $againstId = $twGraphBranchCollisionBoundId((string) data_get($collision, 'against', ''), $type);
+                            $branchId = $twGraphBranchCollisionBoundId(
+                                (string) data_get($collision, 'branch', ''),
+                                $type,
+                            );
+                            $againstId = $twGraphBranchCollisionBoundId(
+                                (string) data_get($collision, 'against', ''),
+                                $type,
+                            );
 
                             if ($branchId === '' || $againstId === '') {
                                 continue;
@@ -941,34 +929,43 @@
                         }
                     }
 
-                    $twGraphDebugCollisionDeltaById = collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkCollisionDebug', []))
-                        ->reduce(function (array $collisionDeltas, array $collision): array {
-                            $trunkId = (string) data_get($collision, 'trunk', '');
-                            $againstId = (string) data_get($collision, 'against', '');
-                            $value = trim('y +' . (string) data_get($collision, 'overlapHeight', '0rem') . ' / x ' . (string) data_get($collision, 'overlapWidth', '0rem'));
+                    $twGraphDebugCollisionDeltaById = collect(
+                        data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkCollisionDebug', []),
+                    )->reduce(function (array $collisionDeltas, array $collision) use ($twGraphElementId): array {
+                        $trunkId = $twGraphElementId(data_get($collision, 'trunk', ''));
+                        $againstId = $twGraphElementId(data_get($collision, 'against', ''));
+                        $value = trim(
+                            'y +' .
+                                (string) data_get($collision, 'overlapHeight', '0rem') .
+                                ' / x ' .
+                                (string) data_get($collision, 'overlapWidth', '0rem'),
+                        );
 
-                            foreach ([$trunkId, $againstId] as $id) {
-                                if ($id === '') {
-                                    continue;
-                                }
-
-                                $collisionDeltas[$id] = collect([
-                                    ...((array) ($collisionDeltas[$id] ?? [])),
-                                    $value,
-                                ])
-                                    ->unique()
-                                    ->values()
-                                    ->all();
+                        foreach ([$trunkId, $againstId] as $id) {
+                            if ($id === '') {
+                                continue;
                             }
 
-                            return $collisionDeltas;
-                        }, []);
+                            $collisionDeltas[$id] = collect([...((array) ($collisionDeltas[$id] ?? [])), $value])
+                                ->unique()
+                                ->values()
+                                ->all();
+                        }
+
+                        return $collisionDeltas;
+                    }, []);
 
                     foreach ($twGraphDataDrivenPreviewBranches as $branchPreview) {
                         foreach ((array) data_get($branchPreview, 'layout.branchCollisionDebug', []) as $collision) {
                             $type = (string) data_get($collision, 'type', 'label');
-                            $branchId = $twGraphBranchCollisionBoundId((string) data_get($collision, 'branch', ''), $type);
-                            $againstId = $twGraphBranchCollisionBoundId((string) data_get($collision, 'against', ''), $type);
+                            $branchId = $twGraphBranchCollisionBoundId(
+                                (string) data_get($collision, 'branch', ''),
+                                $type,
+                            );
+                            $againstId = $twGraphBranchCollisionBoundId(
+                                (string) data_get($collision, 'against', ''),
+                                $type,
+                            );
                             $side = (string) data_get($collision, 'side', '');
                             $direction = $side === 'left' ? 'left' : ($side === 'right' ? 'right' : 'x');
                             $value = $direction . ' +' . (string) data_get($collision, 'requiredIncrement', '0rem');
@@ -989,26 +986,58 @@
                         }
                     }
 
+                    $twGraphDebugAppliedCorrectionById = collect(
+                        data_get($twGraphDataDrivenPreviewGraph, 'layout_corrections.applied', []),
+                    )->reduce(function (array $appliedCorrections, array $correction) use ($twGraphElementId): array {
+                        $target = $twGraphElementId(data_get($correction, 'target', ''));
+                        $prop = (string) data_get($correction, 'prop', '');
+                        $value =
+                            (string) (data_get($correction, 'effectiveValue') ?? data_get($correction, 'value', ''));
+
+                        if ($target === '' || $prop === '' || $value === '') {
+                            return $appliedCorrections;
+                        }
+
+                        $label = $prop . '=' . $value;
+
+                        foreach ([$target, $target . '.bounds'] as $id) {
+                            $appliedCorrections[$id] = collect([...((array) ($appliedCorrections[$id] ?? [])), $label])
+                                ->unique()
+                                ->values()
+                                ->all();
+                        }
+
+                        return $appliedCorrections;
+                    }, []);
+
                     $twGraphDebugBoundRows = $twGraphDebugBaseBoundRows
-                        ->map(function ($debugBoundRow) use ($twGraphDebugCollisionTypeById, $twGraphDebugCollisionDeltaById) {
+                        ->map(function ($debugBoundRow) use (
+                            $twGraphDebugAppliedCorrectionById,
+                            $twGraphDebugCollisionTypeById,
+                            $twGraphDebugCollisionDeltaById,
+                        ) {
                             $debugBoundId = (string) data_get($debugBoundRow, 'id');
 
                             return [
                                 ...$debugBoundRow,
                                 'collision' => array_key_exists($debugBoundId, $twGraphDebugCollisionTypeById),
                                 'collision_type' => $twGraphDebugCollisionTypeById[$debugBoundId] ?? 'none',
-                                'collision_delta' => collect((array) ($twGraphDebugCollisionDeltaById[$debugBoundId] ?? []))->join(' | '),
-                                'applied_correction' => '',
+                                'collision_delta' => collect(
+                                    (array) ($twGraphDebugCollisionDeltaById[$debugBoundId] ?? []),
+                                )->join(' | '),
+                                'applied_correction' => collect(
+                                    (array) ($twGraphDebugAppliedCorrectionById[$debugBoundId] ?? []),
+                                )->join(' | '),
                             ];
                         })
                         ->values();
-                    $twGraphDebugCollisionBoundRows = $twGraphDebugBoundRows
-                        ->where('collision', true)
-                        ->values();
+                    $twGraphDebugCollisionBoundRows = $twGraphDebugBoundRows->where('collision', true)->values();
                 @endphp
 
-                <div class="tw-graph-protocol-dev-only mt-4 overflow-hidden rounded-lg border border-zinc-200 bg-white/75 dark:border-zinc-700 dark:bg-zinc-900/45">
-                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-200 px-3 py-2 dark:border-zinc-700">
+                <div
+                    class="tw-graph-protocol-dev-only mt-4 overflow-hidden rounded-lg border border-zinc-200 bg-white/75 dark:border-zinc-700 dark:bg-zinc-900/45">
+                    <div
+                        class="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-200 px-3 py-2 dark:border-zinc-700">
                         <flux:heading size="sm">{{ __('Debug bounds') }}</flux:heading>
                         <div class="flex flex-wrap items-center justify-end gap-3">
                             <flux:field
@@ -1042,7 +1071,7 @@
                                     <th class="px-3 py-2 font-medium">{{ __('Scope') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Side') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Type') }}</th>
-                                    <th class="px-3 py-2 font-medium">{{ __('Debug bound box') }}</th>
+                                    <th class="px-3 py-2 font-medium">{{ __('Element ID') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Coordinates') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Dimension') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Collision Type') }}</th>
@@ -1068,7 +1097,8 @@
                                         <td class="px-3 py-2 align-top text-zinc-700 dark:text-zinc-200">
                                             {{ data_get($debugBoundRow, 'type') }}
                                         </td>
-                                        <td class="wrap-anywhere px-3 py-2 align-top font-mono text-zinc-900 dark:text-zinc-100">
+                                        <td
+                                            class="wrap-anywhere px-3 py-2 align-top font-mono text-zinc-900 dark:text-zinc-100">
                                             {{ data_get($debugBoundRow, 'id') }}
                                         </td>
                                         <td class="px-3 py-2 align-top font-mono text-zinc-700 dark:text-zinc-200">

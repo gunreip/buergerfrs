@@ -71,8 +71,6 @@ final class BranchPreviewBuilder
                 'color' => 'rose',
                 'end_label' => ['Ended before target', 'not shared obsolete'],
                 'step_label' => ['Source inactive', 'not shared obsolete'],
-                'end_length' => '3rem',
-                'cap_length' => '2rem',
             ],
         ];
     }
@@ -143,8 +141,6 @@ final class BranchPreviewBuilder
                     ->all();
                 $stemCount = count($stemContinuation);
                 $step = [
-                    'beforeLength' => '1.5rem',
-                    'afterLength' => '3.5rem',
                     'stepLabel' => [
                         'text' => [
                             ...$stepLabel,
@@ -164,8 +160,6 @@ final class BranchPreviewBuilder
                     'step' => $step,
                     'stem_continuation' => $stemContinuation,
                     'branch_extension' => [],
-                    'end_length' => (string) ($spec['end_length'] ?? '3rem'),
-                    'end_cap_length' => '2rem',
                     'end_counter_start' => 5 + $stemCount + ($step !== null ? 1 : 0),
                     'end_label' => [
                         'text' => [
@@ -210,8 +204,8 @@ final class BranchPreviewBuilder
         $color = (string) ($spec['color'] ?? 'rose');
         $endLabel = array_values((array) ($spec['end_label'] ?? [$outcomeGroup]));
         $stepLabel = array_values((array) ($spec['step_label'] ?? []));
-        $endLength = (string) ($spec['end_length'] ?? '0rem');
-        $capLength = (string) ($spec['cap_length'] ?? '1.75rem');
+        $endLength = $spec['end_length'] ?? null;
+        $capLength = $spec['cap_length'] ?? null;
         $bridgeLength = $spec['bridge_length'] ?? null;
         $stemLength = $spec['stem_length'] ?? null;
         $extensionRows = $rows
@@ -246,8 +240,6 @@ final class BranchPreviewBuilder
                         $index + 1 => [
                             'color' => $color,
                             'step' => [
-                                'beforeLength' => '1.5rem',
-                                'afterLength' => '2.5rem',
                                 'stepLabel' => [
                                     'text' => [
                                         ...$stepLabel,
@@ -256,8 +248,8 @@ final class BranchPreviewBuilder
                                     'badgeColor' => $color,
                                 ],
                             ],
-                            'endLength' => $endLength,
-                            'capLength' => $capLength,
+                            ...($endLength !== null ? ['endLength' => (string) $endLength] : []),
+                            ...($capLength !== null ? ['capLength' => (string) $capLength] : []),
                             'endLabel' => [
                                 'text' => [
                                     ...$endLabel,

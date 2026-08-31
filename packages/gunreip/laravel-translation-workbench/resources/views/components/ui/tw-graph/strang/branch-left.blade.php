@@ -35,8 +35,8 @@
     'graphId' => null,
     'dev' => false,
     'defaultColor' => null,
-    'lineLength' => '4rem',
-    'arcSize' => '2.75rem',
+    'lineLength' => null,
+    'arcSize' => null,
     'bridgeLength' => null,
     'stemLength' => null,
 ])
@@ -69,8 +69,8 @@
         : $resolvedGraphId . '.strang.branch-left.' . $resolvedComponentCounter;
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'pink');
     $resolvedDev = $devMode ?? $dev;
-    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
-    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($arcSize ?? null, '2.75rem');
+    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
+    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
     $localEntryStemLength = $attributes->get('entry-stem-length');
     $localBridgeLength = $attributes->get('bridge-length');
     $localStemLength = $attributes->get('stem-length');
@@ -82,12 +82,12 @@
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
         $localBridgeLength,
         $bridgeLength ?? null,
-        $resolvedLineLength,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $resolvedLineLength),
     );
     $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
         $localStemLength,
         $stemLength ?? null,
-        $resolvedLineLength,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', $resolvedLineLength),
     );
 
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
@@ -704,7 +704,7 @@
             left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($anchorStart, 'x', '0rem') }});
             bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($anchorStart, 'y', '0rem') }});
         "
-        title="{{ $id }} | missing attach-to: {{ $attachTo }}"
+        title="{{ \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id) }} | missing attach-to: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize($attachTo) }}"
     >
         <flux:badge color="red">
             {{ __('Missing anchor') }}: {{ $attachTo }}
@@ -720,7 +720,7 @@
             bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($fallbackWarning, 'anchor.y', '0rem') }});
             transform: translate(0.75rem, -0.75rem);
         "
-        title="Fallback anchor used | component: {{ data_get($fallbackWarning, 'component') }} | requested: {{ data_get($fallbackWarning, 'requested') }} | resolved: {{ data_get($fallbackWarning, 'resolved') }}"
+        title="Fallback anchor used | component: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label(data_get($fallbackWarning, 'component')) }} | requested: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize(data_get($fallbackWarning, 'requested')) }} | resolved: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize(data_get($fallbackWarning, 'resolved')) }}"
     >
         <flux:badge color="red">
             {{ __('Fallback anchor used') }}

@@ -29,8 +29,8 @@
     'graphId' => null,
     'dev' => false,
     'defaultColor' => null,
-    'lineLength' => '4rem',
-    'capLength' => '1.75rem',
+    'lineLength' => null,
+    'capLength' => null,
 ])
 
 @props([
@@ -62,7 +62,7 @@
         ? (string) $id
         : $resolvedGraphId . '.paths.trunk.' . $resolvedComponentCounter;
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'zinc');
-    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
+    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedPathCount = max(0, (int) ($pathCount ?? $defaultPathSegments));
     $resolvedDev = $devMode ?? $dev;
     $startLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedLineLength, '4rem');
@@ -87,7 +87,7 @@
         })
         ->all();
     $endLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($endLength, $resolvedLineLength, '4rem');
-    $endCapLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($endCapLength, $capLength ?? null, '1.75rem');
+    $endCapLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor($endCapLength, $capLength ?? null, 'cap_length', '1.75rem');
     $startLabelSide = match ($direction) {
         'left-right' => 'left',
         'right-left' => 'right',

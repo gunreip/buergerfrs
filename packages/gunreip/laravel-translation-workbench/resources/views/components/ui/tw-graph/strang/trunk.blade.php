@@ -26,8 +26,9 @@
     'graphId' => null,
     'dev' => false,
     'defaultColor' => null,
-    'lineLength' => '4rem',
-    'capLength' => '1.75rem',
+    'lineLength' => null,
+    'stemLength' => null,
+    'capLength' => null,
 ])
 
 @props([
@@ -37,6 +38,7 @@
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'color' => null,
     'startLength' => null,
+    'stemLength' => null,
     'pathCount' => null,
     'pathLengths' => [],
     'nodeLabels' => [],
@@ -59,11 +61,19 @@
         ? (string) $id
         : $resolvedGraphId . '.strang.trunk.' . $resolvedComponentCounter;
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'zinc');
-    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
+    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
+    $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
+        $stemLength ?? null,
+        null,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', $resolvedLineLength),
+    );
+    $resolvedDefaultPathLength = in_array($direction, ['bottom-top', 'top-bottom'], true)
+        ? $resolvedStemLength
+        : $resolvedLineLength;
     $resolvedPathCount = max(0, (int) ($pathCount ?? $defaultPathSegments));
     $resolvedDev = $devMode ?? $dev;
-    $resolvedStartLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedLineLength, '4rem');
-    $resolvedEndLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($endLength, $resolvedLineLength, '4rem');
+    $resolvedStartLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedDefaultPathLength, '4rem');
+    $resolvedEndLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($endLength, $resolvedDefaultPathLength, '4rem');
 
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $axisDelta = function (string $length) use ($direction): array {
@@ -80,12 +90,12 @@
             'y' => $delta['y'] === '0rem' ? data_get($anchor, 'y', '0rem') : 'calc(' . data_get($anchor, 'y', '0rem') . ' + ' . $delta['y'] . ')',
         ];
     };
-    $lengthOf = function (mixed $entry) use ($resolvedLineLength): string {
+    $lengthOf = function (mixed $entry) use ($resolvedDefaultPathLength): string {
         if (is_array($entry)) {
-            return (string) (data_get($entry, 'length', data_get($entry, 0)) ?: $resolvedLineLength);
+            return (string) (data_get($entry, 'length', data_get($entry, 0)) ?: $resolvedDefaultPathLength);
         }
 
-        return filled($entry) ? (string) $entry : $resolvedLineLength;
+        return filled($entry) ? (string) $entry : $resolvedDefaultPathLength;
     };
     $normalizeNodeLabels = function (mixed $labels): mixed {
         if (! is_array($labels)) {
@@ -111,26 +121,26 @@
             $normalizeLabelForSide($left, 'left'),
         ];
     };
-    $pathLengthWithLabels = function (mixed $entry, mixed $labels) use ($resolvedLineLength, $normalizeNodeLabels): mixed {
+    $pathLengthWithLabels = function (mixed $entry, mixed $labels) use ($resolvedDefaultPathLength, $normalizeNodeLabels): mixed {
         if ($labels === null || $labels === false || $labels === '') {
             return $entry;
         }
 
         if (! is_array($entry)) {
             return [
-                'length' => filled($entry) ? $entry : $resolvedLineLength,
+                'length' => filled($entry) ? $entry : $resolvedDefaultPathLength,
                 'labels' => $normalizeNodeLabels($labels),
             ];
         }
 
         if (array_key_exists('length', $entry) || array_key_exists('labels', $entry)) {
-            $entry['length'] = data_get($entry, 'length') ?: $resolvedLineLength;
+            $entry['length'] = data_get($entry, 'length') ?: $resolvedDefaultPathLength;
             $entry['labels'] = $normalizeNodeLabels($labels);
 
             return $entry;
         }
 
-        $entry[0] = data_get($entry, 0) ?: $resolvedLineLength;
+        $entry[0] = data_get($entry, 0) ?: $resolvedDefaultPathLength;
         $entry[1] = $normalizeNodeLabels($labels);
 
         return $entry;
@@ -142,12 +152,12 @@
     $nodeLabelOverridesAreList = array_is_list($nodeLabelOverrides);
     $pathNumbers = $resolvedPathCount > 0 ? range(1, $resolvedPathCount) : [];
     $resolvedPathLengthEntries = collect($pathNumbers)
-        ->mapWithKeys(function (int $pathNumber) use ($pathLengthOverrides, $pathLengthOverridesAreList, $nodeLabelOverrides, $nodeLabelOverridesAreList, $resolvedLineLength, $pathLengthWithLabels): array {
+        ->mapWithKeys(function (int $pathNumber) use ($pathLengthOverrides, $pathLengthOverridesAreList, $nodeLabelOverrides, $nodeLabelOverridesAreList, $resolvedDefaultPathLength, $pathLengthWithLabels): array {
             $lengthKey = $pathLengthOverridesAreList ? $pathNumber - 1 : $pathNumber;
             $labelKey = $nodeLabelOverridesAreList ? $pathNumber - 1 : $pathNumber;
             $lengthExists = array_key_exists($lengthKey, $pathLengthOverrides);
             $labelExists = array_key_exists($labelKey, $nodeLabelOverrides);
-            $lengthEntry = $lengthExists ? $pathLengthOverrides[$lengthKey] : $resolvedLineLength;
+            $lengthEntry = $lengthExists ? $pathLengthOverrides[$lengthKey] : $resolvedDefaultPathLength;
 
             return [
                 $pathNumber => $labelExists
@@ -157,7 +167,7 @@
         })
         ->all();
     $resolvedPathLengths = collect($pathNumbers)
-        ->map(fn (int $pathNumber): string => $lengthOf($resolvedPathLengthEntries[$pathNumber] ?? $resolvedLineLength))
+        ->map(fn (int $pathNumber): string => $lengthOf($resolvedPathLengthEntries[$pathNumber] ?? $resolvedDefaultPathLength))
         ->all();
 
     $pathStartAnchor = [
@@ -244,11 +254,12 @@
     :id="$id . '.paths.trunk'"
     :direction="$direction"
     :anchor-start="$anchorStart"
-    :start-length="$startLength"
+    :line-length="$resolvedDefaultPathLength"
+    :start-length="$resolvedStartLength"
     :path-count="$pathCount"
     :path-lengths="$resolvedPathLengthEntries"
     :default-path-segments="$defaultPathSegments"
-    :end-length="$endLength"
+    :end-length="$resolvedEndLength"
     :end-cap-length="$endCapLength"
     :start-label="$startLabel"
     :end-label="$endLabel"

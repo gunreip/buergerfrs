@@ -42,6 +42,18 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
             __DIR__ . '/../config/translation-workbench.php',
             'translation-workbench',
         );
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/tw-graph-defaults.php',
+            'tw-graph-defaults',
+        );
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/defaults/tw-graph-data-driven.php',
+            'tw-graph-data-driven-defaults',
+        );
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/layout-corrections/tw-graph-data-driven.php',
+            'tw-graph-data-driven-layout-corrections',
+        );
 
         $this->app->singleton(RuntimeDynamicTranslationCollector::class);
     }
@@ -86,6 +98,9 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/translation-workbench.php' => config_path('translation-workbench.php'),
+                __DIR__ . '/../config/tw-graph-defaults.php' => config_path('tw-graph-defaults.php'),
+                __DIR__ . '/../config/defaults/tw-graph-data-driven.php' => config_path('defaults/tw-graph-data-driven.php'),
+                __DIR__ . '/../config/layout-corrections/tw-graph-data-driven.php' => config_path('layout-corrections/tw-graph-data-driven.php'),
             ], 'translation-workbench-config');
 
             $this->publishes([

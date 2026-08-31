@@ -25,8 +25,8 @@
     'id' => 'path.branch',
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
-    'lineLength' => '4rem',
-    'arcSize' => '2.75rem',
+    'lineLength' => null,
+    'arcSize' => null,
     'entryStemLength' => '0rem',
     'bridgeLength' => null,
     'bridgeContinuation' => [],
@@ -49,11 +49,11 @@
     ];
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
-    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
-    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($arcSize ?? null, '2.75rem');
+    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
+    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
     $resolvedEntryStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($entryStemLength, null, '0rem');
-    $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, $resolvedLineLength, '4rem');
-    $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, $resolvedLineLength, '4rem');
+    $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $resolvedLineLength), '4rem');
+    $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', $resolvedLineLength), '4rem');
     $normalizeLabel = function (mixed $label, ?string $side = null) use ($color): ?array {
         if (blank($label)) {
             return null;

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData;
 
+use Gunreip\TranslationWorkbench\Support\TwGraph\Defaults;
+use Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -75,10 +77,10 @@ final class RenderPreviewBuilder
         }
         $nodeLabels = [];
         $nodeIndex = 2;
-        $timelineSegmentLength = '6rem';
         $previousTimelineItemType = null;
         $trunkTimelineAnchors = [];
-        $trunkAnchorYRem = 3.5 + 24.5;
+        $rootLineLength = self::defaultTrunkPathLength();
+        $trunkAnchorYRem = self::toRem($rootLineLength) * 2;
 
         $timelineLabelItems
             ->sortBy([
@@ -86,9 +88,9 @@ final class RenderPreviewBuilder
                 ['sort_index', 'asc'],
             ])
             ->values()
-            ->each(static function (array $item) use (&$nodeLabels, &$eventPathEntries, &$nodeIndex, &$previousTimelineItemType, &$trunkTimelineAnchors, &$trunkAnchorYRem, $timelineSegmentLength): void {
+            ->each(static function (array $item) use (&$nodeLabels, &$eventPathEntries, &$nodeIndex, &$previousTimelineItemType, &$trunkTimelineAnchors, &$trunkAnchorYRem, $rootLineLength): void {
                 $labels = (array) data_get($item, 'labels', []);
-                $trunkAnchorYRem += 6.0;
+                $trunkAnchorYRem += self::toRem($rootLineLength);
 
                 if ($labels !== []) {
                     $nodeLabels[$nodeIndex] = $labels;
@@ -98,13 +100,8 @@ final class RenderPreviewBuilder
                         && $previousTimelineItemType !== $itemType;
                     $pathEntry = [
                         'component' => $isTimelineTypeTransition ? 'stem-compressed' : 'path',
-                        'length' => $timelineSegmentLength,
                         'labels' => $labels,
                     ];
-
-                    if ($isTimelineTypeTransition) {
-                        $pathEntry['capLength'] = '1.5rem';
-                    }
 
                     $eventPathEntries[$nodeIndex] = $pathEntry;
                     $previousTimelineItemType = $itemType;
@@ -122,14 +119,19 @@ final class RenderPreviewBuilder
             });
         $lastLabelNodeIndex = $nodeLabels !== [] ? max(array_keys($nodeLabels)) : 1;
         $langValueLabels = LangValueLabels::active($mainRow);
+        $graphId = 'timeline-chain-' . (int) ($mainRow['id'] ?? 0) . '-data-preview';
+        $layoutCorrections = LayoutCorrectionConfig::forDataDriven();
         $mergePreviewHeadCandidates = 6;
         $mergePreviews = MergePreviewBuilder::previews($originRows, $mergePreviewHeadCandidates);
         $branchPreviews = BranchPreviewBuilder::previews($mergeOutcomes, $trunkTimelineAnchors);
+        $rekeyPreviews = RekeyPreviewBuilder::previews($mainRow);
+        $mergePreviews = LayoutCorrectionConfig::applyToPreviews($mergePreviews, $layoutCorrections);
+        $branchPreviews = LayoutCorrectionConfig::applyToPreviews($branchPreviews, $layoutCorrections);
+        $rekeyPreviews = LayoutCorrectionConfig::applyToPreviews($rekeyPreviews, $layoutCorrections);
         // Collision compensation is intentionally not applied in this pass;
         // debug bounds report the raw delta until an explicit correction layer
         // writes Applied Correction values and forwards adjusted props.
         $trunkPathSpacingAdjustments = [];
-        $rekeyPreviews = RekeyPreviewBuilder::previews($mainRow);
         $hasRekeyTargetPreview = collect($rekeyPreviews)->contains(static fn(array $preview): bool => (string) ($preview['kind'] ?? '') === 'target');
         $rekeyTargetPreview = collect($rekeyPreviews)->first(static fn(array $preview): bool => (string) ($preview['kind'] ?? '') === 'target');
         $rekeyTargetKeyId = data_get($rekeyTargetPreview, 'source.target_key_id');
@@ -157,6 +159,7 @@ final class RenderPreviewBuilder
         $pathCount = max(
             $eventPathEntries !== [] ? $basePathCount : min(7, $basePathCount),
             $trunkPathSpacingAdjustments !== [] ? max(array_keys($trunkPathSpacingAdjustments)) : 0,
+            LayoutCorrectionConfig::maxTrunkPathNumber($layoutCorrections),
         );
         $mergePreviewCount = count($mergePreviews);
         $branchPreviewCount = collect($branchPreviews)->sum(static fn(array $preview): int => (int) ($preview['finding_count'] ?? 0));
@@ -180,43 +183,40 @@ final class RenderPreviewBuilder
         );
         $trunkEndLabelLines = LabelFormatter::trunkEndLabelLines($mainRow, $trunkEndStateLine);
         $trunkPathLengths = collect(range(1, $pathCount))
-            ->mapWithKeys(static function (int $pathNumber) use ($eventPathEntries, $rekeyTargetTrunkLabel, $trunkPathSpacingAdjustments): array {
-                $length = $pathNumber === 1
-                    ? '24.5rem'
-                    : ($pathNumber === 2 ? '7.5rem' : '5.5rem');
-                $length = self::addRem($length, (float) ($trunkPathSpacingAdjustments[$pathNumber] ?? 0.0));
-
+            ->mapWithKeys(static function (int $pathNumber) use ($eventPathEntries, $rekeyTargetTrunkLabel): array {
                 $eventTypePathEntry = $eventPathEntries[$pathNumber] ?? null;
                 if (is_array($eventTypePathEntry)) {
-                    return [$pathNumber => array_replace($eventTypePathEntry, ['length' => self::addRem(
-                        data_get($eventTypePathEntry, 'length', $length),
-                        (float) ($trunkPathSpacingAdjustments[$pathNumber] ?? 0.0),
-                    )])];
+                    return [$pathNumber => $eventTypePathEntry];
                 }
 
                 if ($pathNumber === 7 && $rekeyTargetTrunkLabel !== null) {
                     return [
                         $pathNumber => [
-                            'length' => $length,
                             'labels' => [$rekeyTargetTrunkLabel, null],
                         ],
                     ];
                 }
 
-                return [$pathNumber => $length];
+                return [$pathNumber => null];
             })
             ->all();
-        $branchPreviews = BranchLabelCollisionResolver::refreshDebugBounds(
-            self::withFinalBranchAnchorY($branchPreviews, $trunkPathLengths, '3.5rem'),
+        $trunkLayoutCorrections = LayoutCorrectionConfig::applyToTrunkPathLengths(
+            $trunkPathLengths,
+            $layoutCorrections,
+            $rootLineLength,
         );
-        $mergePreviews = self::withMergeBridgeBoundsDebug($mergePreviews, $trunkPathLengths, '3.5rem');
-        $rekeyPreviews = self::withRekeyBoundsDebug($rekeyPreviews, $trunkPathLengths, '3.5rem');
+        $trunkPathLengths = $trunkLayoutCorrections['path_lengths'];
+        $trunkAppliedCorrections = $trunkLayoutCorrections['applied'];
+        $branchPreviews = BranchLabelCollisionResolver::refreshDebugBounds(
+            self::withFinalBranchAnchorY($branchPreviews, $trunkPathLengths, $rootLineLength),
+        );
+        $mergePreviews = self::withMergeBridgeBoundsDebug($mergePreviews, $trunkPathLengths, $rootLineLength);
+        $rekeyPreviews = self::withRekeyBoundsDebug($rekeyPreviews, $trunkPathLengths, $rootLineLength);
         $trunkPreview = [
             'component' => 'tw-graph.strang.trunk',
             'color' => 'green',
             'path_count' => $pathCount,
             'path_lengths' => $trunkPathLengths,
-            'end_length' => '6rem',
             'start_label' => [
                 'text' => array_values(array_filter([
                     'key ID #' . (string) ($mainRow['root_key_id'] ?? '?'),
@@ -231,9 +231,9 @@ final class RenderPreviewBuilder
             'node_labels' => $nodeLabels,
             'layout' => [
                 'trunkBoundsDebug' => [
-                    ...self::trunkBoundsDebug($trunkPathLengths, '3.5rem', '6rem'),
+                    ...self::trunkBoundsDebug($trunkPathLengths, $rootLineLength, $rootLineLength),
                     ...self::trunkStartBoundsDebug(
-                        '3.5rem',
+                        $rootLineLength,
                         $langValueLabels,
                         [
                             'text' => array_values(array_filter([
@@ -244,8 +244,8 @@ final class RenderPreviewBuilder
                     ),
                     ...self::trunkEndBoundsDebug(
                         $trunkPathLengths,
-                        '3.5rem',
-                        '6rem',
+                        $rootLineLength,
+                        $rootLineLength,
                         [
                             'text' => $trunkEndLabelLines,
                             'long' => true,
@@ -253,15 +253,15 @@ final class RenderPreviewBuilder
                     ),
                     ...self::trunkMiddleBoundsDebug(
                         $trunkPathLengths,
-                        '3.5rem',
-                        '6rem',
+                        $rootLineLength,
+                        $rootLineLength,
                         $nodeLabels,
                         self::trunkAttachedPathNumbers($mergePreviews, $rekeyPreviews, $branchPreviews),
                     ),
                     ...self::trunkLabelBoundsDebug(
                         $trunkPathLengths,
-                        '3.5rem',
-                        '6rem',
+                        $rootLineLength,
+                        $rootLineLength,
                         $langValueLabels,
                         $nodeLabels,
                         [
@@ -334,7 +334,7 @@ final class RenderPreviewBuilder
                 'available_rekey_relations' => collect(data_get($mainRow, 'meta.moved_relations', []))->count(),
             ],
             'graph' => [
-                'graph_id' => 'timeline-chain-' . (int) ($mainRow['id'] ?? 0) . '-data-preview',
+                'graph_id' => $graphId,
                 'header' => [
                     'text' => [
                         'Timeline chain ID #' . (string) ($mainRow['id'] ?? '?'),
@@ -347,12 +347,27 @@ final class RenderPreviewBuilder
                     'badgeColor' => 'cyan',
                 ],
                 'color' => 'cyan',
-                'line_length' => '3.5rem',
+                'line_length' => Defaults::dataDrivenString('line_length', '4rem'),
+                'line_width' => Defaults::dataDrivenString('line_width', '0.25rem'),
+                'node_size' => Defaults::dataDrivenString('node_size', '0.95rem'),
+                'arc_size' => Defaults::dataDrivenString('arc_size', '2.75rem'),
+                'cap_length' => Defaults::dataDrivenString('cap_length', '1.75rem'),
+                'bridge_length' => Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')),
+                'stem_length' => Defaults::dataDrivenString('stem_length', Defaults::dataDrivenString('line_length', '4rem')),
+                'connector_length' => Defaults::dataDrivenString('connector_length', '2rem'),
+                'connector_gap' => Defaults::dataDrivenString('connector_gap', '0.25rem'),
                 'horizontal_padding' => $horizontalPadding,
                 'horizontal_padding_debug' => [
                     'trunk_label_level' => $trunkLabelPaddingLevel,
                     'has_left_strangs' => self::hasLeftStrangs($mergePreviews, $rekeyPreviews, $branchPreviews),
                     'horizontal_padding' => $horizontalPadding,
+                ],
+                'layout_corrections' => [
+                    'configured' => count($layoutCorrections),
+                    'applied' => [
+                        ...$trunkAppliedCorrections,
+                        ...LayoutCorrectionConfig::appliedCorrections($mergePreviews, $rekeyPreviews, $branchPreviews),
+                    ],
                 ],
                 'slot_min_height' => max(
                     $mergePreviewCount > 0 ? 42 : 34,
@@ -456,7 +471,8 @@ final class RenderPreviewBuilder
 
         return [[
             'type' => 'strang',
-            'id' => 'strang.trunk.1.bounds',
+            'id' => ElementIdentifier::normalize('strang.trunk.1.bounds'),
+            'renderId' => 'strang.trunk.1.bounds',
             'x' => '-0.95rem',
             'y' => '0rem',
             'width' => '1.9rem',
@@ -502,7 +518,8 @@ final class RenderPreviewBuilder
 
         return [[
             'type' => 'start-label-inclusive',
-            'id' => 'strang.trunk.1.start.label-bounds',
+            'id' => ElementIdentifier::normalize('strang.trunk.1.start.label-bounds'),
+            'renderId' => 'strang.trunk.1.start.label-bounds',
             'x' => self::rem($bounds['xStart']),
             'y' => self::rem($bounds['yStart']),
             'width' => self::rem($bounds['xEnd'] - $bounds['xStart']),
@@ -550,7 +567,8 @@ final class RenderPreviewBuilder
 
         return [[
             'type' => 'end-label-inclusive',
-            'id' => 'strang.trunk.1.end.label-bounds',
+            'id' => ElementIdentifier::normalize('strang.trunk.1.end.label-bounds'),
+            'renderId' => 'strang.trunk.1.end.label-bounds',
             'x' => self::rem($bounds['xStart']),
             'y' => self::rem($bounds['yStart']),
             'width' => self::rem($bounds['xEnd'] - $bounds['xStart']),
@@ -625,7 +643,8 @@ final class RenderPreviewBuilder
 
         return [[
             'type' => 'label-inclusive',
-            'id' => 'strang.trunk.1.label-bounds',
+            'id' => ElementIdentifier::normalize('strang.trunk.1.label-bounds'),
+            'renderId' => 'strang.trunk.1.label-bounds',
             'x' => self::rem($bounds['xStart']),
             'y' => self::rem($bounds['yStart']),
             'width' => self::rem($bounds['xEnd'] - $bounds['xStart']),
@@ -704,9 +723,11 @@ final class RenderPreviewBuilder
                 }
             }
 
+            $renderId = 'strang.trunk.1.middle.' . (count($boxes) + 1) . '.label-bounds';
             $boxes[] = [
                 'type' => 'middle-label-inclusive',
-                'id' => 'strang.trunk.1.middle.' . (count($boxes) + 1) . '.label-bounds',
+                'id' => ElementIdentifier::normalize($renderId),
+                'renderId' => $renderId,
                 'x' => self::rem($bounds['xStart']),
                 'y' => self::rem($bounds['yStart']),
                 'width' => self::rem($bounds['xEnd'] - $bounds['xStart']),
@@ -779,8 +800,8 @@ final class RenderPreviewBuilder
 
                 $collisions[] = [
                     'type' => 'trunk-strang-bounds',
-                    'trunk' => (string) ($trunkBox['id'] ?? ''),
-                    'against' => (string) ($againstBox['id'] ?? ''),
+                    'trunk' => ElementIdentifier::normalize($trunkBox['id'] ?? ''),
+                    'against' => ElementIdentifier::normalize($againstBox['id'] ?? ''),
                     'trunkType' => (string) ($trunkBox['type'] ?? ''),
                     'againstType' => (string) ($againstBox['type'] ?? ''),
                     'overlapWidth' => self::rem(min((float) $trunkBox['xEnd'], (float) $againstBox['xEnd']) - max((float) $trunkBox['xStart'], (float) $againstBox['xStart'])),
@@ -890,12 +911,12 @@ final class RenderPreviewBuilder
         $attachPath = self::trunkAttachPathNumber((string) ($mergePreview['attach_to'] ?? 'strang.trunk.path.1.end')) ?? 1;
         $attachY = $trunkAnchors[$attachPath + 1] ?? 0.0;
         $bridgeHeight = 1.5;
-        $bridgeLength = self::toRem($mergePreview['bridge_length'] ?? '4rem');
-        $arcOutSize = self::toRem(data_get($mergePreview, 'arc_sizes.2', data_get($mergePreview, 'arc_sizes.out', '2.75rem'))) ?: 2.75;
+        $bridgeLength = self::toRem($mergePreview['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')));
+        $arcOutSize = self::toRem(data_get($mergePreview, 'arc_sizes.2', data_get($mergePreview, 'arc_sizes.out', self::defaultArcSize()))) ?: self::defaultArcSizeRem();
         $startLength = self::toRem($mergePreview['start_length'] ?? $arcOutSize . 'rem');
-        $stemLength = self::toRem($mergePreview['stem_length'] ?? '4rem');
+        $stemLength = self::toRem($mergePreview['stem_length'] ?? Defaults::dataDrivenString('stem_length', Defaults::dataDrivenString('line_length', '4rem')));
         $stemContinuationLength = self::stemContinuationLength((array) ($mergePreview['stem_continuation'] ?? []), $stemLength);
-        $arcInSize = self::toRem(data_get($mergePreview, 'arc_sizes.1', data_get($mergePreview, 'arc_sizes.in', '2.75rem'))) ?: 2.75;
+        $arcInSize = self::toRem(data_get($mergePreview, 'arc_sizes.1', data_get($mergePreview, 'arc_sizes.in', self::defaultArcSize()))) ?: self::defaultArcSizeRem();
         $mainInnerX = $direction * $arcOutSize;
         $mainOuterX = $direction * ($arcOutSize + $bridgeLength);
         $mainBridgeY = $attachY - $arcOutSize;
@@ -941,12 +962,12 @@ final class RenderPreviewBuilder
             ),
         ];
         $extensionCount = max(0, (int) ($mergePreview['extension_count'] ?? 0));
-        $extensionBridgeDefault = self::toRem($mergePreview['extension_bridge_length'] ?? $mergePreview['bridge_length'] ?? '4rem');
+        $extensionBridgeDefault = self::toRem($mergePreview['extension_bridge_length'] ?? $mergePreview['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')));
         $extensionTargetX = $mainOuterX;
         $extensionTargetY = $mainBridgeY;
-        $extensionStartLength = self::toRem($mergePreview['extension_start_length'] ?? '2.75rem');
-        $extensionStemDefault = self::toRem($mergePreview['extension_stem_length'] ?? $mergePreview['stem_length'] ?? '4rem');
-        $extensionArcDefault = self::toRem($mergePreview['extension_arc_size'] ?? '2.75rem');
+        $extensionStartLength = self::toRem($mergePreview['extension_start_length'] ?? self::defaultArcSize());
+        $extensionStemDefault = self::toRem($mergePreview['extension_stem_length'] ?? $mergePreview['stem_length'] ?? Defaults::dataDrivenString('stem_length', Defaults::dataDrivenString('line_length', '4rem')));
+        $extensionArcDefault = self::toRem($mergePreview['extension_arc_size'] ?? self::defaultArcSize());
 
         for ($extensionIndex = 1; $extensionIndex <= $extensionCount; $extensionIndex++) {
             $extensionBridgeLength = self::toRem(data_get($mergePreview, 'extension_bridge_continuations.' . $extensionIndex, $extensionBridgeDefault));
@@ -955,7 +976,7 @@ final class RenderPreviewBuilder
                 (array) data_get($mergePreview, 'extension_stem_continuations.' . $extensionIndex, []),
                 $extensionStemLength,
             );
-            $extensionArcSize = self::toRem(data_get($mergePreview, 'extension_arc_sizes.' . $extensionIndex, $extensionArcDefault)) ?: 2.75;
+            $extensionArcSize = self::toRem(data_get($mergePreview, 'extension_arc_sizes.' . $extensionIndex, $extensionArcDefault)) ?: self::defaultArcSizeRem();
             $extensionOuterX = $extensionTargetX + ($direction * $extensionBridgeLength);
             $extensionStemX = $extensionOuterX + ($direction * $extensionArcSize);
             $extensionStemEndY = $extensionTargetY - $extensionArcSize;
@@ -1020,11 +1041,11 @@ final class RenderPreviewBuilder
         $attachPath = self::trunkAttachPathNumber((string) ($rekeyPreview['attach_to'] ?? 'strang.trunk.path.1.end')) ?? 1;
         $attachY = $trunkAnchors[$attachPath + 1] ?? 0.0;
         $bridgeHeight = 1.5;
-        $bridgeLength = self::toRem($rekeyPreview['bridge_length'] ?? '4rem');
-        $arcOutSize = self::toRem(data_get($rekeyPreview, 'arc_sizes.2', data_get($rekeyPreview, 'arc_sizes.out', '2.75rem'))) ?: 2.75;
-        $arcInSize = self::toRem(data_get($rekeyPreview, 'arc_sizes.1', data_get($rekeyPreview, 'arc_sizes.in', '2.75rem'))) ?: 2.75;
+        $bridgeLength = self::toRem($rekeyPreview['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')));
+        $arcOutSize = self::toRem(data_get($rekeyPreview, 'arc_sizes.2', data_get($rekeyPreview, 'arc_sizes.out', self::defaultArcSize()))) ?: self::defaultArcSizeRem();
+        $arcInSize = self::toRem(data_get($rekeyPreview, 'arc_sizes.1', data_get($rekeyPreview, 'arc_sizes.in', self::defaultArcSize()))) ?: self::defaultArcSizeRem();
         $startLength = self::toRem($rekeyPreview['start_length'] ?? $arcInSize . 'rem');
-        $stemLength = self::toRem($rekeyPreview['stem_length'] ?? '4rem');
+        $stemLength = self::toRem($rekeyPreview['stem_length'] ?? Defaults::dataDrivenString('stem_length', Defaults::dataDrivenString('line_length', '4rem')));
         $stemContinuation = (array) ($rekeyPreview['stem_continuation'] ?? []);
         $stemContinuationLength = self::stemContinuationLength($stemContinuation, $stemLength);
         $innerX = $direction * $arcOutSize;
@@ -1088,11 +1109,11 @@ final class RenderPreviewBuilder
         $attachPath = self::trunkAttachPathNumber((string) ($rekeyPreview['attach_to'] ?? 'strang.trunk.path.7.end')) ?? 7;
         $attachY = $trunkAnchors[$attachPath + 1] ?? 0.0;
         $bridgeHeight = 1.5;
-        $bridgeLength = self::toRem($rekeyPreview['bridge_length'] ?? '4rem');
-        $arcSize = self::toRem(data_get($rekeyPreview, 'arc_size', data_get($rekeyPreview, 'arc_sizes.1', '2.75rem'))) ?: 2.75;
-        $stemLength = self::toRem($rekeyPreview['stem_length'] ?? '4rem');
+        $bridgeLength = self::toRem($rekeyPreview['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')));
+        $arcSize = self::toRem(data_get($rekeyPreview, 'arc_size', data_get($rekeyPreview, 'arc_sizes.1', self::defaultArcSize()))) ?: self::defaultArcSizeRem();
+        $stemLength = self::toRem($rekeyPreview['stem_length'] ?? Defaults::dataDrivenString('stem_length', Defaults::dataDrivenString('line_length', '4rem')));
         $stemEntries = self::effectiveStemContinuationEntries((array) ($rekeyPreview['stem_continuation'] ?? []), $stemLength);
-        $endLength = self::toRem($rekeyPreview['end_length'] ?? '4rem');
+        $endLength = self::toRem($rekeyPreview['end_length'] ?? Defaults::dataDrivenString('line_length', '4rem'));
         $endLabel = (array) ($rekeyPreview['end_label'] ?? []);
 
         $bridgeStartX = $direction * $arcSize;
@@ -1151,19 +1172,22 @@ final class RenderPreviewBuilder
             ),
             [
                 'type' => 'rekey-target-label',
-                'id' => $componentId . '.label-bounds',
+                'id' => ElementIdentifier::normalize($componentId . '.label-bounds'),
+                'renderId' => $componentId . '.label-bounds',
                 'side' => $side,
                 ...self::boundsToRem($labelBounds),
             ],
             [
                 'type' => 'rekey-target-body',
-                'id' => $componentId . '.main.path.rekey-target.body.bounds',
+                'id' => ElementIdentifier::normalize($componentId . '.main.path.rekey-target.body.bounds'),
+                'renderId' => $componentId . '.main.path.rekey-target.body.bounds',
                 'side' => $side,
                 ...self::boundsToRem($bodyBounds),
             ],
             [
                 'type' => 'rekey-target-end',
-                'id' => $componentId . '.end.path.rekey-target-end.bounds',
+                'id' => ElementIdentifier::normalize($componentId . '.end.path.rekey-target-end.bounds'),
+                'renderId' => $componentId . '.end.path.rekey-target-end.bounds',
                 'side' => $side,
                 ...self::boundsToRem($endBounds),
             ],
@@ -1242,7 +1266,8 @@ final class RenderPreviewBuilder
 
         return [
             'type' => $type,
-            'id' => $id,
+            'id' => ElementIdentifier::normalize($id),
+            'renderId' => $id,
             'side' => $side,
             'x' => self::rem($bounds['xStart']),
             'y' => self::rem($bounds['yStart']),
@@ -1346,7 +1371,8 @@ final class RenderPreviewBuilder
         return [
             [
                 'type' => $typePrefix . '-start',
-                'id' => $idPrefix . '.start.bounds',
+                'id' => ElementIdentifier::normalize($idPrefix . '.start.bounds'),
+                'renderId' => $idPrefix . '.start.bounds',
                 'side' => $side,
                 'x' => self::rem($startBounds['xStart']),
                 'y' => self::rem($startBounds['yStart']),
@@ -1355,7 +1381,8 @@ final class RenderPreviewBuilder
             ],
             [
                 'type' => $typePrefix . '-labels',
-                'id' => $idPrefix . '.labels.bounds',
+                'id' => ElementIdentifier::normalize($idPrefix . '.labels.bounds'),
+                'renderId' => $idPrefix . '.labels.bounds',
                 'side' => $side,
                 'x' => self::rem($labelBounds['xStart']),
                 'y' => self::rem($labelBounds['yStart']),
@@ -1364,7 +1391,8 @@ final class RenderPreviewBuilder
             ],
             [
                 'type' => $typePrefix . '-tail',
-                'id' => $idPrefix . '.tail.bounds',
+                'id' => ElementIdentifier::normalize($idPrefix . '.tail.bounds'),
+                'renderId' => $idPrefix . '.tail.bounds',
                 'side' => $side,
                 'x' => self::rem($tailBounds['xStart']),
                 'y' => self::rem($tailBounds['yStart']),
@@ -1388,7 +1416,9 @@ final class RenderPreviewBuilder
         ?float $offset = null,
     ): array {
         $side ??= (string) data_get($label, 'side', 'right');
-        $offset ??= 0.95 / 2 + self::toRem(data_get($label, 'connectorLength', '2rem')) + self::toRem(data_get($label, 'connectorGap', '0.25rem'));
+        $offset ??= Defaults::dataDrivenRem('node_size', '0.95rem') / 2
+            + self::toRem(data_get($label, 'connectorLength', Defaults::dataDrivenString('connector_length', '2rem')))
+            + self::toRem(data_get($label, 'connectorGap', Defaults::dataDrivenString('connector_gap', '0.25rem')));
         $width = self::textLabelWidth($label);
         $height = self::textLabelHeight($label);
 
@@ -1416,7 +1446,8 @@ final class RenderPreviewBuilder
 
         return [
             'type' => $type,
-            'id' => $id,
+            'id' => ElementIdentifier::normalize($id),
+            'renderId' => $id,
             'side' => $side,
             'x' => self::rem(min($xStart, $xEnd) - $padding),
             'y' => self::rem(min($yStart, $yEnd)),
@@ -1432,7 +1463,8 @@ final class RenderPreviewBuilder
     {
         return [
             'type' => $type,
-            'id' => $id,
+            'id' => ElementIdentifier::normalize($id),
+            'renderId' => $id,
             'side' => $side,
             'x' => self::rem($xStart),
             'y' => self::rem($centerY - ($height / 2)),
@@ -1561,7 +1593,9 @@ final class RenderPreviewBuilder
         ?float $offset = null,
     ): array {
         $side ??= (string) data_get($label, 'side', 'right');
-        $offset ??= 0.95 / 2 + self::toRem(data_get($label, 'connectorLength', '2rem')) + self::toRem(data_get($label, 'connectorGap', '0.25rem'));
+        $offset ??= Defaults::dataDrivenRem('node_size', '0.95rem') / 2
+            + self::toRem(data_get($label, 'connectorLength', Defaults::dataDrivenString('connector_length', '2rem')))
+            + self::toRem(data_get($label, 'connectorGap', Defaults::dataDrivenString('connector_gap', '0.25rem')));
         $width = self::textLabelWidth($label);
         $height = self::textLabelHeight($label);
 
@@ -1620,11 +1654,35 @@ final class RenderPreviewBuilder
 
     private static function pathEntryLength(mixed $entry): float
     {
+        if (blank($entry)) {
+            return self::toRem(self::defaultTrunkPathLength());
+        }
+
         if (is_array($entry)) {
-            return self::toRem(data_get($entry, 'length', data_get($entry, 0, '0rem')));
+            $rootLineLength = self::defaultTrunkPathLength();
+
+            return self::toRem(data_get($entry, 'length', data_get($entry, 0, $rootLineLength)) ?: $rootLineLength);
         }
 
         return self::toRem($entry);
+    }
+
+    private static function defaultTrunkPathLength(): string
+    {
+        return Defaults::dataDrivenString(
+            'stem_length',
+            Defaults::dataDrivenString('line_length', '4rem'),
+        );
+    }
+
+    private static function defaultArcSize(): string
+    {
+        return Defaults::dataDrivenString('arc_size', '2.75rem');
+    }
+
+    private static function defaultArcSizeRem(): float
+    {
+        return self::toRem(self::defaultArcSize()) ?: 2.75;
     }
 
     /**
@@ -1684,19 +1742,6 @@ final class RenderPreviewBuilder
         }
 
         return (float) $matches[0];
-    }
-
-    private static function addRem(mixed $value, float $delta): string
-    {
-        if ($delta === 0.0) {
-            return (string) $value;
-        }
-
-        if (preg_match('/-?\d+(?:\.\d+)?/', (string) $value, $matches) !== 1) {
-            return self::rem($delta);
-        }
-
-        return self::rem((float) $matches[0] + $delta);
     }
 
     private static function rem(float $value): string

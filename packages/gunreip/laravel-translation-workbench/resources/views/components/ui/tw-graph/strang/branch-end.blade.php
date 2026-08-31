@@ -22,8 +22,8 @@
     'graphId' => null,
     'dev' => false,
     'defaultColor' => null,
-    'lineLength' => '4rem',
-    'capLength' => '1.75rem',
+    'lineLength' => null,
+    'capLength' => null,
 ])
 
 @props([
@@ -50,9 +50,9 @@
         : $resolvedGraphId . '.strang.branch-end.' . $resolvedSide . '.' . $resolvedComponentCounter;
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'red');
     $resolvedDev = $devMode ?? $dev;
-    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
+    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($length, $resolvedLineLength, '4rem');
-    $resolvedCapLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($capLength, $capLength ?? null, '1.75rem');
+    $resolvedCapLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor($capLength, null, 'cap_length', '1.75rem');
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $attachTarget = filled($attachTo)
         ? \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, (string) $attachTo)
@@ -103,7 +103,7 @@
             left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($anchorStart, 'x', '0rem') }});
             bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($anchorStart, 'y', '0rem') }});
         "
-        title="{{ $id }} | missing attach-to: {{ $attachTo }}"
+        title="{{ \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id) }} | missing attach-to: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize($attachTo) }}"
     >
         <flux:badge color="red">
             {{ __('Missing anchor') }}: {{ $attachTo }}

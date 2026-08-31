@@ -25,9 +25,9 @@
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'startLength' => null,
-    'lineLength' => '4rem',
-    'lineWidth' => '0.25rem',
-    'arcSize' => '2.75rem',
+    'lineLength' => null,
+    'lineWidth' => null,
+    'arcSize' => null,
     'arcSizes' => [],
     'bridgeLength' => null,
     'stemLength' => null,
@@ -51,9 +51,9 @@
     ];
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
-    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineLength ?? null, '4rem');
-    $resolvedLineWidth = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($lineWidth ?? null, '0.25rem');
-    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrFallback($arcSize ?? null, '2.75rem');
+    $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
+    $resolvedLineWidth = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineWidth ?? null, 'line_width', '0.25rem');
+    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
     $resolvedArcInSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
         data_get($arcSizes, 1, data_get($arcSizes, 'in')),
         $resolvedArcSize,
@@ -64,8 +64,8 @@
         $resolvedArcSize,
         '2.75rem',
     );
-    $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, $resolvedLineLength, '4rem');
-    $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, $resolvedLineLength, '4rem');
+    $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $resolvedLineLength), '4rem');
+    $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', $resolvedLineLength), '4rem');
     $compressedStemParts = is_array($compressedStemParts) ? $compressedStemParts : [];
     $stemContinuationEntries = is_array($stemContinuation) ? $stemContinuation : [];
     $normalizeLabel = function (mixed $label, ?string $side = null) use ($color): ?array {

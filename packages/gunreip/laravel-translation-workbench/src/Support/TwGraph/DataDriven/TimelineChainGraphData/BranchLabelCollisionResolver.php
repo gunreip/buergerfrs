@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData;
 
+use Gunreip\TranslationWorkbench\Support\TwGraph\Defaults;
+use Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier;
+
 final class BranchLabelCollisionResolver
 {
-    private const TRUNK_STEP_REM = 6.0;
     private const LABEL_REACH_REM = 16.0;
     private const LABEL_GAP_REM = 2.0;
     private const BRIDGE_HEIGHT_REM = 1.5;
@@ -135,8 +137,8 @@ final class BranchLabelCollisionResolver
         return [
             'side' => $side,
             'type' => $type,
-            'branch' => self::branchId($branch),
-            'against' => self::branchId($against),
+            'branch' => ElementIdentifier::normalize(self::branchId($branch)),
+            'against' => ElementIdentifier::normalize(self::branchId($against)),
             'pass' => $pass,
             'requiredIncrement' => self::rem($requiredIncrement),
         ];
@@ -164,7 +166,8 @@ final class BranchLabelCollisionResolver
                     ->map(static fn(array $box): array => [
                         'type' => (string) data_get($box, 'type', 'bounds'),
                         'side' => (string) ($branch['side'] ?? ''),
-                        'id' => (string) $box['id'],
+                        'id' => ElementIdentifier::normalize($box['id']),
+                        'renderId' => (string) $box['id'],
                         ...self::boxToRem($box),
                     ])
                     ->values()
@@ -304,8 +307,8 @@ final class BranchLabelCollisionResolver
                         [
                             'type' => 'branch-end-over-bridge',
                             'message' => 'Branch end segment overlaps branch bridge',
-                            'label' => $endSegmentBox['id'],
-                            'bridge' => $bridgeBox['id'],
+                            'label' => ElementIdentifier::normalize($endSegmentBox['id']),
+                            'bridge' => ElementIdentifier::normalize($bridgeBox['id']),
                             'anchor' => [
                                 'x' => self::rem(((float) $bridgeBox['xStart'] + (float) $bridgeBox['xEnd']) / 2),
                                 'y' => self::rem(((float) $bridgeBox['yStart'] + (float) $bridgeBox['yEnd']) / 2),
@@ -313,12 +316,12 @@ final class BranchLabelCollisionResolver
                             'boxes' => [
                                 [
                                     'type' => 'branch-end',
-                                    'id' => $endSegmentBox['id'],
+                                    'id' => ElementIdentifier::normalize($endSegmentBox['id']),
                                     ...self::boxToRem($endSegmentBox),
                                 ],
                                 [
                                     'type' => 'bridge',
-                                    'id' => $bridgeBox['id'],
+                                    'id' => ElementIdentifier::normalize($bridgeBox['id']),
                                     ...self::boxToRem($bridgeBox),
                                 ],
                             ],
@@ -353,9 +356,9 @@ final class BranchLabelCollisionResolver
         $boxes = self::bridgeBoxes($branch, $branchIndex);
         $side = (string) ($branch['side'] ?? 'left');
         $anchorY = self::anchorY($branch);
-        $bridgeLength = self::toRem($branch['bridge_length'] ?? '3.5rem');
+        $bridgeLength = self::toRem($branch['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')));
         $entryStemLength = self::toRem($branch['entry_stem_length'] ?? '0rem');
-        $arcSize = self::toRem($branch['arc_size'] ?? '2.75rem') ?: 2.75;
+        $arcSize = self::toRem($branch['arc_size'] ?? self::defaultArcSize()) ?: self::defaultArcSizeRem();
         $direction = $side === 'left' ? -1.0 : 1.0;
         $stemX = $direction * ($bridgeLength + (2 * $arcSize));
         $arcOutY = $anchorY + $entryStemLength + (2 * $arcSize);
@@ -401,14 +404,14 @@ final class BranchLabelCollisionResolver
         $stemY = $stepEndY;
 
         foreach ($stemEntries as $stemEntry) {
-            $stemY += self::toRem(data_get($stemEntry, 'length', is_array($stemEntry) ? data_get($stemEntry, 0, $branch['stem_length'] ?? '3.5rem') : $stemEntry));
+            $stemY += self::toRem(data_get($stemEntry, 'length', is_array($stemEntry) ? data_get($stemEntry, 0, $branch['stem_length'] ?? Defaults::dataDrivenString('stem_length', Defaults::dataDrivenString('line_length', '4rem'))) : $stemEntry));
 
             foreach (self::labelsFromStemEntry($stemEntry) as $label) {
                 $stemBounds = self::expandBoxForLabelAt($stemBounds, $label, $stemX, $stemY);
             }
         }
 
-        $endLength = self::toRem($branch['end_length'] ?? '3rem');
+        $endLength = self::toRem($branch['end_length'] ?? Defaults::dataDrivenString('line_length', '4rem'));
         $endLabel = (array) ($branch['end_label'] ?? []);
         $hasEndBounds = $endLength > 0.0 || filled(data_get($endLabel, 'text'));
         if ($hasEndBounds) {
@@ -492,9 +495,9 @@ final class BranchLabelCollisionResolver
     {
         $side = (string) ($branch['side'] ?? 'left');
         $anchorY = self::anchorY($branch);
-        $bridgeLength = self::toRem($branch['bridge_length'] ?? '3.5rem');
+        $bridgeLength = self::toRem($branch['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')));
         $entryStemLength = self::toRem($branch['entry_stem_length'] ?? '0rem');
-        $arcSize = self::toRem($branch['arc_size'] ?? '2.75rem') ?: 2.75;
+        $arcSize = self::toRem($branch['arc_size'] ?? self::defaultArcSize()) ?: self::defaultArcSizeRem();
         $direction = $side === 'left' ? -1.0 : 1.0;
         $xStart = $direction * $arcSize;
         $xEnd = $direction * ($arcSize + $bridgeLength);
@@ -520,10 +523,10 @@ final class BranchLabelCollisionResolver
     {
         $side = (string) ($branch['side'] ?? 'left');
         $anchorY = self::anchorY($branch);
-        $bridgeLength = self::toRem($branch['bridge_length'] ?? '3.5rem');
+        $bridgeLength = self::toRem($branch['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')));
         $entryStemLength = self::toRem($branch['entry_stem_length'] ?? '0rem');
-        $arcSize = self::toRem($branch['arc_size'] ?? '2.75rem') ?: 2.75;
-        $endLength = self::toRem($branch['end_length'] ?? '3rem');
+        $arcSize = self::toRem($branch['arc_size'] ?? self::defaultArcSize()) ?: self::defaultArcSizeRem();
+        $endLength = self::toRem($branch['end_length'] ?? Defaults::dataDrivenString('line_length', '4rem'));
         $direction = $side === 'left' ? -1.0 : 1.0;
         $x = $direction * ($bridgeLength + (2 * $arcSize));
         $yStart = $anchorY
@@ -552,7 +555,7 @@ final class BranchLabelCollisionResolver
             return (float) $branch['anchor_y_rem'];
         }
 
-        return self::attachIndex((string) ($branch['attach_to'] ?? '')) * self::TRUNK_STEP_REM;
+        return self::attachIndex((string) ($branch['attach_to'] ?? '')) * Defaults::dataDrivenRem('line_length', '4rem');
     }
 
     /**
@@ -638,9 +641,9 @@ final class BranchLabelCollisionResolver
         }
 
         $side ??= (string) data_get($label, 'side', 'right');
-        $offset ??= 0.95 / 2
-            + self::toRem(data_get($label, 'connectorLength', '2rem'))
-            + self::toRem(data_get($label, 'connectorGap', '0.25rem'));
+        $offset ??= Defaults::dataDrivenRem('node_size', '0.95rem') / 2
+            + self::toRem(data_get($label, 'connectorLength', Defaults::dataDrivenString('connector_length', '2rem')))
+            + self::toRem(data_get($label, 'connectorGap', Defaults::dataDrivenString('connector_gap', '0.25rem')));
         $width = self::textLabelWidth($label);
         $height = self::textLabelHeight($label);
 
@@ -848,7 +851,7 @@ final class BranchLabelCollisionResolver
     private static function stemLabelHeight(array $stemContinuation): float
     {
         return collect($stemContinuation)
-            ->map(static fn(mixed $entry): float => self::toRem(data_get($entry, 'length', is_array($entry) ? data_get($entry, 0, '3.5rem') : $entry)))
+            ->map(static fn(mixed $entry): float => self::toRem(data_get($entry, 'length', is_array($entry) ? data_get($entry, 0, Defaults::dataDrivenString('stem_length', Defaults::dataDrivenString('line_length', '4rem'))) : $entry)))
             ->sum() ?: 5.25;
     }
 
@@ -905,6 +908,16 @@ final class BranchLabelCollisionResolver
         }
 
         return (float) $matches[0];
+    }
+
+    private static function defaultArcSize(): string
+    {
+        return Defaults::dataDrivenString('arc_size', '2.75rem');
+    }
+
+    private static function defaultArcSizeRem(): float
+    {
+        return self::toRem(self::defaultArcSize()) ?: 2.75;
     }
 
     private static function rem(float $value): string

@@ -28,8 +28,8 @@
     'id' => 'path.branch-extension',
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
-    'arcSize' => '2.75rem',
-    'bridgeLength' => '3rem',
+    'arcSize' => null,
+    'bridgeLength' => null,
     'step' => null,
     'stemLength' => '2rem',
     'color' => 'rose',
@@ -38,7 +38,7 @@
     'nodeLabels' => [],
     'endLabel' => null,
     'endLength' => '0rem',
-    'capLength' => '1.75rem',
+    'capLength' => null,
     'dev' => false,
 ])
 
@@ -65,6 +65,7 @@
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
     $startsFromStem = data_get($currentAnchor, 'sourceType') === 'stem';
+    $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', '4rem'));
 
     $bridgeDirection = $isLeft ? 'right-left' : 'left-right';
     $introArcStartAnchor = $isLeft ? 'e' : 'w';

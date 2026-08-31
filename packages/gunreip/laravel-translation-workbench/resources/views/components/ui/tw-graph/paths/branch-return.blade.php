@@ -19,8 +19,8 @@
     'id' => 'path.branch-return',
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
-    'arcSize' => '2.75rem',
-    'bridgeLength' => '3rem',
+    'arcSize' => null,
+    'bridgeLength' => null,
     'color' => 'orange',
     'zIndex' => null,
     'counterStart' => 1,
@@ -37,6 +37,7 @@
     ];
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
+    $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', '4rem'));
 
     $arcInStartAnchor = $isLeft ? 'w' : 'e';
     $arcInEndAnchor = 'n';
