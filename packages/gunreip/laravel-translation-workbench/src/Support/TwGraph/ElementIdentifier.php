@@ -20,9 +20,11 @@ final class ElementIdentifier
 
         $id = self::stripGraphPrefix($id);
         $id = self::normalizeStrangKindAndSide($id);
+        $id = self::normalizeStrangReferenceOrder($id);
         $id = self::normalizeChapterNumbers($id);
         $id = self::removeRedundantPathLevel($id);
         $id = self::normalizeElements($id);
+        $id = self::removeRedundantMainLevel($id);
 
         return trim($id, '.');
     }
@@ -56,6 +58,21 @@ final class ElementIdentifier
         ) ?? $id;
     }
 
+    private static function normalizeStrangReferenceOrder(string $id): string
+    {
+        return preg_replace_callback(
+            '/^strang\.([a-z]+(?:-[a-z]+)*)\.(left|right)\.(\d+)(\.|$)/',
+            static fn(array $matches): string => 'strang.'
+                . $matches[2]
+                . '.'
+                . $matches[3]
+                . '.'
+                . str_replace('-', '.', $matches[1])
+                . $matches[4],
+            $id,
+        ) ?? $id;
+    }
+
     private static function normalizeChapterNumbers(string $id): string
     {
         $id = preg_replace('/\.extension(\d+)(\.|$)/', '.extension.$1$2', $id) ?? $id;
@@ -84,5 +101,10 @@ final class ElementIdentifier
         $id = preg_replace('/\.path\.(\d+)(\.|$)/', '.stem$1$2', $id) ?? $id;
 
         return $id;
+    }
+
+    private static function removeRedundantMainLevel(string $id): string
+    {
+        return str_replace('.main.', '.', $id);
     }
 }

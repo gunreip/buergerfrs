@@ -33,6 +33,15 @@ final class Defaults
         return (float) $matches[0];
     }
 
+    public static function graphBool(string $key, bool $fallback): bool
+    {
+        $config = app('config');
+        $configKey = 'tw-graph-defaults.' . $key;
+        $value = $config->has($configKey) ? $config->get($configKey) : $fallback;
+
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $fallback;
+    }
+
     public static function dataDriven(string $key, mixed $fallback = null): mixed
     {
         $dataDriven = config('tw-graph-data-driven-defaults.' . $key);
@@ -58,6 +67,18 @@ final class Defaults
         }
 
         return (float) $matches[0];
+    }
+
+    public static function dataDrivenBool(string $key, bool $fallback): bool
+    {
+        $config = app('config');
+        $dataDrivenKey = 'tw-graph-data-driven-defaults.' . $key;
+
+        if ($config->has($dataDrivenKey)) {
+            return filter_var($config->get($dataDrivenKey), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $fallback;
+        }
+
+        return self::graphBool($key, $fallback);
     }
 
 

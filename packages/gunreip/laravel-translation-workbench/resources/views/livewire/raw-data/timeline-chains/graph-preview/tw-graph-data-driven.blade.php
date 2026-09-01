@@ -410,6 +410,40 @@
                     </flux:callout.heading>
                 @endif
 
+                @php
+                    $twGraphDebugOverlayElementId = static fn(
+                        mixed $id,
+                    ): string => \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize($id);
+                    $twGraphDebugOverlayRows = collect(
+                        data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkBoundsDebug', []),
+                    )
+                        ->merge(
+                            $twGraphDataDrivenPreviewMerges
+                                ->flatMap(fn($merge) => (array) data_get($merge, 'layout.mergeBoundsDebug', [])),
+                        )
+                        ->merge(
+                            $twGraphDataDrivenPreviewRekeys
+                                ->flatMap(fn($rekey) => (array) data_get($rekey, 'layout.rekeyBoundsDebug', [])),
+                        )
+                        ->merge(
+                            $twGraphDataDrivenPreviewBranches
+                                ->flatMap(fn($branch) => (array) data_get($branch, 'layout.branchBoundsDebug', [])),
+                        )
+                        ->values();
+                    $twGraphDebugBoundNumberById = $twGraphDebugOverlayRows
+                        ->mapWithKeys(
+                            fn($debugBox, int $index) => [
+                                $twGraphDebugOverlayElementId(
+                                    data_get($debugBox, 'id', data_get($debugBox, 'renderId', '')),
+                                ) => $index + 1,
+                            ],
+                        )
+                        ->all();
+                    $twGraphDebugBoundNumber = static fn(
+                        mixed $id,
+                    ): int|string => $twGraphDebugBoundNumberById[$twGraphDebugOverlayElementId($id)] ?? '';
+                @endphp
+
                 <x-translation-workbench::ui.tw-graph
                     class="px-24 py-12"
                     :graph-id="$twGraphDataDrivenPreviewGraph->get('graph_id')"
@@ -431,6 +465,9 @@
                     <x-translation-workbench::ui.tw-graph.strang.trunk
                         :color="$twGraphDataDrivenPreviewTrunk->get('color', 'green')"
                         :stem-length="$twGraphDataDrivenPreviewGraph->get('stem_length')"
+                        :start-length="$twGraphDataDrivenPreviewTrunk->get('start_length')"
+                        :start-shift-enabled="false"
+                        :start-shift-length="$twGraphDataDrivenPreviewTrunk->get('start_shift_length')"
                         :path-count="$twGraphDataDrivenPreviewTrunk->get('path_count', 4)"
                         :path-lengths="$twGraphDataDrivenPreviewTrunk->get('path_lengths', [])"
                         :end-length="$twGraphDataDrivenPreviewTrunk->get('end_length')"
@@ -442,12 +479,13 @@
 
                     @foreach (collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkBoundsDebug', [])) as $trunkBoundsDebug)
                         @php
+                            $trunkBoundsDebugNumber = $twGraphDebugBoundNumber(data_get($trunkBoundsDebug, 'id'));
                             $trunkBoundsDebugTooltip =
                                 'Trunk bounds' .
                                 ' | ' .
                                 data_get($trunkBoundsDebug, 'type') .
                                 ': ' .
-                                data_get($trunkBoundsDebug, 'id') .
+                                \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label(data_get($trunkBoundsDebug, 'id')) .
                                 ' | x=' .
                                 data_get($trunkBoundsDebug, 'x', '0rem') .
                                 ' y=' .
@@ -469,7 +507,13 @@
                                 height: {{ data_get($trunkBoundsDebug, 'height', '0rem') }};
                             "
                             x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
-                        ></span>
+                        >
+                            <span
+                                class="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-sm border border-green-500/70 bg-white px-1 font-mono text-[0.6rem] leading-4 text-green-700 shadow-sm dark:bg-zinc-950 dark:text-green-300"
+                            >
+                                {{ $trunkBoundsDebugNumber }}
+                            </span>
+                        </span>
                     @endforeach
 
                     @foreach ($twGraphDataDrivenPreviewRekeys as $rekeyIndex => $rekeyPreview)
@@ -547,6 +591,7 @@
 
                         @foreach (collect(data_get($rekeyPreview, 'layout.rekeyBoundsDebug', [])) as $rekeyBoundsDebug)
                             @php
+                                $rekeyBoundsDebugNumber = $twGraphDebugBoundNumber(data_get($rekeyBoundsDebug, 'id'));
                                 $rekeyBoundsDebugType = (string) data_get($rekeyBoundsDebug, 'type', '');
                                 $rekeyBoundsDebugIsSubBox =
                                     str_ends_with($rekeyBoundsDebugType, '-start') ||
@@ -561,7 +606,7 @@
                                     ' | ' .
                                     $rekeyBoundsDebugType .
                                     ': ' .
-                                    data_get($rekeyBoundsDebug, 'id') .
+                                    \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label(data_get($rekeyBoundsDebug, 'id')) .
                                     ' | x=' .
                                     data_get($rekeyBoundsDebug, 'x', '0rem') .
                                     ' y=' .
@@ -587,7 +632,17 @@
                                     'z-[1] border-sky-400/75 bg-sky-300/5' => !$rekeyBoundsDebugIsSubBox,
                                 ])
                                 x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
-                            ></span>
+                            >
+                                <span
+                                    @class([
+                                        'absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-sm border bg-white px-1 font-mono text-[0.6rem] leading-4 shadow-sm dark:bg-zinc-950',
+                                        'border-lime-500/70 text-lime-700 dark:text-lime-300' => $rekeyBoundsDebugIsSubBox,
+                                        'border-sky-500/70 text-sky-700 dark:text-sky-300' => !$rekeyBoundsDebugIsSubBox,
+                                    ])
+                                >
+                                    {{ $rekeyBoundsDebugNumber }}
+                                </span>
+                            </span>
                         @endforeach
                     @endforeach
 
@@ -643,6 +698,7 @@
 
                             @foreach (collect(data_get($mergePreview, 'layout.mergeBoundsDebug', [])) as $mergeBoundsDebug)
                                 @php
+                                    $mergeBoundsDebugNumber = $twGraphDebugBoundNumber(data_get($mergeBoundsDebug, 'id'));
                                     $mergeBoundsDebugType = (string) data_get($mergeBoundsDebug, 'type', '');
                                     $mergeBoundsDebugIsSubBox =
                                         str_ends_with($mergeBoundsDebugType, '-start') ||
@@ -655,7 +711,7 @@
                                         ' | ' .
                                         $mergeBoundsDebugType .
                                         ': ' .
-                                        data_get($mergeBoundsDebug, 'id') .
+                                        \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label(data_get($mergeBoundsDebug, 'id')) .
                                         ' | x=' .
                                         data_get($mergeBoundsDebug, 'x', '0rem') .
                                         ' y=' .
@@ -681,7 +737,17 @@
                                         'z-[1] border-amber-400/75 bg-amber-300/5' => !$mergeBoundsDebugIsSubBox,
                                     ])
                                     x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
-                                ></span>
+                                >
+                                    <span
+                                        @class([
+                                            'absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-sm border bg-white px-1 font-mono text-[0.6rem] leading-4 shadow-sm dark:bg-zinc-950',
+                                            'border-lime-500/70 text-lime-700 dark:text-lime-300' => $mergeBoundsDebugIsSubBox,
+                                            'border-amber-500/70 text-amber-700 dark:text-amber-300' => !$mergeBoundsDebugIsSubBox,
+                                        ])
+                                    >
+                                        {{ $mergeBoundsDebugNumber }}
+                                    </span>
+                                </span>
                             @endforeach
                         @endforeach
                     @endif
@@ -753,12 +819,13 @@
 
                         @foreach (collect(data_get($branchPreview, 'layout.branchBoundsDebug', [])) as $branchBoundsDebug)
                             @php
+                                $branchBoundsDebugNumber = $twGraphDebugBoundNumber(data_get($branchBoundsDebug, 'id'));
                                 $branchBoundsDebugTooltip =
                                     'Branch bounds' .
                                     ' | ' .
                                     data_get($branchBoundsDebug, 'type') .
                                     ': ' .
-                                    data_get($branchBoundsDebug, 'id') .
+                                    \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label(data_get($branchBoundsDebug, 'id')) .
                                     ' | x=' .
                                     data_get($branchBoundsDebug, 'x', '0rem') .
                                     ' y=' .
@@ -780,7 +847,13 @@
                                     height: {{ data_get($branchBoundsDebug, 'height', '0rem') }};
                                 "
                                 x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
-                            ></span>
+                            >
+                                <span
+                                    class="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-sm border border-sky-500/70 bg-white px-1 font-mono text-[0.6rem] leading-4 text-sky-700 shadow-sm dark:bg-zinc-950 dark:text-sky-300"
+                                >
+                                    {{ $branchBoundsDebugNumber }}
+                                </span>
+                            </span>
                         @endforeach
                     @endforeach
                 </x-translation-workbench::ui.tw-graph>
@@ -890,6 +963,26 @@
 
                         return $collisionTypes;
                     }, []);
+
+                    foreach ($twGraphDataDrivenPreviewMerges as $mergePreview) {
+                        foreach ((array) data_get($mergePreview, 'layout.mergeCollisionDebug', []) as $collision) {
+                            $firstId = $twGraphElementId(data_get($collision, 'first', ''));
+                            $secondId = $twGraphElementId(data_get($collision, 'second', ''));
+
+                            if ($firstId === '' || $secondId === '') {
+                                continue;
+                            }
+
+                            $collisionType = $twGraphDebugCollisionType(
+                                (string) $twGraphDebugLevelById->get($firstId, 'main'),
+                                (string) $twGraphDebugLevelById->get($secondId, 'main'),
+                            );
+
+                            $twGraphDebugCollisionTypeById[$firstId] = $collisionType;
+                            $twGraphDebugCollisionTypeById[$secondId] = $collisionType;
+                        }
+                    }
+
                     $twGraphBranchCollisionBoundId = static function (string $branchId, string $type) use (
                         $twGraphElementId,
                     ): string {
@@ -901,6 +994,23 @@
                             $type === 'bridge' ? $branchId . '.main.path.branch.bridge1' : $branchId . '.label-bounds';
 
                         return $twGraphElementId($boundId);
+                    };
+                    $twGraphBranchEndBoundId = static function (string $branchEndSegmentId) use (
+                        $twGraphElementId,
+                    ): string {
+                        if ($branchEndSegmentId === '') {
+                            return '';
+                        }
+
+                        $branchEndSegmentId = $twGraphElementId($branchEndSegmentId);
+                        $branchEndBoundId = str_ends_with($branchEndSegmentId, '.branch.end.segment')
+                            ? substr($branchEndSegmentId, 0, -strlen('.segment')) . '.bounds'
+                            : $branchEndSegmentId;
+                        $branchEndBoundId = str_ends_with($branchEndBoundId, '.end.path.branch-end.segment')
+                            ? substr($branchEndSegmentId, 0, -strlen('.segment')) . '.bounds'
+                            : $branchEndBoundId;
+
+                        return $twGraphElementId($branchEndBoundId);
                     };
 
                     foreach ($twGraphDataDrivenPreviewBranches as $branchPreview) {
@@ -926,6 +1036,27 @@
 
                             $twGraphDebugCollisionTypeById[$branchId] = $collisionType;
                             $twGraphDebugCollisionTypeById[$againstId] = $collisionType;
+                        }
+
+                        foreach ((array) data_get($branchPreview, 'layout.warnings', []) as $warning) {
+                            if ((string) data_get($warning, 'type') !== 'branch-end-over-bridge') {
+                                continue;
+                            }
+
+                            $branchEndId = $twGraphBranchEndBoundId((string) data_get($warning, 'label', ''));
+                            $bridgeId = $twGraphElementId(data_get($warning, 'bridge', ''));
+
+                            if ($branchEndId === '' || $bridgeId === '') {
+                                continue;
+                            }
+
+                            $collisionType = $twGraphDebugCollisionType(
+                                (string) $twGraphDebugLevelById->get($branchEndId, 'sub'),
+                                (string) $twGraphDebugLevelById->get($bridgeId, 'main'),
+                            );
+
+                            $twGraphDebugCollisionTypeById[$branchEndId] = $collisionType;
+                            $twGraphDebugCollisionTypeById[$bridgeId] = $collisionType;
                         }
                     }
 
@@ -955,6 +1086,44 @@
                         return $collisionDeltas;
                     }, []);
 
+                    foreach ($twGraphDataDrivenPreviewMerges as $mergePreview) {
+                        foreach ((array) data_get($mergePreview, 'layout.mergeCollisionDebug', []) as $collision) {
+                            $firstId = $twGraphElementId(data_get($collision, 'first', ''));
+                            $secondId = $twGraphElementId(data_get($collision, 'second', ''));
+                            $value = trim(
+                                (string) data_get($collision, 'type', 'merge overlap') .
+                                    ' | preferred ' .
+                                    (string) data_get($collision, 'preferredCompensationDirection', 'vertical') .
+                                    ' +' .
+                                    (string) data_get($collision, 'preferredIncrement', '0rem') .
+                                    ' | bridge +' .
+                                    (string) data_get($collision, 'requiredBridgeIncrement', '0rem') .
+                                    ' | stem +' .
+                                    (string) data_get($collision, 'requiredStemIncrement', '0rem') .
+                                    ' | overlap x=' .
+                                    (string) data_get($collision, 'overlapWidth', '0rem') .
+                                    ' y=' .
+                                    (string) data_get($collision, 'overlapHeight', '0rem') .
+                                    ' | gap=' .
+                                    (string) data_get($collision, 'gap', '0rem'),
+                            );
+
+                            foreach ([$firstId, $secondId] as $id) {
+                                if ($id === '') {
+                                    continue;
+                                }
+
+                                $twGraphDebugCollisionDeltaById[$id] = collect([
+                                    ...((array) ($twGraphDebugCollisionDeltaById[$id] ?? [])),
+                                    $value,
+                                ])
+                                    ->unique()
+                                    ->values()
+                                    ->all();
+                            }
+                        }
+                    }
+
                     foreach ($twGraphDataDrivenPreviewBranches as $branchPreview) {
                         foreach ((array) data_get($branchPreview, 'layout.branchCollisionDebug', []) as $collision) {
                             $type = (string) data_get($collision, 'type', 'label');
@@ -971,6 +1140,34 @@
                             $value = $direction . ' +' . (string) data_get($collision, 'requiredIncrement', '0rem');
 
                             foreach ([$branchId, $againstId] as $id) {
+                                if ($id === '') {
+                                    continue;
+                                }
+
+                                $twGraphDebugCollisionDeltaById[$id] = collect([
+                                    ...((array) ($twGraphDebugCollisionDeltaById[$id] ?? [])),
+                                    $value,
+                                ])
+                                    ->unique()
+                                    ->values()
+                                    ->all();
+                            }
+                        }
+
+                        foreach ((array) data_get($branchPreview, 'layout.warnings', []) as $warning) {
+                            if ((string) data_get($warning, 'type') !== 'branch-end-over-bridge') {
+                                continue;
+                            }
+
+                            $branchEndId = $twGraphBranchEndBoundId((string) data_get($warning, 'label', ''));
+                            $bridgeId = $twGraphElementId(data_get($warning, 'bridge', ''));
+                            $value = trim(
+                                (string) data_get($warning, 'message', 'branch-end/bridge overlap') .
+                                    ' | bridge=' .
+                                    (string) data_get($warning, 'bridge', ''),
+                            );
+
+                            foreach ([$branchEndId, $bridgeId] as $id) {
                                 if ($id === '') {
                                     continue;
                                 }
@@ -1010,9 +1207,92 @@
                         return $appliedCorrections;
                     }, []);
 
+                    $twGraphDebugAppliedCompensationById = collect([
+                        $twGraphDataDrivenPreviewTrunk->all(),
+                        ...$twGraphDataDrivenPreviewBranches->all(),
+                        ...$twGraphDataDrivenPreviewMerges->all(),
+                        ...$twGraphDataDrivenPreviewRekeys->all(),
+                    ])
+                        ->flatMap(static fn(array $preview): array => (array) data_get($preview, 'layout.appliedCompensations', []))
+                        ->reduce(function (array $appliedCompensations, array $compensation) use ($twGraphElementId): array {
+                            $target = $twGraphElementId(data_get($compensation, 'target', ''));
+                            $prop = (string) data_get($compensation, 'prop', '');
+                            $value = (string) data_get($compensation, 'effectiveValue', '');
+
+                            if ($target === '' || $prop === '' || $value === '') {
+                                return $appliedCompensations;
+                            }
+
+                            $parts = [
+                                $prop . '=' . $value,
+                            ];
+
+                            if (filled(data_get($compensation, 'delta'))) {
+                                $parts[] = 'delta=' . data_get($compensation, 'delta');
+                            }
+
+                            if (filled(data_get($compensation, 'overlapWidth'))) {
+                                $parts[] = 'overlap=' . data_get($compensation, 'overlapWidth');
+                            }
+
+                            if (filled(data_get($compensation, 'gap'))) {
+                                $parts[] = 'gap=' . data_get($compensation, 'gap');
+                            }
+
+                            foreach ((array) data_get($compensation, 'sources', []) as $source) {
+                                if (filled(data_get($source, 'requiredIncrement'))) {
+                                    $parts[] = data_get($source, 'source') . ': required=' . data_get($source, 'requiredIncrement');
+                                }
+
+                                if (filled(data_get($source, 'gap'))) {
+                                    $parts[] = 'gap=' . data_get($source, 'gap');
+                                }
+                            }
+
+                            $label = implode(' | ', array_filter($parts));
+
+                            $targetIds = [$target, $target . '.bounds'];
+                            if (preg_match('/^strang\.trunk\.1\.stem(\d+)$/', $target, $matches) === 1) {
+                                $stemNumber = (int) $matches[1];
+                                $targetIds[] = 'strang.trunk.1.bounds';
+
+                                if ($stemNumber === 1) {
+                                    $targetIds[] = 'strang.trunk.1.start.bounds.label';
+                                    $targetIds[] = 'strang.trunk.1.start.left.bounds.label';
+                                    $targetIds[] = 'strang.trunk.1.start.right.bounds.label';
+                                    $targetIds[] = 'strang.trunk.1.start.nodeEndLabel1.bounds';
+                                    $targetIds[] = 'strang.trunk.1.start.nodeEndLabel2.bounds';
+                                }
+                            }
+                            if (preg_match('/^strang\.(left|right)\.(\d+)\.merge\.stem(\d+)$/', $target, $matches) === 1) {
+                                $targetIds[] = 'strang.' . $matches[1] . '.' . $matches[2] . '.merge.start.stem.bounds';
+                                $targetIds[] = 'strang.' . $matches[1] . '.' . $matches[2] . '.merge.start.stem.labels.bounds';
+                                $targetIds[] = 'strang.' . $matches[1] . '.' . $matches[2] . '.merge.start.stem.tail.bounds';
+                            }
+                            if (preg_match('/^strang\.(left|right)\.(\d+)\.merge\.extension\.(\d+)\.stem(\d+)$/', $target, $matches) === 1) {
+                                $targetIds[] = 'strang.' . $matches[1] . '.' . $matches[2] . '.merge.extension.' . $matches[3] . '.start.stem.bounds';
+                                $targetIds[] = 'strang.' . $matches[1] . '.' . $matches[2] . '.merge.extension.' . $matches[3] . '.start.stem.labels.bounds';
+                                $targetIds[] = 'strang.' . $matches[1] . '.' . $matches[2] . '.merge.extension.' . $matches[3] . '.start.stem.tail.bounds';
+                            }
+
+                            foreach (array_unique($targetIds) as $id) {
+                                $appliedCompensations[$id] = collect([
+                                    ...((array) ($appliedCompensations[$id] ?? [])),
+                                    $label,
+                                ])
+                                    ->unique()
+                                    ->values()
+                                    ->all();
+                            }
+
+                            return $appliedCompensations;
+                        }, []);
+
                     $twGraphDebugBoundRows = $twGraphDebugBaseBoundRows
                         ->map(function ($debugBoundRow) use (
+                            $twGraphDebugAppliedCompensationById,
                             $twGraphDebugAppliedCorrectionById,
+                            $twGraphDebugBoundNumberById,
                             $twGraphDebugCollisionTypeById,
                             $twGraphDebugCollisionDeltaById,
                         ) {
@@ -1020,10 +1300,15 @@
 
                             return [
                                 ...$debugBoundRow,
+                                'debug_no' => $twGraphDebugBoundNumberById[$debugBoundId] ?? '',
+                                'display_id' => \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($debugBoundId),
                                 'collision' => array_key_exists($debugBoundId, $twGraphDebugCollisionTypeById),
                                 'collision_type' => $twGraphDebugCollisionTypeById[$debugBoundId] ?? 'none',
                                 'collision_delta' => collect(
                                     (array) ($twGraphDebugCollisionDeltaById[$debugBoundId] ?? []),
+                                )->join(' | '),
+                                'applied_compensation' => collect(
+                                    (array) ($twGraphDebugAppliedCompensationById[$debugBoundId] ?? []),
                                 )->join(' | '),
                                 'applied_correction' => collect(
                                     (array) ($twGraphDebugAppliedCorrectionById[$debugBoundId] ?? []),
@@ -1035,7 +1320,8 @@
                 @endphp
 
                 <div
-                    class="tw-graph-protocol-dev-only mt-4 overflow-hidden rounded-lg border border-zinc-200 bg-white/75 dark:border-zinc-700 dark:bg-zinc-900/45">
+                    x-show="twGraphDataDrivenDev"
+                    class="mt-4 overflow-hidden rounded-lg border border-zinc-200 bg-white/75 dark:border-zinc-700 dark:bg-zinc-900/45">
                     <div
                         class="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-200 px-3 py-2 dark:border-zinc-700">
                         <flux:heading size="sm">{{ __('Debug bounds') }}</flux:heading>
@@ -1068,6 +1354,7 @@
                         <table class="min-w-full text-left text-xs">
                             <thead class="bg-zinc-50 text-zinc-600 dark:bg-zinc-950/60 dark:text-zinc-300">
                                 <tr>
+                                    <th class="px-3 py-2 font-medium">{{ __('#') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Scope') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Side') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Type') }}</th>
@@ -1077,12 +1364,16 @@
                                     <th class="px-3 py-2 font-medium">{{ __('Collision Type') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Collision') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Collision Delta') }}</th>
+                                    <th class="px-3 py-2 font-medium">{{ __('Applied Compensation') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Applied Correction') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-zinc-200/70 dark:divide-zinc-700/70">
                                 @forelse ($twGraphDebugBoundRows as $debugBoundRow)
                                     <tr x-show="!twGraphDebugBoundsCollisionOnly || @js((bool) data_get($debugBoundRow, 'collision'))">
+                                        <td class="px-3 py-2 align-top font-mono text-zinc-700 dark:text-zinc-200">
+                                            {{ data_get($debugBoundRow, 'debug_no') }}
+                                        </td>
                                         <td class="px-3 py-2 align-top">
                                             <flux:badge
                                                 size="sm"
@@ -1098,8 +1389,11 @@
                                             {{ data_get($debugBoundRow, 'type') }}
                                         </td>
                                         <td
-                                            class="wrap-anywhere px-3 py-2 align-top font-mono text-zinc-900 dark:text-zinc-100">
-                                            {{ data_get($debugBoundRow, 'id') }}
+                                            class="wrap-anywhere cursor-copy px-3 py-2 align-top font-mono text-zinc-900 dark:text-zinc-100"
+                                            title="{{ data_get($debugBoundRow, 'id') }}"
+                                            x-on:click.stop="navigator.clipboard?.writeText(@js(data_get($debugBoundRow, 'id')))"
+                                        >
+                                            {{ data_get($debugBoundRow, 'display_id') }}
                                         </td>
                                         <td class="px-3 py-2 align-top font-mono text-zinc-700 dark:text-zinc-200">
                                             x={{ data_get($debugBoundRow, 'x') }}
@@ -1131,6 +1425,9 @@
                                             {{ data_get($debugBoundRow, 'collision_delta') }}
                                         </td>
                                         <td class="px-3 py-2 align-top font-mono text-zinc-700 dark:text-zinc-200">
+                                            {{ data_get($debugBoundRow, 'applied_compensation') }}
+                                        </td>
+                                        <td class="px-3 py-2 align-top font-mono text-zinc-700 dark:text-zinc-200">
                                             {{ data_get($debugBoundRow, 'applied_correction') }}
                                         </td>
                                     </tr>
@@ -1138,7 +1435,7 @@
                                     <tr>
                                         <td
                                             class="px-3 py-4 text-center text-zinc-500"
-                                            colspan="10"
+                                            colspan="12"
                                         >
                                             {{ __('No debug bound boxes available.') }}
                                         </td>
@@ -1148,7 +1445,7 @@
                                     <tr x-show="twGraphDebugBoundsCollisionOnly">
                                         <td
                                             class="px-3 py-4 text-center text-zinc-500"
-                                            colspan="10"
+                                            colspan="12"
                                         >
                                             {{ __('No collision debug bound boxes available.') }}
                                         </td>

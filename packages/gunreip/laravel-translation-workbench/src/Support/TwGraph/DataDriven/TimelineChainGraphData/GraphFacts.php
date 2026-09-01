@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData;
 
+use Gunreip\TranslationWorkbench\Support\TwGraph\Defaults;
 use Illuminate\Support\Collection;
 
 final class GraphFacts
@@ -28,7 +29,7 @@ final class GraphFacts
                     'branch' => (string) ($row['branch'] ?? ''),
                     'event' => (string) ($row['event'] ?? ''),
                     'state' => (string) ($row['state'] ?? ''),
-                    'color' => (string) ($row['color'] ?? 'zinc'),
+                    'color' => (string) ($row['color'] ?? self::color('fallback', 'zinc')),
                 ])
                 ->values()
                 ->all(),
@@ -99,7 +100,7 @@ final class GraphFacts
                         'timestamp' => $row['timestamp'] ?? null,
                         'event' => (string) ($row['event'] ?? ''),
                         'state' => (string) ($row['state'] ?? ''),
-                        'color' => (string) ($row['branch_color'] ?? $row['color'] ?? 'zinc'),
+                        'color' => (string) ($row['branch_color'] ?? $row['color'] ?? self::color('fallback', 'zinc')),
                     ];
                 })
                 ->values()
@@ -146,5 +147,10 @@ final class GraphFacts
                 'count' => collect(data_get($mainRow, 'meta.moved_relations', []))->count(),
             ],
         ];
+    }
+
+    private static function color(string $key, string $fallback): string
+    {
+        return Defaults::dataDrivenString('colors.' . $key, Defaults::graphString('colors.' . $key, $fallback));
     }
 }

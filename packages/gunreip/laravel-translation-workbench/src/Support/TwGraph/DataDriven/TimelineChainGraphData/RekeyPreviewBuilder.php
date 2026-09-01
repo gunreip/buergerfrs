@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData;
 
 use App\Support\Locale\LocaleCode;
+use Gunreip\TranslationWorkbench\Support\TwGraph\Defaults;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -204,7 +205,7 @@ final class RekeyPreviewBuilder
             'kind' => $kind,
             'side' => $side,
             'component_counter' => $componentCounter,
-            'color' => 'sky',
+            'color' => self::color('rekey', 'sky'),
             'attach_to' => $isSource ? 'strang.trunk.path.1.end' : 'strang.trunk.path.7.end',
             'stem_continuation' => $isSource ? $sourceStemContinuation : $targetStemContinuation,
             'end_label' => $isSource
@@ -214,7 +215,7 @@ final class RekeyPreviewBuilder
                         'rekey target to ID #' . (string) ($targetKeyId ?: '?'),
                         $timestamp,
                     ],
-                    'badgeColor' => 'sky',
+                    'badgeColor' => self::color('rekey', 'sky'),
                     'long' => true,
                 ],
             'start_label' => [
@@ -226,7 +227,7 @@ final class RekeyPreviewBuilder
                 ])),
                 'side' => 'bottom',
                 'offset' => '0.75rem',
-                'badgeColor' => 'sky',
+                'badgeColor' => self::color('rekey', 'sky'),
             ],
             'node_labels' => $isSource
                 ? [
@@ -378,4 +379,8 @@ final class RekeyPreviewBuilder
             ->all();
     }
 
+    private static function color(string $key, string $fallback): string
+    {
+        return Defaults::dataDrivenString('colors.' . $key, Defaults::graphString('colors.' . $key, $fallback));
+    }
 }

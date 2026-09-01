@@ -49,6 +49,8 @@
     'endLabel' => null,
     'startNodeLabels' => [],
     'startLabelSpace' => '3rem',
+    'startShiftEnabled' => null,
+    'startShiftLength' => null,
     'zIndex' => 20,
     'counterStart' => 1,
     'devMode' => null,
@@ -72,7 +74,16 @@
         : $resolvedLineLength;
     $resolvedPathCount = max(0, (int) ($pathCount ?? $defaultPathSegments));
     $resolvedDev = $devMode ?? $dev;
-    $resolvedStartLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedDefaultPathLength, '4rem');
+    $resolvedStartLengthBase = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedDefaultPathLength, '4rem');
+    $resolvedStartShiftEnabled = $startShiftEnabled === null
+        ? \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphBool('trunk_start_shift_enabled', false)
+        : (filter_var($startShiftEnabled, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false);
+    $resolvedStartShiftLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
+        $startShiftLength,
+        null,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('trunk_start_shift_length', '4rem'),
+    );
+    $resolvedStartLength = $resolvedStartLengthBase;
     $resolvedEndLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($endLength, $resolvedDefaultPathLength, '4rem');
 
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
@@ -166,6 +177,23 @@
             ];
         })
         ->all();
+    if ($resolvedStartShiftEnabled && $pathNumbers !== []) {
+        $firstPathEntry = $resolvedPathLengthEntries[1] ?? $resolvedDefaultPathLength;
+        $firstPathLength = $lengthOf($firstPathEntry);
+        $shiftedFirstPathLength = 'calc(' . $firstPathLength . ' + ' . $resolvedStartShiftLength . ')';
+
+        if (is_array($firstPathEntry)) {
+            if (array_key_exists('length', $firstPathEntry) || ! array_key_exists(0, $firstPathEntry)) {
+                $firstPathEntry['length'] = $shiftedFirstPathLength;
+            } else {
+                $firstPathEntry[0] = $shiftedFirstPathLength;
+            }
+
+            $resolvedPathLengthEntries[1] = $firstPathEntry;
+        } else {
+            $resolvedPathLengthEntries[1] = $shiftedFirstPathLength;
+        }
+    }
     $resolvedPathLengths = collect($pathNumbers)
         ->map(fn (int $pathNumber): string => $lengthOf($resolvedPathLengthEntries[$pathNumber] ?? $resolvedDefaultPathLength))
         ->all();

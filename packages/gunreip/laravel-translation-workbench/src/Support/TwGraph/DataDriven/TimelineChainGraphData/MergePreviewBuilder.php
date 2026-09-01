@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData;
 
+use Gunreip\TranslationWorkbench\Support\TwGraph\Defaults;
 use Illuminate\Support\Collection;
 
 final class MergePreviewBuilder
@@ -26,6 +27,10 @@ final class MergePreviewBuilder
                 $main = $sideRows->first();
                 $mainPreview = self::preview($main['row'], (int) $main['index'], $side);
                 $extensions = self::extensionRows($sideRows, max(0, intdiv($maxMergeCandidates, 2) - 1));
+                $mainPreview['stem_continuation'] = self::withConfiguredVerticalStagger(
+                    (array) ($mainPreview['stem_continuation'] ?? []),
+                    1,
+                );
 
                 $mainPreview['extension_count'] = $extensions->count();
                 $mainPreview['extension_stem_lengths'] = [];
@@ -33,7 +38,10 @@ final class MergePreviewBuilder
                 $mainPreview['extension_stem_continuations'] = $extensions->isNotEmpty()
                     ? $extensions
                     ->mapWithKeys(static fn(array $extension, int $extensionOffset): array => [
-                        $extensionOffset + 1 => $extension['stem_continuation'] ?? [],
+                        $extensionOffset + 1 => self::withConfiguredVerticalStagger(
+                            (array) ($extension['stem_continuation'] ?? []),
+                            $extensionOffset + 2,
+                        ),
                     ])
                     ->filter(static fn(array $continuation): bool => $continuation !== [])
                     ->all()
@@ -59,11 +67,12 @@ final class MergePreviewBuilder
      */
     private static function extensionRows(Collection $sideRows, int $headExtensionCount): Collection
     {
+        $directPerSideBeforeAggregate = max(1, self::mergeLayoutInt('direct_per_side_before_aggregate', 5));
         $extensionRows = $sideRows
             ->skip(1)
             ->values();
 
-        if ($extensionRows->count() <= $headExtensionCount + 1) {
+        if ($sideRows->count() <= $directPerSideBeforeAggregate) {
             return $extensionRows
                 ->map(static fn(array $row, int $index): array => [
                     'type' => 'real',
@@ -99,23 +108,11 @@ final class MergePreviewBuilder
             [
                 'type' => 'real',
                 'row' => $tailRow['row'],
-                'stem_continuation' => [1 => []],
+                'stem_continuation' => self::tailExtensionStemContinuation(),
             ],
         ];
 
         return collect([...$head->all(), ...$aggregate, ...$tail]);
-    }
-
-    /**
-     * Merge origins use alternating stem slots: default/long/default/long...
-     * Two sides may share the same visual rhythm, but each side receives only
-     * its own row sequence here.
-     *
-     * @return array<int, string>
-     */
-    private static function realExtensionStemContinuation(int $extensionIndex): array
-    {
-        return [1 => []];
     }
 
     /**
@@ -165,7 +162,7 @@ final class MergePreviewBuilder
                 'text' => array_values(array_filter([$firstRootLabel, LabelFormatter::graphTimestampLabel($firstTimestamp)])),
                 'side' => 'bottom',
                 'offset' => '0.75rem',
-                'badgeColor' => 'amber',
+                'badgeColor' => self::color('merge', 'amber'),
             ],
             1 => $side === 'left'
                 ? ['left' => $firstSeenLabel, 'right' => $literalLabel]
@@ -184,30 +181,35 @@ final class MergePreviewBuilder
      */
     private static function aggregateExtensionNodeLabels(Collection $rows, string $side): array
     {
+        $aggregateBadgeColor = self::color('merge_aggregate', self::color('merge', 'amber'));
         $labels = [
             'start' => [
                 'text' => ['Aggregated origins (' . $rows->count() . ')'],
                 'side' => 'bottom',
                 'offset' => '0.75rem',
-                'badgeColor' => 'amber',
+                'badgeColor' => $aggregateBadgeColor,
             ],
         ];
 
         $rows
             ->values()
             ->chunk(2)
-            ->each(static function (Collection $chunk, int $chunkIndex) use (&$labels, $side): void {
+            ->each(static function (Collection $chunk, int $chunkIndex) use (&$labels, $side, $aggregateBadgeColor): void {
                 $chunk = $chunk->values();
                 $nodeIndex = $chunkIndex + 1;
-                $leftLabel = LabelFormatter::findingIdLabelWithTimestamp((array) $chunk->get(0));
-                $rightLabel = LabelFormatter::findingIdLabelWithTimestamp((array) $chunk->get(1));
+                $leftRow = $chunk->get(0);
+                $rightRow = $chunk->get(1);
+                $leftLabel = is_array($leftRow) ? LabelFormatter::findingIdLabelWithTimestamp($leftRow) : null;
+                $rightLabel = is_array($rightRow) ? LabelFormatter::findingIdLabelWithTimestamp($rightRow) : null;
 
                 $labels[$nodeIndex] = $side === 'left'
                     ? array_filter([
+                        'badgeColor' => $aggregateBadgeColor,
                         'left' => $leftLabel,
                         'right' => $rightLabel,
                     ])
                     : array_filter([
+                        'badgeColor' => $aggregateBadgeColor,
                         'left' => $rightLabel,
                         'right' => $leftLabel,
                     ]);
@@ -248,13 +250,13 @@ final class MergePreviewBuilder
             'Source',
             LabelFormatter::graphSourceLabelText($sourcePath),
         ]));
-        $stemContinuation = [1 => []];
+        $stemContinuation = self::mainStemContinuation();
         $attachNodeNumber = 5 + count($stemContinuation);
 
         return [
             'component' => 'tw-graph.strang.merge-' . $side,
             'side' => $side,
-            'color' => 'amber',
+            'color' => self::color('merge', 'amber'),
             'attach_to' => 'strang.trunk.path.1.end',
             'stem_continuation' => $stemContinuation,
             'arc_sizes' => [],
@@ -262,7 +264,7 @@ final class MergePreviewBuilder
                 'text' => array_values(array_filter([$firstRootLabel, LabelFormatter::graphTimestampLabel($firstTimestamp)])),
                 'side' => 'bottom',
                 'offset' => '0.75rem',
-                'badgeColor' => 'amber',
+                'badgeColor' => self::color('merge', 'amber'),
             ],
             'node_labels' => [
                 1 => $side === 'left'
@@ -300,5 +302,137 @@ final class MergePreviewBuilder
                 'last_timestamp' => $row['last_timestamp'] ?? null,
             ],
         ];
+    }
+
+    private static function color(string $key, string $fallback): string
+    {
+        return Defaults::dataDrivenString('colors.' . $key, Defaults::graphString('colors.' . $key, $fallback));
+    }
+
+    /**
+     * @return array<int|string, mixed>
+     */
+    private static function mainStemContinuation(): array
+    {
+        return self::mergeLayoutArray('main_stem_continuation', [1 => []]);
+    }
+
+    /**
+     * @return array<int|string, mixed>
+     */
+    private static function realExtensionStemContinuation(int $extensionIndex): array
+    {
+        return self::mergeLayoutArray('real_extension_stem_continuation', [1 => []]);
+    }
+
+    /**
+     * @return array<int|string, mixed>
+     */
+    private static function tailExtensionStemContinuation(): array
+    {
+        return self::mergeLayoutArray('tail_extension_stem_continuation', [1 => []]);
+    }
+
+    /**
+     * Apply the configured visual merge rhythm as real stem-continuation props.
+     * Collision compensation may later add measured deltas to the same target.
+     *
+     * @param  array<int|string, mixed>  $continuation
+     * @return array<int|string, mixed>
+     */
+    private static function withConfiguredVerticalStagger(array $continuation, int $sequenceNumber): array
+    {
+        if (! self::mergeLayoutBool('vertical_stagger_enabled', true)) {
+            return $continuation;
+        }
+
+        if (! self::matchesConfiguredVerticalStaggerSequence($sequenceNumber)) {
+            return $continuation;
+        }
+
+        $length = self::mergeLayoutString('vertical_stagger_length', '0rem');
+
+        if (Defaults::dataDrivenRem('merge_layout.vertical_stagger_length', Defaults::graphString('merge_layout.vertical_stagger_length', '0rem')) <= 0.0) {
+            return $continuation;
+        }
+
+        $continuationKey = self::mergeVerticalStaggerContinuationKey($continuation);
+        $entry = $continuation[$continuationKey] ?? [];
+
+        if (! is_array($entry)) {
+            $entry = ['length' => $entry];
+        }
+
+        $entry['length'] = $length;
+        $entry['staggered'] = true;
+        $continuation[$continuationKey] = $entry;
+
+        return $continuation;
+    }
+
+    /**
+     * Use the configured stem as minimum, but stagger aggregate extensions on
+     * their last existing continuation stem so the visual rhythm affects the
+     * actual rendered body instead of only the first short start stem.
+     *
+     * @param  array<int|string, mixed>  $continuation
+     */
+    private static function mergeVerticalStaggerContinuationKey(array $continuation): int
+    {
+        $configuredKey = max(1, self::mergeLayoutInt('vertical_stagger_stem', 2) - 1);
+        $lastExistingKey = collect(array_keys($continuation))
+            ->map(static fn(mixed $key): int => is_numeric($key) ? (int) $key : 0)
+            ->max();
+
+        return max($configuredKey, is_numeric($lastExistingKey) ? (int) $lastExistingKey : 0);
+    }
+
+    private static function matchesConfiguredVerticalStaggerSequence(int $sequenceNumber): bool
+    {
+        $sequence = self::mergeLayoutString('vertical_stagger_sequence', 'even');
+
+        return match ($sequence) {
+            'odd' => $sequenceNumber % 2 === 1,
+            default => $sequenceNumber % 2 === 0,
+        };
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $fallback
+     * @return array<int|string, mixed>
+     */
+    private static function mergeLayoutArray(string $key, array $fallback): array
+    {
+        $config = app('config');
+        $dataDrivenKey = 'tw-graph-data-driven-defaults.merge_layout.' . $key;
+        $centralKey = 'tw-graph-defaults.merge_layout.' . $key;
+        $value = $config->has($dataDrivenKey)
+            ? $config->get($dataDrivenKey)
+            : ($config->has($centralKey) ? $config->get($centralKey) : $fallback);
+
+        return is_array($value) ? $value : $fallback;
+    }
+
+    private static function mergeLayoutBool(string $key, bool $fallback): bool
+    {
+        return Defaults::dataDrivenBool('merge_layout.' . $key, Defaults::graphBool('merge_layout.' . $key, $fallback));
+    }
+
+    private static function mergeLayoutInt(string $key, int $fallback): int
+    {
+        $value = Defaults::dataDriven(
+            'merge_layout.' . $key,
+            Defaults::graph('merge_layout.' . $key, $fallback),
+        );
+
+        return is_numeric($value) ? (int) $value : $fallback;
+    }
+
+    private static function mergeLayoutString(string $key, string $fallback): string
+    {
+        return Defaults::dataDrivenString(
+            'merge_layout.' . $key,
+            Defaults::graphString('merge_layout.' . $key, $fallback),
+        );
     }
 }

@@ -14,6 +14,10 @@ final class DevIdentifier
             return 'tw-graph';
         }
 
+        if (str_contains($id, 'strang.')) {
+            return self::compact(ElementIdentifier::normalize($id));
+        }
+
         $label = $id;
 
         if (preg_match('/(?:^|\.)strang\.([^.]+)(?:\.(.*))?$/', $id, $matches) === 1) {
@@ -49,7 +53,203 @@ final class DevIdentifier
             $label = $prefix . '.' . self::element($tail);
         }
 
-        return self::canonical($label);
+        return self::compact(self::canonical($label));
+    }
+
+    private static function compact(string $id): string
+    {
+        $tokens = array_values(array_filter(explode('.', trim($id, '.')), static fn(string $token): bool => $token !== ''));
+
+        if (($tokens[0] ?? null) !== 'strang') {
+            return $id;
+        }
+
+        array_shift($tokens);
+
+        $head = self::compactHead($tokens);
+        $tail = self::compactTail($head['tail'], $head['kind'], $head['side'], $head['role']);
+        $parts = array_values(array_filter([
+            $head['kind'],
+            $head['side'],
+            $head['role'],
+            $head['index'],
+            ...$tail,
+        ], static fn(?string $part): bool => filled($part)));
+
+        return implode('.', $parts);
+    }
+
+    /**
+     * @param  list<string>  $tokens
+     * @return array{kind: string, side: string, role: string, index: string, tail: list<string>}
+     */
+    private static function compactHead(array $tokens): array
+    {
+        if (($tokens[0] ?? null) === 'trunk') {
+            return [
+                'kind' => 'trunk',
+                'side' => 'center',
+                'role' => '',
+                'index' => ctype_digit((string) ($tokens[1] ?? '')) ? (string) $tokens[1] : '1',
+                'tail' => array_slice($tokens, ctype_digit((string) ($tokens[1] ?? '')) ? 2 : 1),
+            ];
+        }
+
+        $side = in_array((string) ($tokens[0] ?? ''), ['left', 'right'], true) ? (string) $tokens[0] : '';
+        $index = ctype_digit((string) ($tokens[1] ?? '')) ? (string) $tokens[1] : '1';
+        $kind = (string) ($tokens[2] ?? 'element');
+        $role = '';
+        $tailStart = 3;
+
+        if ($kind === 'rekey' && in_array((string) ($tokens[3] ?? ''), ['source', 'target'], true)) {
+            $role = (string) $tokens[3];
+            $tailStart = 4;
+        }
+
+        return [
+            'kind' => $kind,
+            'side' => $side,
+            'role' => $role,
+            'index' => $index,
+            'tail' => array_slice($tokens, $tailStart),
+        ];
+    }
+
+    /**
+     * @param  list<string>  $tokens
+     * @return list<string>
+     */
+    private static function compactTail(array $tokens, string $kind, string $side, string $rekeyRole): array
+    {
+        $result = [];
+
+        for ($index = 0; $index < count($tokens); $index++) {
+            $token = $tokens[$index];
+
+            if (in_array($token, ['main', 'path', 'paths', 'segment', 'bounds', 'text'], true)) {
+                continue;
+            }
+
+            if (in_array($token, ['before', 'after'], true)) {
+                continue;
+            }
+
+            if ($token === $kind || str_replace('.', '-', $kind) === $token) {
+                continue;
+            }
+
+            if (in_array($token, ['extension', 'return'], true)) {
+                $chapterNumber = ctype_digit((string) ($tokens[$index + 1] ?? '')) ? (string) $tokens[$index + 1] : '1';
+                $result[] = $token . '-' . $chapterNumber;
+
+                if (ctype_digit((string) ($tokens[$index + 1] ?? ''))) {
+                    $index++;
+                }
+
+                continue;
+            }
+
+            if ($token === 'step') {
+                $stepNumber = ctype_digit((string) ($tokens[$index + 1] ?? '')) ? (string) $tokens[$index + 1] : '1';
+                $result[] = 'step-' . $stepNumber;
+
+                if (ctype_digit((string) ($tokens[$index + 1] ?? ''))) {
+                    $index++;
+                }
+
+                continue;
+            }
+
+            if ($token === 'stem' && str_starts_with((string) end($result), 'step-')) {
+                continue;
+            }
+
+            if ($token === 'arc') {
+                $arcRole = (string) ($tokens[$index + 1] ?? '');
+
+                if (in_array($arcRole, ['in', 'out'], true)) {
+                    $result[] = 'arc-' . self::compactArcDirection($kind, $side, $arcRole, $rekeyRole) . '-' . ($arcRole === 'out' ? '2' : '1');
+                    $index++;
+
+                    continue;
+                }
+
+                $result[] = 'arc-1';
+
+                continue;
+            }
+
+            if ($token === 'label') {
+                $anchor = (string) ($tokens[$index + 1] ?? '');
+                $labelNumber = (string) ($tokens[$index + 2] ?? '');
+
+                if (in_array($anchor, ['start', 'end'], true) && ctype_digit($labelNumber)) {
+                    $result[] = 'anchorNode-' . $anchor;
+                    $result[] = 'label-' . $labelNumber;
+                    $index += 2;
+
+                    continue;
+                }
+
+                $result[] = 'label';
+
+                continue;
+            }
+
+            if (preg_match('/^arc(\d+)-(.+)$/', $token, $matches) === 1) {
+                $result[] = 'arc-' . $matches[2] . '-' . $matches[1];
+
+                continue;
+            }
+
+            if (preg_match('/^(bridge|stem)(\d+)$/', $token, $matches) === 1) {
+                $result[] = $matches[1] . '-' . $matches[2];
+
+                continue;
+            }
+
+            if ($token === 'node') {
+                $next = (string) ($tokens[$index + 1] ?? '');
+
+                if (in_array($next, ['start', 'end'], true)) {
+                    $result[] = 'anchorNode-' . $next;
+                    $index++;
+
+                    continue;
+                }
+
+                $result[] = 'anchorNode';
+
+                continue;
+            }
+
+            if (preg_match('/^node(?:Start|End)Label(\d+)$/', $token, $matches) === 1) {
+                $result[] = 'label-' . $matches[1];
+
+                continue;
+            }
+
+            if (ctype_digit($token)) {
+                continue;
+            }
+
+            $result[] = $token;
+        }
+
+        return $result;
+    }
+
+    private static function compactArcDirection(string $kind, string $side, string $arcRole, string $rekeyRole): string
+    {
+        if ($kind === 'branch' || ($kind === 'rekey' && $rekeyRole === 'target')) {
+            return $arcRole === 'in'
+                ? ($side === 'left' ? 'east-north' : 'west-north')
+                : ($side === 'left' ? 'south-west' : 'south-east');
+        }
+
+        return $arcRole === 'out'
+            ? ($side === 'left' ? 'south-east' : 'south-west')
+            : ($side === 'left' ? 'west-north' : 'east-north');
     }
 
     private static function canonical(string $label): string

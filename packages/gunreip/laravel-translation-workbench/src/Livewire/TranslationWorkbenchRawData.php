@@ -5499,13 +5499,15 @@ class TranslationWorkbenchRawData extends Component
                     'first_origin_key' => (string) ($finding->suggested_key ?? ''),
                     'first_event' => __('First seen as single finding'),
                     'first_state' => (string) $finding->status,
-                    'first_color' => 'sky',
+                    'first_color' => $this->timelineGraphColor('finding_event', 'sky'),
                     'last_timestamp' => $bulkReview?->reviewed_at ?: $bulkReview?->created_at,
                     'last_root' => $root,
                     'last_origin_key' => (string) ($finding->suggested_key ?? ''),
                     'last_event' => __('Last single state before shared key'),
                     'last_state' => $bulkReview ? ('review #' . $bulkReview->id) : __('No bulk review found'),
-                    'last_color' => $bulkReview ? 'amber' : 'zinc',
+                    'last_color' => $bulkReview
+                        ? $this->timelineGraphColor('review_event', 'amber')
+                        : $this->timelineGraphColor('fallback', 'zinc'),
                 ];
             })
             ->filter(static fn(array $row): bool => filled($row['first_timestamp'] ?? null) || filled($row['last_timestamp'] ?? null));
@@ -5600,13 +5602,13 @@ class TranslationWorkbenchRawData extends Component
                     'first_origin_key' => $originKey,
                     'first_event' => __('First seen as shared candidate origin'),
                     'first_state' => (string) ($finding?->status ?? $candidate['status'] ?? ''),
-                    'first_color' => 'sky',
+                    'first_color' => $this->timelineGraphColor('finding_event', 'sky'),
                     'last_timestamp' => $finding?->last_seen_at ?: $finding?->updated_at ?: ($mainRow['updated_at'] ?? null),
                     'last_root' => 'key #' . (string) ($candidate['matched_key_id'] ?? $mainRow['root_key_id'] ?? '?'),
                     'last_origin_key' => $originKey,
                     'last_event' => __('Mapped to shared key'),
                     'last_state' => 'candidate #' . (string) ($candidate['id'] ?? '?') . ' / ' . (string) ($candidate['status'] ?? ''),
-                    'last_color' => 'amber',
+                    'last_color' => $this->timelineGraphColor('merge', 'amber'),
                 ];
             })
             ->filter()
@@ -5638,8 +5640,8 @@ class TranslationWorkbenchRawData extends Component
                 'translation_key' => $translationKey,
                 'event' => __('Current canonical root'),
                 'state' => str((string) $mainRow['chain_type'])->headline() . ' / ' . str((string) $mainRow['chain_status'])->headline(),
-                'color' => 'green',
-                'branch_color' => 'green',
+                'color' => $this->timelineGraphColor('root_event', 'green'),
+                'branch_color' => $this->timelineGraphColor('root_event', 'green'),
             ]);
         }
 
@@ -5654,8 +5656,8 @@ class TranslationWorkbenchRawData extends Component
                     'translation_key' => $translationKey,
                     'event' => __('Key created'),
                     'state' => (string) $key->status,
-                    'color' => 'violet',
-                    'branch_color' => 'violet',
+                    'color' => $this->timelineGraphColor('key_event', 'violet'),
+                    'branch_color' => $this->timelineGraphColor('key_event', 'violet'),
                 ]);
 
                 if ($key->reviewed_at) {
@@ -5666,8 +5668,8 @@ class TranslationWorkbenchRawData extends Component
                         'translation_key' => $translationKey,
                         'event' => __('Key reviewed'),
                         'state' => (string) $key->review_status,
-                        'color' => 'green',
-                        'branch_color' => 'violet',
+                        'color' => $this->timelineGraphColor('key_reviewed_event', 'green'),
+                        'branch_color' => $this->timelineGraphColor('key_event', 'violet'),
                     ]);
                 }
 
@@ -5679,8 +5681,8 @@ class TranslationWorkbenchRawData extends Component
                         'translation_key' => $translationKey,
                         'event' => __('Key updated'),
                         'state' => (string) $key->review_status,
-                        'color' => 'cyan',
-                        'branch_color' => 'violet',
+                        'color' => $this->timelineGraphColor('key_updated_event', 'cyan'),
+                        'branch_color' => $this->timelineGraphColor('key_event', 'violet'),
                     ]);
                 }
             }
@@ -5697,8 +5699,8 @@ class TranslationWorkbenchRawData extends Component
                     'translation_key' => $translationKey,
                     'event' => __('Finding created'),
                     'state' => (string) $finding->status,
-                    'color' => 'sky',
-                    'branch_color' => 'sky',
+                    'color' => $this->timelineGraphColor('finding_event', 'sky'),
+                    'branch_color' => $this->timelineGraphColor('finding_event', 'sky'),
                 ]);
             }
         }
@@ -5716,8 +5718,12 @@ class TranslationWorkbenchRawData extends Component
                         'translation_key' => $translationKey,
                         'event' => __('Lang value'),
                         'state' => trim((string) $langValue->locale . ' / ' . (string) $langValue->status),
-                        'color' => $langValue->status === 'active' ? 'emerald' : 'zinc',
-                        'branch_color' => $langValue->status === 'active' ? 'emerald' : 'zinc',
+                        'color' => $langValue->status === 'active'
+                            ? $this->timelineGraphColor('lang_value_active_event', 'emerald')
+                            : $this->timelineGraphColor('lang_value_inactive_event', 'zinc'),
+                        'branch_color' => $langValue->status === 'active'
+                            ? $this->timelineGraphColor('lang_value_active_event', 'emerald')
+                            : $this->timelineGraphColor('lang_value_inactive_event', 'zinc'),
                     ]);
                 });
         }
@@ -5745,8 +5751,8 @@ class TranslationWorkbenchRawData extends Component
                         'translation_key' => $translationKey,
                         'event' => str((string) $review->decision)->replace('_', ' ')->headline()->toString(),
                         'state' => (string) $review->review_type,
-                        'color' => 'amber',
-                        'branch_color' => 'amber',
+                        'color' => $this->timelineGraphColor('review_event', 'amber'),
+                        'branch_color' => $this->timelineGraphColor('review_event', 'amber'),
                     ]);
                 });
         }
@@ -5781,6 +5787,14 @@ class TranslationWorkbenchRawData extends Component
         $decoded = json_decode($value, true);
 
         return is_array($decoded) ? $decoded : [];
+    }
+
+    private function timelineGraphColor(string $key, string $fallback): string
+    {
+        return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::dataDrivenString(
+            'colors.' . $key,
+            \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('colors.' . $key, $fallback),
+        );
     }
 
     private function normalizedActiveTable(): string

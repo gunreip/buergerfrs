@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData;
 
+use Gunreip\TranslationWorkbench\Support\TwGraph\Defaults;
 use Illuminate\Support\Collection;
 
 final class BranchPreviewBuilder
@@ -59,8 +60,8 @@ final class BranchPreviewBuilder
             [
                 'outcome_group' => 'ended after merge',
                 'placement' => 'branch',
-                'path_color' => 'rose',
-                'badge_color' => 'red',
+                'path_color' => self::color('branch', 'rose'),
+                'badge_color' => self::color('branch_badge', 'red'),
                 'end_label' => ['Ended after merge', 'shared obsolete'],
                 'step_label' => ['Source inactive', 'shared obsolete'],
                 'component_counter_offset' => 0,
@@ -68,7 +69,7 @@ final class BranchPreviewBuilder
             [
                 'outcome_group' => 'ended before target',
                 'placement' => 'branch',
-                'color' => 'rose',
+                'color' => self::color('branch', 'rose'),
                 'end_label' => ['Ended before target', 'not shared obsolete'],
                 'step_label' => ['Source inactive', 'not shared obsolete'],
             ],
@@ -84,7 +85,7 @@ final class BranchPreviewBuilder
     private static function group(Collection $rows, array $spec, array $trunkTimelineAnchors): array
     {
         $outcomeGroup = (string) ($spec['outcome_group'] ?? '');
-        $pathColor = (string) ($spec['path_color'] ?? ($spec['color'] ?? 'red'));
+        $pathColor = (string) ($spec['path_color'] ?? ($spec['color'] ?? self::color('branch_badge', 'red')));
         $badgeColor = (string) ($spec['badge_color'] ?? ($spec['color'] ?? $pathColor));
         $endLabel = array_values((array) ($spec['end_label'] ?? [$outcomeGroup]));
         $stepLabel = array_values((array) ($spec['step_label'] ?? []));
@@ -201,7 +202,7 @@ final class BranchPreviewBuilder
         $outcomeGroup = (string) ($spec['outcome_group'] ?? '');
         $parentOutcomeGroup = (string) ($spec['parent_outcome_group'] ?? '');
         $attachTo = (string) ($spec['attach_to'] ?? 'bridge.end');
-        $color = (string) ($spec['color'] ?? 'rose');
+        $color = (string) ($spec['color'] ?? self::color('branch', 'rose'));
         $endLabel = array_values((array) ($spec['end_label'] ?? [$outcomeGroup]));
         $stepLabel = array_values((array) ($spec['step_label'] ?? []));
         $endLength = $spec['end_length'] ?? null;
@@ -363,5 +364,37 @@ final class BranchPreviewBuilder
         $value = strtotime((string) $timestamp);
 
         return $value === false ? null : $value;
+    }
+
+    private static function attachIndex(string $attachTo): ?int
+    {
+        if (preg_match('/strang\.trunk\.path\.(\d+)\.end/', $attachTo, $matches) !== 1) {
+            return null;
+        }
+
+        return (int) $matches[1];
+    }
+
+    private static function toRem(mixed $value): float
+    {
+        if (is_numeric($value)) {
+            return (float) $value;
+        }
+
+        if (preg_match('/-?\d+(?:\.\d+)?/', (string) $value, $matches) !== 1) {
+            return 0.0;
+        }
+
+        return (float) $matches[0];
+    }
+
+    private static function rem(float $value): string
+    {
+        return rtrim(rtrim(number_format($value, 2, '.', ''), '0'), '.') . 'rem';
+    }
+
+    private static function color(string $key, string $fallback): string
+    {
+        return Defaults::dataDrivenString('colors.' . $key, Defaults::graphString('colors.' . $key, $fallback));
     }
 }
