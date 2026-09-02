@@ -30,6 +30,7 @@ use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchOldEntries;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawData;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawDataNew;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchSettings;
+use Gunreip\TranslationWorkbench\Livewire\TwGraphDataDrivenDatasets;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -69,6 +70,7 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
         Livewire::component('translation-workbench.raw-data', TranslationWorkbenchRawData::class);
         Livewire::component('translation-workbench.raw-data-new', TranslationWorkbenchRawDataNew::class);
         Livewire::component('translation-workbench.settings', TranslationWorkbenchSettings::class);
+        Livewire::component('translation-workbench.tw-graph.data-driven.datasets', TwGraphDataDrivenDatasets::class);
 
         $this->commands([
             ApplySuspiciousKeyRestores::class,
