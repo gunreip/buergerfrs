@@ -75,51 +75,75 @@ final class RenderPreviewBuilder
                 ->merge(data_get($eventTypeBurst, 'items', []))
                 ->values();
         }
-        $nodeLabels = [];
-        $nodeIndex = 2;
-        $previousTimelineItemType = null;
-        $trunkTimelineAnchors = [];
         $rootLineLength = self::defaultTrunkPathLength();
         $trunkStartLength = $rootLineLength;
-        $firstTrunkStemLength = self::defaultTrunkFirstStemLength($rootLineLength);
-        $trunkAnchorYRem = self::toRem($trunkStartLength) + self::toRem($firstTrunkStemLength);
+        $buildTrunkTimeline = static function (
+            Collection $items,
+            int $firstPathNumber,
+            string $pathLength,
+            string $startLength,
+            string $firstPathLength,
+        ): array {
+            $nodeLabels = [];
+            $eventPathEntries = [];
+            $pathNumber = $firstPathNumber;
+            $previousTimelineItemType = null;
+            $trunkTimelineAnchors = [];
+            $trunkAnchorYRem = self::toRem($startLength)
+                + ($firstPathNumber > 1 ? self::toRem($firstPathLength) : 0.0);
 
-        $timelineLabelItems
-            ->sortBy([
-                ['timestamp_sort', 'asc'],
-                ['sort_index', 'asc'],
-            ])
-            ->values()
-            ->each(static function (array $item) use (&$nodeLabels, &$eventPathEntries, &$nodeIndex, &$previousTimelineItemType, &$trunkTimelineAnchors, &$trunkAnchorYRem, $rootLineLength): void {
-                $labels = (array) data_get($item, 'labels', []);
-                $trunkAnchorYRem += self::toRem($rootLineLength);
+            $items
+                ->sortBy([
+                    ['timestamp_sort', 'asc'],
+                    ['sort_index', 'asc'],
+                ])
+                ->values()
+                ->each(static function (array $item) use (&$nodeLabels, &$eventPathEntries, &$pathNumber, &$previousTimelineItemType, &$trunkTimelineAnchors, &$trunkAnchorYRem, $pathLength): void {
+                    $labels = (array) data_get($item, 'labels', []);
+                    $trunkAnchorYRem += self::toRem($pathLength);
 
-                if ($labels !== []) {
-                    $nodeLabels[$nodeIndex] = $labels;
+                    if ($labels !== []) {
+                        $nodeLabels[$pathNumber] = $labels;
 
-                    $itemType = (string) data_get($item, 'type', 'normal');
-                    $isTimelineTypeTransition = $previousTimelineItemType !== null
-                        && $previousTimelineItemType !== $itemType;
-                    $pathEntry = [
-                        'component' => $isTimelineTypeTransition ? 'stem-compressed' : 'path',
-                        'labels' => $labels,
-                    ];
+                        $itemType = (string) data_get($item, 'type', 'normal');
+                        $isTimelineTypeTransition = $previousTimelineItemType !== null
+                            && $previousTimelineItemType !== $itemType;
+                        $pathEntry = [
+                            'component' => $isTimelineTypeTransition ? 'stem-compressed' : 'path',
+                            'labels' => $labels,
+                        ];
 
-                    $eventPathEntries[$nodeIndex] = $pathEntry;
-                    $previousTimelineItemType = $itemType;
-                    $trunkTimelineAnchors[] = [
-                        'path' => $nodeIndex,
-                        'anchor' => 'strang.trunk.path.' . $nodeIndex . '.end',
-                        'timestamp' => (string) data_get($item, 'timestamp_sort', ''),
-                        'type' => $itemType,
-                        'event' => (string) data_get($labels, '0.text.0', ''),
-                        'y_rem' => $trunkAnchorYRem,
-                    ];
-                }
+                        $eventPathEntries[$pathNumber] = $pathEntry;
+                        $previousTimelineItemType = $itemType;
+                        $trunkTimelineAnchors[] = [
+                            'path' => $pathNumber,
+                            'anchor' => 'strang.trunk.path.' . $pathNumber . '.end',
+                            'timestamp' => (string) data_get($item, 'timestamp_sort', ''),
+                            'type' => $itemType,
+                            'event' => (string) data_get($labels, '0.text.0', ''),
+                            'y_rem' => $trunkAnchorYRem,
+                        ];
+                    }
 
-                $nodeIndex++;
-            });
-        $lastLabelNodeIndex = $nodeLabels !== [] ? max(array_keys($nodeLabels)) : 1;
+                    $pathNumber++;
+                });
+
+            return [
+                'node_labels' => $nodeLabels,
+                'event_path_entries' => $eventPathEntries,
+                'trunk_timeline_anchors' => $trunkTimelineAnchors,
+            ];
+        };
+        $trunkTimelineState = $buildTrunkTimeline(
+            $timelineLabelItems,
+            2,
+            $rootLineLength,
+            $trunkStartLength,
+            $rootLineLength,
+        );
+        $nodeLabels = $trunkTimelineState['node_labels'];
+        $eventPathEntries = $trunkTimelineState['event_path_entries'];
+        $trunkTimelineAnchors = $trunkTimelineState['trunk_timeline_anchors'];
         $langValueLabels = LangValueLabels::active($mainRow);
         $graphId = 'timeline-chain-' . (int) ($mainRow['id'] ?? 0) . '-data-preview';
         $layoutCorrections = LayoutCorrectionConfig::forDataDriven();
@@ -144,27 +168,49 @@ final class RenderPreviewBuilder
                 . LabelFormatter::graphKeyLabelText($rekeyTargetTargetKey, 44),
             ' ->',
         );
-        $rekeyTargetTrunkLabel = $hasRekeyTargetPreview
+        $mergePreviewCount = count($mergePreviews);
+        $branchPreviewCount = collect($branchPreviews)->sum(static fn(array $preview): int => (int) ($preview['finding_count'] ?? 0));
+        $rekeyPreviewCount = count($rekeyPreviews);
+        $hasSideStrangPreviews = $mergePreviewCount > 0 || $branchPreviewCount > 0 || $rekeyPreviewCount > 0;
+        if (! $hasSideStrangPreviews) {
+            $trunkOnlyStartPromotion = self::promoteTrunkOnlyStartEvent($timelineLabelItems, $langValueLabels);
+            $timelineLabelItems = $trunkOnlyStartPromotion['items'];
+            $langValueLabels = $trunkOnlyStartPromotion['start_node_labels'];
+            $trunkTimelineState = $buildTrunkTimeline(
+                $timelineLabelItems,
+                1,
+                $rootLineLength,
+                $trunkStartLength,
+                $rootLineLength,
+            );
+            $nodeLabels = $trunkTimelineState['node_labels'];
+            $eventPathEntries = $trunkTimelineState['event_path_entries'];
+            $trunkTimelineAnchors = $trunkTimelineState['trunk_timeline_anchors'];
+        }
+
+        $lastLabelNodeIndex = $nodeLabels !== [] ? max(array_keys($nodeLabels)) : 1;
+        $rekeyTargetPathNumber = $hasRekeyTargetPreview ? max(1, $lastLabelNodeIndex + 1) : null;
+        $rekeyPreviews = self::withRekeyTargetAttachPath($rekeyPreviews, $rekeyTargetPathNumber);
+        $rekeyTargetTrunkLabel = $rekeyTargetPathNumber !== null
             ? [
                 'text' => array_values(array_filter([
                     'rekeyed to this key ID #' . (string) ($rekeyTargetKeyId ?: '?'),
                     $rekeyTargetRelationLine,
                 ])),
                 'side' => 'right',
-                'connectorLength' => '5rem',
+                'connectorLength' => self::defaultConnectorLength('rekey_target_trunk_label_connector_length'),
                 'badgeColor' => self::color('rekey', 'sky'),
                 'long' => true,
             ]
             : null;
-        $basePathCount = max($hasRekeyTargetPreview ? 7 : 4, $lastLabelNodeIndex);
-        $pathCount = max(
-            $eventPathEntries !== [] ? $basePathCount : min(7, $basePathCount),
-            LayoutCorrectionConfig::maxTrunkPathNumber($layoutCorrections),
+        $pathCount = self::plannedTrunkPathCount(
+            $eventPathEntries,
+            self::trunkAttachedPathNumbers($mergePreviews, $rekeyPreviews, $branchPreviews),
+            $rekeyTargetPathNumber,
+            $layoutCorrections,
         );
-        $mergePreviewCount = count($mergePreviews);
-        $branchPreviewCount = collect($branchPreviews)->sum(static fn(array $preview): int => (int) ($preview['finding_count'] ?? 0));
-        $rekeyPreviewCount = count($rekeyPreviews);
-        $previewMode = $mergePreviewCount > 0 || $rekeyPreviewCount > 0 ? 'trunk_with_limited_merge' : 'trunk_only';
+        $previewMode = $hasSideStrangPreviews ? 'trunk_with_limited_merge' : 'trunk_only';
+        $trunkStartShiftEnabledForPreview = $hasSideStrangPreviews && self::trunkStartShiftEnabled();
         $renderedMergeCandidates = collect($mergePreviews)
             ->sum(static fn(array $preview): int => 1 + (int) ($preview['extension_count'] ?? 0));
         $trunkStartTimestamp = LabelFormatter::graphTimestampLabel(
@@ -183,13 +229,13 @@ final class RenderPreviewBuilder
         );
         $trunkEndLabelLines = LabelFormatter::trunkEndLabelLines($mainRow, $trunkEndStateLine);
         $trunkPathLengths = collect(range(1, $pathCount))
-            ->mapWithKeys(static function (int $pathNumber) use ($eventPathEntries, $rekeyTargetTrunkLabel): array {
+            ->mapWithKeys(static function (int $pathNumber) use ($eventPathEntries, $rekeyTargetTrunkLabel, $rekeyTargetPathNumber): array {
                 $eventTypePathEntry = $eventPathEntries[$pathNumber] ?? null;
                 if (is_array($eventTypePathEntry)) {
                     return [$pathNumber => $eventTypePathEntry];
                 }
 
-                if ($pathNumber === 7 && $rekeyTargetTrunkLabel !== null) {
+                if ($pathNumber === $rekeyTargetPathNumber && $rekeyTargetTrunkLabel !== null) {
                     return [
                         $pathNumber => [
                             'labels' => [$rekeyTargetTrunkLabel, null],
@@ -200,7 +246,6 @@ final class RenderPreviewBuilder
                 return [$pathNumber => null];
             })
             ->all();
-        $trunkPathLengths = self::applyTrunkStartStemShift($trunkPathLengths, $rootLineLength);
         $trunkLayoutCorrections = LayoutCorrectionConfig::applyToTrunkPathLengths(
             $trunkPathLengths,
             $layoutCorrections,
@@ -219,6 +264,14 @@ final class RenderPreviewBuilder
             'text' => $trunkEndLabelLines,
             'long' => true,
         ];
+        $trunkStemClassification = self::classifyAndEliminateEmptyTrunkStems(
+            $trunkPathLengths,
+            $nodeLabels,
+            self::trunkAttachedPathNumbers($mergePreviews, $rekeyPreviews, $branchPreviews),
+            $trunkAppliedCorrections,
+            self::hasTrunkStartSideLabels($langValueLabels),
+        );
+        $trunkPathLengths = $trunkStemClassification['path_lengths'];
         $branchPreviews = BranchLabelCollisionResolver::refreshDebugBounds(
             self::withFinalBranchAnchorY($branchPreviews, $trunkPathLengths, $trunkStartLength),
         );
@@ -271,6 +324,11 @@ final class RenderPreviewBuilder
         if ($branchCompensation['applied'] !== []) {
             $branchPreviews = BranchLabelCollisionResolver::refreshDebugBounds($branchCompensation['branches']);
             $mergePreviews = self::withMergeCollisionDebug($mergePreviews);
+            $trunkCollisionDebug = self::trunkPotentialCollisions($trunkBoundsDebug, $branchPreviews, $mergePreviews, $rekeyPreviews);
+        }
+        $rekeySourceCompensation = self::applyRekeySourceEndLabelSideSwitchFromTrunkCollisions($rekeyPreviews, $trunkBoundsDebug, $trunkCollisionDebug);
+        if ($rekeySourceCompensation['applied'] !== []) {
+            $rekeyPreviews = self::withRekeyBoundsDebug($rekeySourceCompensation['rekeys'], $trunkPathLengths, $trunkStartLength);
             $trunkCollisionDebug = self::trunkPotentialCollisions($trunkBoundsDebug, $branchPreviews, $mergePreviews, $rekeyPreviews);
         }
         $rekeyTargetCompensation = self::applyRekeyTargetCompensationFromTrunkCollisions($rekeyPreviews, $trunkCollisionDebug);
@@ -337,7 +395,7 @@ final class RenderPreviewBuilder
             'color' => self::color('trunk', 'green'),
             'path_count' => $pathCount,
             'start_length' => $trunkStartLength,
-            'start_shift_enabled' => self::trunkStartShiftEnabled(),
+            'start_shift_enabled' => $trunkStartShiftEnabledForPreview,
             'start_shift_length' => self::trunkStartShiftLength(),
             'path_lengths' => $trunkPathLengths,
             'start_label' => $trunkStartLabel,
@@ -348,6 +406,7 @@ final class RenderPreviewBuilder
                 'trunkBoundsDebug' => $trunkBoundsDebug,
                 'trunkCollisionDebug' => $trunkCollisionDebug,
                 'appliedCompensations' => $trunkAppliedCompensations,
+                'stemClassification' => $trunkStemClassification['classification'],
             ],
         ];
         $trunkLabelPaddingLevel = self::trunkNodeLabelPaddingLevel($trunkPreview);
@@ -445,6 +504,68 @@ final class RenderPreviewBuilder
     }
 
     /**
+     * In trunk-only graphs the first key-created state belongs to the trunk
+     * start node. Side-strang graphs keep the event in the normal timeline so
+     * their existing start spacing and attached-strang anchors stay stable.
+     *
+     * @param  Collection<int, array<string, mixed>>  $items
+     * @param  array<string, mixed>  $startNodeLabels
+     * @return array{items: Collection<int, array<string, mixed>>, start_node_labels: array<string, mixed>}
+     */
+    private static function promoteTrunkOnlyStartEvent(Collection $items, array $startNodeLabels): array
+    {
+        $targetSide = blank($startNodeLabels['left'] ?? null)
+            ? 'left'
+            : (blank($startNodeLabels['right'] ?? null) ? 'right' : null);
+
+        if ($targetSide === null) {
+            return [
+                'items' => $items,
+                'start_node_labels' => $startNodeLabels,
+            ];
+        }
+
+        $promoted = false;
+        $items = $items
+            ->map(static function (array $item) use (&$promoted, &$startNodeLabels, $targetSide): ?array {
+                if ($promoted || (string) data_get($item, 'type', 'normal') !== 'normal') {
+                    return $item;
+                }
+
+                $labels = array_values((array) data_get($item, 'labels', []));
+
+                foreach ($labels as $labelIndex => $label) {
+                    if (! is_array($label) || trim((string) data_get($label, 'text.0', '')) !== 'Key created') {
+                        continue;
+                    }
+
+                    $label['side'] = $targetSide;
+                    $startNodeLabels[$targetSide] = $label;
+                    unset($labels[$labelIndex]);
+                    $labels = array_values($labels);
+                    $promoted = true;
+
+                    if ($labels === []) {
+                        return null;
+                    }
+
+                    $item['labels'] = $labels;
+
+                    return $item;
+                }
+
+                return $item;
+            })
+            ->filter()
+            ->values();
+
+        return [
+            'items' => $items,
+            'start_node_labels' => $startNodeLabels,
+        ];
+    }
+
+    /**
      * @param  Collection<int, array<string, mixed>>  $eventLabelRows
      * @return Collection<int, array{type: string, timestamp_sort: string, sort_index: int, labels: array<string, array<int, string>>}>
      */
@@ -535,6 +656,7 @@ final class RenderPreviewBuilder
             ...self::trunkMiddleBoundsDebug($pathLengths, $startLength, $endLength, $nodeLabels, $attachedPathNumbers),
             ...self::trunkSideLabelBoundsDebug($pathLengths, $startLength, $endLength, $startNodeLabels, $nodeLabels, $attachedPathNumbers),
             ...self::trunkConcreteLabelBoundsDebug($pathLengths, $startLength, $startNodeLabels, $nodeLabels),
+            ...self::trunkConcreteTerminalLabelBoundsDebug($pathLengths, $startLength, $endLength, $startLabel, $endLabel),
             ...self::trunkLabelBoundsDebug(
                 $pathLengths,
                 $startLength,
@@ -569,6 +691,117 @@ final class RenderPreviewBuilder
         return [
             $pathNumber => (array) $adjustments[$pathNumber],
         ];
+    }
+
+    /**
+     * Keep trunk path numbering stable while removing optically empty stems.
+     * A stem may disappear only when it has no label, no special component, no
+     * attached side strang and no explicit correction target.
+     *
+     * @param  array<int|string, mixed>  $pathLengths
+     * @param  array<int|string, mixed>  $nodeLabels
+     * @param  array<int, int>  $attachedPathNumbers
+     * @param  array<int, array<string, mixed>>  $appliedCorrections
+     * @return array{path_lengths: array<int|string, mixed>, classification: array<int, array<string, mixed>>}
+     */
+    private static function classifyAndEliminateEmptyTrunkStems(
+        array $pathLengths,
+        array $nodeLabels,
+        array $attachedPathNumbers,
+        array $appliedCorrections,
+        bool $hasTrunkStartSideLabels,
+    ): array {
+        $attachedPathNumbers = collect($attachedPathNumbers)
+            ->map(static fn(mixed $pathNumber): int => (int) $pathNumber)
+            ->filter(static fn(int $pathNumber): bool => $pathNumber > 0)
+            ->unique()
+            ->all();
+        $correctedPathNumbers = collect($appliedCorrections)
+            ->map(static function (array $correction): ?int {
+                $target = ElementIdentifier::normalize((string) data_get($correction, 'target', ''));
+
+                if (preg_match('/^strang\.trunk\.1\.stem(\d+)$/', $target, $matches) !== 1) {
+                    return null;
+                }
+
+                return (int) $matches[1];
+            })
+            ->filter()
+            ->unique()
+            ->all();
+        $classification = [];
+
+        foreach ($pathLengths as $pathNumber => $entry) {
+            $pathNumber = (int) $pathNumber;
+            $reasons = [];
+            $component = is_array($entry) ? (string) data_get($entry, 'component', 'path') : 'path';
+            $labels = is_array($entry) ? data_get($entry, 'labels') : null;
+            $hasEntryLabels = is_array($labels)
+                ? collect($labels)->filter(static fn(mixed $label): bool => filled($label))->isNotEmpty()
+                : ($labels !== null && $labels !== false && filled($labels));
+            $hasNodeLabels = collect(self::labelsFromMixed($nodeLabels[$pathNumber] ?? []))->isNotEmpty();
+
+            if ($hasEntryLabels || $hasNodeLabels) {
+                $reasons[] = 'label';
+            }
+
+            if ($component !== 'path') {
+                $reasons[] = $component;
+            }
+
+            if (in_array($pathNumber, $attachedPathNumbers, true)) {
+                $reasons[] = 'anchor';
+            }
+
+            if (in_array($pathNumber, $correctedPathNumbers, true)) {
+                $reasons[] = 'correction';
+            }
+
+            if ($pathNumber === 2
+                && ! $hasTrunkStartSideLabels
+                && $component === 'path'
+                && ! in_array('anchor', $reasons, true)
+                && ! in_array('correction', $reasons, true)
+            ) {
+                $pathLengths[$pathNumber] = self::pathEntryWithLength(
+                    $entry,
+                    self::trunkStartUnlabeledNextStemLength(),
+                );
+                $reasons = collect(['after-unlabeled-start-shortened', ...$reasons])
+                    ->unique()
+                    ->values()
+                    ->all();
+            }
+
+            if ($reasons === []) {
+                $pathLengths[$pathNumber] = self::pathEntryWithoutVisibleStem($entry);
+                $reasons[] = 'empty-eliminated';
+            }
+
+            $classification[$pathNumber] = [
+                'path' => $pathNumber,
+                'role' => $reasons[0],
+                'roles' => $reasons,
+                'length' => self::rem(self::pathEntryLength($pathLengths[$pathNumber] ?? null)),
+            ];
+        }
+
+        return [
+            'path_lengths' => $pathLengths,
+            'classification' => $classification,
+        ];
+    }
+
+    /**
+     * The trunk-start dot is only hidden when no side labels are attached to
+     * that exact anchor. Top/bottom start labels are segment labels and do not
+     * count for this layout rhythm rule.
+     *
+     * @param  array<string, mixed>  $startNodeLabels
+     */
+    private static function hasTrunkStartSideLabels(array $startNodeLabels): bool
+    {
+        return filled($startNodeLabels['left'] ?? null) || filled($startNodeLabels['right'] ?? null);
     }
 
     /**
@@ -609,7 +842,7 @@ final class RenderPreviewBuilder
         }
 
         $gap = self::debugBoundBoxGap();
-        $delta = $startLabelCollisions
+        $measuredDelta = $startLabelCollisions
             ->map(static function (array $collision) use ($gap): float {
                 $trunkYEnd = self::toRem(data_get($collision, 'trunkYEnd', '0rem'));
                 $againstYStart = self::toRem(data_get($collision, 'againstYStart', '0rem'));
@@ -618,17 +851,18 @@ final class RenderPreviewBuilder
             })
             ->max();
 
-        if (! is_numeric($delta) || (float) $delta <= 0.0) {
+        if (! is_numeric($measuredDelta) || (float) $measuredDelta <= 0.0) {
             return [
                 'path_lengths' => $pathLengths,
                 'applied' => [],
             ];
         }
 
+        $delta = max((float) $measuredDelta, self::toRem(self::trunkStartShiftLength()));
         $currentEntry = $pathLengths[1] ?? null;
         $currentLength = self::pathEntryLength($currentEntry);
         $baseLength = $currentLength > 0.0 ? $currentLength : self::toRem($defaultLength);
-        $effectiveLength = self::rem($baseLength + (float) $delta);
+        $effectiveLength = self::rem($baseLength + $delta);
         $pathLengths[1] = self::pathEntryWithLength($currentEntry, $effectiveLength);
 
         return [
@@ -637,10 +871,12 @@ final class RenderPreviewBuilder
                 [
                     'target' => ElementIdentifier::normalize('strang.trunk.1.main.path.trunk.path1'),
                     'prop' => 'length',
-                    'delta' => self::rem((float) $delta),
+                    'delta' => self::rem($delta),
                     'baseValue' => self::rem($baseLength),
                     'effectiveValue' => $effectiveLength,
                     'reason' => 'Automatic real trunk-start-label collision compensation.',
+                    'configuredMinimum' => self::trunkStartShiftLength(),
+                    'measuredDelta' => self::rem((float) $measuredDelta),
                     'sources' => $startLabelCollisions
                         ->map(static fn(array $collision): array => [
                             'source' => 'trunk-start-label-collision',
@@ -733,6 +969,143 @@ final class RenderPreviewBuilder
 
         return [
             'branches' => $branches,
+            'applied' => $applied,
+        ];
+    }
+
+    /**
+     * Rekey-source end labels sit at the trunk-facing arc. Extending the
+     * bridge moves the wrong footprint, so the first safe compensation is a
+     * side switch when the opposite side is free against concrete trunk labels.
+     *
+     * @param  array<int, array<string, mixed>>  $rekeys
+     * @param  array<int, array<string, mixed>>  $trunkBounds
+     * @param  array<int, array<string, mixed>>  $collisions
+     * @return array{rekeys: array<int, array<string, mixed>>, applied: array<int, array<string, mixed>>}
+     */
+    private static function applyRekeySourceEndLabelSideSwitchFromTrunkCollisions(array $rekeys, array $trunkBounds, array $collisions): array
+    {
+        $candidates = [];
+
+        foreach ($collisions as $collision) {
+            $against = ElementIdentifier::normalize(data_get($collision, 'against', ''));
+
+            if ((string) data_get($collision, 'againstType') !== 'rekey-source-end-label') {
+                continue;
+            }
+
+            if (preg_match('/^strang\.(left|right)\.(\d+)\.rekey\.source\./', $against, $matches) !== 1) {
+                continue;
+            }
+
+            $rekeyIndex = self::rekeySourcePreviewIndexByCanonicalCounter($rekeys, $matches[1], (int) $matches[2]);
+
+            if ($rekeyIndex === null) {
+                continue;
+            }
+
+            $candidates[$rekeyIndex][] = $collision;
+        }
+
+        $applied = [];
+
+        foreach ($candidates as $rekeyIndex => $sourceCollisions) {
+            if (! isset($rekeys[$rekeyIndex])) {
+                continue;
+            }
+
+            $side = (string) ($rekeys[$rekeyIndex]['side'] ?? 'left');
+            $oppositeSide = $side === 'left' ? 'right' : 'left';
+            $endNodeNumber = 5 + count((array) ($rekeys[$rekeyIndex]['stem_continuation'] ?? []));
+            $nodeLabel = (array) data_get($rekeys[$rekeyIndex], 'node_labels.' . $endNodeNumber, []);
+            $labelText = data_get($nodeLabel, $side);
+
+            if (blank($labelText) || filled(data_get($nodeLabel, $oppositeSide))) {
+                continue;
+            }
+
+            $sourceBox = collect((array) data_get($rekeys[$rekeyIndex], 'layout.rekeyBoundsDebug', []))
+                ->first(static fn(array $box): bool => (string) ($box['type'] ?? '') === 'rekey-source-end-label');
+
+            if (! is_array($sourceBox)) {
+                continue;
+            }
+
+            $sourceBox = self::debugBoxToFloat($sourceBox);
+            $anchorY = ((float) $sourceBox['yStart'] + (float) $sourceBox['yEnd']) / 2;
+            $labelOptions = collect($nodeLabel)->except(['left', 'right', 'top', 'bottom'])->all();
+            $candidateLabel = [
+                ...$labelOptions,
+                'text' => $labelText,
+                'side' => $oppositeSide,
+            ];
+            $candidateBox = [
+                'type' => 'rekey-source-end-label',
+                'id' => (string) ($sourceBox['id'] ?? ''),
+                'side' => $oppositeSide,
+                ...self::labelBoxAt($candidateLabel, 0.0, $anchorY, $oppositeSide),
+            ];
+
+            $oppositeCollisionExists = collect($trunkBounds)
+                ->filter(static fn(array $box): bool => in_array((string) ($box['type'] ?? ''), [
+                    'trunk-left-label',
+                    'trunk-right-label',
+                    'trunk-terminal-label',
+                ], true))
+                ->map(static fn(array $box): array => self::debugBoxToFloat($box))
+                ->contains(static function (array $trunkBox) use ($candidateBox, $oppositeSide): bool {
+                    $trunkSide = (string) ($trunkBox['side'] ?? '');
+
+                    if ($trunkSide !== '' && $trunkSide !== $oppositeSide) {
+                        return false;
+                    }
+
+                    return self::debugBoxesOverlap($trunkBox, $candidateBox);
+                });
+
+            if ($oppositeCollisionExists) {
+                continue;
+            }
+
+            $componentCounter = (int) ($rekeys[$rekeyIndex]['component_counter'] ?? ($rekeyIndex + 1));
+            $target = ElementIdentifier::normalize('strang.rekey-source-' . $side . '.' . $componentCounter . '.main.path.rekey-source.arc-south-' . ($side === 'left' ? 'east' : 'west') . '-2.end-label');
+            $nodeLabel = [
+                ...$labelOptions,
+                $oppositeSide => $labelText,
+            ];
+            $nodeLabels = (array) ($rekeys[$rekeyIndex]['node_labels'] ?? []);
+            $nodeLabels[$endNodeNumber] = $nodeLabel;
+            $rekeys[$rekeyIndex]['node_labels'] = $nodeLabels;
+
+            $appliedEntry = [
+                'target' => $target,
+                'prop' => 'label_side',
+                'baseValue' => $side,
+                'effectiveValue' => $oppositeSide,
+                'reason' => 'Automatic trunk-label vs rekey-source-end-label side-switch compensation.',
+                'sources' => collect($sourceCollisions)
+                    ->map(static fn(array $collision): array => [
+                        'source' => 'trunk-rekey-source-label-collision',
+                        'trunk' => ElementIdentifier::normalize(data_get($collision, 'trunk', '')),
+                        'against' => ElementIdentifier::normalize(data_get($collision, 'against', '')),
+                        'overlapWidth' => (string) data_get($collision, 'overlapWidth', '0rem'),
+                        'overlapHeight' => (string) data_get($collision, 'overlapHeight', '0rem'),
+                    ])
+                    ->values()
+                    ->all(),
+            ];
+            $rekeys[$rekeyIndex]['layout'] = [
+                ...((array) ($rekeys[$rekeyIndex]['layout'] ?? [])),
+                'appliedCompensations' => [
+                    ...((array) data_get($rekeys[$rekeyIndex], 'layout.appliedCompensations', [])),
+                    $appliedEntry,
+                ],
+            ];
+            $applied[] = $appliedEntry;
+        }
+
+        return [
+            'rekeys' => $rekeys,
             'applied' => $applied,
         ];
     }
@@ -1119,6 +1492,14 @@ final class RenderPreviewBuilder
         return Defaults::dataDrivenString('colors.' . $key, Defaults::graphString('colors.' . $key, $fallback));
     }
 
+    private static function defaultConnectorLength(string $key): string
+    {
+        return Defaults::dataDrivenString(
+            $key,
+            Defaults::graphString($key, Defaults::dataDrivenString('connector_length', '2rem')),
+        );
+    }
+
     /**
      * @param  array<int, array<string, mixed>>  $branches
      * @param  array<int|string, mixed>  $pathLengths
@@ -1152,6 +1533,24 @@ final class RenderPreviewBuilder
     {
         foreach ($branches as $index => $branch) {
             if ((string) ($branch['side'] ?? '') === $side && (int) ($branch['component_counter'] ?? 0) === $counter) {
+                return (int) $index;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $rekeys
+     */
+    private static function rekeySourcePreviewIndexByCanonicalCounter(array $rekeys, string $side, int $counter): ?int
+    {
+        foreach ($rekeys as $index => $rekey) {
+            if (
+                (string) ($rekey['kind'] ?? '') === 'source'
+                && (string) ($rekey['side'] ?? '') === $side
+                && (int) ($rekey['component_counter'] ?? 0) === $counter
+            ) {
                 return (int) $index;
             }
         }
@@ -1677,6 +2076,52 @@ final class RenderPreviewBuilder
     }
 
     /**
+     * Concrete terminal label boxes are side-neutral because centered
+     * start/end labels can overlap left or right side strangs.
+     *
+     * @param  array<int, mixed>  $pathLengths
+     * @param  array<string, mixed>  $startLabel
+     * @param  array<string, mixed>  $endLabel
+     * @return array<int, array<string, string>>
+     */
+    private static function trunkConcreteTerminalLabelBoundsDebug(
+        array $pathLengths,
+        string $startLength,
+        string $endLength,
+        array $startLabel,
+        array $endLabel,
+    ): array {
+        $bodyHeight = self::toRem($startLength)
+            + collect($pathLengths)
+                ->map(static fn(mixed $entry): float => self::pathEntryLength($entry))
+                ->sum()
+            + self::toRem($endLength);
+        $boxes = [];
+
+        if (filled(data_get($startLabel, 'text'))) {
+            $boxes[] = self::trunkConcreteTerminalLabelBox(
+                'strang.trunk.1.start.start-label.bounds',
+                $startLabel,
+                0.0,
+                (string) data_get($startLabel, 'side', 'bottom'),
+                self::toRem(data_get($startLabel, 'offset', '0.75rem')),
+            );
+        }
+
+        if (filled(data_get($endLabel, 'text'))) {
+            $boxes[] = self::trunkConcreteTerminalLabelBox(
+                'strang.trunk.1.end.end-label.bounds',
+                $endLabel,
+                $bodyHeight,
+                (string) data_get($endLabel, 'side', 'top'),
+                self::toRem(data_get($endLabel, 'offset', '0.75rem')),
+            );
+        }
+
+        return $boxes;
+    }
+
+    /**
      * @param  array<string, mixed>  $label
      * @return array<string, string>
      */
@@ -1689,6 +2134,25 @@ final class RenderPreviewBuilder
             'id' => ElementIdentifier::normalize($id),
             'renderId' => $id,
             'side' => $side,
+            'x' => self::rem($box['xStart']),
+            'y' => self::rem($box['yStart']),
+            'width' => self::rem($box['xEnd'] - $box['xStart']),
+            'height' => self::rem($box['yEnd'] - $box['yStart']),
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $label
+     * @return array<string, string>
+     */
+    private static function trunkConcreteTerminalLabelBox(string $id, array $label, float $anchorY, string $side, float $offset): array
+    {
+        $box = self::labelBoxAt($label, 0.0, $anchorY, $side, $offset);
+
+        return [
+            'type' => 'trunk-terminal-label',
+            'id' => ElementIdentifier::normalize($id),
+            'renderId' => $id,
             'x' => self::rem($box['xStart']),
             'y' => self::rem($box['yStart']),
             'width' => self::rem($box['xEnd'] - $box['xStart']),
@@ -1723,6 +2187,58 @@ final class RenderPreviewBuilder
     }
 
     /**
+     * Keep rekey-target attached to the planned trunk timeline instead of a
+     * fixed DEV-era path number.
+     *
+     * @param  array<int, array<string, mixed>>  $rekeyPreviews
+     * @return array<int, array<string, mixed>>
+     */
+    private static function withRekeyTargetAttachPath(array $rekeyPreviews, ?int $pathNumber): array
+    {
+        if ($pathNumber === null) {
+            return $rekeyPreviews;
+        }
+
+        return collect($rekeyPreviews)
+            ->map(static function (array $preview) use ($pathNumber): array {
+                if ((string) ($preview['kind'] ?? '') !== 'target') {
+                    return $preview;
+                }
+
+                $preview['attach_to'] = 'strang.trunk.path.' . $pathNumber . '.end';
+
+                return $preview;
+            })
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Build only the trunk paths that are required by labels, attachments,
+     * corrections or a dedicated rekey-target label.
+     *
+     * @param  array<int|string, mixed>  $eventPathEntries
+     * @param  array<int, int>  $attachedPathNumbers
+     * @param  array<int, array<string, mixed>>  $layoutCorrections
+     */
+    private static function plannedTrunkPathCount(
+        array $eventPathEntries,
+        array $attachedPathNumbers,
+        ?int $rekeyTargetPathNumber,
+        array $layoutCorrections,
+    ): int {
+        return max([
+            1,
+            collect(array_keys($eventPathEntries))
+                ->map(static fn(int|string $pathNumber): int => (int) $pathNumber)
+                ->max() ?? 0,
+            collect($attachedPathNumbers)->max() ?? 0,
+            $rekeyTargetPathNumber ?? 0,
+            LayoutCorrectionConfig::maxTrunkPathNumber($layoutCorrections),
+        ]);
+    }
+
+    /**
      * Report-only collision layer: use the same debug boxes that are rendered
      * in DEV mode and do not mutate graph geometry here.
      *
@@ -1738,6 +2254,7 @@ final class RenderPreviewBuilder
             ->filter(static fn(array $box): bool => in_array((string) ($box['type'] ?? ''), [
                 'trunk-left-label',
                 'trunk-right-label',
+                'trunk-terminal-label',
             ], true))
             ->map(static fn(array $box): array => self::debugBoxToFloat($box))
             ->values();
@@ -1759,7 +2276,8 @@ final class RenderPreviewBuilder
             foreach ($branchBoxes->merge($mergeBoxes)->merge($rekeyBoxes) as $againstBox) {
                 $againstSide = (string) ($againstBox['side'] ?? '');
 
-                if ($againstSide !== '' && (string) ($trunkBox['side'] ?? '') !== $againstSide) {
+                $trunkSide = (string) ($trunkBox['side'] ?? '');
+                if ($trunkSide !== '' && $againstSide !== '' && $trunkSide !== $againstSide) {
                     continue;
                 }
 
@@ -2429,6 +2947,25 @@ final class RenderPreviewBuilder
         $startY = $stemEndY - $stemContinuationLength - $stemLength - $startLength;
         $stemX = $outerX + ($direction * $arcInSize);
         $startStemId = $componentId . '.main.path.rekey-source.start-stem';
+        $endNodeLabels = self::labelsFromMixed(data_get($rekeyPreview, 'node_labels.' . (5 + count($stemContinuation)), []));
+        $endLabelBounds = [
+            'xStart' => -0.75,
+            'xEnd' => 0.75,
+            'yStart' => $attachY - 0.75,
+            'yEnd' => $attachY + 0.75,
+        ];
+        foreach ($endNodeLabels as $label) {
+            $endLabelBounds = self::expandBoundsForLabelAt($endLabelBounds, $label, 0.0, $attachY);
+        }
+        $endLabelDebug = $endNodeLabels === []
+            ? []
+            : [[
+                'type' => 'rekey-source-end-label',
+                'id' => ElementIdentifier::normalize($componentId . '.main.path.rekey-source.arc-south-' . ($side === 'left' ? 'east' : 'west') . '-2.end-label.bounds'),
+                'renderId' => $componentId . '.main.path.rekey-source.arc-south-' . ($side === 'left' ? 'east' : 'west') . '-2.end-label.bounds',
+                'side' => $side,
+                ...self::boundsToRem($endLabelBounds),
+            ]];
 
         return [
             self::mergeStartStemBoxToRem(
@@ -2466,6 +3003,7 @@ final class RenderPreviewBuilder
                 $bridgeHeight,
                 $side,
             ),
+            ...$endLabelDebug,
         ];
     }
 
@@ -3079,39 +3617,36 @@ final class RenderPreviewBuilder
         return $entry;
     }
 
+    private static function pathEntryWithoutVisibleStem(mixed $entry): array
+    {
+        $entry = is_array($entry) ? $entry : [];
+        $entry['length'] = '0rem';
+        $entry['labels'] = false;
+
+        return $entry;
+    }
+
+    private static function trunkStartUnlabeledNextStemLength(): string
+    {
+        return self::rem(self::toRem(self::defaultTrunkPathLength()) * self::trunkStartUnlabeledNextStemFactor());
+    }
+
+    private static function trunkStartUnlabeledNextStemFactor(): float
+    {
+        $value = Defaults::dataDriven(
+            'trunk_start_unlabeled_next_stem_factor',
+            Defaults::graph('trunk_start_unlabeled_next_stem_factor', 1.0),
+        );
+
+        return max(0.0, is_numeric($value) ? (float) $value : 1.0);
+    }
+
     private static function defaultTrunkPathLength(): string
     {
         return Defaults::dataDrivenString(
             'stem_length',
             Defaults::dataDrivenString('line_length', '4rem'),
         );
-    }
-
-    /**
-     * @param  array<int|string, mixed>  $pathLengths
-     * @return array<int|string, mixed>
-     */
-    private static function applyTrunkStartStemShift(array $pathLengths, string $baseLength): array
-    {
-        if (! self::trunkStartShiftEnabled()) {
-            return $pathLengths;
-        }
-
-        $pathLengths[1] = self::pathEntryWithLength(
-            $pathLengths[1] ?? null,
-            self::defaultTrunkFirstStemLength($baseLength),
-        );
-
-        return $pathLengths;
-    }
-
-    private static function defaultTrunkFirstStemLength(string $baseLength): string
-    {
-        if (! self::trunkStartShiftEnabled()) {
-            return $baseLength;
-        }
-
-        return self::rem(self::toRem($baseLength) + self::toRem(self::trunkStartShiftLength()));
     }
 
     private static function trunkStartShiftEnabled(): bool
@@ -3204,9 +3739,9 @@ final class RenderPreviewBuilder
     private static function horizontalPaddingForLevel(string $required): string
     {
         return match ($required) {
-            'long' => '20rem',
-            'halfLong' => '16rem',
-            default => '12rem',
+            'long' => Defaults::dataDrivenString('label_width.long', Defaults::graphString('label_width.long', '20rem')),
+            'halfLong' => Defaults::dataDrivenString('label_width.half_long', Defaults::graphString('label_width.half_long', '16rem')),
+            default => Defaults::dataDrivenString('label_width.default', Defaults::graphString('label_width.default', '12rem')),
         };
     }
 

@@ -168,7 +168,7 @@ final class BranchPreviewBuilder
                             $rows->count() . ' rows',
                         ],
                         'side' => 'top',
-                        'offset' => '0.75rem',
+                        'offset' => self::defaultLabelOffset(),
                         'badgeColor' => $badgeColor,
                     ],
                     'finding_count' => $rows->count(),
@@ -396,5 +396,13 @@ final class BranchPreviewBuilder
     private static function color(string $key, string $fallback): string
     {
         return Defaults::dataDrivenString('colors.' . $key, Defaults::graphString('colors.' . $key, $fallback));
+    }
+
+    private static function defaultLabelOffset(): string
+    {
+        return Defaults::dataDrivenString(
+            'label_offset',
+            Defaults::graphString('label_offset', Defaults::dataDrivenString('connector_gap', '0.25rem')),
+        );
     }
 }

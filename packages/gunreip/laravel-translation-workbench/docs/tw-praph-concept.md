@@ -45,21 +45,59 @@ gelten die aktuell geprüften Bounds als Vertrag:
 - `strang.trunk` trennt reine Strang-Bounds, start/end Sub-Bounds,
   middle Sub-Bounds und label-inclusive Bounds.
 - Eine optionale vertikale Entzerrung am `strang.trunk`-Start wird nicht als
-  äußerer Offset gerendert. Wenn `trunk_start_shift_enabled=true` gesetzt ist,
-  wird der erste Trunk-Stem nach dem Start-Segment
-  (`trunk.center.1.stem-1` / `path1`) um `trunk_start_shift_length`
-  verlängert.
-  Entsteht danach weiterhin eine echte Kollision zwischen einem konkreten
-  Trunk-Start-Node-Label und einem Side-Strang-Footprint, darf nur dieser erste
-  Trunk-Stem zusätzlich kompensiert werden. Die Kompensation wird in
-  `Applied Compensation` sichtbar gemacht; sie darf nicht als versteckter
-  Offset an Side-Strängen oder Labels umgesetzt werden.
+  äußerer Offset und nicht als vorsorglich aufgeblasener Default-Stem gerendert.
+  Wenn `trunk_start_shift_enabled=true` gesetzt ist, bleibt der erste Trunk-Stem
+  nach dem Start-Segment (`trunk.center.1.stem-1` / `path1`) zunächst neutral.
+  Erst wenn eine echte Kollision zwischen einem konkreten
+  Trunk-Start-Node-Label und einem Side-Strang-Footprint gemessen wurde, darf
+  dieser erste Trunk-Stem verlängert werden. `trunk_start_shift_length` ist dabei
+  der konfigurierbare Mindest-Delta für diese sichtbare Compensation, nicht die
+  normale Default-Länge.
+  Die Kompensation wird in `Applied Compensation` sichtbar gemacht; sie darf
+  nicht als versteckter Offset an Side-Strängen oder Labels umgesetzt werden.
   Dadurch bleiben Gradient, AnchorRegistry, Debug-Bounds und angesetzte
   Stränge in derselben `strang.trunk -> paths.trunk -> segments.path`-Chain.
+- Trunk-only Graphen verwenden keine vorsorgliche Side-Strang-Startluft. Wenn
+  kein `merge`, `branch` oder `rekey` angesetzt wird, beginnen Timeline-Labels
+  direkt am ersten Trunk-Path und `trunk_start_shift_enabled` wird für diesen
+  Component-Call deaktiviert. So entstehen am Anfang keine leeren
+  Default-Stems, die nur für komplexere Side-Strang-Layouts gedacht waren.
+- Wenn am `strang.trunk-start` keine `left/right`-Labels am AnchorEnd sitzen,
+  darf nur der sichtbare Dot dieses AnchorNodes ausgeblendet werden. Die
+  `dev-node-counter`-Logik wird dadurch nicht verändert. Der folgende
+  sichtbare Anschluss-Stem (`stem-2`/`path2`) darf über
+  `trunk_start_unlabeled_next_stem_factor` verkürzt werden, solange er kein
+  Side-Strang-Anchor, keine Correction/Compensation und kein Sondersegment ist.
+- Optisch leere Trunk-Stems werden nicht aus der Chain gelöscht, sondern auf
+  `length=0rem` und `labels=false` gesetzt. Dadurch bleiben `pathN`/
+  `stem-N`-Referenzen, AnchorRegistry und Debug-Zuordnung stabil, während der
+  leere Stem samt Node/Counter verschwindet. Ein Stem darf nur so neutralisiert
+  werden, wenn er keine Labels trägt, kein `stem-compressed`/Step ist, keinen
+  Side-Strang-Anschluss hält und nicht durch Correction/Compensation gezielt
+  verlängert wurde.
+- Der Data-driven Trunk wird nicht mehr aus einer pauschalen DEV-Mindestzahl
+  von Stems aufgebaut. Der Render-Plan sammelt die benötigten Pfade aus
+  Timeline-Labels, Side-Strang-Attachments, Rekey-Target-Labels und
+  Layout-Corrections. `pathCount` ist damit ein Ergebnis des Trunk-Plans, nicht
+  der Ausgangspunkt. Die Empty-Stem-Eliminierung bleibt nur als konservatives
+  Sicherheitsnetz für alte oder seltene Zwischenzustände bestehen.
+- Der erste `Key created`-Timeline-Eintrag eines Trunk-only Graphen gehört an
+  den Trunk-Start-Node. Er wird als `start_node_label` gerendert und aus den
+  normalen Timeline-Path-Labels entfernt, damit der erste sichtbare Trunk-Stem
+  den ersten echten Folge-/Chunk-Event trägt.
 - `strang.merge` und `strang.merge-extension` trennen den label-inclusiven
   Start/Stem-Bereich, den Tail-Stem bis zum Arc und die Bridge-Bounds.
 - `strang.rekey-source` verwendet dieselbe Start/Stem/Bridge-Bounds-Logik wie
   `strang.merge`, weil es über dieselbe `paths.merge`-Kette gerendert wird.
+  Zusätzlich besitzt `strang.rekey-source` eine eigene Bounds-Zone für das
+  trunk-seitige Arc-End-Label. Wenn dieses Label mit konkreten Trunk-Labels
+  kollidiert, darf es nur dann auf die Gegenseite gespiegelt werden, wenn die
+  Gegenseite gegen konkrete Trunk-Labels frei ist. Eine automatische
+  `bridge_length`-Verlängerung ist für diesen Kollisions-Typ keine gültige
+  Lösung, weil das trunk-seitige EndLabel dadurch nicht zuverlässig aus der
+  Kollision bewegt wird. Die angewendete Entscheidung muss in
+  `Applied Compensation` sichtbar sein; ein ungelöster Fall bleibt als
+  Collision sichtbar, bis eine saubere Attach-/Anchor-Regel existiert.
 - `strang.rekey-target` verwendet die branch-artige Bridge/Body/End-Bounds-
   Logik. Trunk-Label-Kollisionen werden über die rekey-target-Bridge
   kompensiert; finale End-vs-Bridge-Kollisionen laufen durch dieselbe

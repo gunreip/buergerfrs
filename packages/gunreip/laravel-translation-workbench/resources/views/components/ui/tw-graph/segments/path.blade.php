@@ -24,7 +24,9 @@
     id, direction, length, anchorStart{x,y}, anchorEnd{x,y}
 
     Node / label fields:
-    nodeStart and nodeEnd control both node visibility and labels.
+    nodeStart and nodeEnd control anchor presence, labels, and DEV counters.
+    nodeStartDot/nodeEndDot may hide only the visual dot while keeping the
+    technical anchor and existing DEV-counter behavior intact.
     false|null|'' = no node, no labels
     true = node, no labels
     [null, null] = node, no labels
@@ -121,6 +123,8 @@
     };
     $nodeStart = $nodeIsVisible($nodeStartValue);
     $nodeEnd = $nodeIsVisible($nodeEndValue);
+    $nodeStartDot = (bool) data_get($segment, 'nodeStartDot', $nodeStart);
+    $nodeEndDot = (bool) data_get($segment, 'nodeEndDot', $nodeEnd);
     $devMode = (bool) ($dev ?? data_get($segment, 'dev', false));
     $isHorizontal = in_array($direction, ['left-right', 'right-left'], true);
     $counterDistance = 'calc(var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half))';
@@ -223,8 +227,8 @@
     :start-y="data_get($segment, 'anchorStart.y', '0rem')"
     :end-x="data_get($segment, 'anchorEnd.x', '0rem')"
     :end-y="data_get($segment, 'anchorEnd.y', '0rem')"
-    :node-start="$nodeStart"
-    :node-end="$nodeEnd"
+    :node-start="$nodeStartDot"
+    :node-end="$nodeEndDot"
     :gradient="data_get($segment, 'gradient', false)"
     :cap="data_get($segment, 'cap', false)"
     :cap-start="data_get($segment, 'capStart', false)"

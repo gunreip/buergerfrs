@@ -226,7 +226,7 @@ final class RekeyPreviewBuilder
                     $timestamp,
                 ])),
                 'side' => 'bottom',
-                'offset' => '0.75rem',
+                'offset' => self::defaultLabelOffset(),
                 'badgeColor' => self::color('rekey', 'sky'),
             ],
             'node_labels' => $isSource
@@ -250,7 +250,7 @@ final class RekeyPreviewBuilder
                             'rekeyed into this key ID #' . (string) ($currentKeyId ?: '?'),
                             $relationLine,
                         ])),
-                        'connectorLength' => '5rem',
+                        'connectorLength' => self::defaultConnectorLength('rekey_source_end_label_connector_length'),
                         'long' => true,
                     ],
                 ]
@@ -382,5 +382,21 @@ final class RekeyPreviewBuilder
     private static function color(string $key, string $fallback): string
     {
         return Defaults::dataDrivenString('colors.' . $key, Defaults::graphString('colors.' . $key, $fallback));
+    }
+
+    private static function defaultConnectorLength(string $key): string
+    {
+        return Defaults::dataDrivenString(
+            $key,
+            Defaults::graphString($key, Defaults::dataDrivenString('connector_length', '2rem')),
+        );
+    }
+
+    private static function defaultLabelOffset(): string
+    {
+        return Defaults::dataDrivenString(
+            'label_offset',
+            Defaults::graphString('label_offset', Defaults::dataDrivenString('connector_gap', '0.25rem')),
+        );
     }
 }

@@ -161,7 +161,7 @@ final class MergePreviewBuilder
             'start' => [
                 'text' => array_values(array_filter([$firstRootLabel, LabelFormatter::graphTimestampLabel($firstTimestamp)])),
                 'side' => 'bottom',
-                'offset' => '0.75rem',
+                'offset' => self::defaultLabelOffset(),
                 'badgeColor' => self::color('merge', 'amber'),
             ],
             1 => $side === 'left'
@@ -186,7 +186,7 @@ final class MergePreviewBuilder
             'start' => [
                 'text' => ['Aggregated origins (' . $rows->count() . ')'],
                 'side' => 'bottom',
-                'offset' => '0.75rem',
+                'offset' => self::defaultLabelOffset(),
                 'badgeColor' => $aggregateBadgeColor,
             ],
         ];
@@ -263,7 +263,7 @@ final class MergePreviewBuilder
             'start_label' => [
                 'text' => array_values(array_filter([$firstRootLabel, LabelFormatter::graphTimestampLabel($firstTimestamp)])),
                 'side' => 'bottom',
-                'offset' => '0.75rem',
+                'offset' => self::defaultLabelOffset(),
                 'badgeColor' => self::color('merge', 'amber'),
             ],
             'node_labels' => [
@@ -292,7 +292,7 @@ final class MergePreviewBuilder
                         (string) ($row['last_event'] ?? ''),
                         trim(LabelFormatter::graphTimestampLabel($row['last_timestamp'] ?? null) . ' · ' . (string) ($row['last_state'] ?? ''), ' ·'),
                     ])),
-                    'connectorLength' => '5rem',
+                    'connectorLength' => self::defaultConnectorLength('merge_end_label_connector_length'),
                     'long' => true,
                 ],
             ],
@@ -307,6 +307,22 @@ final class MergePreviewBuilder
     private static function color(string $key, string $fallback): string
     {
         return Defaults::dataDrivenString('colors.' . $key, Defaults::graphString('colors.' . $key, $fallback));
+    }
+
+    private static function defaultConnectorLength(string $key): string
+    {
+        return Defaults::dataDrivenString(
+            $key,
+            Defaults::graphString($key, Defaults::dataDrivenString('connector_length', '2rem')),
+        );
+    }
+
+    private static function defaultLabelOffset(): string
+    {
+        return Defaults::dataDrivenString(
+            'label_offset',
+            Defaults::graphString('label_offset', Defaults::dataDrivenString('connector_gap', '0.25rem')),
+        );
     }
 
     /**

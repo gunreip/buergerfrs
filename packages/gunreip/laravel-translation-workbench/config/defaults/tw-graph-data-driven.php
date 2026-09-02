@@ -8,6 +8,10 @@ return [
     // '' => '',
     'arc_size' => '2.75rem',
     'stem_length' => '5.75rem',
+    // 'label_offset' => '0.75rem',
+    // 'merge_end_label_connector_length' => '5rem',
+    // 'rekey_source_end_label_connector_length' => '5rem',
+    // 'rekey_target_trunk_label_connector_length' => '5rem',
     // 'debug_bound_box_gap' => '2rem',
     // 'debug_bound_bridge_height' => '1.5rem',
     // 'debug_bound_end_segment_width' => '1.5rem',
@@ -16,6 +20,7 @@ return [
     // 'trunk_spacing_compensation_stem_step' => '2.75rem',
     // 'trunk_start_shift_enabled' => false,
     // 'trunk_start_shift_length' => '4rem',
+    // 'trunk_start_unlabeled_next_stem_factor' => 0.333,
 
     /*
      * Merge preview layout defaults for this graph family. Override these when

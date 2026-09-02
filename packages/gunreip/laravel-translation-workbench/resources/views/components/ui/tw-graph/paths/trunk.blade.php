@@ -181,6 +181,13 @@
             'capLength' => data_get($pathLength, 'capLength'),
         ];
     };
+    $nodeIsVisible = function (mixed $value): bool {
+        if (is_array($value)) {
+            return true;
+        }
+
+        return filled($value) && (bool) $value;
+    };
     $segments = [];
     $counter = (int) $counterStart;
     $currentAnchor = [
@@ -210,6 +217,12 @@
                     return null;
                 }
 
+                if (is_array($startNodeLabels[$side]) && array_key_exists('text', $startNodeLabels[$side])) {
+                    return array_replace([
+                        'side' => $side,
+                    ], $startNodeLabels[$side]);
+                }
+
                 return array_replace([
                     'side' => $side,
                 ], $normalizeLabel([
@@ -221,6 +234,8 @@
             ->values()
             ->all()
             : [];
+        $startNodeEndValue = $normalizedStartNodeLabels !== [] ? $normalizedStartNodeLabels : true;
+        $startNodeEndDot = filled($startNodeLabels['left'] ?? null) || filled($startNodeLabels['right'] ?? null);
         $segments[] = [
             'component' => 'start',
             'segment' => [
@@ -229,8 +244,9 @@
                 'length' => $startLength,
                 'anchorStart' => $currentAnchor,
                 'anchorEnd' => $nextAnchor,
-                'nodeEnd' => $normalizedStartNodeLabels !== [] ? $normalizedStartNodeLabels : true,
-                'devCounterEnd' => $counter++,
+                'nodeEnd' => $startNodeEndValue,
+                'nodeEndDot' => $startNodeEndDot,
+                'devCounterEnd' => $nodeIsVisible($startNodeEndValue) ? $counter++ : null,
                 'devCounterColor' => $resolvedColor,
                 'startLabel' => $resolvedStartLabel,
                 'color' => $resolvedColor,
@@ -246,6 +262,7 @@
         $pathComponent = data_get($normalizedPathLength, 'component', 'path');
         $pathLength = data_get($normalizedPathLength, 'length', '0rem');
         $nodeEnd = data_get($normalizedPathLength, 'labels', true);
+        $devCounterEnd = $nodeIsVisible($nodeEnd) ? $counter++ : null;
         $nextAnchor = $addAnchor($currentAnchor, $axisDelta($pathLength));
         $segments[] = [
             'component' => $pathComponent,
@@ -261,7 +278,7 @@
                 'anchorEnd' => $nextAnchor,
                 'nodeStart' => false,
                 'nodeEnd' => $nodeEnd,
-                'devCounterEnd' => $counter++,
+                'devCounterEnd' => $devCounterEnd,
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,

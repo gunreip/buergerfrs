@@ -14,6 +14,10 @@ return [
     'stem_length' => '4rem',
     'connector_length' => '2rem',
     'connector_gap' => '0.25rem',
+    'label_offset' => '0.75rem',
+    'merge_end_label_connector_length' => '5rem',
+    'rekey_source_end_label_connector_length' => '5rem',
+    'rekey_target_trunk_label_connector_length' => '5rem',
     /*
      * DEV bounds/collision diagnostics. debug_bound_box_gap is only the extra
      * clearance added after the measured overlap; the other values describe the
@@ -35,14 +39,19 @@ return [
     'horizontal_padding' => '12rem',
 
     /*
-     * Optional trunk start spacing. When enabled, the trunk start segment is
-     * extended by trunk_start_shift_length instead of moving the trunk with an
-     * external offset. This keeps the visible gradient and all anchor points in
-     * the normal strang.trunk -> paths.trunk -> segments.start chain.
+     * Optional trunk start collision spacing. When enabled, the first trunk
+     * stem may be extended after a real start-label collision was measured.
+     * trunk_start_shift_length is the minimum applied delta for that visible
+     * compensation, not a pre-rendered default spacer.
      */
     'trunk_start_shift_enabled' => true,
     'trunk_start_shift_length' => '10rem',
-
+    /*
+     * If the trunk-start anchor dot is hidden because no left/right labels are
+     * attached there, the following visible trunk stem may be shortened by this
+     * factor. This is layout rhythm only; DEV counters stay tied to nodeEnd.
+     */
+    'trunk_start_unlabeled_next_stem_factor' => 0.25,
     /*
      * Data-driven merge layout baseline. These values describe the current
      * verified visual rhythm before collision compensation and optional layout
