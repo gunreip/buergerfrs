@@ -55,6 +55,12 @@ Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
 
         Route::get('translation-workbench/settings', TranslationWorkbenchSettings::class)->name('translation-workbench.settings');
 
+        Route::view('tw-graph/data-driven/datasets', 'translation-workbench::pages.tw-graph.data-driven.datasets')
+            ->name('tw-graph.data-driven.datasets');
+
+        Route::view('tw-graph/samples/resume-a-einstein', 'translation-workbench::pages.tw-graph.samples.resume-a-einstein')
+            ->name('tw-graph.samples.resume-a-einstein');
+
         Route::get('translations/usage', TranslationUsageAudit::class)->name('translation-usage');
 
         Route::get('translations/lang-ballast', TranslationLangBallast::class)->name('translation-lang-ballast');

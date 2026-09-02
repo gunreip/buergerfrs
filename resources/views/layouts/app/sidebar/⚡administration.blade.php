@@ -191,6 +191,51 @@
         </flux:sidebar.item>
     </flux:sidebar.group>
 
+    {{-- Admin -> TW-Graph (group) --}}
+    <flux:sidebar.group
+        class="grid"
+        :heading="__('TW-Graph')"
+        icon="route"
+        expandable
+        :expanded="request()->routeIs('admin.tw-graph.*')"
+    >
+        {{-- Admin -> TW-Graph -> Data Driven --}}
+        <flux:sidebar.group
+            class="grid"
+            :heading="__('Data Driven')"
+            icon="database"
+            expandable
+            :expanded="request()->routeIs('admin.tw-graph.data-driven.*')"
+        >
+            <flux:sidebar.item
+                icon="table-cells"
+                :href="route('admin.tw-graph.data-driven.datasets')"
+                :current="request()->routeIs('admin.tw-graph.data-driven.datasets')"
+                wire:navigate
+            >
+                {{ __('Datasets') }}
+            </flux:sidebar.item>
+        </flux:sidebar.group>
+
+        {{-- Admin -> TW-Graph -> Samples --}}
+        <flux:sidebar.group
+            class="grid"
+            :heading="__('Samples')"
+            icon="file-text"
+            expandable
+            :expanded="request()->routeIs('admin.tw-graph.samples.*')"
+        >
+            <flux:sidebar.item
+                icon="file-text"
+                :href="route('admin.tw-graph.samples.resume-a-einstein')"
+                :current="request()->routeIs('admin.tw-graph.samples.resume-a-einstein')"
+                wire:navigate
+            >
+                {{ __('Resume A. Einstein') }}
+            </flux:sidebar.item>
+        </flux:sidebar.group>
+    </flux:sidebar.group>
+
     {{-- Admin -> app settings --}}
     <flux:sidebar.item
         icon="settings"
