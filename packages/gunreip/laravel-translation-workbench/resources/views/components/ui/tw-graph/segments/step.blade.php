@@ -154,8 +154,9 @@
         :offset="data_get($stepLabelConfig, 'offset', '0rem')"
         :badge="data_get($stepLabelConfig, 'badge', true)"
         :badge-color="data_get($stepLabelConfig, 'badgeColor', data_get($stepSegment, 'color', 'green'))"
-        :long="data_get($stepLabelConfig, 'long', false)"
-        :half-long="data_get($stepLabelConfig, 'halfLong', false)"
+        :long="data_get($stepLabelConfig, 'long', false) || data_get($stepLabelConfig, 'width') === 'long'"
+        :half-long="data_get($stepLabelConfig, 'halfLong', false) || in_array(data_get($stepLabelConfig, 'width'), ['halfLong', 'half-long', 'half_long'], true)"
+        :half="data_get($stepLabelConfig, 'half', false) || in_array(data_get($stepLabelConfig, 'width'), ['half', 'halfWidth', 'half-width', 'half_width'], true)"
     />
 @endif
 

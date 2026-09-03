@@ -108,6 +108,10 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../database/migrations' => database_path('migrations'),
             ], 'translation-workbench-migrations');
+
+            $this->publishes([
+                __DIR__ . '/../resources/img' => public_path('vendor/translation-workbench/img'),
+            ], 'translation-workbench-assets');
         }
     }
 }

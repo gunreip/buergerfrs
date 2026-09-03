@@ -74,7 +74,10 @@
     :offset="$labelOffset"
     :badge="data_get($label, 'badge', true)"
     :badge-color="$badgeColor"
-    :long="data_get($label, 'long', false)"
-    :half-long="data_get($label, 'halfLong', false)"
+    :long="data_get($label, 'long', false) || data_get($label, 'width') === 'long'"
+    :half-long="data_get($label, 'halfLong', false) || in_array(data_get($label, 'width'), ['halfLong', 'half-long', 'half_long'], true)"
+    :half="data_get($label, 'half', false) || in_array(data_get($label, 'width'), ['half', 'halfWidth', 'half-width', 'half_width'], true)"
+    :align="data_get($label, 'align', 'center')"
+    :justify="data_get($label, 'justify', false)"
     :max-lines="data_get($label, 'maxLines', 3)"
 />

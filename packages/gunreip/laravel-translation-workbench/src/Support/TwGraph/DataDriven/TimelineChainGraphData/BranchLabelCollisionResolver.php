@@ -855,12 +855,16 @@ final class BranchLabelCollisionResolver
      */
     private static function textLabelWidth(array $label): float
     {
-        if ((bool) data_get($label, 'long', false)) {
+        if ((bool) data_get($label, 'long', false) || data_get($label, 'width') === 'long') {
             return 25.0;
         }
 
-        if ((bool) data_get($label, 'halfLong', false)) {
+        if ((bool) data_get($label, 'halfLong', false) || in_array(data_get($label, 'width'), ['halfLong', 'half-long', 'half_long'], true)) {
             return 19.0;
+        }
+
+        if ((bool) data_get($label, 'half', false) || in_array(data_get($label, 'width'), ['half', 'halfWidth', 'half-width', 'half_width'], true)) {
+            return 7.0;
         }
 
         return 13.0;

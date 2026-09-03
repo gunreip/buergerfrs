@@ -24,6 +24,8 @@
     'endY' => '0rem',
     'nodeStart' => false,
     'nodeEnd' => false,
+    'nodeStartSize' => null,
+    'nodeEndSize' => null,
     'gradient' => false,
     'cap' => false,
     'capStart' => false,
@@ -58,6 +60,8 @@
         '--tw-graph-protocol-end-y: ' . $endY,
         '--tw-graph-protocol-local-length: ' . $length,
         '--tw-graph-protocol-local-color-rgb: ' . $colorRgb,
+        '--tw-graph-protocol-line-node-start-size: ' . $nodeStartSize => filled($nodeStartSize),
+        '--tw-graph-protocol-line-node-end-size: ' . $nodeEndSize => filled($nodeEndSize),
         '--tw-graph-protocol-line-end-cap-length: ' . $capLength,
         '--tw-graph-protocol-z-index: ' . $zIndex => filled($zIndex),
     ]) }}

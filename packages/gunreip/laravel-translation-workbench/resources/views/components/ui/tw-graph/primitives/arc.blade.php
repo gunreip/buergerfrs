@@ -30,6 +30,8 @@
     'arcSize' => null,
     'nodeStart' => false,
     'nodeEnd' => false,
+    'nodeStartSize' => null,
+    'nodeEndSize' => null,
     'dashed' => false,
     'color' => 'cyan',
     'zIndex' => null,
@@ -98,6 +100,9 @@
             --tw-graph-protocol-anchor-x: {{ $startX }};
             --tw-graph-protocol-anchor-y: {{ $startY }};
             --tw-graph-protocol-local-color-rgb: {{ $colorRgb }};
+            @if (filled($nodeStartSize))
+                --tw-graph-protocol-local-node-size: {{ $nodeStartSize }};
+            @endif
             @if (filled($zIndex))
                 --tw-graph-protocol-z-index: {{ $zIndex }};
             @endif
@@ -115,6 +120,9 @@
             --tw-graph-protocol-anchor-x: {{ $endX }};
             --tw-graph-protocol-anchor-y: {{ $endY }};
             --tw-graph-protocol-local-color-rgb: {{ $colorRgb }};
+            @if (filled($nodeEndSize))
+                --tw-graph-protocol-local-node-size: {{ $nodeEndSize }};
+            @endif
             @if (filled($zIndex))
                 --tw-graph-protocol-z-index: {{ $zIndex }};
             @endif

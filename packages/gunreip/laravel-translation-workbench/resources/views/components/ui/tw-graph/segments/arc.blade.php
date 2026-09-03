@@ -33,6 +33,10 @@
     $zIndex = data_get($segment, 'zIndex');
     $nodeStart = (bool) data_get($segment, 'nodeStart', false);
     $nodeEnd = (bool) data_get($segment, 'nodeEnd', false);
+    $nodeStartDotValue = data_get($segment, 'nodeStartDot');
+    $nodeEndDotValue = data_get($segment, 'nodeEndDot');
+    $nodeStartDot = $nodeStartDotValue === null ? $nodeStart : (bool) $nodeStartDotValue;
+    $nodeEndDot = $nodeEndDotValue === null ? $nodeEnd : (bool) $nodeEndDotValue;
     $devMode = (bool) ($dev ?? data_get($segment, 'dev', false));
     $counterSize = 'var(--tw-graph-protocol-dev-node-counter-width)';
     $counterDistance = 'calc(var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half))';
@@ -119,8 +123,10 @@
         :end-x="data_get($segment, 'anchorEnd.x', '0rem')"
     :end-y="data_get($segment, 'anchorEnd.y', '0rem')"
         :arc-size="$arcSize"
-        :node-start="$nodeStart"
-        :node-end="$nodeEnd"
+        :node-start="$nodeStartDot"
+        :node-end="$nodeEndDot"
+        :node-start-size="data_get($segment, 'nodeStartSize')"
+        :node-end-size="data_get($segment, 'nodeEndSize')"
         :dashed="data_get($segment, 'dashed', false)"
         :color="$color"
         :z-index="$zIndex"

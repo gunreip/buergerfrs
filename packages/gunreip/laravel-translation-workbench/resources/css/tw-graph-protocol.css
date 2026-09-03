@@ -285,6 +285,16 @@
         content: "";
     }
 
+    .tw-graph-protocol-primitive-line-node-start::before {
+        width: var(--tw-graph-protocol-line-node-start-size, var(--tw-graph-protocol-node-size));
+        height: var(--tw-graph-protocol-line-node-start-size, var(--tw-graph-protocol-node-size));
+    }
+
+    .tw-graph-protocol-primitive-line-node-end::after {
+        width: var(--tw-graph-protocol-line-node-end-size, var(--tw-graph-protocol-node-size));
+        height: var(--tw-graph-protocol-line-node-end-size, var(--tw-graph-protocol-node-size));
+    }
+
     .tw-graph-protocol-primitive-line-bottom-top {
         left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-start-x) - var(--tw-graph-protocol-path-half));
         bottom: calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-start-y));
@@ -623,6 +633,51 @@
         transform: translate(-50%, 50%);
         border-radius: 9999px;
         background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+    }
+
+    .tw-graph-protocol-primitive-node-image {
+        --tw-graph-protocol-active-color-rgb: var(--tw-graph-protocol-local-color-rgb, var(--tw-graph-protocol-color-rgb));
+
+        z-index: var(--tw-graph-protocol-z-index, 40);
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x));
+        bottom: calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-anchor-y));
+        width: var(--tw-graph-protocol-node-image-size, 3rem);
+        height: var(--tw-graph-protocol-node-image-size, 3rem);
+        transform: translate(-50%, 50%);
+        border: 0.0625rem solid rgb(var(--tw-graph-protocol-active-color-rgb) / 0.95);
+        border-radius: 9999px;
+        background-color: rgb(255 255 255 / 0.95);
+        overflow: hidden;
+    }
+
+    .tw-graph-protocol-primitive-node-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .tw-graph-protocol-primitive-joint-arrow {
+        --tw-graph-protocol-active-color-rgb: var(--tw-graph-protocol-local-color-rgb, var(--tw-graph-protocol-color-rgb));
+        --tw-graph-protocol-joint-arrow-size: calc(var(--tw-graph-protocol-path-width) * 1.75);
+
+        z-index: var(--tw-graph-protocol-z-index, 18);
+        left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x));
+        bottom: calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-anchor-y));
+        width: 0;
+        height: 0;
+        transform: translate(-50%, 50%);
+    }
+
+    .tw-graph-protocol-primitive-joint-arrow-right {
+        border-top: var(--tw-graph-protocol-joint-arrow-size) solid transparent;
+        border-bottom: var(--tw-graph-protocol-joint-arrow-size) solid transparent;
+        border-left: calc(var(--tw-graph-protocol-joint-arrow-size) * 1.2) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+    }
+
+    .tw-graph-protocol-primitive-joint-arrow-left {
+        border-top: var(--tw-graph-protocol-joint-arrow-size) solid transparent;
+        border-right: calc(var(--tw-graph-protocol-joint-arrow-size) * 1.2) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        border-bottom: var(--tw-graph-protocol-joint-arrow-size) solid transparent;
     }
 
     .tw-graph-protocol-primitive-text-terminal {

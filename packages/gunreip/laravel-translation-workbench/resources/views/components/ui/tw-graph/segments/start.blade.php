@@ -55,7 +55,10 @@
         :offset="data_get($startSegment, 'startLabel.offset', '0.75rem')"
         :badge="data_get($startSegment, 'startLabel.badge', true)"
         :badge-color="data_get($startSegment, 'startLabel.badgeColor', data_get($startSegment, 'color', 'green'))"
-        :long="data_get($startSegment, 'startLabel.long', false)"
-        :half-long="data_get($startSegment, 'startLabel.halfLong', false)"
+        :long="data_get($startSegment, 'startLabel.long', false) || data_get($startSegment, 'startLabel.width') === 'long'"
+        :half-long="data_get($startSegment, 'startLabel.halfLong', false) || in_array(data_get($startSegment, 'startLabel.width'), ['halfLong', 'half-long', 'half_long'], true)"
+        :half="data_get($startSegment, 'startLabel.half', false) || in_array(data_get($startSegment, 'startLabel.width'), ['half', 'halfWidth', 'half-width', 'half_width'], true)"
+        :align="data_get($startSegment, 'startLabel.align', 'center')"
+        :justify="data_get($startSegment, 'startLabel.justify', false)"
     />
 @endif

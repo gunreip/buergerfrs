@@ -3554,12 +3554,16 @@ final class RenderPreviewBuilder
     {
         $labelPadding = 1.0;
 
-        if ((bool) data_get($label, 'long', false)) {
+        if ((bool) data_get($label, 'long', false) || data_get($label, 'width') === 'long') {
             return 24.0 + $labelPadding;
         }
 
-        if ((bool) data_get($label, 'halfLong', false)) {
+        if ((bool) data_get($label, 'halfLong', false) || in_array(data_get($label, 'width'), ['halfLong', 'half-long', 'half_long'], true)) {
             return 18.0 + $labelPadding;
+        }
+
+        if ((bool) data_get($label, 'half', false) || in_array(data_get($label, 'width'), ['half', 'halfWidth', 'half-width', 'half_width'], true)) {
+            return 6.0 + $labelPadding;
         }
 
         return 12.0 + $labelPadding;
@@ -3741,6 +3745,7 @@ final class RenderPreviewBuilder
         return match ($required) {
             'long' => Defaults::dataDrivenString('label_width.long', Defaults::graphString('label_width.long', '20rem')),
             'halfLong' => Defaults::dataDrivenString('label_width.half_long', Defaults::graphString('label_width.half_long', '16rem')),
+            'half' => Defaults::dataDrivenString('label_width.half', Defaults::graphString('label_width.half', '6rem')),
             default => Defaults::dataDrivenString('label_width.default', Defaults::graphString('label_width.default', '12rem')),
         };
     }
@@ -3784,10 +3789,12 @@ final class RenderPreviewBuilder
 
         $level = 'default';
 
-        if ((bool) ($value['long'] ?? false)) {
+        if ((bool) ($value['long'] ?? false) || ($value['width'] ?? null) === 'long') {
             $level = 'long';
-        } elseif ((bool) ($value['halfLong'] ?? false)) {
+        } elseif ((bool) ($value['halfLong'] ?? false) || in_array($value['width'] ?? null, ['halfLong', 'half-long', 'half_long'], true)) {
             $level = 'halfLong';
+        } elseif ((bool) ($value['half'] ?? false) || in_array($value['width'] ?? null, ['half', 'halfWidth', 'half-width', 'half_width'], true)) {
+            $level = 'half';
         }
 
         foreach ($value as $child) {
@@ -3800,6 +3807,7 @@ final class RenderPreviewBuilder
     private static function maxLabelPaddingLevel(string $current, string $candidate): string
     {
         $rank = [
+            'half' => -1,
             'default' => 0,
             'halfLong' => 1,
             'long' => 2,

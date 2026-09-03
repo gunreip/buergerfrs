@@ -73,6 +73,8 @@
             'anchorEnd' => $anchorEnd,
             'nodeStart' => $nodeStart,
             'nodeEnd' => $nodeEnd,
+            'nodeStartSize' => data_get($segment, 'nodeStartSize'),
+            'nodeEndSize' => data_get($segment, 'nodeEndSize'),
             'devCounterStart' => $devCounterStart,
             'devCounterEnd' => $devCounterEnd,
             'devCounterColor' => $devCounterColor,
@@ -229,6 +231,8 @@
     :end-y="data_get($segment, 'anchorEnd.y', '0rem')"
     :node-start="$nodeStartDot"
     :node-end="$nodeEndDot"
+    :node-start-size="data_get($segment, 'nodeStartSize')"
+    :node-end-size="data_get($segment, 'nodeEndSize')"
     :gradient="data_get($segment, 'gradient', false)"
     :cap="data_get($segment, 'cap', false)"
     :cap-start="data_get($segment, 'capStart', false)"

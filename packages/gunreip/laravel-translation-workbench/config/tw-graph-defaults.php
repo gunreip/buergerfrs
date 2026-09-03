@@ -8,10 +8,12 @@ return [
     'line_length' => '4rem',
     'line_width' => '0.25rem',
     'node_size' => '0.95rem',
+    'node_image_size' => '3rem',
     'arc_size' => '2.75rem',
     'cap_length' => '1.75rem',
     'bridge_length' => '20rem',
     'stem_length' => '4rem',
+    'part_end_length' => '2rem',
     'connector_length' => '2rem',
     'connector_gap' => '0.25rem',
     'label_offset' => '0.75rem',
@@ -108,6 +110,7 @@ return [
     ],
 
     'label_width' => [
+        'half' => '6rem',
         'default' => '12rem',
         'half_long' => '16rem',
         'long' => '20rem',
