@@ -86,6 +86,8 @@
                 'mainRow' => $mainRow,
                 'rootRows' => collect($rootRows ?? []),
                 'originRows' => collect($originRows ?? []),
+                'dev' => false,
+                'coordinates' => false,
             ]
         )
     @else
