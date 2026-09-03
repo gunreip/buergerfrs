@@ -9,6 +9,7 @@
 
         @php
             $resumeGraphId = 'tw-graph-sample-resume-a-einstein';
+            $resumeTopBottomGraphId = 'tw-graph-sample-resume-a-einstein-top-bottom';
             $resumeGraphDev = false;
             $resumeGraphCoordinates = false;
             $resumeEinstein = include base_path(
@@ -39,7 +40,7 @@
                         'side' => 'bottom',
                     ],
                     'nodeImage' => [
-                        'source' => $resumeImagePath . 'resume-a-einstein.png',
+                        'source' => $resumeImagePath . 'resume-a-einstein-02.png',
                         'size' => '3rem',
                         'alt' => 'Albert Einstein',
                     ],
@@ -49,7 +50,7 @@
                     'id' => 'resume.left.1.sideways',
                     'side' => 'left',
                     'arcRadius' => '3.5rem',
-                    'bridgeLength' => '9.0rem',
+                    'bridgeLength' => '7.25rem',
                     'nodeLabelLeft' => $resumeTextLabel('1896', 'left'),
                     'nodeLabelRight' => $resumeDateLabel('1896', 'left'),
                     'nodeImage' => [
@@ -204,7 +205,7 @@
                     'id' => 'resume.right.6.sideways',
                     'side' => 'right',
                     'arcRadius' => '3.5rem',
-                    'bridgeLength' => '18.0rem',
+                    'bridgeLength' => '7.25rem',
                     'nodeLabelLeft' => $resumeDateLabel('1955', 'right'),
                     'nodeLabelRight' => $resumeTextLabel('1955', 'right'),
                     'nodeImage' => [
@@ -225,6 +226,15 @@
                     ],
                 ],
             ];
+            $resumeTopBottomParts = array_map(static function (array $part): array {
+                $id = data_get($part, 'id');
+
+                if (is_string($id) && str_starts_with($id, 'resume.')) {
+                    $part['id'] = 'resume.top-bottom.' . substr($id, strlen('resume.'));
+                }
+
+                return $part;
+            }, $resumeParts);
         @endphp
 
         <flux:callout
@@ -248,11 +258,17 @@
                         >
                             {{ __('hand-authored') }}
                         </flux:badge>
+                        <flux:badge
+                            size="sm"
+                            color="sky"
+                        >
+                            {{ __('bottom to top') }}
+                        </flux:badge>
                     </span>
                 </span>
             </flux:callout.heading>
             <flux:callout.text>
-                {{ __('Manual tw-graph canvas for the A. Einstein resume sample. The resume strangs will be added directly in this component tree.') }}
+                {{ __('Manual tw-graph canvas for the A. Einstein resume sample, rendered bottom to top.') }}
             </flux:callout.text>
 
             <flux:heading
@@ -285,6 +301,77 @@
                     <x-translation-workbench::ui.tw-graph.parts.chain
                         :parts="$resumeParts"
                         :anchor-start="['x' => '0rem', 'y' => '0rem']"
+                        color="sky"
+                    />
+                </x-translation-workbench::ui.tw-graph>
+            </div>
+        </flux:callout>
+
+        <flux:callout
+            class="mt-6"
+            color="zinc"
+            icon="file-text"
+        >
+            <flux:callout.heading>
+                <span class="flex w-full flex-wrap items-center justify-between gap-3">
+                    <span class="inline-flex flex-wrap items-center gap-2">
+                        <span>{{ __('Resume graph canvas') }}</span>
+                        <flux:badge
+                            size="sm"
+                            color="zinc"
+                        >
+                            {{ $resumeTopBottomGraphId }}
+                        </flux:badge>
+                        <flux:badge
+                            size="sm"
+                            color="amber"
+                        >
+                            {{ __('hand-authored') }}
+                        </flux:badge>
+                        <flux:badge
+                            size="sm"
+                            color="sky"
+                        >
+                            {{ __('top to bottom') }}
+                        </flux:badge>
+                    </span>
+                </span>
+            </flux:callout.heading>
+            <flux:callout.text>
+                {{ __('Manual tw-graph canvas for the A. Einstein resume sample, rendered top to bottom.') }}
+            </flux:callout.text>
+
+            <flux:heading
+                class="mt-6"
+                size="xl"
+            >
+                {{ data_get($resumeEinstein, 'title') }}
+            </flux:heading>
+            <flux:heading size="lg">
+                {{ data_get($resumeEinstein, 'subtitle') }}
+            </flux:heading>
+            <flux:text class="columns-3 hyphens-auto text-justify">
+                {{ data_get($resumeEinstein, 'summary') }}
+            </flux:text>
+
+            <div
+                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                <x-translation-workbench::ui.tw-graph
+                    class="px-24 py-12"
+                    :graph-id="$resumeTopBottomGraphId"
+                    :dev="$resumeGraphDev"
+                    :coordinates="$resumeGraphCoordinates"
+                    color="sky"
+                    line-length="4rem"
+                    bridge-length="12rem"
+                    stem-length="4rem"
+                    slot-min-height="42rem"
+                    horizontal-padding="16rem"
+                >
+                    <x-translation-workbench::ui.tw-graph.parts.chain
+                        :parts="$resumeTopBottomParts"
+                        :anchor-start="['x' => '0rem', 'y' => '104rem']"
+                        direction="top-bottom"
                         color="sky"
                     />
                 </x-translation-workbench::ui.tw-graph>

@@ -32,9 +32,13 @@
     'bridgeLength' => null,
     'stemLength' => null,
     'capLength' => null,
+    'direction' => 'bottom-top',
 ])
 
 @php
+    $resolvedDirection = in_array($direction, ['bottom-top', 'top-bottom', 'left-right', 'right-left'], true)
+        ? $direction
+        : 'bottom-top';
     $cursor = is_array($anchorStart) ? $anchorStart : ['x' => '0rem', 'y' => '0rem'];
     $cursor = [
         'x' => data_get($cursor, 'x', '0rem'),
@@ -79,21 +83,21 @@
         'x' => data_get($part, 'anchorStart.x', $cursor['x']),
         'y' => data_get($part, 'anchorStart.y', $cursor['y']),
     ];
-    $advanceStart = function (array $anchor, array $part) use ($add, $neg, $resolvedStemLength): array {
+    $advanceStart = function (array $anchor, array $part) use ($add, $neg, $resolvedStemLength, $resolvedDirection): array {
         $length = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
             data_get($part, 'length'),
             data_get($part, 'stemLength'),
             $resolvedStemLength,
         );
 
-        return match (data_get($part, 'direction', 'bottom-top')) {
+        return match (data_get($part, 'direction', $resolvedDirection)) {
             'top-bottom' => ['x' => $anchor['x'], 'y' => $add($anchor['y'], $neg($length))],
             'left-right' => ['x' => $add($anchor['x'], $length), 'y' => $anchor['y']],
             'right-left' => ['x' => $add($anchor['x'], $neg($length)), 'y' => $anchor['y']],
             default => ['x' => $anchor['x'], 'y' => $add($anchor['y'], $length)],
         };
     };
-    $advanceSideways = function (array $anchor, array $part) use ($add, $neg, $resolvedArcRadius, $resolvedBridgeLength): array {
+    $advanceSideways = function (array $anchor, array $part) use ($add, $neg, $resolvedArcRadius, $resolvedBridgeLength, $resolvedDirection): array {
         $isLeft = data_get($part, 'side', 'left') !== 'right';
         $arcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
             data_get($part, 'arcRadius', data_get($part, 'arcSize')),
@@ -113,9 +117,12 @@
         $xDelta = $isLeft
             ? 'calc(' . $arcRadius . ' + ' . $bridge . ' + ' . $arcRadius . ')'
             : 'calc((' . $arcRadius . ' + ' . $bridge . ' + ' . $arcRadius . ') * -1)';
-        $yDelta = in_array($extension, ['0', '0rem'], true)
+        $rawYDelta = in_array($extension, ['0', '0rem'], true)
             ? 'calc(' . $arcRadius . ' + ' . $arcRadius . ')'
             : 'calc(' . $arcRadius . ' + ' . $arcRadius . ' + ' . $extension . ' + ' . $extension . ')';
+        $yDelta = data_get($part, 'direction', $resolvedDirection) === 'top-bottom'
+            ? $neg($rawYDelta)
+            : $rawYDelta;
 
         return [
             'x' => $add($anchor['x'], $xDelta),
@@ -136,7 +143,7 @@
         <x-translation-workbench::ui.tw-graph.parts.start
             :id="data_get($part, 'id')"
             :color="$partColor"
-            :direction="data_get($part, 'direction', 'bottom-top')"
+            :direction="data_get($part, 'direction', $resolvedDirection)"
             :anchor-start="$anchor"
             :length="data_get($part, 'length')"
             :node-end="data_get($part, 'nodeEnd', true)"
@@ -158,6 +165,7 @@
         <x-translation-workbench::ui.tw-graph.parts.sideways
             :id="data_get($part, 'id')"
             :color="$partColor"
+            :direction="data_get($part, 'direction', $resolvedDirection)"
             :side="data_get($part, 'side', 'left')"
             :anchor-start="$anchor"
             :arc-radius="data_get($part, 'arcRadius', data_get($part, 'arcSize'))"
@@ -180,7 +188,7 @@
         <x-translation-workbench::ui.tw-graph.parts.end
             :id="data_get($part, 'id')"
             :color="$partColor"
-            :direction="data_get($part, 'direction', 'bottom-top')"
+            :direction="data_get($part, 'direction', $resolvedDirection)"
             :anchor-start="$anchor"
             :length="data_get($part, 'length')"
             :cap-length="data_get($part, 'capLength', $resolvedCapLength)"

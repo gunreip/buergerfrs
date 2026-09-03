@@ -219,6 +219,12 @@
 
     if ($startLabel !== null) {
         $startLabelSide = data_get($startLabel, 'side', 'bottom');
+        $startLabelSide = match (true) {
+            $direction === 'top-bottom' && $startLabelSide === 'bottom' => 'top',
+            $direction === 'top-bottom' && $startLabelSide === 'top' => 'bottom',
+            default => $startLabelSide,
+        };
+        $startLabel['side'] = $startLabelSide;
         $startLabelWidth = $labelWidth($startLabel);
         $startLabelHeight = $labelHeight($startLabel);
         $startLabelX = match ($startLabelSide) {

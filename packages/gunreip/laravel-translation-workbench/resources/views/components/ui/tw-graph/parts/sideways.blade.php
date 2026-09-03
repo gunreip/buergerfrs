@@ -39,6 +39,7 @@
     'arcSize' => null,
     'bridgeLength' => null,
     'extension' => null,
+    'direction' => 'bottom-top',
     'color' => null,
     'nodeEnd' => true,
     'nodeImage' => null,
@@ -54,6 +55,7 @@
     $resolvedGraphId = filled($graphId ?? null) ? (string) $graphId : 'tw-graph';
     $resolvedComponentCounter = max(1, (int) $componentCounter);
     $isLeft = $side !== 'right';
+    $isTopBottom = $direction === 'top-bottom';
     $id = filled($id)
         ? (string) $id
         : 'part.' . ($isLeft ? 'left' : 'right') . '.' . $resolvedComponentCounter . '.sideways';
@@ -91,14 +93,22 @@
     $neg = fn(string $value): string => 'calc(' . $value . ' * -1)';
     $arcDelta = $isLeft ? $resolvedArcSize : $neg($resolvedArcSize);
     $bridgeDelta = $isLeft ? $resolvedBridgeLength : $neg($resolvedBridgeLength);
+    $verticalDelta = $isTopBottom ? $neg($resolvedArcSize) : $resolvedArcSize;
+    $extensionDelta = $isTopBottom ? $neg($resolvedExtension) : $resolvedExtension;
     $arcInStartAnchor = $isLeft ? 'w' : 'e';
-    $arcInEndAnchor = 'n';
+    $arcInEndAnchor = $isTopBottom ? 's' : 'n';
     $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
-    $arcOutStartAnchor = 's';
+    $arcOutStartAnchor = $isTopBottom ? 'n' : 's';
     $arcOutEndAnchor = $isLeft ? 'e' : 'w';
+    $arcInName = $isLeft
+        ? ($isTopBottom ? 'west-south' : 'west-north')
+        : ($isTopBottom ? 'east-south' : 'east-north');
+    $arcOutName = $isLeft
+        ? ($isTopBottom ? 'north-east' : 'south-east')
+        : ($isTopBottom ? 'north-west' : 'south-west');
     $arcInEnd = [
         'x' => $add($anchorStart['x'], $arcDelta),
-        'y' => $add($anchorStart['y'], $resolvedArcSize),
+        'y' => $add($anchorStart['y'], $verticalDelta),
     ];
     $bridgeEnd = [
         'x' => $add($arcInEnd['x'], $bridgeDelta),
@@ -106,7 +116,7 @@
     ];
     $arcOutEnd = [
         'x' => $add($bridgeEnd['x'], $arcDelta),
-        'y' => $add($bridgeEnd['y'], $resolvedArcSize),
+        'y' => $add($bridgeEnd['y'], $verticalDelta),
     ];
     $labelAnchor = $arcOutEnd;
     $continuationEnd = $arcOutEnd;
@@ -114,11 +124,11 @@
     if ($hasExtension) {
         $labelAnchor = [
             'x' => $arcOutEnd['x'],
-            'y' => $add($arcOutEnd['y'], $resolvedExtension),
+            'y' => $add($arcOutEnd['y'], $extensionDelta),
         ];
         $continuationEnd = [
             'x' => $labelAnchor['x'],
-            'y' => $add($labelAnchor['y'], $resolvedExtension),
+            'y' => $add($labelAnchor['y'], $extensionDelta),
         ];
     }
 
@@ -263,7 +273,7 @@
         [
             'component' => 'arc',
             'segment' => [
-                'id' => $id . '.arc1-' . ($isLeft ? 'west-north' : 'east-north'),
+                'id' => $id . '.arc1-' . $arcInName,
                 'startAnchor' => $arcInStartAnchor,
                 'endAnchor' => $arcInEndAnchor,
                 'arcSize' => $resolvedArcSize,
@@ -297,7 +307,7 @@
         [
             'component' => 'arc',
             'segment' => [
-                'id' => $id . '.arc2-' . ($isLeft ? 'south-east' : 'south-west'),
+                'id' => $id . '.arc2-' . $arcOutName,
                 'startAnchor' => $arcOutStartAnchor,
                 'endAnchor' => $arcOutEndAnchor,
                 'arcSize' => $resolvedArcSize,
@@ -325,7 +335,7 @@
             'component' => 'path',
             'segment' => [
                 'id' => $id . '.extension-stem1',
-                'direction' => 'bottom-top',
+                'direction' => $isTopBottom ? 'top-bottom' : 'bottom-top',
                 'length' => $resolvedExtension,
                 'anchorStart' => $arcOutEnd,
                 'anchorEnd' => $labelAnchor,
@@ -347,7 +357,7 @@
             'component' => 'path',
             'segment' => [
                 'id' => $id . '.extension-stem2',
-                'direction' => 'bottom-top',
+                'direction' => $isTopBottom ? 'top-bottom' : 'bottom-top',
                 'length' => $resolvedExtension,
                 'anchorStart' => $labelAnchor,
                 'anchorEnd' => $continuationEnd,

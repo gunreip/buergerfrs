@@ -233,6 +233,15 @@
             >
                 {{ __('Resume A. Einstein') }}
             </flux:sidebar.item>
+
+            <flux:sidebar.item
+                icon="bug"
+                :href="route('admin.tw-graph.samples.bug-lifecycle')"
+                :current="request()->routeIs('admin.tw-graph.samples.bug-lifecycle')"
+                wire:navigate
+            >
+                {{ __('Bug Lifecycle') }}
+            </flux:sidebar.item>
         </flux:sidebar.group>
     </flux:sidebar.group>
 

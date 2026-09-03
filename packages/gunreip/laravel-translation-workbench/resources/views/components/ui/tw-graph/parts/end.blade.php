@@ -102,6 +102,14 @@
         'center',
     );
 
+    if (is_array($endLabel)) {
+        $endLabelSide = data_get($endLabel, 'side');
+
+        if ($direction === 'top-bottom' && in_array($endLabelSide, ['top', 'bottom'], true)) {
+            $endLabel['side'] = $endLabelSide === 'top' ? 'bottom' : 'top';
+        }
+    }
+
     $segment = [
         'id' => $id,
         'direction' => $direction,

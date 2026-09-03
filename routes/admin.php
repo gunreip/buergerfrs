@@ -61,6 +61,9 @@ Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
         Route::view('tw-graph/samples/resume-a-einstein', 'translation-workbench::pages.tw-graph.samples.resume-a-einstein')
             ->name('tw-graph.samples.resume-a-einstein');
 
+        Route::view('tw-graph/samples/bug-lifecycle', 'translation-workbench::pages.tw-graph.samples.bug-lifecycle')
+            ->name('tw-graph.samples.bug-lifecycle');
+
         Route::get('translations/usage', TranslationUsageAudit::class)->name('translation-usage');
 
         Route::get('translations/lang-ballast', TranslationLangBallast::class)->name('translation-lang-ballast');

@@ -162,6 +162,12 @@
     $nodeLabelOverrides = is_array($nodeLabels) ? $nodeLabels : [];
     $nodeLabelOverridesAreList = array_is_list($nodeLabelOverrides);
     $pathNumbers = $resolvedPathCount > 0 ? range(1, $resolvedPathCount) : [];
+    $firstPathLengthKey = $pathLengthOverridesAreList ? 0 : 1;
+    $firstPathLengthOverride = $pathLengthOverrides[$firstPathLengthKey] ?? null;
+    $firstPathLengthIsExplicit = array_key_exists($firstPathLengthKey, $pathLengthOverrides)
+        && (is_array($firstPathLengthOverride)
+            ? (filled(data_get($firstPathLengthOverride, 'length')) || filled(data_get($firstPathLengthOverride, 0)))
+            : filled($firstPathLengthOverride));
     $resolvedPathLengthEntries = collect($pathNumbers)
         ->mapWithKeys(function (int $pathNumber) use ($pathLengthOverrides, $pathLengthOverridesAreList, $nodeLabelOverrides, $nodeLabelOverridesAreList, $resolvedDefaultPathLength, $pathLengthWithLabels): array {
             $lengthKey = $pathLengthOverridesAreList ? $pathNumber - 1 : $pathNumber;
@@ -177,7 +183,7 @@
             ];
         })
         ->all();
-    if ($resolvedStartShiftEnabled && $pathNumbers !== []) {
+    if ($resolvedStartShiftEnabled && ! $firstPathLengthIsExplicit && $pathNumbers !== []) {
         $firstPathEntry = $resolvedPathLengthEntries[1] ?? $resolvedDefaultPathLength;
         $firstPathLength = $lengthOf($firstPathEntry);
         $shiftedFirstPathLength = 'calc(' . $firstPathLength . ' + ' . $resolvedStartShiftLength . ')';
