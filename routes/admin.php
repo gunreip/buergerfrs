@@ -55,6 +55,9 @@ Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
 
         Route::get('translation-workbench/settings', TranslationWorkbenchSettings::class)->name('translation-workbench.settings');
 
+        Route::view('tw-graph/documentation', 'translation-workbench::pages.tw-graph.documentation')
+            ->name('tw-graph.documentation');
+
         Route::view('tw-graph/data-driven/datasets', 'translation-workbench::pages.tw-graph.data-driven.datasets')
             ->name('tw-graph.data-driven.datasets');
 

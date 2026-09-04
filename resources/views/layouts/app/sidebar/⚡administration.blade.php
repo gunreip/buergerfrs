@@ -199,6 +199,15 @@
         expandable
         :expanded="request()->routeIs('admin.tw-graph.*')"
     >
+        <flux:sidebar.item
+            icon="book-open"
+            :href="route('admin.tw-graph.documentation')"
+            :current="request()->routeIs('admin.tw-graph.documentation')"
+            wire:navigate
+        >
+            {{ __('Documentation') }}
+        </flux:sidebar.item>
+
         {{-- Admin -> TW-Graph -> Data Driven --}}
         <flux:sidebar.group
             class="grid"
