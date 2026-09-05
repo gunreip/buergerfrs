@@ -67,6 +67,15 @@ Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
         Route::view('tw-graph/samples/bug-lifecycle', 'translation-workbench::pages.tw-graph.samples.bug-lifecycle')
             ->name('tw-graph.samples.bug-lifecycle');
 
+        Route::view('tw-graph/samples/order-lifecycle', 'translation-workbench::pages.tw-graph.samples.order-lifecycle')
+            ->name('tw-graph.samples.order-lifecycle');
+
+        Route::view('tw-graph/samples/project-roadmap', 'translation-workbench::pages.tw-graph.samples.project-roadmap')
+            ->name('tw-graph.samples.project-roadmap');
+
+        Route::view('tw-graph/samples/translation-migration', 'translation-workbench::pages.tw-graph.samples.translation-migration')
+            ->name('tw-graph.samples.translation-migration');
+
         Route::get('translations/usage', TranslationUsageAudit::class)->name('translation-usage');
 
         Route::get('translations/lang-ballast', TranslationLangBallast::class)->name('translation-lang-ballast');

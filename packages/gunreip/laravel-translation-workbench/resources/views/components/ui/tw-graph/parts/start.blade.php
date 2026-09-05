@@ -18,13 +18,20 @@
 
 @aware([
     'graphId' => null,
+    'color' => null,
     'dev' => false,
-    'defaultColor' => null,
     'lineLength' => null,
     'stemLength' => null,
     'connectorLength' => null,
     'connectorGap' => null,
 ])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
 
 @props([
     'id' => null,
@@ -51,7 +58,7 @@
     $id = filled($id)
         ? (string) $id
         : 'part.center.' . $resolvedComponentCounter . '.start';
-    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'zinc');
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
         $length,
@@ -82,17 +89,7 @@
             'y' => 'calc(' . $anchorStart['y'] . ' + ' . $resolvedLength . ')',
         ],
     };
-    $normalizeLabel = function (mixed $label): ?array {
-        if ($label === false || blank($label)) {
-            return null;
-        }
-
-        if (is_array($label)) {
-            return filled(data_get($label, 'text')) ? $label : null;
-        }
-
-        return ['text' => (string) $label];
-    };
+    $normalizeLabel = fn (mixed $label): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, null, $resolvedColor);
     $normalizeNodeLabel = function (mixed $label, string $side) use ($normalizeLabel): ?array {
         $normalized = $normalizeLabel($label);
 

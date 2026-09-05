@@ -58,7 +58,7 @@
     'capEnd' => null,
     'capLength' => '1.25rem',
     'dashed' => false,
-    'color' => 'cyan',
+    'color' => 'zinc',
     'zIndex' => null,
     'dev' => null,
 ])
@@ -92,7 +92,7 @@
 
     $id = data_get($segment, 'id', 'segment.path');
     $direction = data_get($segment, 'direction', 'bottom-top');
-    $color = data_get($segment, 'color', 'cyan');
+    $color = data_get($segment, 'color', 'zinc');
     $zIndex = data_get($segment, 'zIndex');
     $nodeStartValue = data_get($segment, 'nodeStart', false);
     $nodeEndValue = data_get($segment, 'nodeEnd', false);
@@ -103,24 +103,14 @@
 
         return filled($value) && (bool) $value;
     };
-    $nodeLabels = function (mixed $value): array {
+    $nodeLabels = function (mixed $value) use ($color): array {
         if (! is_array($value)) {
             return [];
         }
 
         return collect($value)
             ->take(2)
-            ->map(function (mixed $label): ?array {
-                if (blank($label)) {
-                    return null;
-                }
-
-                if (is_array($label)) {
-                    return $label;
-                }
-
-                return ['text' => $label];
-            })
+            ->map(fn (mixed $label): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, null, $color))
             ->all();
     };
     $nodeStart = $nodeIsVisible($nodeStartValue);
@@ -270,7 +260,7 @@
                 if (! $isHorizontal && ! in_array($side, ['left', 'right'], true)) {
                     $side = $labelIndex === 0 ? 'right' : 'left';
                 }
-                $labelId = $id . '.label.' . $labelPair['anchor'] . '.' . ($labelIndex + 1);
+                $labelId = $id . '.label.' . $side . '.' . ($labelIndex + 1);
             @endphp
 
             <x-translation-workbench::ui.tw-graph.segments.label

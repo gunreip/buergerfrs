@@ -15,7 +15,6 @@ final class RenderContext
      * @return array{
      *     geometry: array<string, mixed>,
      *     direction: string,
-     *     defaultColor: string,
      *     color: string,
      *     colorRgb: string,
      *     graphId: string,
@@ -33,7 +32,6 @@ final class RenderContext
         mixed $graphId,
         bool $slotHasContent,
         mixed $color,
-        mixed $defaultColor,
         string $lineWidth,
         string $nodeSize,
         string $arcSize,
@@ -43,8 +41,7 @@ final class RenderContext
     ): array {
         $geometry = (array) data_get($protocol, 'geometry', []);
         $resolvedDirection = (string) data_get($geometry, 'direction', 'bottom-top');
-        $resolvedDefaultColor = (string) ($defaultColor ?: ($color ?: data_get($geometry, 'color', 'zinc')));
-        $resolvedColor = (string) ($color ?: data_get($geometry, 'color', $resolvedDefaultColor));
+        $resolvedColor = (string) ($color ?: data_get($geometry, 'color', 'zinc'));
         $resolvedGraphId = filled($graphId) ? (string) $graphId : 'tw-graph-' . Str::uuid()->toString();
         $segments = self::collectSegments($protocol);
         $canvasWidth = self::canvasWidth($segments);
@@ -53,9 +50,8 @@ final class RenderContext
         return [
             'geometry' => $geometry,
             'direction' => $resolvedDirection,
-            'defaultColor' => $resolvedDefaultColor,
             'color' => $resolvedColor,
-            'colorRgb' => TranslationWorkbenchColorPalette::rgb($resolvedColor, '6 182 212'),
+            'colorRgb' => TranslationWorkbenchColorPalette::rgb($resolvedColor, '113 113 122'),
             'graphId' => $resolvedGraphId,
             'canvasWidth' => $canvasWidth,
             'canvasHeight' => $canvasHeight,

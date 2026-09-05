@@ -24,6 +24,17 @@
     Inserted between the outer arc and the final stem.
 --}}
 
+@aware([
+    'color' => null,
+])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
+
 @props([
     'id' => 'path.branch-extension',
     'side' => 'left',
@@ -32,7 +43,7 @@
     'bridgeLength' => null,
     'step' => null,
     'stemLength' => '2rem',
-    'color' => 'rose',
+    'color' => null,
     'zIndex' => null,
     'counterStart' => 1,
     'nodeLabels' => [],
@@ -43,15 +54,6 @@
 ])
 
 @php
-    $normalLabels = function (mixed $labels): array {
-        if (! is_array($labels)) {
-            return [];
-        }
-
-        return array_is_list($labels)
-            ? array_values($labels)
-            : [$labels];
-    };
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn (string $value): string => 'calc(' . $value . ' * -1)';
     $currentAnchor = [
@@ -65,6 +67,50 @@
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
     $startsFromStem = data_get($currentAnchor, 'sourceType') === 'stem';
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
+    $normalizeLabel = fn (mixed $label, ?string $side = null): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, $side, $resolvedColor);
+    $labelForSide = function (array $entry, string $side) use ($normalizeLabel): ?array {
+        if (! array_key_exists($side, $entry) || blank($entry[$side])) {
+            return null;
+        }
+
+        $sideValue = $entry[$side];
+
+        if (is_array($sideValue) && array_key_exists('text', $sideValue)) {
+            return $normalizeLabel($sideValue, $side);
+        }
+
+        return $normalizeLabel([
+            'text' => $sideValue,
+            'width' => data_get($entry, 'width'),
+            'long' => data_get($entry, 'long'),
+            'halfLong' => data_get($entry, 'halfLong'),
+            'half' => data_get($entry, 'half'),
+            'align' => data_get($entry, 'align'),
+            'justify' => data_get($entry, 'justify'),
+            'maxLines' => data_get($entry, 'maxLines'),
+            'color' => data_get($entry, 'color'),
+            'badgeColor' => data_get($entry, 'badgeColor'),
+            'connectorLength' => data_get($entry, 'connectorLength'),
+            'connectorGap' => data_get($entry, 'connectorGap'),
+        ], $side);
+    };
+    $normalLabels = function (mixed $labels) use ($normalizeLabel, $labelForSide): array {
+        if (! is_array($labels)) {
+            return [];
+        }
+
+        if (array_key_exists('left', $labels) || array_key_exists('right', $labels) || array_key_exists('top', $labels) || array_key_exists('bottom', $labels)) {
+            return [
+                $labelForSide($labels, 'right') ?? $labelForSide($labels, 'top'),
+                $labelForSide($labels, 'left') ?? $labelForSide($labels, 'bottom'),
+            ];
+        }
+
+        return collect(array_is_list($labels) ? array_values($labels) : [$labels])
+            ->map(fn (mixed $label): ?array => $normalizeLabel($label))
+            ->all();
+    };
     $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', '4rem'));
 
     $bridgeDirection = $isLeft ? 'right-left' : 'left-right';
@@ -105,12 +151,14 @@
         ->filter(fn (mixed $line): bool => filled($line))
         ->take(3)
         ->count();
-    $autoStepLabelGap = match ($stepLabelLines) {
+    $stepLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem');
+    $autoStepLabelContentGap = match ($stepLabelLines) {
         1 => '2.75rem',
         2 => '3.75rem',
         3 => '4.75rem',
         default => '3.75rem',
     };
+    $autoStepLabelGap = 'calc(' . $autoStepLabelContentGap . ' + (' . $stepLabelOffset . ' * 2))';
     $stepBeforeLength = (string) data_get($stepConfig, 'beforeLength', '1.5rem');
     $stepLabelGap = (string) (data_get($stepConfig, 'labelGap') ?: $autoStepLabelGap);
     $stepAfterLength = (string) data_get($stepConfig, 'afterLength', '1.5rem');
@@ -155,8 +203,8 @@
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'color' => $color,
+                'devCounterColor' => $resolvedColor,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
@@ -176,8 +224,8 @@
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'color' => $color,
+                'devCounterColor' => $resolvedColor,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
@@ -193,8 +241,8 @@
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'color' => $color,
+                'devCounterColor' => $resolvedColor,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
@@ -213,8 +261,8 @@
                 'nodeEnd' => true,
                 'stepLabel' => data_get($stepConfig, 'stepLabel'),
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'color' => $color,
+                'devCounterColor' => $resolvedColor,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
@@ -230,8 +278,8 @@
                 'nodeStart' => false,
                 'nodeEnd' => $endNodeLabels !== [] ? $endNodeLabels : true,
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'color' => $color,
+                'devCounterColor' => $resolvedColor,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
@@ -252,8 +300,8 @@
                 'cap' => true,
                 'capLength' => $capLength,
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'color' => $color,
+                'devCounterColor' => $resolvedColor,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
                 'endLabel' => $endLabelConfig,

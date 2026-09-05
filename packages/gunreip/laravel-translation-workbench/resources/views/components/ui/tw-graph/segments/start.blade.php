@@ -36,7 +36,7 @@
         'nodeEnd' => true,
         'gradient' => true,
         'cap' => false,
-        'color' => 'green',
+        'color' => 'zinc',
     ], $segment);
 @endphp
 
@@ -46,15 +46,16 @@
 />
 
 @if (filled(data_get($startSegment, 'startLabel.text')))
+    @php($startLabelSide = data_get($startSegment, 'startLabel.side', 'bottom'))
     <x-translation-workbench::ui.tw-graph.primitives.text
-        :id="data_get($startSegment, 'id', 'segment.start') . '.start-label'"
+        :id="data_get($startSegment, 'id', 'segment.start') . '.label.' . $startLabelSide . '.1'"
         :text="data_get($startSegment, 'startLabel.text')"
         :anchor-x="data_get($startSegment, 'anchorStart.x', '0rem')"
         :anchor-y="data_get($startSegment, 'anchorStart.y', '0rem')"
-        :side="data_get($startSegment, 'startLabel.side', 'bottom')"
+        :side="$startLabelSide"
         :offset="data_get($startSegment, 'startLabel.offset', '0.75rem')"
         :badge="data_get($startSegment, 'startLabel.badge', true)"
-        :badge-color="data_get($startSegment, 'startLabel.badgeColor', data_get($startSegment, 'color', 'green'))"
+        :badge-color="data_get($startSegment, 'startLabel.badgeColor', data_get($startSegment, 'color', 'zinc'))"
         :long="data_get($startSegment, 'startLabel.long', false) || data_get($startSegment, 'startLabel.width') === 'long'"
         :half-long="data_get($startSegment, 'startLabel.halfLong', false) || in_array(data_get($startSegment, 'startLabel.width'), ['halfLong', 'half-long', 'half_long'], true)"
         :half="data_get($startSegment, 'startLabel.half', false) || in_array(data_get($startSegment, 'startLabel.width'), ['half', 'halfWidth', 'half-width', 'half_width'], true)"

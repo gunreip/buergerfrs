@@ -49,7 +49,7 @@
             'devCounterStart' => 'S',
             'devCounterEnd' => 'E',
             'devCounterColor' => 'zinc',
-            'color' => 'cyan',
+            'color' => 'zinc',
             'zIndex' => null,
         ],
         $segment,

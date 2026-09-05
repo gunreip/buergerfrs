@@ -60,7 +60,7 @@
             'stemLength' => 'lineLength',
             'connectorLength' => '2rem',
             'connectorGap' => '0.25rem',
-            'pathCount' => '10',
+            'stemCount' => '10',
         ];
     @endphp
 
@@ -126,10 +126,10 @@
                 {{-- strang.trunk --}}
                 <x-translation-workbench::ui.tw-graph.strang.trunk
                     color="sky"
-                    :path-count="11"
+                    :stem-count="11"
                     :start-label="['text' => ['Trunk', 'start']]"
                     :end-label="['text' => ['Trunk', 'end']]"
-                    :pathLengths="[
+                    :stem-lengths="[
                         7 => '4rem',
                         9 => '4rem',
                         11 => '5rem',

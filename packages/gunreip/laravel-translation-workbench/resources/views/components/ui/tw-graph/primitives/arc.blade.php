@@ -33,7 +33,7 @@
     'nodeStartSize' => null,
     'nodeEndSize' => null,
     'dashed' => false,
-    'color' => 'cyan',
+    'color' => 'zinc',
     'zIndex' => null,
 ])
 
@@ -67,7 +67,7 @@
         'se', 'sw' => data_get($anchors, 's.y', $endY),
         default => $endY,
     };
-    $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '6 182 212');
+    $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '113 113 122');
     $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id);
     $devNodeStartIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id . '.node.start');
     $devNodeEndIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id . '.node.end');

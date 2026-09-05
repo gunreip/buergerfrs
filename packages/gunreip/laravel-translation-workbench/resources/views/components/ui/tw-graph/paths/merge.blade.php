@@ -20,6 +20,17 @@
     e.g. stem2 after anchorNode2, not of the whole merge path.
 --}}
 
+@aware([
+    'color' => null,
+])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
+
 @props([
     'id' => 'path.merge',
     'side' => 'left',
@@ -34,7 +45,7 @@
     'stemContinuation' => [],
     'compressedStemParts' => [],
     'startLabel' => null,
-    'color' => 'amber',
+    'color' => null,
     'zIndex' => null,
     'nodeLabels' => [],
     'counterStart' => 1,
@@ -64,53 +75,12 @@
         $resolvedArcSize,
         '2.75rem',
     );
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $resolvedLineLength), '4rem');
     $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', $resolvedLineLength), '4rem');
     $compressedStemParts = is_array($compressedStemParts) ? $compressedStemParts : [];
     $stemContinuationEntries = is_array($stemContinuation) ? $stemContinuation : [];
-    $normalizeLabel = function (mixed $label, ?string $side = null) use ($color): ?array {
-        if (blank($label)) {
-            return null;
-        }
-
-        if (is_array($label)) {
-            $text = data_get($label, 'text');
-            $left = data_get($label, 'left');
-            $right = data_get($label, 'right');
-            $top = data_get($label, 'top');
-            $bottom = data_get($label, 'bottom');
-
-            if (filled($left)) {
-                $text = $left;
-                $side = 'left';
-            } elseif (filled($right)) {
-                $text = $right;
-                $side = 'right';
-            } elseif (filled($top)) {
-                $text = $top;
-                $side = 'top';
-            } elseif (filled($bottom)) {
-                $text = $bottom;
-                $side = 'bottom';
-            }
-
-            if (blank($text)) {
-                return null;
-            }
-
-            return array_replace([
-                'text' => $text,
-                'side' => $side,
-                'badgeColor' => $color,
-            ], collect($label)->except(['left', 'right', 'top', 'bottom'])->all());
-        }
-
-        return [
-            'text' => $label,
-            'side' => $side,
-            'badgeColor' => $color,
-        ];
-    };
+    $normalizeLabel = fn (mixed $label, ?string $side = null): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, $side, $resolvedColor);
     $pathNodeLabels = function (int $nodeNumber, string $defaultSide) use ($nodeLabels, $normalizeLabel): mixed {
         $rawLabel = data_get($nodeLabels, $nodeNumber);
 
@@ -157,7 +127,7 @@
             'text' => ['Merge', 'start'],
             'side' => 'bottom',
             'offset' => '0.75rem',
-            'badgeColor' => $color,
+            'badgeColor' => $resolvedColor,
         ];
     $startEnd = [
         'x' => $currentAnchor['x'],

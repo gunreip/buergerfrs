@@ -15,16 +15,28 @@
     right: segments.arc east-north -> segments.path right-left -> segments.arc south-west
 --}}
 
+@aware([
+    'color' => null,
+])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
+
 @props([
     'id' => 'path.branch-return',
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcSize' => null,
     'bridgeLength' => null,
-    'color' => 'orange',
+    'color' => null,
     'zIndex' => null,
     'counterStart' => 1,
     'fallbackUsed' => false,
+    'fallback' => true,
     'dev' => false,
 ])
 
@@ -37,7 +49,9 @@
     ];
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', '4rem'));
+    $renderFallbackStyle = (bool) $fallbackUsed && (bool) $fallback;
 
     $arcInStartAnchor = $isLeft ? 'w' : 'e';
     $arcInEndAnchor = 'n';
@@ -79,9 +93,9 @@
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'dashed' => $fallbackUsed,
-                'color' => $color,
+                'devCounterColor' => $resolvedColor,
+                'dashed' => $renderFallbackStyle,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
@@ -97,9 +111,9 @@
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'dashed' => $fallbackUsed,
-                'color' => $color,
+                'devCounterColor' => $resolvedColor,
+                'dashed' => $renderFallbackStyle,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
@@ -115,9 +129,9 @@
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'dashed' => $fallbackUsed,
-                'color' => $color,
+                'devCounterColor' => $resolvedColor,
+                'dashed' => $renderFallbackStyle,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],

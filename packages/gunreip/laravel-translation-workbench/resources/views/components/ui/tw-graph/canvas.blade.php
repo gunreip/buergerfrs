@@ -83,8 +83,8 @@
                     'side' => data_get($path, 'textStartConnectorPlacement', $direction === 'top-bottom' ? 'top' : 'bottom'),
                     'connectorLength' => data_get($path, 'textStartConnectorLength', '2rem'),
                     'connectorGap' => data_get($path, 'textStartConnectorGap', '0.75rem'),
-                    'badgeColor' => data_get($startSegment, 'color', data_get($path, 'color', 'green')),
-                    'color' => data_get($startSegment, 'color', data_get($path, 'color', 'green')),
+                    'badgeColor' => data_get($startSegment, 'color', data_get($path, 'color', 'zinc')),
+                    'color' => data_get($startSegment, 'color', data_get($path, 'color', 'zinc')),
                 ];
             }
 
@@ -97,8 +97,8 @@
                     'side' => data_get($path, 'textEndConnectorPlacement', $direction === 'top-bottom' ? 'bottom' : 'top'),
                     'connectorLength' => data_get($path, 'textEndConnectorLength', '2rem'),
                     'connectorGap' => data_get($path, 'textEndConnectorGap', '0.75rem'),
-                    'badgeColor' => data_get($endSegment, 'color', data_get($path, 'color', 'green')),
-                    'color' => data_get($endSegment, 'color', data_get($path, 'color', 'green')),
+                    'badgeColor' => data_get($endSegment, 'color', data_get($path, 'color', 'zinc')),
+                    'color' => data_get($endSegment, 'color', data_get($path, 'color', 'zinc')),
                 ];
             }
         }
@@ -116,8 +116,8 @@
                     'side' => data_get($mergeEnd, 'textEndConnectorPlacement', 'bottom'),
                     'connectorLength' => data_get($mergeEnd, 'textEndConnectorLength', '1.5rem'),
                     'connectorGap' => data_get($mergeEnd, 'textEndConnectorGap', '0.35rem'),
-                    'badgeColor' => data_get($segment, 'color', 'amber'),
-                    'color' => data_get($segment, 'color', 'amber'),
+                    'badgeColor' => data_get($segment, 'color', 'zinc'),
+                    'color' => data_get($segment, 'color', 'zinc'),
                 ];
             }
         }

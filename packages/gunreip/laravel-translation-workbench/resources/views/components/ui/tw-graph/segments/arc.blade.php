@@ -29,7 +29,7 @@
 
 @php
     $id = data_get($segment, 'id', 'segment.arc');
-    $color = data_get($segment, 'color', 'cyan');
+    $color = data_get($segment, 'color', 'zinc');
     $zIndex = data_get($segment, 'zIndex');
     $nodeStart = (bool) data_get($segment, 'nodeStart', false);
     $nodeEnd = (bool) data_get($segment, 'nodeEnd', false);
@@ -159,10 +159,11 @@
 @endif
 
 @if ($nodeStart && filled(data_get($segment, 'startLabel.text')))
+    @php($startLabelSide = data_get($segment, 'startLabel.side', 'right'))
     <x-translation-workbench::ui.tw-graph.segments.label
-        :id="$id . '.start-label'"
+        :id="$id . '.label.' . $startLabelSide . '.1'"
         :label="data_get($segment, 'startLabel')"
-        :side="data_get($segment, 'startLabel.side', 'right')"
+        :side="$startLabelSide"
         :anchor-x="data_get($segment, 'anchorStart.x', '0rem')"
         :anchor-y="data_get($segment, 'anchorStart.y', '0rem')"
         :color="$color"
@@ -170,10 +171,11 @@
 @endif
 
 @if ($nodeEnd && filled(data_get($segment, 'endLabel.text')))
+    @php($endLabelSide = data_get($segment, 'endLabel.side', 'left'))
     <x-translation-workbench::ui.tw-graph.segments.label
-        :id="$id . '.end-label'"
+        :id="$id . '.label.' . $endLabelSide . '.1'"
         :label="data_get($segment, 'endLabel')"
-        :side="data_get($segment, 'endLabel.side', 'left')"
+        :side="$endLabelSide"
         :anchor-x="data_get($segment, 'anchorEnd.x', '0rem')"
         :anchor-y="data_get($segment, 'anchorEnd.y', '0rem')"
         :color="$color"

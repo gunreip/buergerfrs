@@ -11,25 +11,6 @@
             $bugLifecycleGraphId = 'tw-graph-sample-bug-lifecycle';
             $bugLifecycleDev = true;
             $bugLifecycleCoordinates = false;
-            $bugLifecycleStateLabel = static fn(string $text, string $align = 'center'): array => [
-                'text' => $text,
-                'width' => 'halfLong',
-                'align' => $align,
-                'color' => 'rose',
-            ];
-            $bugLifecycleDetailLabel = static fn(string $text, string $align): array => [
-                'text' => $text,
-                'width' => 'long',
-                'align' => $align,
-                'justify' => true,
-                'color' => 'zinc',
-            ];
-            $bugLifecycleDecisionLabel = static fn(string $text): array => [
-                'text' => $text,
-                'width' => 'halfLong',
-                'align' => 'center',
-                'color' => 'amber',
-            ];
         @endphp
 
         <div x-data="{ bugLifecycleDev: @js($bugLifecycleDev) }">
@@ -96,62 +77,118 @@
                         {{-- trunk --}}
                         <x-translation-workbench::ui.tw-graph.strang.trunk
                             id="bug.center.1.trunk"
-                            :path-count="8"
+                            :stem-count="8"
                             start-length="5rem"
-                            {{-- Explicit path-length values override the automatic trunk-start shift. Use null to keep defaults. --}}
-                            :path-lengths="['1' => '7rem']"
+                            {{-- Explicit stem-length values override the automatic trunk-start shift. Use null to keep defaults. --}}
+                            :stem-lengths="['1' => '7rem']"
                             end-length="3rem"
                             start-label="BUG-1842"
                             :end-label="['text' => ['Closed', 'released and monitored'], 'width' => 'halfLong']"
                             :start-node-labels="[
-                                'left' => $bugLifecycleStateLabel('Reported', 'right'),
-                                'right' => $bugLifecycleDetailLabel(
-                                    'Customer reports checkout timeout after payment confirmation.',
-                                    'left',
-                                ),
+                                'left' => [
+                                    'text' => 'Reported',
+                                    'width' => 'halfLong',
+                                    'align' => 'right',
+                                    'color' => 'rose',
+                                ],
+                                'right' => [
+                                    'text' => 'Customer reports checkout timeout after payment confirmation.',
+                                    'width' => 'long',
+                                    'align' => 'left',
+                                    'justify' => true,
+                                    'color' => 'zinc',
+                                ],
                             ]"
                             :node-labels="[
                                 3 => [
-                                    'left' => $bugLifecycleStateLabel('Triaged', 'right'),
-                                    'right' => $bugLifecycleDetailLabel(
-                                        'Support confirms scope and adds reproduction steps.',
-                                        'left',
-                                    ),
+                                    'left' => [
+                                        'text' => 'Triaged',
+                                        'width' => 'halfLong',
+                                        'align' => 'right',
+                                        'color' => 'rose',
+                                    ],
+                                    'right' => [
+                                        'text' => 'Support confirms scope and adds reproduction steps.',
+                                        'width' => 'long',
+                                        'align' => 'left',
+                                        'justify' => true,
+                                        'color' => 'zinc',
+                                    ],
                                 ],
                                 4 => [
-                                    'left' => $bugLifecycleStateLabel('Reproduced', 'right'),
-                                    'right' => $bugLifecycleDetailLabel(
-                                        'Failing checkout replay isolates stale payment-session cache.',
-                                        'left',
-                                    ),
+                                    'left' => [
+                                        'text' => 'Reproduced',
+                                        'width' => 'halfLong',
+                                        'align' => 'right',
+                                        'color' => 'rose',
+                                    ],
+                                    'right' => [
+                                        'text' => 'Failing checkout replay isolates stale payment-session cache.',
+                                        'width' => 'long',
+                                        'align' => 'left',
+                                        'justify' => true,
+                                        'color' => 'zinc',
+                                    ],
                                 ],
                                 5 => [
-                                    'left' => $bugLifecycleDecisionLabel('Root cause confirmed'),
-                                    'right' => $bugLifecycleDetailLabel(
-                                        'Fix path chosen: invalidate cache on final webhook transition.',
-                                        'left',
-                                    ),
+                                    'left' => [
+                                        'text' => 'Root cause confirmed',
+                                        'width' => 'halfLong',
+                                        'align' => 'center',
+                                        'color' => 'amber',
+                                    ],
+                                    'right' => [
+                                        'text' => 'Fix path chosen: invalidate cache on final webhook transition.',
+                                        'width' => 'long',
+                                        'align' => 'left',
+                                        'justify' => true,
+                                        'color' => 'zinc',
+                                    ],
                                 ],
                                 6 => [
-                                    'left' => $bugLifecycleStateLabel('Fixed', 'right'),
-                                    'right' => $bugLifecycleDetailLabel(
-                                        'Patch and regression tests cover retry and duplicate webhook delivery.',
-                                        'left',
-                                    ),
+                                    'left' => [
+                                        'text' => 'Fixed',
+                                        'width' => 'halfLong',
+                                        'align' => 'right',
+                                        'color' => 'rose',
+                                    ],
+                                    'right' => [
+                                        'text' => 'Patch and regression tests cover retry and duplicate webhook delivery.',
+                                        'width' => 'long',
+                                        'align' => 'left',
+                                        'justify' => true,
+                                        'color' => 'zinc',
+                                    ],
                                 ],
                                 7 => [
-                                    'left' => $bugLifecycleStateLabel('Reviewed', 'right'),
-                                    'right' => $bugLifecycleDetailLabel(
-                                        'Reviewer requests clearer telemetry around payment-session expiry.',
-                                        'left',
-                                    ),
+                                    'left' => [
+                                        'text' => 'Reviewed',
+                                        'width' => 'halfLong',
+                                        'align' => 'right',
+                                        'color' => 'rose',
+                                    ],
+                                    'right' => [
+                                        'text' => 'Reviewer requests clearer telemetry around payment-session expiry.',
+                                        'width' => 'long',
+                                        'align' => 'left',
+                                        'justify' => true,
+                                        'color' => 'zinc',
+                                    ],
                                 ],
                                 8 => [
-                                    'left' => $bugLifecycleStateLabel('Released', 'right'),
-                                    'right' => $bugLifecycleDetailLabel(
-                                        'Deployed behind monitoring, no checkout timeout spike after 24 hours.',
-                                        'left',
-                                    ),
+                                    'left' => [
+                                        'text' => 'Released',
+                                        'width' => 'halfLong',
+                                        'align' => 'right',
+                                        'color' => 'rose',
+                                    ],
+                                    'right' => [
+                                        'text' => 'Deployed behind monitoring, no checkout timeout spike after 24 hours.',
+                                        'width' => 'long',
+                                        'align' => 'left',
+                                        'justify' => true,
+                                        'color' => 'zinc',
+                                    ],
                                 ],
                             ]"
                             color="rose"
@@ -165,16 +202,40 @@
                             stem-length="3rem"
                             start-label="Duplicate report|BUG-1843"
                             :node-labels="[
-                                1 => ['right' => ['same stack trace', 'mobile checkout']],
-                                5 => ['left' => ['merged into', 'BUG-1842']],
+                                1 => [
+                                    'right' => [
+                                        'text' => ['same stack trace', 'mobile checkout'],
+                                        'width' => 'default',
+                                        'align' => 'left',
+                                    ],
+                                ],
+                                5 => [
+                                    'left' => [
+                                        'text' => ['merged into', 'BUG-1842'],
+                                        'width' => 'default',
+                                        'align' => 'right',
+                                    ],
+                                ],
                             ]"
                             :extension-count="1"
                             extension-stem-length="3rem"
                             extension-bridge-length="18rem"
                             :extension-node-labels="[
                                 1 => [
-                                    1 => ['right' => ['Duplicate report', 'BUG-1844']],
-                                    4 => ['left' => ['same root cause', 'webhook retry']],
+                                    1 => [
+                                        'right' => [
+                                            'text' => ['Duplicate report', 'BUG-1844'],
+                                            'width' => 'default',
+                                            'align' => 'left',
+                                        ],
+                                    ],
+                                    4 => [
+                                        'left' => [
+                                            'text' => ['same root cause', 'webhook retry'],
+                                            'width' => 'default',
+                                            'align' => 'right',
+                                        ],
+                                    ],
                                 ],
                             ]"
                         />
@@ -187,7 +248,13 @@
                             bridge-length="34rem"
                             stem-length="4rem"
                             :node-labels="[
-                                3 => ['right' => ['Needs info', 'missing logs']],
+                                3 => [
+                                    'right' => [
+                                        'text' => ['Needs info', 'missing logs'],
+                                        'width' => 'default',
+                                        'align' => 'left',
+                                    ],
+                                ],
                             ]"
                             :step="[
                                 'beforeLength' => '5.35rem',
@@ -198,7 +265,14 @@
                                 ],
                             ]"
                             :stem-continuation="[
-                                1 => ['3rem', 'right' => ['User reply', 'logs attached']],
+                                1 => [
+                                    '3rem',
+                                    'right' => [
+                                        'text' => ['User reply', 'logs attached'],
+                                        'width' => 'default',
+                                        'align' => 'left',
+                                    ],
+                                ],
                             ]"
                             :branch-return="[
                                 1 => [
@@ -217,7 +291,13 @@
                             bridge-length="28rem"
                             stem-length="4rem"
                             :node-labels="[
-                                3 => ['left' => ['Cannot reproduce', 'local checkout passes']],
+                                3 => [
+                                    'left' => [
+                                        'text' => ['Cannot reproduce', 'local checkout passes'],
+                                        'width' => 'default',
+                                        'align' => 'right',
+                                    ],
+                                ],
                             ]"
                             :step="[
                                 'beforeLength' => '3rem',
@@ -228,8 +308,22 @@
                                 ],
                             ]"
                             :stem-continuation="[
-                                1 => ['5rem', 'left' => ['Not closed', 'evidence incomplete']],
-                                2 => ['6rem', 'left' => ['Returns to', 'root-cause work']],
+                                1 => [
+                                    '5rem',
+                                    'left' => [
+                                        'text' => ['Not closed', 'evidence incomplete'],
+                                        'width' => 'default',
+                                        'align' => 'right',
+                                    ],
+                                ],
+                                2 => [
+                                    '6rem',
+                                    'left' => [
+                                        'text' => ['Returns to', 'root-cause work'],
+                                        'width' => 'default',
+                                        'align' => 'right',
+                                    ],
+                                ],
                             ]"
                         />
                         {{-- cannot-reproduce / left/end --}}

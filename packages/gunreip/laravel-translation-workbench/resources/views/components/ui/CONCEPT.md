@@ -88,8 +88,20 @@ Extension labels follow the same node-numbered shape through
 ```blade
 :extension-node-labels="[
     1 => [
-        1 => ['right' => 'Extension start'],
-        4 => ['top' => 'Extension end'],
+        1 => [
+            'right' => [
+                'text' => 'Extension start',
+                'width' => 'default',
+                'align' => 'left',
+            ],
+        ],
+        4 => [
+            'top' => [
+                'text' => 'Extension end',
+                'width' => 'default',
+                'align' => 'center',
+            ],
+        ],
     ],
 ]"
 ```
@@ -97,10 +109,27 @@ Merge labels use the same node numbering:
 
 ```blade
 :node-labels="[
-    1 => ['right' => 'Source'],
-    5 => ['left' => 'Attach'],
+    1 => [
+        'right' => [
+            'text' => 'Source',
+            'width' => 'default',
+            'align' => 'left',
+        ],
+    ],
+    5 => [
+        'left' => [
+            'text' => 'Attach',
+            'width' => 'default',
+            'align' => 'right',
+        ],
+    ],
 ]"
 ```
+
+Public authoring should keep node labels in the explicit
+`nodeNumber => side => labelConfig` shape. Compact forms such as
+`1 => ['right' => 'Source', 'width' => 'default']` are tolerated only as
+legacy input by normalizers; they are not the documented authoring style.
 
 Branch strangs attach to trunk anchors the same way and register their own
 basic path anchors:
@@ -132,8 +161,20 @@ The value can be a simple bridge length or an indexed configuration array:
                     'bridgeLength' => '7rem',
                     'color' => 'amber',
                     'nodeLabels' => [
-                        1 => ['top' => 'Return arc'],
-                        2 => ['bottom' => 'Bridge end'],
+                        1 => [
+                            'top' => [
+                                'text' => 'Return arc',
+                                'width' => 'default',
+                                'align' => 'center',
+                            ],
+                        ],
+                        2 => [
+                            'bottom' => [
+                                'text' => 'Bridge end',
+                                'width' => 'default',
+                                'align' => 'center',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -298,8 +339,9 @@ local strang prop -> inherited tw-graph default -> lineLength
 
 This applies to `bridgeLength` and `stemLength`.
 
-`strang.trunk` renders ten path sections by default through its owned `paths.trunk`.
-`path-count` controls how many path sections are rendered. `path-lengths` may override individual 1-based sections; missing or `null` values use `lineLength`.
+`strang.trunk` renders ten stem sections by default through its owned `paths.trunk`.
+`stem-count` controls how many stem sections are rendered. `stem-lengths` may override individual 1-based sections; missing or `null` values use `stemLength`.
+The lower `paths.trunk` component may still receive `path-lengths` internally because it owns the path renderer; authoring code should stay on the `strang.trunk` vocabulary.
 
 Authoring enters through `tw-graph.strang.*`. `paths.*`, `segments.*`, and
 `primitives.*` are lower layers and should only be called by their owning layer.

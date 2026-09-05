@@ -36,8 +36,7 @@
     $resolvedAlign = in_array($align, ['left', 'right'], true) ? $align : 'center';
     $resolvedTextAlign = (bool) $justify ? 'justify' : $resolvedAlign;
     $resolvedMaxLines = max(1, (int) $maxLines);
-    $lines = collect(is_iterable($text) && !is_string($text) ? $text : [$text])
-        ->filter(fn($line) => filled($line))
+    $lines = collect(\Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::lines($text))
         ->take($resolvedMaxLines)
         ->values();
 @endphp

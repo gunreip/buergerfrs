@@ -21,14 +21,21 @@
 
 @aware([
     'graphId' => null,
+    'color' => null,
     'dev' => false,
-    'defaultColor' => null,
     'lineLength' => null,
     'arcSize' => null,
     'bridgeLength' => null,
     'connectorLength' => null,
     'connectorGap' => null,
 ])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
 
 @props([
     'id' => null,
@@ -61,7 +68,7 @@
         : 'part.' . ($isLeft ? 'left' : 'right') . '.' . $resolvedComponentCounter . '.sideways';
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
         $color,
-        $defaultColor ?? null,
+        $inheritedColor ?? null,
         'zinc',
     );
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString(
@@ -133,17 +140,7 @@
     }
 
     $jointArrowDirection = $isLeft ? 'right' : 'left';
-    $normalizeLabel = function (mixed $label): ?array {
-        if ($label === false || blank($label)) {
-            return null;
-        }
-
-        if (is_array($label)) {
-            return filled(data_get($label, 'text')) ? $label : null;
-        }
-
-        return ['text' => (string) $label];
-    };
+    $normalizeLabel = fn (mixed $label): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, null, $resolvedColor);
     $normalizeNodeLabel = function (mixed $label, string $side) use ($normalizeLabel): ?array {
         $normalized = $normalizeLabel($label);
 

@@ -21,11 +21,11 @@
     'anchorY' => '0rem',
     'length' => '2rem',
     'gap' => null,
-    'color' => 'cyan',
+    'color' => 'zinc',
 ])
 
 @php
-    $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '6 182 212');
+    $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '113 113 122');
     $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id);
 @endphp
 

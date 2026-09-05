@@ -1,0 +1,21 @@
+Ein paar gute Demo-Kandidaten, die mehr zeigen als das Resume, aber nicht gleich Data-driven-Wildwuchs auslösen:
+
+1. **Projekt-Roadmap / Milestones**
+   Ein Hauptstrang als Zeitachse, seitliche Branches für Features, Merge-Punkte für Releases, `step` für Entscheidungen/Statuswechsel. Sehr passend für `trunk + branch + merge + end`.
+
+2. **Bestellprozess / Order Lifecycle**
+   `Cart -> Checkout -> Payment -> Fulfillment -> Delivery`, mit Branches für Fehlerfälle wie Payment failed, Refund, Return. Gut, weil man fachlich sofort versteht, warum ein Branch entsteht.
+
+3. **Bug Lifecycle**
+   `Reported -> Triaged -> In progress -> Review -> Fixed`, mit Branches für Duplicate, Won’t fix, Reopened. Schön kompakt, aber zeigt viele graphische Elemente sinnvoll.
+
+4. **Deployment Pipeline**
+   `Commit -> Build -> Test -> Staging -> Production`, seitliche Stränge für failed tests, rollback, hotfix merge. Technisch nah an uns, aber weniger datenlastig.
+
+5. **Literatur- / Ideenentwicklung**
+   Z. B. „Eine Idee wird zu einem Paper“: notes, drafts, reviews, revisions, publication. Eignet sich gut für `rekey/source-target`-artige Übergänge ohne DB-Kontext.
+
+6. **Migration einer Translation**
+   Das wäre nahe am Produkt, aber handgebaut: eine Translation startet als einzelner Key, wird shared, später rekeyed, ein Finding endet. Zeigt die Fähigkeiten genau im Domain-Kontext, aber kontrolliert und nicht datengetrieben.
+
+Mein Favorit wäre **Bug Lifecycle** oder **Order Lifecycle**. Beide sind anschaulich, haben natürliche Abzweigungen, Rückführungen und Endzustände, ohne dass wir 50 Labels jonglieren müssen. Für eine tw-graph-Demo wäre „Bug Lifecycle“ wahrscheinlich am stärksten: kompakt, logisch, und es zeigt sofort, warum `branch`, `merge`, `step`, `end`, `compressed` etc. existieren.

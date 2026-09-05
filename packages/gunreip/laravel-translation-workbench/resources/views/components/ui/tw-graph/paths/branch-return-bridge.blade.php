@@ -16,13 +16,24 @@
     right: segments.arc east-north -> segments.path right-left
 --}}
 
+@aware([
+    'color' => null,
+])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
+
 @props([
     'id' => 'path.branch-return-bridge',
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcSize' => null,
     'bridgeLength' => null,
-    'color' => 'orange',
+    'color' => null,
     'zIndex' => null,
     'counterStart' => 1,
     'nodeLabels' => [],
@@ -39,6 +50,7 @@
     ];
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', '4rem'));
 
     $arcStartAnchor = $isLeft ? 'w' : 'e';
@@ -46,49 +58,7 @@
     $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
     $arcDelta = $isLeft ? $arcSize : $neg($arcSize);
     $bridgeDelta = $isLeft ? $bridgeLength : $neg($bridgeLength);
-    $normalizeLabel = function (mixed $label, ?string $side = null) use ($color): ?array {
-        if (blank($label)) {
-            return null;
-        }
-
-        if (is_array($label)) {
-            $text = data_get($label, 'text');
-            $left = data_get($label, 'left');
-            $right = data_get($label, 'right');
-            $top = data_get($label, 'top');
-            $bottom = data_get($label, 'bottom');
-
-            if (filled($left)) {
-                $text = $left;
-                $side = 'left';
-            } elseif (filled($right)) {
-                $text = $right;
-                $side = 'right';
-            } elseif (filled($top)) {
-                $text = $top;
-                $side = 'top';
-            } elseif (filled($bottom)) {
-                $text = $bottom;
-                $side = 'bottom';
-            }
-
-            if (blank($text)) {
-                return null;
-            }
-
-            return array_replace([
-                'text' => $text,
-                'side' => $side,
-                'badgeColor' => $color,
-            ], collect($label)->except(['left', 'right', 'top', 'bottom'])->all());
-        }
-
-        return [
-            'text' => $label,
-            'side' => $side,
-            'badgeColor' => $color,
-        ];
-    };
+    $normalizeLabel = fn (mixed $label, ?string $side = null): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, $side, $resolvedColor);
     $pathNodeLabels = function (mixed $label): array {
         if (! is_array($label)) {
             return filled($label) ? [$label, null] : [null, null];
@@ -144,10 +114,10 @@
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
+                'devCounterColor' => $resolvedColor,
                 'endLabel' => $arcEndLabel,
                 'dashed' => $fallbackUsed,
-                'color' => $color,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
@@ -163,9 +133,9 @@
                 'nodeStart' => false,
                 'nodeEnd' => $bridgeEndNode,
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
+                'devCounterColor' => $resolvedColor,
                 'dashed' => $fallbackUsed,
-                'color' => $color,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],

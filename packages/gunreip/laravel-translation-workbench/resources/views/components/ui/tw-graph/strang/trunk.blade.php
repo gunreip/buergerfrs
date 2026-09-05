@@ -5,8 +5,8 @@
     Usage:
     <x-translation-workbench::ui.tw-graph.strang.trunk
         direction="bottom-top"
-        :path-count="10"
-        :path-lengths="[1 => '3rem', 2 => null, 3 => '5rem']"
+        :stem-count="10"
+        :stem-lengths="[1 => '3rem', 2 => null, 3 => '5rem']"
         start-label-space="3rem"
         start-label="Trunk start"
         end-label="Trunk end"
@@ -24,12 +24,19 @@
 
 @aware([
     'graphId' => null,
+    'color' => null,
     'dev' => false,
-    'defaultColor' => null,
     'lineLength' => null,
     'stemLength' => null,
     'capLength' => null,
 ])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
 
 @props([
     'id' => null,
@@ -39,8 +46,8 @@
     'color' => null,
     'startLength' => null,
     'stemLength' => null,
-    'pathCount' => null,
-    'pathLengths' => [],
+    'stemCount' => null,
+    'stemLengths' => [],
     'nodeLabels' => [],
     'defaultPathSegments' => 10,
     'endLength' => null,
@@ -62,7 +69,7 @@
     $id = filled($id)
         ? (string) $id
         : $resolvedGraphId . '.strang.trunk.' . $resolvedComponentCounter;
-    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'zinc');
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
         $stemLength ?? null,
@@ -72,7 +79,7 @@
     $resolvedDefaultPathLength = in_array($direction, ['bottom-top', 'top-bottom'], true)
         ? $resolvedStemLength
         : $resolvedLineLength;
-    $resolvedPathCount = max(0, (int) ($pathCount ?? $defaultPathSegments));
+    $resolvedStemCount = max(0, (int) ($stemCount ?? $defaultPathSegments));
     $resolvedDev = $devMode ?? $dev;
     $resolvedStartLengthBase = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedDefaultPathLength, '4rem');
     $resolvedStartShiftEnabled = $startShiftEnabled === null
@@ -108,22 +115,12 @@
 
         return filled($entry) ? (string) $entry : $resolvedDefaultPathLength;
     };
-    $normalizeNodeLabels = function (mixed $labels): mixed {
+    $normalizeNodeLabels = function (mixed $labels) use ($resolvedColor): mixed {
         if (! is_array($labels)) {
             return $labels;
         }
 
-        $normalizeLabelForSide = static function (mixed $label, string $side): ?array {
-            if (blank($label)) {
-                return null;
-            }
-
-            if (is_array($label) && array_key_exists('text', $label)) {
-                return array_replace(['side' => $side], $label);
-            }
-
-            return ['text' => $label, 'side' => $side];
-        };
+        $normalizeLabelForSide = static fn (mixed $label, string $side): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, $side, $resolvedColor);
         $left = data_get($labels, 'left', data_get($labels, 0));
         $right = data_get($labels, 'right', data_get($labels, 1));
 
@@ -132,7 +129,7 @@
             $normalizeLabelForSide($left, 'left'),
         ];
     };
-    $pathLengthWithLabels = function (mixed $entry, mixed $labels) use ($resolvedDefaultPathLength, $normalizeNodeLabels): mixed {
+    $stemLengthWithLabels = function (mixed $entry, mixed $labels) use ($resolvedDefaultPathLength, $normalizeNodeLabels): mixed {
         if ($labels === null || $labels === false || $labels === '') {
             return $entry;
         }
@@ -157,51 +154,51 @@
         return $entry;
     };
 
-    $pathLengthOverrides = is_array($pathLengths) ? $pathLengths : [];
-    $pathLengthOverridesAreList = array_is_list($pathLengthOverrides);
+    $stemLengthOverrides = is_array($stemLengths) ? $stemLengths : [];
+    $stemLengthOverridesAreList = array_is_list($stemLengthOverrides);
     $nodeLabelOverrides = is_array($nodeLabels) ? $nodeLabels : [];
     $nodeLabelOverridesAreList = array_is_list($nodeLabelOverrides);
-    $pathNumbers = $resolvedPathCount > 0 ? range(1, $resolvedPathCount) : [];
-    $firstPathLengthKey = $pathLengthOverridesAreList ? 0 : 1;
-    $firstPathLengthOverride = $pathLengthOverrides[$firstPathLengthKey] ?? null;
-    $firstPathLengthIsExplicit = array_key_exists($firstPathLengthKey, $pathLengthOverrides)
-        && (is_array($firstPathLengthOverride)
-            ? (filled(data_get($firstPathLengthOverride, 'length')) || filled(data_get($firstPathLengthOverride, 0)))
-            : filled($firstPathLengthOverride));
-    $resolvedPathLengthEntries = collect($pathNumbers)
-        ->mapWithKeys(function (int $pathNumber) use ($pathLengthOverrides, $pathLengthOverridesAreList, $nodeLabelOverrides, $nodeLabelOverridesAreList, $resolvedDefaultPathLength, $pathLengthWithLabels): array {
-            $lengthKey = $pathLengthOverridesAreList ? $pathNumber - 1 : $pathNumber;
-            $labelKey = $nodeLabelOverridesAreList ? $pathNumber - 1 : $pathNumber;
-            $lengthExists = array_key_exists($lengthKey, $pathLengthOverrides);
+    $stemNumbers = $resolvedStemCount > 0 ? range(1, $resolvedStemCount) : [];
+    $firstStemLengthKey = $stemLengthOverridesAreList ? 0 : 1;
+    $firstStemLengthOverride = $stemLengthOverrides[$firstStemLengthKey] ?? null;
+    $firstStemLengthIsExplicit = array_key_exists($firstStemLengthKey, $stemLengthOverrides)
+        && (is_array($firstStemLengthOverride)
+            ? (filled(data_get($firstStemLengthOverride, 'length')) || filled(data_get($firstStemLengthOverride, 0)))
+            : filled($firstStemLengthOverride));
+    $resolvedStemLengthEntries = collect($stemNumbers)
+        ->mapWithKeys(function (int $stemNumber) use ($stemLengthOverrides, $stemLengthOverridesAreList, $nodeLabelOverrides, $nodeLabelOverridesAreList, $resolvedDefaultPathLength, $stemLengthWithLabels): array {
+            $lengthKey = $stemLengthOverridesAreList ? $stemNumber - 1 : $stemNumber;
+            $labelKey = $nodeLabelOverridesAreList ? $stemNumber - 1 : $stemNumber;
+            $lengthExists = array_key_exists($lengthKey, $stemLengthOverrides);
             $labelExists = array_key_exists($labelKey, $nodeLabelOverrides);
-            $lengthEntry = $lengthExists ? $pathLengthOverrides[$lengthKey] : $resolvedDefaultPathLength;
+            $lengthEntry = $lengthExists ? $stemLengthOverrides[$lengthKey] : $resolvedDefaultPathLength;
 
             return [
-                $pathNumber => $labelExists
-                    ? $pathLengthWithLabels($lengthEntry, $nodeLabelOverrides[$labelKey])
+                $stemNumber => $labelExists
+                    ? $stemLengthWithLabels($lengthEntry, $nodeLabelOverrides[$labelKey])
                     : $lengthEntry,
             ];
         })
         ->all();
-    if ($resolvedStartShiftEnabled && ! $firstPathLengthIsExplicit && $pathNumbers !== []) {
-        $firstPathEntry = $resolvedPathLengthEntries[1] ?? $resolvedDefaultPathLength;
-        $firstPathLength = $lengthOf($firstPathEntry);
-        $shiftedFirstPathLength = 'calc(' . $firstPathLength . ' + ' . $resolvedStartShiftLength . ')';
+    if ($resolvedStartShiftEnabled && ! $firstStemLengthIsExplicit && $stemNumbers !== []) {
+        $firstStemEntry = $resolvedStemLengthEntries[1] ?? $resolvedDefaultPathLength;
+        $firstStemLength = $lengthOf($firstStemEntry);
+        $shiftedFirstStemLength = 'calc(' . $firstStemLength . ' + ' . $resolvedStartShiftLength . ')';
 
-        if (is_array($firstPathEntry)) {
-            if (array_key_exists('length', $firstPathEntry) || ! array_key_exists(0, $firstPathEntry)) {
-                $firstPathEntry['length'] = $shiftedFirstPathLength;
+        if (is_array($firstStemEntry)) {
+            if (array_key_exists('length', $firstStemEntry) || ! array_key_exists(0, $firstStemEntry)) {
+                $firstStemEntry['length'] = $shiftedFirstStemLength;
             } else {
-                $firstPathEntry[0] = $shiftedFirstPathLength;
+                $firstStemEntry[0] = $shiftedFirstStemLength;
             }
 
-            $resolvedPathLengthEntries[1] = $firstPathEntry;
+            $resolvedStemLengthEntries[1] = $firstStemEntry;
         } else {
-            $resolvedPathLengthEntries[1] = $shiftedFirstPathLength;
+            $resolvedStemLengthEntries[1] = $shiftedFirstStemLength;
         }
     }
-    $resolvedPathLengths = collect($pathNumbers)
-        ->map(fn (int $pathNumber): string => $lengthOf($resolvedPathLengthEntries[$pathNumber] ?? $resolvedDefaultPathLength))
+    $resolvedStemLengths = collect($stemNumbers)
+        ->map(fn (int $stemNumber): string => $lengthOf($resolvedStemLengthEntries[$stemNumber] ?? $resolvedDefaultPathLength))
         ->all();
 
     $pathStartAnchor = [
@@ -214,7 +211,7 @@
 
     $pathEndAnchor = collect([
         $resolvedStartLength,
-        ...$resolvedPathLengths,
+        ...$resolvedStemLengths,
         $resolvedEndLength,
     ])->reduce(
         fn (array $anchor, string $length): array => $addAnchor($anchor, $axisDelta($length)),
@@ -223,22 +220,26 @@
     $nodeAnchor = $addAnchor($pathStartAnchor, $axisDelta($resolvedStartLength));
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.node.1', $nodeAnchor);
 
-    foreach ($resolvedPathLengths as $nodeIndex => $pathLength) {
-        $pathNumber = $nodeIndex + 1;
+    foreach ($resolvedStemLengths as $nodeIndex => $stemLength) {
+        $stemNumber = $nodeIndex + 1;
         $pathAnchorStart = $nodeAnchor;
-        $nodeAnchor = $addAnchor($nodeAnchor, $axisDelta($pathLength));
+        $nodeAnchor = $addAnchor($nodeAnchor, $axisDelta($stemLength));
         \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put(
             $resolvedGraphId,
-            'strang.trunk.node.' . ($pathNumber + 1),
+            'strang.trunk.node.' . ($stemNumber + 1),
             $nodeAnchor,
         );
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.path.' . $pathNumber . '.start', $pathAnchorStart);
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.path.' . $pathNumber . '.end', $nodeAnchor);
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.path.' . $stemNumber . '.start', $pathAnchorStart);
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.path.' . $stemNumber . '.end', $nodeAnchor);
     }
 
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.end', $pathEndAnchor);
 
     $pathBoxPadding = '1rem';
+    $pathBoxX = data_get($pathStartAnchor, 'x', '0rem');
+    $pathBoxY = data_get($pathStartAnchor, 'y', '0rem');
+    $pathBoxWidth = 'var(--tw-graph-protocol-node-size)';
+    $pathBoxHeight = '0rem';
     $resolvedStartLabelSpace = filled($startLabelSpace) ? (string) $startLabelSpace : '0rem';
     $pathBoxStartPadding = match ($direction) {
         'top-bottom' => ['x' => '0rem', 'y' => '0rem', 'width' => '0rem', 'height' => $resolvedStartLabelSpace],
@@ -269,14 +270,18 @@
     if ($direction === 'top-bottom') {
         $pathBoxHeight = 'calc(' . data_get($pathStartAnchor, 'y', '0rem') . ' - ' . data_get($pathEndAnchor, 'y', '0rem') . ')';
     }
+    $devBoxX = 'calc(' . $pathBoxX . ' - ' . $pathBoxPadding . ' - ' . $pathBoxStartPadding['x'] . ')';
+    $devBoxY = 'calc(' . $pathBoxY . ' - ' . $pathBoxPadding . ' - ' . $pathBoxStartPadding['y'] . ')';
+    $devBoxWidth = 'calc(' . $pathBoxWidth . ' + (' . $pathBoxPadding . ' * 2) + ' . $pathBoxStartPadding['width'] . ')';
+    $devBoxHeight = 'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2) + ' . $pathBoxStartPadding['height'] . ')';
 @endphp
 
 <x-translation-workbench::ui.tw-graph.dev-box
     :id="$id . '.dev-box'"
-    :x="'calc(' . $pathBoxX . ' - ' . $pathBoxPadding . ' - ' . $pathBoxStartPadding['x'] . ')'"
-    :y="'calc(' . $pathBoxY . ' - ' . $pathBoxPadding . ' - ' . $pathBoxStartPadding['y'] . ')'"
-    :width="'calc(' . $pathBoxWidth . ' + (' . $pathBoxPadding . ' * 2) + ' . $pathBoxStartPadding['width'] . ')'"
-    :height="'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2) + ' . $pathBoxStartPadding['height'] . ')'"
+    :x="$devBoxX"
+    :y="$devBoxY"
+    :width="$devBoxWidth"
+    :height="$devBoxHeight"
     :color="$resolvedColor"
     :label="$id"
     :dev="$resolvedDev"
@@ -290,8 +295,8 @@
     :anchor-start="$anchorStart"
     :line-length="$resolvedDefaultPathLength"
     :start-length="$resolvedStartLength"
-    :path-count="$pathCount"
-    :path-lengths="$resolvedPathLengthEntries"
+    :path-count="$resolvedStemCount"
+    :path-lengths="$resolvedStemLengthEntries"
     :default-path-segments="$defaultPathSegments"
     :end-length="$resolvedEndLength"
     :end-cap-length="$endCapLength"

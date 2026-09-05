@@ -20,11 +20,18 @@
 
 @aware([
     'graphId' => null,
+    'color' => null,
     'dev' => false,
-    'defaultColor' => null,
     'lineLength' => null,
     'capLength' => null,
 ])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
 
 @props([
     'id' => null,
@@ -48,7 +55,7 @@
     $id = filled($id)
         ? (string) $id
         : $resolvedGraphId . '.strang.branch-end.' . $resolvedSide . '.' . $resolvedComponentCounter;
-    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'red');
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $resolvedDev = $devMode ?? $dev;
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($length, $resolvedLineLength, '4rem');
@@ -66,7 +73,7 @@
         'x' => data_get($anchor, 'x', '0rem'),
         'y' => $add(data_get($anchor, 'y', '0rem'), $resolvedLength),
     ];
-    $counter = $counterStart ?? 'E';
+    $counter = $counterStart ?? data_get($anchor, 'devCounterNext', 'E');
     $endLabelConfig = is_array($endLabel)
         ? $endLabel
         : (filled($endLabel) ? ['text' => $endLabel] : null);

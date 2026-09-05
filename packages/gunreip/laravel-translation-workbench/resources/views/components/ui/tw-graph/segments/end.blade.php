@@ -38,7 +38,7 @@
         'gradient' => false,
         'cap' => true,
         'capLength' => '1.25rem',
-        'color' => 'green',
+        'color' => 'zinc',
     ], $segment);
     $endSegment['nodeEnd'] = false;
     $endSegment['cap'] = true;
@@ -73,19 +73,20 @@
     :offset-x="data_get($endSegment, 'devCounterEndOffset.x', data_get($capCounterOffset, 'x', '0rem'))"
     :offset-y="data_get($endSegment, 'devCounterEndOffset.y', data_get($capCounterOffset, 'y', '0rem'))"
     :counter="data_get($endSegment, 'devCounterEnd', 'E')"
-    :color="data_get($endSegment, 'devCounterColor', data_get($endSegment, 'color', 'green'))"
+    :color="data_get($endSegment, 'devCounterColor', data_get($endSegment, 'color', 'zinc'))"
 />
 
 @if (filled(data_get($endSegment, 'endLabel.text')))
+    @php($resolvedEndLabelSide = data_get($endSegment, 'endLabel.side', $endLabelSide))
     <x-translation-workbench::ui.tw-graph.primitives.text
-        :id="data_get($endSegment, 'id', 'segment.end') . '.end-label'"
+        :id="data_get($endSegment, 'id', 'segment.end') . '.label.' . $resolvedEndLabelSide . '.1'"
         :text="data_get($endSegment, 'endLabel.text')"
         :anchor-x="data_get($endSegment, 'anchorEnd.x', '0rem')"
         :anchor-y="data_get($endSegment, 'anchorEnd.y', '0rem')"
-        :side="data_get($endSegment, 'endLabel.side', $endLabelSide)"
+        :side="$resolvedEndLabelSide"
         :offset="data_get($endSegment, 'endLabel.offset', '0.75rem')"
         :badge="data_get($endSegment, 'endLabel.badge', true)"
-        :badge-color="data_get($endSegment, 'endLabel.badgeColor', data_get($endSegment, 'color', 'green'))"
+        :badge-color="data_get($endSegment, 'endLabel.badgeColor', data_get($endSegment, 'color', 'zinc'))"
         :long="data_get($endSegment, 'endLabel.long', false) || data_get($endSegment, 'endLabel.width') === 'long'"
         :half-long="data_get($endSegment, 'endLabel.halfLong', false) || in_array(data_get($endSegment, 'endLabel.width'), ['halfLong', 'half-long', 'half_long'], true)"
         :half="data_get($endSegment, 'endLabel.half', false) || in_array(data_get($endSegment, 'endLabel.width'), ['half', 'halfWidth', 'half-width', 'half_width'], true)"

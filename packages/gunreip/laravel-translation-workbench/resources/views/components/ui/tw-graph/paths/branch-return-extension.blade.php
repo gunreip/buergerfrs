@@ -16,6 +16,17 @@
     right: segments.path bottom-top -> segments.arc east-north -> segments.path right-left
 --}}
 
+@aware([
+    'color' => null,
+])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
+
 @props([
     'id' => 'path.branch-return-extension',
     'side' => 'left',
@@ -23,7 +34,7 @@
     'arcSize' => null,
     'stemLength' => '2rem',
     'bridgeLength' => null,
-    'color' => 'yellow',
+    'color' => null,
     'zIndex' => null,
     'counterStart' => 1,
     'dev' => false,
@@ -38,6 +49,7 @@
     ];
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', '4rem'));
 
     $arcStartAnchor = $isLeft ? 'w' : 'e';
@@ -78,8 +90,8 @@
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'color' => $color,
+                'devCounterColor' => $resolvedColor,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
@@ -95,8 +107,8 @@
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'color' => $color,
+                'devCounterColor' => $resolvedColor,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
@@ -112,8 +124,8 @@
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'devCounterEnd' => $counter++,
-                'devCounterColor' => $color,
-                'color' => $color,
+                'devCounterColor' => $resolvedColor,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],

@@ -28,14 +28,21 @@
 
 @aware([
     'graphId' => null,
+    'color' => null,
     'dev' => false,
-    'defaultColor' => null,
     'lineLength' => null,
     'lineWidth' => null,
     'arcSize' => null,
     'bridgeLength' => null,
     'stemLength' => null,
 ])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
 
 @props([
     'id' => null,
@@ -69,7 +76,7 @@
     $id = filled($id)
         ? (string) $id
         : $resolvedGraphId . '.strang.merge-left.' . $resolvedComponentCounter;
-    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'amber');
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $resolvedDev = $devMode ?? $dev;
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedLineWidth = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineWidth ?? null, 'line_width', '0.25rem');
@@ -345,7 +352,7 @@
 
 @foreach (array_reverse($extensionAnchors, true) as $extensionIndex => $extensionAnchor)
     <x-translation-workbench::ui.tw-graph.paths.merge-extension
-        :id="$id . '.extension.' . $extensionIndex"
+        :id="$id . '.extension.' . $extensionIndex . '.paths.merge-extension'"
         side="left"
         :anchor-start="$extensionAnchor"
         :start-length="$resolvedExtensionStartLength"

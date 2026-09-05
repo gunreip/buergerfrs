@@ -55,7 +55,7 @@
         'cap' => false,
         'stepCaps' => true,
         'capLength' => '1.25rem',
-        'color' => 'green',
+        'color' => 'zinc',
     ], $segment);
 
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
@@ -80,12 +80,14 @@
         ->filter(fn (mixed $line): bool => filled($line))
         ->take(3)
         ->count();
-    $autoLabelGap = match ($stepLabelLines) {
+    $stepLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem');
+    $autoLabelContentGap = match ($stepLabelLines) {
         1 => '2.75rem',
         2 => '3.75rem',
         3 => '4.75rem',
         default => '3.75rem',
     };
+    $autoLabelGap = 'calc(' . $autoLabelContentGap . ' + (' . $stepLabelOffset . ' * 2))';
 
     $anchorStart = [
         'x' => data_get($stepSegment, 'anchorStart.x', '0rem'),
@@ -151,12 +153,15 @@
         :anchor-x="data_get($anchorMiddle, 'x', '0rem')"
         :anchor-y="data_get($anchorMiddle, 'y', '0rem')"
         :side="data_get($stepLabelConfig, 'side', $stepLabelSide)"
-        :offset="data_get($stepLabelConfig, 'offset', '0rem')"
+        :offset="data_get($stepLabelConfig, 'offset', $stepLabelOffset)"
         :badge="data_get($stepLabelConfig, 'badge', true)"
-        :badge-color="data_get($stepLabelConfig, 'badgeColor', data_get($stepSegment, 'color', 'green'))"
+        :badge-color="data_get($stepLabelConfig, 'badgeColor', data_get($stepSegment, 'color', 'zinc'))"
         :long="data_get($stepLabelConfig, 'long', false) || data_get($stepLabelConfig, 'width') === 'long'"
         :half-long="data_get($stepLabelConfig, 'halfLong', false) || in_array(data_get($stepLabelConfig, 'width'), ['halfLong', 'half-long', 'half_long'], true)"
         :half="data_get($stepLabelConfig, 'half', false) || in_array(data_get($stepLabelConfig, 'width'), ['half', 'halfWidth', 'half-width', 'half_width'], true)"
+        :align="data_get($stepLabelConfig, 'align', 'center')"
+        :justify="data_get($stepLabelConfig, 'justify', false)"
+        :max-lines="data_get($stepLabelConfig, 'maxLines', 3)"
     />
 @endif
 

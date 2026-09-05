@@ -12,13 +12,20 @@
 
 @aware([
     'graphId' => null,
+    'color' => null,
     'dev' => false,
-    'defaultColor' => null,
     'lineLength' => null,
     'arcSize' => null,
     'bridgeLength' => null,
     'stemLength' => null,
 ])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
 
 @props([
     'id' => null,
@@ -42,7 +49,7 @@
     $resolvedGraphId = filled($graphId ?? null) ? (string) $graphId : 'tw-graph';
     $resolvedComponentCounter = max(1, (int) $componentCounter);
     $id = filled($id) ? (string) $id : $resolvedGraphId . '.strang.rekey-target-left.' . $resolvedComponentCounter;
-    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'sky');
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $resolvedDev = $devMode ?? $dev;
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');

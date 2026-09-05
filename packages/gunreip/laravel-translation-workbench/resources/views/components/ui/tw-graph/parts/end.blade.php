@@ -17,11 +17,18 @@
 
 @aware([
     'graphId' => null,
+    'color' => null,
     'dev' => false,
-    'defaultColor' => null,
     'lineLength' => null,
     'stemLength' => null,
 ])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
 
 @props([
     'id' => null,
@@ -47,7 +54,7 @@
         : 'part.center.' . $resolvedComponentCounter . '.end';
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
         $color,
-        $defaultColor ?? null,
+        $inheritedColor ?? null,
         'zinc',
     );
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString(

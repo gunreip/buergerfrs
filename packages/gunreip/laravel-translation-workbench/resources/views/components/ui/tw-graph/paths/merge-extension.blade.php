@@ -19,6 +19,17 @@
     right: segments.start -> segments.path stem1 bottom-top -> optional stem2/stem3/... -> segments.arc east-north -> segments.path right-left
 --}}
 
+@aware([
+    'color' => null,
+])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
+
 @props([
     'id' => 'path.merge-extension',
     'side' => 'left',
@@ -30,7 +41,7 @@
     'stemContinuation' => [],
     'bridgeLength' => null,
     'nodeLabels' => [],
-    'color' => 'sky',
+    'color' => null,
     'zIndex' => null,
     'counterStart' => 1,
     'dev' => false,
@@ -48,6 +59,7 @@
     $isLeft = $side === 'left';
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', $resolvedLineLength), '4rem');
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $resolvedLineLength), '4rem');
     $stemContinuationEntries = is_array($stemContinuation) ? $stemContinuation : [];
@@ -99,8 +111,8 @@
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'nodeEndLabelNumber' => $stemNodeNumber,
-                'devCounterColor' => $color,
-                'color' => $color,
+                'devCounterColor' => $resolvedColor,
+                'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $dev,
             ],
@@ -123,49 +135,7 @@
         ? 'calc(' . $bridgeEnd['x'] . ' - ' . $currentAnchor['x'] . ')'
         : 'calc(' . $currentAnchor['x'] . ' - ' . $bridgeEnd['x'] . ')';
     $pathBoxHeight = 'calc(' . $bridgeEnd['y'] . ' - ' . $currentAnchor['y'] . ')';
-    $normalizeLabel = function (mixed $label, ?string $side = null) use ($color): ?array {
-        if (blank($label)) {
-            return null;
-        }
-
-        if (is_array($label)) {
-            $text = data_get($label, 'text');
-            $left = data_get($label, 'left');
-            $right = data_get($label, 'right');
-            $top = data_get($label, 'top');
-            $bottom = data_get($label, 'bottom');
-
-            if (filled($left)) {
-                $text = $left;
-                $side = 'left';
-            } elseif (filled($right)) {
-                $text = $right;
-                $side = 'right';
-            } elseif (filled($top)) {
-                $text = $top;
-                $side = 'top';
-            } elseif (filled($bottom)) {
-                $text = $bottom;
-                $side = 'bottom';
-            }
-
-            if (blank($text)) {
-                return null;
-            }
-
-            return array_replace([
-                'text' => $text,
-                'side' => $side,
-                'badgeColor' => $color,
-            ], collect($label)->except(['left', 'right', 'top', 'bottom'])->all());
-        }
-
-        return [
-            'text' => $label,
-            'side' => $side,
-            'badgeColor' => $color,
-        ];
-    };
+    $normalizeLabel = fn (mixed $label, ?string $side = null): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, $side, $resolvedColor);
     $pathNodeLabels = function (int|array $nodeNumber, string $defaultSide) use ($nodeLabels, $normalizeLabel): mixed {
         $rawLabel = is_array($nodeNumber)
             ? $nodeNumber
@@ -205,7 +175,7 @@
         'text' => ['Merge extension', 'start'],
         'side' => 'bottom',
         'offset' => '0.75rem',
-        'badgeColor' => $color,
+        'badgeColor' => $resolvedColor,
     ];
 
     $stemContinuationSegments = [];

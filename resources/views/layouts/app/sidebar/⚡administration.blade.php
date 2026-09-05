@@ -251,6 +251,33 @@
             >
                 {{ __('Bug Lifecycle') }}
             </flux:sidebar.item>
+
+            <flux:sidebar.item
+                icon="package-check"
+                :href="route('admin.tw-graph.samples.order-lifecycle')"
+                :current="request()->routeIs('admin.tw-graph.samples.order-lifecycle')"
+                wire:navigate
+            >
+                {{ __('Order Lifecycle') }}
+            </flux:sidebar.item>
+
+            <flux:sidebar.item
+                icon="map"
+                :href="route('admin.tw-graph.samples.project-roadmap')"
+                :current="request()->routeIs('admin.tw-graph.samples.project-roadmap')"
+                wire:navigate
+            >
+                {{ __('Project Roadmap') }}
+            </flux:sidebar.item>
+
+            <flux:sidebar.item
+                icon="git-branch"
+                :href="route('admin.tw-graph.samples.translation-migration')"
+                :current="request()->routeIs('admin.tw-graph.samples.translation-migration')"
+                wire:navigate
+            >
+                {{ __('Translation Migration') }}
+            </flux:sidebar.item>
         </flux:sidebar.group>
     </flux:sidebar.group>
 

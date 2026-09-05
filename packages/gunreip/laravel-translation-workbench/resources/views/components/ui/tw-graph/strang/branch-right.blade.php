@@ -30,13 +30,20 @@
 
 @aware([
     'graphId' => null,
+    'color' => null,
     'dev' => false,
-    'defaultColor' => null,
     'lineLength' => null,
     'arcSize' => null,
     'bridgeLength' => null,
     'stemLength' => null,
 ])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
 
 @props([
     'id' => null,
@@ -64,7 +71,7 @@
     $id = filled($id)
         ? (string) $id
         : $resolvedGraphId . '.strang.branch-right.' . $resolvedComponentCounter;
-    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'rose');
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $resolvedDev = $devMode ?? $dev;
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
@@ -154,12 +161,14 @@
         ->filter(fn (mixed $line): bool => filled($line))
         ->take(3)
         ->count();
-    $autoStepLabelGap = match ($stepLabelLines) {
+    $stepLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem');
+    $autoStepLabelContentGap = match ($stepLabelLines) {
         1 => '2.75rem',
         2 => '3.75rem',
         3 => '4.75rem',
         default => '3.75rem',
     };
+    $autoStepLabelGap = 'calc(' . $autoStepLabelContentGap . ' + (' . $stepLabelOffset . ' * 2))';
     $stepBeforeLength = (string) data_get($stepConfig, 'beforeLength', '1.5rem');
     $stepLabelGap = (string) (data_get($stepConfig, 'labelGap') ?: $autoStepLabelGap);
     $stepAfterLength = (string) data_get($stepConfig, 'afterLength', '2.5rem');
@@ -451,12 +460,14 @@
                 ->filter(fn (mixed $line): bool => filled($line))
                 ->take(3)
                 ->count();
-            $extensionAutoStepLabelGap = match ($extensionStepLabelLines) {
+            $extensionStepLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem');
+            $extensionAutoStepLabelContentGap = match ($extensionStepLabelLines) {
                 1 => '2.75rem',
                 2 => '3.75rem',
                 3 => '4.75rem',
                 default => '3.75rem',
             };
+            $extensionAutoStepLabelGap = 'calc(' . $extensionAutoStepLabelContentGap . ' + (' . $extensionStepLabelOffset . ' * 2))';
             $extensionStepBeforeLength = (string) data_get($extensionStepConfig, 'beforeLength', '1.5rem');
             $extensionStepLabelGap = (string) (data_get($extensionStepConfig, 'labelGap') ?: $extensionAutoStepLabelGap);
             $extensionStepAfterLength = (string) data_get($extensionStepConfig, 'afterLength', '2.5rem');
@@ -618,6 +629,9 @@
             $resolvedColor,
             'orange',
         );
+        $returnFallback = is_array($returnEntry)
+            ? (bool) data_get($returnEntry, 'fallback', true)
+            : true;
 
         $returnNode1 = [
             'x' => $subtract($returnAnchor['x'], $resolvedArcSize),
@@ -638,6 +652,7 @@
             'bridgeLength' => $returnBridgeLength,
             'color' => $returnColor,
             'fallbackUsed' => $returnAnchorResult['fallbackUsed'],
+            'fallback' => $returnFallback,
             'counterStart' => $branchReturnCounterStart + ((count($branchReturnConfigs)) * 3),
         ];
     }
@@ -654,6 +669,10 @@
         ...$branchExtensionReturnBridgeBoundsPoints,
         ...$branchReturnBoundsPoints,
     ], '1rem');
+    $branchEndDevCounterNext = $counterStart + 2 + count($bridgeAnchors) + count($stemAnchors) + ($hasStep ? 1 : 0);
+    $branchEndAnchor = array_replace($stemEnd, [
+        'devCounterNext' => $branchEndDevCounterNext,
+    ]);
 
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.start', $anchor);
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.node.1', $node1);
@@ -664,7 +683,7 @@
     }
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.bridge.start', $node1);
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.bridge.end', $node2);
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.end', $stemEnd);
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.end', $branchEndAnchor);
 
     foreach ($bridgeAnchors as $bridgeNumber => $bridgeAnchor) {
         \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.bridge.' . $bridgeNumber . '.end', $bridgeAnchor);
@@ -676,7 +695,7 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.stem.' . $stemNumber, $stemAnchor);
     }
 
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.stem.end', $stemEnd);
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.stem.end', $branchEndAnchor);
 
     foreach ($branchExtensionConfigs as $extensionNumber => $extensionConfig) {
         \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-right.extension.' . $extensionNumber . '.start', $extensionConfig['anchor']);
@@ -802,6 +821,7 @@
         :z-index="$zIndex - 1"
         :counter-start="$returnConfig['counterStart']"
         :fallback-used="$returnConfig['fallbackUsed']"
+        :fallback="$returnConfig['fallback']"
         :dev="$resolvedDev"
     />
 @endforeach

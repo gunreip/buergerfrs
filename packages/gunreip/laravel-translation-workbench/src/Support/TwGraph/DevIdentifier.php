@@ -14,6 +14,11 @@ final class DevIdentifier
             return 'tw-graph';
         }
 
+        $handAuthoredId = self::handAuthoredStrangId($id);
+        if ($handAuthoredId !== null) {
+            return self::compact(ElementIdentifier::normalize($handAuthoredId));
+        }
+
         if (str_contains($id, 'strang.')) {
             return self::compact(ElementIdentifier::normalize($id));
         }
@@ -69,6 +74,7 @@ final class DevIdentifier
         $head = self::compactHead($tokens);
         $tail = self::compactTail($head['tail'], $head['kind'], $head['side'], $head['role']);
         $parts = array_values(array_filter([
+            'strang',
             $head['kind'],
             $head['side'],
             $head['role'],
@@ -113,6 +119,75 @@ final class DevIdentifier
             'index' => $index,
             'tail' => array_slice($tokens, $tailStart),
         ];
+    }
+
+    private static function handAuthoredStrangId(string $id): ?string
+    {
+        $tokens = array_values(array_filter(explode('.', trim($id, '.')), static fn(string $token): bool => $token !== ''));
+        $sideIndex = null;
+        $side = null;
+
+        foreach ($tokens as $index => $token) {
+            if (in_array($token, ['left', 'right', 'center'], true) && ctype_digit((string) ($tokens[$index + 1] ?? ''))) {
+                $sideIndex = $index;
+                $side = $token;
+
+                break;
+            }
+        }
+
+        if ($sideIndex === null || $side === null) {
+            return null;
+        }
+
+        $componentIndex = null;
+        $component = null;
+
+        foreach ($tokens as $index => $token) {
+            if (! in_array($token, ['path', 'paths'], true)) {
+                continue;
+            }
+
+            $candidate = (string) ($tokens[$index + 1] ?? '');
+
+            if (in_array($candidate, ['trunk', 'merge', 'merge-extension', 'branch', 'branch-extension', 'rekey-source', 'rekey-target'], true)) {
+                $componentIndex = $index + 1;
+                $component = $candidate;
+
+                break;
+            }
+        }
+
+        if ($componentIndex === null || $component === null) {
+            return null;
+        }
+
+        $counter = (string) $tokens[$sideIndex + 1];
+        $chapter = [];
+        $extensionIndex = array_search('extension', $tokens, true);
+
+        if ($extensionIndex !== false && ctype_digit((string) ($tokens[$extensionIndex + 1] ?? ''))) {
+            $chapter = ['extension', (string) $tokens[$extensionIndex + 1]];
+        }
+
+        $kind = match ($component) {
+            'merge-extension' => 'merge',
+            'branch-extension' => 'branch',
+            'rekey-source', 'rekey-target' => 'rekey',
+            default => $component,
+        };
+        $role = match ($component) {
+            'rekey-source' => ['source'],
+            'rekey-target' => ['target'],
+            default => [],
+        };
+        $tail = array_slice($tokens, $componentIndex + 1);
+
+        if ($side === 'center' && $kind === 'trunk') {
+            return implode('.', array_merge(['strang', 'trunk', $counter], $tail));
+        }
+
+        return implode('.', array_merge(['strang', $kind . '-' . $side, $counter], $role, $chapter, $tail));
     }
 
     /**
@@ -183,6 +258,13 @@ final class DevIdentifier
                 $anchor = (string) ($tokens[$index + 1] ?? '');
                 $labelNumber = (string) ($tokens[$index + 2] ?? '');
 
+                if (in_array($anchor, ['left', 'right', 'top', 'bottom', 'center'], true) && ctype_digit($labelNumber)) {
+                    $result[] = 'label.' . $anchor . '.' . $labelNumber;
+                    $index += 2;
+
+                    continue;
+                }
+
                 if (in_array($anchor, ['start', 'end'], true) && ctype_digit($labelNumber)) {
                     $result[] = 'anchorNode-' . $anchor;
                     $result[] = 'label-' . $labelNumber;
@@ -224,7 +306,8 @@ final class DevIdentifier
             }
 
             if (preg_match('/^node(?:Start|End)Label(\d+)$/', $token, $matches) === 1) {
-                $result[] = 'label-' . $matches[1];
+                $labelNumber = max(1, (int) $matches[1]);
+                $result[] = 'label.' . ($labelNumber % 2 === 1 ? 'right' : 'left') . '.' . (int) ceil($labelNumber / 2);
 
                 continue;
             }

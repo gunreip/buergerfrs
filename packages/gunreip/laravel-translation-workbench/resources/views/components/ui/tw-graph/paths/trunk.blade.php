@@ -27,11 +27,18 @@
 
 @aware([
     'graphId' => null,
+    'color' => null,
     'dev' => false,
-    'defaultColor' => null,
     'lineLength' => null,
     'capLength' => null,
 ])
+
+@php
+    $inheritedColor = $color ?? null;
+
+
+
+@endphp
 
 @props([
     'id' => null,
@@ -61,7 +68,7 @@
     $id = filled($id)
         ? (string) $id
         : $resolvedGraphId . '.paths.trunk.' . $resolvedComponentCounter;
-    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $defaultColor ?? null, 'zinc');
+    $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedPathCount = max(0, (int) ($pathCount ?? $defaultPathSegments));
     $resolvedDev = $devMode ?? $dev;
@@ -114,26 +121,7 @@
             'y' => $delta['y'] === '0rem' ? data_get($anchor, 'y', '0rem') : 'calc(' . data_get($anchor, 'y', '0rem') . ' + ' . $delta['y'] . ')',
         ];
     };
-    $normalizeLabel = function (mixed $label): ?array {
-        if ($label === false) {
-            return null;
-        }
-
-        if (blank($label) || $label === 'null') {
-            return null;
-        }
-
-        if (is_array($label)) {
-            return $label;
-        }
-
-        [$text, $side] = array_pad(explode('|', (string) $label, 2), 2, null);
-
-        return [
-            'text' => trim($text),
-            'side' => filled($side) ? trim($side) : null,
-        ];
-    };
+    $normalizeLabel = fn (mixed $label): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, null, $resolvedColor);
     $resolveTerminalLabel = function (mixed $label, array $default) use ($normalizeLabel): ?array {
         if ($label === false) {
             return null;

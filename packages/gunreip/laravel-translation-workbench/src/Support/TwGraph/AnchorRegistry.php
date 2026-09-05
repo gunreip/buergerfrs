@@ -26,7 +26,7 @@ final class AnchorRegistry
             'y' => (string) ($anchor['y'] ?? '0rem'),
         ];
 
-        foreach (['source', 'sourceType', 'sourceAnchor', 'direction'] as $metadataKey) {
+        foreach (['source', 'sourceType', 'sourceAnchor', 'direction', 'devCounterNext'] as $metadataKey) {
             if (isset($anchor[$metadataKey])) {
                 $storedAnchor[$metadataKey] = (string) $anchor[$metadataKey];
             }
