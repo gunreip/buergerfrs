@@ -82,7 +82,7 @@
             return $normalizeLabel($sideValue, $side);
         }
 
-        return $normalizeLabel([
+        $labelOptions = array_filter([
             'text' => $sideValue,
             'width' => data_get($entry, 'width'),
             'long' => data_get($entry, 'long'),
@@ -95,7 +95,9 @@
             'badgeColor' => data_get($entry, 'badgeColor'),
             'connectorLength' => data_get($entry, 'connectorLength'),
             'connectorGap' => data_get($entry, 'connectorGap'),
-        ], $side);
+        ], static fn (mixed $value): bool => $value !== null);
+
+        return $normalizeLabel($labelOptions, $side);
     };
     $stemNodeLabels = function (mixed $entry) use ($normalizeLabel, $labelForSide): array {
         if (! is_array($entry)) {
@@ -360,6 +362,7 @@
                 'id' => $id . '.arc.in',
                 'startAnchor' => $arcInStartAnchor,
                 'endAnchor' => $arcInEndAnchor,
+                'arcSize' => $resolvedArcSize,
                 'anchorStart' => $branchStartAnchor,
                 'anchorEnd' => $arcInEnd,
                 'nodeStart' => false,
@@ -379,6 +382,7 @@
                 'id' => $id . '.arc.out',
                 'startAnchor' => $arcOutStartAnchor,
                 'endAnchor' => $arcOutEndAnchor,
+                'arcSize' => $resolvedArcSize,
                 'anchorStart' => $bridgeEnd,
                 'anchorEnd' => $arcOutEnd,
                 'nodeStart' => false,

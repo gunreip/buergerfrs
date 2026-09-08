@@ -42,7 +42,7 @@
     'arcSize' => null,
     'bridgeLength' => null,
     'step' => null,
-    'stemLength' => '2rem',
+    'stemLength' => null,
     'color' => null,
     'zIndex' => null,
     'counterStart' => 1,
@@ -68,6 +68,8 @@
     $isLeft = $side === 'left';
     $startsFromStem = data_get($currentAnchor, 'sourceType') === 'stem';
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
+    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
+    $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($stemLength ?? null, 'stem_length', '2rem');
     $normalizeLabel = fn (mixed $label, ?string $side = null): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, $side, $resolvedColor);
     $labelForSide = function (array $entry, string $side) use ($normalizeLabel): ?array {
         if (! array_key_exists($side, $entry) || blank($entry[$side])) {
@@ -80,7 +82,7 @@
             return $normalizeLabel($sideValue, $side);
         }
 
-        return $normalizeLabel([
+        $labelOptions = array_filter([
             'text' => $sideValue,
             'width' => data_get($entry, 'width'),
             'long' => data_get($entry, 'long'),
@@ -93,7 +95,9 @@
             'badgeColor' => data_get($entry, 'badgeColor'),
             'connectorLength' => data_get($entry, 'connectorLength'),
             'connectorGap' => data_get($entry, 'connectorGap'),
-        ], $side);
+        ], static fn (mixed $value): bool => $value !== null);
+
+        return $normalizeLabel($labelOptions, $side);
     };
     $normalLabels = function (mixed $labels) use ($normalizeLabel, $labelForSide): array {
         if (! is_array($labels)) {
@@ -119,7 +123,7 @@
     $arcStartAnchor = 's';
     $arcEndAnchor = $isLeft ? 'w' : 'e';
     $bridgeDelta = $isLeft ? $neg($bridgeLength) : $bridgeLength;
-    $arcDelta = $isLeft ? $neg($arcSize) : $arcSize;
+    $arcDelta = $isLeft ? $neg($resolvedArcSize) : $resolvedArcSize;
 
     $bridgeStart = $currentAnchor;
     $introArcEnd = null;
@@ -127,7 +131,7 @@
     if ($startsFromStem) {
         $introArcEnd = [
             'x' => $add($currentAnchor['x'], $arcDelta),
-            'y' => $add($currentAnchor['y'], $arcSize),
+            'y' => $add($currentAnchor['y'], $resolvedArcSize),
         ];
         $bridgeStart = $introArcEnd;
     }
@@ -138,7 +142,7 @@
     ];
     $arcEnd = [
         'x' => $add($bridgeEnd['x'], $arcDelta),
-        'y' => $add($bridgeEnd['y'], $arcSize),
+        'y' => $add($bridgeEnd['y'], $resolvedArcSize),
     ];
     $stepConfig = is_array($step)
         ? $step
@@ -169,7 +173,7 @@
     $stemStart = $hasStep ? $stepAnchorEnd : $arcEnd;
     $verticalEnd = [
         'x' => $stemStart['x'],
-        'y' => $add($stemStart['y'], $stemLength),
+        'y' => $add($stemStart['y'], $resolvedStemLength),
     ];
     $pathBoxPadding = '0.75rem';
     $pathBoxX = $isLeft ? $verticalEnd['x'] : $currentAnchor['x'];
@@ -198,6 +202,7 @@
                 'id' => $id . '.arc.in',
                 'startAnchor' => $introArcStartAnchor,
                 'endAnchor' => $introArcEndAnchor,
+                'arcSize' => $resolvedArcSize,
                 'anchorStart' => $currentAnchor,
                 'anchorEnd' => $introArcEnd,
                 'nodeStart' => false,
@@ -236,6 +241,7 @@
                 'id' => $id . '.arc',
                 'startAnchor' => $arcStartAnchor,
                 'endAnchor' => $arcEndAnchor,
+                'arcSize' => $resolvedArcSize,
                 'anchorStart' => $bridgeEnd,
                 'anchorEnd' => $arcEnd,
                 'nodeStart' => false,
@@ -272,7 +278,7 @@
             'segment' => [
                 'id' => $id . '.stem',
                 'direction' => 'bottom-top',
-                'length' => $stemLength,
+                'length' => $resolvedStemLength,
                 'anchorStart' => $stemStart,
                 'anchorEnd' => $verticalEnd,
                 'nodeStart' => false,

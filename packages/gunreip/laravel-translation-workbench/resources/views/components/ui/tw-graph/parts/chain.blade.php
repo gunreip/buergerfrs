@@ -86,33 +86,44 @@
         ? $value
         : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn(string $value): string => 'calc(' . $value . ' * -1)';
+    $partValue = static function (array $part, string|array $keys, mixed $default = null): mixed {
+        foreach ((array) $keys as $key) {
+            $value = data_get($part, $key);
+
+            if ($value !== null) {
+                return $value;
+            }
+        }
+
+        return $default;
+    };
     $partAnchor = static fn(array $part, array $cursor): array => [
         'x' => data_get($part, 'anchorStart.x', $cursor['x']),
         'y' => data_get($part, 'anchorStart.y', $cursor['y']),
     ];
-    $advanceStart = function (array $anchor, array $part) use ($add, $neg, $resolvedStemLength, $resolvedDirection): array {
+    $advanceStart = function (array $anchor, array $part) use ($add, $neg, $partValue, $resolvedStemLength, $resolvedDirection): array {
         $length = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
-            data_get($part, 'length'),
-            data_get($part, 'stemLength'),
+            $partValue($part, ['length', 'stem-length', 'stem_length']),
+            $partValue($part, ['stemLength', 'stem-length', 'stem_length']),
             $resolvedStemLength,
         );
 
-        return match (data_get($part, 'direction', $resolvedDirection)) {
+        return match ($partValue($part, 'direction', $resolvedDirection)) {
             'top-bottom' => ['x' => $anchor['x'], 'y' => $add($anchor['y'], $neg($length))],
             'left-right' => ['x' => $add($anchor['x'], $length), 'y' => $anchor['y']],
             'right-left' => ['x' => $add($anchor['x'], $neg($length)), 'y' => $anchor['y']],
             default => ['x' => $anchor['x'], 'y' => $add($anchor['y'], $length)],
         };
     };
-    $advanceSideways = function (array $anchor, array $part) use ($add, $neg, $resolvedArcRadius, $resolvedBridgeLength, $resolvedDirection): array {
-        $isLeft = data_get($part, 'side', 'left') !== 'right';
+    $advanceSideways = function (array $anchor, array $part) use ($add, $neg, $partValue, $resolvedArcRadius, $resolvedBridgeLength, $resolvedDirection): array {
+        $isLeft = $partValue($part, 'side', 'left') !== 'right';
         $arcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
-            data_get($part, 'arcRadius', data_get($part, 'arcSize')),
+            $partValue($part, ['arcRadius', 'arc-radius', 'arc_radius', 'arcSize', 'arc-size', 'arc_size']),
             null,
             $resolvedArcRadius,
         );
         $bridge = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
-            data_get($part, 'bridgeLength'),
+            $partValue($part, ['bridgeLength', 'bridge-length', 'bridge_length']),
             null,
             $resolvedBridgeLength,
         );
@@ -127,7 +138,7 @@
         $rawYDelta = in_array($extension, ['0', '0rem'], true)
             ? 'calc(' . $arcRadius . ' + ' . $arcRadius . ')'
             : 'calc(' . $arcRadius . ' + ' . $arcRadius . ' + ' . $extension . ' + ' . $extension . ')';
-        $yDelta = data_get($part, 'direction', $resolvedDirection) === 'top-bottom'
+        $yDelta = $partValue($part, 'direction', $resolvedDirection) === 'top-bottom'
             ? $neg($rawYDelta)
             : $rawYDelta;
 
@@ -141,28 +152,28 @@
 @foreach ($parts as $part)
     @php
         $part = is_array($part) ? $part : [];
-        $type = data_get($part, 'type', 'sideways');
+        $type = $partValue($part, 'type', 'sideways');
         $anchor = $partAnchor($part, $cursor);
-        $partColor = data_get($part, 'color', $resolvedColor);
+        $partColor = $partValue($part, 'color', $resolvedColor);
     @endphp
 
     @if ($type === 'start')
         <x-translation-workbench::ui.tw-graph.parts.start
-            :id="data_get($part, 'id')"
+            :id="$partValue($part, 'id')"
             :color="$partColor"
-            :direction="data_get($part, 'direction', $resolvedDirection)"
+            :direction="$partValue($part, 'direction', $resolvedDirection)"
             :anchor-start="$anchor"
-            :length="data_get($part, 'length')"
-            :node-end="data_get($part, 'nodeEnd', true)"
-            :node-end-dot="data_get($part, 'nodeEndDot')"
-            :node-image="data_get($part, 'nodeImage')"
-            :node-label-left="data_get($part, 'nodeLabelLeft')"
-            :node-label-right="data_get($part, 'nodeLabelRight')"
-            :dev-counter-end="data_get($part, 'devCounterEnd', 1)"
-            :dev-counter-color="data_get($part, 'devCounterColor')"
-            :start-label="data_get($part, 'startLabel')"
-            :z-index="data_get($part, 'zIndex', 20)"
-            :dev-mode="data_get($part, 'devMode')"
+            :length="$partValue($part, ['length', 'stem-length', 'stem_length'], $resolvedStemLength)"
+            :node-end="$partValue($part, ['nodeEnd', 'node-end', 'node_end'], true)"
+            :node-end-dot="$partValue($part, ['nodeEndDot', 'node-end-dot', 'node_end_dot'])"
+            :node-image="$partValue($part, ['nodeImage', 'node-image', 'node_image'])"
+            :node-label-left="$partValue($part, ['nodeLabelLeft', 'node-label-left', 'node_label_left'])"
+            :node-label-right="$partValue($part, ['nodeLabelRight', 'node-label-right', 'node_label_right'])"
+            :dev-counter-end="$partValue($part, ['devCounterEnd', 'dev-counter-end', 'dev_counter_end'], 1)"
+            :dev-counter-color="$partValue($part, ['devCounterColor', 'dev-counter-color', 'dev_counter_color'])"
+            :start-label="$partValue($part, ['startLabel', 'start-label', 'start_label'])"
+            :z-index="$partValue($part, ['zIndex', 'z-index', 'z_index'], 20)"
+            :dev-mode="$partValue($part, ['devMode', 'dev-mode', 'dev_mode'])"
         />
 
         @php
@@ -170,22 +181,22 @@
         @endphp
     @elseif ($type === 'sideways')
         <x-translation-workbench::ui.tw-graph.parts.sideways
-            :id="data_get($part, 'id')"
+            :id="$partValue($part, 'id')"
             :color="$partColor"
-            :direction="data_get($part, 'direction', $resolvedDirection)"
-            :side="data_get($part, 'side', 'left')"
+            :direction="$partValue($part, 'direction', $resolvedDirection)"
+            :side="$partValue($part, 'side', 'left')"
             :anchor-start="$anchor"
-            :arc-radius="data_get($part, 'arcRadius', data_get($part, 'arcSize'))"
-            :bridge-length="data_get($part, 'bridgeLength')"
+            :arc-radius="$partValue($part, ['arcRadius', 'arc-radius', 'arc_radius', 'arcSize', 'arc-size', 'arc_size'])"
+            :bridge-length="$partValue($part, ['bridgeLength', 'bridge-length', 'bridge_length'], $resolvedBridgeLength)"
             :extension="data_get($part, 'extension')"
-            :node-end="data_get($part, 'nodeEnd', true)"
-            :node-image="data_get($part, 'nodeImage')"
-            :node-label-left="data_get($part, 'nodeLabelLeft')"
-            :node-label-right="data_get($part, 'nodeLabelRight')"
-            :dev-counter-end="data_get($part, 'devCounterEnd', 1)"
-            :dev-counter-color="data_get($part, 'devCounterColor')"
-            :z-index="data_get($part, 'zIndex', 20)"
-            :dev-mode="data_get($part, 'devMode')"
+            :node-end="$partValue($part, ['nodeEnd', 'node-end', 'node_end'], true)"
+            :node-image="$partValue($part, ['nodeImage', 'node-image', 'node_image'])"
+            :node-label-left="$partValue($part, ['nodeLabelLeft', 'node-label-left', 'node_label_left'])"
+            :node-label-right="$partValue($part, ['nodeLabelRight', 'node-label-right', 'node_label_right'])"
+            :dev-counter-end="$partValue($part, ['devCounterEnd', 'dev-counter-end', 'dev_counter_end'], 1)"
+            :dev-counter-color="$partValue($part, ['devCounterColor', 'dev-counter-color', 'dev_counter_color'])"
+            :z-index="$partValue($part, ['zIndex', 'z-index', 'z_index'], 20)"
+            :dev-mode="$partValue($part, ['devMode', 'dev-mode', 'dev_mode'])"
         />
 
         @php
@@ -193,18 +204,18 @@
         @endphp
     @elseif ($type === 'end')
         <x-translation-workbench::ui.tw-graph.parts.end
-            :id="data_get($part, 'id')"
+            :id="$partValue($part, 'id')"
             :color="$partColor"
-            :direction="data_get($part, 'direction', $resolvedDirection)"
+            :direction="$partValue($part, 'direction', $resolvedDirection)"
             :anchor-start="$anchor"
-            :length="data_get($part, 'length')"
-            :cap-length="data_get($part, 'capLength', $resolvedCapLength)"
-            :node-start="data_get($part, 'nodeStart', false)"
-            :dev-counter-end="data_get($part, 'devCounterEnd', 'E')"
-            :dev-counter-color="data_get($part, 'devCounterColor')"
-            :end-label="data_get($part, 'endLabel')"
-            :z-index="data_get($part, 'zIndex', 20)"
-            :dev-mode="data_get($part, 'devMode')"
+            :length="$partValue($part, ['length', 'stem-length', 'stem_length'], $resolvedStemLength)"
+            :cap-length="$partValue($part, ['capLength', 'cap-length', 'cap_length'], $resolvedCapLength)"
+            :node-start="$partValue($part, ['nodeStart', 'node-start', 'node_start'], false)"
+            :dev-counter-end="$partValue($part, ['devCounterEnd', 'dev-counter-end', 'dev_counter_end'], 'E')"
+            :dev-counter-color="$partValue($part, ['devCounterColor', 'dev-counter-color', 'dev_counter_color'])"
+            :end-label="$partValue($part, ['endLabel', 'end-label', 'end_label'])"
+            :z-index="$partValue($part, ['zIndex', 'z-index', 'z_index'], 20)"
+            :dev-mode="$partValue($part, ['devMode', 'dev-mode', 'dev_mode'])"
         />
 
         @php

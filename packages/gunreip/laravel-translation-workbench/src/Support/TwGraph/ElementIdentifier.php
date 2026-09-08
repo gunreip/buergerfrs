@@ -51,6 +51,12 @@ final class ElementIdentifier
 
     private static function normalizeStrangKindAndSide(string $id): string
     {
+        $id = preg_replace(
+            '/^strang\.rekey\.(left|right)\.(source|target)\.(\d+)(\.|$)/',
+            'strang.rekey-$2.$1.$3$4',
+            $id,
+        ) ?? $id;
+
         return preg_replace(
             '/^strang\.([a-z]+(?:-[a-z]+)*)-(left|right)(\.|$)/',
             'strang.$1.$2$3',

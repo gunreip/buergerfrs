@@ -50,6 +50,7 @@
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
+    $arcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
     $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', '4rem'));
     $renderFallbackStyle = (bool) $fallbackUsed && (bool) $fallback;
 
@@ -88,6 +89,7 @@
                 'id' => $id . '.arc.in',
                 'startAnchor' => $arcInStartAnchor,
                 'endAnchor' => $arcInEndAnchor,
+                'arcSize' => $arcSize,
                 'anchorStart' => $currentAnchor,
                 'anchorEnd' => $arcInEnd,
                 'nodeStart' => false,
@@ -124,6 +126,7 @@
                 'id' => $id . '.arc.out',
                 'startAnchor' => $arcOutStartAnchor,
                 'endAnchor' => $arcOutEndAnchor,
+                'arcSize' => $arcSize,
                 'anchorStart' => $bridgeEnd,
                 'anchorEnd' => $arcOutEnd,
                 'nodeStart' => false,

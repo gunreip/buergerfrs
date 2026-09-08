@@ -150,12 +150,34 @@ final class DevIdentifier
 
             $candidate = (string) ($tokens[$index + 1] ?? '');
 
-            if (in_array($candidate, ['trunk', 'merge', 'merge-extension', 'branch', 'branch-extension', 'rekey-source', 'rekey-target'], true)) {
+            if (in_array($candidate, ['trunk', 'merge', 'merge-extension', 'branch', 'branch-extension', 'branch-return', 'branch-return-extension', 'rekey-source', 'rekey-target'], true)) {
                 $componentIndex = $index + 1;
                 $component = $candidate;
 
                 break;
             }
+        }
+
+        $returnBridgeIndex = array_search('return-bridge', $tokens, true);
+        if ($componentIndex === null && $returnBridgeIndex !== false) {
+            $extensionIndex = array_search('extension', $tokens, true);
+            $extensionNumber = $extensionIndex !== false && ctype_digit((string) ($tokens[$extensionIndex + 1] ?? ''))
+                ? (string) $tokens[$extensionIndex + 1]
+                : '1';
+            $returnNumber = ctype_digit((string) ($tokens[$returnBridgeIndex + 1] ?? ''))
+                ? (string) $tokens[$returnBridgeIndex + 1]
+                : '1';
+            $tail = array_slice($tokens, $returnBridgeIndex + 2);
+
+            return implode('.', array_merge([
+                'strang',
+                'branch-' . $side,
+                (string) $tokens[$sideIndex + 1],
+                'extension',
+                $extensionNumber,
+                'return',
+                $returnNumber,
+            ], $tail));
         }
 
         if ($componentIndex === null || $component === null) {
@@ -170,9 +192,13 @@ final class DevIdentifier
             $chapter = ['extension', (string) $tokens[$extensionIndex + 1]];
         }
 
+        if (in_array($component, ['branch-return', 'branch-return-extension'], true) && ctype_digit((string) ($tokens[$componentIndex + 1] ?? ''))) {
+            $chapter = ['return', (string) $tokens[$componentIndex + 1]];
+        }
+
         $kind = match ($component) {
             'merge-extension' => 'merge',
-            'branch-extension' => 'branch',
+            'branch-extension', 'branch-return', 'branch-return-extension' => 'branch',
             'rekey-source', 'rekey-target' => 'rekey',
             default => $component,
         };
@@ -181,7 +207,7 @@ final class DevIdentifier
             'rekey-target' => ['target'],
             default => [],
         };
-        $tail = array_slice($tokens, $componentIndex + 1);
+        $tail = array_slice($tokens, $componentIndex + 1 + ($chapter !== [] && $chapter[0] === 'return' ? 1 : 0));
 
         if ($side === 'center' && $kind === 'trunk') {
             return implode('.', array_merge(['strang', 'trunk', $counter], $tail));
@@ -278,6 +304,19 @@ final class DevIdentifier
                 continue;
             }
 
+            if ($token === 'start-label') {
+                $result[] = 'label';
+
+                continue;
+            }
+
+            if ($token === 'end-label') {
+                $last = (string) end($result);
+                $result[] = in_array($last, ['start', 'end'], true) ? 'label' : 'end-label';
+
+                continue;
+            }
+
             if (preg_match('/^arc(\d+)-(.+)$/', $token, $matches) === 1) {
                 $result[] = 'arc-' . $matches[2] . '-' . $matches[1];
 
@@ -286,6 +325,13 @@ final class DevIdentifier
 
             if (preg_match('/^(bridge|stem)(\d+)$/', $token, $matches) === 1) {
                 $result[] = $matches[1] . '-' . $matches[2];
+
+                continue;
+            }
+
+            if (in_array($token, ['bridge', 'stem'], true) && ctype_digit((string) ($tokens[$index + 1] ?? ''))) {
+                $result[] = $token . '-' . $tokens[$index + 1];
+                $index++;
 
                 continue;
             }

@@ -116,6 +116,10 @@ final class GraphFacts
      */
     public static function componentIntent(array $mainRow, Collection $rootRows, Collection $originRows): array
     {
+        $branchRowCount = $rootRows
+            ->filter(static fn(array $row): bool => ! in_array((string) ($row['branch'] ?? ''), ['Root', 'Root key'], true))
+            ->count();
+
         return [
             [
                 'component' => 'tw-graph.strang.trunk',
@@ -137,8 +141,8 @@ final class GraphFacts
             [
                 'component' => 'tw-graph.strang.branch-left/right',
                 'from' => 'timelineChainRootRows',
-                'required' => $rootRows->isNotEmpty(),
-                'count' => $rootRows->count(),
+                'required' => $branchRowCount > 0,
+                'count' => $branchRowCount,
             ],
             [
                 'component' => 'tw-graph.strang.rekey-source-left/right + tw-graph.strang.rekey-target-left/right',

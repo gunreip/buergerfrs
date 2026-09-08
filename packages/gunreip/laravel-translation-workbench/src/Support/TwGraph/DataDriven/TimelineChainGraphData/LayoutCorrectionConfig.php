@@ -238,7 +238,7 @@ final class LayoutCorrectionConfig
     {
         $target = ElementIdentifier::normalize($target);
 
-        if (preg_match('/^strang\.trunk(?:\.1)?\.main\.stem(\d+)$/', $target, $matches) === 1) {
+        if (preg_match('/^strang\.trunk(?:\.1)?(?:\.main)?\.stem(\d+)$/', $target, $matches) === 1) {
             return max(1, (int) $matches[1]);
         }
 
@@ -379,14 +379,21 @@ final class LayoutCorrectionConfig
     private static function previewPropName(string $prop): string
     {
         $prop = trim($prop);
-
-        return match ($prop) {
+        $parts = explode('.', $prop);
+        $parts[0] = match ($parts[0]) {
             'bridgeLength', 'bridge-length' => 'bridge_length',
             'stemLength', 'stem-length' => 'stem_length',
             'entryStemLength', 'entry-stem-length' => 'entry_stem_length',
             'endLength', 'end-length' => 'end_length',
             'pathLength', 'path-length' => 'path_length',
-            default => $prop,
+            'stemContinuation', 'stem-continuation' => 'stem_continuation',
+            'extensionStemContinuation', 'extension-stem-continuation' => 'extension_stem_continuation',
+            'extensionStemContinuations', 'extension-stem-continuations' => 'extension_stem_continuations',
+            'extensionBridgeContinuation', 'extension-bridge-continuation' => 'extension_bridge_continuation',
+            'extensionBridgeContinuations', 'extension-bridge-continuations' => 'extension_bridge_continuations',
+            default => $parts[0],
         };
+
+        return implode('.', $parts);
     }
 }

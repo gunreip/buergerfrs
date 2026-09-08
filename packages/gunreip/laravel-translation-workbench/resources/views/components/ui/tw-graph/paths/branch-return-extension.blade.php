@@ -32,7 +32,7 @@
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcSize' => null,
-    'stemLength' => '2rem',
+    'stemLength' => null,
     'bridgeLength' => null,
     'color' => null,
     'zIndex' => null,
@@ -50,6 +50,8 @@
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
+    $arcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
+    $stemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($stemLength ?? null, 'stem_length', '2rem');
     $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', '4rem'));
 
     $arcStartAnchor = $isLeft ? 'w' : 'e';
@@ -102,6 +104,7 @@
                 'id' => $id . '.arc',
                 'startAnchor' => $arcStartAnchor,
                 'endAnchor' => $arcEndAnchor,
+                'arcSize' => $arcSize,
                 'anchorStart' => $verticalEnd,
                 'anchorEnd' => $arcEnd,
                 'nodeStart' => false,

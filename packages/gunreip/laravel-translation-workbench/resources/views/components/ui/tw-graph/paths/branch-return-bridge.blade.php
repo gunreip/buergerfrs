@@ -51,6 +51,7 @@
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
+    $arcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
     $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', '4rem'));
 
     $arcStartAnchor = $isLeft ? 'w' : 'e';
@@ -109,6 +110,7 @@
                 'id' => $id . '.arc',
                 'startAnchor' => $arcStartAnchor,
                 'endAnchor' => $arcEndAnchor,
+                'arcSize' => $arcSize,
                 'anchorStart' => $currentAnchor,
                 'anchorEnd' => $arcEnd,
                 'nodeStart' => false,

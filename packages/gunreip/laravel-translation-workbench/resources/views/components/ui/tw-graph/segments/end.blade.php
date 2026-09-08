@@ -86,9 +86,12 @@
         :side="$resolvedEndLabelSide"
         :offset="data_get($endSegment, 'endLabel.offset', '0.75rem')"
         :badge="data_get($endSegment, 'endLabel.badge', true)"
-        :badge-color="data_get($endSegment, 'endLabel.badgeColor', data_get($endSegment, 'color', 'zinc'))"
+        :badge-color="data_get($endSegment, 'endLabel.badgeColor', data_get($endSegment, 'endLabel.color', data_get($endSegment, 'color', 'zinc')))"
         :long="data_get($endSegment, 'endLabel.long', false) || data_get($endSegment, 'endLabel.width') === 'long'"
         :half-long="data_get($endSegment, 'endLabel.halfLong', false) || in_array(data_get($endSegment, 'endLabel.width'), ['halfLong', 'half-long', 'half_long'], true)"
         :half="data_get($endSegment, 'endLabel.half', false) || in_array(data_get($endSegment, 'endLabel.width'), ['half', 'halfWidth', 'half-width', 'half_width'], true)"
+        :align="data_get($endSegment, 'endLabel.align', 'center')"
+        :justify="data_get($endSegment, 'endLabel.justify', false)"
+        :max-lines="data_get($endSegment, 'endLabel.maxLines', 3)"
     />
 @endif

@@ -74,7 +74,7 @@ final class Defaults
         $config = app('config');
         $dataDrivenKey = 'tw-graph-data-driven-defaults.' . $key;
 
-        if ($config->has($dataDrivenKey)) {
+        if ($config->has($dataDrivenKey) && filled($config->get($dataDrivenKey))) {
             return filter_var($config->get($dataDrivenKey), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $fallback;
         }
 

@@ -58,6 +58,9 @@ Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
         Route::view('tw-graph/documentation', 'translation-workbench::pages.tw-graph.documentation')
             ->name('tw-graph.documentation');
 
+        Route::view('tw-graph/diagnostics', 'translation-workbench::pages.tw-graph.diagnostics')
+            ->name('tw-graph.diagnostics');
+
         Route::view('tw-graph/data-driven/datasets', 'translation-workbench::pages.tw-graph.data-driven.datasets')
             ->name('tw-graph.data-driven.datasets');
 
@@ -75,6 +78,9 @@ Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
 
         Route::view('tw-graph/samples/translation-migration', 'translation-workbench::pages.tw-graph.samples.translation-migration')
             ->name('tw-graph.samples.translation-migration');
+
+        Route::view('tw-graph/samples/idea-to-paper', 'translation-workbench::pages.tw-graph.samples.idea-to-paper')
+            ->name('tw-graph.samples.idea-to-paper');
 
         Route::get('translations/usage', TranslationUsageAudit::class)->name('translation-usage');
 

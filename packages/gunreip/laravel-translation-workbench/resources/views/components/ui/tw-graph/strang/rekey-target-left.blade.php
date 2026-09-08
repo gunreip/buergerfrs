@@ -60,9 +60,12 @@
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn (string $value): string => 'calc(' . $value . ' * -1)';
     $stemContinuationEntries = is_array($stemContinuation) ? $stemContinuation : [];
+    $resolvedStemContinuationEntries = $stemContinuationEntries === []
+        ? [1 => ['length' => $resolvedStemLength, 'force' => true]]
+        : $stemContinuationEntries;
     $stemTotal = '0rem';
 
-    foreach ($stemContinuationEntries === [] ? [1 => $resolvedStemLength] : $stemContinuationEntries as $entry) {
+    foreach ($resolvedStemContinuationEntries as $entry) {
         $length = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
             is_array($entry) ? data_get($entry, 'length', data_get($entry, 0)) : $entry,
             $resolvedStemLength,
@@ -85,7 +88,7 @@
     $endLabelConfig = is_array($endLabel)
         ? $endLabel
         : (filled($endLabel) ? ['text' => $endLabel] : null);
-    $stemCount = count($stemContinuationEntries === [] ? [1 => $resolvedStemLength] : $stemContinuationEntries);
+    $stemCount = count($resolvedStemContinuationEntries);
     $endCounter = (int) $counterStart + 3 + $stemCount;
     $endSegment = [
         'id' => $id . '.path.rekey-target.end',
@@ -138,9 +141,10 @@
     :id="$id . '.paths.rekey-target'"
     side="left"
     :anchor-start="$anchor"
+    :arc-size="$resolvedArcSize"
     :bridge-length="$resolvedBridgeLength"
     :stem-length="$resolvedStemLength"
-    :stem-continuation="$stemContinuationEntries"
+    :stem-continuation="$resolvedStemContinuationEntries"
     :color="$resolvedColor"
     :z-index="$zIndex"
     :node-labels="$nodeLabels"

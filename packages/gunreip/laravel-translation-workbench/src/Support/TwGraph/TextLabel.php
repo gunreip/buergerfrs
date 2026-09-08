@@ -57,18 +57,20 @@ class TextLabel
             return null;
         }
 
-        $resolvedBadgeColor = data_get(
-            $resolvedLabel,
-            'badgeColor',
-            data_get($resolvedLabel, 'color', $badgeColor),
-        );
+        $resolvedBadgeColor = data_get($resolvedLabel, 'badgeColor')
+            ?? data_get($resolvedLabel, 'color')
+            ?? $badgeColor;
         $defaults = array_filter([
             'text' => $lines,
             'side' => $side,
             'badgeColor' => $resolvedBadgeColor,
         ], static fn (mixed $value): bool => $value !== null);
+        $labelOptions = collect($resolvedLabel)
+            ->except(['left', 'right', 'top', 'bottom', 'center'])
+            ->filter(static fn (mixed $value): bool => $value !== null)
+            ->all();
 
-        return array_replace($defaults, collect($resolvedLabel)->except(['left', 'right', 'top', 'bottom'])->all(), [
+        return array_replace($defaults, $labelOptions, [
             'text' => $lines,
             'side' => $side,
         ]);

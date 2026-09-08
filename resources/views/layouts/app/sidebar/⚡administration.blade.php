@@ -208,6 +208,15 @@
             {{ __('Documentation') }}
         </flux:sidebar.item>
 
+        <flux:sidebar.item
+            icon="clipboard-check"
+            :href="route('admin.tw-graph.diagnostics')"
+            :current="request()->routeIs('admin.tw-graph.diagnostics')"
+            wire:navigate
+        >
+            {{ __('Diagnostics') }}
+        </flux:sidebar.item>
+
         {{-- Admin -> TW-Graph -> Data Driven --}}
         <flux:sidebar.group
             class="grid"
@@ -277,6 +286,15 @@
                 wire:navigate
             >
                 {{ __('Translation Migration') }}
+            </flux:sidebar.item>
+
+            <flux:sidebar.item
+                icon="file-text"
+                :href="route('admin.tw-graph.samples.idea-to-paper')"
+                :current="request()->routeIs('admin.tw-graph.samples.idea-to-paper')"
+                wire:navigate
+            >
+                {{ __('Idea To Paper') }}
             </flux:sidebar.item>
         </flux:sidebar.group>
     </flux:sidebar.group>

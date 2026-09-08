@@ -22,13 +22,15 @@ final class FindingInspector
     public static function inspect(int $findingId, ?array $mainRow, Collection|array $originRows): array
     {
         $originRow = collect($originRows)
-            ->first(static fn(array $row): bool => (string) ($row['first_root'] ?? '') === 'finding #' . $findingId);
+            ->first(static fn(array $row): bool => preg_match('/finding\s+#' . preg_quote((string) $findingId, '/') . '\b/i', (string) ($row['first_root'] ?? '')) === 1);
         $preview = TimelineChainGraphData::fromTimelineChain($mainRow, collect(), collect($originRows));
         $previewMerges = collect(data_get($preview, 'render_preview.merges', []));
         $renderedAs = null;
 
         foreach ($previewMerges as $mergeIndex => $merge) {
-            if (str_contains(json_encode($merge, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '', 'finding ID #' . $findingId)) {
+            $mergeJson = json_encode($merge, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '';
+
+            if (preg_match('/finding\s*ID\s+#' . preg_quote((string) $findingId, '/') . '\b/i', $mergeJson) === 1) {
                 $renderedAs = [
                     'side' => data_get($merge, 'side'),
                     'strang' => data_get($merge, 'component'),
