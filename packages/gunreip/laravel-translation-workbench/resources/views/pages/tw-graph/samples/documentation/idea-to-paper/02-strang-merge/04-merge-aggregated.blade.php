@@ -17,7 +17,8 @@
             {{ __('Aggregated merge stems keep many related origins readable without rendering every origin as a full merge strand. The aggregate label names the group; continuation labels identify representative rows.') }}
         </flux:callout.text>
 
-        <div class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
+        <div
+            class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
             <pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.merge-left
     id="literature.left.1.aggregated-sources"
     attach-to="strang.trunk.node.2"
@@ -26,32 +27,38 @@
     extension-stem-length="4rem"
     :extension-stem-continuations="[
         1 => [
-            1 => [
-                'length' => '4rem',
-                'left' => [
-                    'text' => ['Finding ID #42', 'archive note'],
-                    'width' => 'default',
-                    'align' => 'right',
-                ],
-            ],
-            2 => [
-                'length' => '4rem',
-                'right' => [
-                    'text' => ['Finding ID #43', 'review note'],
-                    'width' => 'default',
-                    'align' => 'left',
-                ],
-            ],
+            1 => ['length' => '4rem'],
+            2 => ['length' => '4rem'],
         ],
     ]"
     :extension-node-labels="[
         1 => [
             1 => [
-                'right' => [
-                    'text' => ['Aggregated origins', '2 sources'],
-                    'width' => 'halfLong',
-                    'align' => 'left',
+                'labels' => [
+                    'right' => [
+                        'text' => ['Aggregated origins', '2 sources'],
+                        'align' => 'left',
+                    ],
                 ],
+                'width' => 'halfLong',
+            ],
+            3 => [
+                'labels' => [
+                    'left' => [
+                        'text' => ['Finding ID #42', 'archive note'],
+                        'align' => 'right',
+                    ],
+                ],
+                'width' => 'default',
+            ],
+            4 => [
+                'labels' => [
+                    'right' => [
+                        'text' => ['Finding ID #43', 'review note'],
+                        'align' => 'left',
+                    ],
+                ],
+                'width' => 'default',
             ],
         ],
     ]"
@@ -67,7 +74,8 @@
             {{ __('Step 8 preview') }}
         </flux:callout.heading>
 
-        <div class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+        <div
+            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
             <x-translation-workbench::ui.tw-graph
                 class="px-24 py-16"
                 graph-id="idea-to-paper-step-08-merge-aggregated"
@@ -102,37 +110,65 @@
                 <x-translation-workbench::ui.tw-graph.strang.merge-left
                     id="literature.left.1.aggregated-sources"
                     attach-to="strang.trunk.node.2"
+                    bridge-length="8rem"
                     :extension-count="1"
-                    extension-bridge-length="18rem"
+                    extension-bridge-length="24rem"
                     extension-stem-length="4rem"
                     :extension-stem-continuations="[
                         1 => [
-                            1 => [
-                                'length' => '4rem',
-                                'left' => [
-                                    'text' => ['Finding ID #42', 'archive note'],
-                                    'width' => 'default',
-                                    'align' => 'right',
-                                ],
-                            ],
-                            2 => [
-                                'length' => '4rem',
-                                'right' => [
-                                    'text' => ['Finding ID #43', 'review note'],
-                                    'width' => 'default',
-                                    'align' => 'left',
-                                ],
-                            ],
+                            1 => ['length' => '4rem'],
+                            2 => ['length' => '4rem'],
                         ],
                     ]"
                     :extension-node-labels="[
                         1 => [
                             1 => [
-                                'right' => [
-                                    'text' => ['Aggregated origins', '2 sources'],
-                                    'width' => 'halfLong',
-                                    'align' => 'left',
+                                'labels' => [
+                                    'left' => [
+                                        'text' => ['Aggregated origins #1', '2 sources'],
+                                        'align' => 'right',
+                                    ],
+                                    'right' => [
+                                        'text' => ['Aggregated origins #2', '3 sources'],
+                                        'align' => 'left',
+                                    ],
                                 ],
+                                'width' => 'default',
+                            ],
+                            2 => [
+                                'labels' => [
+                                    'left' => [
+                                        'text' => ['Aggregated origins #3', '2 sources'],
+                                        'align' => 'right',
+                                    ],
+                                    'right' => [
+                                        'text' => ['Aggregated origins #4', '8 sources'],
+                                        'align' => 'left',
+                                    ],
+                                ],
+                                'width' => 'default',
+                            ],
+                            3 => [
+                                'labels' => [
+                                    'left' => [
+                                        'text' => ['Finding ID #42', 'archive note'],
+                                        'align' => 'right',
+                                    ],
+                                    'right' => [
+                                        'text' => ['Finding ID #44', 'archive note'],
+                                        'align' => 'left',
+                                    ],
+                                ],
+                                'width' => 'default',
+                            ],
+                            4 => [
+                                'labels' => [
+                                    'left' => [
+                                        'text' => ['Finding ID #43', 'review note'],
+                                        'align' => 'left',
+                                    ],
+                                ],
+                                'width' => 'default',
                             ],
                         ],
                     ]"
@@ -141,37 +177,47 @@
                 <x-translation-workbench::ui.tw-graph.strang.merge-right
                     id="literature.right.1.aggregated-sources"
                     attach-to="strang.trunk.node.3"
+                    bridge-length="12rem"
                     :extension-count="1"
-                    extension-bridge-length="18rem"
+                    extension-start-length="12rem"
+                    extension-start-shift-enabled="true"
+                    extension-start-shift-length="8rem"
+                    extension-bridge-length="28rem"
                     extension-stem-length="4rem"
                     :extension-stem-continuations="[
                         1 => [
-                            1 => [
-                                'length' => '4rem',
-                                'right' => [
-                                    'text' => ['Finding ID #51', 'lab note'],
-                                    'width' => 'default',
-                                    'align' => 'left',
-                                ],
-                            ],
-                            2 => [
-                                'length' => '4rem',
-                                'left' => [
-                                    'text' => ['Finding ID #52', 'margin note'],
-                                    'width' => 'default',
-                                    'align' => 'right',
-                                ],
-                            ],
+                            1 => ['length' => '8rem'],
+                            2 => ['length' => '4rem'],
                         ],
                     ]"
                     :extension-node-labels="[
                         1 => [
                             1 => [
-                                'left' => [
-                                    'text' => ['Aggregated origins', '2 sources'],
-                                    'width' => 'halfLong',
-                                    'align' => 'right',
+                                'labels' => [
+                                    'left' => [
+                                        'text' => ['Aggregated origins', '2 sources'],
+                                        'align' => 'right',
+                                    ],
                                 ],
+                                'width' => 'halfLong',
+                            ],
+                            3 => [
+                                'labels' => [
+                                    'right' => [
+                                        'text' => ['Finding ID #51', 'lab note'],
+                                        'align' => 'left',
+                                    ],
+                                ],
+                                'width' => 'default',
+                            ],
+                            4 => [
+                                'labels' => [
+                                    'left' => [
+                                        'text' => ['Finding ID #52', 'margin note'],
+                                        'align' => 'right',
+                                    ],
+                                ],
+                                'width' => 'default',
                             ],
                         ],
                     ]"

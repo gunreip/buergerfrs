@@ -6,6 +6,8 @@ use Illuminate\Support\Collection;
 
 class TextLabel
 {
+    private const SIDE_KEYS = ['left', 'right', 'top', 'bottom', 'center'];
+
     /**
      * Canonical text label normalization for all tw-graph layers.
      * Components decide placement and options; this class decides how text is
@@ -26,9 +28,10 @@ class TextLabel
         }
 
         $resolvedLabel = $label;
+        $side = $side ?? data_get($resolvedLabel, 'side');
         $text = data_get($resolvedLabel, 'text');
 
-        foreach (['left', 'right', 'top', 'bottom', 'center'] as $candidateSide) {
+        foreach (self::SIDE_KEYS as $candidateSide) {
             $sideText = data_get($resolvedLabel, $candidateSide);
 
             if (blank($sideText)) {
@@ -74,6 +77,76 @@ class TextLabel
             'text' => $lines,
             'side' => $side,
         ]);
+    }
+
+    /**
+     * Normalize one node's label declaration into the two render slots used by
+     * vertical/horizontal graph segments. Prefer `labels => ['left' => ...]`
+     * when the same entry also contains geometry like `length`; direct
+     * `left/right/top/bottom` keys are kept as a legacy authoring fallback.
+     *
+     * @param  list<string>  $geometryKeys
+     * @return array<int, array<string, mixed>|null>|true
+     */
+    public static function nodeLabels(
+        mixed $entry,
+        string $defaultSide,
+        ?string $badgeColor = null,
+        array $geometryKeys = [],
+    ): array|true {
+        if (! is_array($entry)) {
+            $label = self::normalize($entry, $defaultSide, $badgeColor);
+
+            return $label ? [$label, null] : true;
+        }
+
+        $labelSource = array_key_exists('labels', $entry) ? data_get($entry, 'labels') : $entry;
+        $sharedOptions = collect($entry)
+            ->except(array_values(array_unique([
+                'labels',
+                ...self::SIDE_KEYS,
+                ...$geometryKeys,
+            ])))
+            ->all();
+
+        if (is_array($labelSource) && array_is_list($labelSource)) {
+            $labels = collect($labelSource)
+                ->map(static fn (mixed $label): ?array => self::normalize($label, $defaultSide, $badgeColor))
+                ->filter()
+                ->values()
+                ->all();
+
+            return $labels === [] ? true : array_pad(array_slice($labels, 0, 2), 2, null);
+        }
+
+        if (is_array($labelSource)) {
+            $directedLabels = collect(self::SIDE_KEYS)
+                ->map(static function (string $side) use ($labelSource, $sharedOptions, $badgeColor): ?array {
+                    if (! array_key_exists($side, $labelSource) || blank($labelSource[$side])) {
+                        return null;
+                    }
+
+                    return self::normalize([
+                        $side => $labelSource[$side],
+                        ...$sharedOptions,
+                    ], $side, $badgeColor);
+                })
+                ->filter()
+                ->values()
+                ->all();
+
+            if ($directedLabels !== []) {
+                return array_pad(array_slice($directedLabels, 0, 2), 2, null);
+            }
+
+            $label = self::normalize(array_replace($sharedOptions, $labelSource), $defaultSide, $badgeColor);
+
+            return $label ? [$label, null] : true;
+        }
+
+        $label = self::normalize(array_replace($sharedOptions, ['text' => $labelSource]), $defaultSide, $badgeColor);
+
+        return $label ? [$label, null] : true;
     }
 
     public static function lines(mixed $text): array

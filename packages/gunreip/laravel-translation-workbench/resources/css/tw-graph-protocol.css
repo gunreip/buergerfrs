@@ -680,6 +680,18 @@
         border-bottom: var(--tw-graph-protocol-joint-arrow-size) solid transparent;
     }
 
+    .tw-graph-protocol-primitive-joint-arrow-top {
+        border-right: var(--tw-graph-protocol-joint-arrow-size) solid transparent;
+        border-bottom: calc(var(--tw-graph-protocol-joint-arrow-size) * 1.2) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        border-left: var(--tw-graph-protocol-joint-arrow-size) solid transparent;
+    }
+
+    .tw-graph-protocol-primitive-joint-arrow-bottom {
+        border-top: calc(var(--tw-graph-protocol-joint-arrow-size) * 1.2) solid rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-color-alpha));
+        border-right: var(--tw-graph-protocol-joint-arrow-size) solid transparent;
+        border-left: var(--tw-graph-protocol-joint-arrow-size) solid transparent;
+    }
+
     .tw-graph-protocol-primitive-text-terminal {
         left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-anchor-x));
         bottom: calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-anchor-y));

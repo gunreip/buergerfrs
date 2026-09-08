@@ -685,9 +685,9 @@ it('renders translation migration label text without leaking formatting options'
                 id="migration.left.1.shared-origin"
                 color="amber"
                 bridge-length="30rem"
-                stem-length="4rem"
+                :stem-lengths="[1 => '4rem']"
                 :node-labels="[
-                    5 => [
+                    3 => [
                         'left' => [
                             'text' => 'merged into|shared key ID #124',
                             'width' => 'default',

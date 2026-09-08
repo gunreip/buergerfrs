@@ -41,13 +41,18 @@ return [
     'horizontal_padding' => '12rem',
 
     /*
-     * Optional trunk start collision spacing. When enabled, the first trunk
-     * stem may be extended after a real start-label collision was measured.
-     * trunk_start_shift_length is the minimum applied delta for that visible
-     * compensation, not a pre-rendered default spacer.
+     * Optional trunk start shift. Default rendering does not include a shift.
+     * When enabled explicitly, only the trunk-start origin is moved away from
+     * the first regular trunk node; downstream attach points stay stable.
      */
-    'trunk_start_shift_enabled' => true,
+    'trunk_start_shift_enabled' => false,
     'trunk_start_shift_length' => '10rem',
+    'merge_start_shift_enabled' => false,
+    'merge_start_shift_length' => '0rem',
+    'merge_extension_start_shift_enabled' => false,
+    'merge_extension_start_shift_length' => '0rem',
+    'rekey_source_start_shift_enabled' => false,
+    'rekey_source_start_shift_length' => '0rem',
     /*
      * If the trunk-start anchor dot is hidden because no left/right labels are
      * attached there, the following visible trunk stem may be shortened by this

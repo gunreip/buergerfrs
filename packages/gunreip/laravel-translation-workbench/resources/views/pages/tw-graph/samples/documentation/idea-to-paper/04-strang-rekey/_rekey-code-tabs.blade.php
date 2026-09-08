@@ -80,7 +80,7 @@
                 'align' => 'left',
             ],
         ],
-        5 => [
+        'end' => [
             'left' => [
                 'text' => ['rekeyed into', 'current paper key'],
                 'width' => 'default',

@@ -326,7 +326,7 @@
                             attach-to="strang.trunk.node.5"
                             color="amber"
                             bridge-length="14rem"
-                            stem-length="4rem"
+                            :stem-lengths="[1 => '4rem']"
                             :start-label="[
                                 'text' => ['Release train', 'feature bundle A'],
                                 'width' => 'halfLong',

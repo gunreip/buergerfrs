@@ -402,7 +402,7 @@
                             attach-to="strang.trunk.node.10"
                             color="amber"
                             bridge-length="28rem"
-                            stem-length="0rem"
+                            :stem-lengths="[1 => '0rem']"
                             :start-label="[
                                 'text' => ['Payment recovered', 'authorization captured'],
                                 'width' => 'halfLong',

@@ -117,6 +117,14 @@
     $nodeEnd = $nodeIsVisible($nodeEndValue);
     $nodeStartDot = (bool) data_get($segment, 'nodeStartDot', $nodeStart);
     $nodeEndDot = (bool) data_get($segment, 'nodeEndDot', $nodeEnd);
+    $jointArrowStart = $nodeStart && ! $nodeStartDot && (bool) data_get($segment, 'jointArrowStart', false);
+    $jointArrowEnd = $nodeEnd && ! $nodeEndDot && (bool) data_get($segment, 'jointArrowEnd', false);
+    $jointArrowDirection = match ($direction) {
+        'left-right' => 'right',
+        'right-left' => 'left',
+        'top-bottom' => 'bottom',
+        default => 'top',
+    };
     $devMode = (bool) ($dev ?? data_get($segment, 'dev', false));
     $isHorizontal = in_array($direction, ['left-right', 'right-left'], true);
     $counterDistance = 'calc(var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half))';
@@ -211,7 +219,7 @@
     :dev="$devMode"
 />
 
-<x-translation-workbench::ui.tw-graph.primitives.line
+	<x-translation-workbench::ui.tw-graph.primitives.line
     :id="$id"
     :direction="$direction"
     :length="data_get($segment, 'length', '4rem')"
@@ -230,10 +238,32 @@
     :cap-length="data_get($segment, 'capLength', '1.25rem')"
     :dashed="data_get($segment, 'dashed', false)"
     :color="$color"
-    :z-index="$zIndex"
-/>
+	    :z-index="$zIndex"
+	/>
 
-@foreach ($devCounterPairs as $devCounterPair)
+	@if ($jointArrowStart)
+	    <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
+	        :id="$id . '.start.joint-arrow'"
+	        :direction="$jointArrowDirection"
+	        :anchor-x="data_get($segment, 'anchorStart.x', '0rem')"
+	        :anchor-y="data_get($segment, 'anchorStart.y', '0rem')"
+	        :color="$color"
+	        :z-index="$zIndex === null ? null : $zIndex + 1"
+	    />
+	@endif
+
+	@if ($jointArrowEnd)
+	    <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
+	        :id="$id . '.end.joint-arrow'"
+	        :direction="$jointArrowDirection"
+	        :anchor-x="data_get($segment, 'anchorEnd.x', '0rem')"
+	        :anchor-y="data_get($segment, 'anchorEnd.y', '0rem')"
+	        :color="$color"
+	        :z-index="$zIndex === null ? null : $zIndex + 1"
+	    />
+	@endif
+
+	@foreach ($devCounterPairs as $devCounterPair)
     <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
         :id="$devCounterPair['id']"
         :dev="$devMode && $devCounterPair['visible']"

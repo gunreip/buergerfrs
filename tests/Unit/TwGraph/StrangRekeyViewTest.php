@@ -34,7 +34,7 @@ it('renders rekey source with merge path semantics and named label options', fun
                             'align' => 'right',
                         ],
                     ],
-                    5 => [
+                    3 => [
                         'left' => [
                             'text' => ['rekeyed into this key ID #124'],
                             'width' => 'halfLong',
@@ -51,7 +51,7 @@ it('renders rekey source with merge path semantics and named label options', fun
         ->toContain('strang.rekey.left.source.1.start.label.bottom.1')
         ->toContain('strang.rekey.left.source.1.start.label.right.1')
         ->toContain('strang.rekey.left.source.1.stem-1.label.right.1')
-        ->toContain('strang.rekey.left.source.1.arc-south-east-2.label.left.1')
+        ->toContain('strang.rekey.left.source.1.end.label.left.1')
         ->toContain('rekey source from ID #41')
         ->toContain('Origin key')
         ->toContain('admin.buttons.save')
@@ -126,7 +126,7 @@ it('passes scalar rekey source labels with shared options through without leakin
                 bridge-length="9rem"
                 stem-length="4rem"
                 :node-labels="[
-                    5 => [
+                    3 => [
                         'left' => 'rekeyed into this key ID #124|2026-04-15 08:12',
                         'width' => 'halfLong',
                         'align' => 'right',
@@ -139,7 +139,7 @@ it('passes scalar rekey source labels with shared options through without leakin
     BLADE);
 
     expect($html)
-        ->toContain('strang.rekey.left.source.1.arc-south-east-2.label.left.1')
+        ->toContain('strang.rekey.left.source.1.end.label.left.1')
         ->toContain('rekeyed into this key ID #124')
         ->toContain('2026-04-15 08:12')
         ->toContain('w-72')
@@ -149,6 +149,63 @@ it('passes scalar rekey source labels with shared options through without leakin
         ->toContain('text-rose-700')
         ->not->toContain('halfLong')
         ->not->toContain('htmlspecialchars');
+});
+
+it('renders explicit rekey source end labels through the merge path end alias', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-rekey-source-end-alias-test" color="green" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.rekey-source-left
+                id="sample.left.1.rekey-source"
+                bridge-length="9rem"
+                stem-length="4rem"
+                :node-labels="[
+                    9 => ['right' => 'Ignored overflow label'],
+                    'end' => [
+                        'left' => [
+                            'text' => 'Explicit rekey source end left',
+                            'align' => 'right',
+                        ],
+                        'right' => [
+                            'text' => 'Explicit rekey source end right',
+                            'align' => 'left',
+                        ],
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('Explicit rekey source end left')
+        ->toContain('Explicit rekey source end right')
+        ->toContain('strang.rekey.left.source.1.end.label.left.1')
+        ->toContain('strang.rekey.left.source.1.end.label.right.2')
+        ->not->toContain('Ignored overflow label')
+        ->toContain('nodeLabel-Mismatch')
+        ->toContain('ignored nodes: 9');
+});
+
+it('lets explicit rekey source end labels win over numeric end labels in dev mode', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-rekey-source-end-override-test" color="green" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.rekey-source-left
+                id="sample.left.1.rekey-source"
+                bridge-length="9rem"
+                stem-length="4rem"
+                :node-labels="[
+                    3 => ['left' => 'Numeric rekey source end label'],
+                    'end' => ['left' => 'Explicit rekey source end label'],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('Explicit rekey source end label')
+        ->not->toContain('Numeric rekey source end label')
+        ->toContain('nodeLabel-EndOverride')
+        ->toContain('end wins')
+        ->toContain('numeric: 3');
 });
 
 it('passes shared scalar stem label options through rekey target continuations', function (): void {
@@ -263,6 +320,56 @@ it('uses graph defaults for rekey source arc bridge and stem geometry', function
         ->toContain('--tw-graph-protocol-local-arc-size: 4rem')
         ->toContain('--tw-graph-protocol-local-length: 6rem')
         ->toContain('--tw-graph-protocol-local-length: 5rem');
+});
+
+it('keeps rekey source start shift out of default rendering', function (): void {
+    config()->set('tw-graph-defaults.rekey_source_start_shift_enabled', false);
+    config()->set('tw-graph-defaults.rekey_source_start_shift_length', '10rem');
+
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-rekey-source-default-start-shift-test" color="green" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.rekey-source-left
+                id="sample.left.1.rekey-source"
+                start-length="1rem"
+                stem-length="3rem"
+                bridge-length="5rem"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('strang.rekey.left.source.1.start')
+        ->toContain('strang.rekey.left.source.1.stem-1')
+        ->toContain('--tw-graph-protocol-local-length: 1rem')
+        ->toContain('--tw-graph-protocol-local-length: 3rem')
+        ->not->toContain('strang.rekey.left.source.1.start-shift')
+        ->not->toContain('--tw-graph-protocol-local-length: 10rem');
+});
+
+it('renders explicit rekey source start shift as its own segment before the first stem', function (): void {
+    config()->set('tw-graph-defaults.rekey_source_start_shift_enabled', false);
+    config()->set('tw-graph-defaults.rekey_source_start_shift_length', '10rem');
+
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-rekey-source-explicit-start-shift-test" color="green" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.rekey-source-right
+                id="sample.right.1.rekey-source"
+                start-length="1rem"
+                :start-shift-enabled="true"
+                start-shift-length="6rem"
+                stem-length="3rem"
+                bridge-length="5rem"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('strang.rekey.right.source.1.start')
+        ->toContain('strang.rekey.right.source.1.start-shift')
+        ->toContain('strang.rekey.right.source.1.stem-1')
+        ->toContain('--tw-graph-protocol-local-length: 1rem')
+        ->toContain('--tw-graph-protocol-local-length: 6rem')
+        ->toContain('--tw-graph-protocol-local-length: 3rem');
 });
 
 it('renders compressed rekey target stem continuations with named labels', function (): void {

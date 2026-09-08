@@ -17,7 +17,8 @@
             {{ __('The merge start is the semantic entry point of a merge strand. It can carry its own centered label and node labels before the path turns into the bridge.') }}
         </flux:callout.text>
 
-        <div class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
+        <div
+            class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
             <pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.merge-left
     id="literature.left.1.archive-finding"
     attach-to="strang.trunk.node.2"
@@ -48,7 +49,8 @@
             {{ __('Step 6 preview') }}
         </flux:callout.heading>
 
-        <div class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+        <div
+            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
             <x-translation-workbench::ui.tw-graph
                 class="px-24 py-16"
                 graph-id="idea-to-paper-step-06-merge-start"
@@ -83,17 +85,88 @@
                 <x-translation-workbench::ui.tw-graph.strang.merge-left
                     id="literature.left.1.archive-finding"
                     attach-to="strang.trunk.node.2"
+                    bridge-length="6rem"
+                    start-shift-enabled="true"
+                    start-shift-length="5rem"
+                    start-length="3rem"
                     :start-label="[
                         'text' => ['Archive finding', '1905-03-17'],
                         'width' => 'halfLong',
                         'align' => 'center',
                         'color' => 'amber',
                     ]"
+                    {{-- :stem-lengths="[1 => '4rem']" --}}
+                    :stem-lengths="[1 => '4rem', 2 => '4rem', 3 => '4rem', 4 => '4rem']"
                     :node-labels="[
                         1 => [
                             'right' => [
                                 'text' => ['Finding ID #42', 'annotated source'],
                                 'width' => 'default',
+                                'align' => 'left',
+                            ],
+                            'left' => [
+                                'text' => ['Finding ID #43', 'annotated source'],
+                                'width' => 'default',
+                                'align' => 'left',
+                            ],
+                        ],
+                        2 => [
+                            'right' => [
+                                'text' => ['Finding ID #44', 'annotated source'],
+                                'width' => 'default',
+                                'align' => 'left',
+                            ],
+                            'left' => [
+                                'text' => ['Finding ID #45', 'annotated source'],
+                                'width' => 'default',
+                                'align' => 'left',
+                            ],
+                        ],
+                        3 => [
+                            'right' => [
+                                'text' => ['Finding ID #46', 'annotated source'],
+                                'width' => 'default',
+                                'align' => 'left',
+                            ],
+                            'left' => [
+                                'text' => ['Finding ID #47', 'annotated source'],
+                                'width' => 'default',
+                                'align' => 'left',
+                            ],
+                        ],
+                        // 4 => [
+                        //     'right' => [
+                        //         'text' => ['Finding ID #48', 'annotated source'],
+                        //         'width' => 'default',
+                        //         'align' => 'left',
+                        //     ],
+                        //     'left' => [
+                        //         'text' => ['Finding ID #49', 'annotated source'],
+                        //         'width' => 'default',
+                        //         'align' => 'left',
+                        //     ],
+                        // ],
+                        5 => [
+                            'right' => [
+                                'text' => ['Finding ID #50', 'annotated source'],
+                                'width' => 'default',
+                                'align' => 'left',
+                            ],
+                            'left' => [
+                                'text' => ['Finding ID #51', 'annotated source'],
+                                'width' => 'default',
+                                'align' => 'left',
+                            ],
+                        ],
+                        'end' => [
+                            'right' => [
+                                'text' => ['Finding ID #998', 'annotated end'],
+                                'width' => 'halfLong',
+                                'align' => 'left',
+                            ],
+                            'left' => [
+                                'text' => ['Finding ID #999', 'annotated end'],
+                                'width' => 'halfLong',
                                 'align' => 'left',
                             ],
                         ],

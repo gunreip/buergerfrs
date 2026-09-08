@@ -692,8 +692,8 @@
                                     :attach-to="$mergePreview->get('attach_to', 'strang.trunk.path.1.end')"
                                     :bridge-length="$mergePreview->get('bridge_length') ??
                                         $twGraphDataDrivenPreviewGraph->get('bridge_length')"
-                                    :stem-length="$mergePreview->get('stem_length') ??
-                                        $twGraphDataDrivenPreviewGraph->get('stem_length')"
+                                    :stem-lengths="[1 => $mergePreview->get('stem_length') ??
+                                        $twGraphDataDrivenPreviewGraph->get('stem_length')]"
                                     :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
                                     :stem-continuation="$mergePreview->get('stem_continuation', [])"
                                     :arc-sizes="$mergePreview->get('arc_sizes', [])"
@@ -714,8 +714,8 @@
                                     :attach-to="$mergePreview->get('attach_to', 'strang.trunk.path.1.end')"
                                     :bridge-length="$mergePreview->get('bridge_length') ??
                                         $twGraphDataDrivenPreviewGraph->get('bridge_length')"
-                                    :stem-length="$mergePreview->get('stem_length') ??
-                                        $twGraphDataDrivenPreviewGraph->get('stem_length')"
+                                    :stem-lengths="[1 => $mergePreview->get('stem_length') ??
+                                        $twGraphDataDrivenPreviewGraph->get('stem_length')]"
                                     :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
                                     :stem-continuation="$mergePreview->get('stem_continuation', [])"
                                     :arc-sizes="$mergePreview->get('arc_sizes', [])"

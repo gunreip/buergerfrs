@@ -35,6 +35,7 @@
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'startLength' => null,
+    'startShiftLength' => null,
     'lineLength' => null,
     'arcSize' => null,
     'stemLength' => null,
@@ -51,6 +52,15 @@
 @php
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn (string $value): string => 'calc(' . $value . ' * -1)';
+    $toRem = static function (mixed $value): float {
+        if (is_numeric($value)) {
+            return (float) $value;
+        }
+
+        preg_match('/-?\d+(?:\.\d+)?/', (string) $value, $matches);
+
+        return isset($matches[0]) ? (float) $matches[0] : 0.0;
+    };
     $currentAnchor = [
         'x' => data_get($anchorStart, 'x', '0rem'),
         'y' => data_get($anchorStart, 'y', '0rem'),
@@ -70,13 +80,20 @@
     $arcDelta = $isLeft ? $resolvedArcSize : $neg($resolvedArcSize);
     $bridgeDelta = $isLeft ? $resolvedBridgeLength : $neg($resolvedBridgeLength);
     $startLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedArcSize, '2.75rem');
+    $startShiftLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startShiftLength, null, '0rem');
+    $hasStartShiftJoint = $toRem($startShiftLength) >= 1.0;
+    $startShiftLength = $hasStartShiftJoint ? $startShiftLength : '0rem';
     $startEnd = [
         'x' => $currentAnchor['x'],
         'y' => $add($currentAnchor['y'], $startLength),
     ];
-    $stemEnd = [
+    $shiftEnd = [
         'x' => $startEnd['x'],
-        'y' => $add($startEnd['y'], $resolvedStemLength),
+        'y' => $add($startEnd['y'], $startShiftLength),
+    ];
+    $stemEnd = [
+        'x' => $shiftEnd['x'],
+        'y' => $add($shiftEnd['y'], $resolvedStemLength),
     ];
     $stemContinuationBlueprints = [];
     $stemContinuationStart = $stemEnd;
@@ -136,37 +153,19 @@
         : 'calc(' . $currentAnchor['x'] . ' - ' . $bridgeEnd['x'] . ')';
     $pathBoxHeight = 'calc(' . $bridgeEnd['y'] . ' - ' . $currentAnchor['y'] . ')';
     $normalizeLabel = fn (mixed $label, ?string $side = null): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, $side, $resolvedColor);
-    $pathNodeLabels = function (int|array $nodeNumber, string $defaultSide) use ($nodeLabels, $normalizeLabel): mixed {
+    $pathNodeLabels = function (int|array $nodeNumber, string $defaultSide) use ($nodeLabels, $resolvedColor): mixed {
         $rawLabel = is_array($nodeNumber)
             ? $nodeNumber
             : data_get($nodeLabels, $nodeNumber);
 
-        if (is_array($rawLabel)) {
-            $sharedLabelProps = collect($rawLabel)->except(['left', 'right', 'top', 'bottom'])->all();
-            $directedLabels = collect(['left', 'right', 'top', 'bottom'])
-                ->map(static function (string $side) use ($rawLabel, $sharedLabelProps, $normalizeLabel): ?array {
-                    if (! array_key_exists($side, $rawLabel) || blank($rawLabel[$side])) {
-                        return null;
-                    }
-
-                    return $normalizeLabel([
-                        $side => $rawLabel[$side],
-                        ...$sharedLabelProps,
-                    ], $side);
-                })
-                ->filter()
-                ->values()
-                ->all();
-
-            if ($directedLabels !== []) {
-                return array_pad(array_slice($directedLabels, 0, 2), 2, null);
-            }
-        }
-
-        $label = $normalizeLabel($rawLabel, $defaultSide);
-
-        return $label ? [$label, null] : true;
+        return \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::nodeLabels(
+            $rawLabel,
+            $defaultSide,
+            $resolvedColor,
+            ['length', 'component', 'compressed', 'beforeLength', 'gapLength', 'afterLength', 'capLength'],
+        );
     };
+    $hasLabels = static fn (mixed $node): bool => is_array($node) && collect($node)->filter()->isNotEmpty();
     $arcNodeLabel = fn (int $nodeNumber, string $defaultSide): ?array => $normalizeLabel(
         data_get($nodeLabels, $nodeNumber),
         $defaultSide,
@@ -192,8 +191,8 @@
                 'length' => $startLength,
                 'anchorStart' => $currentAnchor,
                 'anchorEnd' => $startEnd,
-                'nodeEnd' => $pathNodeLabels(1, $isLeft ? 'right' : 'left'),
-                'devCounterEnd' => $counter++,
+                'nodeEnd' => $hasStartShiftJoint ? false : $pathNodeLabels(1, $isLeft ? 'right' : 'left'),
+                'devCounterEnd' => $hasStartShiftJoint ? null : $counter++,
                 'devCounterColor' => $color,
                 'startLabel' => $startLabel,
                 'color' => $color,
@@ -201,16 +200,42 @@
                 'dev' => $dev,
             ],
         ],
+    ];
+
+    if (filled($startShiftLength) && $startShiftLength !== '0rem') {
+        $segments[] = [
+            'component' => 'path',
+            'segment' => [
+                'id' => $id . '.start-shift',
+                'direction' => 'bottom-top',
+                'length' => $startShiftLength,
+                'anchorStart' => $startEnd,
+                'anchorEnd' => $shiftEnd,
+                'nodeStart' => false,
+                'nodeEnd' => $pathNodeLabels(1, $isLeft ? 'right' : 'left'),
+                'devCounterEnd' => $counter++,
+                'devCounterColor' => $color,
+                'color' => $color,
+                'zIndex' => $zIndex,
+                'dev' => $dev,
+            ],
+        ];
+    }
+
+    $segments = [
+        ...$segments,
         [
             'component' => 'path',
             'segment' => [
                 'id' => $id . '.stem1',
                 'direction' => 'bottom-top',
                 'length' => $resolvedStemLength,
-                'anchorStart' => $startEnd,
+                'anchorStart' => $shiftEnd,
                 'anchorEnd' => $stemEnd,
                 'nodeStart' => false,
-                'nodeEnd' => $pathNodeLabels(2, $isLeft ? 'right' : 'left'),
+                'nodeEnd' => $stem1NodeEnd = $pathNodeLabels(2, $isLeft ? 'right' : 'left'),
+                'nodeEndDot' => $hasLabels($stem1NodeEnd),
+                'jointArrowEnd' => ! $hasLabels($stem1NodeEnd),
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
                 'color' => $color,
@@ -226,6 +251,8 @@
             (int) data_get($stemContinuationBlueprint, 'segment.nodeEndLabelNumber'),
             $isLeft ? 'right' : 'left',
         );
+        $stemContinuationBlueprint['segment']['nodeEndDot'] = $hasLabels($stemContinuationBlueprint['segment']['nodeEnd']);
+        $stemContinuationBlueprint['segment']['jointArrowEnd'] = ! $hasLabels($stemContinuationBlueprint['segment']['nodeEnd']);
         unset($stemContinuationBlueprint['segment']['nodeEndLabelNumber']);
         $stemContinuationSegments[] = $stemContinuationBlueprint;
     }
@@ -294,3 +321,14 @@
         <x-translation-workbench::ui.tw-graph.segments.path :segment="$segment['segment']" />
     @endif
 @endforeach
+
+@if ($hasStartShiftJoint)
+    <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
+        :id="$id . '.start.start-shift.joint-arrow'"
+        direction="top"
+        :anchor-x="$startEnd['x']"
+        :anchor-y="$startEnd['y']"
+        :color="$resolvedColor"
+        :z-index="$zIndex + 1"
+    />
+@endif

@@ -27,6 +27,20 @@ it('stores anchors with coordinates and allowed metadata', function (): void {
     ]);
 });
 
+it('resolves normalized aliases for registered anchor keys', function (): void {
+    AnchorRegistry::forgetGraph('tw-graph-test');
+
+    AnchorRegistry::put('tw-graph-test', 'strang.merge-left.1.main.path.merge.bridge1', [
+        'x' => '-12rem',
+        'y' => '8rem',
+    ]);
+
+    expect(AnchorRegistry::get('tw-graph-test', 'strang.left.1.merge.bridge1'))->toBe([
+        'x' => '-12rem',
+        'y' => '8rem',
+    ]);
+});
+
 it('forgets all anchors for one graph without touching another graph', function (): void {
     AnchorRegistry::forgetGraph('tw-graph-a');
     AnchorRegistry::forgetGraph('tw-graph-b');

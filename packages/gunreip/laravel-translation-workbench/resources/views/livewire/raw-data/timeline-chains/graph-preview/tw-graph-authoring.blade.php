@@ -178,7 +178,7 @@
                     color="green"
                     attach-to="strang.trunk.node.3"
                     bridge-length="10rem"
-                    stem-length="2rem"
+                    :stem-lengths="[1 => '2rem']"
                     :node-labels="[
                         1 => ['left' => 'merge right start'],
                         5 => ['right' => ['trunk', 'attach']],

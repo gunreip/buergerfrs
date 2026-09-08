@@ -199,7 +199,7 @@
                             attach-to="strang.trunk.node.3"
                             color="amber"
                             bridge-length="28rem"
-                            stem-length="3rem"
+                            :stem-lengths="[1 => '3rem']"
                             start-label="Duplicate report|BUG-1843"
                             :node-labels="[
                                 1 => [

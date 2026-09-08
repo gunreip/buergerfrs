@@ -32,7 +32,9 @@ final class AnchorRegistry
             }
         }
 
-        self::$anchors[$graphId][$key] = $storedAnchor;
+        foreach (self::keyAliases($key) as $alias) {
+            self::$anchors[$graphId][$alias] = $storedAnchor;
+        }
     }
 
     /**
@@ -40,6 +42,26 @@ final class AnchorRegistry
      */
     public static function get(string $graphId, string $key): ?array
     {
-        return self::$anchors[$graphId][$key] ?? null;
+        foreach (self::keyAliases($key) as $alias) {
+            if (isset(self::$anchors[$graphId][$alias])) {
+                return self::$anchors[$graphId][$alias];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function keyAliases(string $key): array
+    {
+        $key = trim($key);
+        $normalizedKey = ElementIdentifier::normalize($key);
+
+        return array_values(array_unique(array_filter([
+            $key,
+            $normalizedKey,
+        ], static fn (string $alias): bool => $alias !== '')));
     }
 }

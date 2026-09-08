@@ -273,3 +273,53 @@ it('keeps center side text from leaking back into label options', function (): v
     ])
         ->and($label)->not->toHaveKey('center');
 });
+
+it('normalizes canonical node labels without leaking geometry options into text', function (): void {
+    $labels = TextLabel::nodeLabels([
+        'length' => '4rem',
+        'compressed' => true,
+        'labels' => [
+            'left' => [
+                'text' => ['Finding ID #42', 'archive note'],
+                'align' => 'right',
+            ],
+            'right' => 'Finding ID #43|review note',
+        ],
+        'width' => 'halfLong',
+        'color' => 'amber',
+    ], 'right', 'green', ['length', 'compressed']);
+
+    expect($labels)->toHaveCount(2)
+        ->and($labels[0])->toMatchArray([
+            'text' => ['Finding ID #42', 'archive note'],
+            'side' => 'left',
+            'width' => 'halfLong',
+            'align' => 'right',
+            'color' => 'amber',
+            'badgeColor' => 'amber',
+        ])
+        ->and($labels[1])->toMatchArray([
+            'text' => ['Finding ID #43', 'review note'],
+            'side' => 'right',
+            'width' => 'halfLong',
+            'color' => 'amber',
+            'badgeColor' => 'amber',
+        ])
+        ->and($labels[0]['text'])->not->toContain('4rem')
+        ->and($labels[0]['text'])->not->toContain('1');
+});
+
+it('preserves an explicit side when an already normalized label is normalized again', function (): void {
+    $label = TextLabel::normalize([
+        'text' => 'First seen|2026-04-14 11:36',
+        'side' => 'left',
+        'align' => 'right',
+    ], null, 'green');
+
+    expect($label)->toMatchArray([
+        'text' => ['First seen', '2026-04-14 11:36'],
+        'side' => 'left',
+        'align' => 'right',
+        'badgeColor' => 'green',
+    ]);
+});

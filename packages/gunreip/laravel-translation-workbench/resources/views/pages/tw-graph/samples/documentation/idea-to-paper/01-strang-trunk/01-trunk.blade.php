@@ -159,6 +159,12 @@
                         {{ __('Trunk start') }}
                     </flux:tab>
                     <flux:tab
+                        name="trunk-start-shift"
+                        x-on:click="trunkVariant = 'startShift'"
+                    >
+                        {{ __('Start shift') }}
+                    </flux:tab>
+                    <flux:tab
                         name="trunk-end"
                         x-on:click="trunkVariant = 'trunkEnd'"
                     >
@@ -298,6 +304,49 @@
                     </div>
                 </flux:tab.panel>
 
+                <flux:tab.panel name="trunk-start-shift">
+                    <p class="mt-4 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
+                        {{ __('Start shift is off by default. When enabled explicitly, it moves only the trunk-start origin away from the first regular trunk stem; downstream attach-to points stay stable. The merge is shown only as a reference attached to stem-1.') }}
+                    </p>
+                    <div class="mt-4 grid gap-3 xl:grid-cols-2">
+                        <div
+                            class="overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
+                            <pre><code>&lt;x-translation-workbench::ui.tw-graph ...&gt;
+    ...
+    &lt;x-translation-workbench::ui.tw-graph.strang.trunk
+        id="literature.center.1.paper"
+        :stem-count="3"
+    /&gt;
+
+    <span class="text-amber-300">&lt;x-translation-workbench::ui.tw-graph.strang.merge-left
+        attach-to="strang.trunk.center.1.stem-1"
+        ...
+    /&gt;</span>
+    ...
+&lt;/x-translation-workbench::ui.tw-graph&gt;</code></pre>
+                        </div>
+                        <div
+                            class="overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
+                            <pre><code>&lt;x-translation-workbench::ui.tw-graph ...&gt;
+    ...
+    &lt;x-translation-workbench::ui.tw-graph.strang.trunk
+        id="literature.center.1.paper"
+        <span class="text-amber-300">color="violet"</span>
+        :stem-count="3"
+        <span class="text-lime-300">:start-shift-enabled="true"
+        start-shift-length="14rem"</span>
+    /&gt;
+
+    <span class="text-amber-300">&lt;x-translation-workbench::ui.tw-graph.strang.merge-left
+        attach-to="strang.trunk.center.1.stem-1"
+        ...
+    /&gt;</span>
+    ...
+&lt;/x-translation-workbench::ui.tw-graph&gt;</code></pre>
+                        </div>
+                    </div>
+                </flux:tab.panel>
+
                 <flux:tab.panel name="trunk-end">
                     <p class="mt-4 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
                         {{ __('Trunk end compares the default closing segment with explicit end props. The highlighted props control the final stem, cap width, and centered end label.') }}
@@ -410,6 +459,13 @@
                     </flux:badge>
                     <flux:badge
                         size="sm"
+                        color="violet"
+                        x-show="trunkVariant === 'startShift'"
+                    >
+                        {{ __('start shift') }}
+                    </flux:badge>
+                    <flux:badge
+                        size="sm"
                         color="emerald"
                         x-show="trunkVariant === 'trunkEnd'"
                     >
@@ -438,199 +494,276 @@
 </x-translation-workbench::ui.tw-graph>
 
 @if ($renderMode === 'documentation')
-            </div>
+    </div>
 
-            <div
-                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
-                x-show="trunkVariant === 'stemCount'"
+    <div
+        class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
+        x-show="trunkVariant === 'stemCount'"
+    >
+        <x-translation-workbench::ui.tw-graph
+            class="px-20 py-12"
+            graph-id="idea-to-paper-step-02-trunk-stem-count"
+            :dev="$dev"
+            :coordinates="$coordinates"
+            slot-min-height="54rem"
+            horizontal-padding="24rem"
+            min-width="40rem"
+            min-height="54rem"
+        >
+            <x-translation-workbench::ui.tw-graph.strang.trunk
+                id="literature.center.1.paper"
+                :stem-count="4"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    </div>
+
+    <div
+        class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
+        x-show="trunkVariant === 'stemLengths'"
+    >
+        <x-translation-workbench::ui.tw-graph
+            class="px-20 py-12"
+            graph-id="idea-to-paper-step-02-trunk-stem-lengths"
+            :dev="$dev"
+            :coordinates="$coordinates"
+            slot-min-height="48rem"
+            horizontal-padding="24rem"
+            min-width="40rem"
+            min-height="48rem"
+        >
+            <x-translation-workbench::ui.tw-graph.strang.trunk
+                id="literature.center.1.paper"
+                :stem-count="4"
+                :stem-lengths="[
+                    1 => '3rem',
+                    2 => null,
+                    3 => '8rem',
+                    4 => '4rem',
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    </div>
+
+    <div
+        class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
+        x-show="trunkVariant === 'direction'"
+    >
+        <x-translation-workbench::ui.tw-graph
+            class="px-20 py-12"
+            graph-id="idea-to-paper-step-02-trunk-direction"
+            :dev="$dev"
+            :coordinates="$coordinates"
+            slot-min-height="42rem"
+            horizontal-padding="24rem"
+            min-width="40rem"
+            min-height="42rem"
+        >
+            <x-translation-workbench::ui.tw-graph.strang.trunk
+                id="literature.center.1.paper"
+                direction="top-bottom"
+                :stem-count="4"
+                start-length="4rem"
+                end-length="3rem"
+                :start-label="[
+                    'text' => ['Idea development', 'top to bottom'],
+                    'width' => 'halfLong',
+                    'align' => 'center',
+                ]"
+                :end-label="[
+                    'text' => ['next', 'inverted direction'],
+                    'width' => 'halfLong',
+                    'align' => 'center',
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    </div>
+
+    <div
+        class="mt-4 grid gap-4 xl:grid-cols-2"
+        x-show="trunkVariant === 'trunkStart'"
+    >
+        <div
+            class="overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+            <x-translation-workbench::ui.tw-graph
+                class="px-20 py-12"
+                graph-id="idea-to-paper-step-02-trunk-start-default"
+                :dev="$dev"
+                :coordinates="$coordinates"
+                slot-min-height="42rem"
+                horizontal-padding="24rem"
+                min-width="40rem"
+                min-height="42rem"
             >
-                <x-translation-workbench::ui.tw-graph
-                    class="px-20 py-12"
-                    graph-id="idea-to-paper-step-02-trunk-stem-count"
-                    :dev="$dev"
-                    :coordinates="$coordinates"
-                    slot-min-height="54rem"
-                    horizontal-padding="24rem"
-                    min-width="40rem"
-                    min-height="54rem"
-                >
-                    <x-translation-workbench::ui.tw-graph.strang.trunk
-                        id="literature.center.1.paper"
-                        :stem-count="4"
-                    />
-                </x-translation-workbench::ui.tw-graph>
-            </div>
+                <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
+            </x-translation-workbench::ui.tw-graph>
+        </div>
 
-            <div
-                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
-                x-show="trunkVariant === 'stemLengths'"
+        <div
+            class="overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+            <x-translation-workbench::ui.tw-graph
+                class="px-20 py-12"
+                graph-id="idea-to-paper-step-02-trunk-start-props"
+                :dev="$dev"
+                :coordinates="$coordinates"
+                slot-min-height="48rem"
+                horizontal-padding="30rem"
+                min-width="52rem"
+                min-height="48rem"
             >
-                <x-translation-workbench::ui.tw-graph
-                    class="px-20 py-12"
-                    graph-id="idea-to-paper-step-02-trunk-stem-lengths"
-                    :dev="$dev"
-                    :coordinates="$coordinates"
-                    slot-min-height="48rem"
-                    horizontal-padding="24rem"
-                    min-width="40rem"
-                    min-height="48rem"
-                >
-                    <x-translation-workbench::ui.tw-graph.strang.trunk
-                        id="literature.center.1.paper"
-                        :stem-count="4"
-                        :stem-lengths="[
-                            1 => '3rem',
-                            2 => null,
-                            3 => '8rem',
-                            4 => '4rem',
-                        ]"
-                    />
-                </x-translation-workbench::ui.tw-graph>
-            </div>
+                <x-translation-workbench::ui.tw-graph.strang.trunk
+                    id="literature.center.1.paper"
+                    color="sky"
+                    start-length="8rem"
+                    :start-label="[
+                        'text' => ['Idea development', 'notes to paper'],
+                        'width' => 'halfLong',
+                        'align' => 'center',
+                    ]"
+                    :start-node-labels="[
+                        'left' => [
+                            'text' => ['1879 notebook', 'raw observation'],
+                            'width' => 'default',
+                            'align' => 'right',
+                        ],
+                        'right' => [
+                            'text' => ['A loose idea is captured as a short note.'],
+                            'width' => 'long',
+                            'align' => 'left',
+                            'justify' => true,
+                        ],
+                    ]"
+                />
+            </x-translation-workbench::ui.tw-graph>
+        </div>
+    </div>
 
-            <div
-                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
-                x-show="trunkVariant === 'direction'"
+    <div
+        class="mt-4 grid gap-4 xl:grid-cols-2"
+        x-show="trunkVariant === 'startShift'"
+    >
+        <div
+            class="overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+            <p class="px-4 pt-4 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                {{ __('Default: no start shift') }}
+            </p>
+            <x-translation-workbench::ui.tw-graph
+                class="px-20 py-12"
+                graph-id="idea-to-paper-step-02-trunk-start-shift-default"
+                :dev="$dev"
+                :coordinates="$coordinates"
+                slot-min-height="54rem"
+                horizontal-padding="30rem"
+                min-width="52rem"
+                min-height="54rem"
             >
-                <x-translation-workbench::ui.tw-graph
-                    class="px-20 py-12"
-                    graph-id="idea-to-paper-step-02-trunk-direction"
-                    :dev="$dev"
-                    :coordinates="$coordinates"
-                    slot-min-height="42rem"
-                    horizontal-padding="24rem"
-                    min-width="40rem"
-                    min-height="42rem"
-                >
-                    <x-translation-workbench::ui.tw-graph.strang.trunk
-                        id="literature.center.1.paper"
-                        direction="top-bottom"
-                        :stem-count="4"
-                        start-length="4rem"
-                        end-length="3rem"
-                        :start-label="[
-                            'text' => ['Idea development', 'top to bottom'],
-                            'width' => 'halfLong',
-                            'align' => 'center',
-                        ]"
-                        :end-label="[
-                            'text' => ['next', 'inverted direction'],
-                            'width' => 'halfLong',
-                            'align' => 'center',
-                        ]"
-                    />
-                </x-translation-workbench::ui.tw-graph>
-            </div>
+                <x-translation-workbench::ui.tw-graph.strang.trunk
+                    id="literature.center.1.paper"
+                    color="zinc"
+                    :stem-count="3"
+                    :node-labels="[
+                        1 => [
+                            'right' => [
+                                'text' => ['Draft state', 'before merge'],
+                                'width' => 'default',
+                                'align' => 'left',
+                            ],
+                        ],
+                    ]"
+                />
 
-            <div
-                class="mt-4 grid gap-4 xl:grid-cols-2"
-                x-show="trunkVariant === 'trunkStart'"
+                <x-translation-workbench::ui.tw-graph.strang.merge-left
+                    id="literature.left.1.review-note"
+                    attach-to="strang.trunk.center.1.stem-1"
+                />
+            </x-translation-workbench::ui.tw-graph>
+        </div>
+
+        <div
+            class="overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+            <p class="px-4 pt-4 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                {{ __('Explicit: start origin shifted') }}
+            </p>
+            <x-translation-workbench::ui.tw-graph
+                class="px-20 py-12"
+                graph-id="idea-to-paper-step-02-trunk-start-shift-props"
+                :dev="$dev"
+                :coordinates="$coordinates"
+                slot-min-height="70rem"
+                horizontal-padding="30rem"
+                min-width="52rem"
+                min-height="70rem"
             >
-                <div
-                    class="overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
-                >
-                    <x-translation-workbench::ui.tw-graph
-                        class="px-20 py-12"
-                        graph-id="idea-to-paper-step-02-trunk-start-default"
-                        :dev="$dev"
-                        :coordinates="$coordinates"
-                        slot-min-height="42rem"
-                        horizontal-padding="24rem"
-                        min-width="40rem"
-                        min-height="42rem"
-                    >
-                        <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
-                    </x-translation-workbench::ui.tw-graph>
-                </div>
+                <x-translation-workbench::ui.tw-graph.strang.trunk
+                    id="literature.center.1.paper"
+                    color="violet"
+                    :stem-count="3"
+                    :start-shift-enabled="true"
+                    start-shift-length="14rem"
+                    :node-labels="[
+                        1 => [
+                            'right' => [
+                                'text' => ['Draft state', 'before merge'],
+                                'width' => 'default',
+                                'align' => 'left',
+                            ],
+                        ],
+                    ]"
+                />
 
-                <div
-                    class="overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
-                >
-                    <x-translation-workbench::ui.tw-graph
-                        class="px-20 py-12"
-                        graph-id="idea-to-paper-step-02-trunk-start-props"
-                        :dev="$dev"
-                        :coordinates="$coordinates"
-                        slot-min-height="48rem"
-                        horizontal-padding="30rem"
-                        min-width="52rem"
-                        min-height="48rem"
-                    >
-                        <x-translation-workbench::ui.tw-graph.strang.trunk
-                            id="literature.center.1.paper"
-                            color="sky"
-                            start-length="8rem"
-                            :start-label="[
-                                'text' => ['Idea development', 'notes to paper'],
-                                'width' => 'halfLong',
-                                'align' => 'center',
-                            ]"
-                            :start-node-labels="[
-                                'left' => [
-                                    'text' => ['1879 notebook', 'raw observation'],
-                                    'width' => 'default',
-                                    'align' => 'right',
-                                ],
-                                'right' => [
-                                    'text' => ['A loose idea is captured as a short note.'],
-                                    'width' => 'long',
-                                    'align' => 'left',
-                                    'justify' => true,
-                                ],
-                            ]"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                </div>
-            </div>
+                <x-translation-workbench::ui.tw-graph.strang.merge-left
+                    id="literature.left.1.review-note"
+                    attach-to="strang.trunk.center.1.stem-1"
+                />
+            </x-translation-workbench::ui.tw-graph>
+        </div>
+    </div>
 
-            <div
-                class="mt-4 grid gap-4 xl:grid-cols-2"
-                x-show="trunkVariant === 'trunkEnd'"
+    <div
+        class="mt-4 grid gap-4 xl:grid-cols-2"
+        x-show="trunkVariant === 'trunkEnd'"
+    >
+        <div
+            class="overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+            <x-translation-workbench::ui.tw-graph
+                class="px-20 py-12"
+                graph-id="idea-to-paper-step-02-trunk-end-default"
+                :dev="$dev"
+                :coordinates="$coordinates"
+                slot-min-height="42rem"
+                horizontal-padding="24rem"
+                min-width="40rem"
+                min-height="42rem"
             >
-                <div
-                    class="overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
-                >
-                    <x-translation-workbench::ui.tw-graph
-                        class="px-20 py-12"
-                        graph-id="idea-to-paper-step-02-trunk-end-default"
-                        :dev="$dev"
-                        :coordinates="$coordinates"
-                        slot-min-height="42rem"
-                        horizontal-padding="24rem"
-                        min-width="40rem"
-                        min-height="42rem"
-                    >
-                        <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
-                    </x-translation-workbench::ui.tw-graph>
-                </div>
+                <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
+            </x-translation-workbench::ui.tw-graph>
+        </div>
 
-                <div
-                    class="overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
-                >
-                    <x-translation-workbench::ui.tw-graph
-                        class="px-20 py-12"
-                        graph-id="idea-to-paper-step-02-trunk-end-props"
-                        :dev="$dev"
-                        :coordinates="$coordinates"
-                        slot-min-height="50rem"
-                        horizontal-padding="28rem"
-                        min-width="48rem"
-                        min-height="50rem"
-                    >
-                        <x-translation-workbench::ui.tw-graph.strang.trunk
-                            id="literature.center.1.paper"
-                            color="emerald"
-                            end-length="7rem"
-                            end-cap-length="3rem"
-                            :end-label="[
-                                'text' => ['published paper', 'stable reference'],
-                                'width' => 'halfLong',
-                                'align' => 'center',
-                            ]"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                </div>
-            </div>
-        </flux:callout>
+        <div
+            class="overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+            <x-translation-workbench::ui.tw-graph
+                class="px-20 py-12"
+                graph-id="idea-to-paper-step-02-trunk-end-props"
+                :dev="$dev"
+                :coordinates="$coordinates"
+                slot-min-height="50rem"
+                horizontal-padding="28rem"
+                min-width="48rem"
+                min-height="50rem"
+            >
+                <x-translation-workbench::ui.tw-graph.strang.trunk
+                    id="literature.center.1.paper"
+                    color="emerald"
+                    end-length="7rem"
+                    end-cap-length="3rem"
+                    :end-label="[
+                        'text' => ['published paper', 'stable reference'],
+                        'width' => 'halfLong',
+                        'align' => 'center',
+                    ]"
+                />
+            </x-translation-workbench::ui.tw-graph>
+        </div>
+    </div>
+    </flux:callout>
     </section>
 @endif

@@ -171,7 +171,7 @@
                             attach-to="strang.trunk.node.2"
                             color="amber"
                             bridge-length="30rem"
-                            stem-length="4rem"
+                            :stem-lengths="[1 => '4rem']"
                             :start-label="[
                                 'text' => 'finding ID #441|2026-04-10 10:12',
                                 'width' => 'halfLong',
@@ -193,7 +193,7 @@
                                         'align' => 'left',
                                     ],
                                 ],
-                                5 => [
+                                3 => [
                                     'left' => [
                                         'text' => 'merged into|shared key ID #124',
                                         'width' => 'default',
@@ -236,7 +236,7 @@
                             attach-to="strang.trunk.node.2"
                             color="amber"
                             bridge-length="16rem"
-                            stem-length="4rem"
+                            :stem-lengths="[1 => '4rem']"
                             :start-label="[
                                 'text' => 'finding ID #443|2026-04-13 16:21',
                                 'width' => 'halfLong',
@@ -257,7 +257,7 @@
                                         'align' => 'left',
                                     ],
                                 ],
-                                5 => [
+                                3 => [
                                     'right' => [
                                         'text' => 'merged into|shared key ID #124',
                                         'width' => 'default',

@@ -46,6 +46,7 @@
     'direction' => 'bottom-top',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'startLength' => null,
+    'startShiftLength' => null,
     'pathLengths' => [],
     'pathCount' => null,
     'defaultPathSegments' => 10,
@@ -73,6 +74,7 @@
     $resolvedPathCount = max(0, (int) ($pathCount ?? $defaultPathSegments));
     $resolvedDev = $devMode ?? $dev;
     $startLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedLineLength, '4rem');
+    $startShiftLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startShiftLength, null, '0rem');
     $pathLengthOverrides = is_array($pathLengths) ? $pathLengths : [];
     $pathLengthOverridesAreList = array_is_list($pathLengthOverrides);
     $pathNumbers = $resolvedPathCount > 0 ? range(1, $resolvedPathCount) : [];
@@ -237,6 +239,26 @@
                 'devCounterEnd' => $nodeIsVisible($startNodeEndValue) ? $counter++ : null,
                 'devCounterColor' => $resolvedColor,
                 'startLabel' => $resolvedStartLabel,
+                'color' => $resolvedColor,
+                'zIndex' => $zIndex,
+                'dev' => $resolvedDev,
+            ],
+        ];
+        $currentAnchor = $nextAnchor;
+    }
+
+    if (filled($startShiftLength) && $startShiftLength !== '0rem') {
+        $nextAnchor = $addAnchor($currentAnchor, $axisDelta($startShiftLength));
+        $segments[] = [
+            'component' => 'path',
+            'segment' => [
+                'id' => $id . '.start-shift',
+                'direction' => $direction,
+                'length' => $startShiftLength,
+                'anchorStart' => $currentAnchor,
+                'anchorEnd' => $nextAnchor,
+                'nodeStart' => false,
+                'nodeEnd' => false,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
                 'dev' => $resolvedDev,

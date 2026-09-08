@@ -81,6 +81,7 @@
         : $resolvedLineLength;
     $resolvedStemCount = max(0, (int) ($stemCount ?? $defaultPathSegments));
     $resolvedDev = $devMode ?? $dev;
+    $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $resolvedStartLengthBase = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedDefaultPathLength, '4rem');
     $resolvedStartShiftEnabled = $startShiftEnabled === null
         ? \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphBool('trunk_start_shift_enabled', false)
@@ -91,15 +92,23 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('trunk_start_shift_length', '4rem'),
     );
     $resolvedStartLength = $resolvedStartLengthBase;
+    $resolvedStartShiftSegmentLength = $resolvedStartShiftEnabled ? $resolvedStartShiftLength : '0rem';
     $resolvedEndLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($endLength, $resolvedDefaultPathLength, '4rem');
 
-    $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $axisDelta = function (string $length) use ($direction): array {
         return match ($direction) {
             'top-bottom' => ['x' => '0rem', 'y' => 'calc(' . $length . ' * -1)'],
             'left-right' => ['x' => $length, 'y' => '0rem'],
             'right-left' => ['x' => 'calc(' . $length . ' * -1)', 'y' => '0rem'],
             default => ['x' => '0rem', 'y' => $length],
+        };
+    };
+    $inverseAxisDelta = function (string $length) use ($direction): array {
+        return match ($direction) {
+            'top-bottom' => ['x' => '0rem', 'y' => $length],
+            'left-right' => ['x' => 'calc(' . $length . ' * -1)', 'y' => '0rem'],
+            'right-left' => ['x' => $length, 'y' => '0rem'],
+            default => ['x' => '0rem', 'y' => 'calc(' . $length . ' * -1)'],
         };
     };
     $addAnchor = function (array $anchor, array $delta): array {
@@ -159,12 +168,6 @@
     $nodeLabelOverrides = is_array($nodeLabels) ? $nodeLabels : [];
     $nodeLabelOverridesAreList = array_is_list($nodeLabelOverrides);
     $stemNumbers = $resolvedStemCount > 0 ? range(1, $resolvedStemCount) : [];
-    $firstStemLengthKey = $stemLengthOverridesAreList ? 0 : 1;
-    $firstStemLengthOverride = $stemLengthOverrides[$firstStemLengthKey] ?? null;
-    $firstStemLengthIsExplicit = array_key_exists($firstStemLengthKey, $stemLengthOverrides)
-        && (is_array($firstStemLengthOverride)
-            ? (filled(data_get($firstStemLengthOverride, 'length')) || filled(data_get($firstStemLengthOverride, 0)))
-            : filled($firstStemLengthOverride));
     $resolvedStemLengthEntries = collect($stemNumbers)
         ->mapWithKeys(function (int $stemNumber) use ($stemLengthOverrides, $stemLengthOverridesAreList, $nodeLabelOverrides, $nodeLabelOverridesAreList, $resolvedDefaultPathLength, $stemLengthWithLabels): array {
             $lengthKey = $stemLengthOverridesAreList ? $stemNumber - 1 : $stemNumber;
@@ -180,37 +183,34 @@
             ];
         })
         ->all();
-    if ($resolvedStartShiftEnabled && ! $firstStemLengthIsExplicit && $stemNumbers !== []) {
-        $firstStemEntry = $resolvedStemLengthEntries[1] ?? $resolvedDefaultPathLength;
-        $firstStemLength = $lengthOf($firstStemEntry);
-        $shiftedFirstStemLength = 'calc(' . $firstStemLength . ' + ' . $resolvedStartShiftLength . ')';
-
-        if (is_array($firstStemEntry)) {
-            if (array_key_exists('length', $firstStemEntry) || ! array_key_exists(0, $firstStemEntry)) {
-                $firstStemEntry['length'] = $shiftedFirstStemLength;
-            } else {
-                $firstStemEntry[0] = $shiftedFirstStemLength;
-            }
-
-            $resolvedStemLengthEntries[1] = $firstStemEntry;
-        } else {
-            $resolvedStemLengthEntries[1] = $shiftedFirstStemLength;
-        }
-    }
     $resolvedStemLengths = collect($stemNumbers)
         ->map(fn (int $stemNumber): string => $lengthOf($resolvedStemLengthEntries[$stemNumber] ?? $resolvedDefaultPathLength))
         ->all();
 
-    $pathStartAnchor = [
+    $baseStartAnchor = [
         'x' => data_get($anchorStart, 'x', '0rem'),
         'y' => data_get($anchorStart, 'y', '0rem'),
     ];
+    $pathStartAnchor = $resolvedStartShiftEnabled
+        ? $addAnchor($baseStartAnchor, $inverseAxisDelta($resolvedStartShiftLength))
+        : $baseStartAnchor;
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::forgetGraph($resolvedGraphId);
     \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::forgetGraph($resolvedGraphId);
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.start', $pathStartAnchor);
+    $putAnchor = static function (array|string $keys, array $anchor) use ($resolvedGraphId): void {
+        foreach ((array) $keys as $key) {
+            \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, (string) $key, $anchor);
+        }
+    };
+    $canonicalTrunkPrefix = 'strang.trunk.center.' . $resolvedComponentCounter;
+
+    $putAnchor([
+        'strang.trunk.start',
+        $canonicalTrunkPrefix . '.start.anchorStart',
+    ], $pathStartAnchor);
 
     $pathEndAnchor = collect([
         $resolvedStartLength,
+        $resolvedStartShiftSegmentLength,
         ...$resolvedStemLengths,
         $resolvedEndLength,
     ])->reduce(
@@ -218,22 +218,48 @@
         $pathStartAnchor,
     );
     $nodeAnchor = $addAnchor($pathStartAnchor, $axisDelta($resolvedStartLength));
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.node.1', $nodeAnchor);
+    $putAnchor([
+        'strang.trunk.node.1',
+        $canonicalTrunkPrefix . '.start',
+        $canonicalTrunkPrefix . '.start.anchorNode-end',
+        $canonicalTrunkPrefix . '.start.end',
+    ], $nodeAnchor);
+
+    if ($resolvedStartShiftEnabled && $resolvedStartShiftSegmentLength !== '0rem') {
+        $shiftAnchorStart = $nodeAnchor;
+        $nodeAnchor = $addAnchor($nodeAnchor, $axisDelta($resolvedStartShiftSegmentLength));
+        $putAnchor([
+            $canonicalTrunkPrefix . '.start-shift',
+            $canonicalTrunkPrefix . '.start-shift.anchorStart',
+        ], $shiftAnchorStart);
+        $putAnchor([
+            $canonicalTrunkPrefix . '.start-shift.anchorEnd',
+            $canonicalTrunkPrefix . '.start-shift.end',
+        ], $nodeAnchor);
+    }
 
     foreach ($resolvedStemLengths as $nodeIndex => $stemLength) {
         $stemNumber = $nodeIndex + 1;
         $pathAnchorStart = $nodeAnchor;
         $nodeAnchor = $addAnchor($nodeAnchor, $axisDelta($stemLength));
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put(
-            $resolvedGraphId,
+        $putAnchor([
             'strang.trunk.node.' . ($stemNumber + 1),
-            $nodeAnchor,
-        );
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.path.' . $stemNumber . '.start', $pathAnchorStart);
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.path.' . $stemNumber . '.end', $nodeAnchor);
+            'strang.trunk.path.' . $stemNumber . '.end',
+            $canonicalTrunkPrefix . '.stem-' . $stemNumber,
+            $canonicalTrunkPrefix . '.stem-' . $stemNumber . '.anchorNode-end',
+            $canonicalTrunkPrefix . '.stem-' . $stemNumber . '.end',
+        ], $nodeAnchor);
+        $putAnchor([
+            'strang.trunk.path.' . $stemNumber . '.start',
+            $canonicalTrunkPrefix . '.stem-' . $stemNumber . '.start',
+        ], $pathAnchorStart);
     }
 
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.trunk.end', $pathEndAnchor);
+    $putAnchor([
+        'strang.trunk.end',
+        $canonicalTrunkPrefix . '.end',
+        $canonicalTrunkPrefix . '.end.anchorNode-end',
+    ], $pathEndAnchor);
 
     $pathBoxPadding = '1rem';
     $pathBoxX = data_get($pathStartAnchor, 'x', '0rem');
@@ -289,12 +315,13 @@
     metrics-side="center"
 />
 
-<x-translation-workbench::ui.tw-graph.paths.trunk
-    :id="$id . '.paths.trunk'"
-    :direction="$direction"
-    :anchor-start="$anchorStart"
+    <x-translation-workbench::ui.tw-graph.paths.trunk
+        :id="$id . '.paths.trunk'"
+        :direction="$direction"
+    :anchor-start="$pathStartAnchor"
     :line-length="$resolvedDefaultPathLength"
     :start-length="$resolvedStartLength"
+    :start-shift-length="$resolvedStartShiftSegmentLength"
     :path-count="$resolvedStemCount"
     :path-lengths="$resolvedStemLengthEntries"
     :default-path-segments="$defaultPathSegments"

@@ -24,7 +24,8 @@
         [
             'name' => ':node-labels',
             'default' => '[]',
-            'effect' => 'Adds labels to concrete merge anchor nodes. Use named label arrays for text, width, align, color, and justify.',
+            'effect' =>
+                'Adds labels to concrete merge anchor nodes. Use named label arrays for text, width, align, color, and justify.',
         ],
     ];
 @endphp
@@ -42,7 +43,8 @@
                 {{ __('A merge strand collects a side path and leads it back toward the central chain. This default example only places left and right merge strands at a trunk anchor; all merge geometry and labels stay on their defaults.') }}
             </flux:callout.text>
 
-            <div class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
+            <div
+                class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
                 <pre><code>&lt;x-translation-workbench::ui.tw-graph ...&gt;
     ...
     &lt;x-translation-workbench::ui.tw-graph.strang.merge-left
@@ -77,7 +79,9 @@
                                 <flux:table.cell class="align-top">
                                     <code class="break-words text-xs">{{ $prop['default'] }}</code>
                                 </flux:table.cell>
-                                <flux:table.cell class="min-w-0 whitespace-normal break-words text-xs leading-5 text-zinc-600 dark:text-zinc-300">
+                                <flux:table.cell
+                                    class="min-w-0 whitespace-normal break-words text-xs leading-5 text-zinc-600 dark:text-zinc-300"
+                                >
                                     {{ $prop['effect'] }}
                                 </flux:table.cell>
                             </flux:table.row>
@@ -95,7 +99,8 @@
                 {{ __('Step 5 preview') }}
             </flux:callout.heading>
 
-            <div class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+            <div
+                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
 @endif
 
 <x-translation-workbench::ui.tw-graph
@@ -135,18 +140,18 @@
     </div>
 
     <x-translation-workbench::ui.tw-graph.strang.merge-left
+        id="literature.right.1.source-note"
+        attach-to="strang.trunk.node.2"
+    />
+    <x-translation-workbench::ui.tw-graph.strang.merge-right
         id="literature.left.1.source-note"
         attach-to="strang.trunk.node.2"
     />
 
-    <x-translation-workbench::ui.tw-graph.strang.merge-right
-        id="literature.right.1.source-note"
-        attach-to="strang.trunk.node.2"
-    />
 </x-translation-workbench::ui.tw-graph>
 
 @if ($renderMode === 'documentation')
-            </div>
-        </flux:callout>
+    </div>
+    </flux:callout>
     </section>
 @endif

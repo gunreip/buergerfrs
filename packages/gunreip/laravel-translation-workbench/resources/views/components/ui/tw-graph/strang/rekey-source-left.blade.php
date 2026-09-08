@@ -7,7 +7,7 @@
         attach-to="strang.trunk.path.1.end"
         bridge-length="12rem"
         stem-length="4rem"
-        :node-labels="[1 => ['left' => 'Source key'], 5 => ['left' => 'Rekeyed into current key']]"
+        :node-labels="[1 => ['left' => 'Source key'], 'end' => ['left' => 'Rekeyed into current key']]"
     />
 
     Component chain:
@@ -43,6 +43,8 @@
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'color' => null,
     'startLength' => null,
+    'startShiftEnabled' => null,
+    'startShiftLength' => null,
     'startLabel' => null,
     'nodeLabels' => [],
     'arcSizes' => [],
@@ -69,6 +71,15 @@
     $resolvedArcInSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($arcSizes, 1, data_get($arcSizes, 'in')), $resolvedArcSize, '2.75rem');
     $resolvedArcOutSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($arcSizes, 2, data_get($arcSizes, 'out')), $resolvedArcSize, '2.75rem');
     $resolvedStartLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedArcInSize, '2.75rem');
+    $resolvedStartShiftEnabled = $startShiftEnabled === null
+        ? \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphBool('rekey_source_start_shift_enabled', false)
+        : (filter_var($startShiftEnabled, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false);
+    $resolvedStartShiftLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
+        $startShiftLength,
+        null,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('rekey_source_start_shift_length', '0rem'),
+    );
+    $resolvedStartShiftSegmentLength = $resolvedStartShiftEnabled ? $resolvedStartShiftLength : '0rem';
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($attributes->get('bridge-length'), $bridgeLength ?? null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $resolvedLineLength));
     $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($attributes->get('stem-length'), $stemLength ?? null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', $resolvedLineLength));
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
@@ -91,7 +102,7 @@
         : null;
     $missingAttachTarget = filled($attachTo) && $attachTarget === null;
     $rekeyWidth = $add($add($resolvedArcInSize, $resolvedBridgeLength), $resolvedArcOutSize);
-    $rekeyHeight = $add($add($add($add($resolvedStartLength, $resolvedStemLength), $resolvedStemContinuationTotal), $resolvedArcInSize), $resolvedArcOutSize);
+    $rekeyHeight = $add($add($add($add($add($resolvedStartLength, $resolvedStartShiftSegmentLength), $resolvedStemLength), $resolvedStemContinuationTotal), $resolvedArcInSize), $resolvedArcOutSize);
     $anchor = [
         'x' => $attachTarget ? $subtract($attachTarget['x'], $rekeyWidth) : data_get($anchorStart, 'x', '0rem'),
         'y' => $attachTarget ? $subtract($attachTarget['y'], $rekeyHeight) : data_get($anchorStart, 'y', '0rem'),
@@ -103,6 +114,18 @@
     $bounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([$anchor, $attachAnchor], '1rem');
 
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.rekey-source-left.start', $anchor);
+    if ($resolvedStartShiftSegmentLength !== '0rem') {
+        $startShiftStart = [
+            'x' => $anchor['x'],
+            'y' => $add($anchor['y'], $resolvedStartLength),
+        ];
+        $startShiftEnd = [
+            'x' => $startShiftStart['x'],
+            'y' => $add($startShiftStart['y'], $resolvedStartShiftSegmentLength),
+        ];
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.rekey-source-left.start-shift.start', $startShiftStart);
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.rekey-source-left.start-shift.end', $startShiftEnd);
+    }
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.rekey-source-left.end', $attachAnchor);
 @endphp
 
@@ -134,9 +157,10 @@
     side="left"
     :anchor-start="$anchor"
     :start-length="$resolvedStartLength"
+    :start-shift-length="$resolvedStartShiftSegmentLength"
     :line-width="$lineWidth"
     :bridge-length="$resolvedBridgeLength"
-    :stem-length="$resolvedStemLength"
+    :stem-lengths="[1 => $resolvedStemLength]"
     :stem-continuation="$stemContinuationEntries"
     :compressed-stem-parts="$compressedStemParts"
     :arc-size="$resolvedArcSize"

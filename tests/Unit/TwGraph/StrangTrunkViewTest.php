@@ -95,8 +95,8 @@ it('renders the trunk start dot counter and side labels when start node labels e
     expect($html)
         ->toContain('strang.trunk.center.1.start.anchorNode-end')
         ->toContain('tw-graph-protocol-primitive-line-node-end')
-        ->toContain('strang.trunk.center.1.start.label.right.1')
-        ->toContain('strang.trunk.center.1.start.label.left.2')
+        ->toContain('strang.trunk.center.1.start.label.left.1')
+        ->toContain('strang.trunk.center.1.start.label.right.2')
         ->toContain('Left start')
         ->toContain('Right start')
         ->toContain('items-end text-right')
@@ -131,8 +131,120 @@ it('uses public trunk stem length props for rendered path lengths', function ():
         ->not->toContain('pathLengths');
 });
 
-it('keeps explicit first trunk stem lengths ahead of automatic start shift defaults', function (): void {
-    config()->set('tw-graph-defaults.trunk_start_shift_enabled', true);
+it('registers canonical trunk stem anchors for attach-to lookups', function (): void {
+    Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-trunk-anchor-alias-test" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.trunk
+                id="sample.center.1.trunk"
+                :stem-count="2"
+                start-length="1rem"
+                stem-length="5rem"
+                end-length="1rem"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    $legacyPathAnchor = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+        'strang-trunk-anchor-alias-test',
+        'strang.trunk.path.1.end',
+    );
+    $canonicalStemAnchor = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+        'strang-trunk-anchor-alias-test',
+        'strang.trunk.center.1.stem-1',
+    );
+
+    expect($canonicalStemAnchor)->toBe($legacyPathAnchor)
+        ->and($canonicalStemAnchor)->not->toBeNull();
+});
+
+it('allows side strangs to attach to canonical trunk stem ids', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-trunk-canonical-attach-test" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.trunk
+                id="sample.center.1.trunk"
+                :stem-count="2"
+                start-length="1rem"
+                stem-length="5rem"
+                end-length="1rem"
+            />
+            <x-translation-workbench::ui.tw-graph.strang.merge-left
+                id="sample.left.1.merge"
+                attach-to="strang.trunk.center.1.stem-1"
+                start-length="1rem"
+                :stem-lengths="[1 => '1rem']"
+                bridge-length="3rem"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('strang.merge.left.1')
+        ->not->toContain('Missing anchor')
+        ->not->toContain('missing attach-to');
+});
+
+it('registers start shift separately without replacing regular trunk stem anchors', function (): void {
+    config()->set('tw-graph-defaults.trunk_start_shift_enabled', false);
+    config()->set('tw-graph-defaults.trunk_start_shift_length', '10rem');
+
+    Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-trunk-with-shift-anchor-test" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.trunk
+                id="sample.center.1.trunk"
+                :stem-count="1"
+                start-length="1rem"
+                stem-length="5rem"
+                :start-shift-enabled="true"
+                end-length="1rem"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    $withShift = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+        'strang-trunk-with-shift-anchor-test',
+        'strang.trunk.center.1.stem-1',
+    );
+    $legacyPath = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+        'strang-trunk-with-shift-anchor-test',
+        'strang.trunk.path.1.end',
+    );
+    $shift = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+        'strang-trunk-with-shift-anchor-test',
+        'strang.trunk.center.1.start-shift',
+    );
+
+    expect($withShift)->toBe($legacyPath)
+        ->and($withShift)->not->toBeNull()
+        ->and($shift)->not->toBeNull();
+});
+
+it('keeps trunk start shift out of default rendering', function (): void {
+    config()->set('tw-graph-defaults.trunk_start_shift_enabled', false);
+    config()->set('tw-graph-defaults.trunk_start_shift_length', '10rem');
+
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-trunk-default-start-shift-test" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.trunk
+                id="sample.center.1.trunk"
+                :stem-count="1"
+                stem-length="6rem"
+                start-length="1rem"
+                end-length="1rem"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('strang.trunk.center.1.start')
+        ->toContain('strang.trunk.center.1.stem-1')
+        ->toContain('--tw-graph-protocol-local-length: 1rem')
+        ->toContain('--tw-graph-protocol-local-length: 6rem')
+        ->not->toContain('calc(1rem + 10rem)')
+        ->not->toContain('calc(6rem + 10rem)');
+});
+
+it('applies explicit trunk start shift before regular trunk stems', function (): void {
+    config()->set('tw-graph-defaults.trunk_start_shift_enabled', false);
     config()->set('tw-graph-defaults.trunk_start_shift_length', '10rem');
 
     $html = Blade::render(<<<'BLADE'
@@ -145,16 +257,22 @@ it('keeps explicit first trunk stem lengths ahead of automatic start shift defau
                 ]"
                 stem-length="6rem"
                 start-length="1rem"
+                :start-shift-enabled="true"
                 end-length="1rem"
             />
         </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
+        ->toContain('strang.trunk.center.1.start')
         ->toContain('strang.trunk.center.1.stem-1')
         ->toContain('strang.trunk.center.1.stem-2')
+        ->toContain('strang.trunk.center.1.start-shift')
+        ->toContain('--tw-graph-protocol-local-length: 1rem')
+        ->toContain('--tw-graph-protocol-local-length: 10rem')
         ->toContain('--tw-graph-protocol-local-length: 3rem')
         ->toContain('--tw-graph-protocol-local-length: 6rem')
+        ->not->toContain('calc(1rem + 10rem)')
         ->not->toContain('calc(3rem + 10rem)');
 });
 
