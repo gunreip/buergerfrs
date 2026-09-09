@@ -16,6 +16,10 @@
     Optional fields:
     nodeStart=true|false
     nodeEnd=true|false
+    nodeStartDot=true|false
+    nodeEndDot=true|false
+    jointArrowStart=true|false
+    jointArrowEnd=true|false
     dev=true|false
     devCounterColor
     startLabel{text, side, connectorLength, connectorGap, color, badgeColor}
@@ -37,6 +41,10 @@
     $nodeEndDotValue = data_get($segment, 'nodeEndDot');
     $nodeStartDot = $nodeStartDotValue === null ? $nodeStart : (bool) $nodeStartDotValue;
     $nodeEndDot = $nodeEndDotValue === null ? $nodeEnd : (bool) $nodeEndDotValue;
+    $jointArrowStart = $nodeStart && ! $nodeStartDot && (bool) data_get($segment, 'jointArrowStart', false);
+    $jointArrowEnd = $nodeEnd && ! $nodeEndDot && (bool) data_get($segment, 'jointArrowEnd', false);
+    $jointArrowStartDirection = data_get($segment, 'jointArrowStartDirection', 'right');
+    $jointArrowEndDirection = data_get($segment, 'jointArrowEndDirection', 'right');
     $devMode = (bool) ($dev ?? data_get($segment, 'dev', false));
     $counterSize = 'var(--tw-graph-protocol-dev-node-counter-width)';
     $counterDistance = 'calc(var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half))';
@@ -131,6 +139,28 @@
         :color="$color"
         :z-index="$zIndex"
     />
+
+@if ($jointArrowStart)
+    <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
+        :id="$id . '.start.joint-arrow'"
+        :direction="$jointArrowStartDirection"
+        :anchor-x="data_get($segment, 'anchorStart.x', '0rem')"
+        :anchor-y="data_get($segment, 'anchorStart.y', '0rem')"
+        :color="$color"
+        :z-index="$zIndex === null ? null : $zIndex + 1"
+    />
+@endif
+
+@if ($jointArrowEnd)
+    <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
+        :id="$id . '.end.joint-arrow'"
+        :direction="$jointArrowEndDirection"
+        :anchor-x="data_get($segment, 'anchorEnd.x', '0rem')"
+        :anchor-y="data_get($segment, 'anchorEnd.y', '0rem')"
+        :color="$color"
+        :z-index="$zIndex === null ? null : $zIndex + 1"
+    />
+@endif
 
 @if ($nodeStart)
     <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter

@@ -35,8 +35,8 @@ it('passes named trunk node label options through to rendered path labels', func
     BLADE);
 
     expect($html)
-        ->toContain('strang.trunk.center.1.stem-1.label.right.1')
-        ->toContain('strang.trunk.center.1.stem-1.label.left.2')
+        ->toContain('strang.trunk.center.1.stem-1.label.left.1')
+        ->toContain('strang.trunk.center.1.stem-1.label.right.2')
         ->toContain('Right fact')
         ->toContain('justified')
         ->toContain('Left fact')
@@ -321,4 +321,54 @@ it('uses graph stem defaults for trunk start stems and end geometry', function (
         ->toContain('--tw-graph-protocol-local-length: 6rem')
         ->toContain('Start')
         ->toContain('End');
+});
+
+it('renders trunk stem joint arrows when stem anchors have no labels', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-trunk-stem-joint-arrow-test" color="green" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.trunk
+                id="sample.center.1.trunk"
+                :stem-count="1"
+                start-length="1rem"
+                stem-length="4rem"
+                end-length="1rem"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('strang.trunk.center.1.stem-1.end.joint-arrow')
+        ->toContain('tw-graph-protocol-primitive-joint-arrow-top')
+        ->toContain('strang.trunk.center.1.stem-1.anchorNode-end');
+});
+
+it('reports trunk node label mismatch when numeric labels exceed stem anchors', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-trunk-node-label-mismatch-test" color="green" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.trunk
+                id="sample.center.1.trunk"
+                :stem-count="1"
+                start-length="1rem"
+                stem-length="4rem"
+                end-length="1rem"
+                :node-labels="[
+                    1 => [
+                        'right' => ['text' => ['Valid stem label']],
+                    ],
+                    2 => [
+                        'right' => ['text' => ['Ignored stem label']],
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('nodeLabel-Mismatch')
+        ->toContain('labels: 2')
+        ->toContain('anchors: 1')
+        ->toContain('ignored: 1')
+        ->toContain('ignored nodes: 2')
+        ->toContain('Valid stem label')
+        ->not->toContain('Ignored stem label');
 });

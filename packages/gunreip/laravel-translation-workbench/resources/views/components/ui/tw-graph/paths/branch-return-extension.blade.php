@@ -57,6 +57,7 @@
     $arcStartAnchor = $isLeft ? 'w' : 'e';
     $arcEndAnchor = 'n';
     $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
+    $bridgeJointArrowDirection = $isLeft ? 'right' : 'left';
     $arcDelta = $isLeft ? $arcSize : $neg($arcSize);
     $bridgeDelta = $isLeft ? $bridgeLength : $neg($bridgeLength);
 
@@ -91,6 +92,8 @@
                 'anchorEnd' => $verticalEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
+                'nodeEndDot' => false,
+                'jointArrowEnd' => true,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
@@ -109,6 +112,9 @@
                 'anchorEnd' => $arcEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
+                'nodeEndDot' => false,
+                'jointArrowEnd' => true,
+                'jointArrowEndDirection' => $bridgeJointArrowDirection,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
@@ -126,6 +132,8 @@
                 'anchorEnd' => $bridgeEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
+                'nodeEndDot' => false,
+                'jointArrowEnd' => true,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,

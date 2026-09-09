@@ -35,8 +35,8 @@ it('passes named branch right stem continuation label options through to rendere
     BLADE);
 
     expect($html)
-        ->toContain('strang.branch.right.1.stem-1.label.right.1')
-        ->toContain('strang.branch.right.1.stem-1.label.left.2')
+        ->toContain('strang.branch.right.1.stem-1.label.left.1')
+        ->toContain('strang.branch.right.1.stem-1.label.right.2')
         ->toContain('Needs info')
         ->toContain('assigned to support')
         ->toContain('SLA paused')
@@ -70,7 +70,7 @@ it('keeps scalar branch continuation labels from leaking shared formatting optio
     BLADE);
 
     expect($html)
-        ->toContain('strang.branch.left.1.stem-1.label.left.2')
+        ->toContain('strang.branch.left.1.stem-1.label.left.1')
         ->toContain('finding ID #42')
         ->toContain('ui.checkout.save')
         ->toContain('2026-04-14 11:36')
@@ -83,6 +83,50 @@ it('keeps scalar branch continuation labels from leaking shared formatting optio
         ->not->toContain('halfLong right')
         ->not->toContain('default right')
         ->not->toContain('justify true');
+});
+
+it('renders branch stem joint arrows when forced stem anchors have no labels', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-branch-joint-arrow-test" color="green" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.branch-left
+                id="sample.left.1.branch"
+                bridge-length="8rem"
+                :stem-continuation="[
+                    1 => ['length' => '4rem', 'force' => true],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toMatch('/class="[^"]*tw-graph-protocol-primitive-joint-arrow-left[^"]*"[^>]*title="strang\.branch\.left\.1\.arc-east-north-1\.end\.joint-arrow"/')
+        ->toMatch('/class="[^"]*tw-graph-protocol-primitive-joint-arrow-top[^"]*"[^>]*title="strang\.branch\.left\.1\.arc-south-west-2\.end\.joint-arrow"/')
+        ->toContain('strang.branch.left.1.bridge-1.end.joint-arrow')
+        ->toContain('strang.branch.left.1.stem-1.end.joint-arrow')
+        ->not->toContain('strang.branch.left.1.stem-1.label.left')
+        ->not->toContain('strang.branch.left.1.stem-1.label.right');
+});
+
+it('reports branch node label mismatch when numeric labels exceed branch anchors', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-branch-node-label-mismatch-test" color="green" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.branch-right
+                id="sample.right.1.branch"
+                bridge-length="8rem"
+                :node-labels="[
+                    4 => ['right' => 'Ignored branch label'],
+                ]"
+                :stem-continuation="[
+                    1 => ['length' => '4rem', 'force' => true],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('nodeLabel-Mismatch')
+        ->toContain('ignored: 1')
+        ->not->toContain('Ignored branch label');
 });
 
 it('inherits graph color for branch labels unless the label sets its own color', function (): void {
@@ -151,8 +195,8 @@ it('promotes the first labeled branch stem onto the step end anchor without losi
 
     expect($html)
         ->toContain('strang.branch.left.1.step-1.label')
-        ->toContain('strang.branch.left.1.step-1.label.right.1')
-        ->toContain('strang.branch.left.1.step-1.label.left.2')
+        ->toContain('strang.branch.left.1.step-1.label.left.1')
+        ->toContain('strang.branch.left.1.step-1.label.right.2')
         ->toContain('Source inactive')
         ->toContain('shared obsolete')
         ->toContain('finding ID #42')
@@ -205,8 +249,8 @@ it('renders branch extensions from configured branch anchors with named labels',
         ->toContain('sample.left.1.branch.extension.1.bridge')
         ->toContain('sample.left.1.branch.extension.1.arc')
         ->toContain('sample.left.1.branch.extension.1.stem')
-        ->toContain('sample.left.1.branch.extension.1.stem.label.right.1')
-        ->toContain('sample.left.1.branch.extension.1.stem.label.left.2')
+        ->toContain('sample.left.1.branch.extension.1.stem.label.left.1')
+        ->toContain('sample.left.1.branch.extension.1.stem.label.right.2')
         ->toContain('Extension start')
         ->toContain('from stem 1')
         ->toContain('Extension detail')
@@ -260,8 +304,8 @@ it('renders right branch extensions from branch anchors with mirrored named labe
         ->toContain('sample.right.1.branch.extension.1.bridge')
         ->toContain('sample.right.1.branch.extension.1.arc')
         ->toContain('sample.right.1.branch.extension.1.stem')
-        ->toContain('sample.right.1.branch.extension.1.stem.label.right.1')
-        ->toContain('sample.right.1.branch.extension.1.stem.label.left.2')
+        ->toContain('sample.right.1.branch.extension.1.stem.label.left.1')
+        ->toContain('sample.right.1.branch.extension.1.stem.label.right.2')
         ->toContain('Right extension start')
         ->toContain('from stem 1')
         ->toContain('Mirrored detail')
@@ -303,6 +347,40 @@ it('renders branch returns from branch stem anchors without falling back to the 
         ->toContain('tw-graph-protocol-primitive-line-right-left')
         ->not->toContain('tw-graph-protocol-primitive-line-dashed')
         ->not->toContain('tw-graph-protocol-primitive-arc-dashed');
+});
+
+it('marks branch return close targets as forced trunk nodes', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-branch-return-close-test" color="green" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.trunk
+                id="sample.center.1.trunk"
+                :stem-count="4"
+                color="sky"
+            />
+            <x-translation-workbench::ui.tw-graph.strang.branch-left
+                id="sample.left.1.branch"
+                attach-to="trunk.center.1.stem-2.anchorNode-end"
+                bridge-length="8rem"
+                :stem-continuation="[
+                    1 => ['length' => '4rem', 'force' => true],
+                ]"
+                :branch-return="[
+                    1 => [
+                        'attachTo' => 'stem.1',
+                        'closeTo' => '+2',
+                        'bridgeLength' => '10rem',
+                        'fallback' => false,
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('trunk.center.1.stem-4.anchorNode-end.forced-node')
+        ->toContain('--tw-graph-protocol-local-color-rgb: 14 165 233')
+        ->toContain('--tw-graph-protocol-z-index: 20')
+        ->not->toContain('strang.trunk.center.1.center.stem-4.anchorNode-end.forced-node');
 });
 
 it('passes branch extension return bridge labels and options through', function (): void {
@@ -380,10 +458,38 @@ it('renders unresolved branch returns as fallback dashed paths by default', func
 
     expect($html)
         ->toContain('sample.left.1.branch.return.1')
-        ->toContain('Fallback anchor used')
+        ->not->toContain('Fallback anchor used')
         ->toContain('--tw-graph-protocol-local-length: 10rem')
         ->toContain('tw-graph-protocol-primitive-line-dashed')
         ->toContain('tw-graph-protocol-primitive-arc-dashed');
+});
+
+it('warns for unresolved branch returns when fallback is explicitly disabled', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-branch-return-fallback-warning-test" color="green" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.branch-left
+                id="sample.left.1.branch"
+                bridge-length="8rem"
+                :stem-continuation="[
+                    1 => ['length' => '4rem', 'force' => true],
+                ]"
+                :branch-return="[
+                    1 => [
+                        'attachTo' => 'stem.99',
+                        'bridgeLength' => '10rem',
+                        'fallback' => false,
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('sample.left.1.branch.return.1')
+        ->toContain('Fallback anchor used')
+        ->toContain('--tw-graph-protocol-local-length: 10rem')
+        ->not->toContain('tw-graph-protocol-primitive-line-dashed')
+        ->not->toContain('tw-graph-protocol-primitive-arc-dashed');
 });
 
 it('derives branch continuation counters from rendered stems without explicit sample counters', function (): void {

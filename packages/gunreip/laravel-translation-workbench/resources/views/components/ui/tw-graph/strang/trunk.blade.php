@@ -124,20 +124,12 @@
 
         return filled($entry) ? (string) $entry : $resolvedDefaultPathLength;
     };
-    $normalizeNodeLabels = function (mixed $labels) use ($resolvedColor): mixed {
-        if (! is_array($labels)) {
-            return $labels;
-        }
-
-        $normalizeLabelForSide = static fn (mixed $label, string $side): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, $side, $resolvedColor);
-        $left = data_get($labels, 'left', data_get($labels, 0));
-        $right = data_get($labels, 'right', data_get($labels, 1));
-
-        return [
-            $normalizeLabelForSide($right, 'right'),
-            $normalizeLabelForSide($left, 'left'),
-        ];
-    };
+    $normalizeNodeLabels = fn (mixed $labels): mixed => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::nodeLabels(
+        $labels,
+        in_array($direction, ['left-right', 'right-left'], true) ? 'top' : 'right',
+        $resolvedColor,
+        ['length', 'component', 'compressed', 'beforeLength', 'gapLength', 'afterLength', 'capLength'],
+    );
     $stemLengthWithLabels = function (mixed $entry, mixed $labels) use ($resolvedDefaultPathLength, $normalizeNodeLabels): mixed {
         if ($labels === null || $labels === false || $labels === '') {
             return $entry;
@@ -167,6 +159,27 @@
     $stemLengthOverridesAreList = array_is_list($stemLengthOverrides);
     $nodeLabelOverrides = is_array($nodeLabels) ? $nodeLabels : [];
     $nodeLabelOverridesAreList = array_is_list($nodeLabelOverrides);
+    $configuredNodeLabelNumbers = collect(array_keys($nodeLabelOverrides))
+        ->filter(static fn (mixed $key): bool => is_int($key) || (is_string($key) && ctype_digit($key)))
+        ->map(static fn (mixed $key): int => $nodeLabelOverridesAreList ? ((int) $key + 1) : (int) $key)
+        ->filter(static fn (int $nodeNumber): bool => $nodeNumber > 0)
+        ->unique()
+        ->sort()
+        ->values();
+    $availableNodeLabelNumbers = $resolvedStemCount > 0 ? collect(range(1, $resolvedStemCount)) : collect();
+    $ignoredNodeLabelNumbers = $configuredNodeLabelNumbers
+        ->diff($availableNodeLabelNumbers)
+        ->values();
+    $nodeLabelMismatch = $ignoredNodeLabelNumbers->isNotEmpty();
+    $nodeLabelMismatchText = 'nodeLabel-Mismatch | labels: '
+        . $configuredNodeLabelNumbers->count()
+        . ' | anchors: '
+        . $availableNodeLabelNumbers->count()
+        . ' | ignored: '
+        . $ignoredNodeLabelNumbers->count();
+    $nodeLabelMismatchTitle = $nodeLabelMismatchText
+        . ' | ignored nodes: '
+        . $ignoredNodeLabelNumbers->implode(', ');
     $stemNumbers = $resolvedStemCount > 0 ? range(1, $resolvedStemCount) : [];
     $resolvedStemLengthEntries = collect($stemNumbers)
         ->mapWithKeys(function (int $stemNumber) use ($stemLengthOverrides, $stemLengthOverridesAreList, $nodeLabelOverrides, $nodeLabelOverridesAreList, $resolvedDefaultPathLength, $stemLengthWithLabels): array {
@@ -196,7 +209,12 @@
         : $baseStartAnchor;
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::forgetGraph($resolvedGraphId);
     \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::forgetGraph($resolvedGraphId);
-    $putAnchor = static function (array|string $keys, array $anchor) use ($resolvedGraphId): void {
+    $putAnchor = static function (array|string $keys, array $anchor) use ($resolvedGraphId, $resolvedColor, $zIndex): void {
+        $anchor = array_replace([
+            'color' => $resolvedColor,
+            'zIndex' => $zIndex,
+        ], $anchor);
+
         foreach ((array) $keys as $key) {
             \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, (string) $key, $anchor);
         }
@@ -336,4 +354,19 @@
     :dev-mode="$resolvedDev"
     :show-dev-box="false"
     :show-layout-spacer="false"
-/>
+	/>
+
+@if ($resolvedDev && $nodeLabelMismatch)
+    <span
+        class="tw-graph-protocol-dev-only absolute z-50"
+        style="
+            left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($pathEndAnchor, 'x', '0rem') }} + 1rem);
+            bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($pathEndAnchor, 'y', '0rem') }} + 1rem);
+        "
+        title="{{ $nodeLabelMismatchTitle }}"
+    >
+        <flux:badge color="red">
+            {{ $nodeLabelMismatchText }}
+        </flux:badge>
+    </span>
+@endif

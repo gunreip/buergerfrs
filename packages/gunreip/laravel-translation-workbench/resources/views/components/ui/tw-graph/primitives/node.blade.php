@@ -19,6 +19,7 @@
     'anchorY' => '0rem',
     'size' => null,
     'color' => 'zinc',
+    'zIndex' => null,
 ])
 
 @php
@@ -32,6 +33,7 @@
         '--tw-graph-protocol-anchor-y: ' . $anchorY,
         '--tw-graph-protocol-local-node-size: ' . $size => filled($size),
         '--tw-graph-protocol-local-color-rgb: ' . $colorRgb,
+        '--tw-graph-protocol-z-index: ' . $zIndex => filled($zIndex),
     ]) }}
     title="{{ $devIdentifier }}"
     data-tw-graph-path="{{ $devIdentifier }}"

@@ -30,7 +30,7 @@ it('passes branch path scalar stem labels through without null option fallbacks'
     BLADE);
 
     expect($html)
-        ->toContain('scalar-label.stem-1.label.left.2')
+        ->toContain('scalar-label.stem-1.label.left.1')
         ->toContain('finding ID #42')
         ->toContain('ui.checkout.save')
         ->toContain('2026-04-14 11:36')
@@ -66,7 +66,7 @@ it('passes branch extension scalar stem labels through without null option fallb
     BLADE);
 
     expect($html)
-        ->toContain('scalar-label.stem.label.left.2')
+        ->toContain('scalar-label.stem.label.left.1')
         ->toContain('event ID #12')
         ->toContain('needs review')
         ->toContain('w-72')
@@ -173,6 +173,36 @@ it('renders branch returns solid by default for hand authored graphs', function 
         ->not->toContain('tw-graph-protocol-primitive-arc-dashed');
 });
 
+it('renders branch return joint arrows in return flow direction', function (): void {
+    $leftHtml = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph.paths.branch-return
+            id="orders.left.1.default-return"
+            side="left"
+            :anchor-start="['x' => '-12rem', 'y' => '8rem']"
+            color="green"
+            :dev="true"
+        />
+    BLADE);
+    $rightHtml = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph.paths.branch-return
+            id="orders.right.1.default-return"
+            side="right"
+            :anchor-start="['x' => '12rem', 'y' => '8rem']"
+            color="green"
+            :dev="true"
+        />
+    BLADE);
+
+    expect($leftHtml)
+        ->toMatch('/class="[^"]*tw-graph-protocol-primitive-joint-arrow-right[^"]*"[^>]*title="orders\.left\.1\.default-return\.arc\.in\.end\.joint-arrow"/')
+        ->toContain('orders.left.1.default-return.bridge.end.joint-arrow')
+        ->not->toContain('orders.left.1.default-return.arc.out.end.joint-arrow')
+        ->and($rightHtml)
+        ->toMatch('/class="[^"]*tw-graph-protocol-primitive-joint-arrow-left[^"]*"[^>]*title="orders\.right\.1\.default-return\.arc\.in\.end\.joint-arrow"/')
+        ->toContain('orders.right.1.default-return.bridge.end.joint-arrow')
+        ->not->toContain('orders.right.1.default-return.arc.out.end.joint-arrow');
+});
+
 it('uses graph defaults for branch return arc and bridge geometry', function (): void {
     config()->set('tw-graph-defaults.arc_size', '4rem');
     config()->set('tw-graph-defaults.bridge_length', '6rem');
@@ -234,6 +264,26 @@ it('passes return bridge node labels through with width alignment and color', fu
         ->toContain('items-end text-right')
         ->toContain('items-start text-left')
         ->toContain('text-rose-700');
+});
+
+it('keeps labeled branch return bridge anchors as dots and unlabeled bridge anchors as joint arrows', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
+            id="orders.left.1.return-bridge"
+            side="left"
+            :anchor-start="['x' => '-16rem', 'y' => '12rem']"
+            color="rose"
+            :node-labels="[
+                1 => ['text' => ['Return starts']],
+            ]"
+            :dev="true"
+        />
+    BLADE);
+
+    expect($html)
+        ->toContain('Return starts')
+        ->not->toContain('.arc.end.joint-arrow')
+        ->toContain('.end.joint-arrow');
 });
 
 it('keeps geometric branch returns separate from label carrying return bridges', function (): void {
@@ -379,6 +429,24 @@ it('mirrors branch return extension geometry on the right side', function (): vo
         ->toContain('--tw-graph-protocol-anchor-x: calc(20rem + calc(4rem * -1))')
         ->toContain('--tw-graph-protocol-anchor-y: calc(calc(10rem + 5rem) + 4rem)')
         ->toContain('text-amber-700');
+});
+
+it('renders branch return extension joint arrows for unlabeled continuation anchors', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph.paths.branch-return-extension
+            id="orders.right.1.return-extension"
+            side="right"
+            :anchor-start="['x' => '20rem', 'y' => '10rem']"
+            color="amber"
+            :counter-start="4"
+            :dev="true"
+        />
+    BLADE);
+
+    expect($html)
+        ->toContain('orders.right.1.return-extension.stem.end.joint-arrow')
+        ->toMatch('/class="[^"]*tw-graph-protocol-primitive-joint-arrow-left[^"]*"[^>]*title="orders\.right\.1\.return-extension\.arc\.end\.joint-arrow"/')
+        ->toContain('orders.right.1.return-extension.bridge.end.joint-arrow');
 });
 
 it('mirrors return bridge node labels on right side paths', function (): void {

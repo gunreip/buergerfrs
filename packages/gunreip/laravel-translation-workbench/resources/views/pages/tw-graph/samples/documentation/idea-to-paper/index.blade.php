@@ -72,6 +72,9 @@
                     <flux:tab name="idea-to-paper-merge-start">
                         {{ __('Merge start') }}
                     </flux:tab>
+                    <flux:tab name="idea-to-paper-merge-mismatch">
+                        {{ __('Merge mismatch') }}
+                    </flux:tab>
                     <flux:tab name="idea-to-paper-merge-extension">
                         {{ __('Extension') }}
                     </flux:tab>
@@ -92,6 +95,15 @@
                 <flux:tab.panel name="idea-to-paper-merge-start">
                     <div class="mt-4">
                         @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.02-strang-merge.02-merge-start', [
+                            'dev' => $dev,
+                            'coordinates' => $coordinates,
+                        ])
+                    </div>
+                </flux:tab.panel>
+
+                <flux:tab.panel name="idea-to-paper-merge-mismatch">
+                    <div class="mt-4">
+                        @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.02-strang-merge.05-merge-mismatch', [
                             'dev' => $dev,
                             'coordinates' => $coordinates,
                         ])

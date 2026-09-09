@@ -149,6 +149,9 @@
     />
 
 </x-translation-workbench::ui.tw-graph>
+<flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+    .../tw-graph/samples/documentation/idea-to-paper/02-strang-merge/01-merge.blade.php
+</flux:field>
 
 @if ($renderMode === 'documentation')
     </div>

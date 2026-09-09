@@ -103,6 +103,7 @@
     $arcOutStartAnchor = 's';
     $arcOutEndAnchor = $isLeft ? 'e' : 'w';
     $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
+    $bridgeJointArrowDirection = $isLeft ? 'right' : 'left';
     $bridgeDelta = $isLeft ? $resolvedBridgeLength : $neg($resolvedBridgeLength);
     $startLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedArcInSize, '2.75rem');
     $startShiftLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startShiftLength, null, '0rem');
@@ -344,6 +345,9 @@
                 'arcSize' => $resolvedArcInSize,
                 'nodeStart' => false,
                 'nodeEnd' => true,
+                'nodeEndDot' => false,
+                'jointArrowEnd' => true,
+                'jointArrowEndDirection' => $bridgeJointArrowDirection,
                 'endLabel' => null,
                 'devCounterEnd' => $counter++,
                 'color' => $color,
@@ -378,6 +382,9 @@
                 'arcSize' => $resolvedArcOutSize,
                 'nodeStart' => true,
                 'nodeEnd' => true,
+                'nodeStartDot' => false,
+                'jointArrowStart' => true,
+                'jointArrowStartDirection' => $bridgeJointArrowDirection,
                 'startLabel' => null,
                 'endLabel' => null,
                 'devCounterStart' => $counter++,

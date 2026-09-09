@@ -63,16 +63,20 @@ it('keeps branch documentation code tabs matched to preview variants', function 
         ->toContain('name="branch-step"')
         ->toContain('name="branch-continuation"')
         ->toContain('name="branch-return"')
+        ->toContain('name="branch-mismatch"')
         ->toContain("'attachTo' => 'stem.1.end'")
         ->toContain("'fallback' => false")
+        ->not->toContain("'labelGap' => '0.5rem'")
         ->and($previews)
         ->toContain('x-show="branchVariant === \'default\'"')
         ->toContain('x-show="branchVariant === \'offset\'"')
         ->toContain('x-show="branchVariant === \'step\'"')
         ->toContain('x-show="branchVariant === \'continuation\'"')
         ->toContain('x-show="branchVariant === \'return\'"')
+        ->toContain('x-show="branchVariant === \'mismatch\'"')
         ->toContain("'attachTo' => 'stem.1.end'")
-        ->toContain("'fallback' => false");
+        ->toContain("'fallback' => false")
+        ->not->toContain("'labelGap' => '0.5rem'");
 });
 
 it('keeps idea to paper branch subtabs scoped to one code panel and one preview panel per variant', function (): void {
@@ -86,7 +90,7 @@ it('keeps idea to paper branch subtabs scoped to one code panel and one preview 
         'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.03-strang-branch._branch-preview-variants',
     ));
 
-    foreach (['default', 'offset', 'step', 'continuation', 'return'] as $variant) {
+    foreach (['default', 'offset', 'step', 'continuation', 'return', 'mismatch'] as $variant) {
         expect(substr_count($source . $codeTabs . $previews, "branchVariant === '{$variant}'"))->toBe(2);
     }
 

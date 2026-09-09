@@ -5,6 +5,7 @@
     $coordinates = $coordinates ?? false;
     $graphId = $ideaToPaperGraphId ?? 'idea-to-paper-step-01';
     $renderMode = $renderMode ?? 'documentation';
+    $thisPath = '.../tw-graph/samples/documentation/idea-to-paper/00-tw-graph/01-canvas.blade.php';
     $twGraphProps = [
         [
             'name' => 'protocol',
@@ -535,6 +536,9 @@
 @endif
 
 <x-translation-workbench::ui.tw-graph></x-translation-workbench::ui.tw-graph>
+<flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+    {{ $thisPath }}
+</flux:field>
 
 @if ($renderMode === 'documentation')
     </div>
@@ -548,6 +552,9 @@
 <x-translation-workbench::ui.tw-graph>
     <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
 </x-translation-workbench::ui.tw-graph>
+<flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+    {{ $thisPath }}
+</flux:field>
 
 @if ($renderMode === 'documentation')
     </div>
@@ -569,6 +576,9 @@
 >
     <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
 </x-translation-workbench::ui.tw-graph>
+<flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+    {{ $thisPath }}
+</flux:field>
 
 @if ($renderMode === 'documentation')
     </div>
@@ -595,6 +605,9 @@
             {{-- slot-min-height supplies the fallback canvas room for this slotted trunk. --}}
             <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            .../tw-graph/samples/documentation/idea-to-paper/00-tw-graph/01-canvas.blade.php
+        </flux:field>
     </div>
 
     <div class="min-w-0">
@@ -612,6 +625,9 @@
             {{-- min-height sets the visible minimum canvas height directly. --}}
             <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 </div>
 
@@ -643,6 +659,9 @@
             {{-- Default line-width comes from the graph defaults. --}}
             <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 
     <div class="min-w-0">
@@ -662,6 +681,9 @@
             {{-- The trunk has no own props here; it inherits the canvas line width. --}}
             <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 </div>
 
@@ -684,6 +706,9 @@
             {{-- Default stem-length comes from the graph defaults. --}}
             <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 
     <div class="min-w-0">
@@ -703,6 +728,9 @@
             {{-- The trunk has no own props here; it inherits the canvas stem length. --}}
             <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 </div>
 
@@ -725,6 +753,9 @@
             {{-- Default node-size comes from the graph defaults. --}}
             <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 
     <div class="min-w-0">
@@ -744,6 +775,9 @@
             {{-- The trunk has no own props here; it inherits the canvas node size. --}}
             <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 </div>
 
@@ -766,6 +800,9 @@
             {{-- Default cap-length comes from the graph defaults. --}}
             <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 
     <div class="min-w-0">
@@ -785,6 +822,9 @@
             {{-- The trunk has no own props here; it inherits the canvas cap length. --}}
             <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 </div>
 
@@ -806,6 +846,9 @@
             {{-- Default min-width follows the calculated graph bounds. --}}
             <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 
     <div class="min-w-0">
@@ -824,6 +867,9 @@
             {{-- The trunk is unchanged; only the reserved canvas width grows. --}}
             <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 </div>
 

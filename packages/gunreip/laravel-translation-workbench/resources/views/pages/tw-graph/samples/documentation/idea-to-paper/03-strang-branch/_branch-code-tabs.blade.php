@@ -34,15 +34,21 @@
                     >
                         {{ __('Return') }}
                     </flux:tab>
+                    <flux:tab
+                        name="branch-mismatch"
+                        x-on:click="branchVariant = 'mismatch'"
+                    >
+                        {{ __('Mismatch') }}
+                    </flux:tab>
                 </flux:tabs>
 
                 <flux:tab.panel name="branch-default">
                     <div
                         class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-                        <pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.branch-left
+<pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.branch-left
     id="literature.left.1.side-thought"
     attach-to="strang.trunk.node.2"
-    bridge-length="18rem"
+    <span class="text-lime-300">bridge-length="18rem"
     stem-length="5rem"
     :node-labels="[
         3 => [
@@ -52,7 +58,7 @@
                 'align' => 'right',
             ],
         ],
-    ]"
+    ]"</span>
 /&gt;</code></pre>
                     </div>
                 </flux:tab.panel>
@@ -60,16 +66,16 @@
                 <flux:tab.panel name="branch-offset">
                     <div
                         class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-                        <pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.branch-left
+<pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.branch-left
     id="literature.left.1.question"
-    attach-to="strang.trunk.node.2"
-    bridge-length="20rem"
+    <span class="text-lime-300">attach-to="strang.trunk.node.2"</span>
+    <span class="text-amber-300">bridge-length="20rem"</span>
 /&gt;
 
 &lt;x-translation-workbench::ui.tw-graph.strang.branch-right
     id="literature.right.1.review"
-    attach-to="strang.trunk.node.4"
-    bridge-length="24rem"
+    <span class="text-lime-300">attach-to="strang.trunk.node.4"</span>
+    <span class="text-amber-300">bridge-length="24rem"</span>
 /&gt;</code></pre>
                     </div>
                 </flux:tab.panel>
@@ -77,20 +83,19 @@
                 <flux:tab.panel name="branch-step">
                     <div
                         class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-                        <pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.branch-right
+<pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.branch-right
     id="literature.right.1.decision"
     attach-to="strang.trunk.node.3"
-    bridge-length="22rem"
-    :step="[
+    <span class="text-amber-300">bridge-length="22rem"</span>
+    <span class="text-lime-300">:step="[
         'beforeLength' => '1.5rem',
         'afterLength' => '2.5rem',
-        'labelGap' => '0.5rem',
         'stepLabel' => [
             'text' => ['Decision', 'keep as appendix'],
             'width' => 'halfLong',
             'align' => 'center',
         ],
-    ]"
+    ]"</span>
 /&gt;</code></pre>
                     </div>
                 </flux:tab.panel>
@@ -98,11 +103,11 @@
                 <flux:tab.panel name="branch-continuation">
                     <div
                         class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-                        <pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.branch-left
+<pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.branch-left
     id="literature.left.1.archive-path"
     attach-to="strang.trunk.node.2"
-    bridge-length="20rem"
-    :stem-continuation="[
+    <span class="text-amber-300">bridge-length="20rem"</span>
+    <span class="text-lime-300">:stem-continuation="[
         1 => [
             'length' => '5rem',
             'left' => [
@@ -119,7 +124,7 @@
                 'align' => 'left',
             ],
         ],
-    ]"
+    ]"</span>
 /&gt;</code></pre>
                     </div>
                 </flux:tab.panel>
@@ -127,11 +132,11 @@
                 <flux:tab.panel name="branch-return">
                     <div
                         class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-                        <pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.branch-right
+<pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.branch-right
     id="literature.right.1.review-loop"
     attach-to="strang.trunk.node.2"
-    bridge-length="22rem"
-    :stem-continuation="[
+    <span class="text-amber-300">bridge-length="22rem"</span>
+    <span class="text-lime-300">:stem-continuation="[
         1 => [
             'length' => '4.1rem',
             'right' => [
@@ -147,6 +152,27 @@
             'bridgeLength' => '22rem',
             'fallback' => false,
         ],
+    ]"</span>
+/&gt;</code></pre>
+                    </div>
+                </flux:tab.panel>
+
+                <flux:tab.panel name="branch-mismatch">
+                    <div
+                        class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
+                        <pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.branch-left
+    id="literature.left.1.label-mismatch"
+    attach-to="strang.trunk.node.2"
+    <span class="text-amber-300">bridge-length="18rem"
+    stem-length="5rem"</span>
+    :node-labels="[
+        3 => [
+            'left' => ['text' => ['Valid label', 'branch arc end']],
+        ],
+        ...
+        <span class="text-lime-300">4 => [
+            'right' => ['text' => ['Ignored label', 'anchor 4 missing']],
+        ],</span>
     ]"
 /&gt;</code></pre>
                     </div>

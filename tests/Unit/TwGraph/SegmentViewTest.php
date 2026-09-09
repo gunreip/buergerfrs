@@ -64,6 +64,38 @@ it('renders end segment cap counter and default top end label', function (): voi
         ->toContain('text-rose-700');
 });
 
+it('passes graph label gap to start end and step labels', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="segment-label-gap-test" label-gap="2rem" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.segments.start
+                :segment="[
+                    'id' => 'segment.start.label-gap',
+                    'startLabel' => ['text' => ['Start']],
+                ]"
+            />
+            <x-translation-workbench::ui.tw-graph.segments.end
+                :segment="[
+                    'id' => 'segment.end.label-gap',
+                    'endLabel' => ['text' => ['End']],
+                ]"
+            />
+            <x-translation-workbench::ui.tw-graph.segments.step
+                :segment="[
+                    'id' => 'segment.step.label-gap',
+                    'stepLabel' => ['text' => ['One', 'Two']],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('segment.start.label-gap.label.bottom.1')
+        ->toContain('segment.end.label-gap.label.top.1')
+        ->toContain('segment.step.label-gap.label')
+        ->toContain('--tw-graph-protocol-text-label-offset: 2rem')
+        ->toContain('calc(2.75rem + (2rem * 2))');
+});
+
 it('passes end label formatting options through to primitive text', function (): void {
     $html = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph.segments.end
@@ -116,7 +148,7 @@ it('renders step segments with automatic label gap and centered label props', fu
     expect($html)
         ->toContain('segment.step.test.stem.before')
         ->toContain('segment.step.test.stem.after')
-        ->toContain('calc(4.75rem + (1rem * 2))')
+        ->toContain('calc(3.75rem + (1rem * 2))')
         ->toContain('segment.step.test.label')
         ->toContain('Source inactive')
         ->toContain('shared obsolete')
@@ -318,11 +350,11 @@ it('calculates automatic step gaps from the visible step label line count', func
 
     expect($html)
         ->toContain('segment.step.one-line.label')
-        ->toContain('calc(2.75rem + (0.5rem * 2))')
+        ->toContain('calc(1.75rem + (0.5rem * 2))')
         ->toContain('segment.step.two-lines.label')
-        ->toContain('calc(3.75rem + (0.5rem * 2))')
+        ->toContain('calc(2.75rem + (0.5rem * 2))')
         ->toContain('segment.step.three-lines.label')
-        ->toContain('calc(4.75rem + (0.5rem * 2))')
+        ->toContain('calc(3.75rem + (0.5rem * 2))')
         ->toContain('Three')
         ->not->toContain('Four');
 });

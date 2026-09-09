@@ -264,6 +264,44 @@ it('keeps the merge stem dot when the stem has a label', function (): void {
         ->not->toContain('strang.merge.left.1.stem-1.end.joint-arrow');
 });
 
+it('renders joint arrows instead of merge bridge dots on left-side bridge joints', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-merge-left-bridge-joint-arrow-test" color="green" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.merge-left
+                id="sample.left.1.merge"
+                :stem-lengths="[1 => '3rem']"
+                bridge-length="5rem"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('strang.merge.left.1.arc-west-north-1.end.joint-arrow')
+        ->toContain('strang.merge.left.1.arc-south-east-2.start.joint-arrow')
+        ->toContain('tw-graph-protocol-primitive-joint-arrow-right')
+        ->toContain('strang.merge.left.1.arc-west-north-1.anchorNode-end')
+        ->toContain('strang.merge.left.1.arc-south-east-2.anchorNode-start');
+});
+
+it('renders joint arrows instead of merge bridge dots on right-side bridge joints', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="strang-merge-right-bridge-joint-arrow-test" color="green" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.merge-right
+                id="sample.right.1.merge"
+                :stem-lengths="[1 => '3rem']"
+                bridge-length="5rem"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('strang.merge.right.1.arc-east-north-1.end.joint-arrow')
+        ->toContain('strang.merge.right.1.arc-south-west-2.start.joint-arrow')
+        ->toContain('tw-graph-protocol-primitive-joint-arrow-left')
+        ->toContain('strang.merge.right.1.arc-east-north-1.anchorNode-end')
+        ->toContain('strang.merge.right.1.arc-south-west-2.anchorNode-start');
+});
+
 it('renders explicit merge start shift as its own segment before the first stem', function (): void {
     config()->set('tw-graph-defaults.merge_start_shift_enabled', false);
     config()->set('tw-graph-defaults.merge_start_shift_length', '10rem');

@@ -5,6 +5,7 @@
     $coordinates = $coordinates ?? false;
     $graphId = $ideaToPaperGraphId ?? 'idea-to-paper-step-02-trunk';
     $renderMode = $renderMode ?? 'documentation';
+    $thisPath = '.../tw-graph/samples/documentation/idea-to-paper/01-strang-trunk/01-trunk.blade.php';
     $trunkProps = [
         [
             'name' => 'id',
@@ -492,6 +493,9 @@
 >
     <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
 </x-translation-workbench::ui.tw-graph>
+<flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+    {{ $thisPath }}
+</flux:field>
 
 @if ($renderMode === 'documentation')
     </div>
@@ -515,6 +519,9 @@
                 :stem-count="4"
             />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 
     <div
@@ -542,6 +549,9 @@
                 ]"
             />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 
     <div
@@ -576,6 +586,9 @@
                 ]"
             />
         </x-translation-workbench::ui.tw-graph>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            {{ $thisPath }}
+        </flux:field>
     </div>
 
     <div
@@ -596,6 +609,9 @@
             >
                 <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
             </x-translation-workbench::ui.tw-graph>
+            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+                {{ $thisPath }}
+            </flux:field>
         </div>
 
         <div
@@ -634,6 +650,9 @@
                     ]"
                 />
             </x-translation-workbench::ui.tw-graph>
+            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+                {{ $thisPath }}
+            </flux:field>
         </div>
     </div>
 
@@ -676,6 +695,9 @@
                     attach-to="strang.trunk.center.1.stem-1"
                 />
             </x-translation-workbench::ui.tw-graph>
+            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+                {{ $thisPath }}
+            </flux:field>
         </div>
 
         <div
@@ -715,6 +737,9 @@
                     attach-to="strang.trunk.center.1.stem-1"
                 />
             </x-translation-workbench::ui.tw-graph>
+            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+                {{ $thisPath }}
+            </flux:field>
         </div>
     </div>
 
@@ -736,6 +761,9 @@
             >
                 <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
             </x-translation-workbench::ui.tw-graph>
+            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+                {{ $thisPath }}
+            </flux:field>
         </div>
 
         <div
@@ -762,6 +790,9 @@
                     ]"
                 />
             </x-translation-workbench::ui.tw-graph>
+            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+                {{ $thisPath }}
+            </flux:field>
         </div>
     </div>
     </flux:callout>

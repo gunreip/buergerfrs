@@ -26,6 +26,10 @@
     'dev' => null,
 ])
 
+@aware([
+    'labelGap' => null,
+])
+
 @php
     $endSegment = array_replace([
         'id' => 'segment.end',
@@ -58,6 +62,11 @@
         'top-bottom' => 'bottom',
         default => 'top',
     };
+    $endLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
+        data_get($endSegment, 'endLabel.offset'),
+        $labelGap ?? null,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem'),
+    );
 @endphp
 
 <x-translation-workbench::ui.tw-graph.segments.path
@@ -84,7 +93,7 @@
         :anchor-x="data_get($endSegment, 'anchorEnd.x', '0rem')"
         :anchor-y="data_get($endSegment, 'anchorEnd.y', '0rem')"
         :side="$resolvedEndLabelSide"
-        :offset="data_get($endSegment, 'endLabel.offset', '0.75rem')"
+        :offset="$endLabelOffset"
         :badge="data_get($endSegment, 'endLabel.badge', true)"
         :badge-color="data_get($endSegment, 'endLabel.badgeColor', data_get($endSegment, 'endLabel.color', data_get($endSegment, 'color', 'zinc')))"
         :long="data_get($endSegment, 'endLabel.long', false) || data_get($endSegment, 'endLabel.width') === 'long'"

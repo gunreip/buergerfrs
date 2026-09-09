@@ -23,6 +23,7 @@
 
 @aware([
     'color' => null,
+    'labelGap' => null,
 ])
 
 @php
@@ -71,84 +72,39 @@
         data_get($nodeLabels, $nodeNumber),
         $defaultSide,
     );
-    $labelForSide = function (array $entry, string $side) use ($normalizeLabel): ?array {
-        if (! array_key_exists($side, $entry) || blank($entry[$side])) {
-            return null;
-        }
-
-        $sideValue = $entry[$side];
-
-        if (is_array($sideValue) && array_key_exists('text', $sideValue)) {
-            return $normalizeLabel($sideValue, $side);
-        }
-
-        $labelOptions = array_filter([
-            'text' => $sideValue,
-            'width' => data_get($entry, 'width'),
-            'long' => data_get($entry, 'long'),
-            'halfLong' => data_get($entry, 'halfLong'),
-            'half' => data_get($entry, 'half'),
-            'align' => data_get($entry, 'align'),
-            'justify' => data_get($entry, 'justify'),
-            'maxLines' => data_get($entry, 'maxLines'),
-            'color' => data_get($entry, 'color'),
-            'badgeColor' => data_get($entry, 'badgeColor'),
-            'connectorLength' => data_get($entry, 'connectorLength'),
-            'connectorGap' => data_get($entry, 'connectorGap'),
-        ], static fn (mixed $value): bool => $value !== null);
-
-        return $normalizeLabel($labelOptions, $side);
-    };
-    $stemNodeLabels = function (mixed $entry) use ($normalizeLabel, $labelForSide): array {
+    $nodeLabelGeometryKeys = [
+        'length',
+        'component',
+        'compressed',
+        'beforeLength',
+        'gapLength',
+        'afterLength',
+        'capLength',
+        'force',
+        'render',
+        'spacer',
+    ];
+    $nodeLabelsForEntry = function (mixed $entry, string $defaultSide) use ($resolvedColor, $nodeLabelGeometryKeys): array {
         if (! is_array($entry)) {
             return [null, null];
         }
 
-        if (array_key_exists('left', $entry) || array_key_exists('right', $entry) || array_key_exists('top', $entry) || array_key_exists('bottom', $entry)) {
-            return [
-                $labelForSide($entry, 'right') ?? $labelForSide($entry, 'top'),
-                $labelForSide($entry, 'left') ?? $labelForSide($entry, 'bottom'),
-            ];
-        }
-
-        $labels = data_get($entry, 'labels');
-        if (is_array($labels)) {
-            return [
-                $normalizeLabel(data_get($labels, 'right', data_get($labels, 'top', data_get($labels, 0)))),
-                $normalizeLabel(data_get($labels, 'left', data_get($labels, 'bottom', data_get($labels, 1)))),
-            ];
-        }
-
-        return [
-            $normalizeLabel(data_get($entry, 'labelA', data_get($entry, 'label', data_get($entry, 1)))),
-            $normalizeLabel(data_get($entry, 'labelB', data_get($entry, 2))),
-        ];
-    };
-    $bridgeNodeLabels = function (mixed $entry) use ($normalizeLabel, $labelForSide): array {
-        if (! is_array($entry)) {
+        if (array_is_list($entry)) {
             return [null, null];
         }
 
-        if (array_key_exists('top', $entry) || array_key_exists('bottom', $entry) || array_key_exists('left', $entry) || array_key_exists('right', $entry)) {
-            return [
-                $labelForSide($entry, 'top') ?? $labelForSide($entry, 'right'),
-                $labelForSide($entry, 'bottom') ?? $labelForSide($entry, 'left'),
-            ];
-        }
+        $labels = \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::nodeLabels(
+            $entry,
+            $defaultSide,
+            $resolvedColor,
+            $nodeLabelGeometryKeys,
+        );
 
-        $labels = data_get($entry, 'labels');
-        if (is_array($labels)) {
-            return [
-                $normalizeLabel(data_get($labels, 'top', data_get($labels, 'right', data_get($labels, 0)))),
-                $normalizeLabel(data_get($labels, 'bottom', data_get($labels, 'left', data_get($labels, 1)))),
-            ];
-        }
-
-        return [
-            $normalizeLabel(data_get($entry, 'labelA', data_get($entry, 'label', data_get($entry, 1)))),
-            $normalizeLabel(data_get($entry, 'labelB', data_get($entry, 2))),
-        ];
+        return $labels === true ? [null, null] : $labels;
     };
+    $stemNodeLabels = fn (mixed $entry): array => $nodeLabelsForEntry($entry, 'right');
+    $bridgeNodeLabels = fn (mixed $entry): array => $nodeLabelsForEntry($entry, 'top');
+    $hasLabels = static fn (mixed $node): bool => is_array($node) && collect($node)->filter()->isNotEmpty();
     $hasVisibleStemPayload = function (mixed $entry, array $labels): bool {
         if (! is_array($entry)) {
             return false;
@@ -168,6 +124,8 @@
     $arcInStartAnchor = $isLeft ? 'e' : 'w';
     $arcInEndAnchor = 'n';
     $bridgeDirection = $isLeft ? 'right-left' : 'left-right';
+    $bridgeJointArrowDirection = $isLeft ? 'left' : 'right';
+    $stemJointArrowDirection = 'top';
     $arcOutStartAnchor = 's';
     $arcOutEndAnchor = $isLeft ? 'w' : 'e';
     $arcDelta = $isLeft ? $neg($resolvedArcSize) : $resolvedArcSize;
@@ -198,7 +156,7 @@
             'y' => $bridgeEnd['y'],
         ];
         $bridgeLabels = $bridgeNodeLabels($bridgeEntry);
-        $bridgeNodeEnd = collect($bridgeLabels)->filter(fn (mixed $label): bool => filled($label))->isNotEmpty()
+        $bridgeNodeEnd = $hasLabels($bridgeLabels)
             ? $bridgeLabels
             : true;
 
@@ -212,6 +170,8 @@
                 'anchorEnd' => $nextBridgeEnd,
                 'nodeStart' => false,
                 'nodeEnd' => $bridgeNodeEnd,
+                'nodeEndDot' => $hasLabels($bridgeNodeEnd),
+                'jointArrowEnd' => ! $hasLabels($bridgeNodeEnd),
                 'devCounterEnd' => $bridgeCounter++,
                 'devCounterColor' => $color,
                 'color' => $color,
@@ -238,14 +198,16 @@
         ->filter(fn (mixed $line): bool => filled($line))
         ->take(3)
         ->count();
-    $stepLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem');
-    $autoStepLabelContentGap = match ($stepLabelLines) {
-        1 => '2.75rem',
-        2 => '3.75rem',
-        3 => '4.75rem',
-        default => '3.75rem',
-    };
+    $stepLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
+        data_get($stepConfig, 'stepLabel.offset'),
+        $labelGap ?? null,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem'),
+    );
+    $autoStepLabelContentGap = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::stepLabelContentGap($stepLabelLines);
     $autoStepLabelGap = 'calc(' . $autoStepLabelContentGap . ' + (' . $stepLabelOffset . ' * 2))';
+    if ($hasStep && blank(data_get($stepConfig, 'stepLabel.offset'))) {
+        $stepConfig['stepLabel']['offset'] = $stepLabelOffset;
+    }
     $stepBeforeLength = (string) data_get($stepConfig, 'beforeLength', '1.5rem');
     $stepLabelGap = (string) (data_get($stepConfig, 'labelGap') ?: $autoStepLabelGap);
     $stepAfterLength = (string) data_get($stepConfig, 'afterLength', '2.5rem');
@@ -265,6 +227,29 @@
     $arcOutCounter = $counter + 1 + count($bridgeSegments);
     $stepCounter = $arcOutCounter + 1;
     $stepNodeEnd = true;
+    $arcInEndLabel = $arcNodeLabel(1, 'top');
+    $arcOutEndLabel = $arcNodeLabel(3, 'top');
+    $configuredNodeLabelNumbers = collect(is_array($nodeLabels) ? array_keys($nodeLabels) : [])
+        ->filter(static fn (mixed $key): bool => is_int($key) || (is_string($key) && ctype_digit($key)))
+        ->map(static fn (mixed $key): int => (int) $key)
+        ->filter(static fn (int $nodeNumber): bool => $nodeNumber > 0)
+        ->unique()
+        ->sort()
+        ->values();
+    $availableNodeLabelNumbers = collect([1, 3]);
+    $ignoredNodeLabelNumbers = $configuredNodeLabelNumbers
+        ->diff($availableNodeLabelNumbers)
+        ->values();
+    $nodeLabelMismatch = $ignoredNodeLabelNumbers->isNotEmpty();
+    $nodeLabelMismatchText = 'nodeLabel-Mismatch | labels: '
+        . $configuredNodeLabelNumbers->count()
+        . ' | anchors: '
+        . $availableNodeLabelNumbers->count()
+        . ' | ignored: '
+        . $ignoredNodeLabelNumbers->count();
+    $nodeLabelMismatchTitle = $nodeLabelMismatchText
+        . ' | ignored nodes: '
+        . $ignoredNodeLabelNumbers->implode(', ');
 
     if ($hasStep && $stemEntries !== []) {
         $firstStemKey = array_key_first($stemEntries);
@@ -302,7 +287,7 @@
             continue;
         }
 
-        $stemNodeEnd = collect($stemLabels)->filter(fn (mixed $label): bool => filled($label))->isNotEmpty()
+        $stemNodeEnd = $hasLabels($stemLabels)
             ? $stemLabels
             : true;
 
@@ -321,6 +306,8 @@
                 'anchorEnd' => $stemEnd,
                 'nodeStart' => false,
                 'nodeEnd' => $stemNodeEnd,
+                'nodeEndDot' => $hasLabels($stemNodeEnd),
+                'jointArrowEnd' => ! $hasLabels($stemNodeEnd),
                 'devCounterEnd' => $stemCounter++,
                 'devCounterColor' => $color,
                 'color' => $color,
@@ -366,8 +353,11 @@
                 'anchorStart' => $branchStartAnchor,
                 'anchorEnd' => $arcInEnd,
                 'nodeStart' => false,
-                'nodeEnd' => true,
-                'endLabel' => $arcNodeLabel(1, 'top'),
+                'nodeEnd' => $arcInEndLabel === null ? true : [$arcInEndLabel, null],
+                'nodeEndDot' => filled($arcInEndLabel),
+                'jointArrowEnd' => blank($arcInEndLabel),
+                'jointArrowEndDirection' => $bridgeJointArrowDirection,
+                'endLabel' => null,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $color,
                 'color' => $color,
@@ -386,8 +376,11 @@
                 'anchorStart' => $bridgeEnd,
                 'anchorEnd' => $arcOutEnd,
                 'nodeStart' => false,
-                'nodeEnd' => true,
-                'endLabel' => $arcNodeLabel(3, 'top'),
+                'nodeEnd' => $arcOutEndLabel === null ? true : [$arcOutEndLabel, null],
+                'nodeEndDot' => filled($arcOutEndLabel),
+                'jointArrowEnd' => blank($arcOutEndLabel),
+                'jointArrowEndDirection' => $stemJointArrowDirection,
+                'endLabel' => null,
                 'devCounterEnd' => $arcOutCounter,
                 'devCounterColor' => $color,
                 'color' => $color,
@@ -429,6 +422,21 @@
     :label="$id"
     :dev="$dev"
 />
+
+@if ($dev && $nodeLabelMismatch)
+    <span
+        class="tw-graph-protocol-dev-only absolute z-50"
+        style="
+            left: calc(var(--tw-graph-protocol-trunk-x) + {{ $pathEndAnchor['x'] }} + 1rem);
+            bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ $pathEndAnchor['y'] }} + 1rem);
+        "
+        title="{{ $nodeLabelMismatchTitle }}"
+    >
+        <flux:badge color="red">
+            {{ $nodeLabelMismatchText }}
+        </flux:badge>
+    </span>
+@endif
 
 @foreach ($segments as $segment)
     @if ($segment['component'] === 'arc')

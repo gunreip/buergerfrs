@@ -4,6 +4,7 @@
     $ideaToPaperGraphId = $ideaToPaperGraphId ?? 'tw-graph-sample-idea-to-paper-final-draft';
     $ideaToPaperDev = $ideaToPaperDev ?? false;
     $ideaToPaperCoordinates = $ideaToPaperCoordinates ?? false;
+    $thisPath = '.../tw-graph/samples/documentation/idea-to-paper/00-graph-final.blade.php';
 @endphp
 
 <x-translation-workbench::ui.tw-graph
@@ -224,7 +225,7 @@
         ]"
         :branch-return="[
             1 => [
-                'attachTo' => 'stem.1',
+                'attachTo' => 'stem.end',
                 'bridgeLength' => '24rem',
                 'color' => 'rose',
                 'fallback' => false,
@@ -317,3 +318,6 @@
         ]"
     />
 </x-translation-workbench::ui.tw-graph>
+<flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+    {{ $thisPath }}
+</flux:field>

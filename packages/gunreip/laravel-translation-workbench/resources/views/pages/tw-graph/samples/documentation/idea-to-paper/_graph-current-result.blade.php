@@ -3,6 +3,7 @@
 @php
     $ideaToPaperGraphId = $ideaToPaperGraphId ?? 'tw-graph-sample-idea-to-paper-current-result';
     $ideaToPaperDev = $ideaToPaperDev ?? false;
+    $thisPath = '.../tw-graph/samples/documentation/idea-to-paper/_graph-current-result.blade.php';
     $ideaToPaperCoordinates = $ideaToPaperCoordinates ?? false;
 @endphp
 
@@ -24,7 +25,7 @@
         :stem-count="10"
         start-length="4rem"
         :stem-lengths="[
-            1 => '5rem',
+            1 => '6rem',
             2 => '6rem',
             3 => '5rem',
             4 => '11rem',
@@ -144,7 +145,7 @@
         id="literature.left.1.note-source"
         attach-to="strang.trunk.node.3"
         color="sky"
-        bridge-length="48rem"
+        bridge-length="24rem"
         stem-length="4rem"
         :start-label="[
             'text' => ['source note', 'notebook fragment'],
@@ -193,7 +194,7 @@
         attach-to="strang.trunk.node.6"
         color="rose"
         entry-stem-length="0.35rem"
-        bridge-length="24rem"
+        bridge-length="12rem"
         stem-length="4rem"
         :node-labels="[
             3 => [
@@ -232,33 +233,20 @@
         ]"
         :branch-return="[
             1 => [
-                'attachTo' => 'stem.1',
-                'bridgeLength' => '24rem',
+                'attachTo' => 'stem.end',
+                'bridgeLength' => '12rem',
                 'color' => 'rose',
                 'fallback' => false,
             ],
         ]"
     />
 
-    {{-- <x-translation-workbench::ui.tw-graph.strang.branch-end
-        id="literature.right.1.review-objection.end"
-        side="right"
-        attach-to="strang.branch-right.end"
-        color="rose"
-        length="3rem"
-        :end-label="[
-            'text' => ['Objection closed', 'revision accepted'],
-            'width' => 'halfLong',
-            'align' => 'center',
-        ]"
-    /> --}}
-
     {{-- collaborator feedback merges into the first draft --}}
     <x-translation-workbench::ui.tw-graph.strang.merge-left
         id="literature.left.1.peer-notes"
         attach-to="strang.trunk.node.5"
         color="amber"
-        bridge-length="28rem"
+        bridge-length="24rem"
         stem-length="4rem"
         :start-label="[
             'text' => ['peer notes', 'draft margin'],
@@ -325,3 +313,6 @@
         ]"
     />
 </x-translation-workbench::ui.tw-graph>
+<flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+    {{ $thisPath }}
+</flux:field>

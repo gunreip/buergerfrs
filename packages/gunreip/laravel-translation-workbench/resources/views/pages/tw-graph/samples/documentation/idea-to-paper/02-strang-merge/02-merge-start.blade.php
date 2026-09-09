@@ -3,6 +3,7 @@
 @php
     $dev = $dev ?? true;
     $coordinates = $coordinates ?? false;
+    $thisPath = '.../tw-graph/samples/documentation/idea-to-paper/02-strang-merge/02-merge-start.blade.php';
 @endphp
 
 <section class="grid gap-4 lg:grid-cols-2">
@@ -22,12 +23,17 @@
             <pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.merge-left
     id="literature.left.1.archive-finding"
     attach-to="strang.trunk.node.2"
+    <span class="text-lime-300">bridge-length="6rem"
+    start-shift-enabled="true"
+    start-shift-length="5rem"
+    start-length="3rem"
     :start-label="[
         'text' => ['Archive finding', '1905-03-17'],
         'width' => 'halfLong',
         'align' => 'center',
         'color' => 'amber',
     ]"
+    :stem-lengths="[1 => '4rem']"
     :node-labels="[
         1 => [
             'right' => [
@@ -35,8 +41,25 @@
                 'width' => 'default',
                 'align' => 'left',
             ],
+            'left' => [
+                'text' => ['Finding ID #43', 'annotated source'],
+                'width' => 'default',
+                'align' => 'left',
+            ],
         ],
-    ]"
+        'end' => [
+            'right' => [
+                'text' => ['Finding ID #998', 'annotated end'],
+                'width' => 'halfLong',
+                'align' => 'left',
+            ],
+            'left' => [
+                'text' => ['Finding ID #999', 'annotated end'],
+                'width' => 'halfLong',
+                'align' => 'left',
+            ],
+        ],
+    ]"</span>
 /&gt;</code></pre>
         </div>
     </flux:callout>
@@ -96,7 +119,7 @@
                         'color' => 'amber',
                     ]"
                     {{-- :stem-lengths="[1 => '4rem']" --}}
-                    :stem-lengths="[1 => '4rem', 2 => '4rem', 3 => '4rem', 4 => '4rem']"
+                    :stem-lengths="[1 => '4rem']"
                     :node-labels="[
                         1 => [
                             'right' => [
@@ -106,54 +129,6 @@
                             ],
                             'left' => [
                                 'text' => ['Finding ID #43', 'annotated source'],
-                                'width' => 'default',
-                                'align' => 'left',
-                            ],
-                        ],
-                        2 => [
-                            'right' => [
-                                'text' => ['Finding ID #44', 'annotated source'],
-                                'width' => 'default',
-                                'align' => 'left',
-                            ],
-                            'left' => [
-                                'text' => ['Finding ID #45', 'annotated source'],
-                                'width' => 'default',
-                                'align' => 'left',
-                            ],
-                        ],
-                        3 => [
-                            'right' => [
-                                'text' => ['Finding ID #46', 'annotated source'],
-                                'width' => 'default',
-                                'align' => 'left',
-                            ],
-                            'left' => [
-                                'text' => ['Finding ID #47', 'annotated source'],
-                                'width' => 'default',
-                                'align' => 'left',
-                            ],
-                        ],
-                        // 4 => [
-                        //     'right' => [
-                        //         'text' => ['Finding ID #48', 'annotated source'],
-                        //         'width' => 'default',
-                        //         'align' => 'left',
-                        //     ],
-                        //     'left' => [
-                        //         'text' => ['Finding ID #49', 'annotated source'],
-                        //         'width' => 'default',
-                        //         'align' => 'left',
-                        //     ],
-                        // ],
-                        5 => [
-                            'right' => [
-                                'text' => ['Finding ID #50', 'annotated source'],
-                                'width' => 'default',
-                                'align' => 'left',
-                            ],
-                            'left' => [
-                                'text' => ['Finding ID #51', 'annotated source'],
                                 'width' => 'default',
                                 'align' => 'left',
                             ],
@@ -173,6 +148,9 @@
                     ]"
                 />
             </x-translation-workbench::ui.tw-graph>
+            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+                {{ $thisPath }}
+            </flux:field>
         </div>
     </flux:callout>
 </section>

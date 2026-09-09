@@ -36,6 +36,7 @@
     'arcSize' => null,
     'bridgeLength' => null,
     'stemLength' => null,
+    'labelGap' => null,
 ])
 
 @php
@@ -161,14 +162,16 @@
         ->filter(fn (mixed $line): bool => filled($line))
         ->take(3)
         ->count();
-    $stepLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem');
-    $autoStepLabelContentGap = match ($stepLabelLines) {
-        1 => '2.75rem',
-        2 => '3.75rem',
-        3 => '4.75rem',
-        default => '3.75rem',
-    };
+    $stepLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
+        data_get($stepConfig, 'stepLabel.offset'),
+        $labelGap ?? null,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem'),
+    );
+    $autoStepLabelContentGap = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::stepLabelContentGap($stepLabelLines);
     $autoStepLabelGap = 'calc(' . $autoStepLabelContentGap . ' + (' . $stepLabelOffset . ' * 2))';
+    if ($hasStep && blank(data_get($stepConfig, 'stepLabel.offset'))) {
+        $stepConfig['stepLabel']['offset'] = $stepLabelOffset;
+    }
     $stepBeforeLength = (string) data_get($stepConfig, 'beforeLength', '1.5rem');
     $stepLabelGap = (string) (data_get($stepConfig, 'labelGap') ?: $autoStepLabelGap);
     $stepAfterLength = (string) data_get($stepConfig, 'afterLength', '2.5rem');
@@ -460,14 +463,16 @@
                 ->filter(fn (mixed $line): bool => filled($line))
                 ->take(3)
                 ->count();
-            $extensionStepLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem');
-            $extensionAutoStepLabelContentGap = match ($extensionStepLabelLines) {
-                1 => '2.75rem',
-                2 => '3.75rem',
-                3 => '4.75rem',
-                default => '3.75rem',
-            };
+            $extensionStepLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
+                data_get($extensionStepConfig, 'stepLabel.offset'),
+                $labelGap ?? null,
+                \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem'),
+            );
+            $extensionAutoStepLabelContentGap = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::stepLabelContentGap($extensionStepLabelLines);
             $extensionAutoStepLabelGap = 'calc(' . $extensionAutoStepLabelContentGap . ' + (' . $extensionStepLabelOffset . ' * 2))';
+            if ($extensionHasStep && blank(data_get($extensionStepConfig, 'stepLabel.offset'))) {
+                $extensionStepConfig['stepLabel']['offset'] = $extensionStepLabelOffset;
+            }
             $extensionStepBeforeLength = (string) data_get($extensionStepConfig, 'beforeLength', '1.5rem');
             $extensionStepLabelGap = (string) (data_get($extensionStepConfig, 'labelGap') ?: $extensionAutoStepLabelGap);
             $extensionStepAfterLength = (string) data_get($extensionStepConfig, 'afterLength', '2.5rem');
@@ -599,6 +604,35 @@
     $branchReturnBoundsPoints = [];
     $branchReturnConfigs = [];
     $branchReturnCounterStart = $branchExtensionReturnBridgeCounterStart;
+    $forceCloseNode = static function (mixed $closeTo) use ($attachTo, $resolvedGraphId, $resolvedComponentCounter): void {
+        if (blank($closeTo) || $closeTo === true) {
+            return;
+        }
+
+        $target = null;
+        $closeTo = (string) $closeTo;
+
+        if (preg_match('/^[+-]\d+$/', $closeTo) === 1) {
+            $delta = (int) $closeTo;
+            $baseAttachTo = \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize((string) $attachTo);
+
+            if (preg_match('/trunk\.center\.(\d+)\.stem-(\d+)/', $baseAttachTo, $matches) === 1) {
+                $target = 'trunk.center.' . $matches[1] . '.stem-' . ((int) $matches[2] + $delta) . '.anchorNode-end';
+            } elseif (preg_match('/strang\.trunk\.node\.(\d+)/', $baseAttachTo, $matches) === 1) {
+                $target = 'strang.trunk.node.' . ((int) $matches[1] + $delta);
+            } elseif (str_contains($baseAttachTo, 'trunk.center.' . $resolvedComponentCounter . '.start')) {
+                $target = 'trunk.center.' . $resolvedComponentCounter . '.stem-' . $delta . '.anchorNode-end';
+            }
+        } else {
+            $target = $closeTo;
+        }
+
+        if (filled($target)) {
+            \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::forceNode($resolvedGraphId, $target, [
+                'reason' => 'branch-return-close',
+            ]);
+        }
+    };
 
     foreach ($branchReturnEntries as $returnIndex => $returnEntry) {
         $returnAttachTo = is_array($returnEntry)
@@ -612,7 +646,10 @@
             $stemAnchors[$returnFallbackIndex] ?? $stemEnd,
         );
         $returnAnchor = $returnAnchorResult['anchor'];
-        if ($returnAnchorResult['fallbackUsed']) {
+        $returnFallback = is_array($returnEntry)
+            ? (bool) data_get($returnEntry, 'fallback', true)
+            : true;
+        if ($returnAnchorResult['fallbackUsed'] && ! $returnFallback) {
             $fallbackWarnings[] = [
                 ...$returnAnchorResult,
                 'component' => $id . '.branch-return.' . $returnIndex,
@@ -629,9 +666,7 @@
             $resolvedColor,
             'orange',
         );
-        $returnFallback = is_array($returnEntry)
-            ? (bool) data_get($returnEntry, 'fallback', true)
-            : true;
+        $forceCloseNode(is_array($returnEntry) ? data_get($returnEntry, 'closeTo', data_get($returnEntry, 'closedTo')) : null);
 
         $returnNode1 = [
             'x' => $subtract($returnAnchor['x'], $resolvedArcSize),

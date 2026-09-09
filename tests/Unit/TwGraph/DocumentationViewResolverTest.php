@@ -15,7 +15,7 @@ it('resolves the highest ordinal documentation view inside one section', functio
     expect(DocumentationViewResolver::latestOrdinalView(
         'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.02-strang-merge',
     ))->toBe(
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.02-strang-merge.04-merge-aggregated',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.02-strang-merge.05-merge-mismatch',
     );
 });
 

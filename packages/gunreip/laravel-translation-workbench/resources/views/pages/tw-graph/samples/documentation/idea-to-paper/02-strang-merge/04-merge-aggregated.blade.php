@@ -3,6 +3,7 @@
 @php
     $dev = $dev ?? true;
     $coordinates = $coordinates ?? false;
+    $thisPath = '.../tw-graph/samples/documentation/idea-to-paper/02-strang-merge/04-merge-aggregated.blade.php';
 @endphp
 
 <section class="grid gap-4 lg:grid-cols-2">
@@ -22,8 +23,9 @@
             <pre><code>&lt;x-translation-workbench::ui.tw-graph.strang.merge-left
     id="literature.left.1.aggregated-sources"
     attach-to="strang.trunk.node.2"
-    :extension-count="1"
-    extension-bridge-length="18rem"
+    <span class="text-amber-300">bridge-length="8rem"</span>
+    <span class="text-lime-300">:extension-count="1"
+    extension-bridge-length="24rem"
     extension-stem-length="4rem"
     :extension-stem-continuations="[
         1 => [
@@ -35,33 +37,46 @@
         1 => [
             1 => [
                 'labels' => [
+                    'left' => [
+                        'text' => ['Aggregated origins #1', '2 sources'],
+                        'align' => 'right',
+                    ],
                     'right' => [
-                        'text' => ['Aggregated origins', '2 sources'],
+                        'text' => ['Aggregated origins #2', '3 sources'],
                         'align' => 'left',
                     ],
                 ],
-                'width' => 'halfLong',
+                'width' => 'default',
             ],
-            3 => [
+            ...
+            ...
+            4 => [
                 'labels' => [
                     'left' => [
-                        'text' => ['Finding ID #42', 'archive note'],
+                        'text' => ['Finding ID #43', 'review note'],
                         'align' => 'right',
                     ],
                 ],
                 'width' => 'default',
             ],
-            4 => [
-                'labels' => [
-                    'right' => [
-                        'text' => ['Finding ID #43', 'review note'],
-                        'align' => 'left',
-                    ],
-                ],
-                'width' => 'default',
-            ],
         ],
-    ]"
+    ]"</span>
+/&gt;
+
+...
+
+&lt;x-translation-workbench::ui.tw-graph.strang.merge-right
+    id="literature.right.1.aggregated-sources"
+    attach-to="strang.trunk.node.3"
+    <span class="text-amber-300">bridge-length="12rem"</span>
+    <span class="text-lime-300">:extension-count="1"
+    extension-start-length="12rem"
+    extension-start-shift-enabled="true"
+    extension-start-shift-length="8rem"
+    extension-bridge-length="28rem"
+    extension-stem-length="4rem"
+    :extension-stem-continuations="[...]"
+    :extension-node-labels="[...]"</span>
 /&gt;</code></pre>
         </div>
     </flux:callout>
@@ -165,7 +180,7 @@
                                 'labels' => [
                                     'left' => [
                                         'text' => ['Finding ID #43', 'review note'],
-                                        'align' => 'left',
+                                        'align' => 'right',
                                     ],
                                 ],
                                 'width' => 'default',
@@ -223,6 +238,9 @@
                     ]"
                 />
             </x-translation-workbench::ui.tw-graph>
+            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+                {{ $thisPath }}
+            </flux:field>
         </div>
     </flux:callout>
 </section>

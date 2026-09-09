@@ -41,6 +41,10 @@
     'dev' => null,
 ])
 
+@aware([
+    'labelGap' => null,
+])
+
 @php
     $stepSegment = array_replace([
         'id' => 'segment.step',
@@ -80,13 +84,12 @@
         ->filter(fn (mixed $line): bool => filled($line))
         ->take(3)
         ->count();
-    $stepLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem');
-    $autoLabelContentGap = match ($stepLabelLines) {
-        1 => '2.75rem',
-        2 => '3.75rem',
-        3 => '4.75rem',
-        default => '3.75rem',
-    };
+    $stepLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
+        data_get($stepLabelConfig, 'offset'),
+        $labelGap ?? null,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem'),
+    );
+    $autoLabelContentGap = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::stepLabelContentGap($stepLabelLines);
     $autoLabelGap = 'calc(' . $autoLabelContentGap . ' + (' . $stepLabelOffset . ' * 2))';
 
     $anchorStart = [
@@ -153,7 +156,7 @@
         :anchor-x="data_get($anchorMiddle, 'x', '0rem')"
         :anchor-y="data_get($anchorMiddle, 'y', '0rem')"
         :side="data_get($stepLabelConfig, 'side', $stepLabelSide)"
-        :offset="data_get($stepLabelConfig, 'offset', $stepLabelOffset)"
+        :offset="$stepLabelOffset"
         :badge="data_get($stepLabelConfig, 'badge', true)"
         :badge-color="data_get($stepLabelConfig, 'badgeColor', data_get($stepSegment, 'color', 'zinc'))"
         :long="data_get($stepLabelConfig, 'long', false) || data_get($stepLabelConfig, 'width') === 'long'"

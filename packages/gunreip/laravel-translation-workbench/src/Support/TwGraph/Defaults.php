@@ -42,6 +42,15 @@ final class Defaults
         return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $fallback;
     }
 
+    public static function stepLabelContentGap(int $lineCount): string
+    {
+        return match (max(1, min(3, $lineCount))) {
+            1 => self::graphString('step_label_content_gap_1_line', '1.75rem'),
+            3 => self::graphString('step_label_content_gap_3_lines', '3.75rem'),
+            default => self::graphString('step_label_content_gap_2_lines', '2.75rem'),
+        };
+    }
+
     public static function dataDriven(string $key, mixed $fallback = null): mixed
     {
         $dataDriven = config('tw-graph-data-driven-defaults.' . $key);

@@ -57,6 +57,7 @@
     $arcStartAnchor = $isLeft ? 'w' : 'e';
     $arcEndAnchor = 'n';
     $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
+    $bridgeJointArrowDirection = $isLeft ? 'right' : 'left';
     $arcDelta = $isLeft ? $arcSize : $neg($arcSize);
     $bridgeDelta = $isLeft ? $bridgeLength : $neg($bridgeLength);
     $normalizeLabel = fn (mixed $label, ?string $side = null): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, $side, $resolvedColor);
@@ -115,6 +116,9 @@
                 'anchorEnd' => $arcEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
+                'nodeEndDot' => filled($arcEndLabel),
+                'jointArrowEnd' => blank($arcEndLabel),
+                'jointArrowEndDirection' => $bridgeJointArrowDirection,
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $resolvedColor,
                 'endLabel' => $arcEndLabel,
@@ -134,6 +138,8 @@
                 'anchorEnd' => $bridgeEnd,
                 'nodeStart' => false,
                 'nodeEnd' => $bridgeEndNode,
+                'nodeEndDot' => collect($bridgeEndLabels)->filter(fn (mixed $label): bool => filled($label))->isNotEmpty(),
+                'jointArrowEnd' => collect($bridgeEndLabels)->filter(fn (mixed $label): bool => filled($label))->isEmpty(),
                 'devCounterEnd' => $counter++,
                 'devCounterColor' => $resolvedColor,
                 'dashed' => $fallbackUsed,

@@ -31,6 +31,7 @@
     'dev' => false,
     'lineLength' => null,
     'capLength' => null,
+    'labelGap' => null,
 ])
 
 @php
@@ -97,6 +98,11 @@
         ->all();
     $endLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($endLength, $resolvedLineLength, '4rem');
     $endCapLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor($endCapLength, $capLength ?? null, 'cap_length', '1.75rem');
+    $resolvedLabelGap = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
+        null,
+        $labelGap ?? null,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem'),
+    );
     $startLabelSide = match ($direction) {
         'left-right' => 'left',
         'right-left' => 'right',
@@ -146,7 +152,8 @@
                 ->all(),
         );
     };
-    $normalizePathLength = function (mixed $pathLength) use ($normalizeLabel): array {
+    $defaultNodeLabelSide = in_array($direction, ['left-right', 'right-left'], true) ? 'top' : 'right';
+    $normalizePathLength = function (mixed $pathLength) use ($normalizeLabel, $defaultNodeLabelSide, $resolvedColor): array {
         if (! is_array($pathLength)) {
             return ['component' => 'path', 'length' => $pathLength, 'labels' => true];
         }
@@ -154,11 +161,18 @@
         $length = data_get($pathLength, 'length', data_get($pathLength, 0));
         $labels = data_get($pathLength, 'labels', data_get($pathLength, 1, true));
 
-        if (is_array($labels)) {
+        if (is_array($labels) && array_is_list($labels)) {
             $labels = collect($labels)
                 ->take(2)
                 ->map(fn (mixed $label): ?array => $normalizeLabel($label))
                 ->all();
+        } elseif (is_array($labels)) {
+            $labels = \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::nodeLabels(
+                $labels,
+                $defaultNodeLabelSide,
+                $resolvedColor,
+                ['length', 'component', 'compressed', 'beforeLength', 'gapLength', 'afterLength', 'capLength'],
+            );
         }
 
         return [
@@ -178,6 +192,7 @@
 
         return filled($value) && (bool) $value;
     };
+    $hasLabels = static fn (mixed $node): bool => is_array($node) && collect($node)->filter()->isNotEmpty();
     $segments = [];
     $counter = (int) $counterStart;
     $currentAnchor = [
@@ -188,13 +203,13 @@
     $resolvedStartLabel = $resolveTerminalLabel($startLabel, [
         'text' => ['Path', 'start'],
         'side' => $startLabelSide,
-        'offset' => '0.75rem',
+        'offset' => $resolvedLabelGap,
         'badgeColor' => $resolvedColor,
     ]);
     $resolvedEndLabel = $resolveTerminalLabel($endLabel, [
         'text' => ['Path', 'end'],
         'side' => $endLabelSide,
-        'offset' => '0.75rem',
+        'offset' => $resolvedLabelGap,
         'badgeColor' => $resolvedColor,
     ]);
 
@@ -288,6 +303,8 @@
                 'anchorEnd' => $nextAnchor,
                 'nodeStart' => false,
                 'nodeEnd' => $nodeEnd,
+                'nodeEndDot' => $hasLabels($nodeEnd),
+                'jointArrowEnd' => ! $hasLabels($nodeEnd),
                 'devCounterEnd' => $devCounterEnd,
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,

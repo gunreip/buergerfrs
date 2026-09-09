@@ -28,6 +28,7 @@
     'stemLength' => null,
     'connectorLength' => null,
     'connectorGap' => null,
+    'labelGap' => null,
     'slotMinHeight' => null,
     'horizontalPadding' => null,
     'minWidth' => null,
@@ -74,11 +75,21 @@
                 '--tw-graph-protocol-arc-size: ' . $context['arcSize'],
             ]) }}
 >
-    @if ($slot->isNotEmpty())
-        <div class="tw-graph-protocol-canvas tw-graph-protocol-canvas-slot content-center">
-            {{ $slot }}
+	    @if ($slot->isNotEmpty())
+	        <div class="tw-graph-protocol-canvas tw-graph-protocol-canvas-slot content-center">
+	            {{ $slot }}
 
-                <x-translation-workbench::ui.tw-graph.canvas-metrics
+                @foreach (\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::forcedNodes($context['graphId']) as $forcedNode)
+                    <x-translation-workbench::ui.tw-graph.primitives.node
+                        :id="$forcedNode['key'] . '.forced-node'"
+                        :anchor-x="$forcedNode['x']"
+                        :anchor-y="$forcedNode['y']"
+                        :color="data_get($forcedNode, 'color', $color ?? 'zinc')"
+                        :z-index="data_get($forcedNode, 'zIndex', 30)"
+                    />
+                @endforeach
+
+	                <x-translation-workbench::ui.tw-graph.canvas-metrics
                     :graph-id="$context['graphId']"
                     :dev="$dev"
                     :coordinates="$showCoordinates"

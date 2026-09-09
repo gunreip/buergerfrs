@@ -5,6 +5,7 @@
     $coordinates = $coordinates ?? false;
     $graphId = $ideaToPaperGraphId ?? 'idea-to-paper-step-07-rekey';
     $renderMode = $renderMode ?? 'documentation';
+    $thisPath = '.../tw-graph/samples/documentation/idea-to-paper/04-strang-rekey/_rekey-preview-variants.blade.php';
     $rekeyProps = [
         [
             'name' => 'attach-to / :anchor-start',
@@ -39,12 +40,14 @@
         [
             'name' => ':start-label / :end-label',
             'default' => 'null',
-            'effect' => 'Source uses start-label at the old key side; target uses end-label at the new continuing side.',
+            'effect' =>
+                'Source uses start-label at the old key side; target uses end-label at the new continuing side.',
         ],
         [
             'name' => ':node-labels',
             'default' => '[]',
-            'effect' => 'Labels concrete facts at source/target anchors, using named label arrays with text, width, align, color, and justify.',
+            'effect' =>
+                'Labels concrete facts at source/target anchors, using named label arrays with text, width, align, color, and justify.',
         ],
     ];
 @endphp
@@ -136,12 +139,15 @@
                 </span>
             </flux:callout.heading>
 
-            @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.04-strang-rekey._rekey-preview-variants', [
-                'dev' => $dev,
-                'coordinates' => $coordinates,
-                'graphId' => $graphId,
-                'renderMode' => $renderMode,
-            ])
+            @include(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.04-strang-rekey._rekey-preview-variants',
+                [
+                    'dev' => $dev,
+                    'coordinates' => $coordinates,
+                    'graphId' => $graphId,
+                    'renderMode' => $renderMode,
+                ]
+            )
         </flux:callout>
     </section>
 @endif

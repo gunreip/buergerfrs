@@ -5,6 +5,7 @@
     $coordinates = $coordinates ?? false;
     $graphId = $ideaToPaperGraphId ?? 'idea-to-paper-step-06-branch';
     $renderMode = $renderMode ?? 'documentation';
+    $thisPath = '.../tw-graph/samples/documentation/idea-to-paper/03-strang-branch/01-branch.blade.php';
     $branchProps = [
         [
             'name' => 'attach-to / :anchor-start',
@@ -54,7 +55,7 @@
             'name' => ':node-labels',
             'default' => '[]',
             'effect' =>
-                'Labels on the branch arc anchors. Use named label arrays with text, width, align, color, and justify.',
+                'Labels on existing branch arc anchors. Use named left/right/top/bottom arrays; DEV mode reports nodeLabel-Mismatch for unsupported numeric anchors.',
         ],
     ];
 @endphp
@@ -150,15 +151,25 @@
                     >
                         {{ __('return') }}
                     </flux:badge>
+                    <flux:badge
+                        size="sm"
+                        color="red"
+                        x-show="branchVariant === 'mismatch'"
+                    >
+                        {{ __('mismatch') }}
+                    </flux:badge>
                 </span>
             </flux:callout.heading>
 
-            @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.03-strang-branch._branch-preview-variants', [
-                'dev' => $dev,
-                'coordinates' => $coordinates,
-                'graphId' => $graphId,
-                'renderMode' => $renderMode,
-            ])
-    </flux:callout>
+            @include(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.03-strang-branch._branch-preview-variants',
+                [
+                    'dev' => $dev,
+                    'coordinates' => $coordinates,
+                    'graphId' => $graphId,
+                    'renderMode' => $renderMode,
+                ]
+            )
+        </flux:callout>
     </section>
 @endif

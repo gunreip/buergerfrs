@@ -102,8 +102,8 @@ it('renders rekey target with branch path semantics stem labels and a terminal e
     expect($html)
         ->toContain('strang.rekey.right.target.1.arc-west-north-1')
         ->toContain('strang.rekey.right.target.1.bridge')
-        ->toContain('strang.rekey.right.target.1.stem-1.label.right.1')
-        ->toContain('strang.rekey.right.target.1.stem-1.label.left.2')
+        ->toContain('strang.rekey.right.target.1.stem-1.label.left.1')
+        ->toContain('strang.rekey.right.target.1.stem-1.label.right.2')
         ->toContain('strang.rekey.right.target.1.end.label.top.1')
         ->toContain('Target key')
         ->toContain('ui.button.save.save')
@@ -401,7 +401,7 @@ it('renders compressed rekey target stem continuations with named labels', funct
     expect($html)
         ->toContain('strang.rekey.left.target.1.stem-1.stem')
         ->toContain('strang.rekey.left.target.1.stem-1.stem.dotted')
-        ->toContain('strang.rekey.left.target.1.stem-1.stem.label.left.2')
+        ->toContain('strang.rekey.left.target.1.stem-1.stem.label.left.1')
         ->toContain('Target continues')
         ->toContain('as key ID #124')
         ->toContain('w-72')
@@ -468,7 +468,7 @@ it('keeps rekey target continuation stems and end segment in the same branch cha
     BLADE);
 
     expect($html)
-        ->toContain('strang.rekey.right.target.1.stem-1.label.left.2')
+        ->toContain('strang.rekey.right.target.1.stem-1.label.left.1')
         ->toContain('strang.rekey.right.target.1.stem-2.label.right.1')
         ->toContain('strang.rekey.right.target.1.end.label.top.1')
         ->toContain('--tw-graph-protocol-local-length: 5rem')
