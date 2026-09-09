@@ -351,13 +351,13 @@ it('renders the idea to paper merge documentation fragments with default extensi
         ->toContain('Archive finding')
         ->toContain('Finding ID #42')
         ->and($extensionHtml)
-        ->toContain('7. Merge extension')
-        ->toContain('idea-to-paper-step-07-merge-extension')
+        ->toContain('8. Merge extension')
+        ->toContain('idea-to-paper-step-08-merge-extension')
         ->toContain('Second source')
         ->toContain('Second review')
         ->and($aggregateHtml)
-        ->toContain('8. Merge aggregated')
-        ->toContain('idea-to-paper-step-08-merge-aggregated')
+        ->toContain('9. Merge aggregated')
+        ->toContain('idea-to-paper-step-09-merge-aggregated')
         ->toContain('Aggregated origins')
         ->toContain('extension-stem-continuations');
 });

@@ -12,7 +12,7 @@
         icon="list-collapse"
     >
         <flux:callout.heading>
-            {{ __('8. Merge aggregated') }}
+            {{ __('9. Merge aggregated') }}
         </flux:callout.heading>
         <flux:callout.text>
             {{ __('Aggregated merge stems keep many related origins readable without rendering every origin as a full merge strand. The aggregate label names the group; continuation labels identify representative rows.') }}
@@ -86,14 +86,14 @@
         icon="square-dashed-text"
     >
         <flux:callout.heading>
-            {{ __('Step 8 preview') }}
+            {{ __('Step 9 preview') }}
         </flux:callout.heading>
 
         <div
             class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
             <x-translation-workbench::ui.tw-graph
                 class="px-24 py-16"
-                graph-id="idea-to-paper-step-08-merge-aggregated"
+                graph-id="idea-to-paper-step-09-merge-aggregated"
                 :dev="$dev"
                 :coordinates="$coordinates"
                 color="amber"

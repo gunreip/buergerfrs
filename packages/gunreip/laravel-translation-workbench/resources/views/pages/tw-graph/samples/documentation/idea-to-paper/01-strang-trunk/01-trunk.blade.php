@@ -251,6 +251,11 @@
             'width' => 'halfLong',
             'align' => 'center',
         ]"
+        <span class="text-amber-300">:end-label="[
+            'text' => ['next', 'inverted direction'],
+            'width' => 'halfLong',
+            'align' => 'center',
+        ]"</span>
     /&gt;
     ...
 &lt;/x-translation-workbench::ui.tw-graph&gt;</code></pre>
@@ -316,7 +321,17 @@
     ...
     &lt;x-translation-workbench::ui.tw-graph.strang.trunk
         id="literature.center.1.paper"
+        <span class="text-amber-300">color="zinc"</span>
         :stem-count="3"
+        <span class="text-amber-300">:node-labels="[
+            1 => [
+                'right' => [
+                    'text' => ['Draft state', 'before merge'],
+                    'width' => 'default',
+                    'align' => 'left',
+                ],
+            ],
+        ]"</span>
     /&gt;
 
     <span class="text-amber-300">&lt;x-translation-workbench::ui.tw-graph.strang.merge-left
@@ -336,6 +351,15 @@
         :stem-count="3"
         <span class="text-lime-300">:start-shift-enabled="true"
         start-shift-length="14rem"</span>
+        <span class="text-amber-300">:node-labels="[
+            1 => [
+                'right' => [
+                    'text' => ['Draft state', 'before merge'],
+                    'width' => 'default',
+                    'align' => 'left',
+                ],
+            ],
+        ]"</span>
     /&gt;
 
     <span class="text-amber-300">&lt;x-translation-workbench::ui.tw-graph.strang.merge-left

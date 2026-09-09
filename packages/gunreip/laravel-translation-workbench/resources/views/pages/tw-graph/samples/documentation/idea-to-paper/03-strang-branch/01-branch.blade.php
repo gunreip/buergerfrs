@@ -49,13 +49,13 @@
             'name' => ':branch-return',
             'default' => '[]',
             'effect' =>
-                'Adds a return path back toward another anchor. Use fallback=false for a regular handmade return line.',
+                'Adds a return path back toward another anchor. Default fallback=true keeps unresolved returns visible; fallback=false means the requested anchor is required and DEV warns when it is missing.',
         ],
         [
             'name' => ':node-labels',
             'default' => '[]',
             'effect' =>
-                'Labels on existing branch arc anchors. Use named left/right/top/bottom arrays; DEV mode reports nodeLabel-Mismatch for unsupported numeric anchors.',
+                'Labels on supported branch anchors. Numeric labels map to existing branch anchors only; unsupported numeric keys are ignored and reported as nodeLabel-Mismatch in DEV mode.',
         ],
     ];
 @endphp

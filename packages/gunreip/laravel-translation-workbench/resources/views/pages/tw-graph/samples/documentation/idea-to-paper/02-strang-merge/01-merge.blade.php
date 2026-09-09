@@ -140,11 +140,11 @@
     </div>
 
     <x-translation-workbench::ui.tw-graph.strang.merge-left
-        id="literature.right.1.source-note"
+        id="literature.left.1.source-note"
         attach-to="strang.trunk.node.2"
     />
     <x-translation-workbench::ui.tw-graph.strang.merge-right
-        id="literature.left.1.source-note"
+        id="literature.right.1.source-note"
         attach-to="strang.trunk.node.2"
     />
 

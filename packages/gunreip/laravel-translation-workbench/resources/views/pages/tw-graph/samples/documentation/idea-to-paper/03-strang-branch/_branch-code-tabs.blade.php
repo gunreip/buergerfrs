@@ -59,6 +59,22 @@
             ],
         ],
     ]"</span>
+/&gt;
+
+&lt;x-translation-workbench::ui.tw-graph.strang.branch-right
+    id="literature.right.1.side-thought"
+    attach-to="strang.trunk.node.2"
+    <span class="text-lime-300">bridge-length="18rem"
+    stem-length="5rem"
+    :node-labels="[
+        3 => [
+            'right' => [
+                'text' => ['parallel thought', 'kept separate'],
+                'width' => 'default',
+                'align' => 'left',
+            ],
+        ],
+    ]"</span>
 /&gt;</code></pre>
                     </div>
                 </flux:tab.panel>
@@ -149,6 +165,7 @@
     :branch-return="[
         1 => [
             'attachTo' => 'stem.1.end',
+            'closeTo' => '+3',
             'bridgeLength' => '22rem',
             'fallback' => false,
         ],

@@ -34,13 +34,12 @@
             'left' => ['text' => ['Valid end label', 'explicit end']],
         ],
         ...
-        <
-        span class="text-lime-300" > 4 => [
+        <span class="text-lime-300">4 => [
             'right' => ['text' => ['Ignored label', 'anchor 4 missing']],
         ],
         5 => [
             'left' => ['text' => ['Ignored label', 'anchor 5 missing']],
-        ], < /span>
+        ],</span>
     ]"
 /&gt;
 
@@ -53,13 +52,13 @@
     :node-labels="[
         1 => [
             'left' => ['text' => ['Valid label', 'anchor 1']],
-        ], <
-        span class="text-lime-300" > 3 => [
+        ],
+        <span class="text-lime-300">3 => [
             'right' => ['text' => ['Numeric end label', 'overridden']],
         ],
         'end' => [
             'right' => ['text' => ['Explicit end label', 'end wins']],
-        ], < /span>
+        ],</span>
     ]"
 /&gt;</code></pre>
         </div>

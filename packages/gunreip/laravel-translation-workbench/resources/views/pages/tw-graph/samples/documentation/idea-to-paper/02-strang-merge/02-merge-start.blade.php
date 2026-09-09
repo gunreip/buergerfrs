@@ -118,7 +118,6 @@
                         'align' => 'center',
                         'color' => 'amber',
                     ]"
-                    {{-- :stem-lengths="[1 => '4rem']" --}}
                     :stem-lengths="[1 => '4rem']"
                     :node-labels="[
                         1 => [

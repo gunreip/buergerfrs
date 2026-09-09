@@ -25,7 +25,7 @@
         [
             'name' => ':stem-continuation',
             'default' => '[]',
-            'effect' => 'Adds rekey source/target continuation stems. Each entry may carry left/right labels.',
+            'effect' => 'Adds explicit rekey source/target continuation stems. Entries can set length and left/right labels; labels are only rendered for anchors that actually exist.',
         ],
         [
             'name' => ':compressed-stem-parts',
@@ -47,7 +47,7 @@
             'name' => ':node-labels',
             'default' => '[]',
             'effect' =>
-                'Labels concrete facts at source/target anchors, using named label arrays with text, width, align, color, and justify.',
+                'Labels concrete facts at source/target anchors, using named arrays with text, width, align, color, and justify. The explicit end key targets the end anchor where supported.',
         ],
     ];
 @endphp

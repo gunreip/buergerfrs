@@ -12,7 +12,7 @@
         icon="git-pull-request-arrow"
     >
         <flux:callout.heading>
-            {{ __('7. Merge extension') }}
+            {{ __('8. Merge extension') }}
         </flux:callout.heading>
         <flux:callout.text>
             {{ __('Merge extensions continue an existing merge side outward. Use them when multiple sources belong to the same merge relation but should still remain visually inspectable.') }}
@@ -64,14 +64,14 @@
         icon="square-dashed-text"
     >
         <flux:callout.heading>
-            {{ __('Step 7 preview') }}
+            {{ __('Step 8 preview') }}
         </flux:callout.heading>
 
         <div
             class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
             <x-translation-workbench::ui.tw-graph
                 class="px-24 py-16"
-                graph-id="idea-to-paper-step-07-merge-extension"
+                graph-id="idea-to-paper-step-08-merge-extension"
                 :dev="$dev"
                 :coordinates="$coordinates"
                 color="amber"
