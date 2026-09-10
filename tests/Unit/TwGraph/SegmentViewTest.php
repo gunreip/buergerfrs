@@ -158,6 +158,31 @@ it('renders step segments with automatic label gap and centered label props', fu
         ->toContain('items-end text-right');
 });
 
+it('renders step stems as cap label cap stem dot', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph.segments.step
+            :dev="true"
+            :segment="[
+                'id' => 'segment.step.cap-sequence',
+                'beforeLength' => '1.5rem',
+                'labelGap' => '4.25rem',
+                'afterLength' => '2.5rem',
+                'nodeEndDot' => true,
+                'stepLabel' => [
+                    'text' => ['Review loop'],
+                    'width' => 'halfLong',
+                ],
+            ]"
+        />
+    BLADE);
+
+    expect($html)
+        ->toMatch('/class="(?=[^"]*tw-graph-protocol-primitive-line-end)(?![^"]*tw-graph-protocol-primitive-line-node-end)[^"]*"[^>]*title="segment\.step\.cap-sequence\.stem\.before"/')
+        ->toMatch('/class="(?=[^"]*tw-graph-protocol-primitive-line-cap-start)(?=[^"]*tw-graph-protocol-primitive-line-node-end)[^"]*"[^>]*title="segment\.step\.cap-sequence\.stem\.after"/')
+        ->toContain('segment.step.cap-sequence.label')
+        ->toContain('Review loop');
+});
+
 it('renders vertical path node labels on right and left by default', function (): void {
     $html = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph.segments.path

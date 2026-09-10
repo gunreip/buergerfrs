@@ -35,6 +35,25 @@ it('passes width alignment and justify options through parts start labels', func
         ->toContain('text-amber-700');
 });
 
+it('lets flow start inherit graph color unless it overrides it', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="flow-start-color-test" color="cyan" :dev="true" :coordinates="false">
+            <x-translation-workbench::ui.tw-graph.strang.flow-start
+                id="sample.flow.1.start"
+                :start-label="[
+                    'text' => ['Inherited color'],
+                    'width' => 'default',
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('--tw-graph-protocol-local-color-rgb: 6 182 212')
+        ->toContain('text-cyan-800')
+        ->not->toContain('--tw-graph-protocol-local-color-rgb: 113 113 122');
+});
+
 it('passes half width labels and extension geometry through parts sideways', function (): void {
     $html = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph graph-id="parts-sideways-test" :dev="true" :coordinates="false">

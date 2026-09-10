@@ -28,6 +28,14 @@ class TextLabel
         }
 
         $resolvedLabel = $label;
+        if (array_key_exists('connector-length', $resolvedLabel) && ! array_key_exists('connectorLength', $resolvedLabel)) {
+            $resolvedLabel['connectorLength'] = $resolvedLabel['connector-length'];
+        }
+
+        if (array_key_exists('connector-gap', $resolvedLabel) && ! array_key_exists('connectorGap', $resolvedLabel)) {
+            $resolvedLabel['connectorGap'] = $resolvedLabel['connector-gap'];
+        }
+
         $side = $side ?? data_get($resolvedLabel, 'side');
         $text = data_get($resolvedLabel, 'text');
 
@@ -69,7 +77,7 @@ class TextLabel
             'badgeColor' => $resolvedBadgeColor,
         ], static fn (mixed $value): bool => $value !== null);
         $labelOptions = collect($resolvedLabel)
-            ->except(['left', 'right', 'top', 'bottom', 'center'])
+            ->except(['left', 'right', 'top', 'bottom', 'center', 'connector-length', 'connector-gap'])
             ->filter(static fn (mixed $value): bool => $value !== null)
             ->all();
 

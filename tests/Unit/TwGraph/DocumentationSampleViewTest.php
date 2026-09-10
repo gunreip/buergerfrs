@@ -395,10 +395,30 @@ it('keeps idea to paper draft and current result as separate graph includes', fu
     expect($source)
         ->toContain("name=\"idea-to-paper-draft\"")
         ->toContain("name=\"idea-to-paper-result\"")
+        ->toContain("name=\"idea-to-paper-flow-result\"")
         ->toContain("idea-to-paper.00-graph-final")
         ->toContain("idea-to-paper._graph-current-result")
+        ->toContain("idea-to-paper._graph-flow-diagram")
         ->toContain("'tw-graph-sample-idea-to-paper-thought-draft'")
-        ->toContain("'tw-graph-sample-idea-to-paper-current-result'");
+        ->toContain("'tw-graph-sample-idea-to-paper-current-result'")
+        ->toContain("'tw-graph-sample-idea-to-paper-flow-diagram'");
+});
+
+it('keeps the idea to paper flow diagram assembled separately from draft and current result', function (): void {
+    $source = file_get_contents(View::getFinder()->find(
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper._graph-flow-diagram',
+    ));
+
+    expect($source)
+        ->toContain('tw-graph-sample-idea-to-paper-flow-diagram')
+        ->toContain('strang.flow-start')
+        ->toContain('strang.flow-decision')
+        ->toContain('literature.flow.1.paper-process')
+        ->toContain('literature.flow.1.paper-process.decision-1')
+        ->toContain('literature.flow.1.paper-process.revision-step')
+        ->toContain('literature.flow.1.paper-process.accepted-step')
+        ->not->toContain('tw-graph-sample-idea-to-paper-current-result')
+        ->not->toContain('tw-graph-sample-idea-to-paper-thought-draft');
 });
 
 it('keeps idea to paper current result authored separately from the hidden thought draft', function (): void {
@@ -443,6 +463,7 @@ it('keeps idea to paper top level tabs delegated to one documentation section ea
         '02-strang-merge.04-merge-aggregated',
         '03-strang-branch.01-branch',
         '04-strang-rekey.01-rekey',
+        '05-strang-flow.01-flow',
     ];
 
     foreach ($sections as $section) {
@@ -455,8 +476,36 @@ it('keeps idea to paper top level tabs delegated to one documentation section ea
         ->toContain('<flux:tab.panel name="idea-to-paper-merge">')
         ->toContain('<flux:tab.panel name="idea-to-paper-branch">')
         ->toContain('<flux:tab.panel name="idea-to-paper-rekey">')
+        ->toContain('<flux:tab.panel name="idea-to-paper-flow">')
         ->not->toContain('subsub')
         ->not->toContain('path/to/file');
+});
+
+it('documents the first idea to paper flow authoring step without introducing a flow engine yet', function (): void {
+    $html = view('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.05-strang-flow.01-flow', [
+        'dev' => true,
+        'coordinates' => false,
+    ])->render();
+
+    expect($html)
+        ->toContain('8. Flow')
+        ->toContain('Flow start')
+        ->toContain('Flow decision')
+        ->toContain('Flow branch steps')
+        ->toContain('x-translation-workbench::ui.tw-graph.strang.flow-start')
+        ->toContain('x-translation-workbench::ui.tw-graph.strang.flow-step')
+        ->toContain('x-translation-workbench::ui.tw-graph.strang.flow-decision')
+        ->toContain('delegates to parts.start')
+        ->toContain('literature.flow.1.paper-process')
+        ->toContain('literature.flow.1.paper-process.step-1')
+        ->toContain('literature.flow.1.paper-process.decision-1')
+        ->toContain('literature.flow.1.paper-process.revision-step')
+        ->toContain('literature.flow.1.paper-process.accepted-step')
+        ->toContain('Paper process')
+        ->toContain(':start-node-labels')
+        ->toContain(':step-label')
+        ->toContain(':decision-label')
+        ->toContain('Step 8 preview');
 });
 
 it('documents trunk authoring with public stem props instead of internal path length names', function (): void {

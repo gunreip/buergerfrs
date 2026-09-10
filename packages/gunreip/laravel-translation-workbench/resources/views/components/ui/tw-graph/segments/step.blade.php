@@ -121,6 +121,7 @@
         'anchorEnd' => $anchorBeforeEnd,
         'nodeStart' => data_get($stepSegment, 'nodeStart', false),
         'nodeEnd' => false,
+        'nodeEndDot' => false,
         'capStart' => false,
         'capEnd' => (bool) data_get($stepSegment, 'stepCaps', true),
         'capLength' => data_get($stepSegment, 'capLength', '1.25rem'),

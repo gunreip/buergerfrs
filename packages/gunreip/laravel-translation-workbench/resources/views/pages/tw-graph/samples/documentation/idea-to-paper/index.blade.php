@@ -39,6 +39,9 @@
             <flux:tab name="idea-to-paper-rekey">
                 {{ __('Rekey') }}
             </flux:tab>
+            <flux:tab name="idea-to-paper-flow">
+                {{ __('Flow') }}
+            </flux:tab>
         </flux:tabs>
 
         <flux:tab.panel name="idea-to-paper-canvas">
@@ -147,6 +150,15 @@
                 ])
             </div>
         </flux:tab.panel>
+
+        <flux:tab.panel name="idea-to-paper-flow">
+            <div class="mt-4">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.05-strang-flow.01-flow', [
+                    'dev' => $dev,
+                    'coordinates' => $coordinates,
+                ])
+            </div>
+        </flux:tab.panel>
     </flux:tab.group>
 
     <flux:callout
@@ -157,7 +169,7 @@
             {{ __('Draft and current result') }}
         </flux:callout.heading>
         <flux:callout.text>
-            {{ __('The draft tab preserves the original thought sketch. The result tab uses a separate copy that can be adjusted into the final graph without changing the draft.') }}
+            {{ __('The draft tab preserves the original thought sketch. The result tab uses a separate copy that can be adjusted into the final graph without changing the draft. The flow diagram tab assembles the flow components as they are introduced above.') }}
         </flux:callout.text>
 
         <flux:tab.group class="mt-4 min-w-0 max-w-full">
@@ -171,6 +183,9 @@
                 </flux:tab>
                 <flux:tab name="idea-to-paper-result">
                     {{ __('Current result') }}
+                </flux:tab>
+                <flux:tab name="idea-to-paper-flow-result">
+                    {{ __('Flow diagram') }}
                 </flux:tab>
             </flux:tabs>
 
@@ -192,6 +207,18 @@
                 >
                     @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper._graph-current-result', [
                         'ideaToPaperGraphId' => 'tw-graph-sample-idea-to-paper-current-result',
+                        'ideaToPaperDev' => false,
+                        'ideaToPaperCoordinates' => false,
+                    ])
+                </div>
+            </flux:tab.panel>
+
+            <flux:tab.panel name="idea-to-paper-flow-result">
+                <div
+                    class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
+                >
+                    @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper._graph-flow-diagram', [
+                        'ideaToPaperGraphId' => 'tw-graph-sample-idea-to-paper-flow-diagram',
                         'ideaToPaperDev' => false,
                         'ideaToPaperCoordinates' => false,
                     ])

@@ -33,6 +33,18 @@ it('keeps named label options while normalizing nested side text', function (): 
     ]);
 });
 
+it('normalizes kebab connector label options to canonical option names', function (): void {
+    expect(TextLabel::normalize([
+        'text' => ['Peer review', 'decision'],
+        'connector-length' => '4rem',
+        'connector-gap' => '0.5rem',
+    ]))->toMatchArray([
+        'text' => ['Peer review', 'decision'],
+        'connectorLength' => '4rem',
+        'connectorGap' => '0.5rem',
+    ])->not->toHaveKeys(['connector-length', 'connector-gap']);
+});
+
 it('supports text arrays without leaking formatting options into rendered lines', function (): void {
     expect(TextLabel::normalize([
         'text' => ['merged into', 'shared key ID #124'],
