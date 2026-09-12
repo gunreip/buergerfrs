@@ -18,6 +18,7 @@
 ])
 
 @php
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev);
     $showCoordinates = filter_var($coordinates, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? (bool) $coordinates;
     $summary = filled($graphId)
         ? \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::summary((string) $graphId)

@@ -42,6 +42,15 @@ final class Defaults
         return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $fallback;
     }
 
+    public static function bool(mixed $value, bool $fallback = false): bool
+    {
+        if ($value === null) {
+            return $fallback;
+        }
+
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? (bool) $value;
+    }
+
     public static function stepLabelContentGap(int $lineCount): string
     {
         return match (max(1, min(3, $lineCount))) {

@@ -80,7 +80,10 @@
         ? $resolvedStemLength
         : $resolvedLineLength;
     $resolvedStemCount = max(0, (int) ($stemCount ?? $defaultPathSegments));
-    $resolvedDev = $devMode ?? $dev;
+    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
+        $devMode,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
+    );
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $resolvedStartLengthBase = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedDefaultPathLength, '4rem');
     $resolvedStartShiftEnabled = $startShiftEnabled === null

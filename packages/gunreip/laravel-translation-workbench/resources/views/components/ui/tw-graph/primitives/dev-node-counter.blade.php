@@ -32,6 +32,7 @@
 ])
 
 @php
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev);
     $resolvedAnchorX = $anchorX ?? data_get($segment, 'anchorStart.x', '0rem');
     $resolvedAnchorY = $anchorY ?? data_get($segment, 'anchorStart.y', '0rem');
     $resolvedOffsetX = $offsetX ?? data_get($segment, 'devCounterOffset.x');

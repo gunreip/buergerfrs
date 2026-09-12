@@ -73,7 +73,10 @@
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedPathCount = max(0, (int) ($pathCount ?? $defaultPathSegments));
-    $resolvedDev = $devMode ?? $dev;
+    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
+        $devMode,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
+    );
     $startLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedLineLength, '4rem');
     $startShiftLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startShiftLength, null, '0rem');
     $pathLengthOverrides = is_array($pathLengths) ? $pathLengths : [];

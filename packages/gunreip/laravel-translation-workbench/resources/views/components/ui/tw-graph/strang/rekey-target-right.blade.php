@@ -49,7 +49,10 @@
     $resolvedComponentCounter = max(1, (int) $componentCounter);
     $id = filled($id) ? (string) $id : $resolvedGraphId . '.strang.rekey-target-right.' . $resolvedComponentCounter;
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
-    $resolvedDev = $devMode ?? $dev;
+    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
+        $devMode,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
+    );
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $resolvedLineLength));

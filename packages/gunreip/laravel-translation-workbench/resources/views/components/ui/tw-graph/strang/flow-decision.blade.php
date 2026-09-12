@@ -19,6 +19,7 @@
 @props([
     'id' => null,
     'componentCounter' => 1,
+    'attachTo' => null,
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcRadius' => null,
     'arcSize' => null,
@@ -52,8 +53,14 @@
         $inheritedColor ?? null,
         'zinc',
     );
-    $resolvedDev = $devMode ?? $dev;
-    $anchorStart = is_array($anchorStart) ? $anchorStart : ['x' => '0rem', 'y' => '0rem'];
+    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
+        $devMode,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
+    );
+    $attachTarget = filled($attachTo)
+        ? \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, (string) $attachTo)
+        : null;
+    $anchorStart = $attachTarget ?: (is_array($anchorStart) ? $anchorStart : ['x' => '0rem', 'y' => '0rem']);
     $anchorStart = [
         'x' => data_get($anchorStart, 'x', '0rem'),
         'y' => data_get($anchorStart, 'y', '0rem'),

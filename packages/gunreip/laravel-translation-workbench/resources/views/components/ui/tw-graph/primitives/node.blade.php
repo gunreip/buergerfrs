@@ -19,20 +19,29 @@
     'anchorY' => '0rem',
     'size' => null,
     'color' => 'zinc',
+    'tone' => 'line',
     'zIndex' => null,
 ])
 
 @php
     $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '113 113 122');
+    $surfaceColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::surfaceRgb($color, $colorRgb);
+    $darkSurfaceColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::darkSurfaceRgb($color, $surfaceColorRgb);
     $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id);
 @endphp
 
 <span
-    {{ $attributes->class('tw-graph-protocol-primitive tw-graph-protocol-primitive-node')->style([
+    {{ $attributes->class([
+        'tw-graph-protocol-primitive',
+        'tw-graph-protocol-primitive-node',
+        'tw-graph-protocol-tone-surface' => $tone === 'surface',
+    ])->style([
         '--tw-graph-protocol-anchor-x: ' . $anchorX,
         '--tw-graph-protocol-anchor-y: ' . $anchorY,
         '--tw-graph-protocol-local-node-size: ' . $size => filled($size),
         '--tw-graph-protocol-local-color-rgb: ' . $colorRgb,
+        '--tw-graph-protocol-local-surface-color-rgb: ' . $surfaceColorRgb,
+        '--tw-graph-protocol-local-dark-surface-color-rgb: ' . $darkSurfaceColorRgb,
         '--tw-graph-protocol-z-index: ' . $zIndex => filled($zIndex),
     ]) }}
     title="{{ $devIdentifier }}"

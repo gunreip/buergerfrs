@@ -112,6 +112,309 @@ it('renders right sideways parts with mirrored arc names labels and joint arrows
         ->toContain('items-start text-left');
 });
 
+it('renders label bridge segments with centered labels and bridge joint arrows', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="label-bridge-segment-test" :dev="true" :coordinates="false" color="cyan">
+            <x-translation-workbench::ui.tw-graph.segments.label-bridge
+                id="sample.flow.1.label-bridge"
+                :label="['text' => ['Inline label'], 'width' => 'half', 'align' => 'center']"
+                :anchor-start="['x' => '0rem', 'y' => '0rem']"
+                direction="left-right"
+                bridge-length="0.1rem"
+                color="cyan"
+                z-index="20"
+                :dev="true"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('sample.flow.1.label-bridge.bridge-in')
+        ->toContain('sample.flow.1.label-bridge.label.center.1')
+        ->toContain('sample.flow.1.label-bridge.label.center.1.mask')
+        ->toContain('sample.flow.1.label-bridge.bridge-out')
+        ->toContain('sample.flow.1.label-bridge.bridge-out.end.joint-arrow')
+        ->toContain('Inline label')
+        ->toContain('tw-graph-protocol-label-bridge-mask')
+        ->toContain('--tw-graph-protocol-z-index: 21')
+        ->toContain('w-24')
+        ->toContain('--tw-graph-protocol-z-index: 22')
+        ->toContain('--tw-graph-protocol-local-length: 0.25rem')
+        ->not->toContain('--tw-graph-protocol-local-length: 0.1rem');
+});
+
+it('lets flow steps attach to registered flow start anchors', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="flow-step-attach-test" :dev="true" :coordinates="false" color="cyan">
+            <x-translation-workbench::ui.tw-graph.strang.flow-start
+                id="sample.flow.1.process"
+                start-length="7rem"
+                :node-end-dot="false"
+            />
+
+            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                id="sample.flow.1.process.step-1"
+                attach-to="sample.flow.1.process.anchorNode-end"
+                before-length="2rem"
+                after-length="2rem"
+                :step-label="['text' => ['Attached step']]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('sample.flow.1.process.step-1.stem.before')
+        ->toContain('--tw-graph-protocol-start-y: calc(0rem + 7rem)')
+        ->toContain('Attached step');
+});
+
+it('lets flow decisions and branch steps attach to registered flow anchors', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="flow-decision-attach-test" :dev="true" :coordinates="false" color="cyan">
+            <x-translation-workbench::ui.tw-graph.strang.flow-start
+                id="sample.flow.1.process"
+                start-length="7rem"
+                :node-end-dot="false"
+            />
+
+            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                id="sample.flow.1.process.step-1"
+                attach-to="sample.flow.1.process.anchorNode-end"
+                before-length="2rem"
+                after-length="2rem"
+                :step-label="['text' => ['Attached step']]"
+            />
+
+            <x-translation-workbench::ui.tw-graph.strang.flow-decision
+                id="sample.flow.1.process.decision-1"
+                attach-to="sample.flow.1.process.step-1.anchorNode-end"
+                bridge-length="8rem"
+                :decision-label="['text' => ['Decision']]"
+            />
+
+            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                id="sample.flow.1.process.right-step"
+                attach-to="sample.flow.1.process.decision-1.right.anchorNode-end"
+                before-length="1rem"
+                after-length="1rem"
+                :step-label="['text' => ['Right branch']]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('sample.flow.1.process.decision-1.anchorNode-decision')
+        ->toContain('sample.flow.1.process.decision-1.right.bridge1')
+        ->toContain('--tw-graph-protocol-local-length: 8rem')
+        ->toContain('sample.flow.1.process.right-step.stem.before')
+        ->toContain('Right branch');
+});
+
+it('keeps flow elseif group width alignment quiet by normalizing condition labels', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="flow-if-elseif-group-width-test" :dev="true" :coordinates="false" color="cyan">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-group
+                id="sample.flow.1.elseif"
+                :conditions="[
+                    [
+                        'key' => '1',
+                        'label' => [
+                            'text' => ['ELSEIF compact'],
+                            'width' => 'half',
+                        ],
+                    ],
+                    [
+                        'key' => '2',
+                        'label' => [
+                            'text' => ['ELSEIF long'],
+                            'width' => 'long',
+                        ],
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('sample.flow.1.elseif.1.label.center.1')
+        ->toContain('sample.flow.1.elseif.2.label.center.1')
+        ->toContain('w-96')
+        ->not->toContain('conditionWidth-Mismatch');
+});
+
+it('normalizes flow if and elseif condition widths in one coordinated condition set', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="flow-if-condition-set-width-test" :dev="true" :coordinates="false" color="cyan">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-condition-set
+                id="sample.flow.1.conditions"
+                if-id="sample.flow.1.if"
+                elseif-id="sample.flow.1.elseif"
+                :if-condition-label="[
+                    'text' => ['IF compact'],
+                    'width' => 'half',
+                ]"
+                :elseif-conditions="[
+                    [
+                        'key' => '1',
+                        'label' => [
+                            'text' => ['ELSEIF long'],
+                            'width' => 'long',
+                        ],
+                    ],
+                ]"
+            />
+
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-end
+                id="sample.flow.1.endif"
+                attach-to="sample.flow.1.conditions.then.anchorNode-end"
+                bridge-length="0.75rem"
+                :end-label="['text' => ['ENDIF'], 'width' => 'half']"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('sample.flow.1.if.bridge-in')
+        ->toContain('sample.flow.1.if.bridge-out')
+        ->toContain('sample.flow.1.if.bridge-out.end.joint-arrow')
+        ->toContain('sample.flow.1.if.label.center.1')
+        ->toContain('sample.flow.1.elseif.1.bridge-in')
+        ->toContain('sample.flow.1.elseif.1.bridge-out')
+        ->toContain('sample.flow.1.elseif.1.bridge-out.end.joint-arrow')
+        ->toContain('sample.flow.1.elseif.1.label.center.1')
+        ->toContain('sample.flow.1.endif.bridge-in')
+        ->toContain('sample.flow.1.endif.bridge-out')
+        ->toContain('sample.flow.1.endif.bridge-out.end.joint-arrow')
+        ->toContain('sample.flow.1.endif.label.center.1')
+        ->toContain('ENDIF')
+        ->toContain('w-96')
+        ->not->toContain('conditionWidth-Mismatch');
+});
+
+it('lets flow elseif rows transition from parent color to condition color', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="flow-if-condition-color-transition-test" :dev="true" :coordinates="false" color="cyan">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-condition-set
+                id="sample.flow.1.conditions"
+                if-id="sample.flow.1.if"
+                elseif-id="sample.flow.1.elseif"
+                color="cyan"
+                :if-condition-label="['text' => ['IF'], 'width' => 'half']"
+                :elseif-conditions="[
+                    [
+                        'key' => 'amber',
+                        'color' => 'amber',
+                        'label' => ['text' => ['ELSEIF amber'], 'width' => 'half'],
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('sample.flow.1.elseif.amber.arc-west-north')
+        ->toContain('--tw-graph-protocol-local-surface-color-rgb: 222 248 252')
+        ->toContain('--tw-graph-protocol-local-to-surface-color-rgb: 254 245 222')
+        ->toContain('--tw-graph-protocol-local-dark-surface-color-rgb: 14 98 113')
+        ->toContain('--tw-graph-protocol-local-to-dark-surface-color-rgb: 115 91 31')
+        ->toMatch('/--tw-graph-protocol-local-color-rgb: 6 182 212;[^>]*--tw-graph-protocol-local-to-color-rgb: 245 158 11;[^>]*title="sample\.flow\.1\.elseif\.amber\.bridge-in"/s')
+        ->toMatch('/--tw-graph-protocol-local-color-rgb: 245 158 11;[^>]*--tw-graph-protocol-local-to-color-rgb: 6 182 212;[^>]*title="sample\.flow\.1\.elseif\.amber\.bridge-out"/s')
+        ->toMatch('/--tw-graph-protocol-local-color-rgb: 6 182 212;[^>]*title="sample\.flow\.1\.elseif\.amber\.bridge-out\.end\.joint-arrow"/s')
+        ->toMatch('/--tw-graph-protocol-local-color-rgb: 6 182 212;[^>]*title="sample\.flow\.1\.elseif\.amber\.arc-west-north"/s')
+        ->toMatch('/--tw-graph-protocol-local-color-rgb: 6 182 212;[^>]*title="sample\.flow\.1\.elseif\.amber\.arc-south-east"/s')
+        ->toMatch('/--tw-graph-protocol-local-color-rgb: 6 182 212;[^>]*title="sample\.flow\.1\.elseif\.amber\.stem"/s')
+        ->toMatch('/--tw-graph-protocol-local-color-rgb: 6 182 212;[^>]*title="sample\.flow\.1\.elseif\.amber\.arc-south-east\.stem"/s');
+});
+
+it('keeps flow if start condition set and end bridge lengths within visible bounds', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="flow-if-bridge-minimum-test" :dev="true" :coordinates="false" color="cyan">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-start
+                id="sample.flow.1.if-start"
+                bridge-length="0.1rem"
+                :intro-label="['text' => ['IF'], 'width' => 'half']"
+            />
+
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-condition-set
+                id="sample.flow.1.conditions-min"
+                if-id="sample.flow.1.if-min"
+                attach-to="sample.flow.1.if-start.anchorNode-end"
+                bridge-length="0.1rem"
+                :if-condition-label="['text' => ['IF min'], 'width' => 'half']"
+            />
+
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-condition-set
+                id="sample.flow.1.conditions-max"
+                if-id="sample.flow.1.if-max"
+                attach-to="sample.flow.1.conditions-min.then.anchorNode-end"
+                bridge-length="24rem"
+                :if-condition-label="['text' => ['IF max'], 'width' => 'half']"
+            />
+
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-condition-set
+                id="sample.flow.1.conditions-render-min"
+                if-id="sample.flow.1.if-render-min"
+                attach-to="sample.flow.1.conditions-max.then.anchorNode-end"
+                bridge-length="0.35rem"
+                :if-condition-label="['text' => ['IF render min'], 'width' => 'half']"
+            />
+
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-end
+                id="sample.flow.1.if-end"
+                attach-to="sample.flow.1.conditions-render-min.then.anchorNode-end"
+                bridge-length="0.1rem"
+                :end-label="['text' => ['ENDIF'], 'width' => 'half']"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('sample.flow.1.if-start.bridge-in')
+        ->toContain('sample.flow.1.if-min.bridge-in')
+        ->toContain('sample.flow.1.if-min.bridge-out')
+        ->toContain('sample.flow.1.if-max.bridge-in')
+        ->toContain('sample.flow.1.if-max.bridge-out')
+        ->toContain('sample.flow.1.if-render-min.bridge-in')
+        ->toContain('sample.flow.1.if-render-min.bridge-out')
+        ->toContain('sample.flow.1.if-end.bridge-in')
+        ->toContain('tw-graph-protocol-tone-surface')
+        ->toContain('--tw-graph-protocol-local-length: 0.25rem')
+        ->toContain('--tw-graph-protocol-local-length: 1.15rem')
+        ->toContain('--tw-graph-protocol-local-length: 12rem')
+        ->not->toContain('--tw-graph-protocol-local-length: 0.1rem')
+        ->not->toContain('--tw-graph-protocol-local-length: 0.35rem')
+        ->not->toContain('--tw-graph-protocol-local-length: 24rem');
+});
+
+it('renders an if else endif wrapper from the atomic flow if strangs', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="flow-if-wrapper-test" :dev="true" :coordinates="false" color="cyan">
+            <x-translation-workbench::ui.tw-graph.strang.if-else-endif
+                id="sample.flow.1.ifelse"
+                bridge-length="1.75rem"
+                :intro-label="['text' => ['IF / ELSE flow'], 'width' => 'half']"
+                :if-condition-label="['text' => ['IF ready'], 'width' => 'default']"
+                :elseif-conditions="[
+                    [
+                        'key' => 'review',
+                        'color' => 'amber',
+                        'label' => ['text' => ['ELSEIF review'], 'width' => 'default'],
+                    ],
+                ]"
+                :end-label="['text' => ['ENDIF'], 'width' => 'half']"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('sample.flow.1.ifelse.start')
+        ->toContain('sample.flow.1.ifelse.endif')
+        ->toContain('sample.flow.1.ifelse.if.bridge-in')
+        ->toContain('sample.flow.1.ifelse.elseif.review.bridge-in')
+        ->toContain('sample.flow.1.ifelse.endif.bridge-in')
+        ->toContain('tw-graph-protocol-tone-surface');
+});
+
 it('renders parts end with configured direction cap label and counter', function (): void {
     $html = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph graph-id="parts-end-test" :dev="true" :coordinates="false">
@@ -694,6 +997,25 @@ it('renders root graph dev transparency and coordinate visibility flags independ
         ->not->toContain('tw-graph-protocol-coordinates-disabled');
 });
 
+it('treats string false dev props as disabled across root and nested graph elements', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="root-dev-string-false-test" dev="false" coordinates="false" color="cyan">
+            <x-translation-workbench::ui.tw-graph.parts.start
+                id="sample.center.1.start"
+                :node-label-right="['text' => ['Visible label']]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+
+    expect($html)
+        ->toContain('id="root-dev-string-false-test"')
+        ->toContain('--tw-graph-protocol-color-alpha: 1')
+        ->toContain('tw-graph-protocol-coordinates-disabled')
+        ->toContain('Visible label')
+        ->not->toContain('tw-graph-protocol-dev-only')
+        ->not->toContain('tw-graph-protocol-primitive-dev-node-counter');
+});
+
 it('uses central graph defaults for root canvas geometry styles', function (): void {
     config()->set('tw-graph-defaults.line_width', '0.5rem');
     config()->set('tw-graph-defaults.node_size', '1.5rem');
@@ -811,4 +1133,45 @@ it('passes node images and extension geometry through chained handmade parts', f
         ->toContain('sample.center.1.close')
         ->toContain('--tw-graph-protocol-start-x: calc(0rem + calc(2.75rem + 5rem + 2.75rem))')
         ->toContain('--tw-graph-protocol-start-y: calc(calc(0rem + 4rem) + calc(2.75rem + 2.75rem + 3rem + 3rem))');
+});
+
+it('positions right IF sections opposite the left geometry while preserving height and readable labels', function (): void {
+    foreach (['left', 'right'] as $side) {
+        $html = Blade::render(<<<'BLADE'
+            <x-translation-workbench::ui.tw-graph :graph-id="'if-side-' . $side" :dev="true">
+                <x-translation-workbench::ui.tw-graph.strang.if-else-endif
+                    id="side-test" :side="$side" :bypass="true"
+                    :anchor-start="['x' => '7rem', 'y' => '3rem']"
+                    :if-condition-label="['text' => ['Readable condition'], 'width' => 'long', 'align' => 'left']"
+                    :elseif-conditions="[['key' => 'else', 'label' => ['text' => ['Fallback']], 'thenContinuation' => 'arc-east-north']]"
+                />
+            </x-translation-workbench::ui.tw-graph>
+        BLADE, ['side' => $side]);
+
+        expect($html)->toContain('Readable condition')->toContain('Fallback')->not->toContain('scaleX');
+        $document = new DOMDocument;
+        @$document->loadHTML($html);
+        $xpath = new DOMXPath($document);
+        $arc = $side === 'right' ? 'arc-west-north' : 'arc-east-north';
+        $direction = $side === 'right' ? 'right' : 'left';
+        expect($xpath->query('//*[@title="side-test.start.' . $arc . '.end.joint-arrow" and contains(@class, "joint-arrow-' . $direction . '")]')->length)->toBe(1);
+    }
+
+    foreach (['start.anchorNode-end', 'if.condition.anchorNode-end', 'if.then.anchorNode-end', 'elseif.else.then.anchorNode-end', 'endif.anchorNode-end'] as $name) {
+        $left = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('if-side-left', 'side-test.' . $name);
+        $right = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('if-side-right', 'side-test.' . $name);
+        expect($left)->not->toBeNull();
+        expect($right)->not->toBeNull();
+        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::forgetGraph('side-comparison');
+        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
+            'side-comparison', 'point',
+            'calc(' . $left['x'] . ' + ' . $right['x'] . ')',
+            'calc(' . $left['y'] . ' - ' . $right['y'] . ')',
+            '0rem', '0rem', 'center',
+        );
+        $metrics = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::canvasMetrics('side-comparison', '0rem', '0rem');
+        expect($metrics['maxXRem'])->toBe(14.0);
+        expect($metrics['minYRem'])->toBe(0.0);
+        expect($metrics['maxYRem'])->toBe(0.0);
+    }
 });

@@ -36,6 +36,7 @@
 ])
 
 @php
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev);
     $showCoordinates = filter_var($coordinates, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? (bool) $coordinates;
     $lineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($lineLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('line_length', '4rem'));
     $lineWidth = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($lineWidth, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('line_width', '0.25rem'));

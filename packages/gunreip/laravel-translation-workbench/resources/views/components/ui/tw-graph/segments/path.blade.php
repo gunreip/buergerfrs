@@ -59,6 +59,9 @@
     'capLength' => '1.25rem',
     'dashed' => false,
     'color' => 'zinc',
+    'toColor' => null,
+    'colorGradient' => false,
+    'tone' => 'line',
     'zIndex' => null,
     'dev' => null,
 ])
@@ -85,6 +88,9 @@
             'capLength' => $capLength,
             'dashed' => $dashed,
             'color' => $color,
+            'toColor' => $toColor,
+            'colorGradient' => $colorGradient,
+            'tone' => $tone,
             'zIndex' => $zIndex,
             'dev' => $dev,
         ];
@@ -93,6 +99,9 @@
     $id = data_get($segment, 'id', 'segment.path');
     $direction = data_get($segment, 'direction', 'bottom-top');
     $color = data_get($segment, 'color', 'zinc');
+    $toColor = data_get($segment, 'toColor');
+    $colorGradient = (bool) data_get($segment, 'colorGradient', false);
+    $tone = data_get($segment, 'tone', 'line');
     $zIndex = data_get($segment, 'zIndex');
     $nodeStartValue = data_get($segment, 'nodeStart', false);
     $nodeEndValue = data_get($segment, 'nodeEnd', false);
@@ -125,7 +134,12 @@
         'top-bottom' => 'bottom',
         default => 'top',
     };
-    $devMode = (bool) ($dev ?? data_get($segment, 'dev', false));
+    $jointArrowStartColor = data_get($segment, 'jointArrowStartColor', $color);
+    $jointArrowEndColor = data_get($segment, 'jointArrowEndColor', $color);
+    $devMode = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
+        $dev,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($segment, 'dev', false)),
+    );
     $isHorizontal = in_array($direction, ['left-right', 'right-left'], true);
     $counterDistance = 'calc(var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half))';
     $negativeCounterDistance = 'calc((var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half)) * -1)';
@@ -238,6 +252,9 @@
     :cap-length="data_get($segment, 'capLength', '1.25rem')"
     :dashed="data_get($segment, 'dashed', false)"
     :color="$color"
+    :to-color="$toColor"
+    :color-gradient="$colorGradient"
+    :tone="$tone"
 	    :z-index="$zIndex"
 	/>
 
@@ -247,7 +264,8 @@
 	        :direction="$jointArrowDirection"
 	        :anchor-x="data_get($segment, 'anchorStart.x', '0rem')"
 	        :anchor-y="data_get($segment, 'anchorStart.y', '0rem')"
-	        :color="$color"
+	        :color="$jointArrowStartColor"
+	        :tone="$tone"
 	        :z-index="$zIndex === null ? null : $zIndex + 1"
 	    />
 	@endif
@@ -258,7 +276,8 @@
 	        :direction="$jointArrowDirection"
 	        :anchor-x="data_get($segment, 'anchorEnd.x', '0rem')"
 	        :anchor-y="data_get($segment, 'anchorEnd.y', '0rem')"
-	        :color="$color"
+	        :color="$jointArrowEndColor"
+	        :tone="$tone"
 	        :z-index="$zIndex === null ? null : $zIndex + 1"
 	    />
 	@endif

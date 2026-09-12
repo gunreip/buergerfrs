@@ -110,7 +110,10 @@
     $anchorBeforeEnd = $advance($anchorStart, $beforeLength);
     $anchorGapEnd = $advance($anchorBeforeEnd, $gapLength);
     $anchorEnd ??= $advance($anchorGapEnd, $afterLength);
-    $devMode = (bool) ($dev ?? data_get($compressedSegment, 'dev', false));
+    $devMode = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
+        $dev,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($compressedSegment, 'dev', false)),
+    );
 
     $beforeSegment = array_replace($compressedSegment, [
         'id' => data_get($compressedSegment, 'id', 'segment.stem-compressed') . '.stem.before',

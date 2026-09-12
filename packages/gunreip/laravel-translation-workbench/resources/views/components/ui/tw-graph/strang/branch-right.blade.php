@@ -73,7 +73,10 @@
         ? (string) $id
         : $resolvedGraphId . '.strang.branch-right.' . $resolvedComponentCounter;
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
-    $resolvedDev = $devMode ?? $dev;
+    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
+        $devMode,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
+    );
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
     $localEntryStemLength = $attributes->get('entry-stem-length');

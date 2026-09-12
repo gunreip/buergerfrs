@@ -88,7 +88,10 @@
     );
     $resolvedExtension = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($extension, null, '0rem');
     $hasExtension = filled($extension) && ! in_array($resolvedExtension, ['0', '0rem'], true);
-    $resolvedDev = $devMode ?? $dev;
+    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
+        $devMode,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
+    );
     $anchorStart = is_array($anchorStart) ? $anchorStart : ['x' => '0rem', 'y' => '0rem'];
     $anchorStart = [
         'x' => data_get($anchorStart, 'x', '0rem'),
@@ -191,11 +194,11 @@
         }
 
         if ((bool) data_get($label, 'long', false) || data_get($label, 'width') === 'long') {
-            return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.long', '20rem');
+            return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.long', '24rem');
         }
 
         if ((bool) data_get($label, 'halfLong', false) || in_array(data_get($label, 'width'), ['halfLong', 'half-long', 'half_long'], true)) {
-            return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.half_long', '16rem');
+            return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.half_long', '18rem');
         }
 
         if ((bool) data_get($label, 'half', false) || in_array(data_get($label, 'width'), ['half', 'halfWidth', 'half-width', 'half_width'], true)) {
@@ -253,6 +256,17 @@
     );
     $putSideLabelBounds($id . '.anchorNode-end.label-1.bounds', $nodeLabelRight, 'right', $labelAnchor);
     $putSideLabelBounds($id . '.anchorNode-end.label-2.bounds', $nodeLabelLeft, 'left', $labelAnchor);
+
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, $id . '.anchorNode-end', [
+        'x' => $labelAnchor['x'],
+        'y' => $labelAnchor['y'],
+        'source' => $id,
+        'sourceType' => 'parts.sideways',
+        'sourceAnchor' => 'anchorNode-end',
+        'direction' => $direction,
+        'color' => $resolvedColor,
+        'zIndex' => (string) $zIndex,
+    ]);
 
     if ($nodeImage !== null) {
         $nodeImageSize = data_get($nodeImage, 'size', \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('node_image_size', '3rem'));

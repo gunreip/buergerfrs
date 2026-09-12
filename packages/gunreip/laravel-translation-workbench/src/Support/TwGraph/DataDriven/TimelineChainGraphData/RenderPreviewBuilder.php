@@ -3743,8 +3743,8 @@ final class RenderPreviewBuilder
     private static function horizontalPaddingForLevel(string $required): string
     {
         return match ($required) {
-            'long' => Defaults::dataDrivenString('label_width.long', Defaults::graphString('label_width.long', '20rem')),
-            'halfLong' => Defaults::dataDrivenString('label_width.half_long', Defaults::graphString('label_width.half_long', '16rem')),
+            'long' => Defaults::dataDrivenString('label_width.long', Defaults::graphString('label_width.long', '24rem')),
+            'halfLong' => Defaults::dataDrivenString('label_width.half_long', Defaults::graphString('label_width.half_long', '18rem')),
             'half' => Defaults::dataDrivenString('label_width.half', Defaults::graphString('label_width.half', '6rem')),
             default => Defaults::dataDrivenString('label_width.default', Defaults::graphString('label_width.default', '12rem')),
         };

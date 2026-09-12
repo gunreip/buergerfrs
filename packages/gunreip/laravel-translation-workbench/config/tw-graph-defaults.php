@@ -125,7 +125,7 @@ return [
     'label_width' => [
         'half' => '6rem',
         'default' => '12rem',
-        'half_long' => '16rem',
-        'long' => '20rem',
+        'half_long' => '18rem',
+        'long' => '24rem',
     ],
 ];

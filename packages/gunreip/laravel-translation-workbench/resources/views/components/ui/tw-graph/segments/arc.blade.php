@@ -34,6 +34,8 @@
 @php
     $id = data_get($segment, 'id', 'segment.arc');
     $color = data_get($segment, 'color', 'zinc');
+    $toColor = data_get($segment, 'toColor', $color);
+    $tone = data_get($segment, 'tone', 'line');
     $zIndex = data_get($segment, 'zIndex');
     $nodeStart = (bool) data_get($segment, 'nodeStart', false);
     $nodeEnd = (bool) data_get($segment, 'nodeEnd', false);
@@ -45,7 +47,10 @@
     $jointArrowEnd = $nodeEnd && ! $nodeEndDot && (bool) data_get($segment, 'jointArrowEnd', false);
     $jointArrowStartDirection = data_get($segment, 'jointArrowStartDirection', 'right');
     $jointArrowEndDirection = data_get($segment, 'jointArrowEndDirection', 'right');
-    $devMode = (bool) ($dev ?? data_get($segment, 'dev', false));
+    $devMode = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
+        $dev,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($segment, 'dev', false)),
+    );
     $counterSize = 'var(--tw-graph-protocol-dev-node-counter-width)';
     $counterDistance = 'calc(var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half))';
     $negativeCounterDistance = 'calc((var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half)) * -1)';
@@ -137,6 +142,8 @@
         :node-end-size="data_get($segment, 'nodeEndSize')"
         :dashed="data_get($segment, 'dashed', false)"
         :color="$color"
+        :to-color="$toColor"
+        :tone="$tone"
         :z-index="$zIndex"
     />
 
@@ -147,6 +154,7 @@
         :anchor-x="data_get($segment, 'anchorStart.x', '0rem')"
         :anchor-y="data_get($segment, 'anchorStart.y', '0rem')"
         :color="$color"
+        :tone="$tone"
         :z-index="$zIndex === null ? null : $zIndex + 1"
     />
 @endif
@@ -158,6 +166,7 @@
         :anchor-x="data_get($segment, 'anchorEnd.x', '0rem')"
         :anchor-y="data_get($segment, 'anchorEnd.y', '0rem')"
         :color="$color"
+        :tone="$tone"
         :z-index="$zIndex === null ? null : $zIndex + 1"
     />
 @endif

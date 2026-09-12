@@ -46,7 +46,10 @@
     ], $segment);
     $endSegment['nodeEnd'] = false;
     $endSegment['cap'] = true;
-    $devMode = (bool) ($dev ?? data_get($endSegment, 'dev', false));
+    $devMode = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
+        $dev,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($endSegment, 'dev', false)),
+    );
     $counterDistance = 'calc(var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half))';
     $negativeCounterDistance = 'calc((var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half)) * -1)';
     $capCounterOffset = match (data_get($endSegment, 'direction', 'bottom-top')) {

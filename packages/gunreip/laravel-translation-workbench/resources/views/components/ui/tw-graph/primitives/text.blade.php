@@ -29,6 +29,7 @@
     'align' => 'center',
     'justify' => false,
     'maxLines' => 3,
+    'zIndex' => null,
 ])
 
 @php
@@ -58,6 +59,7 @@
                 '--tw-graph-protocol-anchor-x: ' . $anchorX,
                 '--tw-graph-protocol-anchor-y: ' . $anchorY,
                 '--tw-graph-protocol-text-label-offset: ' . $offset,
+                '--tw-graph-protocol-z-index: ' . $zIndex => filled($zIndex),
             ]) }}
         x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
     >

@@ -492,6 +492,14 @@ it('documents the first idea to paper flow authoring step without introducing a 
         ->toContain('Flow start')
         ->toContain('Flow decision')
         ->toContain('Flow branch steps')
+        ->toContain('Flow IF')
+        ->toContain('IF ENDIF')
+        ->toContain('IF ELSE ENDIF')
+        ->toContain('IF ELSEIF ENDIF')
+        ->toContain('idea-to-paper-step-08-flow-if-elseif-endif')
+        ->toContain('literature.flow.1.if-elseif-endif.elseif.4.arc-east-north')
+        ->toContain('literature.flow.1.if-elseif-endif-right.endif.arc-south-east')
+        ->toContain('Flow IF Test')
         ->toContain('x-translation-workbench::ui.tw-graph.strang.flow-start')
         ->toContain('x-translation-workbench::ui.tw-graph.strang.flow-step')
         ->toContain('x-translation-workbench::ui.tw-graph.strang.flow-decision')
@@ -501,11 +509,82 @@ it('documents the first idea to paper flow authoring step without introducing a 
         ->toContain('literature.flow.1.paper-process.decision-1')
         ->toContain('literature.flow.1.paper-process.revision-step')
         ->toContain('literature.flow.1.paper-process.accepted-step')
+        ->toContain('literature.flow.1.paper-process.revision-if')
+        ->toContain('literature.flow.1.paper-process.accepted-if')
+        ->toContain('idea-to-paper-step-08-flow-if')
+        ->toContain('idea-to-paper-step-08-flow-if-endif')
+        ->toContain('literature.flow.1.paper-process.review-if-endif.if.arc-east-north')
+        ->toContain('literature.flow.1.paper-process.review-if-endif.endif.label.center.1')
+        ->toContain('literature.flow.1.paper-process.review-if-endif.bypass.stem.end.joint-arrow')
+        ->toContain('literature.flow.1.paper-process.review-if-endif.bypass.arc-west-north.end.joint-arrow')
+        ->toContain('literature.flow.1.paper-process.review-if-endif.bypass.bridge')
+        ->toContain('literature.flow.1.paper-process.review-if-endif.bypass.arc-south-east')
+        ->toContain('literature.flow.1.paper-process.review-if-endif-right.start.arc-west-north')
+        ->toContain('literature.flow.1.paper-process.review-if-endif-right.endif.arc-south-east')
+        ->toContain('literature.flow.1.paper-process.review-if-endif-right.bypass.arc-south-west')
+        ->toContain('idea-to-paper-step-08-flow-if-else-endif')
+        ->toContain('idea-to-paper-step-08-flow-if-test')
+        ->toContain('x-translation-workbench::ui.tw-graph.strang.if-else-endif')
+        ->toContain('literature.flow.1.paper-process.review-if-else')
+        ->toContain('literature.flow.1.paper-process.review-if-else-right.start.arc-west-north')
+        ->toContain('literature.flow.1.paper-process.review-if-else-right.elseif.else.arc-west-north')
+        ->toContain('literature.flow.1.paper-process.review-if-else-right.endif.arc-south-east')
+        ->toContain('IF review passes')
+        ->toContain('ELSE revise draft')
+        ->toContain('literature.flow.1.if-test.start.arc-east-north')
+        ->toContain('literature.flow.1.if-test.start.arc-east-north.end.joint-arrow')
+        ->toContain('literature.flow.1.if-test.start.bridge-in')
+        ->toContain('literature.flow.1.if-test.start.bridge-out')
+        ->toContain('literature.flow.1.if-test.start.bridge-out.end.joint-arrow')
+        ->toContain('literature.flow.1.if-test.start.intro.label.center.1')
+        ->toContain('IF / ELSE flow')
+        ->toContain('literature.flow.1.if-test.start.arc-south-west')
+        ->toContain('literature.flow.1.if-test.if.arc-west-north')
+        ->toContain('literature.flow.1.if-test.if.bridge-in')
+        ->toContain('literature.flow.1.if-test.if.bridge-out')
+        ->toContain('literature.flow.1.if-test.if.bridge-out.end.joint-arrow')
+        ->toContain('literature.flow.1.if-test.if.stem')
+        ->toContain('literature.flow.1.if-test.elseif.1.arc-west-north')
+        ->toContain('literature.flow.1.if-test.elseif.1.bridge-in')
+        ->toContain('literature.flow.1.if-test.elseif.1.bridge-out')
+        ->toContain('literature.flow.1.if-test.elseif.1.bridge-out.end.joint-arrow')
+        ->toContain('literature.flow.1.if-test.elseif.2.arc-west-north')
+        ->toContain('literature.flow.1.if-test.elseif.3.arc-west-north')
+        ->toContain('literature.flow.1.if-test.elseif.4.arc-west-north')
+        ->toContain('literature.flow.1.if-test.elseif.4.arc-east-north.end.joint-arrow')
+        ->toMatch('/class="[^"]*tw-graph-protocol-primitive-joint-arrow-left[^"]*"[^>]*title="literature\.flow\.1\.if-test\.elseif\.4\.arc-east-north\.end\.joint-arrow"/')
+        ->toContain('literature.flow.1.if-test.endif.bridge-in')
+        ->toContain('literature.flow.1.if-test.endif.bridge-out')
+        ->toContain('literature.flow.1.if-test.endif.bridge-out.end.joint-arrow')
+        ->toContain('literature.flow.1.if-test.endif.label.center.1')
+        ->toContain('review changes required')
+        ->toContain('publication ready')
         ->toContain('Paper process')
         ->toContain(':start-node-labels')
         ->toContain(':step-label')
         ->toContain(':decision-label')
+        ->toContain('Array keys')
+        ->toContain('start-bridge-length')
+        ->toContain('condition-bridge-length')
+        ->toContain('end-bridge-length')
+        ->toContain(':elseif-conditions')
+        ->toContain(':conditions')
+        ->toContain('key, id, color, label, conditionLabel, conditionRailWidth')
+        ->toContain('then-continuation')
+        ->toContain('stem, arc-east-north, none')
         ->toContain('Step 8 preview');
+
+    $document = new DOMDocument;
+    @$document->loadHTML($html);
+    $xpath = new DOMXPath($document);
+
+    foreach (['stem' => '12', 'arc-west-north' => '13', 'bridge' => '14'] as $segment => $counter) {
+        $path = 'literature.flow.1.paper-process.review-if-endif.bypass.' . $segment . '.node.end';
+        $nodes = $xpath->query('//*[contains(@class, "tw-graph-protocol-primitive-dev-node-counter") and @data-tw-graph-path="' . $path . '"]');
+
+        expect($nodes->length)->toBe(1);
+        expect(trim($nodes->item(0)->textContent))->toBe($counter);
+    }
 });
 
 it('documents trunk authoring with public stem props instead of internal path length names', function (): void {
@@ -942,5 +1021,21 @@ it('keeps hand authored sample dev switches scoped to their own graph wrapper', 
             ->not->toContain('halfLong right')
             ->not->toContain('long center')
             ->not->toContain('default right');
+    }
+});
+
+it('keeps left and right flow examples individually authored and editable', function (): void {
+    foreach (['flow-if-test', 'flow-if-elseif-endif'] as $section) {
+        $source = file_get_contents(View::getFinder()->find(
+            'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.05-strang-flow.sections.' . $section,
+        ));
+        $preview = explode("@elseif (\$sectionContent === 'preview')", $source, 2)[1];
+
+        expect($preview)->not->toContain('@foreach');
+        expect(substr_count($preview, '<x-translation-workbench::ui.tw-graph.strang.if-else-endif'))->toBe(2);
+        expect(substr_count($preview, ':if-condition-label='))->toBe(2);
+        expect(substr_count($preview, ':elseif-conditions='))->toBe(2);
+        expect($preview)->toContain('side="left"')->toContain('side="right"');
+        expect($preview)->not->toContain(':id=')->not->toContain(':side=');
     }
 });

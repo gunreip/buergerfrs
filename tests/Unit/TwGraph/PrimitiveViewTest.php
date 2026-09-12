@@ -50,6 +50,42 @@ it('renders primitive lines with direction caps nodes dashed style and custom si
         ->toContain('--tw-graph-protocol-z-index: 31');
 });
 
+it('renders primitive line surface tone without changing the semantic color', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph.primitives.line
+            id="primitive.line.surface"
+            color="cyan"
+            tone="surface"
+        />
+    BLADE);
+
+    expect($html)
+        ->toContain('primitive.line.surface')
+        ->toContain('tw-graph-protocol-tone-surface')
+        ->toContain('--tw-graph-protocol-local-color-rgb: 6 182 212')
+        ->toContain('--tw-graph-protocol-local-surface-color-rgb: 222 248 252')
+        ->toContain('--tw-graph-protocol-local-dark-surface-color-rgb: 14 98 113');
+});
+
+it('renders primitive arc transition color variables for surface tone', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph.primitives.arc
+            id="primitive.arc.transition"
+            color="cyan"
+            to-color="amber"
+            tone="surface"
+        />
+    BLADE);
+
+    expect($html)
+        ->toContain('primitive.arc.transition')
+        ->toContain('tw-graph-protocol-tone-surface')
+        ->toContain('--tw-graph-protocol-local-surface-color-rgb: 222 248 252')
+        ->toContain('--tw-graph-protocol-local-to-surface-color-rgb: 254 245 222')
+        ->toContain('--tw-graph-protocol-local-dark-surface-color-rgb: 14 98 113')
+        ->toContain('--tw-graph-protocol-local-to-dark-surface-color-rgb: 115 91 31');
+});
+
 it('renders primitive arcs with semantic corner classes and explicit node anchors', function (): void {
     $html = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph.primitives.arc
@@ -179,6 +215,7 @@ it('renders primitive text labels with fixed width variants and alignment styles
             :long="true"
             align="right"
             badge-color="rose"
+            z-index="32"
         />
     BLADE);
 
@@ -194,6 +231,7 @@ it('renders primitive text labels with fixed width variants and alignment styles
         ->toContain('items-start text-left')
         ->toContain('items-center text-center')
         ->toContain('items-end text-right')
+        ->toContain('--tw-graph-protocol-z-index: 32')
         ->toContain('style="text-align: left;"')
         ->toContain('style="text-align: center;"')
         ->toContain('style="text-align: right;"');

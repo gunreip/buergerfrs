@@ -110,7 +110,10 @@
         ? ['x' => data_get($anchorEnd, 'x', '0rem'), 'y' => data_get($anchorEnd, 'y', '0rem')]
         : $advance($anchorAfterStart, $afterLength);
 
-    $devMode = (bool) ($dev ?? data_get($stepSegment, 'dev', false));
+    $devMode = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
+        $dev,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($stepSegment, 'dev', false)),
+    );
     $direction = data_get($stepSegment, 'direction', 'bottom-top');
     $stepLabelSide = 'center';
 

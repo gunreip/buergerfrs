@@ -56,7 +56,10 @@
         ? (string) $id
         : $resolvedGraphId . '.strang.branch-end.' . $resolvedSide . '.' . $resolvedComponentCounter;
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
-    $resolvedDev = $devMode ?? $dev;
+    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
+        $devMode,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
+    );
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($length, $resolvedLineLength, '4rem');
     $resolvedCapLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor($capLength, null, 'cap_length', '1.75rem');
