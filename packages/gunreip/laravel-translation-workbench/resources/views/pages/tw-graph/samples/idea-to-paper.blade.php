@@ -14,10 +14,10 @@
             $ideaToPaperCoordinates = false;
         @endphp
 
-        @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.index', [
-            'dev' => $ideaToPaperDev,
-            'coordinates' => $ideaToPaperCoordinates,
-        ])
+        <livewire:translation-workbench.tw-graph.documentation
+            :dev="$ideaToPaperDev"
+            :coordinates="$ideaToPaperCoordinates"
+        />
 
         {{--
             Hidden thought draft:

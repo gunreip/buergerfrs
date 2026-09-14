@@ -22,6 +22,7 @@
     'anchorY' => '0rem',
     'side' => 'right',
     'color' => 'zinc',
+    'dev' => false,
 ])
 
 @aware([
@@ -67,6 +68,7 @@
 
 <x-translation-workbench::ui.tw-graph.primitives.text
     :id="$id"
+    :dev="$dev"
     :text="data_get($label, 'text')"
     :side="$side"
     :anchor-x="$anchorX"

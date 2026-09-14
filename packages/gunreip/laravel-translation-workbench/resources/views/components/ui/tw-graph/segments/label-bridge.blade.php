@@ -88,6 +88,7 @@
 
 <x-translation-workbench::ui.tw-graph.primitives.text
     :id="$labelId"
+    :dev="$dev"
     :text="data_get($label, 'text')"
     side="center"
     :anchor-x="data_get($labelAnchor, 'x', '0rem')"

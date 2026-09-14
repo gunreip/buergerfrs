@@ -54,6 +54,7 @@
 
 @if ($dev)
     <span
+        data-tw-graph-dev-box="{{ $id }}"
         class="tw-graph-protocol-dev-only group pointer-events-none absolute rounded border border-dashed"
         style="
             left: calc(var(--tw-graph-protocol-trunk-x) + {{ $x }});

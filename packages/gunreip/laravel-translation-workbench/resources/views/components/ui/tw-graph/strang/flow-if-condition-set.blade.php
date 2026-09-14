@@ -33,6 +33,7 @@
     'thenStemLength' => null,
     'leftStem' => true,
     'thenContinuation' => 'stem',
+    'thenEndSide' => null,
     'color' => null,
     'pathTone' => 'surface',
     'zIndex' => 20,
@@ -90,6 +91,7 @@
 <x-translation-workbench::ui.tw-graph.strang.flow-if-condition
     :side="$side"
     :id="$resolvedIfId"
+    :then-end-side="$elseifConditions->isEmpty() ? $thenEndSide : null"
     :attach-to="$attachTo"
     :arc-size="$arcSize"
     :condition-label="$normalizedIfConditionLabel"
@@ -116,6 +118,7 @@
 <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-group
     :side="$side"
     :id="$resolvedElseifId"
+    :then-end-side="$thenEndSide"
     :attach-to="$resolvedIfId . '.left.anchorNode-end'"
     :conditions="$elseifConditions"
     :condition-rail-width="$sharedWidth"

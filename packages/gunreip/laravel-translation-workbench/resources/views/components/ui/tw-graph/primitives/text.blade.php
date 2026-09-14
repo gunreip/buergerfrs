@@ -30,6 +30,7 @@
     'justify' => false,
     'maxLines' => 3,
     'zIndex' => null,
+    'dev' => false,
 ])
 
 @php
@@ -63,6 +64,15 @@
             ]) }}
         x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
     >
+        @if (\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev))
+            <span
+                data-tw-graph-dev-box="{{ $id . '.dev-box' }}"
+                class="tw-graph-protocol-dev-only pointer-events-none absolute rounded border border-dashed"
+                style="inset: -0.35rem; border-color: rgb(14 165 233 / 0.6);"
+                title="{{ $devIdentifier }}"
+                aria-hidden="true"
+            ></span>
+        @endif
         @if ($badge)
             <flux:badge color="{{ $badgeColor }}">
                 <span

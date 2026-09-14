@@ -79,6 +79,13 @@
 	    @if ($slot->isNotEmpty())
 	        <div class="tw-graph-protocol-canvas tw-graph-protocol-canvas-slot content-center">
 	            {{ $slot }}
+                @if ($dev && $showCoordinates)
+                    <x-translation-workbench::ui.tw-graph.canvas-dimensions
+                        :min-width="$context['minWidth']"
+                        :min-height="$context['minHeight']"
+                        :horizontal-padding="$horizontalPadding"
+                    />
+                @endif
 
                 @foreach (\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::forcedNodes($context['graphId']) as $forcedNode)
                     <x-translation-workbench::ui.tw-graph.primitives.node
@@ -102,6 +109,9 @@
                 :protocol="$protocol"
                 :direction="$context['direction']"
                 :dev="$dev"
+                :coordinates="$showCoordinates"
+                :min-width="$context['minWidth']"
+                :min-height="$context['minHeight']"
             />
         @endif
     </div>

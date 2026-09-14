@@ -23,6 +23,7 @@
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcSize' => null,
     'bridgeLength' => null,
+    'continuation' => 'bridge',
     'endLabel' => ['text' => ['ENDIF']],
     'color' => null,
     'pathTone' => 'surface',
@@ -34,7 +35,9 @@
 ])
 
 @php
-    $isRight = $side === 'right';
+    // Node labels position only text/connector; inline labels may redirect the bridge.
+    $labelSide = data_get($endLabel, 'placement') === 'node' ? null : data_get($endLabel, 'side');
+    $isRight = (in_array($labelSide, ['left', 'right'], true) ? $labelSide : $side) === 'right';
     $resolvedGraphId = filled($graphId ?? null) ? (string) $graphId : 'tw-graph';
     $id = filled($id) ? (string) $id : 'strang.flow.if-end';
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
@@ -78,6 +81,10 @@
         'y' => $add($outArcStart['y'], $resolvedArcSize),
     ];
 
+    if ($continuation === 'none') {
+        $outArcEnd = $anchorStart;
+    }
+
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, $id . '.anchorNode-end', [
         'x' => $outArcEnd['x'],
         'y' => $outArcEnd['y'],
@@ -89,6 +96,25 @@
     ]);
 @endphp
 
+@if ($continuation !== 'none')
+@if (data_get($label, 'placement') === 'node')
+<x-translation-workbench::ui.tw-graph.segments.path :segment="[
+    'id' => $id . '.bridge-in',
+    'direction' => $isRight ? 'left-right' : 'right-left',
+    'length' => $labelBridge['spanLength'],
+    'anchorStart' => $anchorStart,
+    'anchorEnd' => $labelBridge['anchorEnd'],
+    'nodeEnd' => true,
+    'nodeEndDot' => false,
+    'jointArrowEnd' => true,
+    'devCounterEnd' => $counterBridgeEnd,
+    'devCounterColor' => $devCounterColor,
+    'color' => $resolvedColor,
+    'tone' => $pathTone,
+    'zIndex' => $zIndex,
+    'dev' => $resolvedDev,
+]" />
+@else
 <x-translation-workbench::ui.tw-graph.segments.label-bridge
     :id="$id"
     :label-id="$id . '.label.center.1'"
@@ -105,6 +131,7 @@
     :dev-counter-end="$counterBridgeEnd"
     :dev-counter-color="$devCounterColor"
 />
+@endif
 
 <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
     'id' => $id . ($isRight ? '.arc-south-east' : '.arc-south-west'),
@@ -123,3 +150,24 @@
     'zIndex' => $zIndex,
     'dev' => $resolvedDev,
 ]" />
+
+@endif
+
+@if (data_get($label, 'placement') === 'node')
+@php
+    $labelAttachTo = data_get($label, 'attachTo');
+    $labelAnchor = filled($labelAttachTo)
+        ? \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $labelAttachTo)
+        : null;
+    $labelAnchor ??= $outArcEnd;
+@endphp
+<x-translation-workbench::ui.tw-graph.segments.label
+    :id="$id . '.label.center.1'"
+    :label="$label"
+    :anchor-x="$labelAnchor['x']"
+    :anchor-y="$labelAnchor['y']"
+    :side="data_get($label, 'side') ?? data_get($label, 'nodeSide', $isRight ? 'right' : 'left')"
+    :color="$resolvedColor"
+    :dev="$resolvedDev"
+/>
+@endif

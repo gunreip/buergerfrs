@@ -218,7 +218,6 @@
                                     <tr>
                                         <td
                                             class="px-3 py-2 text-zinc-900 dark:text-zinc-100"
-                                            title="{{ data_get($twGraphCheck, 'output') }}"
                                         >
                                             <span class="font-medium">{{ data_get($twGraphCheck, 'name') }}</span>
                                             <span class="mt-1 block text-xs text-zinc-500 dark:text-zinc-400">
@@ -238,6 +237,9 @@
                                         </td>
                                         <td class="px-3 py-2 text-zinc-700 dark:text-zinc-200">
                                             {{ data_get($twGraphCheck, 'summary') }}
+                                            @if ($checkStatus === 'failed')
+                                                @include('translation-workbench::pages.tw-graph.partials.test-failures', ['check' => $twGraphCheck])
+                                            @endif
                                         </td>
                                         <td class="px-3 py-2 font-mono text-xs text-zinc-600 dark:text-zinc-300">
                                             {{ data_get($twGraphCheck, 'command') }}

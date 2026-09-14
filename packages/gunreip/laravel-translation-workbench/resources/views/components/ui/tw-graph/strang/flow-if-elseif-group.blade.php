@@ -30,6 +30,7 @@
     'thenStemLength' => null,
     'leftStem' => true,
     'thenContinuation' => 'stem',
+    'thenEndSide' => null,
     'color' => null,
     'pathTone' => 'surface',
     'zIndex' => 20,
@@ -93,6 +94,7 @@
     <x-translation-workbench::ui.tw-graph.strang.flow-if-condition
         :side="$side"
         :id="$conditionId"
+        :then-end-side="$loop->last ? $thenEndSide : null"
         :attach-to="$currentAttachTo"
         :arc-size="data_get($condition, 'arcSize', $arcSize)"
         :condition-label="$conditionLabel"

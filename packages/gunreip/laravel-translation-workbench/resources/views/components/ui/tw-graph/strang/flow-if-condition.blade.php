@@ -30,6 +30,7 @@
     'thenStemLength' => null,
     'leftStem' => true,
     'thenContinuation' => 'stem',
+    'thenEndSide' => null,
     'color' => null,
     'fromColor' => null,
     'pathTone' => 'surface',
@@ -126,14 +127,18 @@
         'x' => $thenArcEnd['x'],
         'y' => $add($thenArcEnd['y'], $resolvedThenStemLength),
     ];
-    $thenEndArcEnd = [
-        'x' => $add($thenArcEnd['x'], $horizontal($neg($resolvedArcSize))),
-        'y' => $add($thenArcEnd['y'], $resolvedArcSize),
-    ];
     $thenContinuation = $thenContinuation === 'arc-west-north' ? 'arc-east-north' : $thenContinuation;
     $thenContinuation = in_array($thenContinuation, ['stem', 'arc-east-north', 'none'], true) ? $thenContinuation : 'stem';
+    $hasEndSide = in_array($thenEndSide, ['left', 'right'], true);
+    $renderEndTurn = $hasEndSide || $thenContinuation === 'arc-east-north';
+    $endTurnRight = $hasEndSide ? $thenEndSide === 'right' : $isRight;
+    $endTurnStart = $thenContinuation === 'stem' ? $thenStemEnd : $thenArcEnd;
+    $thenEndArcEnd = [
+        'x' => $add($endTurnStart['x'], $endTurnRight ? $resolvedArcSize : $neg($resolvedArcSize)),
+        'y' => $add($endTurnStart['y'], $resolvedArcSize),
+    ];
     $renderLeftStem = $leftStem !== false && ! in_array(trim($resolvedLeftStemLength), ['0', '0rem'], true);
-    $thenAnchorEnd = match ($thenContinuation) {
+    $thenAnchorEnd = $renderEndTurn ? $thenEndArcEnd : match ($thenContinuation) {
         'arc-east-north' => $thenEndArcEnd,
         'none' => $thenArcEnd,
         default => $thenStemEnd,
@@ -157,6 +162,12 @@
         'color' => $resolvedColor,
         'zIndex' => (string) $zIndex,
     ]);
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put(
+        $resolvedGraphId,
+        $id . ($isRight ? '.arc-south-west.node.end' : '.arc-south-east.node.end'),
+        $thenArcEnd,
+    );
+
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, $id . '.then.anchorNode-end', [
         'x' => $thenAnchorEnd['x'],
         'y' => $thenAnchorEnd['y'],
@@ -241,19 +252,21 @@
         'zIndex' => $zIndex,
         'dev' => $resolvedDev,
     ]" />
-@elseif ($thenContinuation === 'arc-east-north')
+@endif
+
+@if ($renderEndTurn)
     <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
-        'id' => $id . ($isRight ? '.arc-west-north' : '.arc-east-north'),
-        'startAnchor' => $isRight ? 'w' : 'e',
+        'id' => $id . ($hasEndSide ? '.then' : '') . ($endTurnRight ? '.arc-west-north' : '.arc-east-north'),
+        'startAnchor' => $endTurnRight ? 'w' : 'e',
         'endAnchor' => 'n',
         'arcSize' => $resolvedArcSize,
-        'anchorStart' => $thenArcEnd,
+        'anchorStart' => $endTurnStart,
         'anchorEnd' => $thenEndArcEnd,
         'nodeStart' => false,
         'nodeEnd' => true,
         'nodeEndDot' => false,
         'jointArrowEnd' => true,
-        'jointArrowEndDirection' => $isRight ? 'right' : 'left',
+        'jointArrowEndDirection' => $endTurnRight ? 'right' : 'left',
         'devCounterEnd' => $counterThenEnd,
         'devCounterColor' => $devCounterColor,
         'color' => $resolvedColor,

@@ -131,3 +131,41 @@ it('keeps diagnostic dev boxes behind graph elements while preserving hover labe
         ->not->toContain('absolute z-50 rounded border border-dashed')
         ->not->toContain('absolute z-40 rounded border border-dashed');
 });
+
+it('shows configured minimum dimensions and padding without changing the content metrics', function (): void {
+    $render = function (bool $coordinates): string {
+        BoundsRegistry::forgetGraph('diagnostics-minimum-frame');
+
+        return Blade::render(<<<'BLADE'
+            <x-translation-workbench::ui.tw-graph graph-id="diagnostics-minimum-frame" :dev="true" :coordinates="$coordinates" min-width="20rem" slot-min-height="15rem" horizontal-padding="3rem">
+                <x-translation-workbench::ui.tw-graph.dev-box id="minimum-frame-content" :dev="true" x="-30rem" y="-4rem" width="70rem" height="50rem" metrics-scope="canvas" metrics-side="center" />
+            </x-translation-workbench::ui.tw-graph>
+        BLADE, ['coordinates' => $coordinates]);
+    };
+
+    $hidden = $render(false);
+    $before = BoundsRegistry::canvasMetrics('diagnostics-minimum-frame', '2rem', '3rem');
+    $visible = $render(true);
+    $after = BoundsRegistry::canvasMetrics('diagnostics-minimum-frame', '2rem', '3rem');
+
+    expect($hidden)->not->toContain('data-tw-graph-canvas-minimum')
+        ->and($visible)->toContain('data-tw-graph-canvas-minimum', 'data-tw-graph-canvas-padding', '20rem × 15rem', 'x=3rem, y=2rem')
+        ->and($after)->toBe($before)
+        ->and($after['widthRem'])->toBe(76.0)
+        ->and($after['heightRem'])->toBe(54.0);
+});
+
+it('uses the resolved protocol minimum dimensions and hides configuration lines without dev mode', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph :protocol="['geometry' => ['minWidth' => '55rem', 'minHeight' => '26rem']]" :dev="true" :coordinates="true" />
+    BLADE);
+    expect($html)->toContain('data-tw-graph-canvas-minimum', '55rem × 26rem')
+        ->not->toContain('data-tw-graph-canvas-padding');
+
+    $hidden = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph :dev="false" :coordinates="true" min-width="55rem" min-height="26rem">
+            <span>Example</span>
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+    expect($hidden)->not->toContain('data-tw-graph-canvas-minimum');
+});

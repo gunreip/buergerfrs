@@ -17,11 +17,11 @@
 --}}
 @php
     $sections = [
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.00-tw-graph',
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.01-strang-trunk',
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.02-strang-merge',
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.03-strang-branch',
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.04-strang-rekey',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.trunk.trunk-final',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.merge.merge-final',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.branch.branch-final',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.rekey.rekey-final',
     ];
     $latestSectionView = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\DocumentationViewResolver::latestOrdinalViewAcrossSections($sections);
 @endphp

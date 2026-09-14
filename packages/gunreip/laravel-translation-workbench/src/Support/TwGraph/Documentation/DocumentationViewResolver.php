@@ -45,6 +45,8 @@ class DocumentationViewResolver
      * lets the master graph follow the newest development step without rendering
      * every earlier section as a separate graph.
      *
+     * Entries may also name an explicit final view for sections without ordinal files.
+     *
      * @param  array<int, string>  $directoryViews
      */
     public static function latestOrdinalViewAcrossSections(array $directoryViews): ?string
@@ -52,6 +54,10 @@ class DocumentationViewResolver
         $directoryViews = array_values(array_filter($directoryViews, 'is_string'));
 
         for ($index = count($directoryViews) - 1; $index >= 0; $index--) {
+            if (is_file(self::directoryFromViewName($directoryViews[$index]) . '.blade.php')) {
+                return $directoryViews[$index];
+            }
+
             $latestView = self::latestOrdinalView($directoryViews[$index]);
 
             if ($latestView !== null) {

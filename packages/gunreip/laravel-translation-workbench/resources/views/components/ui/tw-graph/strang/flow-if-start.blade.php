@@ -36,7 +36,9 @@
 ])
 
 @php
-    $isRight = $side === 'right';
+    // Node labels position only text/connector; inline labels may redirect the bridge.
+    $labelSide = data_get($introLabel, 'placement') === 'node' ? null : data_get($introLabel, 'side');
+    $isRight = (in_array($labelSide, ['left', 'right'], true) ? $labelSide : $side) === 'right';
     $resolvedGraphId = filled($graphId ?? null) ? (string) $graphId : 'tw-graph';
     $id = filled($id) ? (string) $id : 'strang.flow.if-start';
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
@@ -116,6 +118,24 @@
     'dev' => $resolvedDev,
 ]" />
 
+@if (data_get($introLabel, 'placement') === 'node')
+<x-translation-workbench::ui.tw-graph.segments.path :segment="[
+    'id' => $id . '.bridge-in',
+    'direction' => $isRight ? 'left-right' : 'right-left',
+    'length' => $introBridge['spanLength'],
+    'anchorStart' => $arcEastNorthEnd,
+    'anchorEnd' => $introBridge['anchorEnd'],
+    'nodeEnd' => true,
+    'nodeEndDot' => false,
+    'jointArrowEnd' => true,
+    'devCounterEnd' => $counterBridgeEnd,
+    'devCounterColor' => $devCounterColor,
+    'color' => $resolvedColor,
+    'tone' => $pathTone,
+    'zIndex' => $zIndex,
+    'dev' => $resolvedDev,
+]" />
+@else
 <x-translation-workbench::ui.tw-graph.segments.label-bridge
     :id="$id"
     :label-id="$id . '.intro.label.center.1'"
@@ -132,6 +152,7 @@
     :dev-counter-end="$counterBridgeEnd"
     :dev-counter-color="$devCounterColor"
 />
+@endif
 
 <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
     'id' => $id . ($isRight ? '.arc-south-east' : '.arc-south-west'),
@@ -149,3 +170,15 @@
     'zIndex' => $zIndex,
     'dev' => $resolvedDev,
 ]" />
+
+@if (data_get($introLabel, 'placement') === 'node')
+<x-translation-workbench::ui.tw-graph.segments.label
+    :id="$id . '.intro.label.center.1'"
+    :label="$introLabel"
+    :anchor-x="$arcSouthWestEnd['x']"
+    :anchor-y="$arcSouthWestEnd['y']"
+    :side="data_get($introLabel, 'side') ?? data_get($introLabel, 'nodeSide', $isRight ? 'right' : 'left')"
+    :color="$resolvedColor"
+    :dev="$resolvedDev"
+/>
+@endif

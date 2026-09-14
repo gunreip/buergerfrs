@@ -27,6 +27,7 @@
     'startBridgeLength' => null,
     'conditionBridgeLength' => null,
     'endBridgeLength' => null,
+    'endContinuation' => 'bridge',
     'thenArcReach' => null,
     'leftStemLength' => null,
     'thenStemLength' => null,
@@ -64,6 +65,8 @@
     $startId = $id . '.start';
     $conditionsId = $id . '.conditions';
     $endId = $id . '.endif';
+    $explicitEndSide = data_get($endLabel, 'placement') === 'node' ? null : data_get($endLabel, 'side');
+    $explicitEndSide = in_array($explicitEndSide, ['left', 'right'], true) ? $explicitEndSide : null;
     $counterStart = is_numeric($counterStart) ? (int) $counterStart : 1;
     $conditionCounterStart = $counterStart + 4;
     $conditionRows = 1 + (is_iterable($elseifConditions) ? collect($elseifConditions)->count() : 0);
@@ -93,6 +96,7 @@
     :side="$side"
     :id="$conditionsId"
     :if-id="$id . '.if'"
+    :then-end-side="$explicitEndSide"
     :elseif-id="$id . '.elseif'"
     :attach-to="$startId . '.anchorNode-end'"
     :if-condition-label="$ifConditionLabel"
@@ -120,6 +124,7 @@
     :arc-size="$arcSize"
     :bridge-length="$resolvedEndBridgeLength"
     :end-label="$endLabel"
+    :continuation="$endContinuation"
     :color="$resolvedColor"
     :path-tone="$pathTone"
     :z-index="$zIndex"

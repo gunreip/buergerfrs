@@ -1175,3 +1175,121 @@ it('positions right IF sections opposite the left geometry while preserving heig
         expect($metrics['maxYRem'])->toBe(0.0);
     }
 });
+
+it('bounds label bridges using the rendered text box instead of a fixed line height', function (array $text, int $maxLines, bool $dev): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph.segments.label-bridge
+            id="label-bounds" :dev="$dev"
+            :label="['text' => $text, 'width' => 'half', 'maxLines' => $maxLines]"
+        />
+    BLADE, compact('text', 'maxLines', 'dev'));
+    $document = new DOMDocument;
+    @$document->loadHTML($html);
+    $xpath = new DOMXPath($document);
+    $boxes = $xpath->query('//*[@data-tw-graph-dev-box="label-bounds.label.center.1.dev-box"]');
+    expect($boxes->length)->toBe($dev ? 1 : 0);
+    expect($xpath->query('//*[@data-tw-graph-dev-box="label-bounds.label.center.1.mask.dev-box"]')->length)->toBe(0);
+    if ($dev) {
+        $box = $boxes->item(0);
+        expect($box->parentNode->getAttribute('data-tw-graph-path'))->toBe('label-bounds.label.center.1');
+        expect($box->getAttribute('style'))->toContain('inset: -0.35rem')->not->toContain('height:');
+        expect($xpath->query('.//*[contains(@class, "tw-graph-protocol-primitive-text-line")]', $box->parentNode)->length)
+            ->toBe(min(count($text), $maxLines));
+    }
+})->with([
+    'one line' => [['Inner ENDIF'], 3, true],
+    'two lines' => [['IF review is required', 'THEN check the result'], 3, true],
+    'wrapped text' => [[str_repeat('Long condition text ', 12), 'Second line', 'Third line'], 3, true],
+    'limited lines' => [['First', 'Second', 'Third'], 1, true],
+    'DEV disabled' => [['First', 'Second'], 3, false],
+]);
+
+it('honors explicit intro and ENDIF sides without changing the condition rail', function (string $side, ?string $introSide, ?string $endSide, bool $withElse): void {
+    $intro = ['text' => ['Intro'], 'width' => 'half', 'align' => 'center'];
+    $end = ['text' => ['End'], 'width' => 'half', 'align' => 'left'];
+    if ($introSide !== null) {
+        $intro['side'] = $introSide;
+    }
+    if ($endSide !== null) {
+        $end['side'] = $endSide;
+    }
+    $conditions = $withElse ? [
+        ['key' => 'next', 'label' => ['text' => ['Next']]],
+        ['key' => 'else', 'label' => ['text' => ['Else']], 'thenContinuation' => 'arc-east-north'],
+    ] : [];
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="label-side-test" :dev="true">
+            <x-translation-workbench::ui.tw-graph.strang.if-else-endif
+                id="label-side" :side="$side"
+                :intro-label="$intro" :end-label="$end"
+                end-bridge-length="1.75rem"
+                :elseif-conditions="$conditions"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, compact('side', 'intro', 'end', 'conditions'));
+    $introRight = ($introSide ?? $side) === 'right';
+    $endRight = ($endSide ?? $side) === 'right';
+    expect($html)
+        ->toContain('label-side.start.' . ($introRight ? 'arc-west-north' : 'arc-east-north'))
+        ->toContain('label-side.endif.' . ($endRight ? 'arc-south-east' : 'arc-south-west'))
+        ->toContain('label-side.if.' . ($side === 'right' ? 'arc-east-north' : 'arc-west-north'));
+    if ($endSide !== null) {
+        $last = $withElse ? 'elseif.else' : 'if';
+        $turn = $endRight ? 'arc-west-north' : 'arc-east-north';
+        $document = new DOMDocument;
+        @$document->loadHTML($html);
+        $xpath = new DOMXPath($document);
+        $direction = $endRight ? 'right' : 'left';
+        expect($xpath->query('//*[@title="label-side.' . $last . '.then.' . $turn . '.end.joint-arrow" and contains(@class, "joint-arrow-' . $direction . '")]')->length)->toBe(1);
+        if (! $withElse) {
+            // A requested ENDIF turn must preserve the authored THEN stem.
+            expect($html)->toContain('label-side.if.' . ($side === 'right' ? 'arc-south-west.stem' : 'arc-south-east.stem'));
+        }
+    }
+    $from = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('label-side-test', 'label-side.conditions.then.anchorNode-end');
+    $to = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('label-side-test', 'label-side.endif.anchorNode-end');
+    $delta = $endRight ? 'calc(' . $to['x'] . ' - ' . $from['x'] . ')' : 'calc(' . $from['x'] . ' - ' . $to['x'] . ')';
+    \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::forgetGraph('label-side-distance');
+    \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put('label-side-distance', 'point', '0rem', $delta, '0rem', '0rem', 'center');
+    expect(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::canvasMetrics('label-side-distance')['maxYRem'])->toBe(12.25);
+})->with([
+    'unchanged left' => ['left', null, null, true],
+    'unchanged right' => ['right', null, null, true],
+    'left end right' => ['left', null, 'right', true],
+    'right end left' => ['right', null, 'left', true],
+    'left intro right' => ['left', 'right', null, true],
+    'right intro left' => ['right', 'left', null, true],
+    'both units right' => ['left', 'right', 'right', true],
+    'both units left' => ['right', 'left', 'left', true],
+    'single IF end right' => ['left', null, 'right', false],
+    'single IF end left' => ['right', null, 'left', false],
+]);
+
+it('moves node labels independently of IF geometry', function (string $side, string $labelSide): void {
+    $template = <<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="node-label-side-test">
+            <x-translation-workbench::ui.tw-graph.strang.if-else-endif
+                id="node-label-side" :side="$side"
+                :intro-label="$intro" :end-label="$end"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE;
+    $intro = ['text' => ['IF'], 'placement' => 'node'];
+    $end = ['text' => ['ENDIF'], 'placement' => 'node'];
+    Blade::render($template, compact('side', 'intro', 'end'));
+    $anchors = [];
+    foreach (['start', 'conditions.then', 'endif'] as $part) {
+        $anchors[$part] = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('node-label-side-test', 'node-label-side.' . $part . '.anchorNode-end');
+    }
+    $intro['side'] = $labelSide;
+    $end['side'] = $labelSide;
+    $html = Blade::render($template, compact('side', 'intro', 'end'));
+    foreach ($anchors as $part => $anchor) {
+        expect($anchor)->not->toBeNull();
+        expect(\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('node-label-side-test', 'node-label-side.' . $part . '.anchorNode-end'))->toBe($anchor);
+    }
+    expect($html)->toContain('node-label-side.start.intro.label.center.1.connector');
+    expect($html)->toContain('node-label-side.endif.label.center.1.connector');
+})->with([
+    ['left', 'right'], ['right', 'left'], ['left', 'top'], ['right', 'bottom'],
+]);

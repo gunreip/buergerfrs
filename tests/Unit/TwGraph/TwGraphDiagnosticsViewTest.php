@@ -53,7 +53,7 @@ it('keeps diagnostics table columns aligned to the generated report fields', fun
         ->toContain("data_get(\$twGraphCheck, 'duration_ms')")
         ->toContain("data_get(\$twGraphCheck, 'summary')")
         ->toContain("data_get(\$twGraphCheck, 'command')")
-        ->toContain('title="{{ data_get($twGraphCheck, \'output\') }}"')
+        ->toContain('translation-workbench::pages.tw-graph.partials.test-failures')
         ->not->toContain('colspan="5"')
         ->toContain("{{ __('Check') }}")
         ->toContain("{{ __('Group') }}")
@@ -61,4 +61,17 @@ it('keeps diagnostics table columns aligned to the generated report fields', fun
         ->toContain("{{ __('Duration') }}")
         ->toContain("{{ __('Summary') }}")
         ->toContain("{{ __('Command') }}");
+});
+
+it('renders readable escaped failure details including a location and preserves raw output as fallback', function (): void {
+    $view = 'translation-workbench::pages.tw-graph.partials.test-failures';
+    $html = view($view, ['check' => ['parsed_output' => ['failures' => [
+        ['test' => 'renders nodes', 'file' => 'tests/PrimitiveViewTest.php', 'line' => 183, 'message' => "Expected <script>alert(1)</script>\nActual: missing"],
+        ['test' => 'renders arcs', 'message' => 'Arc mismatch'],
+    ]]]])->render();
+    expect($html)->toContain('renders nodes', 'tests/PrimitiveViewTest.php:183', '&lt;script&gt;', 'Actual: missing', 'renders arcs', 'Arc mismatch')
+        ->not->toContain('<script>');
+
+    expect(view($view, ['check' => ['output' => 'PHP Fatal error: memory exhausted']])->render())
+        ->toContain('PHP Fatal error: memory exhausted');
 });

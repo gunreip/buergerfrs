@@ -236,6 +236,10 @@ class ClearProject extends Command
             }
 
             $this->line('    ' . ($process->isSuccessful() ? 'passed' : 'failed') . ': ' . $result['summary']);
+
+            if (! $process->isSuccessful()) {
+                $this->output->writeln($this->processFailureDetails($result), \Symfony\Component\Console\Output\OutputInterface::OUTPUT_RAW);
+            }
         }
 
         $report = [
@@ -413,6 +417,25 @@ class ClearProject extends Command
         return $lastLine ?: 'No output.';
     }
 
+    /** @return list<string> */
+    private function processFailureDetails(array $check): array
+    {
+        $details = [];
+        foreach ((array) data_get($check, 'parsed_output.failures', []) as $failure) {
+            $location = (string) ($failure['file'] ?? '');
+            if ($location !== '' && isset($failure['line'])) {
+                $location .= ':' . $failure['line'];
+            }
+            $details[] = implode(PHP_EOL, array_filter([
+                (string) ($failure['test'] ?? 'Failed test'),
+                $location,
+                (string) ($failure['message'] ?? ''),
+            ], static fn(string $value): bool => $value !== ''));
+        }
+
+        return $details ?: [(string) ($check['output'] ?? 'No failure details available.')];
+    }
+
     /**
      * @param  array<string, mixed>  $report
      * @return array{json: string, html: string}
@@ -465,22 +488,28 @@ class ClearProject extends Command
             })
             ->join("\n");
         $rows = collect((array) ($report['checks'] ?? []))
-            ->map(static function (array $check): string {
+            ->map(function (array $check): string {
                 $name = e((string) ($check['name'] ?? ''));
                 $checkStatus = e((string) ($check['status'] ?? 'unknown'));
                 $command = e((string) ($check['command'] ?? ''));
                 $duration = e((string) ($check['duration_ms'] ?? ''));
                 $summary = e((string) ($check['summary'] ?? ''));
-                $output = e((string) ($check['output'] ?? ''));
                 $description = e((string) ($check['description'] ?? ''));
+                $failureDetails = '';
+                if (($check['status'] ?? '') === 'failed') {
+                    foreach ($this->processFailureDetails($check) as $detail) {
+                        $failureDetails .= '<pre class="failure-detail">' . e($detail) . '</pre>';
+                    }
+                    $failureDetails = '<strong>Failure details</strong>' . $failureDetails;
+                }
 
                 return <<<HTML
                     <tr>
-                        <td title="{$output}"><strong>{$name}</strong><br><span class="muted">{$description}</span></td>
+                        <td><strong>{$name}</strong><br><span class="muted">{$description}</span></td>
                         <td><span class="badge {$checkStatus}">{$checkStatus}</span></td>
                         <td><code>{$command}</code></td>
                         <td>{$duration} ms</td>
-                        <td>{$summary}</td>
+                        <td>{$summary}{$failureDetails}</td>
                     </tr>
                 HTML;
             })
@@ -498,6 +527,7 @@ class ClearProject extends Command
                     th, td { border: 1px solid #d4d4d8; padding: 0.65rem; vertical-align: top; text-align: left; }
                     th { background: #f4f4f5; }
                     pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.8rem; }
+                    .failure-detail { max-height: 24rem; overflow: auto; max-width: 60rem; margin-top: 0.5rem; }
                     code { font-size: 0.85rem; }
                     .muted { color: #71717a; font-size: 0.85rem; }
                     .badge { border-radius: 999px; padding: 0.15rem 0.55rem; font-size: 0.8rem; font-weight: 700; }

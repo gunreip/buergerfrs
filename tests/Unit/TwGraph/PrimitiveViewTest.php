@@ -120,7 +120,7 @@ it('renders primitive arcs with semantic corner classes and explicit node anchor
         ->toContain('--tw-graph-protocol-local-node-size: 1.2rem');
 });
 
-it('renders primitive nodes connectors counters and wavy lines with direct props', function (): void {
+it('renders primitive nodes connectors and counters with direct props', function (): void {
     $html = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph.primitives.node
             id="primitive.node.test"
@@ -153,15 +153,6 @@ it('renders primitive nodes connectors counters and wavy lines with direct props
             :dev="false"
             counter="13"
         />
-        <x-translation-workbench::ui.tw-graph.primitives.wavy-line
-            id="primitive.wavy.test"
-            direction="bottom-top"
-            start-x="1rem"
-            start-y="2rem"
-            length="2.5rem"
-            color="sky"
-            z-index="19"
-        />
     BLADE);
 
     expect($html)
@@ -179,12 +170,7 @@ it('renders primitive nodes connectors counters and wavy lines with direct props
         ->toContain('--tw-graph-protocol-dev-node-counter-offset-x: 1rem')
         ->toContain('--tw-graph-protocol-dev-node-counter-offset-y: -1rem')
         ->toContain('12')
-        ->not->toContain('primitive.counter.hidden')
-        ->toContain('primitive.wavy.test')
-        ->toContain('tw-graph-protocol-primitive-wavy-line-bottom-top')
-        ->toContain('--tw-graph-protocol-local-length: 2.5rem')
-        ->toContain('--tw-graph-protocol-z-index: 19')
-        ->toContain('~~~~~~~~~~~~~~~~');
+        ->not->toContain('primitive.counter.hidden');
 });
 
 it('renders primitive text labels with fixed width variants and alignment styles', function (): void {

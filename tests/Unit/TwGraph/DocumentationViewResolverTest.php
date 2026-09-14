@@ -11,25 +11,25 @@ it('returns null for missing documentation view directories', function (): void 
     ))->toBeNull();
 });
 
-it('resolves the highest ordinal documentation view inside one section', function (): void {
-    expect(DocumentationViewResolver::latestOrdinalView(
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.02-strang-merge',
-    ))->toBe(
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.02-strang-merge.05-merge-mismatch',
+it('resolves an explicit final view for a reorganized section', function (): void {
+    expect(DocumentationViewResolver::latestOrdinalViewAcrossSections([
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.merge.merge-final',
+    ]))->toBe(
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.merge.merge-final',
     );
 });
 
 it('resolves the latest documentation view across ordered sections', function (): void {
     $latest = DocumentationViewResolver::latestOrdinalViewAcrossSections([
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.00-tw-graph',
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.01-strang-trunk',
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.02-strang-merge',
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.03-strang-branch',
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.04-strang-rekey',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.trunk.trunk-final',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.merge.merge-final',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.branch.branch-final',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.rekey.rekey-final',
     ]);
 
     expect($latest)->toBe(
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.04-strang-rekey.01-rekey',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.rekey.rekey-final',
     );
 });
 
@@ -38,32 +38,30 @@ it('skips empty or invalid documentation sections while resolving the latest aut
         null,
         '',
         'translation-workbench::pages.tw-graph.samples.documentation.missing-section',
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.00-tw-graph',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.trunk.trunk-final',
     ]);
 
     expect($latest)->toBe(
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.00-tw-graph.01-canvas',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.trunk.trunk-final',
     );
 });
 
-it('ignores underscore partials and non blade assets while resolving latest documentation steps', function (): void {
+it('does not select documentation examples by filename after section reorganization', function (): void {
     expect(DocumentationViewResolver::latestOrdinalView(
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.03-strang-branch',
-    ))->toBe(
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.03-strang-branch.01-branch',
-    );
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.branch',
+    ))->toBeNull();
 });
 
 it('keeps ordinal resolution scoped to public documentation steps only', function (): void {
     $sections = [
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.00-tw-graph',
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.01-strang-trunk',
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.02-strang-merge',
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.03-strang-branch',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.trunk.trunk-final',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.merge.merge-final',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.branch.branch-final',
     ];
 
     expect(DocumentationViewResolver::latestOrdinalViewAcrossSections($sections))->toBe(
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.03-strang-branch.01-branch',
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.branch.branch-final',
     );
 });
 

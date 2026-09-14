@@ -11,6 +11,9 @@
     'protocol' => [],
     'direction' => 'bottom-top',
     'dev' => false,
+    'coordinates' => false,
+    'minWidth' => '40rem',
+    'minHeight' => '18rem',
 ])
 
 @php
@@ -130,6 +133,9 @@
 @endphp
 
 <div class="tw-graph-protocol-canvas content-center">
+    @if (\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev) && \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($coordinates))
+        <x-translation-workbench::ui.tw-graph.canvas-dimensions :min-width="$minWidth" :min-height="$minHeight" />
+    @endif
     @foreach ($segments as $segment)
         @php
             $type = data_get($segment, 'type', 'path');
