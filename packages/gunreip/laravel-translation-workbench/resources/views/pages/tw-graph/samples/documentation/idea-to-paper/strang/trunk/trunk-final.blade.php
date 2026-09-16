@@ -14,7 +14,6 @@
     stem-length="5rem"
     connector-length="2rem"
     connector-gap="0.25rem"
-    slot-min-height="42rem"
     horizontal-padding="28rem"
     min-width="48rem"
     min-height="42rem"

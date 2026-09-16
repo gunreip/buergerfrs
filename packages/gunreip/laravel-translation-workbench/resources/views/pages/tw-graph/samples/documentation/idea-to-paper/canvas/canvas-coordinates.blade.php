@@ -4,20 +4,16 @@
         <p class="mt-4 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
             {{ __('This builds on the default trunk example. Only coordinate and dimension props are added so the same trunk can be framed without changing the trunk itself.') }}
         </p>
-        <div
-            class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre><code>&lt;x-translation-workbench::ui.tw-graph
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-4">&lt;x-translation-workbench::ui.tw-graph
     <span class="text-lime-300">graph-id="idea-to-paper-step-01-coordinates"</span>
     <span class="text-lime-300">:dev="true"</span>
     <span class="text-lime-300">:coordinates="true"</span>
-    <span class="text-lime-300">slot-min-height="42rem"</span>
     <span class="text-lime-300">horizontal-padding="24rem"</span>
     <span class="text-lime-300">min-width="40rem"</span>
     <span class="text-lime-300">min-height="42rem"</span>
 &gt;
     &lt;x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</code></pre>
-        </div>
+&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
         <div class="mt-4 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
             <flux:table container:class="max-h-80">
                 <flux:table.columns class="bg-white dark:bg-zinc-900" sticky>
@@ -96,11 +92,7 @@
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>0.25rem</code></flux:table.cell>
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs">Gap between a connector and its related label/node edge.</flux:table.cell>
                     </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>slot-min-height</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>52rem</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Minimum vertical canvas space used while slotted handmade components are rendered.</flux:table.cell>
-                    </flux:table.row>
+
                     <flux:table.row>
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>horizontal-padding</code></flux:table.cell>
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>12rem</code></flux:table.cell>
@@ -113,8 +105,8 @@
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>min-height</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>calculated</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Optional hard minimum height override for the graph viewport.</flux:table.cell>
+                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>config / 52rem; protocol: calculated</code></flux:table.cell>
+                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Minimum canvas height. Handmade graphs default to config / 52rem; protocol graphs use their geometry. Content bounds and padding can require more space.</flux:table.cell>
                     </flux:table.row>
                 </flux:table.rows>
             </flux:table>
@@ -129,7 +121,6 @@
                         graph-id="idea-to-paper-step-01-coordinates"
                         :dev="true"
                         :coordinates="true"
-                        slot-min-height="42rem"
                         horizontal-padding="24rem"
                         min-width="40rem"
                         min-height="42rem"

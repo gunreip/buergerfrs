@@ -45,7 +45,7 @@ return [
      */
     'trunk_spacing_compensation_factor' => 0.65,
     'trunk_spacing_compensation_stem_step' => '2.75rem',
-    'slot_min_height' => '52rem',
+    'min_height' => '52rem',
     'horizontal_padding' => '12rem',
 
     /*

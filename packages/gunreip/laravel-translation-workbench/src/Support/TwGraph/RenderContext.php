@@ -30,12 +30,10 @@ final class RenderContext
     public static function make(
         array $protocol,
         mixed $graphId,
-        bool $slotHasContent,
         mixed $color,
         string $lineWidth,
         string $nodeSize,
         string $arcSize,
-        string $slotMinHeight,
         mixed $minWidth,
         mixed $minHeight,
     ): array {
@@ -56,7 +54,7 @@ final class RenderContext
             'canvasWidth' => $canvasWidth,
             'canvasHeight' => $canvasHeight,
             'minWidth' => (string) ($minWidth ?: data_get($geometry, 'minWidth', $canvasWidth)),
-            'minHeight' => (string) ($minHeight ?: ($slotHasContent ? $slotMinHeight : data_get($geometry, 'minHeight', $canvasHeight))),
+            'minHeight' => (string) ($minHeight ?: data_get($geometry, 'minHeight', $canvasHeight)),
             'pathWidth' => (string) data_get($geometry, 'pathWidth', $lineWidth),
             'nodeSize' => (string) data_get($geometry, 'nodeSize', $nodeSize),
             'arcSize' => (string) data_get($geometry, 'arcSize', $arcSize),

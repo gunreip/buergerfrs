@@ -19,6 +19,7 @@
     'dev' => false,
     'coordinates' => false,
     'color' => null,
+    'pathTone' => true,
     'lineLength' => null,
     'lineWidth' => null,
     'nodeSize' => null,
@@ -29,7 +30,6 @@
     'connectorLength' => null,
     'connectorGap' => null,
     'labelGap' => null,
-    'slotMinHeight' => null,
     'horizontalPadding' => null,
     'minWidth' => null,
     'minHeight' => null,
@@ -37,6 +37,7 @@
 
 @php
     $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev);
+    $surfacePaths = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($pathTone, true);
     $showCoordinates = filter_var($coordinates, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? (bool) $coordinates;
     $lineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($lineLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('line_length', '4rem'));
     $lineWidth = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($lineWidth, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('line_width', '0.25rem'));
@@ -47,17 +48,17 @@
     $stemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', $lineLength));
     $connectorLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($connectorLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('connector_length', '2rem'));
     $connectorGap = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($connectorGap, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('connector_gap', '0.25rem'));
-    $slotMinHeight = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($slotMinHeight, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('slot_min_height', '52rem'));
+    $minHeight = $slot->isNotEmpty()
+        ? \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($minHeight, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('min_height', '52rem'))
+        : $minHeight;
     $horizontalPadding = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($horizontalPadding, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('horizontal_padding', '12rem'));
     $context = \Gunreip\TranslationWorkbench\Support\TwGraph\RenderContext::make(
         (array) $protocol,
         $graphId,
-        $slot->isNotEmpty(),
         $color,
         $lineWidth,
         $nodeSize,
         $arcSize,
-        $slotMinHeight,
         $minWidth,
         $minHeight,
     );
@@ -65,7 +66,9 @@
 
 <div class="tw-graph-protocol-viewport">
     <div
+        data-tw-graph-dev="{{ $dev ? 'true' : 'false' }}"
         data-tw-graph-direction="{{ $context['direction'] }}"
+        data-tw-graph-path-tone="{{ $surfacePaths ? 'surface' : 'line' }}"
         {{ $attributes->merge(['id' => $context['graphId']])->class(['tw-graph-protocol', 'tw-graph-protocol-coordinates-disabled' => !$showCoordinates])->style([
                 '--tw-graph-protocol-color-rgb: ' . $context['colorRgb'],
                 '--tw-graph-protocol-color-alpha: ' . ($dev ? '0.5' : '1'),
@@ -79,6 +82,7 @@
 	    @if ($slot->isNotEmpty())
 	        <div class="tw-graph-protocol-canvas tw-graph-protocol-canvas-slot content-center">
 	            {{ $slot }}
+                <x-translation-workbench::ui.tw-graph.return-colors :graph-id="$context['graphId']" />
                 @if ($dev && $showCoordinates)
                     <x-translation-workbench::ui.tw-graph.canvas-dimensions
                         :min-width="$context['minWidth']"

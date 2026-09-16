@@ -9,186 +9,46 @@
             {{ __('A label attaches information to a visible anchor through a connector. The zinc path and dot are reference geometry. A label bridge places text inside the horizontal flow: bridge-in, text label, bridge-out. These individually authored examples show all four label positions and both label-bridge directions. Text alignment is independent of placement and traversal direction.') }}
         </flux:callout.text>
         @php
-            $labelsExampleSource = file_get_contents(
-                \Illuminate\Support\Facades\View::getFinder()->find(
-                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.segments-labels',
-                ),
+            $labelsExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.segments-labels',
             );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-label-right:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-label-right:end --\}\}/ms',
-                    $labelsExampleSource,
-                    $labelsLabelRightMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-label-right requires start and end markers.');
-            }
-            $labelsLabelRightLines = explode("\n", rtrim($labelsLabelRightMatch[1]));
-            $labelsLabelRightIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($labelsLabelRightLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $labelsLabelRightCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $labelsLabelRightIndent), $labelsLabelRightLines),
-            );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-label-left:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-label-left:end --\}\}/ms',
-                    $labelsExampleSource,
-                    $labelsLabelLeftMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-label-left requires start and end markers.');
-            }
-            $labelsLabelLeftLines = explode("\n", rtrim($labelsLabelLeftMatch[1]));
-            $labelsLabelLeftIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($labelsLabelLeftLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $labelsLabelLeftCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $labelsLabelLeftIndent), $labelsLabelLeftLines),
-            );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-label-top:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-label-top:end --\}\}/ms',
-                    $labelsExampleSource,
-                    $labelsLabelTopMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-label-top requires start and end markers.');
-            }
-            $labelsLabelTopLines = explode("\n", rtrim($labelsLabelTopMatch[1]));
-            $labelsLabelTopIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($labelsLabelTopLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $labelsLabelTopCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $labelsLabelTopIndent), $labelsLabelTopLines),
-            );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-label-bottom:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-label-bottom:end --\}\}/ms',
-                    $labelsExampleSource,
-                    $labelsLabelBottomMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-label-bottom requires start and end markers.');
-            }
-            $labelsLabelBottomLines = explode("\n", rtrim($labelsLabelBottomMatch[1]));
-            $labelsLabelBottomIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($labelsLabelBottomLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $labelsLabelBottomCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $labelsLabelBottomIndent), $labelsLabelBottomLines),
-            );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-bridge-left-right:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-bridge-left-right:end --\}\}/ms',
-                    $labelsExampleSource,
-                    $labelsBridgeLeftRightMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-bridge-left-right requires start and end markers.');
-            }
-            $labelsBridgeLeftRightLines = explode("\n", rtrim($labelsBridgeLeftRightMatch[1]));
-            $labelsBridgeLeftRightIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($labelsBridgeLeftRightLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $labelsBridgeLeftRightCode = implode(
-                "\n",
-                array_map(
-                    fn(string $line): string => substr($line, $labelsBridgeLeftRightIndent),
-                    $labelsBridgeLeftRightLines,
-                ),
-            );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-bridge-right-left:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-bridge-right-left:end --\}\}/ms',
-                    $labelsExampleSource,
-                    $labelsBridgeRightLeftMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-bridge-right-left requires start and end markers.');
-            }
-            $labelsBridgeRightLeftLines = explode("\n", rtrim($labelsBridgeRightLeftMatch[1]));
-            $labelsBridgeRightLeftIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($labelsBridgeRightLeftLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $labelsBridgeRightLeftCode = implode(
-                "\n",
-                array_map(
-                    fn(string $line): string => substr($line, $labelsBridgeRightLeftIndent),
-                    $labelsBridgeRightLeftLines,
-                ),
-            );
+            $labelsLabelRightCode = $labelsExampleSource->example('segment-label-right');
+            $labelsLabelLeftCode = $labelsExampleSource->example('segment-label-left');
+            $labelsLabelTopCode = $labelsExampleSource->example('segment-label-top');
+            $labelsLabelBottomCode = $labelsExampleSource->example('segment-label-bottom');
+            $labelsBridgeLeftRightCode = $labelsExampleSource->example('segment-bridge-left-right');
+            $labelsBridgeRightLeftCode = $labelsExampleSource->example('segment-bridge-right-left');
         @endphp
         <flux:heading
             class="mt-4"
             size="sm"
         >Label · right</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $labelsLabelRightCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $labelsLabelRightCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >Label · left</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $labelsLabelLeftCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $labelsLabelLeftCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >Label · top</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $labelsLabelTopCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $labelsLabelTopCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >Label · bottom</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $labelsLabelBottomCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $labelsLabelBottomCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >Label bridge · left-right</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $labelsBridgeLeftRightCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $labelsBridgeLeftRightCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >Label bridge · right-left</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $labelsBridgeRightLeftCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $labelsBridgeRightLeftCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -461,7 +321,6 @@
                             graph-id="idea-to-paper-segments-label-right"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="20rem"
                             min-height="20rem"
                             min-width="24rem"
                             horizontal-padding="10rem"
@@ -505,7 +364,6 @@
                             graph-id="idea-to-paper-segments-label-left"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="20rem"
                             min-height="20rem"
                             min-width="24rem"
                             horizontal-padding="10rem"
@@ -549,7 +407,6 @@
                             graph-id="idea-to-paper-segments-label-top"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="20rem"
                             min-height="20rem"
                             min-width="24rem"
                             horizontal-padding="10rem"
@@ -593,7 +450,6 @@
                             graph-id="idea-to-paper-segments-label-bottom"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="20rem"
                             min-height="20rem"
                             min-width="24rem"
                             horizontal-padding="10rem"
@@ -637,7 +493,6 @@
                             graph-id="idea-to-paper-segments-bridge-left-right"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="20rem"
                             min-height="20rem"
                             min-width="24rem"
                             horizontal-padding="10rem"
@@ -668,7 +523,6 @@
                             graph-id="idea-to-paper-segments-bridge-right-left"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="20rem"
                             min-height="20rem"
                             min-width="24rem"
                             horizontal-padding="10rem"

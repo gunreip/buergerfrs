@@ -16,8 +16,9 @@
     line-length="4rem"
     bridge-length="18rem"
     stem-length="5rem"
-    slot-min-height="94rem"
-    horizontal-padding="40rem"
+    min-height="94rem"
+    min-width="112rem"
+    horizontal-padding="24rem"
 >
     {{-- central idea lifecycle --}}
     <x-translation-workbench::ui.tw-graph.strang.trunk

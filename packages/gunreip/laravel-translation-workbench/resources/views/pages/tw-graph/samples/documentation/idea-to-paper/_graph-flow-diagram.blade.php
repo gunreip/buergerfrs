@@ -14,7 +14,6 @@
     :coordinates="$ideaToPaperCoordinates"
     color="cyan"
     stem-length="5rem"
-    slot-min-height="72rem"
     horizontal-padding="46rem"
     min-width="92rem"
     min-height="72rem"
@@ -64,37 +63,34 @@
         ]"
     />
 
-    <x-translation-workbench::ui.tw-graph.strang.flow-decision
+    <x-translation-workbench::ui.tw-graph.strang.flow-if-else
         id="literature.flow.1.paper-process.decision-1"
-        :anchor-start="['x' => '0rem', 'y' => '16.25rem']"
+        attach-to="literature.flow.1.paper-process.step-1.anchorNode-end"
         bridge-length="21rem"
-        :decision-label="[
-            'text' => ['Peer review', 'decision'],
+        :condition-label="[
+            'text' => ['IF reviewApproved?'],
             'width' => 'halfLong',
             'align' => 'center',
-            'connectorLength' => '3.5rem',
         ]"
-    />
-
-    <x-translation-workbench::ui.tw-graph.strang.flow-step
-        id="literature.flow.1.paper-process.revision-step"
-        :anchor-start="['x' => '-26.5rem', 'y' => '21.75rem']"
-        before-length="1.5rem"
-        after-length="2.5rem"
-        :step-label="[
-            'text' => ['Revision loop', 'comments resolved'],
+        :if-start="[
+            'text' => ['True', 'Accepted path', 'publication prep'],
+            'width' => 'halfLong',
+            'align' => 'center',
+        ]"
+        :if-end="[
+            'text' => ['False', 'Revision loop', 'comments resolved'],
             'width' => 'halfLong',
             'align' => 'center',
         ]"
     />
 
     <x-translation-workbench::ui.tw-graph.strang.flow-step
-        id="literature.flow.1.paper-process.accepted-step"
-        :anchor-start="['x' => '26.5rem', 'y' => '21.75rem']"
+        id="literature.flow.1.paper-process.continue-step"
+        attach-to="literature.flow.1.paper-process.decision-1.anchorNode-end"
         before-length="1.5rem"
         after-length="2.5rem"
         :step-label="[
-            'text' => ['Accepted path', 'publication prep'],
+            'text' => ['Continue process'],
             'width' => 'halfLong',
             'align' => 'center',
         ]"

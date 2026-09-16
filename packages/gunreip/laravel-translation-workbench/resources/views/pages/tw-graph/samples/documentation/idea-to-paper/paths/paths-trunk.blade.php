@@ -9,68 +9,22 @@
             {{ __('Two individually authored trunk paths demonstrate bottom-top and top-bottom. Each connects a start section, three middle sections, and an end section. The middle sections are 3rem, 4rem, and 5rem long. The second carries a Checkpoint label. Each path calculates its next anchors and delegates drawing to its segments. The upward path starts at y = 5rem and ends at y = 22rem; the downward path starts at y = 22rem and ends at y = 5rem.') }}
         </flux:callout.text>
         @php
-            $trunkExampleSource = file_get_contents(
-                \Illuminate\Support\Facades\View::getFinder()->find(
-                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-trunk',
-                ),
+            $trunkExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-trunk',
             );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- trunk-example:start --\}\}\R(.*?)^[ \t]*\{\{-- trunk-example:end --\}\}/ms',
-                    $trunkExampleSource,
-                    $trunkExampleMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The trunk example requires start and end markers.');
-            }
-            $trunkExampleLines = explode("\n", rtrim($trunkExampleMatch[1]));
-            $trunkExampleIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($trunkExampleLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $trunkExampleCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $trunkExampleIndent), $trunkExampleLines),
-            );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- trunk-top-bottom-example:start --\}\}\R(.*?)^[ \t]*\{\{-- trunk-top-bottom-example:end --\}\}/ms',
-                    $trunkExampleSource,
-                    $trunkTopBottomMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The trunk example requires start and end markers.');
-            }
-            $trunkTopBottomLines = explode("\n", rtrim($trunkTopBottomMatch[1]));
-            $trunkTopBottomIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($trunkTopBottomLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $trunkTopBottomCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $trunkTopBottomIndent), $trunkTopBottomLines),
-            );
+            $trunkExampleCode = $trunkExampleSource->example('trunk-example');
+            $trunkTopBottomCode = $trunkExampleSource->example('trunk-top-bottom-example');
         @endphp
         <flux:heading
             class="mt-4"
             size="sm"
         >bottom-top</flux:heading>
-        <div
-            class="mt-4 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $trunkExampleCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-4">{{ $trunkExampleCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >top-bottom</flux:heading>
-        <div
-            class="mt-4 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $trunkTopBottomCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-4">{{ $trunkTopBottomCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -250,7 +204,6 @@
                             :dev="true"
                             :coordinates="true"
                             color="cyan"
-                            slot-min-height="30rem"
                             min-height="30rem"
                             min-width="24rem"
                             horizontal-padding="12rem"
@@ -293,7 +246,6 @@
                             :dev="true"
                             :coordinates="true"
                             color="cyan"
-                            slot-min-height="30rem"
                             min-height="30rem"
                             min-width="24rem"
                             horizontal-padding="12rem"

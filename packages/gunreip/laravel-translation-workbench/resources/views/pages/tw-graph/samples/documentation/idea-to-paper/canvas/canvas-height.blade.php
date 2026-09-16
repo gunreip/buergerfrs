@@ -2,26 +2,21 @@
     <flux:callout color="indigo" icon="file-text" class="min-w-0">
         <flux:callout.heading>{{ __('Canvas height') }}</flux:callout.heading>
         <p class="mt-4 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
-            {{ __('This separates slot-min-height and min-height. The first graph sets slot-min-height below the calculated graph bounds, so the bounds still win. The second graph sets min-height above the calculated bounds, so the visible canvas grows.') }}
+            {{ __('This compares the configured minimum height with the automatically calculated content height. The first graph sets min-height below the calculated graph bounds, so the bounds still win. The second graph sets min-height above the calculated bounds, so the visible canvas grows.') }}
         </p>
         <div class="mt-4 grid gap-4 xl:grid-cols-2">
-            <div
-                class="overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-                <pre><code>&lt;x-translation-workbench::ui.tw-graph
-    <span class="text-amber-300">graph-id="idea-to-paper-step-01-slot-height"</span>
+            <x-translation-workbench::ui.tw-graph.code-box>&lt;x-translation-workbench::ui.tw-graph
+    <span class="text-amber-300">graph-id="idea-to-paper-step-01-content-height"</span>
     <span class="text-amber-300">:dev="true"</span>
     <span class="text-amber-300">:coordinates="true"</span>
     <span class="text-amber-300">horizontal-padding="24rem"</span>
     <span class="text-amber-300">min-width="40rem"</span>
-    <span class="text-lime-300">slot-min-height="30rem"</span>
+    <span class="text-lime-300">min-height="30rem"</span>
 &gt;
-    {{-- slot-min-height is the fallback room for slotted handmade graph content. --}}
+    {{-- min-height sets a lower bound; larger graph content expands the canvas. --}}
     &lt;x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</code></pre>
-            </div>
-            <div
-                class="overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-                <pre><code>&lt;x-translation-workbench::ui.tw-graph
+&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
+            <x-translation-workbench::ui.tw-graph.code-box>&lt;x-translation-workbench::ui.tw-graph
     <span class="text-amber-300">graph-id="idea-to-paper-step-01-min-height"</span>
     <span class="text-amber-300">:dev="true"</span>
     <span class="text-amber-300">:coordinates="true"</span>
@@ -31,8 +26,7 @@
 &gt;
     {{-- min-height overrides the visible minimum height of the graph canvas. --}}
     &lt;x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</code></pre>
-            </div>
+&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
         </div>
         <div class="mt-4 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
             <flux:table container:class="max-h-80">
@@ -112,11 +106,7 @@
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>0.25rem</code></flux:table.cell>
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs">Gap between a connector and its related label/node edge.</flux:table.cell>
                     </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>slot-min-height</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>52rem</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Minimum vertical canvas space used while slotted handmade components are rendered.</flux:table.cell>
-                    </flux:table.row>
+
                     <flux:table.row>
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>horizontal-padding</code></flux:table.cell>
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>12rem</code></flux:table.cell>
@@ -129,8 +119,8 @@
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>min-height</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>calculated</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Optional hard minimum height override for the graph viewport.</flux:table.cell>
+                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>config / 52rem; protocol: calculated</code></flux:table.cell>
+                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Minimum canvas height. Handmade graphs default to config / 52rem; protocol graphs use their geometry. Content bounds and padding can require more space.</flux:table.cell>
                     </flux:table.row>
                 </flux:table.rows>
             </flux:table>
@@ -142,16 +132,16 @@
             <div class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                 <div class="grid gap-4 xl:grid-cols-2">
                     <div class="min-w-0">
-                        <flux:heading size="sm">{{ __('slot-min-height only') }}</flux:heading>
+                        <flux:heading size="sm">{{ __('min-height only') }}</flux:heading>
                         <x-translation-workbench::ui.tw-graph
-                            graph-id="idea-to-paper-step-01-slot-height"
+                            graph-id="idea-to-paper-step-01-content-height"
                             :dev="true"
                             :coordinates="true"
                             horizontal-padding="24rem"
                             min-width="40rem"
-                            slot-min-height="30rem"
+                            min-height="30rem"
                         >
-                            {{-- slot-min-height supplies the fallback canvas room for this slotted trunk. --}}
+                            {{-- min-height supplies the fallback canvas room for this slotted trunk. --}}
                             <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
                         </x-translation-workbench::ui.tw-graph>
                     </div>

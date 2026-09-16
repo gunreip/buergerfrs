@@ -18,12 +18,10 @@ it('uses geometry values ahead of inherited render defaults for protocol renderi
             ],
         ],
         'context-test',
-        false,
         null,
         '0.25rem',
         '0.95rem',
         '2.75rem',
-        '52rem',
         null,
         null,
     );
@@ -42,18 +40,16 @@ it('uses geometry values ahead of inherited render defaults for protocol renderi
         ->and($context['colorRgb'])->toBe('245 158 11');
 });
 
-it('uses slot min height for manually authored slot graphs', function (): void {
+it('uses explicit minimum dimensions for manually authored graphs', function (): void {
     $context = RenderContext::make(
         [],
         'slot-context-test',
-        true,
         'green',
         '0.25rem',
         '0.95rem',
         '2.75rem',
-        '66rem',
         '44rem',
-        null,
+        '66rem',
     );
 
     expect($context)
@@ -92,12 +88,10 @@ it('calculates protocol canvas size from resolved segment anchors', function ():
             ],
         ],
         'size-context-test',
-        false,
         null,
         '0.25rem',
         '0.95rem',
         '2.75rem',
-        '52rem',
         null,
         null,
     );
@@ -130,12 +124,10 @@ it('keeps explicit min width and min height ahead of calculated protocol canvas 
             ],
         ],
         'explicit-size-context-test',
-        false,
         null,
         '0.25rem',
         '0.95rem',
         '2.75rem',
-        '52rem',
         '80rem',
         '90rem',
     );
@@ -150,12 +142,10 @@ it('uses minimum canvas dimensions when protocol has no segments', function (): 
     $context = RenderContext::make(
         [],
         'empty-context-test',
-        false,
         'unknown-color',
         '0.25rem',
         '0.95rem',
         '2.75rem',
-        '52rem',
         null,
         null,
     );

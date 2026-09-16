@@ -5,74 +5,22 @@
             {{ __('Four individually authored path segments with the same length in all four directions. Each combines a line with anchor dots, an end label and connector, and DEV diagnostics. Set both anchors to match direction and length: unlike a complete path, this segment expects its endpoint coordinates explicitly. Canvas y coordinates increase upwards.') }}
         </flux:callout.text>
         @php
-            $pathExampleSource = file_get_contents(\Illuminate\Support\Facades\View::getFinder()->find(
+            $pathExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.segments-path',
-            ));
-            if (preg_match('/^[ \t]*\{\{-- segment-path-bottom-top:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-path-bottom-top:end --\}\}/ms', $pathExampleSource, $pathBottomTopMatch) !== 1) {
-                throw new \LogicException('The segment-path-bottom-top requires start and end markers.');
-            }
-            $pathBottomTopLines = explode("\n", rtrim($pathBottomTopMatch[1]));
-            $pathBottomTopIndent = min(array_map(
-                fn (string $line): int => strlen($line) - strlen(ltrim($line)),
-                array_filter($pathBottomTopLines, fn (string $line): bool => trim($line) !== ''),
-            ));
-            $pathBottomTopCode = implode("\n", array_map(
-                fn (string $line): string => substr($line, $pathBottomTopIndent),
-                $pathBottomTopLines,
-            ));
-            if (preg_match('/^[ \t]*\{\{-- segment-path-top-bottom:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-path-top-bottom:end --\}\}/ms', $pathExampleSource, $pathTopBottomMatch) !== 1) {
-                throw new \LogicException('The segment-path-top-bottom requires start and end markers.');
-            }
-            $pathTopBottomLines = explode("\n", rtrim($pathTopBottomMatch[1]));
-            $pathTopBottomIndent = min(array_map(
-                fn (string $line): int => strlen($line) - strlen(ltrim($line)),
-                array_filter($pathTopBottomLines, fn (string $line): bool => trim($line) !== ''),
-            ));
-            $pathTopBottomCode = implode("\n", array_map(
-                fn (string $line): string => substr($line, $pathTopBottomIndent),
-                $pathTopBottomLines,
-            ));
-            if (preg_match('/^[ \t]*\{\{-- segment-path-left-right:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-path-left-right:end --\}\}/ms', $pathExampleSource, $pathLeftRightMatch) !== 1) {
-                throw new \LogicException('The segment-path-left-right requires start and end markers.');
-            }
-            $pathLeftRightLines = explode("\n", rtrim($pathLeftRightMatch[1]));
-            $pathLeftRightIndent = min(array_map(
-                fn (string $line): int => strlen($line) - strlen(ltrim($line)),
-                array_filter($pathLeftRightLines, fn (string $line): bool => trim($line) !== ''),
-            ));
-            $pathLeftRightCode = implode("\n", array_map(
-                fn (string $line): string => substr($line, $pathLeftRightIndent),
-                $pathLeftRightLines,
-            ));
-            if (preg_match('/^[ \t]*\{\{-- segment-path-right-left:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-path-right-left:end --\}\}/ms', $pathExampleSource, $pathRightLeftMatch) !== 1) {
-                throw new \LogicException('The segment-path-right-left requires start and end markers.');
-            }
-            $pathRightLeftLines = explode("\n", rtrim($pathRightLeftMatch[1]));
-            $pathRightLeftIndent = min(array_map(
-                fn (string $line): int => strlen($line) - strlen(ltrim($line)),
-                array_filter($pathRightLeftLines, fn (string $line): bool => trim($line) !== ''),
-            ));
-            $pathRightLeftCode = implode("\n", array_map(
-                fn (string $line): string => substr($line, $pathRightLeftIndent),
-                $pathRightLeftLines,
-            ));
+            );
+            $pathBottomTopCode = $pathExampleSource->example('segment-path-bottom-top');
+            $pathTopBottomCode = $pathExampleSource->example('segment-path-top-bottom');
+            $pathLeftRightCode = $pathExampleSource->example('segment-path-left-right');
+            $pathRightLeftCode = $pathExampleSource->example('segment-path-right-left');
         @endphp
         <flux:heading class="mt-4" size="sm">bottom-top</flux:heading>
-        <div class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $pathBottomTopCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $pathBottomTopCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">top-bottom</flux:heading>
-        <div class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $pathTopBottomCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $pathTopBottomCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">left-right</flux:heading>
-        <div class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $pathLeftRightCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $pathLeftRightCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">right-left</flux:heading>
-        <div class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $pathRightLeftCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $pathRightLeftCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">{{ __('Path segment props') }}</flux:heading>
         <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
             <flux:table container:class="max-h-80">
@@ -198,7 +146,6 @@
                             graph-id="idea-to-paper-segments-path-bottom-top"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="18rem"
                             min-height="18rem"
                             min-width="24rem"
                             horizontal-padding="10rem"
@@ -228,7 +175,6 @@
                             graph-id="idea-to-paper-segments-path-top-bottom"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="18rem"
                             min-height="18rem"
                             min-width="24rem"
                             horizontal-padding="10rem"
@@ -258,7 +204,6 @@
                             graph-id="idea-to-paper-segments-path-left-right"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="18rem"
                             min-height="18rem"
                             min-width="24rem"
                             horizontal-padding="10rem"
@@ -288,7 +233,6 @@
                             graph-id="idea-to-paper-segments-path-right-left"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="18rem"
                             min-height="18rem"
                             min-width="24rem"
                             horizontal-padding="10rem"

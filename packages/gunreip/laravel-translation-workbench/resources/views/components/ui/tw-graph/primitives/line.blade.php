@@ -16,6 +16,7 @@
 
 @props([
     'id' => 'line',
+    'lineJumps' => [],
     'direction' => 'bottom-top',
     'length' => '4rem',
     'startX' => '0rem',
@@ -47,6 +48,12 @@
     $toSurfaceColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::surfaceRgb($toColor, $surfaceColorRgb);
     $toDarkSurfaceColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::darkSurfaceRgb($toColor, $toSurfaceColorRgb);
     $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id);
+    $resolvedLineJumps = array_map(static function ($jump) {
+        if (is_array($jump) && is_string($jump['over'] ?? null)) {
+            $jump['over'] = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($jump['over']);
+        }
+        return $jump;
+    }, (array) $lineJumps);
     $resolvedCapEnd = $capEnd ?? $cap;
 @endphp
 
@@ -80,6 +87,9 @@
         '--tw-graph-protocol-line-end-cap-length: ' . $capLength,
         '--tw-graph-protocol-z-index: ' . $zIndex => filled($zIndex),
     ]) }}
+    @if ($resolvedLineJumps !== [])
+        data-tw-graph-line-jumps="{{ json_encode($resolvedLineJumps) }}"
+    @endif
     title="{{ $devIdentifier }}"
     data-tw-graph-path="{{ $devIdentifier }}"
     x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"

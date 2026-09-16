@@ -56,22 +56,27 @@ final class LabelBridge
      *     bridgeOutStart: array{x: string, y: string},
      *     anchorEnd: array{x: string, y: string},
      *     labelAnchor: array{x: string, y: string},
+     *     bridgeOutLength: string,
      *     spanLength: string,
      *     spanHalfLength: string
      * }
      */
-    public static function geometry(array $anchorStart, string $direction, string $labelWidth, string $bridgeLength): array
+    public static function geometry(array $anchorStart, string $direction, string $labelWidth, string $bridgeLength, ?string $bridgeOutLength = null): array
     {
         $x = (string) data_get($anchorStart, 'x', '0rem');
         $y = (string) data_get($anchorStart, 'y', '0rem');
-        $spanLength = 'calc(' . $labelWidth . ' + (' . $bridgeLength . ' * 2))';
+        $spanLength = $bridgeOutLength === null
+            ? 'calc(' . $labelWidth . ' + (' . $bridgeLength . ' * 2))'
+            : 'calc(' . $labelWidth . ' + ' . $bridgeLength . ' + ' . $bridgeOutLength . ')';
         $spanHalfLength = 'calc(' . $spanLength . ' / 2)';
         $add = static fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
         $neg = static fn (string $value): string => 'calc(' . $value . ' * -1)';
         $isRightLeft = $direction === 'right-left';
         $signedBridgeLength = $isRightLeft ? $neg($bridgeLength) : $bridgeLength;
         $signedSpanLength = $isRightLeft ? $neg($spanLength) : $spanLength;
-        $signedSpanHalfLength = $isRightLeft ? $neg($spanHalfLength) : $spanHalfLength;
+        $labelCenter = $bridgeOutLength === null ? $spanHalfLength : 'calc(' . $bridgeLength . ' + (' . $labelWidth . ' / 2))';
+        $signedSpanHalfLength = $isRightLeft ? $neg($labelCenter) : $labelCenter;
+        $bridgeOutLength ??= $bridgeLength;
         $anchorEnd = [
             'x' => $add($x, $signedSpanLength),
             'y' => $y,
@@ -83,7 +88,7 @@ final class LabelBridge
                 'y' => $y,
             ],
             'bridgeOutStart' => [
-                'x' => $add($anchorEnd['x'], $isRightLeft ? $bridgeLength : $neg($bridgeLength)),
+                'x' => $add($anchorEnd['x'], $isRightLeft ? $bridgeOutLength : $neg($bridgeOutLength)),
                 'y' => $y,
             ],
             'anchorEnd' => $anchorEnd,
@@ -91,6 +96,7 @@ final class LabelBridge
                 'x' => $add($x, $signedSpanHalfLength),
                 'y' => $y,
             ],
+            'bridgeOutLength' => $bridgeOutLength,
             'spanLength' => $spanLength,
             'spanHalfLength' => $spanHalfLength,
         ];

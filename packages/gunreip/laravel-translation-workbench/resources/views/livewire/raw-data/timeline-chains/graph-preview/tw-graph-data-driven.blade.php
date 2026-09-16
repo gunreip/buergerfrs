@@ -480,7 +480,7 @@
                     :stem-length="$twGraphDataDrivenPreviewGraph->get('stem_length', '4rem')"
                     :connector-length="$twGraphDataDrivenPreviewGraph->get('connector_length', '2rem')"
                     :connector-gap="$twGraphDataDrivenPreviewGraph->get('connector_gap', '0.25rem')"
-                    :slot-min-height="$twGraphDataDrivenPreviewGraph->get('slot_min_height', '34rem')"
+                    :min-height="$twGraphDataDrivenPreviewGraph->get('min_height', '34rem')"
                     :horizontal-padding="$twGraphDataDrivenPreviewGraph->get('horizontal_padding', '12rem')"
                 >
                     <x-translation-workbench::ui.tw-graph.strang.trunk

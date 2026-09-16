@@ -9,36 +9,12 @@
             {{ __('A merge strand collects a side path and leads it back toward the central chain. This default example only places left and right merge strands at a trunk anchor; all merge geometry and labels stay on their defaults.') }}
         </flux:callout.text>
         @php
-            $mergeExampleSource = file_get_contents(
-                \Illuminate\Support\Facades\View::getFinder()->find(
-                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.merge.merge-default',
-                ),
+            $mergeExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.merge.merge-default',
             );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- merge-default-example-1:start --\}\}\R(.*?)^[ \t]*\{\{-- merge-default-example-1:end --\}\}/ms',
-                    $mergeExampleSource,
-                    $mergeExample1Match,
-                ) !== 1
-            ) {
-                throw new \LogicException('Missing merge-default-example-1 source markers.');
-            }
-            $mergeExample1Lines = explode("\n", rtrim($mergeExample1Match[1]));
-            $mergeExample1Indent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($mergeExample1Lines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $mergeExample1Code = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $mergeExample1Indent), $mergeExample1Lines),
-            );
+            $mergeExample1Code = $mergeExampleSource->example('merge-default-example-1');
         @endphp
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $mergeExample1Code }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $mergeExample1Code }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -143,7 +119,6 @@
                     stem-length="5rem"
                     connector-length="2rem"
                     connector-gap="0.25rem"
-                    slot-min-height="34rem"
                     horizontal-padding="12rem"
                     min-width="42rem"
                     min-height="34rem"

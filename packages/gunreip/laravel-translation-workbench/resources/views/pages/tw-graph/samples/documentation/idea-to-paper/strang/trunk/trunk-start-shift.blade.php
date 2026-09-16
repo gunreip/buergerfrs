@@ -9,68 +9,22 @@
             {{ __('Start shift is off by default. When enabled explicitly, it moves only the trunk-start origin away from the first regular trunk stem; downstream attach-to points stay stable. The merge is shown only as a reference attached to stem-1.') }}
         </flux:callout.text>
         @php
-            $trunkExampleSource = file_get_contents(
-                \Illuminate\Support\Facades\View::getFinder()->find(
-                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.trunk.trunk-start-shift',
-                ),
+            $trunkExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.trunk.trunk-start-shift',
             );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- trunk-start-shift-example-1:start --\}\}\R(.*?)^[ \t]*\{\{-- trunk-start-shift-example-1:end --\}\}/ms',
-                    $trunkExampleSource,
-                    $trunkExample1Match,
-                ) !== 1
-            ) {
-                throw new \LogicException('Missing trunk-start-shift-example-1 source markers.');
-            }
-            $trunkExample1Lines = explode("\n", rtrim($trunkExample1Match[1]));
-            $trunkExample1Indent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($trunkExample1Lines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $trunkExample1Code = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $trunkExample1Indent), $trunkExample1Lines),
-            );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- trunk-start-shift-example-2:start --\}\}\R(.*?)^[ \t]*\{\{-- trunk-start-shift-example-2:end --\}\}/ms',
-                    $trunkExampleSource,
-                    $trunkExample2Match,
-                ) !== 1
-            ) {
-                throw new \LogicException('Missing trunk-start-shift-example-2 source markers.');
-            }
-            $trunkExample2Lines = explode("\n", rtrim($trunkExample2Match[1]));
-            $trunkExample2Indent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($trunkExample2Lines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $trunkExample2Code = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $trunkExample2Indent), $trunkExample2Lines),
-            );
+            $trunkExample1Code = $trunkExampleSource->example('trunk-start-shift-example-1');
+            $trunkExample2Code = $trunkExampleSource->example('trunk-start-shift-example-2');
         @endphp
         <flux:heading
             class="mt-4"
             size="sm"
         >Example 1</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $trunkExample1Code }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $trunkExample1Code }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >Example 2</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $trunkExample2Code }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $trunkExample2Code }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -265,7 +219,6 @@
                     graph-id="idea-to-paper-step-02-trunk-start-shift-default"
                     :dev="true"
                     :coordinates="true"
-                    slot-min-height="54rem"
                     horizontal-padding="30rem"
                     min-width="52rem"
                     min-height="36rem"
@@ -300,7 +253,6 @@
                     graph-id="idea-to-paper-step-02-trunk-start-shift-props"
                     :dev="true"
                     :coordinates="true"
-                    slot-min-height="70rem"
                     horizontal-padding="30rem"
                     min-width="52rem"
                     min-height="36rem"

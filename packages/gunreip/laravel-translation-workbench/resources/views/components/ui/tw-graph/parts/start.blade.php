@@ -36,11 +36,15 @@
 @props([
     'id' => null,
     'componentCounter' => 1,
+    'returnTo' => null,
+    'lineJumps' => [],
     'direction' => 'bottom-top',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'length' => null,
+    'gradient' => true,
     'color' => null,
     'nodeEnd' => true,
+    'jointArrowEnd' => false,
     'nodeEndDot' => null,
     'nodeImage' => null,
     'nodeLabelLeft' => null,
@@ -264,13 +268,15 @@
         : $nodeEnd;
     $segment = [
         'id' => $id,
+        'lineJumps' => $lineJumps,
         'direction' => $direction,
         'length' => $resolvedLength,
         'anchorStart' => $anchorStart,
         'anchorEnd' => $anchorEnd,
         'nodeStart' => false,
         'nodeEnd' => $nodeEnd,
-        'gradient' => true,
+        'jointArrowEnd' => $jointArrowEnd,
+        'gradient' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($gradient, true),
         'cap' => false,
         'color' => $resolvedColor,
         'zIndex' => $zIndex,
@@ -282,7 +288,7 @@
 
     if ($nodeEndDot !== null) {
         $segment['nodeEndDot'] = $nodeEndDot;
-    } elseif ($nodeImage !== null) {
+    } elseif ($nodeImage !== null || ($jointArrowEnd && ! $nodeLabelRight && ! $nodeLabelLeft)) {
         $segment['nodeEndDot'] = false;
     }
 @endphp
@@ -304,3 +310,9 @@
         :z-index="data_get($nodeImage, 'zIndex')"
     />
 @endif
+
+@php
+    if (filled($returnTo)) {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\ReturnColorRegistry::connect($resolvedGraphId, (string) $returnTo, $resolvedColor);
+    }
+@endphp

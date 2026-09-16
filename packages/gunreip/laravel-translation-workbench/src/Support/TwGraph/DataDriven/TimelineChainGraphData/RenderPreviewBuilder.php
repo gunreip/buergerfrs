@@ -489,7 +489,7 @@ final class RenderPreviewBuilder
                         ...LayoutCorrectionConfig::appliedCorrections($mergePreviews, $rekeyPreviews, $branchPreviews),
                     ],
                 ],
-                'slot_min_height' => max(
+                'min_height' => max(
                     $mergePreviewCount > 0 ? 42 : 34,
                     ($pathCount + 3) * 4,
                     42 + (int) ceil($branchPreviewCount / 2) * 2,

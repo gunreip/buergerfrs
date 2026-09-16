@@ -5,9 +5,7 @@
             {{ __('min-width controls the minimum visible canvas width. It does not change the trunk geometry itself; it changes how much horizontal room the graph canvas reserves around that geometry.') }}
         </p>
         <div class="mt-4 grid gap-4 xl:grid-cols-2">
-            <div
-                class="overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-                <pre><code>&lt;x-translation-workbench::ui.tw-graph
+            <x-translation-workbench::ui.tw-graph.code-box>&lt;x-translation-workbench::ui.tw-graph
     <span class="text-amber-300">graph-id="idea-to-paper-step-01-props-width-default"</span>
     <span class="text-amber-300">:dev="true"</span>
     <span class="text-amber-300">:coordinates="false"</span>
@@ -16,11 +14,8 @@
 &gt;
     &#123;&#123;-- Default min-width follows the calculated graph bounds. --&#125;&#125;
     &lt;x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</code></pre>
-            </div>
-            <div
-                class="overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-                <pre><code>&lt;x-translation-workbench::ui.tw-graph
+&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
+            <x-translation-workbench::ui.tw-graph.code-box>&lt;x-translation-workbench::ui.tw-graph
     <span class="text-amber-300">graph-id="idea-to-paper-step-01-props-width-custom"</span>
     <span class="text-amber-300">:dev="true"</span>
     <span class="text-amber-300">:coordinates="false"</span>
@@ -31,8 +26,7 @@
 &gt;
     &#123;&#123;-- The trunk is unchanged; only the reserved canvas width grows. --&#125;&#125;
     &lt;x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</code></pre>
-            </div>
+&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
         </div>
         <div class="mt-4 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
             <flux:table container:class="max-h-80">
@@ -112,11 +106,7 @@
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>0.25rem</code></flux:table.cell>
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs">Gap between a connector and its related label/node edge.</flux:table.cell>
                     </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>slot-min-height</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>52rem</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Minimum vertical canvas space used while slotted handmade components are rendered.</flux:table.cell>
-                    </flux:table.row>
+
                     <flux:table.row>
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>horizontal-padding</code></flux:table.cell>
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>12rem</code></flux:table.cell>
@@ -129,8 +119,8 @@
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>min-height</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>calculated</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Optional hard minimum height override for the graph viewport.</flux:table.cell>
+                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>config / 52rem; protocol: calculated</code></flux:table.cell>
+                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Minimum canvas height. Handmade graphs default to config / 52rem; protocol graphs use their geometry. Content bounds and padding can require more space.</flux:table.cell>
                     </flux:table.row>
                 </flux:table.rows>
             </flux:table>

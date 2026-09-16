@@ -16,6 +16,7 @@
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'direction' => 'left-right',
     'bridgeLength' => null,
+    'lineJumps' => [],
     'labelWidth' => null,
     'geometry' => null,
     'color' => 'zinc',
@@ -107,8 +108,9 @@
 
 <x-translation-workbench::ui.tw-graph.segments.path :segment="[
     'id' => $id . '.bridge-out',
+    'lineJumps' => data_get($label, 'lineJumps', $lineJumps),
     'direction' => $direction,
-    'length' => $resolvedBridgeLength,
+    'length' => $geometry['bridgeOutLength'] ?? $resolvedBridgeLength,
     'anchorStart' => $bridgeOutStart,
     'anchorEnd' => $anchorEnd,
     'nodeStart' => false,

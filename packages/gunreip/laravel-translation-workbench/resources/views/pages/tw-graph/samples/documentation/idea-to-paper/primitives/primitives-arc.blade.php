@@ -12,13 +12,10 @@
             class="mt-4"
             size="sm"
         >{{ __('Complete example: west → north') }}</flux:heading>
-        <div
-            class="mt-3 min-w-0 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>&lt;x-translation-workbench::ui.tw-graph
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">&lt;x-translation-workbench::ui.tw-graph
     graph-id="idea-to-paper-primitives-arc-west-north"
     :dev="true"
     :coordinates="true"
-    slot-min-height="12rem"
     min-height="12rem"
     min-width="14rem"
     horizontal-padding="4rem"
@@ -72,8 +69,7 @@
         anchor-y="4.75rem"
         color="zinc"
     /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</code></pre>
-        </div>
+&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -85,81 +81,67 @@
             class="mt-4"
             size="sm"
         >east-north</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>start-anchor="e"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="e"
 start-x="2.75rem"
-color="red"</code></pre>
-        </div>
+color="red"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >south-west</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>start-anchor="s"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="s"
 end-anchor="w"
 start-x="0rem"
 end-x="-2.75rem"
-color="green"</code></pre>
-        </div>
+color="green"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >south-east</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>start-anchor="s"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="s"
 end-anchor="e"
 start-x="0rem"
 end-x="2.75rem"
-color="yellow"</code></pre>
-        </div>
+color="yellow"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >north-west</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>start-anchor="n"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="n"
 end-anchor="w"
 start-x="0rem"
 start-y="4.75rem"
 end-x="-2.75rem"
 end-y="2rem"
-color="fuchsia"</code></pre>
-        </div>
+color="fuchsia"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >north-east</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>start-anchor="n"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="n"
 end-anchor="e"
 start-x="0rem"
 start-y="4.75rem"
 end-x="2.75rem"
 end-y="2rem"
-color="rose"</code></pre>
-        </div>
+color="rose"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >west-south</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>end-anchor="s"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">end-anchor="s"
 start-y="4.75rem"
 end-y="2rem"
-color="blue"</code></pre>
-        </div>
+color="blue"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >east-south</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>start-anchor="e"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="e"
 end-anchor="s"
 start-x="2.75rem"
 start-y="4.75rem"
 end-y="2rem"
-color="violet"</code></pre>
-        </div>
+color="violet"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -326,7 +308,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-arc-west-north"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="4rem"
@@ -394,7 +375,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-arc-east-north"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="4rem"
@@ -463,7 +443,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-arc-south-west"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="4rem"
@@ -532,7 +511,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-arc-south-east"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="4rem"
@@ -600,7 +578,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-arc-north-west"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="4rem"
@@ -669,7 +646,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-arc-north-east"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="4rem"
@@ -738,7 +714,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-arc-west-south"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="4rem"
@@ -807,7 +782,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-arc-east-south"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="4rem"

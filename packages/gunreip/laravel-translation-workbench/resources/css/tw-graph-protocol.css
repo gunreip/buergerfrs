@@ -150,6 +150,24 @@
         --tw-graph-protocol-active-to-color-rgb: var(--tw-graph-protocol-local-to-dark-surface-color-rgb, var(--tw-graph-protocol-local-to-surface-color-rgb, var(--tw-graph-protocol-active-color-rgb)));
     }
 
+    /* The canvas owns the path palette, overriding legacy local tone classes. */
+    .tw-graph-protocol[data-tw-graph-path-tone="surface"] :is(.tw-graph-protocol-primitive-line, .tw-graph-protocol-primitive-arc, .tw-graph-protocol-primitive-node, .tw-graph-protocol-primitive-joint-arrow) {
+        --tw-graph-protocol-active-color-rgb: var(--tw-graph-protocol-local-surface-color-rgb, var(--tw-graph-protocol-local-color-rgb, var(--tw-graph-protocol-color-rgb)));
+        --tw-graph-protocol-active-to-color-rgb: var(--tw-graph-protocol-local-to-surface-color-rgb, var(--tw-graph-protocol-local-surface-color-rgb, var(--tw-graph-protocol-active-color-rgb)));
+        --tw-graph-protocol-local-color-alpha: 1;
+    }
+
+    .dark .tw-graph-protocol[data-tw-graph-path-tone="surface"] :is(.tw-graph-protocol-primitive-line, .tw-graph-protocol-primitive-arc, .tw-graph-protocol-primitive-node, .tw-graph-protocol-primitive-joint-arrow) {
+        --tw-graph-protocol-active-color-rgb: var(--tw-graph-protocol-local-dark-surface-color-rgb, var(--tw-graph-protocol-local-surface-color-rgb, var(--tw-graph-protocol-local-color-rgb, var(--tw-graph-protocol-color-rgb))));
+        --tw-graph-protocol-active-to-color-rgb: var(--tw-graph-protocol-local-to-dark-surface-color-rgb, var(--tw-graph-protocol-local-to-surface-color-rgb, var(--tw-graph-protocol-active-color-rgb)));
+    }
+
+    .tw-graph-protocol[data-tw-graph-path-tone="line"] :is(.tw-graph-protocol-primitive-line, .tw-graph-protocol-primitive-arc, .tw-graph-protocol-primitive-node, .tw-graph-protocol-primitive-joint-arrow) {
+        --tw-graph-protocol-active-color-rgb: var(--tw-graph-protocol-local-color-rgb, var(--tw-graph-protocol-color-rgb));
+        --tw-graph-protocol-active-to-color-rgb: var(--tw-graph-protocol-local-to-color-rgb, var(--tw-graph-protocol-active-color-rgb));
+        --tw-graph-protocol-local-color-alpha: var(--tw-graph-protocol-color-alpha);
+    }
+
     .tw-graph-protocol-primitive-line {
         z-index: var(--tw-graph-protocol-z-index, 1);
         background-color: rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-active-color-alpha));
@@ -896,4 +914,17 @@
         width: 100%;
         box-shadow: 0 1rem 2rem rgb(0 0 0 / 0.28);
     }
+}
+
+.tw-graph-line-jump-mismatch {
+    position: absolute;
+    z-index: 50;
+    transform: translateY(-100%);
+    padding: 0.15rem 0.35rem;
+    border: 1px solid #f59e0b;
+    border-radius: 0.25rem;
+    background: #451a03;
+    color: #fef3c7;
+    font: 0.65rem/1.3 ui-monospace, monospace;
+    white-space: nowrap;
 }

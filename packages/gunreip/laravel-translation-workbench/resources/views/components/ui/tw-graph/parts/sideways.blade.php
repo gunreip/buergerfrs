@@ -17,6 +17,8 @@
     A manual authoring part that routes sideways through arc -> bridge -> arc.
     The first arc and bridge keep their anchors technical only; the final arc
     owns the visible end anchor and optional left/right labels.
+    An optional bridgeLabel replaces the plain bridge with segments.label-bridge;
+    its shared LabelBridge geometry determines the following arc and end anchor.
 --}}
 
 @aware([
@@ -45,10 +47,14 @@
     'arcRadius' => null,
     'arcSize' => null,
     'bridgeLength' => null,
+    'bridgeLabel' => null,
+    'bridgeOutLength' => null,
+    'lineJumps' => [],
     'extension' => null,
     'direction' => 'bottom-top',
     'color' => null,
     'nodeEnd' => true,
+    'jointArrowEnd' => false,
     'nodeImage' => null,
     'nodeLabelLeft' => null,
     'nodeLabelRight' => null,
@@ -120,7 +126,19 @@
         'x' => $add($anchorStart['x'], $arcDelta),
         'y' => $add($anchorStart['y'], $verticalDelta),
     ];
-    $bridgeEnd = [
+    $bridgeLabel = \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($bridgeLabel, 'center', $resolvedColor);
+    $labelBridgeGeometry = null;
+    if ($bridgeLabel !== null) {
+        $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\LabelBridge::bridgeLength($bridgeLength);
+        $labelBridgeGeometry = \Gunreip\TranslationWorkbench\Support\TwGraph\LabelBridge::geometry(
+            $arcInEnd,
+            $bridgeDirection,
+            \Gunreip\TranslationWorkbench\Support\TwGraph\LabelBridge::labelWidth($bridgeLabel),
+            $resolvedBridgeLength,
+            $bridgeOutLength,
+        );
+    }
+    $bridgeEnd = $labelBridgeGeometry['anchorEnd'] ?? [
         'x' => $add($arcInEnd['x'], $bridgeDelta),
         'y' => $arcInEnd['y'],
     ];
@@ -254,6 +272,19 @@
         $geometryBounds['height'],
         $isLeft ? 'left' : 'right',
     );
+    if ($labelBridgeGeometry !== null) {
+        $bridgeLabelWidth = $labelWidth($bridgeLabel);
+        $bridgeLabelHeight = $labelHeight($bridgeLabel);
+        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
+            $resolvedGraphId,
+            $id . '.bridge1.label.bounds',
+            'calc(' . $labelBridgeGeometry['labelAnchor']['x'] . ' - (' . $bridgeLabelWidth . ' / 2))',
+            'calc(' . $labelBridgeGeometry['labelAnchor']['y'] . ' - (' . $bridgeLabelHeight . ' / 2))',
+            $bridgeLabelWidth,
+            $bridgeLabelHeight,
+            $isLeft ? 'left' : 'right',
+        );
+    }
     $putSideLabelBounds($id . '.anchorNode-end.label-1.bounds', $nodeLabelRight, 'right', $labelAnchor);
     $putSideLabelBounds($id . '.anchorNode-end.label-2.bounds', $nodeLabelLeft, 'left', $labelAnchor);
 
@@ -302,6 +333,7 @@
             'component' => 'path',
             'segment' => [
                 'id' => $id . '.bridge1',
+                'lineJumps' => $lineJumps,
                 'direction' => $bridgeDirection,
                 'length' => $resolvedBridgeLength,
                 'anchorStart' => $arcInEnd,
@@ -328,6 +360,9 @@
                 'devCounterStart' => false,
                 'nodeEnd' => $hasExtension ? true : $nodeEnd,
                 'nodeEndSize' => null,
+                'nodeEndDot' => ! $hasExtension && $jointArrowEnd && ! $nodeLabelRight && ! $nodeLabelLeft ? false : null,
+                'jointArrowEnd' => ! $hasExtension && $jointArrowEnd,
+                'jointArrowEndDirection' => $direction === 'top-bottom' ? 'bottom' : 'top',
                 'devCounterEnd' => $hasExtension ? false : $devCounterEnd,
                 'devCounterColor' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
                     $devCounterColor,
@@ -352,6 +387,8 @@
                 'anchorEnd' => $labelAnchor,
                 'nodeStart' => false,
                 'nodeEnd' => $nodeEnd,
+                'nodeEndDot' => $jointArrowEnd && ! $nodeLabelRight && ! $nodeLabelLeft ? false : $nodeEnd,
+                'jointArrowEnd' => $jointArrowEnd,
                 'devCounterStart' => false,
                 'devCounterEnd' => $devCounterEnd,
                 'devCounterColor' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
@@ -374,6 +411,7 @@
                 'anchorEnd' => $continuationEnd,
                 'nodeStart' => false,
                 'nodeEnd' => true,
+    'jointArrowEnd' => false,
                 'nodeEndSize' => null,
                 'devCounterStart' => false,
                 'devCounterEnd' => false,
@@ -399,6 +437,20 @@
             :segment="$segment['segment']"
             :dev="$resolvedDev"
         />
+    @elseif ($segment['segment']['id'] === $id . '.bridge1' && $bridgeLabel !== null)
+        <x-translation-workbench::ui.tw-graph.segments.label-bridge
+            :id="$id . '.bridge1'"
+            :label="$bridgeLabel"
+            :line-jumps="data_get($bridgeLabel, 'lineJumps', $lineJumps)"
+            :anchor-start="$arcInEnd"
+            :direction="$bridgeDirection"
+            :bridge-length="$resolvedBridgeLength"
+            :geometry="$labelBridgeGeometry"
+            :color="$resolvedColor"
+            :z-index="$zIndex"
+            :dev="$resolvedDev"
+            :dev-counter-end="false"
+        />
     @else
         <x-translation-workbench::ui.tw-graph.segments.path
             :segment="$segment['segment']"
@@ -416,17 +468,21 @@
     :z-index="$zIndex + 1"
 />
 
-<x-translation-workbench::ui.tw-graph.primitives.joint-arrow
-    :id="$id . '.bridge.arc-out.joint-arrow'"
-    :direction="$jointArrowDirection"
-    :anchor-x="$bridgeEnd['x']"
-    :anchor-y="$bridgeEnd['y']"
-    :color="$resolvedColor"
-    :z-index="$zIndex + 1"
-/>
+@if ($bridgeLabel === null)
+    <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
+        :id="$id . '.bridge.arc-out.joint-arrow'"
+        :direction="$jointArrowDirection"
+        :anchor-x="$bridgeEnd['x']"
+        :anchor-y="$bridgeEnd['y']"
+        :color="$resolvedColor"
+        :z-index="$zIndex + 1"
+    />
+
+@endif
 
 @if ($nodeEnd && $nodeLabelRight)
     <x-translation-workbench::ui.tw-graph.segments.label
+        :dev="$resolvedDev"
         :id="$id . '.anchorNode-end.label-1'"
         :label="$nodeLabelRight"
         side="right"
@@ -438,6 +494,7 @@
 
 @if ($nodeEnd && $nodeLabelLeft)
     <x-translation-workbench::ui.tw-graph.segments.label
+        :dev="$resolvedDev"
         :id="$id . '.anchorNode-end.label-2'"
         :label="$nodeLabelLeft"
         side="left"

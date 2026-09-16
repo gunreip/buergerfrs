@@ -9,68 +9,22 @@
             {{ __('Two individually authored return extensions, shown one below the other. The zinc branch and its return provide context. Each colored extension connects a stem, an arc, and a bridge, joining the reference return where its incoming arc meets its bridge. side="left" runs left-right; side="right" runs right-left. The endpoint coordinates are calculated from the starting anchor and lengths.') }}
         </flux:callout.text>
         @php
-            $branchReturnExtensionExampleSource = file_get_contents(
-                \Illuminate\Support\Facades\View::getFinder()->find(
-                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-branch-return-extension',
-                ),
+            $branchReturnExtensionExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-branch-return-extension',
             );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- branch-return-extension-left-example:start --\}\}\R(.*?)^[ \t]*\{\{-- branch-return-extension-left-example:end --\}\}/ms',
-                    $branchReturnExtensionExampleSource,
-                    $branchReturnExtensionLeftMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The branch-return-extension-left-example requires start and end markers.');
-            }
-            $branchReturnExtensionLeftLines = explode("\n", rtrim($branchReturnExtensionLeftMatch[1]));
-            $branchReturnExtensionLeftIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($branchReturnExtensionLeftLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $branchReturnExtensionLeftCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $branchReturnExtensionLeftIndent), $branchReturnExtensionLeftLines),
-            );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- branch-return-extension-right-example:start --\}\}\R(.*?)^[ \t]*\{\{-- branch-return-extension-right-example:end --\}\}/ms',
-                    $branchReturnExtensionExampleSource,
-                    $branchReturnExtensionRightMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The branch-return-extension-right-example requires start and end markers.');
-            }
-            $branchReturnExtensionRightLines = explode("\n", rtrim($branchReturnExtensionRightMatch[1]));
-            $branchReturnExtensionRightIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($branchReturnExtensionRightLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $branchReturnExtensionRightCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $branchReturnExtensionRightIndent), $branchReturnExtensionRightLines),
-            );
+            $branchReturnExtensionLeftCode = $branchReturnExtensionExampleSource->example('branch-return-extension-left-example');
+            $branchReturnExtensionRightCode = $branchReturnExtensionExampleSource->example('branch-return-extension-right-example');
         @endphp
         <flux:heading
             class="mt-4"
             size="sm"
         >left-right · side="left"</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $branchReturnExtensionLeftCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $branchReturnExtensionLeftCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >right-left · side="right"</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $branchReturnExtensionRightCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $branchReturnExtensionRightCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -153,7 +107,6 @@
                     graph-id="idea-to-paper-paths-branch-return-extension-left-right"
                     :dev="true"
                     :coordinates="true"
-                    slot-min-height="30rem"
                     min-height="30rem"
                     min-width="44rem"
                     horizontal-padding="20rem"
@@ -208,7 +161,6 @@
                     graph-id="idea-to-paper-paths-branch-return-extension-right-left"
                     :dev="true"
                     :coordinates="true"
-                    slot-min-height="30rem"
                     min-height="30rem"
                     min-width="44rem"
                     horizontal-padding="20rem"

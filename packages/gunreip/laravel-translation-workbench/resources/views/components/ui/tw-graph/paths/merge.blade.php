@@ -449,6 +449,7 @@
         @endphp
 
         <x-translation-workbench::ui.tw-graph.segments.label
+            :dev="$dev"
             :id="$id . '.end.label.' . $side . '.' . ($labelIndex + 1)"
             :label="$label"
             :side="$side"

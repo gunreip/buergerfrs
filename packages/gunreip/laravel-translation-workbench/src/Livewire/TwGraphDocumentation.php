@@ -10,12 +10,13 @@ class TwGraphDocumentation extends Component
 {
     // Only navigation IDs are client state. View names remain in the authored Blade includes.
     private const TABS = [
-        'main' => ['idea-to-paper-canvas', 'idea-to-paper-primitives', 'idea-to-paper-segments', 'idea-to-paper-paths', 'idea-to-paper-trunk', 'idea-to-paper-merge', 'idea-to-paper-branch', 'idea-to-paper-rekey', 'idea-to-paper-flow'],
-        'results' => ['idea-to-paper-results-idle', 'idea-to-paper-draft', 'idea-to-paper-result', 'idea-to-paper-flow-result'],
+        'main' => ['idea-to-paper-canvas', 'idea-to-paper-primitives', 'idea-to-paper-segments', 'idea-to-paper-parts', 'idea-to-paper-paths', 'idea-to-paper-trunk', 'idea-to-paper-merge', 'idea-to-paper-branch', 'idea-to-paper-rekey', 'idea-to-paper-flow'],
+        'results' => ['idea-to-paper-draft', 'idea-to-paper-result', 'idea-to-paper-flow-result'],
         'canvas_canvas_props' => ['canvas-props-line', 'canvas-props-stem-length', 'canvas-props-node-size', 'canvas-props-cap-length', 'canvas-props-min-width'],
         'canvas_index' => ['canvas-default', 'canvas-borders', 'canvas-default-trunk', 'canvas-coordinates', 'canvas-height', 'canvas-props'],
-        'flow_flow_if' => ['flow-if-if', 'flow-if-endif', 'flow-if-else-endif', 'flow-if-elseif-endif', 'flow-if-test', 'flow-if-nested-test'],
-        'flow_index' => ['flow-start', 'flow-step', 'flow-decision', 'flow-branch-steps', 'flow-if'],
+        'flow_flow_if' => ['flow-if-simple', 'flow-if-else', 'flow-if-elseif', 'flow-if-elseif-multi', 'flow-if-ternary', 'flow-if-nested-1', 'flow-if-nested-2', 'flow-if-nested-test'],
+        'flow_index' => ['flow-start', 'flow-step', 'flow-branch-steps', 'flow-if'],
+        'parts_index' => ['idea-to-paper-parts-start', 'idea-to-paper-parts-end', 'idea-to-paper-parts-sideways', 'idea-to-paper-parts-chain'],
         'paths_index' => ['idea-to-paper-paths-trunk', 'idea-to-paper-paths-merge', 'idea-to-paper-paths-merge-extension', 'idea-to-paper-paths-branch', 'idea-to-paper-paths-branch-extension', 'idea-to-paper-paths-branch-return', 'idea-to-paper-paths-branch-return-extension', 'idea-to-paper-paths-branch-return-bridge'],
         'primitives_index' => ['idea-to-paper-primitives-line', 'idea-to-paper-primitives-arc', 'idea-to-paper-primitives-text-label', 'idea-to-paper-primitives-markers-connectors'],
         'primitives_primitives_markers_connectors' => ['primitives-markers-node', 'primitives-markers-joint-arrow', 'primitives-markers-connector'],
@@ -37,6 +38,14 @@ class TwGraphDocumentation extends Component
 
     public function render(): View
     {
+        if (($this->tabs['flow_flow_if'] ?? null) === 'flow-if-true-false') {
+            $this->tabs['flow_flow_if'] = 'flow-if-else';
+        }
+        if (in_array($this->tabs['flow_index'] ?? null, ['flow-if-true-false', 'flow-if-else'], true)) {
+            $this->tabs['flow_index'] = 'flow-if';
+            $this->tabs['flow_flow_if'] = 'flow-if-else';
+        }
+
         $selection = [];
         foreach (self::TABS as $group => $options) {
             $value = $this->tabs[$group] ?? null;

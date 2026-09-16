@@ -295,7 +295,7 @@
                     line-length="4rem"
                     bridge-length="12rem"
                     stem-length="4rem"
-                    slot-min-height="42rem"
+                    min-height="42rem"
                     horizontal-padding="16rem"
                 >
                     <x-translation-workbench::ui.tw-graph.parts.chain
@@ -365,7 +365,7 @@
                     line-length="4rem"
                     bridge-length="12rem"
                     stem-length="4rem"
-                    slot-min-height="42rem"
+                    min-height="42rem"
                     horizontal-padding="16rem"
                 >
                     <x-translation-workbench::ui.tw-graph.parts.chain

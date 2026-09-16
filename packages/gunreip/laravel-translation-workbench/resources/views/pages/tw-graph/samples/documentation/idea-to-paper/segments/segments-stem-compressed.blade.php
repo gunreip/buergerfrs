@@ -5,25 +5,12 @@
             {{ __('A compressed stem is a graphical omission marker: a solid section, a cap, a dashed section, another cap, and a solid section. This individually authored example sets all three lengths explicitly. Alternatively, anchorEnd defines the total distance and replaces those lengths with a one-quarter, one-half, one-quarter split. The marker has no status text; use segments.step when a reason or status needs to be shown.') }}
         </flux:callout.text>
         @php
-            $compressedStemExampleSource = file_get_contents(\Illuminate\Support\Facades\View::getFinder()->find(
+            $compressedStemExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.segments-stem-compressed',
-            ));
-            if (preg_match('/^[ \t]*\{\{-- segment-stem-compressed-example:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-stem-compressed-example:end --\}\}/ms', $compressedStemExampleSource, $compressedStemMatch) !== 1) {
-                throw new \LogicException('The segment-stem-compressed-example requires start and end markers.');
-            }
-            $compressedStemLines = explode("\n", rtrim($compressedStemMatch[1]));
-            $compressedStemIndent = min(array_map(
-                fn (string $line): int => strlen($line) - strlen(ltrim($line)),
-                array_filter($compressedStemLines, fn (string $line): bool => trim($line) !== ''),
-            ));
-            $compressedStemCode = implode("\n", array_map(
-                fn (string $line): string => substr($line, $compressedStemIndent),
-                $compressedStemLines,
-            ));
+            );
+            $compressedStemCode = $compressedStemExampleSource->example('segment-stem-compressed-example');
         @endphp
-        <div class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $compressedStemCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $compressedStemCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">{{ __('Compressed stem segment props') }}</flux:heading>
         <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
             <flux:table container:class="max-h-80">
@@ -121,7 +108,6 @@
                     graph-id="idea-to-paper-segments-stem-compressed"
                     :dev="true"
                     :coordinates="true"
-                    slot-min-height="22rem"
                     min-height="22rem"
                     min-width="24rem"
                     horizontal-padding="10rem"

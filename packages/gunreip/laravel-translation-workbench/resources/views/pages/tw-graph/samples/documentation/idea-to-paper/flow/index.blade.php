@@ -5,7 +5,6 @@
     <flux:tabs wire:model.live="tabs.flow_index" scrollable scrollable:fade scrollable:scrollbar="hide">
         <flux:tab name="flow-start">{{ __('Flow start') }}</flux:tab>
         <flux:tab name="flow-step">{{ __('Flow step') }}</flux:tab>
-        <flux:tab name="flow-decision">{{ __('Flow decision') }}</flux:tab>
         <flux:tab name="flow-branch-steps">{{ __('Flow branch steps') }}</flux:tab>
         <flux:tab name="flow-if">{{ __('Flow IF') }}</flux:tab>
     </flux:tabs>
@@ -20,13 +19,6 @@
         @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-step')
             <div wire:key="documentation-flow-step">
                 @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-step')
-            </div>
-        @endif
-    </flux:tab.panel>
-    <flux:tab.panel name="flow-decision">
-        @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-decision')
-            <div wire:key="documentation-flow-decision">
-                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-decision')
             </div>
         @endif
     </flux:tab.panel>

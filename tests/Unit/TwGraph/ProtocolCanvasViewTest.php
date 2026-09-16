@@ -15,7 +15,6 @@ it('renders tw graph wrapper props as shared canvas css variables and metrics pa
             line-width="0.5rem"
             node-size="1.5rem"
             arc-size="4rem"
-            slot-min-height="30rem"
             horizontal-padding="18rem"
             min-width="72rem"
             min-height="88rem"
@@ -188,3 +187,42 @@ it('flattens merge branch and extension protocol segments without recalculating 
         ->toContain('protocol.branch.right.stem')
         ->toContain('protocol.branch.right.extension.stem');
 });
+
+it('normalizes the canvas path tone and preserves each path color', function (mixed $tone, string $expected): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="palette-test" :path-tone="$tone">
+            <x-translation-workbench::ui.tw-graph.parts.start id="palette.start" color="cyan" />
+            <x-translation-workbench::ui.tw-graph.parts.sideways id="palette.sideways" color="rose" />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, compact('tone'));
+    expect($html)->toContain('data-tw-graph-path-tone="' . $expected . '"')
+        ->toContain('--tw-graph-protocol-local-color-rgb: ' . \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb('cyan'))
+        ->toContain('--tw-graph-protocol-local-color-rgb: ' . \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb('rose'));
+})->with([[true, 'surface'], [false, 'line'], ['false', 'line'], [null, 'surface']]);
+
+it('defaults to surface paths while another canvas can select line colors', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="surface-default">
+            <x-translation-workbench::ui.tw-graph.parts.start />
+        </x-translation-workbench::ui.tw-graph>
+        <x-translation-workbench::ui.tw-graph graph-id="line-explicit" :path-tone="false">
+            <x-translation-workbench::ui.tw-graph.parts.start />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    expect($xpath->query('//*[@id="surface-default"]')->item(0)->getAttribute('data-tw-graph-path-tone'))->toBe('surface')
+        ->and($xpath->query('//*[@id="line-explicit"]')->item(0)->getAttribute('data-tw-graph-path-tone'))->toBe('line');
+});
+
+
+it('uses the configured minimum height unless the canvas overrides it', function (?string $height, string $expected): void {
+    config()->set('tw-graph-defaults.min_height', '64rem');
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="minimum-height-api" :min-height="$height">
+            <x-translation-workbench::ui.tw-graph.strang.flow-step :step-label="['text' => ['Step']]" />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, ['height' => $height]);
+    expect($html)->toContain('--tw-graph-protocol-min-height: ' . $expected);
+})->with([[null, '64rem'], ['20rem', '20rem']]);

@@ -73,7 +73,7 @@
                         line-length="4rem"
                         bridge-length="16rem"
                         stem-length="5rem"
-                        slot-min-height="78rem"
+                        min-height="78rem"
                         horizontal-padding="36rem"
                     >
                         {{-- central milestone timeline --}}

@@ -12,13 +12,10 @@
             class="mt-4"
             size="sm"
         >{{ __('Complete example: default · 12rem') }}</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>&lt;x-translation-workbench::ui.tw-graph
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">&lt;x-translation-workbench::ui.tw-graph
     graph-id="idea-to-paper-primitives-text-preview"
     :dev="true"
     :coordinates="true"
-    slot-min-height="41rem"
     min-height="41rem"
     min-width="34rem"
     horizontal-padding="4rem"
@@ -33,8 +30,7 @@
         badge-color="cyan"
         :dev="true"
     /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</code></pre>
-        </div>
+&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -46,58 +42,46 @@
             class="mt-4"
             size="sm"
         >half · 6rem · two lines</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>anchor-y="34rem"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">anchor-y="34rem"
 badge-color="red"
-:half="true"</code></pre>
-        </div>
+:half="true"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >default · 12rem · one line</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>:text="['Text label']"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">:text="['Text label']"
 anchor-y="25rem"
-badge-color="green"</code></pre>
-        </div>
+badge-color="green"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >default · 12rem · four lines</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>:text="['Text label', 'Second line', 'Third line', 'Fourth line']"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">:text="['Text label', 'Second line', 'Third line', 'Fourth line']"
 anchor-y="20rem"
 badge-color="fuchsia"
-maxLines="4"</code></pre>
-        </div>
+maxLines="4"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >half-long · 18rem · two lines</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>anchor-y="14rem"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">anchor-y="14rem"
 badge-color="emerald"
-:half-long="true"</code></pre>
-        </div>
+:half-long="true"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >long · 24rem · two lines</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>anchor-y="9rem"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">anchor-y="9rem"
 badge-color="rose"
-:long="true"</code></pre>
-        </div>
+:long="true"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >long · 24rem · three lines</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>:text="['Text label', 'Three lines of information', 'Additional line']"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">:text="['Text label', 'Three lines of information', 'Additional line']"
 anchor-y="3rem"
 badge-color="sky"
-:long="true"</code></pre>
-        </div>
+:long="true"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -238,7 +222,6 @@ badge-color="sky"
                     graph-id="idea-to-paper-primitives-text-preview"
                     :dev="true"
                     :coordinates="true"
-                    slot-min-height="24rem"
                     min-height="41rem"
                     min-width="34rem"
                     horizontal-padding="4rem"

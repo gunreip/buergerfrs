@@ -7,36 +7,12 @@
         <flux:callout.heading>{{ __('Branch mismatch') }}</flux:callout.heading>
         <flux:callout.text>{{ __('Handmade example with individually configurable components.') }}</flux:callout.text>
         @php
-            $docExampleSource = file_get_contents(
-                \Illuminate\Support\Facades\View::getFinder()->find(
-                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.branch.branch-mismatch',
-                ),
+            $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.branch.branch-mismatch',
             );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- branch-mismatch-example-1:start --\}\}\R(.*?)^[ \t]*\{\{-- branch-mismatch-example-1:end --\}\}/ms',
-                    $docExampleSource,
-                    $docExample1Match,
-                ) !== 1
-            ) {
-                throw new \LogicException('Missing branch-mismatch-example-1 source markers.');
-            }
-            $docExample1Lines = explode("\n", rtrim($docExample1Match[1]));
-            $docExample1Indent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($docExample1Lines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $docExample1Code = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $docExample1Indent), $docExample1Lines),
-            );
+            $docExample1Code = $docExampleSource->example('branch-mismatch-example-1');
         @endphp
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $docExample1Code }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $docExample1Code }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -154,7 +130,6 @@
                     arc-size="2.75rem"
                     bridge-length="18rem"
                     stem-length="5rem"
-                    slot-min-height="46rem"
                     horizontal-padding="5rem"
                     min-width="48rem"
                     min-height="42rem"

@@ -170,7 +170,7 @@ it('lets flow steps attach to registered flow start anchors', function (): void 
 
 it('lets flow decisions and branch steps attach to registered flow anchors', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph graph-id="flow-decision-attach-test" :dev="true" :coordinates="false" color="cyan">
+        <x-translation-workbench::ui.tw-graph graph-id="flow-if-else-attach-test" :dev="true" :coordinates="false" color="cyan">
             <x-translation-workbench::ui.tw-graph.strang.flow-start
                 id="sample.flow.1.process"
                 start-length="7rem"
@@ -185,11 +185,11 @@ it('lets flow decisions and branch steps attach to registered flow anchors', fun
                 :step-label="['text' => ['Attached step']]"
             />
 
-            <x-translation-workbench::ui.tw-graph.strang.flow-decision
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-else
                 id="sample.flow.1.process.decision-1"
                 attach-to="sample.flow.1.process.step-1.anchorNode-end"
                 bridge-length="8rem"
-                :decision-label="['text' => ['Decision']]"
+                :condition-label="['text' => ['Decision']]"
             />
 
             <x-translation-workbench::ui.tw-graph.strang.flow-step
@@ -203,9 +203,9 @@ it('lets flow decisions and branch steps attach to registered flow anchors', fun
     BLADE);
 
     expect($html)
-        ->toContain('sample.flow.1.process.decision-1.anchorNode-decision')
-        ->toContain('sample.flow.1.process.decision-1.right.bridge1')
-        ->toContain('--tw-graph-protocol-local-length: 8rem')
+        ->toContain('sample.flow.1.process.decision-1.question.stem.after')
+        ->toContain('sample.flow.1.process.decision-1.false.bridge1')
+        ->toContain('sample.flow.1.process.decision-1.false.stem')
         ->toContain('sample.flow.1.process.right-step.stem.before')
         ->toContain('Right branch');
 });
@@ -1020,7 +1020,7 @@ it('uses central graph defaults for root canvas geometry styles', function (): v
     config()->set('tw-graph-defaults.line_width', '0.5rem');
     config()->set('tw-graph-defaults.node_size', '1.5rem');
     config()->set('tw-graph-defaults.arc_size', '4rem');
-    config()->set('tw-graph-defaults.slot_min_height', '64rem');
+    config()->set('tw-graph-defaults.min_height', '64rem');
 
     $html = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph graph-id="root-defaults-test" color="green" :dev="false" :coordinates="false">
@@ -1293,3 +1293,578 @@ it('moves node labels independently of IF geometry', function (string $side, str
 })->with([
     ['left', 'right'], ['right', 'left'], ['left', 'top'], ['right', 'bottom'],
 ]);
+
+it('routes a question into true and false action bridges with attachable final arcs', function (string $direction, string $side, float $questionY, float $outgoingY, float $outgoingX, string $stemLength = '8rem'): void {
+    $graphId = 'binary-decision-' . $direction . '-' . $side;
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph :graph-id="$graphId" :dev="true">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-else
+                id="binary.decision"
+                :side="$side"
+                :stem-length="$stemLength"
+                :direction="$direction"
+                :anchor-start="['x' => '3rem', 'y' => '10rem']"
+                before-length="2rem"
+                label-gap="6rem"
+                after-length="3rem"
+                arc-size="2rem"
+                left-bridge-length="2rem"
+                right-bridge-length="3rem"
+                :condition-label="['text' => ['IF approved?', 'Review completed'], 'width' => 'halfLong']"
+                :if-start="['text' => ['True'], 'width' => 'half']"
+                :if-end="['text' => ['False', 'Try again'], 'width' => 'default']"
+            />
+            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                id="binary.followup"
+                attach-to="binary.decision.anchorNode-true"
+                :direction="$direction"
+                before-length="1rem"
+                label-gap="2rem"
+                after-length="1rem"
+                :step-label="['text' => ['Continue']]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, compact('graphId', 'direction', 'side', 'stemLength'));
+
+    $anchor = fn(string $name): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, $name);
+    $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
+    $number = fn(string $expression): float => $evaluate->invoke(null, $expression);
+    $junction = $anchor('binary.decision.anchorNode-decision');
+    $true = $anchor('binary.decision.anchorNode-true');
+    $false = $anchor('binary.decision.anchorNode-false');
+    $document = new DOMDocument();
+    @$document->loadHTML($html);
+    $sharedNodes = 0;
+    foreach ((new DOMXPath($document))->query('//*[contains(concat(" ", normalize-space(@class), " "), " tw-graph-protocol-primitive-node ")]') as $node) {
+        $style = $node->getAttribute('style');
+        if (preg_match('/--tw-graph-protocol-anchor-x: ([^;]+);/', $style, $x) && preg_match('/--tw-graph-protocol-anchor-y: ([^;]+);/', $style, $y)) {
+            if ($number($x[1]) === $outgoingX && $number($y[1]) === $outgoingY) {
+                $sharedNodes++;
+            }
+        }
+    }
+    expect($sharedNodes)->toBe(1);
+    expect($html)->toContain('binary.decision.false.stem.end.joint-arrow');
+    expect($html)->toMatch('/binary\.decision\.true\.arc2-[a-z-]+\.end\.joint-arrow/');
+    $trueExitArrows = (new DOMXPath($document))->query('//*[starts-with(@data-tw-graph-path, "binary.decision.true.arc2-") and contains(@data-tw-graph-path, ".end.joint-arrow")]');
+    expect($trueExitArrows)->toHaveCount(1);
+    expect($trueExitArrows->item(0)->getAttribute('class'))->toContain('tw-graph-protocol-primitive-joint-arrow-' . ($direction === 'top-bottom' ? 'bottom' : 'top'));
+    foreach (['true', 'false'] as $branch) {
+        $stems = (new DOMXPath($document))->query('//*[@data-tw-graph-path="binary.decision.' . $branch . '.stem"]');
+        expect($stems)->toHaveCount(1);
+        expect($stems->item(0)->getAttribute('class'))->not->toContain('tw-graph-protocol-primitive-line-start');
+    }
+
+    expect($junction)->toBe($anchor('binary.decision.question.anchorNode-end'))
+        ->and($number($junction['y']))->toBe($questionY)
+        ->and($true)->toBe($anchor('binary.decision.left.anchorNode-end'))
+        ->and($false)->toBe($anchor('binary.decision.right.anchorNode-end'))
+        ->and($number($true['x']))->toBe($outgoingX)
+        ->and($number($false['x']))->toBe($outgoingX)
+        ->and($number($anchor('binary.decision.true.stem.anchorNode-end')['y']))->toBe($outgoingY)
+        ->and($number($anchor('binary.decision.true.stem.anchorNode-end')['x']))->toBe($outgoingX)
+        ->and($anchor('binary.decision.anchorNode-end'))->toBe($false)
+        ->and($number($true['y']))->toBe($outgoingY)
+        ->and($number($false['y']))->toBe($outgoingY)
+        ->and($number($anchor('binary.followup.anchorNode-end')['x']))->toBe($outgoingX)
+        ->and($number($anchor('binary.followup.anchorNode-end')['y']))->toBe($outgoingY + ($direction === 'bottom-top' ? 4.0 : -4.0))
+        ->and($html)->toContain('binary.decision.question.label', 'binary.decision.true.bridge1.label.center.1', 'binary.decision.false.bridge1.label.center.1', 'IF approved?', 'True', 'False')
+        ->not->toContain('binary.decision.decision-label', 'binary.decision.left.bridge.arc-out.joint-arrow');
+})->with([['bottom-top', 'left', 21.0, 33.0, -19.0], ['top-bottom', 'left', -1.0, -13.0, -19.0], ['bottom-top', 'right', 21.0, 33.0, 25.0], ['top-bottom', 'right', -1.0, -13.0, 25.0], ['bottom-top', 'left', 21.0, 29.25, -19.0, '1rem']]);
+
+it('keeps chain continuation aligned with the rendered sideways radius', function (string $direction, string $side, ?string $override): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="chain-radius-test" arc-size="2.75rem">
+            <x-translation-workbench::ui.tw-graph.parts.chain
+                :direction="$direction"
+                arc-radius="2rem"
+                bridge-length="6rem"
+                :parts="[
+                    ['type' => 'sideways', 'id' => 'radius.sideways', 'side' => $side, 'arcRadius' => $override],
+                    ['type' => 'end', 'id' => 'radius.end', 'length' => '4rem'],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, compact('direction', 'side', 'override'));
+
+    $sideways = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('chain-radius-test', 'radius.sideways.anchorNode-end');
+    $document = new DOMDocument();
+    @$document->loadHTML($html);
+    $line = (new DOMXPath($document))->query('//*[@data-tw-graph-path="radius.end"]')->item(0);
+    expect($line)->not->toBeNull();
+    preg_match('/--tw-graph-protocol-start-x: ([^;]+);/', $line->getAttribute('style'), $entryX);
+    preg_match('/--tw-graph-protocol-start-y: ([^;]+);/', $line->getAttribute('style'), $entryY);
+    $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
+    $number = fn (string $value): float => $evaluate->invoke(null, $value);
+    $radius = $override === null ? 2.0 : 3.0;
+    expect($number($sideways['x']))->toBe(($side === 'left' ? 1 : -1) * (6.0 + 2 * $radius))
+        ->and($number($entryX[1]))->toBe($number($sideways['x']))
+        ->and($number($entryY[1]))->toBe($number($sideways['y']));
+})->with([
+    ['bottom-top', 'left', null],
+    ['bottom-top', 'right', null],
+    ['top-bottom', 'left', null],
+    ['top-bottom', 'right', null],
+    ['bottom-top', 'left', '3rem'],
+]);
+
+it('renders ternary values with separate branch information and an attachable result', function (string $side, string $direction): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="ternary-test" :dev="true">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-ternary
+                id="ternary.expression"
+                :side="$side"
+                :direction="$direction"
+                :condition-label="['text' => ['$name !== null?']]"
+                :if-start="['text' => ['$name'], 'width' => 'half']"
+                :if-end="['text' => ['Unknown', 'Fallback'], 'width' => 'default']"
+                stem-length="6rem"
+                color="cyan"
+            />
+            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                id="ternary.assignment"
+                attach-to="ternary.expression.anchorNode-end"
+                :direction="$direction"
+                before-length="1rem"
+                label-gap="2rem"
+                after-length="1rem"
+                :step-label="['text' => ['$label = result']]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, compact('side', 'direction'));
+    expect($html)->toContain('$name !== null?', '$name', 'Unknown', 'Fallback', 'True', 'False', '$label = result');
+    expect($html)->toContain('ternary.expression.true.anchorNode-end.label-', 'ternary.expression.false.stem.label.');
+    $end = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('ternary-test', 'ternary.expression.anchorNode-end');
+    $assignment = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('ternary-test', 'ternary.assignment.anchorNode-end');
+    $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
+    $number = fn (string $value): float => $evaluate->invoke(null, $value);
+    expect($number($assignment['x']))->toBe($number($end['x']))
+        ->and($number($assignment['y']))->toBe($number($end['y']) + ($direction === 'bottom-top' ? 4.0 : -4.0));
+})->with([['left', 'bottom-top'], ['right', 'bottom-top'], ['left', 'top-bottom'], ['right', 'top-bottom']]);
+
+it('forwards ternary dimensions to the shared route geometry', function (string $property, string $value, float $questionDelta, float $endDelta): void {
+    $render = function (array $overrides): array {
+        Blade::render(<<<'BLADE'
+            <x-translation-workbench::ui.tw-graph graph-id="ternary-dimensions">
+                <x-translation-workbench::ui.tw-graph.strang.flow-if-ternary
+                    id="dimension.expression"
+                    :before-length="$overrides['before'] ?? '2rem'"
+                    :stem-length="$overrides['stem'] ?? '8rem'"
+                    :arc-radius="$overrides['arc'] ?? '2rem'"
+                    :condition-label="['text' => ['Condition']]"
+                />
+            </x-translation-workbench::ui.tw-graph>
+        BLADE, compact('overrides'));
+        $question = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('ternary-dimensions', 'dimension.expression.question.anchorNode-end');
+        $end = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('ternary-dimensions', 'dimension.expression.anchorNode-end');
+        $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
+        return [$evaluate->invoke(null, $question['y']), $evaluate->invoke(null, $end['y'])];
+    };
+    $baseline = $render([]);
+    $changed = $render([$property => $value]);
+    expect($changed[0] - $baseline[0])->toBe($questionDelta)
+        ->and($changed[1] - $baseline[1])->toBe($endDelta);
+})->with([
+    ['before', '6rem', 4.0, 4.0],
+    ['stem', '12rem', 0.0, 4.0],
+    ['arc', '3rem', 0.0, 2.0],
+]);
+
+it('renders counters at both ternary branch dots and the common output only in DEV mode', function (bool $dev): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="ternary-counters" :dev="$dev">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-ternary id="counted.ternary" />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, compact('dev'));
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    foreach ([
+        'counted.ternary.true.arc2-south-west.node.end' => '1',
+        'counted.ternary.false.stem.node.end' => '2',
+        'counted.ternary.false.arc2-south-west.node.end' => '3',
+    ] as $id => $counter) {
+        $nodes = $xpath->query('//*[contains(@class, "tw-graph-protocol-primitive-dev-node-counter") and @data-tw-graph-path="' . $id . '"]');
+        expect($nodes->length)->toBe($dev ? 1 : 0);
+        if ($dev) {
+            expect(trim($nodes->item(0)->textContent))->toBe($counter);
+        }
+    }
+})->with([true, false]);
+
+it('routes a simple IF around its action with a plain full width bypass', function (string $side, string $direction, string $width): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="simple-if-test" :dev="true">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if
+                id="simple.if"
+                :side="$side"
+                :direction="$direction"
+                before-length="6rem"
+                stem-length="8rem"
+                true-bridge-length="3rem"
+                :condition-label="['text' => ['IF approved?']]"
+                :if-start="['text' => ['Publish paper', 'Notify author'], 'width' => $width]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, compact('side', 'direction', 'width'));
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    expect($xpath->query('//*[@data-tw-graph-path="simple.if.false.bridge1"]')->length)->toBe(1);
+    expect($xpath->query('//*[@data-tw-graph-path="simple.if.true.bridge1.label.center.1"]')->length)->toBe(1);
+    expect($html)->not->toContain('simple.if.false.bridge1.label.center.1');
+    $trueEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('simple-if-test', 'simple.if.true.stem.anchorNode-end');
+    $commonEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('simple-if-test', 'simple.if.anchorNode-end');
+    $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
+    foreach (['x', 'y'] as $axis) {
+        expect($evaluate->invoke(null, $trueEnd[$axis]))->toBe($evaluate->invoke(null, $commonEnd[$axis]));
+    }
+})->with([
+    ['left', 'bottom-top', 'half'], ['right', 'bottom-top', 'long'],
+    ['left', 'top-bottom', 'long'], ['right', 'top-bottom', 'half'],
+]);
+
+it('wires ELSEIF only after the first False output and joins all three routes', function (string $side, string $direction, string $width, array $falseLabel = []): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="elseif-test" :dev="true">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif
+                id="checked.elseif"
+                :side="$side"
+                :if-end="$falseLabel"
+                :direction="$direction"
+                :anchor-start="['x' => '3rem', 'y' => '4rem']"
+                before-length="4rem"
+                elseif-before-length="8rem"
+                stem-length="10rem"
+                arc-radius="3rem"
+                :condition-label="['text' => ['IF approved?']]"
+                :if-start="['text' => ['Publish'], 'width' => $width]"
+                :elseifs="[[
+                    'conditionLabel' => ['text' => ['ELSEIF changes?']],
+                    'actionLabel' => ['text' => ['Revise', 'Notify'], 'width' => 'default'],
+                ]]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, compact('side', 'direction', 'width', 'falseLabel'));
+    $anchor = fn (string $suffix) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('elseif-test', 'checked.elseif.' . $suffix);
+    $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
+    $number = fn (string $value): float => $evaluate->invoke(null, $value);
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    $before = $xpath->query('//*[@data-tw-graph-path="checked.elseif.elseif.question.stem.before"]')->item(0);
+    expect($before)->not->toBeNull();
+    foreach (['x', 'y'] as $axis) {
+        preg_match('/--tw-graph-protocol-start-' . $axis . ': ([^;]+);/', $before->getAttribute('style'), $coordinate);
+        expect($number($coordinate[1]))->toBe($number($anchor('question.anchorNode-end')[$axis]));
+        expect($number($anchor('true.stem.anchorNode-end')[$axis]))->toBe($number($anchor('elseif.true.anchorNode-end')[$axis]));
+        expect($number($anchor('elseif.true.stem.anchorNode-end')[$axis]))->toBe($number($anchor('anchorNode-end')[$axis]));
+    }
+    $hasFalseText = isset($falseLabel['text']);
+    expect($xpath->query('//*[@data-tw-graph-path="checked.elseif.elseif.false.bridge1"]')->length)->toBe($hasFalseText ? 0 : 1);
+    expect($xpath->query('//*[@data-tw-graph-path="checked.elseif.elseif.false.bridge1.label.center.1"]')->length)->toBe($hasFalseText ? 1 : 0);
+    expect($html)->toContain('IF approved?', 'ELSEIF changes?', 'Publish', 'Revise', 'Notify');
+})->with([
+    ['left', 'bottom-top', 'half'], ['right', 'bottom-top', 'long'],
+    ['left', 'top-bottom', 'long'], ['right', 'top-bottom', 'half'],
+    ['left', 'bottom-top', 'half', ['color' => 'zinc', 'text' => ['Fallback'], 'width' => 'long']],
+    ['right', 'top-bottom', 'half', ['color' => 'zinc']],
+]);
+
+it('applies false label color to the entire lane with or without a text label', function (bool $withText, string $side): void {
+    $falseLabel = ['color' => 'zinc'];
+    if ($withText) {
+        $falseLabel += ['text' => ['Fallback action'], 'badgeColor' => 'rose', 'width' => 'long'];
+    }
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="false-lane-test" :path-tone="false" :dev="true">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if
+                id="colored.if"
+                color="cyan"
+                :side="$side"
+                :if-end="$falseLabel"
+                :if-start="['text' => ['Action']]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, compact('falseLabel', 'side'));
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    $lines = $xpath->query('//*[starts-with(@data-tw-graph-path, "colored.if.false") and (contains(concat(" ", normalize-space(@class), " "), " tw-graph-protocol-primitive-line ") or contains(concat(" ", normalize-space(@class), " "), " tw-graph-protocol-primitive-arc ") or contains(concat(" ", normalize-space(@class), " "), " tw-graph-protocol-primitive-joint-arrow "))]');
+    expect($lines->length)->toBeGreaterThanOrEqual(4);
+    foreach ($lines as $line) {
+        $colorVariable = str_ends_with($line->getAttribute('data-tw-graph-path'), '.bridge1.bridge-out')
+            ? '--tw-graph-protocol-local-to-color-rgb: ' : '--tw-graph-protocol-local-color-rgb: ';
+        expect($line->getAttribute('style'))->toContain($colorVariable . \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb('zinc'));
+    }
+    $labels = $xpath->query('//*[@data-tw-graph-path="colored.if.false.bridge1.label.center.1"]');
+    expect($labels->length)->toBe($withText ? 1 : 0);
+    if ($withText) {
+        expect($labels->item(0)->textContent)->toContain('Fallback action');
+        expect($html)->toContain('text-rose-700');
+    } else {
+        expect($xpath->query('//*[@data-tw-graph-path="colored.if.false.bridge1"]')->length)->toBe(1);
+    }
+    $get = fn (string $name) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('false-lane-test', 'colored.if.' . $name);
+    $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
+    foreach (['x', 'y'] as $axis) {
+        expect($evaluate->invoke(null, $get('true.stem.anchorNode-end')[$axis]))->toBe($evaluate->invoke(null, $get('anchorNode-end')[$axis]));
+    }
+})->with([[false, 'left'], [true, 'left'], [false, 'right'], [true, 'right']]);
+
+it('keeps true and ELSEIF route colors independent from their badges and false lanes', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="branch-colors" :dev="true">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-else
+                id="color.binary" color="cyan"
+                :if-start="['text' => ['Publish'], 'color' => 'green', 'badgeColor' => 'amber']"
+                :if-end="['color' => 'zinc']"
+            />
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif
+                id="color.elseif" color="cyan"
+                :if-start="['text' => ['Publish'], 'color' => 'green']"
+                :elseifs="[[
+                    'conditionLabel' => ['text' => ['ELSEIF revise?'], 'color' => 'violet', 'badgeColor' => 'amber'],
+                    'actionLabel' => ['text' => ['Revise']],
+                ]]"
+                :if-end="['color' => 'zinc']"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    foreach ([
+        'color.binary.question.stem.before' => 'cyan',
+        'color.binary.true.stem' => 'green',
+        'color.binary.true.arc2-south-west' => 'green',
+        'color.binary.false.stem' => 'zinc',
+        'color.elseif.true.stem' => 'green',
+        'color.elseif.elseif.question.stem.before' => 'cyan',
+        'color.elseif.elseif.true.stem' => 'green',
+        'color.elseif.elseif.false.stem' => 'zinc',
+    ] as $id => $color) {
+        $nodes = $xpath->query('//*[@data-tw-graph-path="' . $id . '"]');
+        expect($nodes->length)->toBe(1);
+        expect($nodes->item(0)->getAttribute('style'))->toContain('--tw-graph-protocol-local-color-rgb: ' . \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color));
+    }
+    expect($html)->toContain('text-amber-700');
+});
+
+it('connects every multi ELSEIF test only to the preceding False output', function (int $count, string $side, string $direction, ?string $firstColor): void {
+    $branches = [];
+    for ($i = 1; $i <= $count; $i++) {
+        $branches[] = [
+            'key' => 'branch-' . $i,
+            'beforeLength' => ($i + 5) . 'rem',
+            'conditionLabel' => ['text' => ['ELSEIF ' . $i . '?'], 'color' => $i % 2 ? 'violet' : 'blue'],
+            'actionLabel' => ['text' => ['Action ' . $i, 'Next line'], 'width' => $i % 2 ? 'long' : 'half', 'color' => 'amber'],
+        ];
+    }
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="multi-test" :dev="true">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-multi
+                id="multi" :side="$side" :direction="$direction"
+                :elseifs="$branches"
+                :if-end="['color' => 'zinc']"
+                :if-start="['text' => ['First action'], 'width' => 'half', 'color' => $firstColor]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, compact('branches', 'side', 'direction', 'firstColor'));
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    $anchor = fn (string $id) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('multi-test', $id);
+    $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
+    $number = fn (string $value): float => $evaluate->invoke(null, $value);
+    $returnRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($firstColor ?? 'zinc');
+    $stems = $xpath->query('//*[contains(@class, "tw-graph-protocol-primitive-line") and contains(@data-tw-graph-path, ".true.stem") and not(contains(@data-tw-graph-path, ".node."))]');
+    expect($stems->length)->toBe($count + 1);
+    foreach ($stems as $stem) {
+        expect($stem->getAttribute('style'))->toContain('--tw-graph-protocol-local-color-rgb: ' . $returnRgb);
+    }
+    $previous = 'multi.if';
+    for ($i = 1; $i <= $count; $i++) {
+        $current = 'multi.elseif.branch-' . $i;
+        $before = $xpath->query('//*[@data-tw-graph-path="' . $current . '.question.stem.before"]')->item(0);
+        expect($before)->not->toBeNull();
+        $rgb = fn (string $color) => \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color);
+        expect($before->getAttribute('style'))->toContain('--tw-graph-protocol-local-color-rgb: ' . $rgb($i === 1 ? 'zinc' : (($i - 1) % 2 ? 'violet' : 'blue')));
+        $after = $xpath->query('//*[@data-tw-graph-path="' . $current . '.question.stem.after"]')->item(0);
+        expect($after->getAttribute('style'))->toContain('--tw-graph-protocol-local-color-rgb: ' . $rgb($i % 2 ? 'violet' : 'blue'));
+        $dot = $xpath->query('//*[@data-tw-graph-path="' . $previous . '.question.stem.after.node.end" and contains(@class, "tw-graph-protocol-primitive-node")]')->item(0);
+        expect($dot)->not->toBeNull();
+        expect($dot->getAttribute('style'))->toContain('--tw-graph-protocol-z-index: 21');
+        expect($before->getAttribute('style'))->toContain('--tw-graph-protocol-z-index: 20');
+
+        foreach (['x', 'y'] as $axis) {
+            preg_match('/--tw-graph-protocol-start-' . $axis . ': ([^;]+);/', $before->getAttribute('style'), $coordinate);
+            expect($number($coordinate[1]))->toBe($number($anchor($previous . '.question.anchorNode-end')[$axis]));
+            expect($number($anchor($previous . '.true.stem.anchorNode-end')[$axis]))->toBe($number($anchor($current . '.true.anchorNode-end')[$axis]));
+        }
+        $arcName = $side === 'left' ? 'south-west' : 'south-east';
+        if ($direction === 'bottom-top') {
+            $arc = $xpath->query('//*[@data-tw-graph-path="' . $current . '.true.arc2-' . $arcName . '"]')->item(0);
+            expect($arc)->not->toBeNull();
+            expect($arc->getAttribute('style'))->toContain('--tw-graph-protocol-local-color-rgb: ' . $rgb('amber'));
+            $actionDot = $xpath->query('//*[@data-tw-graph-path="' . $current . '.true.arc2-' . $arcName . '.node.end" and contains(@class, "tw-graph-protocol-primitive-node")]')->item(0);
+            expect($actionDot)->not->toBeNull();
+            expect($actionDot->getAttribute('style'))
+                ->toContain('--tw-graph-protocol-local-color-rgb: ' . $rgb('amber'))
+                ->toContain('--tw-graph-protocol-z-index: 21');
+
+        }
+        $previous = $current;
+    }
+    foreach (['x', 'y'] as $axis) {
+        expect($number($anchor($previous . '.true.stem.anchorNode-end')[$axis]))->toBe($number($anchor('multi.anchorNode-end')[$axis]));
+    }
+    expect($xpath->query('//*[@data-tw-graph-path="' . $previous . '.false.bridge1"]')->length)->toBe(1);
+    expect($html)->not->toContain($previous . '.false.bridge1.label.center.1');
+    $counter = $xpath->query('//*[contains(@class, "tw-graph-protocol-primitive-dev-node-counter") and @data-tw-graph-path="' . $previous . '.false.stem.node.end"]')->item(0);
+    expect(trim($counter->textContent))->toBe((string) ($count * 2 + 3));
+})->with([[1, 'left', 'bottom-top', null], [3, 'right', 'bottom-top', 'green'], [3, 'left', 'top-bottom', 'rose'], [5, 'right', 'top-bottom', null]]);
+
+it('rejects empty multi ELSEIF definitions and duplicate branch keys', function (array $branches, string $message): void {
+    expect(fn () => Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph>
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-multi :elseifs="$branches" />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, ['branches' => $branches]))->toThrow(\Exception::class, $message);
+})->with([[[], 'requires at least one'], [[['key' => 'same'], ['key' => 'same']], 'keys must be nonempty and unique']]);
+
+
+it('requires exactly one structured elseifs entry for the single ELSEIF variant', function (mixed $elseifs): void {
+    expect(fn () => Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="invalid-single-elseif">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif :elseifs="$elseifs" />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, ['elseifs' => $elseifs]))->toThrow(Exception::class, 'requires exactly one elseifs entry');
+})->with([
+    'empty list' => [[]],
+    'multiple entries' => [[[], []]],
+    'unstructured entry' => [['invalid']],
+    'invalid list' => [null],
+]);
+
+it('passes DEV mode to action node and question label bounding boxes', function (bool $dev): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="label-boxes" :dev="$dev">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-multi
+                id="label-boxes.multi"
+                :if-start="['text' => ['Publish', 'Notify']]"
+                :elseifs="[
+                    ['key' => 'changes', 'conditionLabel' => ['text' => ['Changes requested?', 'Review notes']], 'actionLabel' => ['text' => ['Revise']]],
+                    ['key' => 'sources', 'conditionLabel' => ['text' => ['Sources missing?', 'Check references']], 'actionLabel' => ['text' => ['Add sources']]],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, ['dev' => $dev]);
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    foreach ([
+        'label-boxes.multi.if.true.bridge1.label.center.1',
+        'label-boxes.multi.elseif.changes.true.anchorNode-end.label-2',
+        'label-boxes.multi.elseif.sources.question.label',
+    ] as $id) {
+        expect($xpath->query('//*[@data-tw-graph-path="' . $id . '"]')->length)->toBe(1);
+        expect($xpath->query('//*[@data-tw-graph-path="' . $id . '"]/*[@data-tw-graph-dev-box="' . $id . '.dev-box"]')->length)->toBe($dev ? 1 : 0);
+    }
+})->with([true, false]);
+
+it('leaves configured action returns open while publishing their join anchors', function (string $variant, string $side, string $direction): void {
+    $template = <<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="open-return" :dev="true">
+            <x-translation-workbench::ui.tw-graph.strang.VARIANT
+                id="open" :side="$side" :direction="$direction"
+                :if-start="['text' => ['Nested action'], 'return' => false]"
+                :elseifs="[
+                    ['key' => 'next', 'conditionLabel' => ['text' => ['Next condition?']], 'actionLabel' => ['text' => ['Another nested action'], 'return' => false]],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE;
+    $html = Blade::render(str_replace('VARIANT', $variant, $template), compact('side', 'direction'));
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    $prefixes = match ($variant) {
+        'flow-if-elseif-multi' => ['open.if', 'open.elseif.next'],
+        'flow-if-elseif' => ['open', 'open.elseif'],
+        default => ['open'],
+    };
+    foreach ($prefixes as $prefix) {
+        expect($xpath->query('//*[@data-tw-graph-path="' . $prefix . '.true.stem"]')->length)->toBe(0);
+        expect(\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('open-return', $prefix . '.true.anchorNode-end'))->not->toBeNull();
+        expect(\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('open-return', $prefix . '.true.anchorNode-return'))->not->toBeNull();
+    }
+    expect(\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('open-return', 'open.anchorNode-end'))->not->toBeNull();
+})->with(['flow-if', 'flow-if-else', 'flow-if-elseif', 'flow-if-elseif-multi'])
+    ->with(['left', 'right'])->with(['bottom-top', 'top-bottom']);
+
+it('honors local if-end stem length across IF variants and keeps their outputs joined', function (string $variant, ?string $length, bool $withText, string $direction): void {
+    $ifEnd = ['stemLength' => $length, 'color' => 'zinc'];
+    if ($withText) {
+        $ifEnd['text'] = ['Fallback', 'Second line'];
+    }
+    $template = <<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="local-end-stem">
+            <x-translation-workbench::ui.tw-graph.strang.VARIANT
+                id="local" :direction="$direction" stem-length="8rem"
+                :if-start="['text' => ['Action']]" :if-end="$ifEnd"
+                :elseifs="[['key' => 'next', 'conditionLabel' => ['text' => ['Next?']], 'actionLabel' => ['text' => ['Next action']]]]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE;
+    $html = Blade::render(str_replace('VARIANT', $variant, $template), compact('ifEnd', 'direction'));
+    $prefix = match ($variant) {
+        'flow-if-elseif-multi' => 'local.elseif.next',
+        'flow-if-elseif' => 'local.elseif',
+        default => 'local',
+    };
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    $stem = $xpath->query('//*[@data-tw-graph-path="' . $prefix . '.false.stem"]')->item(0);
+    preg_match('/--tw-graph-protocol-local-length: ([^;]+);/', $stem->getAttribute('style'), $match);
+    $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
+    $number = fn (string $value): float => $evaluate->invoke(null, $value);
+    $actual = $number($match[1]);
+    if ($length === '0rem') {
+        expect($actual)->toBeGreaterThan(0.0)->toBeLessThan(8.0);
+    } else {
+        expect($actual)->toBe($length === null ? 8.0 : 12.0);
+    }
+    $get = fn (string $suffix) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('local-end-stem', $prefix . '.' . $suffix);
+    foreach (['x', 'y'] as $axis) {
+        expect($number($get('true.stem.anchorNode-end')[$axis]))->toBe($number($get('anchorNode-end')[$axis]));
+    }
+})->with(['flow-if', 'flow-if-else', 'flow-if-elseif', 'flow-if-elseif-multi', 'flow-if-ternary'])
+    ->with([[null, false, 'bottom-top'], ['12rem', false, 'top-bottom'], ['12rem', true, 'bottom-top'], ['0rem', true, 'top-bottom']]);
+
+it('keeps earlier actions off a later open ELSEIF output in either orientation', function (string $side, string $direction, bool $lastOpen): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="later-nested">
+            <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-multi
+                id="outer" :side="$side" :direction="$direction"
+                :if-start="['text' => ['First action']]"
+                :elseifs="[
+                    ['key' => 'nested', 'conditionLabel' => ['text' => ['Nested?']], 'actionLabel' => ['text' => ['Nested action'], 'return' => false, 'returnOffset' => '9rem']],
+                    ['key' => 'last', 'conditionLabel' => ['text' => ['Last?']], 'actionLabel' => ['text' => ['Last action'], 'return' => ! $lastOpen]],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, compact('side', 'direction', 'lastOpen'));
+    $get = fn (string $suffix) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('later-nested', 'outer.' . $suffix);
+    $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
+    $number = fn (string $value): float => $evaluate->invoke(null, $value);
+    $target = $get($lastOpen ? 'anchorNode-end' : 'elseif.last.true.anchorNode-end');
+    foreach (['x', 'y'] as $axis) {
+        expect($number($get('if.true.stem.anchorNode-end')[$axis]))->toBe($number($target[$axis]));
+        expect($number($get('elseif.nested.true.anchorNode-return')[$axis]))->toBe($number($target[$axis]));
+    }
+    $offset = $number($get('elseif.nested.true.anchorNode-end')['x']) - $number($get('if.true.anchorNode-end')['x']);
+    expect($offset)->toBe($side === 'left' ? -9.0 : 9.0);
+    expect($html)->not->toContain('data-tw-graph-path="outer.elseif.nested.true.stem"');
+})->with(['left', 'right'])->with(['bottom-top', 'top-bottom'])->with([false, true]);

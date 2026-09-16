@@ -15,10 +15,10 @@
             <p>
                 {{ __('Suggested local convention: store project-roadmap hardcopys below public/hardcopys/tw-graph/project-roadmap and reference them from this partial only after the image file exists.') }}
             </p>
-            <pre class="overflow-x-auto rounded-md bg-zinc-950 p-3 text-xs text-zinc-100"><code>&lt;img
+            <x-translation-workbench::ui.tw-graph.code-box>&lt;img
     src="{{ asset('hardcopys/tw-graph/project-roadmap/01-trunk-rhythm.png') }}"
     alt="{{ __('Project roadmap trunk rhythm') }}"
-&gt;</code></pre>
+&gt;</x-translation-workbench::ui.tw-graph.code-box>
         </div>
     </flux:callout.text>
 </flux:callout>

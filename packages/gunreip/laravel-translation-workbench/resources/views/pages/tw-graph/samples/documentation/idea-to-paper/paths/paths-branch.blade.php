@@ -9,68 +9,22 @@
             {{ __('Two individually authored branch paths, shown one below the other. side="left" routes the bridge right-left; side="right" routes it left-right. Each connects an entry stem, an incoming arc, a bridge, an outgoing arc, and a labeled stem. The path calculates subsequent anchors from the starting coordinates and lengths.') }}
         </flux:callout.text>
         @php
-            $branchExampleSource = file_get_contents(
-                \Illuminate\Support\Facades\View::getFinder()->find(
-                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-branch',
-                ),
+            $branchExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-branch',
             );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- branch-left-example:start --\}\}\R(.*?)^[ \t]*\{\{-- branch-left-example:end --\}\}/ms',
-                    $branchExampleSource,
-                    $branchLeftMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The branch-left-example requires start and end markers.');
-            }
-            $branchLeftLines = explode("\n", rtrim($branchLeftMatch[1]));
-            $branchLeftIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($branchLeftLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $branchLeftCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $branchLeftIndent), $branchLeftLines),
-            );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- branch-right-example:start --\}\}\R(.*?)^[ \t]*\{\{-- branch-right-example:end --\}\}/ms',
-                    $branchExampleSource,
-                    $branchRightMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The branch-right-example requires start and end markers.');
-            }
-            $branchRightLines = explode("\n", rtrim($branchRightMatch[1]));
-            $branchRightIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($branchRightLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $branchRightCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $branchRightIndent), $branchRightLines),
-            );
+            $branchLeftCode = $branchExampleSource->example('branch-left-example');
+            $branchRightCode = $branchExampleSource->example('branch-right-example');
         @endphp
         <flux:heading
             class="mt-4"
             size="sm"
         >right-left · side="left"</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $branchLeftCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $branchLeftCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >left-right · side="right"</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $branchRightCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $branchRightCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -222,7 +176,6 @@
                     :dev="true"
                     :coordinates="true"
                     color="cyan"
-                    slot-min-height="24rem"
                     min-height="24rem"
                     min-width="36rem"
                     horizontal-padding="14rem"
@@ -262,7 +215,6 @@
                     :dev="true"
                     :coordinates="true"
                     color="emerald"
-                    slot-min-height="24rem"
                     min-height="24rem"
                     min-width="36rem"
                     horizontal-padding="14rem"

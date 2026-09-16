@@ -73,7 +73,7 @@
                         line-length="4rem"
                         bridge-length="16rem"
                         stem-length="5rem"
-                        slot-min-height="86rem"
+                        min-height="86rem"
                         horizontal-padding="38rem"
                     >
                         {{-- happy path --}}

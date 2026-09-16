@@ -34,6 +34,7 @@
     Optional fields:
     stepLabel{text, side, offset, badgeColor, long}
     stepCaps, capLength
+    anchorStart.color: incoming stem color; falls back to the step color
 --}}
 
 @props([
@@ -119,6 +120,12 @@
 
     $beforeSegment = array_replace($stepSegment, [
         'id' => data_get($stepSegment, 'id', 'segment.step') . '.stem.before',
+        // The incoming connection belongs to the preceding step until this label.
+        'color' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
+            data_get($stepSegment, 'anchorStart.color'),
+            data_get($stepSegment, 'color'),
+            'zinc',
+        ),
         'length' => $beforeLength,
         'anchorStart' => $anchorStart,
         'anchorEnd' => $anchorBeforeEnd,
@@ -155,6 +162,7 @@
 
 @if (is_array($stepLabelConfig) && filled(data_get($stepLabelConfig, 'text')))
     <x-translation-workbench::ui.tw-graph.primitives.text
+        :dev="$devMode"
         :id="data_get($stepSegment, 'id', 'segment.step') . '.label'"
         :text="data_get($stepLabelConfig, 'text')"
         :anchor-x="data_get($anchorMiddle, 'x', '0rem')"

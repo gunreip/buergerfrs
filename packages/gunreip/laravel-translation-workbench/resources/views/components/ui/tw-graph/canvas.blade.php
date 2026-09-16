@@ -169,6 +169,7 @@
 
     @foreach ($texts as $text)
         <x-translation-workbench::ui.tw-graph.segments.label
+            :dev="$dev"
             :id="$text['id']"
             :label="[
                 'text' => $text['text'],

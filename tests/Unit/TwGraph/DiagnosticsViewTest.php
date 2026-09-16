@@ -137,7 +137,7 @@ it('shows configured minimum dimensions and padding without changing the content
         BoundsRegistry::forgetGraph('diagnostics-minimum-frame');
 
         return Blade::render(<<<'BLADE'
-            <x-translation-workbench::ui.tw-graph graph-id="diagnostics-minimum-frame" :dev="true" :coordinates="$coordinates" min-width="20rem" slot-min-height="15rem" horizontal-padding="3rem">
+            <x-translation-workbench::ui.tw-graph graph-id="diagnostics-minimum-frame" :dev="true" :coordinates="$coordinates" min-width="20rem" min-height="15rem" horizontal-padding="3rem">
                 <x-translation-workbench::ui.tw-graph.dev-box id="minimum-frame-content" :dev="true" x="-30rem" y="-4rem" width="70rem" height="50rem" metrics-scope="canvas" metrics-side="center" />
             </x-translation-workbench::ui.tw-graph>
         BLADE, ['coordinates' => $coordinates]);

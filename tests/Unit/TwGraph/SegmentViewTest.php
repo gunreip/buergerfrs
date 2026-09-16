@@ -178,7 +178,8 @@ it('renders step stems as cap label cap stem dot', function (): void {
 
     expect($html)
         ->toMatch('/class="(?=[^"]*tw-graph-protocol-primitive-line-end)(?![^"]*tw-graph-protocol-primitive-line-node-end)[^"]*"[^>]*title="segment\.step\.cap-sequence\.stem\.before"/')
-        ->toMatch('/class="(?=[^"]*tw-graph-protocol-primitive-line-cap-start)(?=[^"]*tw-graph-protocol-primitive-line-node-end)[^"]*"[^>]*title="segment\.step\.cap-sequence\.stem\.after"/')
+        ->toMatch('/class="(?=[^"]*tw-graph-protocol-primitive-line-cap-start)(?![^"]*tw-graph-protocol-primitive-line-node-end)[^"]*"[^>]*title="segment\.step\.cap-sequence\.stem\.after"/')
+        ->toContain('segment.step.cap-sequence.stem.after.node.end')
         ->toContain('segment.step.cap-sequence.label')
         ->toContain('Review loop');
 });
@@ -275,7 +276,7 @@ it('keeps start dev counters when only the start dot is hidden', function (): vo
         ->toContain('1')
         ->toContain('2')
         ->not->toContain('tw-graph-protocol-primitive-line-node-start')
-        ->toContain('tw-graph-protocol-primitive-line-node-end');
+        ->toContain('tw-graph-protocol-primitive-node');
 });
 
 it('renders path start and end caps from explicit cap flags', function (): void {

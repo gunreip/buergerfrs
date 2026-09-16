@@ -6,7 +6,7 @@
     <flux:callout color="indigo" icon="information-circle">
         <flux:callout.heading>{{ __('Segments in the component chain') }}</flux:callout.heading>
         <flux:callout.text>
-            {{ __('From the drawing level upwards: primitives → segments → paths → strangs. Segments sit directly above primitives and below paths. This tab documents these building blocks; paths and strangs use them to assemble connected routes and complete logical graph strands.') }}
+            {{ __('From the drawing level upwards: primitives → segments → parts or paths → strangs. Segments sit directly above primitives. Parts combine them into smaller reusable connections, while paths assemble larger routes. This tab documents the underlying segment building blocks.') }}
         </flux:callout.text>
     </flux:callout>
 </div>

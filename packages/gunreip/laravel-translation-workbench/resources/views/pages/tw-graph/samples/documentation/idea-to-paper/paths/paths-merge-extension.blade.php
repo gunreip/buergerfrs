@@ -9,68 +9,22 @@
             {{ __('Two individually authored merge-extension paths, shown one below the other. side="left" routes the bridge left-right; side="right" routes it right-left. Each path connects a start section, a stem, one arc, and a final bridge. The path calculates their connections from the starting anchor and lengths. Each zinc merge path is a reference: the colored extension adds another source and joins the merge where its incoming arc meets its bridge. The merge then continues through its outgoing arc.') }}
         </flux:callout.text>
         @php
-            $mergeExtensionExampleSource = file_get_contents(
-                \Illuminate\Support\Facades\View::getFinder()->find(
-                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-merge-extension',
-                ),
+            $mergeExtensionExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-merge-extension',
             );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- merge-extension-left-example:start --\}\}\R(.*?)^[ \t]*\{\{-- merge-extension-left-example:end --\}\}/ms',
-                    $mergeExtensionExampleSource,
-                    $mergeExtensionLeftMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The merge-extension-left-example requires start and end markers.');
-            }
-            $mergeExtensionLeftLines = explode("\n", rtrim($mergeExtensionLeftMatch[1]));
-            $mergeExtensionLeftIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($mergeExtensionLeftLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $mergeExtensionLeftCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $mergeExtensionLeftIndent), $mergeExtensionLeftLines),
-            );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- merge-extension-right-example:start --\}\}\R(.*?)^[ \t]*\{\{-- merge-extension-right-example:end --\}\}/ms',
-                    $mergeExtensionExampleSource,
-                    $mergeExtensionRightMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The merge-extension-right-example requires start and end markers.');
-            }
-            $mergeExtensionRightLines = explode("\n", rtrim($mergeExtensionRightMatch[1]));
-            $mergeExtensionRightIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($mergeExtensionRightLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $mergeExtensionRightCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $mergeExtensionRightIndent), $mergeExtensionRightLines),
-            );
+            $mergeExtensionLeftCode = $mergeExtensionExampleSource->example('merge-extension-left-example');
+            $mergeExtensionRightCode = $mergeExtensionExampleSource->example('merge-extension-right-example');
         @endphp
         <flux:heading
             class="mt-4"
             size="sm"
         >left-right · side="left"</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $mergeExtensionLeftCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $mergeExtensionLeftCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >right-left · side="right"</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $mergeExtensionRightCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $mergeExtensionRightCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -213,7 +167,6 @@
                     :dev="true"
                     :coordinates="true"
                     color="cyan"
-                    slot-min-height="28rem"
                     min-height="28rem"
                     min-width="36rem"
                     horizontal-padding="14rem"
@@ -267,7 +220,6 @@
                     :dev="true"
                     :coordinates="true"
                     color="emerald"
-                    slot-min-height="28rem"
                     min-height="28rem"
                     min-width="36rem"
                     horizontal-padding="14rem"

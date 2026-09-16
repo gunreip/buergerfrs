@@ -9,68 +9,22 @@
             {{ __('Two individually authored branch extensions, shown one below the other. Each colored extension starts at the bridge endpoint of a zinc reference branch and continues outward through its own bridge, arc, stem, and labeled end. The reference branch also continues upwards, making the additional branch visible. side="left" runs right-left; side="right" runs left-right.') }}
         </flux:callout.text>
         @php
-            $branchExtensionExampleSource = file_get_contents(
-                \Illuminate\Support\Facades\View::getFinder()->find(
-                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-branch-extension',
-                ),
+            $branchExtensionExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-branch-extension',
             );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- branch-extension-left-example:start --\}\}\R(.*?)^[ \t]*\{\{-- branch-extension-left-example:end --\}\}/ms',
-                    $branchExtensionExampleSource,
-                    $branchExtensionLeftMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The branch-extension-left-example requires start and end markers.');
-            }
-            $branchExtensionLeftLines = explode("\n", rtrim($branchExtensionLeftMatch[1]));
-            $branchExtensionLeftIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($branchExtensionLeftLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $branchExtensionLeftCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $branchExtensionLeftIndent), $branchExtensionLeftLines),
-            );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- branch-extension-right-example:start --\}\}\R(.*?)^[ \t]*\{\{-- branch-extension-right-example:end --\}\}/ms',
-                    $branchExtensionExampleSource,
-                    $branchExtensionRightMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The branch-extension-right-example requires start and end markers.');
-            }
-            $branchExtensionRightLines = explode("\n", rtrim($branchExtensionRightMatch[1]));
-            $branchExtensionRightIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($branchExtensionRightLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $branchExtensionRightCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $branchExtensionRightIndent), $branchExtensionRightLines),
-            );
+            $branchExtensionLeftCode = $branchExtensionExampleSource->example('branch-extension-left-example');
+            $branchExtensionRightCode = $branchExtensionExampleSource->example('branch-extension-right-example');
         @endphp
         <flux:heading
             class="mt-4"
             size="sm"
         >right-left · side="left"</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $branchExtensionLeftCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $branchExtensionLeftCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >left-right · side="right"</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $branchExtensionRightCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $branchExtensionRightCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -183,7 +137,6 @@
                     graph-id="idea-to-paper-paths-branch-extension-right-left"
                     :dev="true"
                     :coordinates="true"
-                    slot-min-height="28rem"
                     min-height="28rem"
                     min-width="44rem"
                     horizontal-padding="20rem"
@@ -240,7 +193,6 @@
                     graph-id="idea-to-paper-paths-branch-extension-left-right"
                     :dev="true"
                     :coordinates="true"
-                    slot-min-height="28rem"
                     min-height="28rem"
                     min-width="44rem"
                     horizontal-padding="20rem"

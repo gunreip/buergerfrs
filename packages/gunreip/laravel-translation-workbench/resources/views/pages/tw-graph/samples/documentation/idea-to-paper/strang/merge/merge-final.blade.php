@@ -8,7 +8,6 @@
     arc-size="2.75rem"
     bridge-length="18rem"
     stem-length="5rem"
-    slot-min-height="34rem"
     horizontal-padding="42rem"
     min-width="72rem"
     min-height="34rem"

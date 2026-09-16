@@ -71,7 +71,7 @@
                         line-length="4rem"
                         bridge-length="12rem"
                         stem-length="6.5rem"
-                        slot-min-height="64rem"
+                        min-height="64rem"
                         horizontal-padding="24rem"
                     >
                         {{-- trunk --}}

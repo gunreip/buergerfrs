@@ -9,36 +9,12 @@
             {{ __('This builds on the previous stem-count example. Only selected stem lengths are overridden; missing or null entries continue to use the default stem length. Stem indexes name the rendered stem sections; they are not the same as DEV node counters, which usually appear one step higher at the stem end anchor.') }}
         </flux:callout.text>
         @php
-            $trunkExampleSource = file_get_contents(
-                \Illuminate\Support\Facades\View::getFinder()->find(
-                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.trunk.trunk-stem-lengths',
-                ),
+            $trunkExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.trunk.trunk-stem-lengths',
             );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- trunk-stem-lengths-example-1:start --\}\}\R(.*?)^[ \t]*\{\{-- trunk-stem-lengths-example-1:end --\}\}/ms',
-                    $trunkExampleSource,
-                    $trunkExample1Match,
-                ) !== 1
-            ) {
-                throw new \LogicException('Missing trunk-stem-lengths-example-1 source markers.');
-            }
-            $trunkExample1Lines = explode("\n", rtrim($trunkExample1Match[1]));
-            $trunkExample1Indent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($trunkExample1Lines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $trunkExample1Code = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $trunkExample1Indent), $trunkExample1Lines),
-            );
+            $trunkExample1Code = $trunkExampleSource->example('trunk-stem-lengths-example-1');
         @endphp
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $trunkExample1Code }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $trunkExample1Code }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -233,7 +209,6 @@
                     graph-id="idea-to-paper-step-02-trunk-stem-lengths"
                     :dev="true"
                     :coordinates="true"
-                    slot-min-height="48rem"
                     horizontal-padding="24rem"
                     min-width="40rem"
                     min-height="48rem"

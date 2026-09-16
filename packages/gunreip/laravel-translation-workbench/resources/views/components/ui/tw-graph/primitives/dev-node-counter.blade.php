@@ -43,7 +43,7 @@
     $hasOffset = filled($resolvedOffsetX) || filled($resolvedOffsetY);
 @endphp
 
-@if ($dev && filled($counter))
+@if ($dev && $counter !== false && filled($counter))
     <span
         {{ $attributes->class([
             'tw-graph-protocol-primitive',

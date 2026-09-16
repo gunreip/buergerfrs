@@ -66,7 +66,7 @@ it('keeps the trunk start dev counter when the unlabeled start dot is hidden', f
     expect($html)
         ->toContain('strang.trunk.center.1.start.anchorNode-end')
         ->toContain('Trunk start')
-        ->not->toContain('tw-graph-protocol-primitive-line-node-end');
+        ->not->toContain('tw-graph-protocol-primitive-node');
 });
 
 it('renders the trunk start dot counter and side labels when start node labels exist', function (): void {
@@ -94,7 +94,7 @@ it('renders the trunk start dot counter and side labels when start node labels e
 
     expect($html)
         ->toContain('strang.trunk.center.1.start.anchorNode-end')
-        ->toContain('tw-graph-protocol-primitive-line-node-end')
+        ->toContain('tw-graph-protocol-primitive-node')
         ->toContain('strang.trunk.center.1.start.label.left.1')
         ->toContain('strang.trunk.center.1.start.label.right.2')
         ->toContain('Left start')

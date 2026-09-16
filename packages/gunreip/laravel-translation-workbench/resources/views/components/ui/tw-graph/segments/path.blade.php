@@ -42,6 +42,7 @@
 
 @props([
     'segment' => [],
+    'lineJumps' => [],
     'id' => 'segment.path',
     'direction' => 'bottom-top',
     'length' => '4rem',
@@ -70,6 +71,7 @@
     if ($segment === []) {
         $segment = [
             'id' => $id,
+            'lineJumps' => $lineJumps,
             'direction' => $direction,
             'length' => $length,
             'anchorStart' => $anchorStart,
@@ -236,13 +238,14 @@
 	<x-translation-workbench::ui.tw-graph.primitives.line
     :id="$id"
     :direction="$direction"
+    :line-jumps="data_get($segment, 'lineJumps', $lineJumps)"
     :length="data_get($segment, 'length', '4rem')"
     :start-x="data_get($segment, 'anchorStart.x', '0rem')"
     :start-y="data_get($segment, 'anchorStart.y', '0rem')"
     :end-x="data_get($segment, 'anchorEnd.x', '0rem')"
     :end-y="data_get($segment, 'anchorEnd.y', '0rem')"
-    :node-start="$nodeStartDot"
-    :node-end="$nodeEndDot"
+    :node-start="false"
+    :node-end="false"
     :node-start-size="data_get($segment, 'nodeStartSize')"
     :node-end-size="data_get($segment, 'nodeEndSize')"
     :gradient="data_get($segment, 'gradient', false)"
@@ -257,6 +260,22 @@
     :tone="$tone"
 	    :z-index="$zIndex"
 	/>
+
+
+    {{-- Independent nodes sit above adjacent paths, outside the line's stacking context. --}}
+    @foreach (['start' => $nodeStartDot, 'end' => $nodeEndDot] as $nodePosition => $showDot)
+        @if ($showDot)
+            <x-translation-workbench::ui.tw-graph.primitives.node
+                :id="$id . '.node.' . $nodePosition"
+                :anchor-x="data_get($segment, $nodePosition === 'start' ? 'anchorStart.x' : 'anchorEnd.x', '0rem')"
+                :anchor-y="data_get($segment, $nodePosition === 'start' ? 'anchorStart.y' : 'anchorEnd.y', '0rem')"
+                :size="data_get($segment, $nodePosition === 'start' ? 'nodeStartSize' : 'nodeEndSize')"
+                :color="$nodePosition === 'end' && $colorGradient ? ($toColor ?: $color) : $color"
+                :tone="$tone"
+                :z-index="$zIndex === null ? null : $zIndex + 1"
+            />
+        @endif
+    @endforeach
 
 	@if ($jointArrowStart)
 	    <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
@@ -313,6 +332,7 @@
             @endphp
 
             <x-translation-workbench::ui.tw-graph.segments.label
+                :dev="$devMode"
                 :id="$labelId"
                 :label="$label"
                 :side="$side"

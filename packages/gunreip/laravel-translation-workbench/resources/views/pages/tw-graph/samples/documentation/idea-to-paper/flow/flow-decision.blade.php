@@ -1,28 +1,24 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
-    <flux:callout color="indigo" icon="file-text" class="min-w-0">
-        <flux:callout.heading>{{ __('Flow decision') }}</flux:callout.heading>
-        <flux:callout.text>{{ __('Flow decision marks the first explicit branch point in a handmade process graph. It does not continue the center line; it renders one decision anchor and splits the flow into left and right sideways parts.') }}</flux:callout.text>
+    <flux:callout
+        class="min-w-0"
+        color="indigo"
+        icon="file-text"
+    >
+        <flux:callout.heading>{{ __('Flow IF True/False') }}</flux:callout.heading>
+        <flux:callout.text>
+            {{ __('A binary IF decision first evaluates its question inside a step. The shared output splits into two stacked action bridges pointing in the same direction. True routes sideways first and then follows a stem; False follows its stem first and then routes sideways. Both paths meet at one end anchor. Per execution only one branch is taken. Node labels remain optional explanations; the question and results are embedded in the path.') }}
+        </flux:callout.text>
         @php
-            $docExampleSource = file_get_contents(\Illuminate\Support\Facades\View::getFinder()->find(
+            $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-decision',
-            ));
-            if (preg_match('/^[ \t]*\{\{-- flow-decision-example-1:start --\}\}\R(.*?)^[ \t]*\{\{-- flow-decision-example-1:end --\}\}/ms', $docExampleSource, $docExample1Match) !== 1) {
-                throw new \LogicException('Missing flow-decision-example-1 source markers.');
-            }
-            $docExample1Lines = explode("\n", rtrim($docExample1Match[1]));
-            $docExample1Indent = min(array_map(
-                fn (string $line): int => strlen($line) - strlen(ltrim($line)),
-                array_filter($docExample1Lines, fn (string $line): bool => trim($line) !== ''),
-            ));
-            $docExample1Code = implode("\n", array_map(
-                fn (string $line): string => substr($line, $docExample1Indent),
-                $docExample1Lines,
-            ));
+            );
+            $docExample1Code = $docExampleSource->example('flow-decision-example-1');
         @endphp
-        <div class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $docExample1Code }}</code></pre>
-        </div>
-        <flux:heading class="mt-4" size="sm">{{ __('Flow decision props') }}</flux:heading>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $docExample1Code }}</x-translation-workbench::ui.tw-graph.code-box>
+        <flux:heading
+            class="mt-4"
+            size="sm"
+        >{{ __('Flow IF True/False props') }}</flux:heading>
         <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
             <flux:table container:class="max-h-80">
                 <flux:table.columns sticky>
@@ -34,341 +30,259 @@
                 <flux:table.rows>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">id</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">auto id</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">auto id
+                        </flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Stable element prefix for every flow strand, including labels, DEV identifiers, bounds, and attach targets.</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Stable prefix. The
+                            question uses .question, the two routes use .true and .false, and .anchorNode-end is the
+                            common continuation.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">component-counter</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">1</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional DEV/component counter value used by flow-start, flow-step, and flow-decision.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">direction</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bottom-top</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Main flow direction. The first flow examples stay vertical; later decision branches can turn left or right.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">attach-to</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">attach-to
+                        </flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Existing anchor id to continue from. Used by flow-step, flow-decision, flow-if-* and if-else-endif.</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Incoming anchor before
+                            the question step.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:anchor-start</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[&#x27;x&#x27; =&gt; &#x27;0rem&#x27;, &#x27;y&#x27; =&gt; &#x27;0rem&#x27;]</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:anchor-start
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[&#x27;x&#x27; =&gt;
+                            &#x27;0rem&#x27;, &#x27;y&#x27; =&gt; &#x27;0rem&#x27;]</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">x, y</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Manual start coordinate when no attach-to anchor is used.</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Fallback incoming
+                            coordinate when no attach-to anchor is available.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">direction
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bottom-top
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bottom-top, top-bottom
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Vertical direction for
+                            the question, both arcs and branch continuations.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:condition-label
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">IF condition?
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, width, align,
+                            badgeColor, maxLines</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Question embedded in
+                            the incoming step, not attached as a separate node label.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">before-length
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">2rem</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Stem before the
+                            question.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label-gap
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">auto from question
+                            lines</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Space occupied by the
+                            question in the stem.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">after-length
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">2rem</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Stem between the
+                            question and the shared split anchor.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">step-caps
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">true</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Draws caps bordering
+                            the question gap.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">cap-length
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph cap-length /
+                            1.75rem</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Size of the
+                            question-step caps.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-size
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph arc-size /
+                            2.75rem</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Size of the incoming
+                            and final arcs. arc-radius is the existing alias.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">0.75rem
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Minimum straight length
+                            before and after each outcome label. Both route spans align to the larger required total;
+                            the shorter route receives longer straight sections.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">left-bridge-length
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Legacy alias of
+                            true-bridge-length.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">right-bridge-length
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Legacy alias of
+                            false-bridge-length.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:if-start
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">True; width=half
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, width, align,
+                            badgeColor, maxLines</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Action text on the
+                            route that crosses sideways first, then follows its stem to the common end.
+                        </flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:if-end
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">False; width=half
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, width, align,
+                            badgeColor, maxLines</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Action text on the
+                            route that follows its stem first, then crosses sideways to the common end.
+                        </flux:table.cell>
+                    </flux:table.row>
+
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:node-labels
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[]</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">left, right → text,
+                            width, align, connectorLength, connectorGap</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Additional information
+                            at the single shared end anchor.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">node-end
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">true</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Visibility of the
+                            shared end anchor, rendered once by the final False arc.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">color</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">inherited graph color / zinc</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">inherited graph color /
+                            zinc</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Flow color inherited from tw-graph unless the flow component overrides it.</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Base color for the
+                            question and paths. Label badgeColor can distinguish outcomes.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">z-index</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">dev-mode
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">inherited :dev
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional local
+                            override for diagnostic output.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">z-index
+                        </flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">20</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Layer order for the flow component and its segments.</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Rendering layer.
+                        </flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">dev-mode</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">inherited :dev</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">side</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">left</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">left, right
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Side toward which both
+                            bridges run; default left uses east-north and south-west arcs.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">stem-length
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">8rem</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional local DEV override for counters and debug helpers.</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Vertical offset
+                            between the True and False bridges. The same length follows True and precedes False; enough
+                            space for the label line heights plus 2rem is enforced.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">dev-counter-color</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">zinc / inherited</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">true-bridge-length
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length
+                        </flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Badge color for DEV node counters where the component exposes it.</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Requested straight
+                            length before and after the True label. May grow to match the False route span.
+                        </flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:start-label</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, side, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Flow-start label that names the entry point, for example a process start, first milestone, or initial state.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:start-node-labels</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">left, right -&gt; text, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional left/right facts at the flow-start end anchor, using the same text-label structure as trunk and branch labels.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">node-label-left</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Shorthand single-side labels for flow-start when a full start-node-labels array would be too much.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">node-label-right</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Shorthand single-side labels for flow-start when a full start-node-labels array would be too much.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">start-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">stem-length</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">false-bridge-length
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length
+                        </flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Length of the first visible flow-start stem before the first anchor node.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">stem-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Length of the first visible flow-start stem before the first anchor node.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">node-end</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">true / null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Controls whether the end anchor exists and whether its visible dot is rendered.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">node-end-dot</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">true / null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Controls whether the end anchor exists and whether its visible dot is rendered.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:node-image</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">src, size, alt, color, zIndex</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional image marker at a flow-start node, following the generic tw-graph node image structure.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">before-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">2rem / 2rem</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Lengths around a flow-step label. The label gap is calculated from the step label height unless label-gap is set explicitly.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">after-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">2rem / 2rem</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Lengths around a flow-step label. The label gap is calculated from the step label height unless label-gap is set explicitly.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label-gap</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph label-gap / calculated</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Explicit gap around a flow-step label; otherwise the step uses the label height.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:step-label</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Centered label that names the process step, status, or decision reason.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:node-labels</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">end -&gt; left/right -&gt; text, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional facts at the flow-step or flow-decision end anchors. For flow-step the public anchor is usually end.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">step-caps</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">true / graph cap-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Controls the small caps around a flow-step label and their length.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">cap-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">true / graph cap-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Controls the small caps around a flow-step label and their length.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-radius</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph arc-size</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Radius/size of flow-decision and flow-if arcs. arc-size is the current canonical prop.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-size</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph arc-size</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Radius/size of flow-decision and flow-if arcs. arc-size is the current canonical prop.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph bridge-length / label-bridge minimum</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Common bridge length for flow-decision and the flow-if label bridges unless a more specific bridge prop overrides it.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">left-bridge-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Side-specific bridge lengths for flow-decision.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">right-bridge-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Side-specific bridge lengths for flow-decision.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">extension</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">0rem</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional additional reach for flow-decision branches.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">left-extension</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">0rem</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional additional reach for flow-decision branches.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">right-extension</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">0rem</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional additional reach for flow-decision branches.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:decision-label</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, side, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Centered label at the decision anchor. The flow continues only through the left/right sideways branches.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">decision-label-side</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">top</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Default side for a flow-decision label when the label itself does not set side.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">path-tone</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">surface</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Tone used by flow-if paths, arcs, and label bridges.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">start-bridge-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Specific bridge lengths for the if-else-endif wrapper: intro, condition rows, and ENDIF.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">condition-bridge-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Specific bridge lengths for the if-else-endif wrapper: intro, condition rows, and ENDIF.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">end-bridge-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Specific bridge lengths for the if-else-endif wrapper: intro, condition rows, and ENDIF.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bypass</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">false</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Connects the IF entry rail directly to the ENDIF output when the condition is not met.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">then-arc-reach</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-size</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Horizontal reach of the THEN/output arc in a flow-if condition row.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">left-stem-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">stem-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Vertical lengths for the ELSE/next-condition rail and the THEN/output continuation.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">then-stem-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">stem-length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Vertical lengths for the ELSE/next-condition rail and the THEN/output continuation.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">left-stem</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">true</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Enables or suppresses the left rail continuation in a flow-if condition row.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">then-continuation</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">stem</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">stem, arc-east-north, none</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Defines how the THEN/output side continues after the condition label.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:intro-label</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[&#x27;text&#x27; =&gt; [&#x27;IF / ELSE flow&#x27;, &#x27;section starts&#x27;]]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, width, side, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Opening label for flow-if-start or the if-else-endif wrapper. Optional side (left/right) overrides the direction of the intro arcs and bridges; omitted side preserves the component direction.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:if-condition-label</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Label for the first IF condition row inside flow-if-condition-set or if-else-endif.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:elseif-conditions</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">key, id, color, label, conditionLabel, conditionRailWidth, arcSize, bridgeLength, thenArcReach, leftStemLength, thenStemLength, leftStem, thenContinuation, pathTone, zIndex, devMode, devCounterColor</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Rows after the first IF row. Each entry may be ELSEIF, ELSE, DEFAULT, or any handmade condition label.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:conditions</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">key, id, color, label, conditionLabel, conditionRailWidth, arcSize, bridgeLength, thenArcReach, leftStemLength, thenStemLength, leftStem, thenContinuation, pathTone, zIndex, devMode, devCounterColor</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Rows after the first IF row. Each entry may be ELSEIF, ELSE, DEFAULT, or any handmade condition label.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">condition-rail-width</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">widest condition label width</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Shared label width for IF/ELSEIF/ELSE rows so the condition rail remains aligned.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:end-label</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[&#x27;text&#x27; =&gt; [&#x27;ENDIF&#x27;]]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, width, side, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Closing label rendered by flow-if-end or the if-else-endif wrapper. Optional side (left/right) overrides the ENDIF direction, including the final THEN turn in the wrapper. Omitted side preserves existing behavior.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">if-id</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">derived from id</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional stable id prefixes for the generated IF and ELSEIF condition rows.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">elseif-id</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">derived from id</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional stable id prefixes for the generated IF and ELSEIF condition rows.</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Requested straight
+                            length before and after the False label. May grow to match the True route span.
+                        </flux:table.cell>
                     </flux:table.row>
                 </flux:table.rows>
             </flux:table>
         </div>
+        <flux:text class="mt-3">
+            {{ __('Continue after both routes with attach-to="…decision-1.anchorNode-end". The older true/false and left/right output aliases now refer to this same shared continuation; branch-specific actions belong in the corresponding action bridge.') }}
+        </flux:text>
     </flux:callout>
-    <flux:callout color="zinc" icon="eye" class="min-w-0">
+    <flux:callout
+        class="min-w-0"
+        color="zinc"
+        icon="eye"
+    >
         <flux:callout.heading>{{ __('Preview') }}</flux:callout.heading>
-        <x-translation-workbench::ui.tw-graph.preview-tools :dev="$dev ?? true" :coordinates="$coordinates ?? false">
-                    <div class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                        {{-- flow-decision-example-1:start --}}
+        <x-translation-workbench::ui.tw-graph.preview-tools
+            :dev="$dev ?? true"
+            :coordinates="$coordinates ?? false"
+        >
+            <div
+                class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                {{-- flow-decision-example-1:start --}}
                 <x-translation-workbench::ui.tw-graph
-                    class="px-20 py-12"
                     graph-id="idea-to-paper-step-08-flow-decision"
                     :dev="true"
                     :coordinates="true"
                     color="zinc"
-                    slot-min-height="58rem"
-                    horizontal-padding="34rem"
-                    min-width="64rem"
-                    min-height="58rem"
+                    horizontal-padding="12rem"
+                    min-width="56rem"
+                    min-height="44rem"
                 >
                     <div class="pointer-events-none opacity-25">
                         <x-translation-workbench::ui.tw-graph.strang.flow-start
@@ -380,53 +294,55 @@
                                 'width' => 'halfLong',
                                 'align' => 'center',
                             ]"
-                            :start-node-labels="[
-                                'left' => [
-                                    'text' => ['Input', 'raw thought'],
-                                    'width' => 'default',
-                                    'align' => 'right',
-                                ],
-                            ]"
                         />
-
                         <x-translation-workbench::ui.tw-graph.strang.flow-step
                             id="literature.flow.1.paper-process.step-1"
                             attach-to="literature.flow.1.paper-process.anchorNode-end"
                             before-length="2rem"
                             after-length="3rem"
                             :step-label="[
-                                'text' => ['Draft prepared', 'structure exists'],
+                                'text' => ['Draft prepared'],
                                 'width' => 'halfLong',
                                 'align' => 'center',
-                            ]"
-                            :node-labels="[
-                                'end' => [
-                                    'right' => [
-                                        'text' => ['Next', 'review choice'],
-                                        'width' => 'default',
-                                        'align' => 'left',
-                                    ],
-                                ],
                             ]"
                         />
                     </div>
 
-                    <x-translation-workbench::ui.tw-graph.strang.flow-decision
+                    <x-translation-workbench::ui.tw-graph.strang.flow-if-else
                         id="literature.flow.1.paper-process.decision-1"
-                        color="cyan"
                         attach-to="literature.flow.1.paper-process.step-1.anchorNode-end"
-                        bridge-length="9rem"
-                        :decision-label="[
-                            'text' => ['Peer review', 'decision'],
-                            'width' => 'halfLong',
+                        color="cyan"
+                        before-length="2rem"
+                        after-length="2rem"
+                        arc-size="2.75rem"
+                        side="left"
+                        stem-length="4rem"
+                        bridge-length="2rem"
+                        true-bridge-length="5rem"
+                        false-bridge-length="3rem"
+                        :condition-label="[
+                            'text' => ['IF reviewApproved?'],
+                            'width' => 'default',
                             'align' => 'center',
-                            'connectorLength' => '4rem',
+                        ]"
+                        :if-start="[
+                            'text' => ['True'],
+                            'width' => 'half',
+                            'align' => 'center',
+                            'badgeColor' => 'green',
+                        ]"
+                        :if-end="[
+                            'text' => ['False'],
+                            'width' => 'half',
+                            'align' => 'center',
+                            'badgeColor' => 'rose',
                         ]"
                     />
                 </x-translation-workbench::ui.tw-graph>
                 {{-- flow-decision-example-1:end --}}
-                    </div>
-                </x-translation-workbench::ui.tw-graph.preview-tools>
-        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/flow-decision.blade.php</flux:field>
+            </div>
+        </x-translation-workbench::ui.tw-graph.preview-tools>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/flow-decision.blade.php
+        </flux:field>
     </flux:callout>
 </section>

@@ -9,36 +9,12 @@
             {{ __('Merge extensions continue an existing merge side outward. Use them when multiple sources belong to the same merge relation but should still remain visually inspectable.') }}
         </flux:callout.text>
         @php
-            $mergeExampleSource = file_get_contents(
-                \Illuminate\Support\Facades\View::getFinder()->find(
-                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.merge.merge-extension',
-                ),
+            $mergeExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.merge.merge-extension',
             );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- merge-extension-example-1:start --\}\}\R(.*?)^[ \t]*\{\{-- merge-extension-example-1:end --\}\}/ms',
-                    $mergeExampleSource,
-                    $mergeExample1Match,
-                ) !== 1
-            ) {
-                throw new \LogicException('Missing merge-extension-example-1 source markers.');
-            }
-            $mergeExample1Lines = explode("\n", rtrim($mergeExample1Match[1]));
-            $mergeExample1Indent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($mergeExample1Lines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $mergeExample1Code = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $mergeExample1Indent), $mergeExample1Lines),
-            );
+            $mergeExample1Code = $mergeExampleSource->example('merge-extension-example-1');
         @endphp
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $mergeExample1Code }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $mergeExample1Code }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -168,7 +144,6 @@
                     arc-size="2.75rem"
                     bridge-length="8rem"
                     stem-length="5rem"
-                    slot-min-height="52rem"
                     horizontal-padding="16rem"
                     min-width="36rem"
                     min-height="32rem"

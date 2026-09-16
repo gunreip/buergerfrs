@@ -57,10 +57,7 @@
         ? \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, (string) $attachTo)
         : null;
     $anchorStart = $attachTarget ?: (is_array($anchorStart) ? $anchorStart : ['x' => '0rem', 'y' => '0rem']);
-    $anchorStart = [
-        'x' => data_get($anchorStart, 'x', '0rem'),
-        'y' => data_get($anchorStart, 'y', '0rem'),
-    ];
+
     $normalizeLabel = fn (mixed $label, string $side): ?array => tap(
         \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, null, $resolvedColor),
         function (?array &$normalized) use ($side): void {

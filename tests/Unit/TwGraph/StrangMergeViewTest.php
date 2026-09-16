@@ -345,7 +345,7 @@ it('renders a joint arrow instead of the merge start dot when start shift is vis
     expect($html)
         ->toContain('strang.merge.left.1.start.start-shift.joint-arrow')
         ->toContain('tw-graph-protocol-primitive-joint-arrow-top')
-        ->toContain('tw-graph-protocol-primitive-line-node-end"');
+        ->toContain('tw-graph-protocol-primitive-node');
 });
 
 it('renders merge start node labels at the start shift end anchor', function (): void {

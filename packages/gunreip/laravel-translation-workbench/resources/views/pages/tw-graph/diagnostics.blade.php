@@ -52,7 +52,7 @@
                         <p class="text-sm text-zinc-600 dark:text-zinc-300">
                             {{ $twGraphReportError ?? __('No TW-Graph test report exists yet.') }}
                         </p>
-                        <pre class="mt-3 overflow-x-auto rounded-md bg-zinc-950 p-3 text-xs text-zinc-100"><code>php artisan clear:project --tw-graph-tests</code></pre>
+                        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">php artisan clear:project --tw-graph-tests</x-translation-workbench::ui.tw-graph.code-box>
                     @else
                         <dl class="mt-3 grid gap-3 text-sm sm:grid-cols-3">
                             <div>
@@ -98,7 +98,7 @@
                     <p class="text-sm text-zinc-600 dark:text-zinc-300">
                         {{ __('The diagnostics page is read-only. Run the checks deliberately from the console, then reload this page.') }}
                     </p>
-                    <pre class="mt-3 overflow-x-auto rounded-md bg-zinc-950 p-3 text-xs text-zinc-100"><code>php artisan clear:project --tw-graph-tests</code></pre>
+                    <x-translation-workbench::ui.tw-graph.code-box class="mt-3">php artisan clear:project --tw-graph-tests</x-translation-workbench::ui.tw-graph.code-box>
                     @if (is_file($twGraphReportHtmlPath))
                         <p class="mt-3 break-all font-mono text-xs text-zinc-500 dark:text-zinc-400">
                             {{ str_replace(base_path() . DIRECTORY_SEPARATOR, '', $twGraphReportHtmlPath) }}

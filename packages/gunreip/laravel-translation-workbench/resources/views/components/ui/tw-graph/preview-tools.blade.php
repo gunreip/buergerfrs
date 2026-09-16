@@ -6,7 +6,7 @@
     :class="{ 'tw-graph-protocol-dev-disabled': !previewDev, 'tw-graph-protocol-coordinates-disabled': !previewCoordinates }"
     :data-boxes="previewBoxes ? 'on' : 'off'"
 >
-    <flux:fieldset class="sticky top-0 rounded-lg bg-white p-3 dark:bg-zinc-900">
+    <flux:fieldset class="z-100 sticky top-0 rounded-lg bg-white p-3 dark:bg-zinc-900">
         <div class="flex items-center gap-4 *:gap-x-2">
             <flux:checkbox.group variant="pills">
                 <flux:checkbox

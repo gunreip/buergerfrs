@@ -132,7 +132,7 @@ it('renders the idea to paper canvas documentation with default and prop compari
         ->toContain('This keeps the canvas at its defaults and adds a default trunk')
         ->toContain('literature.center.1.paper')
         ->toContain('idea-to-paper-step-01-coordinates')
-        ->toContain('idea-to-paper-step-01-slot-height')
+        ->toContain('idea-to-paper-step-01-content-height')
         ->toContain('idea-to-paper-step-01-props-line-custom')
         ->toContain('idea-to-paper-step-01-props-stem-custom');
 });
@@ -142,14 +142,14 @@ it('keeps each canvas subtab handmade in its own file', function (): void {
     foreach (['canvas-default', 'canvas-default-trunk', 'canvas-coordinates', 'canvas-height', 'canvas-props-line', 'canvas-props-stem-length', 'canvas-props-node-size', 'canvas-props-cap-length', 'canvas-props-min-width'] as $name) {
         $source = file_get_contents($directory . '/' . $name . '.blade.php');
         expect($source)
-            ->toContain('<pre><code>')
+            ->toContain('<x-translation-workbench::ui.tw-graph.code-box')
             ->toContain('<x-translation-workbench::ui.tw-graph')
             ->toContain('<x-translation-workbench::ui.tw-graph.preview-tools')
             ->not->toContain('canvasVariant')
             ->not->toContain('canvasPropsVariant')
             ->not->toContain('@foreach')
             ->not->toContain('@include');
-        expect(strpos($source, '<flux:table '))->toBeGreaterThan(strpos($source, '</code></pre>'));
+        expect(strpos($source, '<flux:table '))->toBeGreaterThan(strpos($source, '</x-translation-workbench::ui.tw-graph.code-box>'));
         expect(strpos($source, '</flux:table>'))->toBeLessThan(strpos($source, '</flux:callout>'));
         expect($source)->toContain("{{ __('Prop') }}")->toContain("{{ __('Default') }}")->toContain("{{ __('Purpose') }}");
         $html = view('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas.' . $name, ['dev' => false, 'coordinates' => false])->render();
@@ -164,8 +164,8 @@ it('keeps idea to paper canvas default examples free of hidden visual overrides'
     $defaultTrunkPanelMatches = [1 => file_get_contents(View::getFinder()->find(
         'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas.canvas-default-trunk',
     ))];
-    preg_match('/<pre><code>(.*?)<\/code><\/pre>/s', $defaultPanelMatches[1], $defaultPanelMatches);
-    preg_match('/<pre><code>(.*?)<\/code><\/pre>/s', $defaultTrunkPanelMatches[1], $defaultTrunkPanelMatches);
+    preg_match('/<x-translation-workbench::ui\.tw-graph\.code-box[^>]*>(.*?)<\/x-translation-workbench::ui\.tw-graph\.code-box>/s', $defaultPanelMatches[1], $defaultPanelMatches);
+    preg_match('/<x-translation-workbench::ui\.tw-graph\.code-box[^>]*>(.*?)<\/x-translation-workbench::ui\.tw-graph\.code-box>/s', $defaultTrunkPanelMatches[1], $defaultTrunkPanelMatches);
 
     expect($defaultPanelMatches[1] ?? '')
         ->toContain('&lt;x-translation-workbench::ui.tw-graph&gt;&lt;/x-translation-workbench::ui.tw-graph&gt;')
@@ -202,19 +202,19 @@ it('keeps idea to paper canvas prop examples visually scoped and explicitly colo
         ->not->toContain(':coordinates="$coordinates"');
 });
 
-it('keeps canvas height examples focused on slot and minimum height differences', function (): void {
+it('keeps canvas height examples focused on content and minimum height differences', function (): void {
     $source = file_get_contents(View::getFinder()->find(
         'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas.canvas-height',
     ));
 
     expect($source)
-        ->toContain('graph-id="idea-to-paper-step-01-slot-height"')
-        ->toContain('<span class="text-lime-300">slot-min-height="30rem"</span>')
-        ->toContain('slot-min-height is the fallback room for slotted handmade graph content.')
+        ->toContain('graph-id="idea-to-paper-step-01-content-height"')
+        ->toContain('<span class="text-lime-300">min-height="30rem"</span>')
+        ->toContain('min-height sets a lower bound; larger graph content expands the canvas.')
         ->toContain('graph-id="idea-to-paper-step-01-min-height"')
         ->toContain('<span class="text-lime-300">min-height="88rem"</span>')
         ->toContain('min-height overrides the visible minimum height of the graph canvas.')
-        ->toContain('The first graph sets slot-min-height below the calculated graph bounds')
+        ->toContain('The first graph sets min-height below the calculated graph bounds')
         ->toContain('The second graph sets min-height above the calculated bounds');
 });
 
@@ -308,11 +308,12 @@ it('keeps the idea to paper flow diagram assembled separately from draft and cur
     expect($source)
         ->toContain('tw-graph-sample-idea-to-paper-flow-diagram')
         ->toContain('strang.flow-start')
-        ->toContain('strang.flow-decision')
+        ->toContain('strang.flow-if-else')
         ->toContain('literature.flow.1.paper-process')
         ->toContain('literature.flow.1.paper-process.decision-1')
-        ->toContain('literature.flow.1.paper-process.revision-step')
-        ->toContain('literature.flow.1.paper-process.accepted-step')
+        ->toContain('literature.flow.1.paper-process.continue-step')
+        ->toContain('Accepted path')
+        ->toContain('Revision loop')
         ->not->toContain('tw-graph-sample-idea-to-paper-current-result')
         ->not->toContain('tw-graph-sample-idea-to-paper-thought-draft');
 });
@@ -374,112 +375,15 @@ it('keeps idea to paper top level tabs delegated to one documentation section ea
         ->not->toContain('path/to/file');
 });
 
-it('documents the first idea to paper flow authoring step without introducing a flow engine yet', function (): void {
+it('documents the current IF variants including a handmade nested block', function (): void {
     $html = view('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.index', [
-        'dev' => true,
-        'coordinates' => false,
+        'dev' => true, 'coordinates' => false,
     ])->render();
-
-    expect($html)
-        ->toContain('Flow')
-        ->toContain('Flow start')
-        ->toContain('Flow decision')
-        ->toContain('Flow branch steps')
-        ->toContain('Flow IF')
-        ->toContain('IF ENDIF')
-        ->toContain('IF ELSE ENDIF')
-        ->toContain('IF ELSEIF ENDIF')
-        ->toContain('idea-to-paper-step-08-flow-if-elseif-endif')
-        ->toContain('literature.flow.1.if-elseif-endif.elseif.4.arc-east-north')
-        ->toContain('literature.flow.1.if-elseif-endif-right.endif.arc-south-east')
-        ->toContain('Flow IF Test')
-        ->toContain('Flow IF nested Test')
-        ->toContain('idea-to-paper-step-08-flow-if-nested-test')
-        ->toContain('literature.flow.1.if-nested-test.inner.elseif.else.then.arc-west-north')
-        ->toContain('x-translation-workbench::ui.tw-graph.strang.flow-start')
-        ->toContain('x-translation-workbench::ui.tw-graph.strang.flow-step')
-        ->toContain('x-translation-workbench::ui.tw-graph.strang.flow-decision')
-        ->toContain('delegates to parts.start')
-        ->toContain('literature.flow.1.paper-process')
-        ->toContain('literature.flow.1.paper-process.step-1')
-        ->toContain('literature.flow.1.paper-process.decision-1')
-        ->toContain('literature.flow.1.paper-process.revision-step')
-        ->toContain('literature.flow.1.paper-process.accepted-step')
-        ->toContain('literature.flow.1.paper-process.revision-if')
-        ->toContain('literature.flow.1.paper-process.accepted-if')
-        ->toContain('idea-to-paper-step-08-flow-if')
-        ->toContain('idea-to-paper-step-08-flow-if-endif')
-        ->toContain('literature.flow.1.paper-process.review-if-endif.if.arc-east-north')
-        ->toContain('literature.flow.1.paper-process.review-if-endif.endif.label.center.1')
-        ->toContain('literature.flow.1.paper-process.review-if-endif.bypass.stem.end.joint-arrow')
-        ->toContain('literature.flow.1.paper-process.review-if-endif.bypass.arc-west-north.end.joint-arrow')
-        ->toContain('literature.flow.1.paper-process.review-if-endif.bypass.bridge')
-        ->toContain('literature.flow.1.paper-process.review-if-endif.bypass.arc-south-east')
-        ->toContain('literature.flow.1.paper-process.review-if-endif-right.start.arc-west-north')
-        ->toContain('literature.flow.1.paper-process.review-if-endif-right.endif.arc-south-east')
-        ->toContain('literature.flow.1.paper-process.review-if-endif-right.bypass.arc-south-west')
-        ->toContain('idea-to-paper-step-08-flow-if-else-endif')
-        ->toContain('idea-to-paper-step-08-flow-if-test')
-        ->toContain('x-translation-workbench::ui.tw-graph.strang.if-else-endif')
-        ->toContain('literature.flow.1.paper-process.review-if-else')
-        ->toContain('literature.flow.1.paper-process.review-if-else-right.start.arc-west-north')
-        ->toContain('literature.flow.1.paper-process.review-if-else-right.elseif.else.arc-west-north')
-        ->toContain('literature.flow.1.paper-process.review-if-else-right.endif.arc-south-east')
-        ->toContain('IF review passes')
-        ->toContain('ELSE revise draft')
-        ->toContain('literature.flow.1.if-test.start.arc-east-north')
-        ->toContain('literature.flow.1.if-test.start.arc-east-north.end.joint-arrow')
-        ->toContain('literature.flow.1.if-test.start.bridge-in')
-        ->toContain('literature.flow.1.if-test.start.bridge-in')
-        ->toContain('literature.flow.1.if-test.start.bridge-in.end.joint-arrow')
-        ->toContain('literature.flow.1.if-test.start.intro.label.center.1')
-        ->toContain('IF / ELSE flow')
-        ->toContain('literature.flow.1.if-test.start.arc-south-west')
-        ->toContain('literature.flow.1.if-test.if.arc-west-north')
-        ->toContain('literature.flow.1.if-test.if.bridge-in')
-        ->toContain('literature.flow.1.if-test.if.bridge-out')
-        ->toContain('literature.flow.1.if-test.if.bridge-out.end.joint-arrow')
-        ->toContain('literature.flow.1.if-test.if.stem')
-        ->toContain('literature.flow.1.if-test.elseif.1.arc-west-north')
-        ->toContain('literature.flow.1.if-test.elseif.1.bridge-in')
-        ->toContain('literature.flow.1.if-test.elseif.1.bridge-out')
-        ->toContain('literature.flow.1.if-test.elseif.1.bridge-out.end.joint-arrow')
-        ->toContain('literature.flow.1.if-test.elseif.2.arc-west-north')
-        ->toContain('literature.flow.1.if-test.elseif.3.arc-west-north')
-        ->toContain('literature.flow.1.if-test.elseif.4.arc-west-north')
-        ->not->toContain('literature.flow.1.if-test.elseif.4.arc-east-north.end.joint-arrow')
-        ->not->toContain('literature.flow.1.if-test.endif.bridge-in')
-        ->not->toContain('literature.flow.1.if-test.endif.bridge-in')
-        ->not->toContain('literature.flow.1.if-test.endif.bridge-in.end.joint-arrow')
-        ->toContain('literature.flow.1.if-test.endif.label.center.1')
-        ->toContain('review changes required')
-        ->toContain('publication ready')
-        ->toContain('Paper process')
-        ->toContain(':start-node-labels')
-        ->toContain(':step-label')
-        ->toContain(':decision-label')
-        ->toContain('Array keys')
-        ->toContain('start-bridge-length')
-        ->toContain('condition-bridge-length')
-        ->toContain('end-bridge-length')
-        ->toContain(':elseif-conditions')
-        ->toContain(':conditions')
-        ->toContain('key, id, color, label, conditionLabel, conditionRailWidth')
-        ->toContain('then-continuation')
-        ->toContain('stem, arc-east-north, none')
+    expect($html)->toContain('Flow IF nested Test')
+        ->toContain('literature.flow.1.if-nested-test.inner.elseif.sources.question')
+        ->toContain('literature.flow.1.if-nested-test.outer.elseif.automatic.question')
+        ->toContain('if-start.return')->toContain('anchorNode-return')
         ->toContain('x-model="previewDev"');
-
-    $document = new DOMDocument;
-    @$document->loadHTML($html);
-    $xpath = new DOMXPath($document);
-
-    foreach (['stem' => '12', 'arc-west-north' => '13', 'bridge' => '14'] as $segment => $counter) {
-        $path = 'literature.flow.1.paper-process.review-if-endif.bypass.' . $segment . '.node.end';
-        $nodes = $xpath->query('//*[contains(@class, "tw-graph-protocol-primitive-dev-node-counter") and @data-tw-graph-path="' . $path . '"]');
-
-        expect($nodes->length)->toBe(1);
-        expect(trim($nodes->item(0)->textContent))->toBe($counter);
-    }
 });
 
 it('documents trunk stem lengths in its own handmade example', function (): void {
@@ -910,20 +814,14 @@ it('keeps hand authored sample dev switches scoped to their own graph wrapper', 
 });
 
 it('keeps left and right flow examples individually authored and editable', function (): void {
-    foreach (['flow-if-test', 'flow-if-elseif-endif'] as $section) {
-        $source = file_get_contents(View::getFinder()->find(
-            'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.' . $section,
-        ));
-        preg_match('/^[ \t]*\{\{-- ' . $section . '-example-1:start --\}\}\R(.*?)^[ \t]*\{\{-- ' . $section . '-example-1:end --\}\}/ms', $source, $match);
-        $preview = $match[1];
-
-        expect($preview)->not->toContain('@foreach');
-        expect(substr_count($preview, '<x-translation-workbench::ui.tw-graph.strang.if-else-endif'))->toBe(2);
-        expect(substr_count($preview, ':if-condition-label='))->toBe(2);
-        expect(substr_count($preview, ':elseif-conditions='))->toBe(2);
-        expect($preview)->toContain('side="left"')->toContain('side="right"');
-        expect($preview)->not->toContain(':id=')->not->toContain(':side=');
-    }
+    $source = file_get_contents(View::getFinder()->find(
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-if-elseif-multi',
+    ));
+    expect($source)->not->toContain('@foreach');
+    expect(substr_count($source, '<x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-multi'))->toBe(2);
+    expect(substr_count($source, ':if-start='))->toBe(2);
+    expect(substr_count($source, ':elseifs='))->toBe(2);
+    expect($source)->toContain('side="left"')->toContain('side="right"');
 });
 
 it('renders nested IF code examples with intact PHP array arrows', function (): void {
@@ -941,91 +839,69 @@ it('renders nested IF code examples with intact PHP array arrows', function (): 
     expect($code)->toContain('side="left"');
 });
 
-it('keeps nested flow diagnostics available and closes the outer IF after the inner ENDIF', function (): void {
-    $html = view('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-if-nested-test', [
-        'dev' => false, 'coordinates' => false,
-    ])->render();
-    expect($html)
-        ->toContain('x-model="nestedDev"')
-        ->toContain('x-model="nestedBoxes"')
-        ->toContain('x-model="nestedCoordinates"')
-        ->toContain('tw-graph-protocol-coordinate-only')
+it('routes the nested IF back to the outer output without a parallel shortcut', function (): void {
+    $view = 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-if-nested-test';
+    $html = view($view, ['dev' => false, 'coordinates' => false])->render();
+    expect($html)->toContain('x-model="previewDev"')->toContain('x-model="previewBoxes"')
+        ->toContain('x-model="previewCoordinates"')->toContain('wire:click="$refresh"')
         ->toContain('data-tw-graph-dev-box="literature.flow.1.if-nested-test.inner.bounds"')
-        ->toContain('data-tw-graph-dev-box="literature.flow.1.if-nested-test.outer.bounds"')
-        ->toContain('literature.flow.1.if-nested-test.return.arc-east-north.end.joint-arrow')
-        ->toContain('literature.flow.1.if-nested-test.elseif.automatic.label.center.1')
-        ->toContain('literature.flow.1.if-nested-test.elseif.deferred.label.center.1')
-        ->toContain('literature.flow.1.if-nested-test.else.label.center.1')
-        ->toContain('literature.flow.1.if-nested-test.inner-return.arc-south-west')
-        ->not->toContain('literature.flow.1.if-nested-test.bypass.stem');
-
-    $source = file_get_contents(\Illuminate\Support\Facades\View::getFinder()->find(
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-if-nested-test',
-    ));
-    expect($source)
-        ->toMatch('/id="literature\.flow\.1\.if-nested-test\.inner"\s+attach-to="literature\.flow\.1\.if-nested-test\.if\.then\.anchorNode-end"/')
-        ->toMatch('/id="literature\.flow\.1\.if-nested-test\.inner-return"\s+attach-to="literature\.flow\.1\.if-nested-test\.inner\.endif\.anchorNode-end"\s+merge-to="literature\.flow\.1\.if-nested-test\.else\.then\.anchorNode-end"/')
-        ->not->toContain('inner-exit.anchorNode-end');
-
-    $graphId = 'idea-to-paper-step-08-flow-if-nested-test';
-    $outsideStart = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, 'literature.flow.1.if-nested-test.inner.endif.anchorNode-end');
-    $merge = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, 'literature.flow.1.if-nested-test.else.then.anchorNode-end');
-    $radius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('arc_size', '2.75rem');
-    \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::forgetGraph('nested-return-length');
-    \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
-        'nested-return-length', 'bridge', '0rem',
-        'calc(' . $outsideStart['x'] . ' - ' . $merge['x'] . ' - 2 * ' . $radius . ')',
-        '0rem', '0rem', 'center',
+        ->toContain('data-tw-graph-dev-box="literature.flow.1.if-nested-test.outer.bounds"');
+    $source = file_get_contents(View::getFinder()->find($view));
+    expect(substr_count($source, '<x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-multi'))->toBe(2);
+    expect($source)->not->toContain('@foreach')->not->toContain('strang.if-else-endif');
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    expect($xpath->query('//*[@data-tw-graph-path="literature.flow.1.if-nested-test.outer.elseif.sources.true.stem"]')->length)->toBe(0);
+    $get = fn (string $suffix) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+        'idea-to-paper-step-08-flow-if-nested-test', 'literature.flow.1.if-nested-test.' . $suffix,
     );
-    expect(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::canvasMetrics('nested-return-length')['maxYRem'])->toBeGreaterThan(0.0);
-    expect($html)->toMatch('/class="[^"]*joint-arrow-left[^"]*"[^>]*title="literature\.flow\.1\.if-nested-test\.inner-return\.bridge\.end\.joint-arrow"/');
+    $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
+    $number = fn (string $value): float => $evaluate->invoke(null, $value);
+    foreach (['x', 'y'] as $axis) {
+        expect($number($get('inner.anchorNode-start')[$axis]))->toBe($number($get('outer.elseif.sources.true.anchorNode-end')[$axis]));
+        expect($number($get('inner-return.stem.anchorNode-end')[$axis]))->toBe($number($get('outer.elseif.sources.true.anchorNode-return')[$axis]));
+        expect($number($get('outer.elseif.sources.true.anchorNode-return')[$axis]))->toBe($number($get('outer.elseif.deferred.true.anchorNode-end')[$axis]));
+    }
+    foreach (['x', 'y'] as $axis) {
+        expect($number($get('outer.if.true.stem.anchorNode-end')[$axis]))
+            ->toBe($number($get('outer.elseif.automatic.true.anchorNode-end')[$axis]));
+        expect($number($get('outer.elseif.automatic.true.stem.anchorNode-end')[$axis]))
+            ->toBe($number($get('outer.elseif.deferred.true.anchorNode-end')[$axis]));
+    }
+    expect($number($get('outer.elseif.sources.true.anchorNode-end')['x']))
+        ->toBeLessThan($number($get('outer.elseif.automatic.true.anchorNode-end')['x']));
+    expect($number($get('inner-return.anchorNode-end')['y']))->toBeLessThan($number($get('outer.elseif.sources.true.anchorNode-return')['y']));
+    expect($number($get('inner.anchorNode-end')['y']))->toBeGreaterThan($number($get('inner.anchorNode-start')['y']));
+    expect($number($get('inner-return.anchorNode-end')['x']))->toBeGreaterThan($number($get('inner.anchorNode-end')['x']));
+    $returnColor = $get('inner.if.true.anchorNode-end')['color'];
+    expect($get('outer.anchorNode-end')['returnColor'])->toBe($returnColor);
+    expect($get('outer.anchorNode-end')['color'])->toBe('zinc');
+    $returnStyle = $xpath->query('//style[@data-tw-graph-return-colors]')->item(0);
+    expect($returnStyle)->not->toBeNull();
+    expect($returnStyle->textContent)
+        ->not->toContain('literature.flow.1.if-nested-test.outer.elseif.automatic.true.stem')
+        ->not->toContain('literature.flow.1.if-nested-test.outer.if.true.stem')
+        ->toContain('literature.flow.1.if-nested-test.outer.elseif.deferred.true.stem')
+        ->toContain('--tw-graph-protocol-local-color-rgb: ' . \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($returnColor) . ' !important')
+        ->not->toContain('.false.')->not->toContain('.node.')->not->toContain('.arc');
 
-    foreach (['elseif.automatic', 'elseif.deferred', 'else'] as $row) {
-        $output = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, 'literature.flow.1.if-nested-test.' . $row . '.then.anchorNode-end');
-        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::forgetGraph('nested-return-clearance');
-        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
-            'nested-return-clearance', 'distance', '0rem',
-            'calc(' . $outsideStart['x'] . ' - ' . $output['x'] . ')',
-            '0rem', '0rem', 'center',
-        );
-        expect(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::canvasMetrics('nested-return-clearance')['maxYRem'])->toBeGreaterThan(5.5);
+    expect($get('inner.anchorNode-end')['returnColor'])->toBe($returnColor);
+    expect($get('inner.anchorNode-end')['color'])->toBe('zinc');
+    expect($get('inner-return.anchorNode-end')['color'])->toBe($returnColor);
+    expect($get('inner-return.stem.anchorNode-end')['color'])->toBe($returnColor);
+    $rgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($returnColor);
+    $returnPaths = $xpath->query('//*[starts-with(@data-tw-graph-path, "literature.flow.1.if-nested-test.inner-return") and (contains(@class, "tw-graph-protocol-primitive-line") or contains(@class, "tw-graph-protocol-primitive-arc") or contains(@class, "tw-graph-protocol-primitive-joint-arrow"))]');
+    expect($returnPaths->length)->toBeGreaterThanOrEqual(4);
+    foreach ($returnPaths as $path) {
+        expect($path->getAttribute('style'))->toContain('--tw-graph-protocol-local-color-rgb: ' . $rgb);
     }
 
-    $heights = [];
-    foreach (['if.then.anchorNode-end', 'inner.endif.anchorNode-end', 'elseif.automatic.then.anchorNode-end', 'elseif.deferred.then.anchorNode-end', 'else.then.anchorNode-end', 'endif.anchorNode-end'] as $suffix) {
-        $anchor = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('idea-to-paper-step-08-flow-if-nested-test', 'literature.flow.1.if-nested-test.' . $suffix);
-        expect($anchor)->not->toBeNull();
-        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::forgetGraph('nested-height-test');
-        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put('nested-height-test', 'point', '0rem', $anchor['y'], '0rem', '0rem', 'center');
-        $heights[] = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::canvasMetrics('nested-height-test')['maxYRem'];
-    }
-    expect($heights[1])->toBeGreaterThan($heights[0]);
-    expect($heights[2])->toBeGreaterThan($heights[1]);
-    expect($heights[3] - $heights[2])->toBe(6.0);
-    expect($heights[4] - $heights[3])->toBe(6.0);
-    expect($heights[5])->toBeGreaterThan($heights[4]);
-});
-
-it('renders IF test boundary labels with connectors at the outgoing arc dots', function (): void {
-    $html = view('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-if-test', [
-        'dev' => true, 'coordinates' => false,
-    ])->render();
-    foreach (['if-test', 'if-test-right'] as $block) {
-        foreach (['start' => 'intro.label.center.1', 'endif' => 'label.center.1'] as $part => $label) {
-            $id = 'literature.flow.1.' . $block . '.' . $part;
-            expect($html)
-                ->not->toContain('data-tw-graph-path="' . $id . '.bridge-out"')
-                ->toContain($id . '.' . $label . '.connector')
-                ->toContain($id . '.' . $label)
-                ->not->toContain($id . '.' . $label . '.mask');
-        }
-        $prefix = 'literature.flow.1.' . $block;
-        $end = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('idea-to-paper-step-08-flow-if-test', $prefix . '.endif.anchorNode-end');
-        $dot = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('idea-to-paper-step-08-flow-if-test', $prefix . '.elseif.4.' . ($block === 'if-test' ? 'arc-south-east' : 'arc-south-west') . '.node.end');
-        expect($end)->not->toBeNull();
-        expect($dot)->not->toBeNull();
-        expect([$end['x'], $end['y']])->toBe([$dot['x'], $dot['y']]);
-        expect($html)->not->toContain('data-tw-graph-path="' . $prefix . '.endif.bridge-in"');
+    // The outer False route still reaches its own next condition, not the nested block.
+    $before = $xpath->query('//*[@data-tw-graph-path="literature.flow.1.if-nested-test.outer.elseif.automatic.question.stem.before"]')->item(0);
+    foreach (['x', 'y'] as $axis) {
+        preg_match('/--tw-graph-protocol-start-' . $axis . ': ([^;]+);/', $before->getAttribute('style'), $match);
+        expect($number($match[1]))->toBe($number($get('outer.if.question.anchorNode-end')[$axis]));
     }
 });
 
@@ -1252,13 +1128,17 @@ it('keeps reorganized branch rekey and flow examples self contained with matchin
         $dom = new DOMDocument;
         @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
         $xpath = new DOMXPath($dom);
-        expect($xpath->query('//pre/code')->length)->toBe(1);
+        expect($xpath->query('//pre/code')->length)->toBe(in_array($name, ['flow-if-else', 'flow-if-nested-1', 'flow-if-nested-2'], true) ? 2 : 1);
         expect($xpath->query('//pre/code')->item(0)->textContent)->toBe($expected);
-        if ($name === 'flow-if-nested-test') {
-            expect($html)->toContain('x-model="nestedDev"')->toContain('x-model="nestedBoxes"')->toContain('x-model="nestedCoordinates"');
-        } else {
-            expect($html)->toContain('x-model="previewDev"')->toContain('x-model="previewBoxes"')->toContain('x-model="previewCoordinates"');
+        if (in_array($name, ['flow-if-else', 'flow-if-nested-1', 'flow-if-nested-2'], true)) {
+            preg_match('/^[ \t]*\{\{-- ' . $name . '-example-2:start --\}\}\R(.*?)^[ \t]*\{\{-- ' . $name . '-example-2:end --\}\}/ms', $source, $secondMatch);
+            $secondLines = explode("\n", rtrim($secondMatch[1]));
+            $secondIndent = min(array_map(fn ($line) => strlen($line) - strlen(ltrim($line)), array_filter($secondLines, fn ($line) => trim($line) !== '')));
+            $secondExpected = implode("\n", array_map(fn ($line) => substr($line, $secondIndent), $secondLines));
+            expect($xpath->query('//pre/code')->item(1)->textContent)->toBe($secondExpected);
+            expect($html)->toContain('id="idea-to-paper-step-08-' . $name . '-right"');
         }
+        expect($html)->toContain('x-model="previewDev"')->toContain('x-model="previewBoxes"')->toContain('x-model="previewCoordinates"');
         foreach ($xpath->query('//pre') as $pre) {
             $pre->parentNode->removeChild($pre);
         }
@@ -1267,7 +1147,7 @@ it('keeps reorganized branch rekey and flow examples self contained with matchin
 })->with([
     ['strang.branch', ['branch-default', 'branch-offset', 'branch-step', 'branch-continuation', 'branch-return', 'branch-mismatch']],
     ['strang.rekey', ['rekey-default', 'rekey-source', 'rekey-target', 'rekey-compressed']],
-    ['flow', ['flow-start', 'flow-step', 'flow-decision', 'flow-branch-steps', 'flow-if-if', 'flow-if-endif', 'flow-if-else-endif', 'flow-if-elseif-endif', 'flow-if-test', 'flow-if-nested-test']],
+    ['flow', ['flow-start', 'flow-step', 'flow-if-else', 'flow-branch-steps', 'flow-if-nested-1', 'flow-if-nested-2', 'flow-if-nested-test']],
 ]);
 
 it('preserves graph-only branch and rekey finals for the master', function (string $kind): void {
@@ -1276,3 +1156,83 @@ it('preserves graph-only branch and rekey finals for the master', function (stri
     ])->render();
     expect($html)->toContain('id="relocated-' . $kind . '-final"')->not->toContain('<pre')->not->toContain('previewDev');
 })->with(['branch', 'rekey']);
+
+it('renders both ternary previews as graphs rather than literal component source', function (): void {
+    $html = view('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-if-ternary', [
+        'dev' => true, 'coordinates' => false,
+    ])->render();
+    $dom = new DOMDocument;
+    @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
+    $xpath = new DOMXPath($dom);
+    foreach (['', '-right'] as $suffix) {
+        $preview = $xpath->query('//*[@id="idea-to-paper-step-08-flow-if-ternary' . $suffix . '"]')->item(0);
+        expect($preview)->not->toBeNull();
+        $prefix = 'literature.flow.1.ternary-process' . $suffix . '.decision-1';
+        foreach (['.question.label', '.true.bridge1.label.center.1', '.false.bridge1.label.center.1'] as $label) {
+            expect($xpath->query('.//*[@data-tw-graph-path="' . $prefix . $label . '"]', $preview)->length)->toBe(1);
+        }
+        expect($preview->textContent)->toContain("'Unknown'", '$name')
+            ->not->toContain('badgeColor', ':if-end', '=>');
+        expect($xpath->query('.//*[starts-with(name(), "x-translation-workbench")]', $preview)->length)->toBe(0);
+    }
+});
+
+it('connects both independently authored nested examples to their own outer return rails', function (): void {
+    $view = 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-if-nested-1';
+    $source = file_get_contents(View::getFinder()->find($view));
+    expect($source)->not->toContain('@foreach');
+    expect(substr_count($source, '<x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-multi'))->toBe(4);
+    $html = view($view)->render();
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
+    $number = fn (string $value): float => $evaluate->invoke(null, $value);
+    foreach (['' => -1, '-right' => 1] as $suffix => $sign) {
+        $graph = 'idea-to-paper-step-08-flow-if-nested-1' . $suffix;
+        $prefix = 'literature.flow.1.if-nested-1' . $suffix;
+        $get = fn (string $id) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graph, $prefix . '.' . $id);
+        foreach (['x', 'y'] as $axis) {
+            expect($number($get('inner.anchorNode-start')[$axis]))->toBe($number($get('outer.if.true.anchorNode-end')[$axis]));
+            expect($number($get('inner-return.stem.anchorNode-end')[$axis]))->toBe($number($get('outer.if.true.anchorNode-return')[$axis]));
+        }
+        expect(($number($get('inner.anchorNode-end')['x']) - $number($get('inner.anchorNode-start')['x'])) * $sign)->toBeGreaterThan(0.0);
+        expect(($number($get('inner.anchorNode-end')['x']) - $number($get('inner-return.anchorNode-end')['x'])) * $sign)->toBeGreaterThan(0.0);
+        expect($number($get('outer.if.true.anchorNode-return')['y']) - $number($get('inner-return.anchorNode-end')['y']))->toBeGreaterThanOrEqual(0.0);
+        expect($get('outer.anchorNode-end')['returnColor'])->toBe($get('inner.anchorNode-end')['returnColor']);
+        expect($xpath->query('//*[@data-tw-graph-path="' . $prefix . '.outer.if.true.stem"]')->length)->toBe(0);
+    }
+});
+
+it('connects both saved ELSEIF nested examples to their own outer return rails', function (): void {
+    $view = 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-if-nested-2';
+    $source = file_get_contents(View::getFinder()->find($view));
+    expect($source)->not->toContain('@foreach');
+    expect(substr_count($source, '<x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-multi'))->toBe(4);
+    $html = view($view)->render();
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
+    $number = fn (string $value): float => $evaluate->invoke(null, $value);
+    foreach (['' => -1, '-right' => 1] as $suffix => $sign) {
+        $graph = 'idea-to-paper-step-08-flow-if-nested-2' . $suffix;
+        $prefix = 'literature.flow.1.if-nested-2' . $suffix;
+        $get = fn (string $id) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graph, $prefix . '.' . $id);
+        foreach (['x', 'y'] as $axis) {
+            expect($number($get('inner.anchorNode-start')[$axis]))->toBe($number($get('outer.elseif.sources.true.anchorNode-end')[$axis]));
+            expect($number($get('inner-return.stem.anchorNode-end')[$axis]))->toBe($number($get('outer.elseif.sources.true.anchorNode-return')[$axis]));
+        }
+        expect(($number($get('inner.anchorNode-end')['x']) - $number($get('inner.anchorNode-start')['x'])) * $sign)->toBeGreaterThan(0.0);
+        expect(($number($get('inner.anchorNode-end')['x']) - $number($get('inner-return.anchorNode-end')['x'])) * $sign)->toBeGreaterThan(0.0);
+        expect($number($get('outer.elseif.sources.true.anchorNode-return')['y']) - $number($get('inner-return.anchorNode-end')['y']))->toBeGreaterThanOrEqual(0.0);
+        expect($get('outer.anchorNode-end')['returnColor'])->toBe($get('inner.anchorNode-end')['returnColor']);
+        $owner = $suffix === '' ? '.outer.elseif.sources.true.bridge1.bridge-out' : '.outer.elseif.automatic.true.stem';
+        $target = $suffix === '' ? '.outer.elseif.automatic.true.stem' : '.outer.elseif.sources.true.bridge1.bridge-out';
+        $jump = $xpath->query('//*[@data-tw-graph-path="' . $prefix . $owner . '"]')->item(0);
+        $config = json_decode($jump->getAttribute('data-tw-graph-line-jumps'), true, flags: JSON_THROW_ON_ERROR);
+        expect($config[0]['over'])->toBe($prefix . $target);
+        expect($config[0]['side'])->toBe($suffix === '' ? 'top' : 'right');
+        expect($xpath->query('//*[@data-tw-graph-path="' . $prefix . '.outer.elseif.sources.true.stem"]')->length)->toBe(0);
+    }
+});

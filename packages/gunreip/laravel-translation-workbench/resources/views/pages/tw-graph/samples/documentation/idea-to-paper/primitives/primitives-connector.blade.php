@@ -3,12 +3,10 @@
         <flux:callout.heading>{{ __('Connector') }}</flux:callout.heading>
         <flux:callout.text>{{ __('Four placements, each with two lengths and gaps: first row length 2rem and gap 0.25rem; second row length 4rem and gap 0.75rem. The zinc dots are visual aids marking the reference points. A connector begins outside the node radius plus gap and draws only the connecting line, without a text label.') }}</flux:callout.text>
         <flux:heading class="mt-4" size="sm">{{ __('Complete example') }}</flux:heading>
-        <div class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>&lt;x-translation-workbench::ui.tw-graph
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">&lt;x-translation-workbench::ui.tw-graph
     graph-id="idea-to-paper-primitives-connector-right-2"
     :dev="true"
     :coordinates="true"
-    slot-min-height="12rem"
     min-height="12rem"
     min-width="14rem"
     horizontal-padding="6rem"
@@ -28,51 +26,36 @@
         anchor-y="5rem"
         color="zinc"
     /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</code></pre>
-        </div>
+&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">{{ __('Changed props for the other examples') }}</flux:heading>
         <flux:text class="mt-2">{{ __('Changes are relative to the complete example. Each preview has its own graph-id and component IDs. Canvas changes are identified separately.') }}</flux:text>
         <flux:heading class="mt-4" size="sm">left · 2rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>placement="left"
-color="red"</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">placement="left"
+color="red"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">top · 2rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>placement="top"
-color="green"</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">placement="top"
+color="green"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">bottom · 2rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>placement="bottom"
-color="violet"</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">placement="bottom"
+color="violet"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">right · 4rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>length="4rem"
-gap="0.75rem"</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">length="4rem"
+gap="0.75rem"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">left · 4rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>placement="left"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">placement="left"
 length="4rem"
 gap="0.75rem"
-color="red"</code></pre>
-        </div>
+color="red"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">top · 4rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>placement="top"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">placement="top"
 length="4rem"
 gap="0.75rem"
-color="green"</code></pre>
-        </div>
+color="green"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">bottom · 4rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>placement="bottom"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">placement="bottom"
 length="4rem"
 gap="0.75rem"
-color="violet"</code></pre>
-        </div>
+color="violet"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">{{ __('Props') }}</flux:heading>
         <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
             <flux:table container:class="max-h-80">
@@ -132,7 +115,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-connector-right-2"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -160,7 +142,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-connector-left-2"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -188,7 +169,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-connector-top-2"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -216,7 +196,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-connector-bottom-2"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -244,7 +223,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-connector-right-4"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -272,7 +250,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-connector-left-4"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -300,7 +277,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-connector-top-4"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -328,7 +304,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-connector-bottom-4"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"

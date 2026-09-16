@@ -16,7 +16,7 @@
     line-length="4rem"
     bridge-length="18rem"
     stem-length="5rem"
-    slot-min-height="94rem"
+    min-height="94rem"
     horizontal-padding="40rem"
 >
     {{-- central idea lifecycle --}}

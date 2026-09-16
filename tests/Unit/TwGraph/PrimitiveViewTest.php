@@ -311,3 +311,32 @@ it('renders mixed primitive text lines without leaking array values', function (
         ->not->toContain('Array')
         ->not->toContain('htmlspecialchars');
 });
+
+it('omits disabled or empty dev counters while preserving zero', function (mixed $counter, bool $visible): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
+            id="counter.visibility"
+            :dev="true"
+            :counter="$counter"
+        />
+    BLADE, ['counter' => $counter]);
+
+    if ($visible) {
+        expect($html)->toContain('data-flux-badge', 'counter.visibility');
+        $document = new DOMDocument();
+        @$document->loadHTML($html);
+        $badge = (new DOMXPath($document))->query('//*[@data-flux-badge]')->item(0);
+        expect(trim($badge->textContent))->toBe((string) $counter);
+    } else {
+        expect($html)->not->toContain('data-flux-badge', 'counter.visibility');
+    }
+})->with([
+    'disabled' => [false, false],
+    'null' => [null, false],
+    'empty' => ['', false],
+    'whitespace' => [' ', false],
+    'zero' => [0, true],
+    'zero string' => ['0', true],
+    'number' => [1, true],
+    'decision' => ['D', true],
+]);

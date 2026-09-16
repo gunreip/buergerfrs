@@ -73,7 +73,7 @@
                         line-length="4rem"
                         bridge-length="16rem"
                         stem-length="5rem"
-                        slot-min-height="74rem"
+                        min-height="74rem"
                         horizontal-padding="34rem"
                     >
                         {{-- central translation key lifecycle --}}

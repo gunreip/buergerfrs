@@ -38,6 +38,9 @@
             <flux:tab name="idea-to-paper-segments">
                 {{ __('Segments') }}
             </flux:tab>
+            <flux:tab name="idea-to-paper-parts">
+                {{ __('Parts') }}
+            </flux:tab>
             <flux:tab name="idea-to-paper-paths">
                 {{ __('Paths') }}
             </flux:tab>
@@ -92,6 +95,16 @@
                             'dev' => $dev,
                             'coordinates' => $coordinates,
                         ])
+                    </div>
+                </div>
+            @endif
+        </flux:tab.panel>
+
+        <flux:tab.panel name="idea-to-paper-parts">
+            @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-parts')
+                <div wire:key="documentation-idea-to-paper-parts">
+                    <div class="mt-4">
+                        @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.parts.index')
                     </div>
                 </div>
             @endif
@@ -193,7 +206,6 @@
                 scrollable:fade
                 scrollable:scrollbar="hide"
             >
-                <flux:tab name="idea-to-paper-results-idle">{{ __('Select a graph') }}</flux:tab>
                 <flux:tab name="idea-to-paper-draft">
                     {{ __('Thought draft') }}
                 </flux:tab>
@@ -205,26 +217,20 @@
                 </flux:tab>
             </flux:tabs>
 
-            <flux:tab.panel name="idea-to-paper-results-idle">
-                @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-results-idle')
-                    <div wire:key="documentation-idea-to-paper-results-idle">
-                        <flux:text>{{ __('Choose a tab to load its graph.') }}</flux:text>
-                    </div>
-                @endif
-            </flux:tab.panel>
-
             <flux:tab.panel name="idea-to-paper-draft">
                 @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-draft')
                     <div wire:key="documentation-idea-to-paper-draft">
-                        <div
-                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
-                        >
-                            @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.00-graph-final', [
-                                'ideaToPaperGraphId' => 'tw-graph-sample-idea-to-paper-thought-draft',
-                                'ideaToPaperDev' => false,
-                                'ideaToPaperCoordinates' => false,
-                            ])
-                        </div>
+                        <x-translation-workbench::ui.tw-graph.preview-tools :dev="$dev" :coordinates="$coordinates">
+                            <div
+                                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
+                            >
+                                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.00-graph-final', [
+                                    'ideaToPaperGraphId' => 'tw-graph-sample-idea-to-paper-thought-draft',
+                                    'ideaToPaperDev' => true,
+                                    'ideaToPaperCoordinates' => true,
+                                ])
+                            </div>
+                        </x-translation-workbench::ui.tw-graph.preview-tools>
                     </div>
                 @endif
             </flux:tab.panel>
@@ -232,15 +238,17 @@
             <flux:tab.panel name="idea-to-paper-result">
                 @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-result')
                     <div wire:key="documentation-idea-to-paper-result">
-                        <div
-                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
-                        >
-                            @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper._graph-current-result', [
-                                'ideaToPaperGraphId' => 'tw-graph-sample-idea-to-paper-current-result',
-                                'ideaToPaperDev' => false,
-                                'ideaToPaperCoordinates' => false,
-                            ])
-                        </div>
+                        <x-translation-workbench::ui.tw-graph.preview-tools :dev="$dev" :coordinates="$coordinates">
+                            <div
+                                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
+                            >
+                                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper._graph-current-result', [
+                                    'ideaToPaperGraphId' => 'tw-graph-sample-idea-to-paper-current-result',
+                                    'ideaToPaperDev' => true,
+                                    'ideaToPaperCoordinates' => true,
+                                ])
+                            </div>
+                        </x-translation-workbench::ui.tw-graph.preview-tools>
                     </div>
                 @endif
             </flux:tab.panel>
@@ -248,15 +256,17 @@
             <flux:tab.panel name="idea-to-paper-flow-result">
                 @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-flow-result')
                     <div wire:key="documentation-idea-to-paper-flow-result">
-                        <div
-                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
-                        >
-                            @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper._graph-flow-diagram', [
-                                'ideaToPaperGraphId' => 'tw-graph-sample-idea-to-paper-flow-diagram',
-                                'ideaToPaperDev' => false,
-                                'ideaToPaperCoordinates' => false,
-                            ])
-                        </div>
+                        <x-translation-workbench::ui.tw-graph.preview-tools :dev="$dev" :coordinates="$coordinates">
+                            <div
+                                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
+                            >
+                                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper._graph-flow-diagram', [
+                                    'ideaToPaperGraphId' => 'tw-graph-sample-idea-to-paper-flow-diagram',
+                                    'ideaToPaperDev' => true,
+                                    'ideaToPaperCoordinates' => true,
+                                ])
+                            </div>
+                        </x-translation-workbench::ui.tw-graph.preview-tools>
                     </div>
                 @endif
             </flux:tab.panel>

@@ -3,12 +3,10 @@
         <flux:callout.heading>{{ __('Node') }}</flux:callout.heading>
         <flux:callout.text>{{ __('Four dots with different colors and sizes. The first inherits node-size from the canvas; the other three set size directly on the node primitive. A node draws only the dot, without a connector or text label.') }}</flux:callout.text>
         <flux:heading class="mt-4" size="sm">{{ __('Complete example') }}</flux:heading>
-        <div class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>&lt;x-translation-workbench::ui.tw-graph
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">&lt;x-translation-workbench::ui.tw-graph
     graph-id="idea-to-paper-primitives-node-default"
     :dev="true"
     :coordinates="true"
-    slot-min-height="12rem"
     min-height="12rem"
     min-width="14rem"
     horizontal-padding="6rem"
@@ -19,25 +17,18 @@
         anchor-y="5rem"
         color="cyan"
     /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</code></pre>
-        </div>
+&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">{{ __('Changed props for the other examples') }}</flux:heading>
         <flux:text class="mt-2">{{ __('Changes are relative to the complete example. Each preview has its own graph-id and component IDs. Canvas changes are identified separately.') }}</flux:text>
         <flux:heading class="mt-4" size="sm">0.5rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>size="0.5rem"
-color="red"</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">size="0.5rem"
+color="red"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">1.5rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>size="1.5rem"
-color="green"</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">size="1.5rem"
+color="green"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">2rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>size="2rem"
-color="violet"</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">size="2rem"
+color="violet"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">{{ __('Props') }}</flux:heading>
         <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
             <flux:table container:class="max-h-80">
@@ -97,7 +88,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-node-default"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -116,7 +106,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-node-small"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -136,7 +125,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-node-medium"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -156,7 +144,6 @@ color="violet"</code></pre>
                             graph-id="idea-to-paper-primitives-node-large"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"

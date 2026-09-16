@@ -5,74 +5,22 @@
             {{ __('Start and end segments shown in both vertical directions. Start fades in and ends at a dot; end starts at a dot and finishes with a cap. Both delegate the line and nodes to segments.path. Their configuration is passed through the segment array; anchor coordinates must match direction and length. The labels mark the starting or ending anchor.') }}
         </flux:callout.text>
         @php
-            $startEndExampleSource = file_get_contents(\Illuminate\Support\Facades\View::getFinder()->find(
+            $startEndExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.segments-start-end',
-            ));
-            if (preg_match('/^[ \t]*\{\{-- segment-start-bottom-top:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-start-bottom-top:end --\}\}/ms', $startEndExampleSource, $startBottomTopMatch) !== 1) {
-                throw new \LogicException('The segment-start-bottom-top requires start and end markers.');
-            }
-            $startBottomTopLines = explode("\n", rtrim($startBottomTopMatch[1]));
-            $startBottomTopIndent = min(array_map(
-                fn (string $line): int => strlen($line) - strlen(ltrim($line)),
-                array_filter($startBottomTopLines, fn (string $line): bool => trim($line) !== ''),
-            ));
-            $startBottomTopCode = implode("\n", array_map(
-                fn (string $line): string => substr($line, $startBottomTopIndent),
-                $startBottomTopLines,
-            ));
-            if (preg_match('/^[ \t]*\{\{-- segment-start-top-bottom:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-start-top-bottom:end --\}\}/ms', $startEndExampleSource, $startTopBottomMatch) !== 1) {
-                throw new \LogicException('The segment-start-top-bottom requires start and end markers.');
-            }
-            $startTopBottomLines = explode("\n", rtrim($startTopBottomMatch[1]));
-            $startTopBottomIndent = min(array_map(
-                fn (string $line): int => strlen($line) - strlen(ltrim($line)),
-                array_filter($startTopBottomLines, fn (string $line): bool => trim($line) !== ''),
-            ));
-            $startTopBottomCode = implode("\n", array_map(
-                fn (string $line): string => substr($line, $startTopBottomIndent),
-                $startTopBottomLines,
-            ));
-            if (preg_match('/^[ \t]*\{\{-- segment-end-bottom-top:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-end-bottom-top:end --\}\}/ms', $startEndExampleSource, $endBottomTopMatch) !== 1) {
-                throw new \LogicException('The segment-end-bottom-top requires start and end markers.');
-            }
-            $endBottomTopLines = explode("\n", rtrim($endBottomTopMatch[1]));
-            $endBottomTopIndent = min(array_map(
-                fn (string $line): int => strlen($line) - strlen(ltrim($line)),
-                array_filter($endBottomTopLines, fn (string $line): bool => trim($line) !== ''),
-            ));
-            $endBottomTopCode = implode("\n", array_map(
-                fn (string $line): string => substr($line, $endBottomTopIndent),
-                $endBottomTopLines,
-            ));
-            if (preg_match('/^[ \t]*\{\{-- segment-end-top-bottom:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-end-top-bottom:end --\}\}/ms', $startEndExampleSource, $endTopBottomMatch) !== 1) {
-                throw new \LogicException('The segment-end-top-bottom requires start and end markers.');
-            }
-            $endTopBottomLines = explode("\n", rtrim($endTopBottomMatch[1]));
-            $endTopBottomIndent = min(array_map(
-                fn (string $line): int => strlen($line) - strlen(ltrim($line)),
-                array_filter($endTopBottomLines, fn (string $line): bool => trim($line) !== ''),
-            ));
-            $endTopBottomCode = implode("\n", array_map(
-                fn (string $line): string => substr($line, $endTopBottomIndent),
-                $endTopBottomLines,
-            ));
+            );
+            $startBottomTopCode = $startEndExampleSource->example('segment-start-bottom-top');
+            $startTopBottomCode = $startEndExampleSource->example('segment-start-top-bottom');
+            $endBottomTopCode = $startEndExampleSource->example('segment-end-bottom-top');
+            $endTopBottomCode = $startEndExampleSource->example('segment-end-top-bottom');
         @endphp
         <flux:heading class="mt-4" size="sm">Start · bottom-top</flux:heading>
-        <div class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $startBottomTopCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $startBottomTopCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">Start · top-bottom</flux:heading>
-        <div class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $startTopBottomCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $startTopBottomCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">End · bottom-top</flux:heading>
-        <div class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $endBottomTopCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $endBottomTopCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">End · top-bottom</flux:heading>
-        <div class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $endTopBottomCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $endTopBottomCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">{{ __('Start and end segment props') }}</flux:heading>
         <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
             <flux:table container:class="max-h-80">
@@ -291,7 +239,6 @@
                             graph-id="idea-to-paper-segments-start-bottom-top"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="18rem"
                             min-height="18rem"
                             min-width="24rem"
                             horizontal-padding="10rem"
@@ -325,7 +272,6 @@
                             graph-id="idea-to-paper-segments-start-top-bottom"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="18rem"
                             min-height="18rem"
                             min-width="24rem"
                             horizontal-padding="10rem"
@@ -359,7 +305,6 @@
                             graph-id="idea-to-paper-segments-end-bottom-top"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="18rem"
                             min-height="18rem"
                             min-width="24rem"
                             horizontal-padding="10rem"
@@ -393,7 +338,6 @@
                             graph-id="idea-to-paper-segments-end-top-bottom"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="18rem"
                             min-height="18rem"
                             min-width="24rem"
                             horizontal-padding="10rem"

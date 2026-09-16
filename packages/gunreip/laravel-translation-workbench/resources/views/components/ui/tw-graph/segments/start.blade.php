@@ -57,6 +57,7 @@
 @if (filled(data_get($startSegment, 'startLabel.text')))
     @php($startLabelSide = data_get($startSegment, 'startLabel.side', 'bottom'))
     <x-translation-workbench::ui.tw-graph.primitives.text
+        :dev="\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($startSegment, 'dev', false)))"
         :id="data_get($startSegment, 'id', 'segment.start') . '.label.' . $startLabelSide . '.1'"
         :text="data_get($startSegment, 'startLabel.text')"
         :anchor-x="data_get($startSegment, 'anchorStart.x', '0rem')"

@@ -9,68 +9,22 @@
             {{ __('Two individually authored merge paths, shown one below the other. side="left" routes the bridge left-right; side="right" routes it right-left. Both use a start section, one stem, an incoming arc, a bridge, and an outgoing arc. The path calculates their connections from the starting anchor and lengths.') }}
         </flux:callout.text>
         @php
-            $mergeExampleSource = file_get_contents(
-                \Illuminate\Support\Facades\View::getFinder()->find(
-                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-merge',
-                ),
+            $mergeExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-merge',
             );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- merge-left-example:start --\}\}\R(.*?)^[ \t]*\{\{-- merge-left-example:end --\}\}/ms',
-                    $mergeExampleSource,
-                    $mergeLeftMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The merge-left-example requires start and end markers.');
-            }
-            $mergeLeftLines = explode("\n", rtrim($mergeLeftMatch[1]));
-            $mergeLeftIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($mergeLeftLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $mergeLeftCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $mergeLeftIndent), $mergeLeftLines),
-            );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- merge-right-example:start --\}\}\R(.*?)^[ \t]*\{\{-- merge-right-example:end --\}\}/ms',
-                    $mergeExampleSource,
-                    $mergeRightMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The merge-right-example requires start and end markers.');
-            }
-            $mergeRightLines = explode("\n", rtrim($mergeRightMatch[1]));
-            $mergeRightIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($mergeRightLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $mergeRightCode = implode(
-                "\n",
-                array_map(fn(string $line): string => substr($line, $mergeRightIndent), $mergeRightLines),
-            );
+            $mergeLeftCode = $mergeExampleSource->example('merge-left-example');
+            $mergeRightCode = $mergeExampleSource->example('merge-right-example');
         @endphp
         <flux:heading
             class="mt-4"
             size="sm"
         >left-right · side="left"</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $mergeLeftCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $mergeLeftCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >right-left · side="right"</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $mergeRightCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $mergeRightCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -248,7 +202,6 @@
                     :dev="true"
                     :coordinates="true"
                     color="cyan"
-                    slot-min-height="28rem"
                     min-height="28rem"
                     min-width="36rem"
                     horizontal-padding="14rem"
@@ -289,7 +242,6 @@
                     :dev="true"
                     :coordinates="true"
                     color="emerald"
-                    slot-min-height="28rem"
                     min-height="28rem"
                     min-width="36rem"
                     horizontal-padding="14rem"

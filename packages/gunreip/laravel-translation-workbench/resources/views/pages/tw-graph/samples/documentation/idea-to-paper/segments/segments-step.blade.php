@@ -5,25 +5,12 @@
             {{ __('A step describes a status or reason inside the path, such as a source being inactive. It composes a line before the label, centered text, and a line after the label. Caps mark the interruption around the text. The label gap is calculated from the text line count and offset; subsequent anchors are calculated from the starting anchor and section lengths.') }}
         </flux:callout.text>
         @php
-            $stepExampleSource = file_get_contents(\Illuminate\Support\Facades\View::getFinder()->find(
+            $stepExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.segments-step',
-            ));
-            if (preg_match('/^[ \t]*\{\{-- segment-step-example:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-step-example:end --\}\}/ms', $stepExampleSource, $stepMatch) !== 1) {
-                throw new \LogicException('The segment-step-example requires start and end markers.');
-            }
-            $stepLines = explode("\n", rtrim($stepMatch[1]));
-            $stepIndent = min(array_map(
-                fn (string $line): int => strlen($line) - strlen(ltrim($line)),
-                array_filter($stepLines, fn (string $line): bool => trim($line) !== ''),
-            ));
-            $stepCode = implode("\n", array_map(
-                fn (string $line): string => substr($line, $stepIndent),
-                $stepLines,
-            ));
+            );
+            $stepCode = $stepExampleSource->example('segment-step-example');
         @endphp
-        <div class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $stepCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $stepCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">{{ __('Step segment props') }}</flux:heading>
         <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
             <flux:table container:class="max-h-80">
@@ -206,7 +193,6 @@
                     graph-id="idea-to-paper-segments-step"
                     :dev="true"
                     :coordinates="true"
-                    slot-min-height="22rem"
                     min-height="22rem"
                     min-width="24rem"
                     horizontal-padding="10rem"

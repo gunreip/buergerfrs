@@ -9,212 +9,58 @@
             {{ __('Four arc shapes and their reverse traversal, shown in two rows. Each example uses an individually authored segment array. A labeled start dot and an end joint arrow indicate the direction. Reversing an arc swaps both the semantic anchors and their coordinates; the joint arrow direction must match the outgoing tangent. Coordinates must agree with arcSize.') }}
         </flux:callout.text>
         @php
-            $arcExampleSource = file_get_contents(
-                \Illuminate\Support\Facades\View::getFinder()->find(
-                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.segments-arc',
-                ),
+            $arcExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.segments-arc',
             );
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-arc-w-n:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-arc-w-n:end --\}\}/ms',
-                    $arcExampleSource,
-                    $arcWNMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-arc-w-n requires start and end markers.');
-            }
-            $arcWNLines = explode("\n", rtrim($arcWNMatch[1]));
-            $arcWNIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($arcWNLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $arcWNCode = implode("\n", array_map(fn(string $line): string => substr($line, $arcWNIndent), $arcWNLines));
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-arc-e-n:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-arc-e-n:end --\}\}/ms',
-                    $arcExampleSource,
-                    $arcENMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-arc-e-n requires start and end markers.');
-            }
-            $arcENLines = explode("\n", rtrim($arcENMatch[1]));
-            $arcENIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($arcENLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $arcENCode = implode("\n", array_map(fn(string $line): string => substr($line, $arcENIndent), $arcENLines));
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-arc-s-w:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-arc-s-w:end --\}\}/ms',
-                    $arcExampleSource,
-                    $arcSWMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-arc-s-w requires start and end markers.');
-            }
-            $arcSWLines = explode("\n", rtrim($arcSWMatch[1]));
-            $arcSWIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($arcSWLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $arcSWCode = implode("\n", array_map(fn(string $line): string => substr($line, $arcSWIndent), $arcSWLines));
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-arc-s-e:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-arc-s-e:end --\}\}/ms',
-                    $arcExampleSource,
-                    $arcSEMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-arc-s-e requires start and end markers.');
-            }
-            $arcSELines = explode("\n", rtrim($arcSEMatch[1]));
-            $arcSEIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($arcSELines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $arcSECode = implode("\n", array_map(fn(string $line): string => substr($line, $arcSEIndent), $arcSELines));
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-arc-n-w:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-arc-n-w:end --\}\}/ms',
-                    $arcExampleSource,
-                    $arcNWMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-arc-n-w requires start and end markers.');
-            }
-            $arcNWLines = explode("\n", rtrim($arcNWMatch[1]));
-            $arcNWIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($arcNWLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $arcNWCode = implode("\n", array_map(fn(string $line): string => substr($line, $arcNWIndent), $arcNWLines));
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-arc-n-e:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-arc-n-e:end --\}\}/ms',
-                    $arcExampleSource,
-                    $arcNEMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-arc-n-e requires start and end markers.');
-            }
-            $arcNELines = explode("\n", rtrim($arcNEMatch[1]));
-            $arcNEIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($arcNELines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $arcNECode = implode("\n", array_map(fn(string $line): string => substr($line, $arcNEIndent), $arcNELines));
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-arc-w-s:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-arc-w-s:end --\}\}/ms',
-                    $arcExampleSource,
-                    $arcWSMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-arc-w-s requires start and end markers.');
-            }
-            $arcWSLines = explode("\n", rtrim($arcWSMatch[1]));
-            $arcWSIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($arcWSLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $arcWSCode = implode("\n", array_map(fn(string $line): string => substr($line, $arcWSIndent), $arcWSLines));
-            if (
-                preg_match(
-                    '/^[ \t]*\{\{-- segment-arc-e-s:start --\}\}\R(.*?)^[ \t]*\{\{-- segment-arc-e-s:end --\}\}/ms',
-                    $arcExampleSource,
-                    $arcESMatch,
-                ) !== 1
-            ) {
-                throw new \LogicException('The segment-arc-e-s requires start and end markers.');
-            }
-            $arcESLines = explode("\n", rtrim($arcESMatch[1]));
-            $arcESIndent = min(
-                array_map(
-                    fn(string $line): int => strlen($line) - strlen(ltrim($line)),
-                    array_filter($arcESLines, fn(string $line): bool => trim($line) !== ''),
-                ),
-            );
-            $arcESCode = implode("\n", array_map(fn(string $line): string => substr($line, $arcESIndent), $arcESLines));
+            $arcWNCode = $arcExampleSource->example('segment-arc-w-n');
+            $arcENCode = $arcExampleSource->example('segment-arc-e-n');
+            $arcSWCode = $arcExampleSource->example('segment-arc-s-w');
+            $arcSECode = $arcExampleSource->example('segment-arc-s-e');
+            $arcNWCode = $arcExampleSource->example('segment-arc-n-w');
+            $arcNECode = $arcExampleSource->example('segment-arc-n-e');
+            $arcWSCode = $arcExampleSource->example('segment-arc-w-s');
+            $arcESCode = $arcExampleSource->example('segment-arc-e-s');
         @endphp
         <flux:heading
             class="mt-4"
             size="sm"
         >w → n</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $arcWNCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcWNCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >e → n</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $arcENCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcENCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >s → w</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $arcSWCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcSWCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >s → e</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $arcSECode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcSECode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >n → w</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $arcNWCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcNWCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >n → e</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $arcNECode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcNECode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >w → s</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $arcWSCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcWSCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >e → s</flux:heading>
-        <div
-            class="mt-3 min-w-0 max-w-full overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-            <pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>{{ $arcESCode }}</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcESCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -472,7 +318,6 @@
                                 graph-id="idea-to-paper-segments-arc-w-n"
                                 :dev="true"
                                 :coordinates="true"
-                                slot-min-height="16rem"
                                 min-height="16rem"
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
@@ -513,7 +358,6 @@
                                 graph-id="idea-to-paper-segments-arc-e-n"
                                 :dev="true"
                                 :coordinates="true"
-                                slot-min-height="16rem"
                                 min-height="16rem"
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
@@ -554,7 +398,6 @@
                                 graph-id="idea-to-paper-segments-arc-s-w"
                                 :dev="true"
                                 :coordinates="true"
-                                slot-min-height="16rem"
                                 min-height="16rem"
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
@@ -595,7 +438,6 @@
                                 graph-id="idea-to-paper-segments-arc-s-e"
                                 :dev="true"
                                 :coordinates="true"
-                                slot-min-height="16rem"
                                 min-height="16rem"
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
@@ -636,7 +478,6 @@
                                 graph-id="idea-to-paper-segments-arc-n-w"
                                 :dev="true"
                                 :coordinates="true"
-                                slot-min-height="16rem"
                                 min-height="16rem"
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
@@ -677,7 +518,6 @@
                                 graph-id="idea-to-paper-segments-arc-n-e"
                                 :dev="true"
                                 :coordinates="true"
-                                slot-min-height="16rem"
                                 min-height="16rem"
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
@@ -718,7 +558,6 @@
                                 graph-id="idea-to-paper-segments-arc-w-s"
                                 :dev="true"
                                 :coordinates="true"
-                                slot-min-height="16rem"
                                 min-height="16rem"
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
@@ -759,7 +598,6 @@
                                 graph-id="idea-to-paper-segments-arc-e-s"
                                 :dev="true"
                                 :coordinates="true"
-                                slot-min-height="16rem"
                                 min-height="16rem"
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"

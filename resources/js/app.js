@@ -6,10 +6,12 @@ import './notices/validation-notices';
 
 import { setupGlobalTooltips } from './tooltips/global-tooltip';
 import { setupShowHideLayoutRefresh } from './helper/show-hide';
+import { setupTwGraphLineJumps } from './helper/tw-graph-line-jumps';
 import { setupTwGraphDevTools } from './helper/tw-graph-dev';
 
 document.addEventListener('DOMContentLoaded', function () {
     setupGlobalTooltips();
     setupShowHideLayoutRefresh();
     setupTwGraphDevTools();
+    setupTwGraphLineJumps();
 });

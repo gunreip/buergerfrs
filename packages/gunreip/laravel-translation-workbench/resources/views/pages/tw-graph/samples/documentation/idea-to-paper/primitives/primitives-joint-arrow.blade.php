@@ -3,12 +3,10 @@
         <flux:callout.heading>{{ __('Joint Arrow') }}</flux:callout.heading>
         <flux:callout.text>{{ __('All four directions appear in both rows. The first row inherits the default canvas node-size; the second sets node-size to 1.75rem on each canvas. Joint arrows have no separate size prop. They mark the direction of a technical transition.') }}</flux:callout.text>
         <flux:heading class="mt-4" size="sm">{{ __('Complete example') }}</flux:heading>
-        <div class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>&lt;x-translation-workbench::ui.tw-graph
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">&lt;x-translation-workbench::ui.tw-graph
     graph-id="idea-to-paper-primitives-joint-arrow-right-default"
     :dev="true"
     :coordinates="true"
-    slot-min-height="12rem"
     min-height="12rem"
     min-width="14rem"
     horizontal-padding="6rem"
@@ -20,56 +18,41 @@
         anchor-y="5rem"
         color="cyan"
     /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</code></pre>
-        </div>
+&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">{{ __('Changed props for the other examples') }}</flux:heading>
         <flux:text class="mt-2">{{ __('Changes are relative to the complete example. Each preview has its own graph-id and component IDs. Canvas changes are identified separately.') }}</flux:text>
         <flux:heading class="mt-4" size="sm">left · canvas default</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>direction="left"
-color="red"</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">direction="left"
+color="red"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">top · canvas default</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>direction="top"
-color="green"</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">direction="top"
+color="green"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">bottom · canvas default</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>direction="bottom"
-color="violet"</code></pre>
-        </div>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">direction="bottom"
+color="violet"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">right · 1.75rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">
 
 Canvas
-    node-size="1.75rem"</code></pre>
-        </div>
+    node-size="1.75rem"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">left · 1.75rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>direction="left"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">direction="left"
 color="red"
 
 Canvas
-    node-size="1.75rem"</code></pre>
-        </div>
+    node-size="1.75rem"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">top · 1.75rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>direction="top"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">direction="top"
 color="green"
 
 Canvas
-    node-size="1.75rem"</code></pre>
-        </div>
+    node-size="1.75rem"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">bottom · 1.75rem</flux:heading>
-        <div class="mt-2 overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs leading-5 text-zinc-100">
-<pre style="white-space: pre-wrap; overflow-wrap: anywhere;"><code>direction="bottom"
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">direction="bottom"
 color="violet"
 
 Canvas
-    node-size="1.75rem"</code></pre>
-        </div>
+    node-size="1.75rem"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading class="mt-4" size="sm">{{ __('Props') }}</flux:heading>
         <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
             <flux:table container:class="max-h-80">
@@ -134,7 +117,6 @@ Canvas
                             graph-id="idea-to-paper-primitives-joint-arrow-right-default"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -154,7 +136,6 @@ Canvas
                             graph-id="idea-to-paper-primitives-joint-arrow-left-default"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -174,7 +155,6 @@ Canvas
                             graph-id="idea-to-paper-primitives-joint-arrow-top-default"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -194,7 +174,6 @@ Canvas
                             graph-id="idea-to-paper-primitives-joint-arrow-bottom-default"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -214,7 +193,6 @@ Canvas
                             graph-id="idea-to-paper-primitives-joint-arrow-right-large"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -235,7 +213,6 @@ Canvas
                             graph-id="idea-to-paper-primitives-joint-arrow-left-large"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -256,7 +233,6 @@ Canvas
                             graph-id="idea-to-paper-primitives-joint-arrow-top-large"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"
@@ -277,7 +253,6 @@ Canvas
                             graph-id="idea-to-paper-primitives-joint-arrow-bottom-large"
                             :dev="true"
                             :coordinates="true"
-                            slot-min-height="12rem"
                             min-height="12rem"
                             min-width="14rem"
                             horizontal-padding="6rem"

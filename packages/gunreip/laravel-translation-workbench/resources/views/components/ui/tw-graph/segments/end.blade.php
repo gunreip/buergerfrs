@@ -91,6 +91,7 @@
 @if (filled(data_get($endSegment, 'endLabel.text')))
     @php($resolvedEndLabelSide = data_get($endSegment, 'endLabel.side', $endLabelSide))
     <x-translation-workbench::ui.tw-graph.primitives.text
+        :dev="$devMode"
         :id="data_get($endSegment, 'id', 'segment.end') . '.label.' . $resolvedEndLabelSide . '.1'"
         :text="data_get($endSegment, 'endLabel.text')"
         :anchor-x="data_get($endSegment, 'anchorEnd.x', '0rem')"
