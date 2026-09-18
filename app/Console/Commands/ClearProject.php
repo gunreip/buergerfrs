@@ -169,21 +169,24 @@ class ClearProject extends Command
         }
     }
 
+    /** @param list<string> $paths @return list<string> */
+    private function twGraphPestCommand(array $paths): array
+    {
+        // Collect every failure; a failed check must not hide later datasets.
+        return array_merge([PHP_BINARY, 'artisan', 'test'], $paths);
+    }
+
     private function runTwGraphTests(): int
     {
         $this->line('▶ Run TW-Graph checks');
 
         $checks = collect($this->twGraphTestGroups())
-            ->map(static fn(array $group): array => [
+            ->map(fn(array $group): array => [
                 'name' => 'Pest: ' . $group['name'],
                 'type' => 'pest',
                 'group' => $group['name'],
                 'description' => $group['description'],
-                'command' => array_values(array_filter(array_merge(
-                    [PHP_BINARY, 'artisan', 'test'],
-                    $group['paths'],
-                    ['--stop-on-failure'],
-                ))),
+                'command' => $this->twGraphPestCommand($group['paths']),
             ])
             ->all();
 
@@ -212,9 +215,14 @@ class ClearProject extends Command
             $startedAt = microtime(true);
             $process = new Process($check['command'], base_path());
             $process->setTimeout(300);
-            $process->run();
+            $processError = '';
+            try {
+                $process->run();
+            } catch (\Symfony\Component\Process\Exception\ExceptionInterface $exception) {
+                $processError = $exception->getMessage();
+            }
 
-            $output = trim($process->getOutput() . "\n" . $process->getErrorOutput());
+            $output = trim($process->getOutput() . "\n" . $process->getErrorOutput() . "\n" . $processError);
             $parsedOutput = $this->parseJsonProcessOutput($output);
             $result = [
                 'name' => $check['name'],
@@ -273,7 +281,15 @@ class ClearProject extends Command
      */
     private function twGraphTestGroups(): array
     {
-        return [
+        $groups = [
+            [
+                'name' => 'Props contracts',
+                'description' => 'Defaults, explicit values and component forwarding: reports unexpected prop overrides with expected and actual values.',
+                'paths' => [
+                    'tests/Unit/TwGraph/PropContractTest.php',
+                    'tests/Unit/TwGraph/SwitchCaseViewTest.php',
+                ],
+            ],
             [
                 'name' => 'Defaults, identifiers & geometry',
                 'description' => 'Central defaults, stable references, bounds, coordinates, and primitive geometry.',
@@ -341,6 +357,23 @@ class ClearProject extends Command
                 ],
             ],
         ];
+
+        // Newly added regression files must never silently disappear from the report.
+        $listed = array_merge(...array_column($groups, 'paths'));
+        $discovered = glob(base_path('tests/Unit/TwGraph/*Test.php')) ?: [];
+        sort($discovered);
+        foreach ($discovered as $file) {
+            $relative = 'tests/Unit/TwGraph/' . basename($file);
+            if (!in_array($relative, $listed, true)) {
+                $groups[] = [
+                    'name' => 'Additional TW-Graph regressions',
+                    'description' => 'Automatically discovered test files not yet assigned to a themed group.',
+                    'paths' => [$relative],
+                ];
+            }
+        }
+
+        return $groups;
     }
 
     /**
@@ -421,7 +454,7 @@ class ClearProject extends Command
     private function processFailureDetails(array $check): array
     {
         $details = [];
-        foreach ((array) data_get($check, 'parsed_output.failures', []) as $failure) {
+        foreach (array_merge((array) data_get($check, 'parsed_output.failures', []), (array) data_get($check, 'parsed_output.error_details', [])) as $failure) {
             $location = (string) ($failure['file'] ?? '');
             if ($location !== '' && isset($failure['line'])) {
                 $location .= ':' . $failure['line'];

@@ -28,15 +28,15 @@ it('loads a nested leaf and removes the previous example when switching tabs', f
     $component = Livewire::test(TwGraphDocumentation::class)
         ->set('tabs.main', 'idea-to-paper-flow')
         ->set('tabs.flow_index', 'flow-if')
-        ->set('tabs.flow_flow_if', 'flow-if-nested-test')
+        ->set('tabs.flow_flow_if', 'flow-if-nested-9')
         ->assertSee('literature.flow', false)
-        ->assertSee('literature.flow.1.if-nested-test.outer', false)
+        ->assertSee('literature.flow.1.if-nested-9.outer', false)
         ->assertDontSee('graph-id="idea-to-paper-canvas-default"', false);
 
     $component->set('tabs.main', 'idea-to-paper-canvas')
-        ->assertDontSee('literature.flow.1.if-nested-test.outer', false)
+        ->assertDontSee('literature.flow.1.if-nested-9.outer', false)
         ->set('tabs.main', 'idea-to-paper-flow')
-        ->assertSee('literature.flow.1.if-nested-test.outer', false);
+        ->assertSee('literature.flow.1.if-nested-9.outer', false);
 });
 
 it('loads the parts overview only when its tab is selected', function () {
@@ -185,28 +185,120 @@ it('loads the authored multi ELSEIF examples only for their selected tab', funct
 });
 
 
-it('loads the saved nested example independently from the nested test tab', function () {
+it('loads the saved nested example independently from the saved action sequence tab', function () {
     Livewire::test(TwGraphDocumentation::class)
         ->set('tabs.main', 'idea-to-paper-flow')
         ->set('tabs.flow_index', 'flow-if')
         ->set('tabs.flow_flow_if', 'flow-if-nested-1')
         ->assertSet('tabs.flow_flow_if', 'flow-if-nested-1')
         ->assertSee('literature.flow.1.if-nested-1.outer', false)
-        ->assertDontSee('literature.flow.1.if-nested-test.outer', false)
-        ->set('tabs.flow_flow_if', 'flow-if-nested-test')
-        ->assertSee('literature.flow.1.if-nested-test.outer', false)
+        ->assertDontSee('literature.flow.1.if-nested-9.outer', false)
+        ->set('tabs.flow_flow_if', 'flow-if-nested-9')
+        ->assertSee('literature.flow.1.if-nested-9.outer', false)
         ->assertDontSee('literature.flow.1.if-nested-1.outer', false);
 });
 
-it('loads the second saved nested example independently from the nested test tab', function () {
+it('loads saved later nested examples independently from the saved action sequence tab', function (string $number) {
     Livewire::test(TwGraphDocumentation::class)
         ->set('tabs.main', 'idea-to-paper-flow')
         ->set('tabs.flow_index', 'flow-if')
-        ->set('tabs.flow_flow_if', 'flow-if-nested-2')
-        ->assertSet('tabs.flow_flow_if', 'flow-if-nested-2')
-        ->assertSee('literature.flow.1.if-nested-2.outer', false)
-        ->assertDontSee('literature.flow.1.if-nested-test.outer', false)
-        ->set('tabs.flow_flow_if', 'flow-if-nested-test')
-        ->assertSee('literature.flow.1.if-nested-test.outer', false)
-        ->assertDontSee('literature.flow.1.if-nested-2.outer', false);
+        ->set('tabs.flow_flow_if', 'flow-if-nested-' . $number)
+        ->assertSet('tabs.flow_flow_if', 'flow-if-nested-' . $number)
+        ->assertSee('literature.flow.1.if-nested-' . $number . '.outer', false)
+        ->assertDontSee('literature.flow.1.if-nested-9.outer', false)
+        ->set('tabs.flow_flow_if', 'flow-if-nested-9')
+        ->assertSee('literature.flow.1.if-nested-9.outer', false)
+        ->assertDontSee('literature.flow.1.if-nested-' . $number . '.outer', false);
+})->with(['2', '3', '4', '5', '6', '7', '8']);
+
+
+it('loads the four primitive line-jump drawings only in their own tab', function () {
+    Livewire::test(TwGraphDocumentation::class)
+        ->set('tabs.main', 'idea-to-paper-primitives')
+        ->assertDontSee('data-line-jump-example="top"', false)
+        ->set('tabs.primitives_index', 'idea-to-paper-primitives-line-jump')
+        ->assertSee('data-line-jump-example="top"', false)
+        ->assertSee('data-line-jump-example="right"', false)
+        ->set('tabs.primitives_index', 'idea-to-paper-primitives-line')
+        ->assertDontSee('data-line-jump-example="top"', false);
 });
+
+it('keeps the experimental nested tab inactive even when requested through URL state', function () {
+    Livewire::test(TwGraphDocumentation::class)
+        ->set('tabs.main', 'idea-to-paper-flow')
+        ->set('tabs.flow_index', 'flow-if')
+        ->set('tabs.flow_flow_if', 'flow-if-nested-test')
+        ->assertSet('tabs.flow_flow_if', 'flow-if-simple')
+        ->assertDontSee('Flow IF nested Test')
+        ->assertDontSee('literature.flow.1.if-nested-test.outer', false);
+});
+
+it('loads the switch case test only when the switch case subtab is active', function () {
+    Livewire::test(TwGraphDocumentation::class)
+        ->set('tabs.main', 'idea-to-paper-flow')
+        ->assertDontSee('One SWITCH expression selects a CASE.')
+        ->set('tabs.flow_index', 'flow-switch-case')
+        ->assertSet('tabs.flow_switch_case', 'flow-switch-case-default')
+        ->assertSee('id="idea-to-paper-flow-switch-case-default-right"', false)
+        ->assertSee('Language examples')
+        ->assertSee('CASEs single')
+        ->set('tabs.flow_switch_case', 'flow-switch-case-grouped')
+        ->assertSee('id="idea-to-paper-flow-switch-case-grouped"', false)
+        ->assertSee('literature.switch.1.grouped.status', false)
+        ->assertDontSee('Language examples')
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-test"', false)
+        ->set('tabs.flow_switch_case', 'flow-switch-case-grouped-3')
+        ->assertSee('id="idea-to-paper-flow-switch-case-grouped-3-right"', false)
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-grouped"', false)
+        ->set('tabs.flow_switch_case', 'flow-switch-case-grouped-multi')
+        ->assertSee('id="idea-to-paper-flow-switch-case-grouped-multi-right"', false)
+        ->assertSee('CASE reopened')
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-grouped-3-right"', false)
+        ->set('tabs.flow_switch_case', 'flow-switch-case-nested')
+        ->assertSee('id="idea-to-paper-flow-switch-case-nested-right"', false)
+        ->assertSee('SWITCH ($format)')
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-test"', false)
+        ->set('tabs.flow_switch_case', 'flow-switch-case-without-default')
+        ->assertSee('id="idea-to-paper-flow-switch-case-without-default-right"', false)
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-test"', false)
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-nested-right"', false)
+        ->set('tabs.flow_switch_case', 'flow-switch-case-fallthrough')
+        ->assertSee('id="idea-to-paper-flow-switch-case-fallthrough-right"', false)
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-test"', false)
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-nested-right"', false)
+        ->set('tabs.flow_switch_case', 'flow-switch-case-test')
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-fallthrough-right"', false)
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-without-default-right"', false)
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-nested-right"', false)
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-grouped-multi-right"', false)
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-grouped-3-right"', false)
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-grouped"', false)
+        ->assertDontSee('id="idea-to-paper-flow-switch-case-default-right"', false)
+        ->assertDontSee('Language examples')
+        ->assertSee('SWITCH/CASE Test')
+        ->assertSee('One SWITCH expression selects a CASE.')
+        ->set('tabs.flow_index', 'flow-if')
+        ->assertDontSee('One SWITCH expression selects a CASE.');
+});
+
+it('lazy loads the handmade fusion documentation for each component level', function (string $level): void {
+    $view = 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.'.$level.'.'.$level.'-fusion';
+    $source = file_get_contents(app('view')->getFinder()->find($view));
+    expect($source)->not->toContain('@foreach', '@include');
+    expect(substr_count($source, '<x-translation-workbench::ui.tw-graph.'.$level.'.fusion'))->toBe(6);
+    Livewire::test(TwGraphDocumentation::class)
+        ->set('tabs.main', 'idea-to-paper-'.$level)
+        ->assertDontSee('The configured arc-radius is a starting value.')
+        ->set('tabs.'.$level.'_index', 'idea-to-paper-'.$level.'-fusion')
+        ->assertSee('The configured arc-radius is a starting value.')
+        ->assertSee('literature.'.$level.'.fusion', false)
+        ->assertSee('wire:click="$refresh"', false)
+        ->set('tabs.main', 'idea-to-paper-canvas')
+        ->assertDontSee('The configured arc-radius is a starting value.');
+    $html = view($view)->render();
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    expect($xpath->query('//pre/code')->length)->toBe(1);
+    expect($xpath->query('//*[contains(@class, "tw-graph-protocol-canvas-slot")]')->length)->toBe(6);
+})->with(['segments', 'parts']);

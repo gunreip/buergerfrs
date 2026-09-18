@@ -16,9 +16,8 @@ test('multiple jumps are ordered geometrically, with top and bottom semicircles'
     const drawing = jumpDrawing(bridge, jumps);
     assert.match(drawing.lineMask, /to right/);
     assert.match(drawing.lineMask, /transparent 44px/);
-    const svg = decodeURIComponent(drawing.arcMask);
-    assert.match(svg, /A 6 6 0 0 1/);
-    assert.match(svg, /A 8 8 0 0 0/);
+    assert.deepEqual(drawing.placements.map(p => p.side), ['top', 'bottom']);
+    assert.deepEqual(drawing.placements.map(p => p.x), [44, 142]);
 });
 
 for (const side of ['left', 'right']) {
@@ -29,7 +28,8 @@ for (const side of ['left', 'right']) {
         assert.equal(jumps[0].position, 50);
         const drawing = jumpDrawing(owner, jumps);
         assert.match(drawing.lineMask, /to bottom/);
-        assert.ok(decodeURIComponent(drawing.arcMask).includes(`A 8 8 0 0 ${side === 'right' ? 1 : 0}`));
+        assert.equal(drawing.placements[0].side, side);
+        assert.equal(drawing.placements[0].y, 42);
     });
 }
 
@@ -55,14 +55,13 @@ test('touching an endpoint is not a free crossing', () => {
 });
 
 
-test('rounded ends use line thickness and the jump clears every crossed layer', () => {
+test('jump placements clear every crossed layer', () => {
     const owner = { ...bridge, thickness: 4, zIndex: 7 };
     const { jumps } = planLineJumps(owner, [
         { over: 'low', radius: '8px' }, { over: 'high', radius: '8px' },
     ], (id) => ({ ...stem(id === 'low' ? 50 : 150), zIndex: id === 'low' ? 2 : 15 }), radius);
     const drawing = jumpDrawing(owner, jumps);
-    const svg = decodeURIComponent(drawing.arcMask);
-    assert.match(svg, /stroke-width="4" stroke-linecap="round"/);
+    assert.equal(drawing.placements.length, 2);
     assert.equal(drawing.zIndex, 16);
     assert.equal(jumpDrawing({ ...owner, zIndex: 20 }, jumps).zIndex, 21);
 });

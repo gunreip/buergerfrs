@@ -4,16 +4,16 @@
         color="indigo"
         icon="file-text"
     >
-        <flux:callout.heading>{{ __('IF nested 1') }}</flux:callout.heading>
+        <flux:callout.heading>{{ __('IF nested 3') }}</flux:callout.heading>
         <flux:callout.text>
-            {{ __('The outer IF enters the amber inner IF only when review is required. Every inner result returns to the outer output rail. Outer ELSEIF conditions are reached exclusively through the outer False route.') }}
+            {{ __('The amber inner IF belongs to the outer ELSE fallback. It is entered only when every outer condition is false. Successful outer actions bypass it and continue at the common output. Every inner result rejoins that same output.') }}
         </flux:callout.text>
         @php
             $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
-                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-if-nested-1',
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.if.flow-if-nested-3',
             );
-            $docExample1Code = $docExampleSource->example('flow-if-nested-1-example-1');
-            $docExample2Code = $docExampleSource->example('flow-if-nested-1-example-2');
+            $docExample1Code = $docExampleSource->example('flow-if-nested-3-example-1');
+            $docExample2Code = $docExampleSource->example('flow-if-nested-3-example-2');
         @endphp
         <flux:heading
             class="mt-4"
@@ -43,73 +43,82 @@
             <flux:table.rows>
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal">condition-label</flux:table.cell>
-                    <flux:table.cell>IF condition?</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">IF condition?</flux:table.cell>
                     <flux:table.cell class="whitespace-normal">First decision of each independent IF block.
                     </flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell>if-start</flux:table.cell>
-                    <flux:table.cell>IF action</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal">First action and color of the shared return rail.
+                    <flux:table.cell class="whitespace-normal">if-start</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">IF action</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">Action taken when the first condition is true.
                     </flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell>if-start.return</flux:table.cell>
-                    <flux:table.cell>true</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal">false leaves the action output open for a nested graph.
-                        The author must connect its output to anchorNode-return. No direct stem bypasses the nested
-                        graph.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">elseifs</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">[]</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">Subsequent conditions and their actions. None of their
+                        successful routes enters the fallback.</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell>elseifs</flux:table.cell>
-                    <flux:table.cell>[]; one or more entries</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal">Explicit conditionLabel/actionLabel entries.
-                        actionLabel.return can also open an ELSEIF action for nesting.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">if-end.return</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">true</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">Set false to open the fallback for a separately authored
+                        nested graph.</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell>if-end</flux:table.cell>
-                    <flux:table.cell>[]</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal">Final fallback action, or a bypass when no text is
-                        supplied.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">if-end.returnOffset</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">12rem when open</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">Extends the outgoing fallback bridge beyond the common
+                        return rail.</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal">elseifs[].beforeLength</flux:table.cell>
-                    <flux:table.cell>elseif-before-length / 6rem</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal">The first outer ELSEIF reserves 84rem for the nested
-                        block. Adjust this explicit clearance when enlarging the inner graph.</flux:table.cell>
-                </flux:table.row>
-                <flux:table.row>
-                    <flux:table.cell class="whitespace-normal">.if.true.anchorNode-end</flux:table.cell>
-                    <flux:table.cell>action output</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal">Entry anchor for the inner IF, after the outer True
-                        action.</flux:table.cell>
-                </flux:table.row>
-                <flux:table.row>
-                    <flux:table.cell class="whitespace-normal">.if.true.anchorNode-return</flux:table.cell>
-                    <flux:table.cell>next output junction</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal">Rejoins the common outer output rail, never the next
-                        condition input.</flux:table.cell>
-                </flux:table.row>
-                <flux:table.row>
-                    <flux:table.cell>.anchorNode-end</flux:table.cell>
-                    <flux:table.cell>common output</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal">Continuation after all alternatives of the corresponding
-                        IF. returnColor carries its shared True rail color; color retains the final node color.
-                    </flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">if-end.returnLength</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">8rem when open</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">Distance from the fallback output level to the common
+                        continuation. This example reserves 40rem for the inner block and its return.</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal">if-end.stemLength</flux:table.cell>
                     <flux:table.cell class="whitespace-normal">stem-length / 8rem</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal">Overrides the incoming stem of the final False route,
-                        including a textless bypass. The opposite return stem adjusts with it; label clearance remains a
-                        minimum.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">Incoming stem before the fallback bridge. Independent of
+                        returnLength.</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell>parts.start return-to</flux:table.cell>
-                    <flux:table.cell>null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal">Declares the IF return target. The incoming color
-                        continues along the outer return stems after this junction; branch arcs and dots keep their own
-                        colors.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">if-end.lineJumps</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">[]</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">Explicit crossing on the outgoing fallback bridge, over
+                        the final True return stem.</flux:table.cell>
+                </flux:table.row>
+                <flux:table.row>
+                    <flux:table.cell class="whitespace-normal">.false.anchorNode-end</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">fallback output</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">Entry for the inner IF after all outer conditions are
+                        false.</flux:table.cell>
+                </flux:table.row>
+                <flux:table.row>
+                    <flux:table.cell class="whitespace-normal">.false.anchorNode-return</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">common output</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">Target for the handmade nested return. Earlier True
+                        actions meet here without entering the nested graph.</flux:table.cell>
+                </flux:table.row>
+                <flux:table.row>
+                    <flux:table.cell class="whitespace-normal">.anchorNode-end</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">common continuation</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">Continue after successful outer actions or completion of
+                        the fallback nested IF.</flux:table.cell>
+                </flux:table.row>
+                <flux:table.row>
+                    <flux:table.cell class="whitespace-normal">parts.start return-to</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">null</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">Declares the return connection and propagates returnColor
+                        to the outer continuation.</flux:table.cell>
+                </flux:table.row>
+                <flux:table.row>
+                    <flux:table.cell class="whitespace-normal">elseifs[].actionLabel.stemLineJumps</flux:table.cell>
+                    <flux:table.cell>[]</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">The right example puts the jump on the final True return
+                        stem, over the continuous fallback bridge. side="right" controls the bow direction.
+                    </flux:table.cell>
                 </flux:table.row>
             </flux:table.rows>
         </flux:table>
@@ -126,48 +135,61 @@
         >
             <flux:text class="m-3">{{ __('Cyan: outer IF · Amber: inner IF · Zinc: fallback routes') }}</flux:text>
             <flux:heading
-                class="mt-3"
+                class="m-3"
                 size="sm"
-            >side="left"</flux:heading>
+            >side="left" · Line jump on bridge</flux:heading>
             <div
                 class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                {{-- flow-if-nested-1-example-1:start --}}
+                {{-- flow-if-nested-3-example-1:start --}}
                 <x-translation-workbench::ui.tw-graph
-                    graph-id="idea-to-paper-step-08-flow-if-nested-1"
+                    graph-id="idea-to-paper-step-08-flow-if-nested-3"
                     :dev="true"
                     :coordinates="true"
                     color="cyan"
                     min-width="72rem"
-                    min-height="86rem"
+                    min-height="103rem"
                     horizontal-padding="12rem"
                 >
                     <x-translation-workbench::ui.tw-graph.strang.flow-start
-                        id="literature.flow.1.if-nested-1-origin"
+                        id="literature.flow.1.if-nested-3-origin"
                         :start-label="['text' => ['Review request'], 'width' => 'half']"
                     />
                     {{-- Outer IF --}}
                     <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-multi
-                        id="literature.flow.1.if-nested-1.outer"
-                        attach-to="literature.flow.1.if-nested-1-origin.anchorNode-end"
+                        id="literature.flow.1.if-nested-3.outer"
+                        attach-to="literature.flow.1.if-nested-3-origin.anchorNode-end"
                         side="left"
                         color="cyan"
                         :condition-label="['text' => ['IF review required?'], 'width' => 'halfLong']"
                         :if-start="[
-                            'text' => ['Evaluate review result'],
+                            'text' => ['Schedule review'],
                             'width' => 'halfLong',
                             'color' => 'cyan',
-                            'return' => false,
                         ]"
                         :elseifs="[
                             [
                                 'key' => 'automatic',
-                                'beforeLength' => '36rem',
+                                'beforeLength' => '4rem',
                                 'conditionLabel' => [
                                     'text' => ['ELSEIF automatic approval?'],
                                     'width' => 'halfLong',
                                     'color' => 'blue',
                                 ],
                                 'actionLabel' => ['text' => ['Approve automatically'], 'width' => 'halfLong'],
+                            ],
+                            [
+                                'key' => 'sources',
+                                'beforeLength' => '4rem',
+                                'afterLength' => '1rem',
+                                'conditionLabel' => [
+                                    'text' => ['ELSEIF sources missing?'],
+                                    'width' => 'halfLong',
+                                    'color' => 'violet',
+                                ],
+                                'actionLabel' => [
+                                    'text' => ['Evaluate source review'],
+                                    'width' => 'halfLong',
+                                ],
                             ],
                             [
                                 'key' => 'deferred',
@@ -182,17 +204,27 @@
                             ],
                         ]"
                         :if-end="[
-                            'text' => ['Keep draft'],
+                            'text' => ['Evaluate fallback review'],
                             'width' => 'halfLong',
                             'color' => 'zinc',
-                            'stemLength' => '2rem',
+                            'stemLength' => '5rem',
+                            'return' => false,
+                            'returnOffset' => '12rem',
+                            'returnLength' => '40rem',
+                            'lineJumps' => [
+                                [
+                                    'over' => 'literature.flow.1.if-nested-3.outer.elseif.deferred.true.stem',
+                                    'radius' => '0.65rem',
+                                    'side' => 'top',
+                                ],
+                            ],
                         ]"
                     />
 
-                    {{-- The inner block belongs only to the first outer True action. --}}
+                    {{-- The inner block is entered only when all outer conditions are false. --}}
                     <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-multi
-                        id="literature.flow.1.if-nested-1.inner"
-                        attach-to="literature.flow.1.if-nested-1.outer.if.true.anchorNode-end"
+                        id="literature.flow.1.if-nested-3.inner"
+                        attach-to="literature.flow.1.if-nested-3.outer.false.anchorNode-end"
                         side="left"
                         color="amber"
                         before-length="2rem"
@@ -232,61 +264,63 @@
 
                     {{-- Return above the inner block, then join the outer output rail. --}}
                     @php
-                        $nestedGraphId = 'idea-to-paper-step-08-flow-if-nested-1';
+                        $nestedGraphId = 'idea-to-paper-step-08-flow-if-nested-3';
                         $innerEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                             $nestedGraphId,
-                            'literature.flow.1.if-nested-1.inner.anchorNode-end',
+                            'literature.flow.1.if-nested-3.inner.anchorNode-end',
                         );
                         $outerReturn = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                             $nestedGraphId,
-                            'literature.flow.1.if-nested-1.outer.if.true.anchorNode-return',
+                            'literature.flow.1.if-nested-3.outer.false.anchorNode-return',
                         );
                         $returnBridge = 'calc(' . $outerReturn['x'] . ' - ' . $innerEnd['x'] . ' - (2 * 2.75rem))';
                     @endphp
                     <x-translation-workbench::ui.tw-graph.parts.sideways
-                        id="literature.flow.1.if-nested-1.inner-return"
+                        id="literature.flow.1.if-nested-3.inner-return"
                         :anchor-start="$innerEnd"
                         side="left"
                         arc-radius="2.75rem"
                         :bridge-length="$returnBridge"
                         :color="$innerEnd['returnColor']"
-                        :joint-arrow-end="true"
-                        :dev-counter-end="'R'"
+                        :node-end="false"
+                        :joint-arrow-end="false"
+                        :dev-counter-end="false"
                     />
                     @php
                         $returnEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                             $nestedGraphId,
-                            'literature.flow.1.if-nested-1.inner-return.anchorNode-end',
+                            'literature.flow.1.if-nested-3.inner-return.anchorNode-end',
                         );
                     @endphp
                     <x-translation-workbench::ui.tw-graph.parts.start
-                        id="literature.flow.1.if-nested-1.inner-return.stem"
-                        return-to="literature.flow.1.if-nested-1.outer.if.true.anchorNode-return"
+                        id="literature.flow.1.if-nested-3.inner-return.stem"
+                        return-to="literature.flow.1.if-nested-3.outer.false.anchorNode-return"
                         :anchor-start="$returnEnd"
                         :length="'calc(' . $outerReturn['y'] . ' - ' . $returnEnd['y'] . ')'"
                         :gradient="false"
                         :node-end="false"
+                        :joint-arrow-end="false"
                         :dev-counter-end="false"
                         :color="$returnEnd['color']"
                     />
                     <x-translation-workbench::ui.tw-graph.strang.flow-step
-                        id="literature.flow.1.if-nested-1.continue"
-                        attach-to="literature.flow.1.if-nested-1.outer.anchorNode-end"
-                        color="cyan"
+                        id="literature.flow.1.if-nested-3.continue"
+                        attach-to="literature.flow.1.if-nested-3.outer.anchorNode-end"
+                        color="yellow"
                         :step-label="['text' => ['Continue process'], 'width' => 'halfLong']"
                     />
                     @php
                         $outerInput = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                             $nestedGraphId,
-                            'literature.flow.1.if-nested-1.outer.anchorNode-start',
+                            'literature.flow.1.if-nested-3.outer.anchorNode-start',
                         );
                         $outerEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                             $nestedGraphId,
-                            'literature.flow.1.if-nested-1.outer.anchorNode-end',
+                            'literature.flow.1.if-nested-3.outer.anchorNode-end',
                         );
                         $innerInput = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                             $nestedGraphId,
-                            'literature.flow.1.if-nested-1.inner.anchorNode-start',
+                            'literature.flow.1.if-nested-3.inner.anchorNode-start',
                         );
                         $innerBounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints(
                             [$innerInput, $innerEnd],
@@ -298,7 +332,7 @@
                         );
                     @endphp
                     <x-translation-workbench::ui.tw-graph.dev-box
-                        id="literature.flow.1.if-nested-1.inner.bounds"
+                        id="literature.flow.1.if-nested-3.inner.bounds"
                         label="Inner IF / ELSEIF / ELSE"
                         :x="$innerBounds['left']"
                         :y="$innerBounds['bottom']"
@@ -308,7 +342,7 @@
                         :dev="true"
                     />
                     <x-translation-workbench::ui.tw-graph.dev-box
-                        id="literature.flow.1.if-nested-1.outer.bounds"
+                        id="literature.flow.1.if-nested-3.outer.bounds"
                         label="Outer IF including nested section"
                         :x="$outerBounds['left']"
                         :y="$outerBounds['bottom']"
@@ -318,51 +352,64 @@
                         :dev="true"
                     />
                 </x-translation-workbench::ui.tw-graph>
-                {{-- flow-if-nested-1-example-1:end --}}
+                {{-- flow-if-nested-3-example-1:end --}}
             </div>
             <flux:heading
-                class="mt-6"
+                class="m-3"
                 size="sm"
-            >side="right"</flux:heading>
+            >side="right" · Line jump on stem</flux:heading>
             <div
                 class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                {{-- flow-if-nested-1-example-2:start --}}
+                {{-- flow-if-nested-3-example-2:start --}}
                 <x-translation-workbench::ui.tw-graph
-                    graph-id="idea-to-paper-step-08-flow-if-nested-1-right"
+                    graph-id="idea-to-paper-step-08-flow-if-nested-3-right"
                     :dev="true"
                     :coordinates="true"
                     color="cyan"
                     min-width="72rem"
-                    min-height="86rem"
+                    min-height="103rem"
                     horizontal-padding="12rem"
                 >
                     <x-translation-workbench::ui.tw-graph.strang.flow-start
-                        id="literature.flow.1.if-nested-1-right-origin"
+                        id="literature.flow.1.if-nested-3-right-origin"
                         :start-label="['text' => ['Review request'], 'width' => 'half']"
                     />
                     {{-- Outer IF --}}
                     <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-multi
-                        id="literature.flow.1.if-nested-1-right.outer"
-                        attach-to="literature.flow.1.if-nested-1-right-origin.anchorNode-end"
+                        id="literature.flow.1.if-nested-3-right.outer"
+                        attach-to="literature.flow.1.if-nested-3-right-origin.anchorNode-end"
                         side="right"
                         color="cyan"
                         :condition-label="['text' => ['IF review required?'], 'width' => 'halfLong']"
                         :if-start="[
-                            'text' => ['Evaluate review result'],
+                            'text' => ['Schedule review'],
                             'width' => 'halfLong',
                             'color' => 'cyan',
-                            'return' => false,
                         ]"
                         :elseifs="[
                             [
                                 'key' => 'automatic',
-                                'beforeLength' => '36rem',
+                                'beforeLength' => '4rem',
                                 'conditionLabel' => [
                                     'text' => ['ELSEIF automatic approval?'],
                                     'width' => 'halfLong',
                                     'color' => 'blue',
                                 ],
                                 'actionLabel' => ['text' => ['Approve automatically'], 'width' => 'halfLong'],
+                            ],
+                            [
+                                'key' => 'sources',
+                                'beforeLength' => '4rem',
+                                'afterLength' => '1rem',
+                                'conditionLabel' => [
+                                    'text' => ['ELSEIF sources missing?'],
+                                    'width' => 'halfLong',
+                                    'color' => 'violet',
+                                ],
+                                'actionLabel' => [
+                                    'text' => ['Evaluate source review'],
+                                    'width' => 'halfLong',
+                                ],
                             ],
                             [
                                 'key' => 'deferred',
@@ -373,21 +420,35 @@
                                     'width' => 'halfLong',
                                     'color' => 'violet',
                                 ],
-                                'actionLabel' => ['text' => ['Schedule review'], 'width' => 'halfLong'],
+                                'actionLabel' => [
+                                    'text' => ['Schedule review'],
+                                    'width' => 'halfLong',
+                                    'stemLineJumps' => [
+                                        [
+                                            'over' =>
+                                                'literature.flow.1.if-nested-3-right.outer.elseif.deferred.false.bridge1.bridge-out',
+                                            'radius' => '0.65rem',
+                                            'side' => 'right',
+                                        ],
+                                    ],
+                                ],
                             ],
                         ]"
                         :if-end="[
-                            'text' => ['Keep draft'],
+                            'text' => ['Evaluate fallback review'],
                             'width' => 'halfLong',
                             'color' => 'zinc',
-                            'stemLength' => '2rem',
+                            'stemLength' => '5rem',
+                            'return' => false,
+                            'returnOffset' => '12rem',
+                            'returnLength' => '40rem',
                         ]"
                     />
 
-                    {{-- The inner block belongs only to the first outer True action. --}}
+                    {{-- The inner block is entered only when all outer conditions are false. --}}
                     <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-multi
-                        id="literature.flow.1.if-nested-1-right.inner"
-                        attach-to="literature.flow.1.if-nested-1-right.outer.if.true.anchorNode-end"
+                        id="literature.flow.1.if-nested-3-right.inner"
+                        attach-to="literature.flow.1.if-nested-3-right.outer.false.anchorNode-end"
                         side="right"
                         color="amber"
                         before-length="2rem"
@@ -427,61 +488,63 @@
 
                     {{-- Return above the inner block, then join the outer output rail. --}}
                     @php
-                        $nestedGraphId = 'idea-to-paper-step-08-flow-if-nested-1-right';
+                        $nestedGraphId = 'idea-to-paper-step-08-flow-if-nested-3-right';
                         $innerEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                             $nestedGraphId,
-                            'literature.flow.1.if-nested-1-right.inner.anchorNode-end',
+                            'literature.flow.1.if-nested-3-right.inner.anchorNode-end',
                         );
                         $outerReturn = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                             $nestedGraphId,
-                            'literature.flow.1.if-nested-1-right.outer.if.true.anchorNode-return',
+                            'literature.flow.1.if-nested-3-right.outer.false.anchorNode-return',
                         );
                         $returnBridge = 'calc(' . $innerEnd['x'] . ' - ' . $outerReturn['x'] . ' - (2 * 2.75rem))';
                     @endphp
                     <x-translation-workbench::ui.tw-graph.parts.sideways
-                        id="literature.flow.1.if-nested-1-right.inner-return"
+                        id="literature.flow.1.if-nested-3-right.inner-return"
                         :anchor-start="$innerEnd"
                         side="right"
                         arc-radius="2.75rem"
                         :bridge-length="$returnBridge"
                         :color="$innerEnd['returnColor']"
-                        :joint-arrow-end="true"
-                        :dev-counter-end="'R'"
+                        :node-end="false"
+                        :joint-arrow-end="false"
+                        :dev-counter-end="false"
                     />
                     @php
                         $returnEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                             $nestedGraphId,
-                            'literature.flow.1.if-nested-1-right.inner-return.anchorNode-end',
+                            'literature.flow.1.if-nested-3-right.inner-return.anchorNode-end',
                         );
                     @endphp
                     <x-translation-workbench::ui.tw-graph.parts.start
-                        id="literature.flow.1.if-nested-1-right.inner-return.stem"
-                        return-to="literature.flow.1.if-nested-1-right.outer.if.true.anchorNode-return"
+                        id="literature.flow.1.if-nested-3-right.inner-return.stem"
+                        return-to="literature.flow.1.if-nested-3-right.outer.false.anchorNode-return"
                         :anchor-start="$returnEnd"
                         :length="'calc(' . $outerReturn['y'] . ' - ' . $returnEnd['y'] . ')'"
                         :gradient="false"
                         :node-end="false"
+                        :joint-arrow-end="false"
                         :dev-counter-end="false"
                         :color="$returnEnd['color']"
                     />
                     <x-translation-workbench::ui.tw-graph.strang.flow-step
-                        id="literature.flow.1.if-nested-1-right.continue"
-                        attach-to="literature.flow.1.if-nested-1-right.outer.anchorNode-end"
-                        color="cyan"
+                        id="literature.flow.1.if-nested-3-right.continue"
+                        attach-to="literature.flow.1.if-nested-3-right.outer.anchorNode-end"
+                        color="rose"
                         :step-label="['text' => ['Continue process'], 'width' => 'halfLong']"
                     />
                     @php
                         $outerInput = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                             $nestedGraphId,
-                            'literature.flow.1.if-nested-1-right.outer.anchorNode-start',
+                            'literature.flow.1.if-nested-3-right.outer.anchorNode-start',
                         );
                         $outerEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                             $nestedGraphId,
-                            'literature.flow.1.if-nested-1-right.outer.anchorNode-end',
+                            'literature.flow.1.if-nested-3-right.outer.anchorNode-end',
                         );
                         $innerInput = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                             $nestedGraphId,
-                            'literature.flow.1.if-nested-1-right.inner.anchorNode-start',
+                            'literature.flow.1.if-nested-3-right.inner.anchorNode-start',
                         );
                         $innerBounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints(
                             [$innerInput, $innerEnd],
@@ -493,7 +556,7 @@
                         );
                     @endphp
                     <x-translation-workbench::ui.tw-graph.dev-box
-                        id="literature.flow.1.if-nested-1-right.inner.bounds"
+                        id="literature.flow.1.if-nested-3-right.inner.bounds"
                         label="Inner IF / ELSEIF / ELSE"
                         :x="$innerBounds['left']"
                         :y="$innerBounds['bottom']"
@@ -503,7 +566,7 @@
                         :dev="true"
                     />
                     <x-translation-workbench::ui.tw-graph.dev-box
-                        id="literature.flow.1.if-nested-1-right.outer.bounds"
+                        id="literature.flow.1.if-nested-3-right.outer.bounds"
                         label="Outer IF including nested section"
                         :x="$outerBounds['left']"
                         :y="$outerBounds['bottom']"
@@ -513,10 +576,10 @@
                         :dev="true"
                     />
                 </x-translation-workbench::ui.tw-graph>
-                {{-- flow-if-nested-1-example-2:end --}}
+                {{-- flow-if-nested-3-example-2:end --}}
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
-        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/flow-if-nested-1.blade.php
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/if/flow-if-nested-3.blade.php
         </flux:field>
     </flux:callout>
 </section>

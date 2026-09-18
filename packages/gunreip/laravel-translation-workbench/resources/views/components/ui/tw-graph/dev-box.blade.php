@@ -63,7 +63,7 @@
             height: {{ $height }};
             border-color: rgb({{ $colorRgb }} / 0.35);
         "
-        title="{{ $devIdentifier }}"
+        title="{{ $devIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
     >
         <span
             class="absolute left-1 top-0 -translate-y-full rounded-sm px-1 py-0.5 font-mono text-[0.6rem] leading-none opacity-0 transition-opacity group-hover:opacity-100"

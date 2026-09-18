@@ -19,6 +19,7 @@
         <flux:tab name="idea-to-paper-segments-labels">{{ __('Labels') }}</flux:tab>
         <flux:tab name="idea-to-paper-segments-step">{{ __('Step') }}</flux:tab>
         <flux:tab name="idea-to-paper-segments-stem-compressed">{{ __('Stem compressed') }}</flux:tab>
+        <flux:tab name="idea-to-paper-segments-fusion">{{ __('Fusion') }}</flux:tab>
     </flux:tabs>
     <flux:tab.panel name="idea-to-paper-segments-path">
         @if (!isset($documentationTabs) || $documentationTabs['segments_index'] === 'idea-to-paper-segments-path')
@@ -59,6 +60,13 @@
         @if (!isset($documentationTabs) || $documentationTabs['segments_index'] === 'idea-to-paper-segments-stem-compressed')
             <div wire:key="documentation-idea-to-paper-segments-stem-compressed">
                 @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.segments-stem-compressed')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="idea-to-paper-segments-fusion">
+        @if (!isset($documentationTabs) || $documentationTabs['segments_index'] === 'idea-to-paper-segments-fusion')
+            <div wire:key="documentation-idea-to-paper-segments-fusion">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.segments-fusion')
             </div>
         @endif
     </flux:tab.panel>

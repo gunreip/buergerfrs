@@ -35,6 +35,9 @@
 ])
 
 @php
+    // Keep the authoring ID throughout the internal component chain.
+    $previousRootIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::enter($id);
+    try {
     // Node labels position only text/connector; inline labels may redirect the bridge.
     $labelSide = data_get($endLabel, 'placement') === 'node' ? null : data_get($endLabel, 'side');
     $isRight = (in_array($labelSide, ['left', 'right'], true) ? $labelSide : $side) === 'right';
@@ -171,3 +174,9 @@
     :dev="$resolvedDev"
 />
 @endif
+
+@php
+    } finally {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
+    }
+@endphp

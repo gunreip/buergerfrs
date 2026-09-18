@@ -18,6 +18,9 @@
 ])
 
 @php
+    // Keep the authoring ID throughout the internal component chain.
+    $previousRootIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::enter($id);
+    try {
     $isRight = $side === 'right';
     $start = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, $attachTo);
     $end = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, $mergeTo);
@@ -81,3 +84,9 @@
         'anchorEnd' => $end,
     ])" />
 @endif
+
+@php
+    } finally {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
+    }
+@endphp

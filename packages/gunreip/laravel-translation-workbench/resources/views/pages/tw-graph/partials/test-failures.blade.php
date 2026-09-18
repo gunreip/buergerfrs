@@ -1,6 +1,6 @@
 <div class="mt-3 min-w-0 space-y-3">
     <flux:heading size="sm">{{ __('Failure details') }}</flux:heading>
-    @forelse ((array) data_get($check, 'parsed_output.failures', []) as $failure)
+    @forelse (array_merge((array) data_get($check, 'parsed_output.failures', []), (array) data_get($check, 'parsed_output.error_details', [])) as $failure)
         <div class="space-y-2">
             <flux:text class="font-semibold break-all">{{ data_get($failure, 'test', 'Failed test') }}</flux:text>
             @if (data_get($failure, 'file'))

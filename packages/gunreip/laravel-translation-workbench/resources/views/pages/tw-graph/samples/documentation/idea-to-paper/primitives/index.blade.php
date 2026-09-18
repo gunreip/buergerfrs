@@ -16,6 +16,7 @@
     <flux:tabs wire:model.live="tabs.primitives_index" scrollable scrollable:fade scrollable:scrollbar="hide">
         <flux:tab name="idea-to-paper-primitives-line">{{ __('Line') }}</flux:tab>
         <flux:tab name="idea-to-paper-primitives-arc">{{ __('Arc') }}</flux:tab>
+        <flux:tab name="idea-to-paper-primitives-line-jump">{{ __('Line jump') }}</flux:tab>
         <flux:tab name="idea-to-paper-primitives-text-label">{{ __('Text Label') }}</flux:tab>
         <flux:tab name="idea-to-paper-primitives-markers-connectors">{{ __('Markers & Connectors') }}</flux:tab>
     </flux:tabs>
@@ -30,6 +31,13 @@
         @if (!isset($documentationTabs) || $documentationTabs['primitives_index'] === 'idea-to-paper-primitives-arc')
             <div wire:key="documentation-idea-to-paper-primitives-arc">
                 @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.primitives.primitives-arc')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="idea-to-paper-primitives-line-jump">
+        @if (!isset($documentationTabs) || $documentationTabs['primitives_index'] === 'idea-to-paper-primitives-line-jump')
+            <div wire:key="documentation-idea-to-paper-primitives-line-jump">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.primitives.primitives-line-jump')
             </div>
         @endif
     </flux:tab.panel>

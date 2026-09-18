@@ -64,6 +64,9 @@
 ])
 
 @php
+    // Keep the authoring ID throughout the internal component chain.
+    $previousRootIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::enter($id);
+    try {
     $resolvedGraphId = filled($graphId ?? null) ? (string) $graphId : 'tw-graph';
     $resolvedComponentCounter = max(1, (int) $componentCounter);
     $id = filled($id)
@@ -366,10 +369,16 @@
             left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($pathEndAnchor, 'x', '0rem') }} + 1rem);
             bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($pathEndAnchor, 'y', '0rem') }} + 1rem);
         "
-        title="{{ $nodeLabelMismatchTitle }}"
+        title="{{ $nodeLabelMismatchTitle }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
     >
         <flux:badge color="red">
             {{ $nodeLabelMismatchText }}
         </flux:badge>
     </span>
 @endif
+
+@php
+    } finally {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
+    }
+@endphp

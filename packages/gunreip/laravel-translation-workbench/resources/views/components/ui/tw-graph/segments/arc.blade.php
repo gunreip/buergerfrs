@@ -18,6 +18,7 @@
     nodeEnd=true|false
     nodeStartDot=true|false
     nodeEndDot=true|false
+    nodeStartZIndex/nodeEndZIndex: optional dot layer; defaults to path zIndex + 1
     jointArrowStart=true|false
     jointArrowEnd=true|false
     dev=true|false
@@ -157,7 +158,7 @@
                 :size="data_get($segment, $nodePosition === 'start' ? 'nodeStartSize' : 'nodeEndSize')"
                 :color="$nodePosition === 'end' ? ($toColor ?: $color) : $color"
                 :tone="$tone"
-                :z-index="$zIndex === null ? null : $zIndex + 1"
+                :z-index="data_get($segment, $nodePosition === 'start' ? 'nodeStartZIndex' : 'nodeEndZIndex', $zIndex === null ? null : $zIndex + 1)"
             />
         @endif
     @endforeach

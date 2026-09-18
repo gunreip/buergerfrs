@@ -28,7 +28,12 @@
     'devMode' => null,
     'zIndex' => 20,
 ])
+
 @php
+    // Keep the authoring ID throughout the internal component chain.
+    $previousRootIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::enter($id);
+    try {
+@endphp@php
     if (! is_array($elseifs) || $elseifs === []) {
         throw new \InvalidArgumentException('flow-if-elseif-multi requires at least one elseifs entry.');
     }
@@ -136,6 +141,7 @@
             :anchor-start="$cursor"
             :direction="$direction"
             :before-length="$row['beforeLength']"
+            :before-color="data_get($cursor, 'color')"
             :after-length="$row['afterLength']"
             :step-label="$row['conditionLabel']"
             :node-labels="[$falseSide => $falseInformation]"
@@ -211,5 +217,22 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\ReturnColorRegistry::rail(
             $resolvedGraphId, $returnRow['id'] . '.true.anchorNode-return', $returnPaths, $returnOutputs,
         );
+    }
+    // Publish the terminal fallback separately from the common continuation.
+    $fallbackId = $previousRow['id'];
+    foreach (['end', 'return'] as $fallbackAnchor) {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put(
+            $resolvedGraphId, $id . '.false.anchorNode-' . $fallbackAnchor,
+            \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $fallbackId . '.false.anchorNode-' . $fallbackAnchor),
+        );
+    }
+    \Gunreip\TranslationWorkbench\Support\TwGraph\ReturnColorRegistry::rail(
+        $resolvedGraphId, $id . '.false.anchorNode-return', [], [$id . '.anchorNode-end', $fallbackId . '.anchorNode-end'],
+    );
+@endphp
+
+@php
+    } finally {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
     }
 @endphp

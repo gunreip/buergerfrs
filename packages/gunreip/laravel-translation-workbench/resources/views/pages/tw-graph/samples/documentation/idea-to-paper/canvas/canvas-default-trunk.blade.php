@@ -108,6 +108,92 @@
                 </flux:table.rows>
             </flux:table>
         </div>
+        <flux:heading class="mt-6" size="lg">{{ __('Using the preview tools') }}</flux:heading>
+        <flux:text class="mt-2">
+            {{ __('The preview-tools component wraps one or more graph previews and provides the shared control bar. Try the controls on the default trunk alongside this explanation. They change diagnostic visibility immediately in the browser; they do not change lengths, anchors, collision calculations or the graph source.') }}
+        </flux:text>
+        <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
+            <flux:table>
+                <flux:table.columns>
+                    <flux:table.column>{{ __('Control') }}</flux:table.column>
+                    <flux:table.column>{{ __('Effect') }}</flux:table.column>
+                </flux:table.columns>
+                <flux:table.rows>
+                    <flux:table.row>
+                        <flux:table.cell class="align-top whitespace-normal text-xs">DEV mode</flux:table.cell>
+                        <flux:table.cell class="align-top whitespace-normal text-xs">
+                            {{ __('Master switch for diagnostic overlays: node counters, DEV hints and mismatch badges, bounding boxes and coordinate overlays. Turning it off hides these overlays and restores normal graph opacity. The Bounding boxes and Coordinates selections are retained and take effect again when DEV mode is enabled.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="align-top whitespace-normal text-xs">Bounding boxes</flux:table.cell>
+                        <flux:table.cell class="align-top whitespace-normal text-xs">
+                            {{ __('Shows the dashed diagnostic rectangles around components and labels. These help inspect occupied space, multiline labels and overlaps. Requires DEV mode. Hiding the rectangles does not change the bounds used for layout, and does not hide the separate canvas dimension guides.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="align-top whitespace-normal text-xs">Coordinates</flux:table.cell>
+                        <flux:table.cell class="align-top whitespace-normal text-xs">
+                            {{ __('Shows the available coordinate guides and measurement badges for the rendered graph bounds. The yellow guides additionally explain canvas dimensions, minimum sizes and padding; they are not the bounding box of an individual component. Requires DEV mode and coordinate diagnostics rendered by the graph.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="align-top whitespace-normal text-xs">Refresh preview ↻</flux:table.cell>
+                        <flux:table.cell class="align-top whitespace-normal text-xs">
+                            {{ __('Re-renders the containing Livewire documentation component on the server. The active example, its source code box and its graph are rendered again without switching tabs or reloading the whole browser page. The active tab and saved visibility settings remain selected. The button is disabled while its refresh request is running; outside a Livewire component it has no refresh action.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                </flux:table.rows>
+            </flux:table>
+        </div>
+        <figure class="mt-4">
+            <figcaption class="mb-2 text-sm text-zinc-600 dark:text-zinc-300">
+                {{ __('Static example — no function. DEV mode and Bounding boxes are selected; Coordinates is off. The refresh icon sits at the far right.') }}
+            </figcaption>
+            <div inert class="overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-700">
+                <flux:fieldset class="rounded-lg bg-white p-3 dark:bg-zinc-900">
+                    <div class="flex items-center gap-4 *:gap-x-2">
+                        <flux:checkbox.group variant="pills">
+                            <flux:checkbox checked label="{{ __('DEV mode') }}" />
+                            <flux:checkbox checked label="{{ __('Bounding boxes') }}" />
+                            <flux:checkbox label="{{ __('Coordinates') }}" />
+                        </flux:checkbox.group>
+                        <div class="ml-auto shrink-0">
+                            <flux:button type="button" variant="ghost" size="sm" square
+                                icon="arrow-path" :aria-label="__('Refresh preview')" />
+                        </div>
+                    </div>
+                </flux:fieldset>
+            </div>
+        </figure>
+        <flux:heading class="mt-4" size="sm">{{ __('Start values and saved settings') }}</flux:heading>
+        <flux:text class="mt-2">
+            {{ __('On preview-tools, :dev defaults to true and :coordinates defaults to false; Bounding boxes starts enabled. These are initial visibility values only. Alpine Persist stores the three selections in localStorage under tw-graph-preview-dev, tw-graph-preview-boxes and tw-graph-preview-coordinates. Previously saved values take precedence, including after a reload. All previews using these keys share the preferences in this browser for this site; they are not saved in the database or synchronized to other devices.') }}
+        </flux:text>
+        <flux:heading class="mt-4" size="sm">{{ __('Render diagnostics first, then control their visibility') }}</flux:heading>
+        <flux:text class="mt-2">
+            {{ __('The graph itself must render the diagnostics before the toolbar can reveal them. Documentation previews therefore set :dev="true" and :coordinates="true" on tw-graph. The wrapper can initially hide them. If the graph was rendered with these props disabled, switching the toolbar on cannot create the missing diagnostic elements. The short graph example above omits this documentation wrapper to focus on canvas defaults.') }}
+        </flux:text>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">&lt;x-translation-workbench::ui.tw-graph.preview-tools
+    :dev="true"
+    :coordinates="false"
+&gt;
+    &lt;x-translation-workbench::ui.tw-graph
+        graph-id="preview-tools-example"
+        :dev="true"
+        :coordinates="true"
+    &gt;
+        &lt;x-translation-workbench::ui.tw-graph.strang.trunk
+            id="literature.center.1.paper"
+        /&gt;
+    &lt;/x-translation-workbench::ui.tw-graph&gt;
+&lt;/x-translation-workbench::ui.tw-graph.preview-tools&gt;</x-translation-workbench::ui.tw-graph.code-box>
+        <flux:callout class="mt-4" color="indigo" icon="information-circle">
+            <flux:callout.heading>{{ __('Try it here') }}</flux:callout.heading>
+            <flux:callout.text>
+                {{ __('Enable DEV mode, then toggle Bounding boxes and Coordinates separately. Leave Coordinates enabled and turn DEV mode off and on to see the master switch in action. Switch to another example to check the saved settings. After editing and saving an example, use the refresh icon at the far right to render the current documentation again.') }}
+            </flux:callout.text>
+        </flux:callout>
     </flux:callout>
     <flux:callout
         class="min-w-0"

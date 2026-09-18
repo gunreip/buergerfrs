@@ -156,3 +156,29 @@ it('retains raw output for failed processes without structured pest failures', f
     $html = (new ReflectionMethod(ClearProject::class, 'twGraphTestsReportHtml'))->invoke($command, ['checks' => [$check]]);
     expect($html)->toContain($check['output']);
 });
+
+it('runs every TW Graph test file once without stopping at the first failure', function (): void {
+    $command = new ClearProject;
+    $groups = (new ReflectionMethod(ClearProject::class, 'twGraphTestGroups'))->invoke($command);
+    $paths = array_merge(...array_column($groups, 'paths'));
+    $expected = array_map(fn ($path) => 'tests/Unit/TwGraph/'.basename($path), glob(base_path('tests/Unit/TwGraph/*Test.php')));
+    sort($paths);
+    sort($expected);
+    expect($paths)->toBe($expected);
+    expect(array_column($groups, 'name'))->toContain('Props contracts');
+    $arguments = (new ReflectionMethod(ClearProject::class, 'twGraphPestCommand'))->invoke($command, ['first.php', 'second.php']);
+    expect($arguments)->toBe([PHP_BINARY, 'artisan', 'test', 'first.php', 'second.php']);
+});
+
+it('includes structured Pest error details as well as assertion failures', function (): void {
+    $check = ['status' => 'failed', 'parsed_output' => [
+        'failures' => [['test' => 'first', 'message' => 'bridge-length expected 5rem; rendered 0rem']],
+        'error_details' => [['test' => 'second', 'file' => 'component.blade.php', 'line' => 42, 'message' => 'color expected cyan; rendered amber']],
+    ]];
+    $command = new ClearProject;
+    $details = (new ReflectionMethod(ClearProject::class, 'processFailureDetails'))->invoke($command, $check);
+    expect($details)->toHaveCount(2);
+    expect(implode("\n", $details))->toContain('first', 'second', 'component.blade.php:42', 'bridge-length', 'color');
+    $html = view('translation-workbench::pages.tw-graph.partials.test-failures', compact('check'))->render();
+    expect($html)->toContain('first', 'second', 'component.blade.php:42', 'bridge-length', 'color');
+});

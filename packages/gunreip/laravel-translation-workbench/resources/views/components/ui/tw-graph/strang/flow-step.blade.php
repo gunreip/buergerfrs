@@ -23,6 +23,7 @@
     'attachTo' => null,
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'beforeLength' => null,
+    'beforeColor' => null,
     'labelGap' => null,
     'afterLength' => null,
     'stepLabel' => null,
@@ -39,6 +40,9 @@
 ])
 
 @php
+    // Keep the authoring ID throughout the internal component chain.
+    $previousRootIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::enter($id);
+    try {
     $resolvedGraphId = filled($graphId ?? null) ? (string) $graphId : 'tw-graph';
     $resolvedComponentCounter = max(1, (int) $componentCounter);
     $id = filled($id)
@@ -119,6 +123,7 @@
         'direction' => $direction,
         'anchorStart' => $anchorStart,
         'beforeLength' => $beforeLength ?? '2rem',
+        'beforeColor' => $beforeColor,
         'labelGap' => $labelGap,
         'afterLength' => $afterLength ?? '2rem',
         'stepLabel' => $stepLabel,
@@ -140,3 +145,9 @@
     :segment="$segment"
     :dev="$resolvedDev"
 />
+
+@php
+    } finally {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
+    }
+@endphp

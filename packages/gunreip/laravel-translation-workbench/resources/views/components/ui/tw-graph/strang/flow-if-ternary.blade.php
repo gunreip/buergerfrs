@@ -35,7 +35,12 @@
     'ifStart' => ['text' => ['value if true'], 'width' => 'half'],
     'ifEnd' => ['text' => ['value if false'], 'width' => 'half'],
 ])
+
 @php
+    // Keep the authoring ID throughout the internal component chain.
+    $previousRootIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::enter($id);
+    try {
+@endphp@php
     $ternaryId = filled($id) ? (string) $id : ($graphId ?: 'tw-graph') . '.flow.ternary.' . max(1, (int) $componentCounter);
     $trueInformation = [($side === 'right' ? 'right' : 'left') => [
         'text' => ['True'], 'width' => 'half', 'badgeColor' => 'green',
@@ -77,3 +82,9 @@
     :right-counter-end="$rightCounterEnd"
     :z-index="$zIndex"
 />
+
+@php
+    } finally {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
+    }
+@endphp

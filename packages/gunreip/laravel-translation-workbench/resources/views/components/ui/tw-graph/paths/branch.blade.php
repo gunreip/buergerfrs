@@ -433,7 +433,7 @@
             left: calc(var(--tw-graph-protocol-trunk-x) + {{ $pathEndAnchor['x'] }} + 1rem);
             bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ $pathEndAnchor['y'] }} + 1rem);
         "
-        title="{{ $nodeLabelMismatchTitle }}"
+        title="{{ $nodeLabelMismatchTitle }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
     >
         <flux:badge color="red">
             {{ $nodeLabelMismatchText }}

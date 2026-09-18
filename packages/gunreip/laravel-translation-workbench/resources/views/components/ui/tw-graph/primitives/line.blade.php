@@ -90,7 +90,7 @@
     @if ($resolvedLineJumps !== [])
         data-tw-graph-line-jumps="{{ json_encode($resolvedLineJumps) }}"
     @endif
-    title="{{ $devIdentifier }}"
+    title="{{ $devIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
     data-tw-graph-path="{{ $devIdentifier }}"
     x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
 ></span>

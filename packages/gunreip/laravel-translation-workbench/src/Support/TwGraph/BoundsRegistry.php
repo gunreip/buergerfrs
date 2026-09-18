@@ -225,7 +225,8 @@ final class BoundsRegistry
         return $resolved === [] ? null : max($resolved);
     }
 
-    private static function evaluateRemExpression(string $expression): ?float
+    /** Resolve rem/calc geometry for bounds and components that compare anchor positions. */
+    public static function evaluateRemExpression(string $expression): ?float
     {
         $expression = trim($expression);
 

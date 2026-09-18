@@ -4,16 +4,16 @@
         color="indigo"
         icon="file-text"
     >
-        <flux:callout.heading>{{ __('IF') }}</flux:callout.heading>
+        <flux:callout.heading>{{ __('IF ternär') }}</flux:callout.heading>
         <flux:callout.text>
-            {{ __('A simple IF executes its action only when the condition is true. False follows a plain bypass with no action label in the bridge. Both routes join at the same output and continue with the next step. True and False are informational node labels. These two examples are authored separately for side=left and side=right.') }}
+            {{ __('A ternary expression evaluates a condition and yields exactly one selected value. Only the selected branch is evaluated. True and False are explanatory node labels; the alternatives are embedded in the bridges. Here: $label = $name !== null ? $name : "Unknown". The assignment is a separate step after the common output; it is not part of the ternary expression itself.') }}
         </flux:callout.text>
         @php
             $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
-                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-if-simple',
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.if.flow-if-ternary',
             );
-            $docExample1Code = $docExampleSource->example('flow-if-simple-example-1');
-            $docExample2Code = $docExampleSource->example('flow-if-simple-example-2');
+            $docExample1Code = $docExampleSource->example('flow-if-ternary-example-1');
+            $docExample2Code = $docExampleSource->example('flow-if-ternary-example-2');
         @endphp
         <flux:heading
             class="mt-4"
@@ -28,7 +28,7 @@
         <flux:heading
             class="mt-4"
             size="sm"
-        >{{ __('IF props') }}</flux:heading>
+        >{{ __('IF ternär props') }}</flux:heading>
         <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
             <flux:table container:class="max-h-80">
                 <flux:table.columns sticky>
@@ -44,7 +44,7 @@
                         </flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Stable prefix;
-                            .anchorNode-end is the common continuation.</flux:table.cell>
+                            .anchorNode-end is the selected value output.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">component-counter
@@ -68,13 +68,23 @@
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">if-start
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Action; width=half
-                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">value if true;
+                            width=half</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, width, align,
                             badgeColor, maxLines</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Action displayed in the
-                            True bridge. The plain False bypass follows its total width automatically.
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Value or expression
+                            displayed in the True bridge. Pass code as text, not as an expression to execute.
                         </flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">if-end
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">value if false;
+                            width=half</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, width, align,
+                            badgeColor, maxLines</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Alternative displayed
+                            in the False bridge. This may be a fallback or any other expression.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">side</flux:table.cell>
@@ -82,8 +92,7 @@
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">left, right
                         </flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Destination side for
-                            the action and bypass routes. True/False information labels follow the layout.
-                        </flux:table.cell>
+                            both value routes. True/False information labels follow the layout.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">attach-to
@@ -178,7 +187,7 @@
                             least 1.15rem)</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Base length on each
-                            side of a action label.</flux:table.cell>
+                            side of a value label.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">true-bridge-length
@@ -190,12 +199,21 @@
                             length; total spans are aligned automatically.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">false-bridge-length
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length
+                        </flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">False route bridge
+                            length; total spans are aligned automatically.</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">stem-length
                         </flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">8rem</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Distance between
-                            alternatives; grows when needed for multiline action labels.</flux:table.cell>
+                            alternatives; grows when needed for multiline values.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">node-labels
@@ -221,7 +239,7 @@
                         </flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Color of the
-                            IF route.</flux:table.cell>
+                            expression route.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">dev-mode
@@ -265,16 +283,6 @@
                             common output. Set false to hide this counter.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">if-end
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">text, color,
-                            badgeColor, width, align</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">color sets the entire
-                            False lane; without text the bridge stays continuous. Adding text inserts a label;
-                            badgeColor overrides its color. The canvas controls path-tone.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
                     <flux:table.cell class="whitespace-normal">if-end.stemLength</flux:table.cell>
                     <flux:table.cell class="whitespace-normal">stem-length / 8rem</flux:table.cell>
                     <flux:table.cell class="whitespace-normal">Overrides the incoming stem of the final False route, including a textless bypass. The opposite return stem adjusts with it; label clearance remains a minimum.</flux:table.cell>
@@ -283,7 +291,10 @@
             </flux:table>
         </div>
         <flux:text class="mt-3">
-            {{ __('Continue with attach-to="…decision-1.anchorNode-end" after either executing the action or taking the bypass. The bypass has no action and its bridge spans the same width as the True route.') }}
+            {{ __('if-end: color sets the entire False lane, badgeColor can override the label color. Without text the bridge stays continuous. The canvas controls path-tone.') }}
+        </flux:text>
+        <flux:text class="mt-3">
+            {{ __('Continue with attach-to="…decision-1.anchorNode-end" to use the selected value. The assignment shown here is optional: the expression can also be used in a return statement or a function argument.') }}
         </flux:text>
     </flux:callout>
     <flux:callout
@@ -302,59 +313,59 @@
             >side="left"</flux:heading>
             <div
                 class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                {{-- flow-if-simple-example-1:start --}}
+                {{-- flow-if-ternary-example-1:start --}}
                 <x-translation-workbench::ui.tw-graph
-                    graph-id="idea-to-paper-step-08-flow-if-simple"
+                    graph-id="idea-to-paper-step-08-flow-if-ternary"
                     :dev="true"
                     :coordinates="true"
                     color="zinc"
-                    horizontal-padding="6rem"
+                    horizontal-padding="12rem"
                     min-width="56rem"
                     min-height="34rem"
                 >
 
-                    <x-translation-workbench::ui.tw-graph.strang.flow-if
-                        id="literature.flow.1.simple-if-process.decision-1"
+                    <x-translation-workbench::ui.tw-graph.strang.flow-if-ternary
+                        id="literature.flow.1.ternary-process.decision-1"
                         :anchor-start="['x' => '0rem', 'y' => '3rem']"
-                        color="cyan"
+                        color="amber"
                         before-length="2rem"
                         after-length="2rem"
                         arc-size="2.75rem"
                         side="left"
-                        stem-length="3rem"
-                        :if-end="['color' => 'zinc']"
+                        stem-length="2rem"
                         bridge-length="2rem"
                         true-bridge-length="5rem"
-                        :condition-label="['text' => ['IF reviewApproved?'], 'width' => 'default', 'align' => 'center']"
+                        false-bridge-length="3rem"
+                        :condition-label="['text' => ['$name !== null?'], 'width' => 'default', 'align' => 'center']"
                         :if-start="[
-                            'text' => ['Publish paper'],
+                            'text' => ['$name'],
                             'width' => 'default',
                             'align' => 'center',
                             'badgeColor' => 'green',
                             'color' => 'green',
                         ]"
                         :if-end="[
-                            // 'text' => ['Do not publish'],
-                            // 'width' => 'default',
-                            // 'align' => 'center',
-                            // 'badgeColor' => 'red',
-                            'color' => 'red',
+                            'text' => ['\'Unknown\''],
+                            'width' => 'half',
+                            'align' => 'center',
+                            'badgeColor' => 'rose',
+                            'color' => 'rose',
                         ]"
                     />
                     <x-translation-workbench::ui.tw-graph.strang.flow-step
-                        id="literature.flow.1.simple-if-process.continue"
-                        attach-to="literature.flow.1.simple-if-process.decision-1.anchorNode-end"
+                        id="literature.flow.1.ternary-process.assignment"
+                        attach-to="literature.flow.1.ternary-process.decision-1.anchorNode-end"
                         before-length="3rem"
                         after-length="3rem"
                         color="zinc"
                         :step-label="[
-                            'text' => ['Continue process'],
+                            'text' => ['$label = selected value'],
                             'width' => 'halfLong',
                             'align' => 'center',
                         ]"
                     />
                 </x-translation-workbench::ui.tw-graph>
-                {{-- flow-if-simple-example-1:end --}}
+                {{-- flow-if-ternary-example-1:end --}}
             </div>
             <flux:heading
                 class="mt-4"
@@ -362,19 +373,19 @@
             >side="right"</flux:heading>
             <div
                 class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                {{-- flow-if-simple-example-2:start --}}
+                {{-- flow-if-ternary-example-2:start --}}
                 <x-translation-workbench::ui.tw-graph
-                    graph-id="idea-to-paper-step-08-flow-if-simple-right"
+                    graph-id="idea-to-paper-step-08-flow-if-ternary-right"
                     :dev="true"
                     :coordinates="true"
                     color="zinc"
-                    horizontal-padding="6rem"
+                    horizontal-padding="12rem"
                     min-width="56rem"
                     min-height="34rem"
                 >
 
-                    <x-translation-workbench::ui.tw-graph.strang.flow-if
-                        id="literature.flow.1.simple-if-process-right.decision-1"
+                    <x-translation-workbench::ui.tw-graph.strang.flow-if-ternary
+                        id="literature.flow.1.ternary-process-right.decision-1"
                         :anchor-start="['x' => '0rem', 'y' => '3rem']"
                         color="cyan"
                         before-length="2rem"
@@ -382,38 +393,44 @@
                         arc-size="2.75rem"
                         side="right"
                         stem-length="4rem"
-                        :if-end="['color' => 'zinc']"
                         bridge-length="2rem"
                         true-bridge-length="5rem"
+                        false-bridge-length="3rem"
                         :condition-label="[
-                            'text' => ['IF reviewApproved?'],
+                            'text' => ['$name !== null?'],
                             'width' => 'default',
                             'align' => 'center',
                         ]"
                         :if-start="[
-                            'text' => ['Publish paper'],
+                            'text' => ['$name'],
                             'width' => 'half',
                             'align' => 'center',
                             'badgeColor' => 'green',
                         ]"
+                        :if-end="[
+                            'text' => ['\'Unknown\''],
+                            'width' => 'half',
+                            'align' => 'center',
+                            'badgeColor' => 'rose',
+                        ]"
                     />
                     <x-translation-workbench::ui.tw-graph.strang.flow-step
-                        id="literature.flow.1.simple-if-process-right.continue"
-                        attach-to="literature.flow.1.simple-if-process-right.decision-1.anchorNode-end"
+                        id="literature.flow.1.ternary-process-right.assignment"
+                        attach-to="literature.flow.1.ternary-process-right.decision-1.anchorNode-end"
                         before-length="2rem"
                         after-length="2rem"
                         color="zinc"
                         :step-label="[
-                            'text' => ['Continue process'],
+                            'text' => ['$label = selected value'],
                             'width' => 'halfLong',
                             'align' => 'center',
                         ]"
                     />
                 </x-translation-workbench::ui.tw-graph>
-                {{-- flow-if-simple-example-2:end --}}
+                {{-- flow-if-ternary-example-2:end --}}
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
-        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/flow-if-simple.blade.php
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/if/flow-if-ternary.blade.php
         </flux:field>
     </flux:callout>
 </section>

@@ -10,7 +10,7 @@
         </flux:callout.text>
         @php
             $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
-                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-decision',
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.if.flow-decision',
             );
             $docExample1Code = $docExampleSource->example('flow-decision-example-1');
         @endphp
@@ -342,7 +342,7 @@
                 {{-- flow-decision-example-1:end --}}
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
-        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/flow-decision.blade.php
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/if/flow-decision.blade.php
         </flux:field>
     </flux:callout>
 </section>

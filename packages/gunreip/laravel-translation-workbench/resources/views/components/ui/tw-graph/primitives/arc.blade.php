@@ -101,7 +101,7 @@
         '--tw-graph-protocol-local-to-dark-surface-color-rgb: ' . $toDarkSurfaceColorRgb,
         '--tw-graph-protocol-z-index: ' . $zIndex => filled($zIndex),
     ]) }}
-    title="{{ $devIdentifier }}"
+    title="{{ $devIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
     data-tw-graph-path="{{ $devIdentifier }}"
     x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
 ></span>
@@ -126,7 +126,7 @@
                 --tw-graph-protocol-z-index: {{ $zIndex }};
             @endif
         "
-        title="{{ $devNodeStartIdentifier }}"
+        title="{{ $devNodeStartIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
         data-tw-graph-path="{{ $devNodeStartIdentifier }}"
         x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
     ></span>
@@ -152,7 +152,7 @@
                 --tw-graph-protocol-z-index: {{ $zIndex }};
             @endif
         "
-        title="{{ $devNodeEndIdentifier }}"
+        title="{{ $devNodeEndIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
         data-tw-graph-path="{{ $devNodeEndIdentifier }}"
         x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
     ></span>

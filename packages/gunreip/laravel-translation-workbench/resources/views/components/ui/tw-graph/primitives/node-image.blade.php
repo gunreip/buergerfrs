@@ -43,7 +43,7 @@
             '--tw-graph-protocol-local-color-rgb: ' . $colorRgb,
             '--tw-graph-protocol-z-index: ' . $zIndex => filled($zIndex),
         ]) }}
-        title="{{ $devIdentifier }}"
+        title="{{ $devIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
         data-tw-graph-path="{{ $devIdentifier }}"
         x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
     >

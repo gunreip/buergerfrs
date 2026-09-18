@@ -49,6 +49,8 @@
     'bridgeLength' => null,
     'bridgeLabel' => null,
     'bridgeOutLength' => null,
+    'bridgeInJoinLength' => null,
+    'devCounterJoin' => 'J',
     'lineJumps' => [],
     'extension' => null,
     'direction' => 'bottom-top',
@@ -434,13 +436,14 @@
 @foreach ($segments as $segment)
     @if ($segment['component'] === 'arc')
         <x-translation-workbench::ui.tw-graph.segments.arc
-            :segment="$segment['segment']"
+            :segment="$segment['segment']['id'] === $id . '.bridge1' ? array_replace($segment['segment'], ['joinLength' => $bridgeInJoinLength, 'devCounterJoin' => $devCounterJoin]) : $segment['segment']"
             :dev="$resolvedDev"
         />
     @elseif ($segment['segment']['id'] === $id . '.bridge1' && $bridgeLabel !== null)
         <x-translation-workbench::ui.tw-graph.segments.label-bridge
             :id="$id . '.bridge1'"
             :label="$bridgeLabel"
+            :bridge-in-join-length="$bridgeInJoinLength" :dev-counter-join="$devCounterJoin"
             :line-jumps="data_get($bridgeLabel, 'lineJumps', $lineJumps)"
             :anchor-start="$arcInEnd"
             :direction="$bridgeDirection"
@@ -453,7 +456,7 @@
         />
     @else
         <x-translation-workbench::ui.tw-graph.segments.path
-            :segment="$segment['segment']"
+            :segment="$segment['segment']['id'] === $id . '.bridge1' ? array_replace($segment['segment'], ['joinLength' => $bridgeInJoinLength, 'devCounterJoin' => $devCounterJoin]) : $segment['segment']"
             :dev="$resolvedDev"
         />
     @endif

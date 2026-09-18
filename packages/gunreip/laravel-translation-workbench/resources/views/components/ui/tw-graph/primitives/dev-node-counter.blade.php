@@ -56,7 +56,7 @@
             '--tw-graph-protocol-dev-node-counter-offset-x: ' . ($resolvedOffsetX ?: '0rem'),
             '--tw-graph-protocol-dev-node-counter-offset-y: ' . ($resolvedOffsetY ?: '0rem'),
         ]) }}
-        title="{{ $devIdentifier }}"
+        title="{{ $devIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
         data-tw-graph-path="{{ $devIdentifier }}"
         x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
     >

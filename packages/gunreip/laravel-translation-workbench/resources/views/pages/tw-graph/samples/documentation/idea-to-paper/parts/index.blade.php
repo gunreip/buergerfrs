@@ -22,6 +22,7 @@
         <flux:tab name="idea-to-paper-parts-end">{{ __('End') }}</flux:tab>
         <flux:tab name="idea-to-paper-parts-sideways">{{ __('Sideways') }}</flux:tab>
         <flux:tab name="idea-to-paper-parts-chain">{{ __('Chain') }}</flux:tab>
+        <flux:tab name="idea-to-paper-parts-fusion">{{ __('Fusion') }}</flux:tab>
     </flux:tabs>
     <flux:tab.panel name="idea-to-paper-parts-start">
         @if (!isset($documentationTabs) || $documentationTabs['parts_index'] === 'idea-to-paper-parts-start')
@@ -48,6 +49,13 @@
         @if (!isset($documentationTabs) || $documentationTabs['parts_index'] === 'idea-to-paper-parts-chain')
             <div wire:key="documentation-idea-to-paper-parts-chain">
                 @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.parts.parts-chain')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="idea-to-paper-parts-fusion">
+        @if (!isset($documentationTabs) || $documentationTabs['parts_index'] === 'idea-to-paper-parts-fusion')
+            <div wire:key="documentation-idea-to-paper-parts-fusion">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.parts.parts-fusion')
             </div>
         @endif
     </flux:tab.panel>

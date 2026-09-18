@@ -99,8 +99,8 @@ it('renders branch stem joint arrows when forced stem anchors have no labels', f
     BLADE);
 
     expect($html)
-        ->toMatch('/class="[^"]*tw-graph-protocol-primitive-joint-arrow-left[^"]*"[^>]*title="strang\.branch\.left\.1\.arc-east-north-1\.end\.joint-arrow"/')
-        ->toMatch('/class="[^"]*tw-graph-protocol-primitive-joint-arrow-top[^"]*"[^>]*title="strang\.branch\.left\.1\.arc-south-west-2\.end\.joint-arrow"/')
+        ->toMatch('/class="[^"]*tw-graph-protocol-primitive-joint-arrow-left[^"]*"[^>]*data-tw-graph-path="strang\.branch\.left\.1\.arc-east-north-1\.end\.joint-arrow"/')
+        ->toMatch('/class="[^"]*tw-graph-protocol-primitive-joint-arrow-top[^"]*"[^>]*data-tw-graph-path="strang\.branch\.left\.1\.arc-south-west-2\.end\.joint-arrow"/')
         ->toContain('strang.branch.left.1.bridge-1.end.joint-arrow')
         ->toContain('strang.branch.left.1.stem-1.end.joint-arrow')
         ->not->toContain('strang.branch.left.1.stem-1.label.left')
@@ -508,7 +508,7 @@ it('derives branch continuation counters from rendered stems without explicit sa
 
     expect($html)
         ->toContain('strang.branch.right.1.stem-2.anchorNode-end')
-        ->toMatch('/title="strang\.branch\.right\.1\.stem-2\.anchorNode-end"[\s\S]*?>\s*5\s*<\/div>/')
+        ->toMatch('/data-tw-graph-path="strang\.branch\.right\.1\.stem-2\.anchorNode-end"[\s\S]*?>\s*5\s*<\/div>/')
         ->not->toMatch('/>\s*E\s*<\/div>/');
 });
 

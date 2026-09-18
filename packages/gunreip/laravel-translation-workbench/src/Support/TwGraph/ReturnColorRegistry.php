@@ -17,7 +17,11 @@ final class ReturnColorRegistry
 
     public static function connect(string $graph, string $target, string $color): void
     {
-        self::$connections[$graph][ElementIdentifier::normalize($target)] = $color;
+        $target = ElementIdentifier::normalize($target);
+        self::$connections[$graph][$target] = $color;
+        // Parent returns may be authored immediately after their nested return.
+        // Publish metadata now; rendered rail styles are still resolved at graph end.
+        self::updateOutputs($graph, self::$rails[$graph][$target]['outputs'] ?? [], $color);
     }
 
     public static function forgetGraph(string $graph): void
@@ -37,17 +41,22 @@ final class ReturnColorRegistry
             foreach ($rail['paths'] as $path) {
                 $colors[DevIdentifier::label($path)] = $color;
             }
-            foreach ($rail['outputs'] as $output) {
-                $anchor = AnchorRegistry::get($graph, $output);
-                if ($anchor !== null) {
-                    $anchor['returnColor'] = $color;
-                    AnchorRegistry::put($graph, $output, $anchor);
-                }
-            }
+            self::updateOutputs($graph, $rail['outputs'], $color);
         }
         self::forgetGraph($graph);
 
         return $colors;
+    }
+
+    private static function updateOutputs(string $graph, array $outputs, string $color): void
+    {
+        foreach ($outputs as $output) {
+            $anchor = AnchorRegistry::get($graph, $output);
+            if ($anchor !== null) {
+                $anchor['returnColor'] = $color;
+                AnchorRegistry::put($graph, $output, $anchor);
+            }
+        }
     }
 
     public static function selectorValue(string $value): string

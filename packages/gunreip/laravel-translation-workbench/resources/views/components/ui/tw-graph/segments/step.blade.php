@@ -34,7 +34,7 @@
     Optional fields:
     stepLabel{text, side, offset, badgeColor, long}
     stepCaps, capLength
-    anchorStart.color: incoming stem color; falls back to the step color
+    beforeColor: explicit incoming stem color; defaults to the step color
 --}}
 
 @props([
@@ -120,9 +120,9 @@
 
     $beforeSegment = array_replace($stepSegment, [
         'id' => data_get($stepSegment, 'id', 'segment.step') . '.stem.before',
-        // The incoming connection belongs to the preceding step until this label.
+        // Incoming color is an explicit composition choice, not anchor inheritance.
         'color' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
-            data_get($stepSegment, 'anchorStart.color'),
+            data_get($stepSegment, 'beforeColor'),
             data_get($stepSegment, 'color'),
             'zinc',
         ),

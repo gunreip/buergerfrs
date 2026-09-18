@@ -23,6 +23,9 @@
     Required segment fields:
     id, direction, length, anchorStart{x,y}, anchorEnd{x,y}
 
+    joinLength: optional distance from anchorStart for a path-owned joining Dot.
+    Registers <id>.anchorNode-join; devCounterJoin defaults to J.
+
     Node / label fields:
     nodeStart and nodeEnd control anchor presence, labels, and DEV counters.
     nodeStartDot/nodeEndDot may hide only the visual dot while keeping the
@@ -40,6 +43,7 @@
     counters on one point.
 --}}
 
+@aware(['graphId' => null])
 @props([
     'segment' => [],
     'lineJumps' => [],
@@ -261,6 +265,32 @@
 	    :z-index="$zIndex"
 	/>
 
+
+    @if (data_get($segment, 'joinLength') !== null)
+        @php
+            $joinLength = (string) $segment['joinLength'];
+            $joinAxis = in_array($direction, ['left-right', 'right-left'], true) ? 'x' : 'y';
+            $joinSign = in_array($direction, ['right-left', 'top-bottom'], true) ? ' - ' : ' + ';
+            $joinAnchor = $segment['anchorStart'];
+            $joinAnchor[$joinAxis] = 'calc(' . $joinAnchor[$joinAxis] . $joinSign . $joinLength . ')';
+            $joinDistance = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($joinLength);
+            $pathDistance = abs(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression(
+                'calc(' . $segment['anchorEnd'][$joinAxis] . ' - ' . $segment['anchorStart'][$joinAxis] . ')',
+            ));
+            if ($joinDistance === null || $joinDistance < 0 || $joinDistance > $pathDistance) {
+                throw new \InvalidArgumentException($id . ': joinLength must lie within the path. Increase the incoming bridge length or reduce the join offset.');
+            }
+            \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($graphId ?: 'tw-graph', $id . '.anchorNode-join', $joinAnchor);
+        @endphp
+        <x-translation-workbench::ui.tw-graph.primitives.node
+            :id="$id . '.node.join'" :anchor-x="$joinAnchor['x']" :anchor-y="$joinAnchor['y']"
+            :color="$color" :tone="$tone" :z-index="$zIndex === null ? null : $zIndex + 1"
+        />
+        <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
+            :id="$id . '.node.join.dev-counter'" :anchor-x="$joinAnchor['x']" :anchor-y="$joinAnchor['y']"
+            :counter="data_get($segment, 'devCounterJoin', 'J')" :dev="$devMode" :color="$color" placement="top"
+        />
+    @endif
 
     {{-- Independent nodes sit above adjacent paths, outside the line's stacking context. --}}
     @foreach (['start' => $nodeStartDot, 'end' => $nodeEndDot] as $nodePosition => $showDot)

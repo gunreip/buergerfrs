@@ -41,7 +41,7 @@
         '--tw-graph-protocol-connector-anchor-gap: ' . $gap => filled($gap),
         '--tw-graph-protocol-local-color-rgb: ' . $colorRgb,
     ]) }}
-    title="{{ $devIdentifier }}"
+    title="{{ $devIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
     data-tw-graph-path="{{ $devIdentifier }}"
     x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
 ></span>

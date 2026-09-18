@@ -10,7 +10,7 @@
         </flux:callout.text>
         @php
             $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
-                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-if-elseif',
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.if.flow-if-elseif',
             );
             $docExample1Code = $docExampleSource->example('flow-if-elseif-example-1');
             $docExample2Code = $docExampleSource->example('flow-if-elseif-example-2');
@@ -381,7 +381,7 @@
                 {{-- flow-if-elseif-example-2:end --}}
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
-        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/flow-if-elseif.blade.php
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/if/flow-if-elseif.blade.php
         </flux:field>
     </flux:callout>
 </section>

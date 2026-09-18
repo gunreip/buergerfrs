@@ -48,6 +48,9 @@
 ])
 
 @php
+    // Keep the authoring ID throughout the internal component chain.
+    $previousRootIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::enter($id);
+    try {
     $resolvedGraphId = filled($graphId ?? null) ? (string) $graphId : 'tw-graph';
     $id = filled($id) ? (string) $id : 'strang.if-else-endif';
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
@@ -168,5 +171,11 @@
                 $anchor,
             );
         }
+    }
+@endphp
+
+@php
+    } finally {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
     }
 @endphp

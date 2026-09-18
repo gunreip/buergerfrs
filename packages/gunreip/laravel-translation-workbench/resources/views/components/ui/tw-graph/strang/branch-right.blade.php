@@ -67,6 +67,9 @@
 ])
 
 @php
+    // Keep the authoring ID throughout the internal component chain.
+    $previousRootIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::enter($id);
+    try {
     $resolvedGraphId = filled($graphId ?? null) ? (string) $graphId : 'tw-graph';
     $resolvedComponentCounter = max(1, (int) $componentCounter);
     $id = filled($id)
@@ -758,7 +761,7 @@
             left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($anchorStart, 'x', '0rem') }});
             bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($anchorStart, 'y', '0rem') }});
         "
-        title="{{ \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id) }} | missing attach-to: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize($attachTo) }}"
+        title="{{ \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id) }} | missing attach-to: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize($attachTo) }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
     >
         <flux:badge color="red">
             {{ __('Missing anchor') }}: {{ $attachTo }}
@@ -774,7 +777,7 @@
             bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($fallbackWarning, 'anchor.y', '0rem') }});
             transform: translate(0.75rem, -0.75rem);
         "
-        title="Fallback anchor used | component: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label(data_get($fallbackWarning, 'component')) }} | requested: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize(data_get($fallbackWarning, 'requested')) }} | resolved: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize(data_get($fallbackWarning, 'resolved')) }}"
+        title="Fallback anchor used | component: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label(data_get($fallbackWarning, 'component')) }} | requested: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize(data_get($fallbackWarning, 'requested')) }} | resolved: {{ \Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier::normalize(data_get($fallbackWarning, 'resolved')) }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
     >
         <flux:badge color="red">
             {{ __('Fallback anchor used') }}
@@ -863,3 +866,9 @@
         :dev="$resolvedDev"
     />
 @endforeach
+
+@php
+    } finally {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
+    }
+@endphp

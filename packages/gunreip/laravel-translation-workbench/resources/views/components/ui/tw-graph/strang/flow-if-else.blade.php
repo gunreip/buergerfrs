@@ -56,6 +56,9 @@
 ])
 
 @php
+    // Keep the authoring ID throughout the internal component chain.
+    $previousRootIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::enter($id);
+    try {
     $resolvedGraphId = filled($graphId ?? null) ? (string) $graphId : 'tw-graph';
     $resolvedComponentCounter = max(1, (int) $componentCounter);
     $id = filled($id)
@@ -96,6 +99,10 @@
         $stemLength,
         '8rem',
     );
+    $falseOpen = ! \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($ifEnd, 'return'), true);
+    $falseReturnOffset = $falseOpen ? \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($ifEnd, 'returnOffset'), null, '12rem') : '0rem';
+    $falseReturnLength = $falseOpen ? \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($ifEnd, 'returnLength'), null, '8rem') : '0rem';
+    $falseLineJumps = data_get($ifEnd, 'lineJumps', []);
     $normalizedFalseLabel = \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($ifEnd, 'center', $falseColor);
     $falseBypass = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($falseBypass) || $normalizedFalseLabel === null;
     $ifEnd = $normalizedFalseLabel ?? ['text' => [], 'width' => 'half'];
@@ -125,6 +132,7 @@
     :direction="$direction"
     :step-label="$conditionLabel"
     :before-length="$beforeLength"
+    :before-color="data_get($anchorStart, 'color')"
     :label-gap="$labelGap"
     :after-length="$afterLength"
     :step-caps="$stepCaps"
@@ -165,10 +173,11 @@
     :line-jumps="data_get($ifStart, 'stemLineJumps', [])"
     :gradient="false"
     :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $id . '.true.anchorNode-end')"
-    :length="$resolvedStemLength"
+    :length="$falseOpen ? 'calc(' . $resolvedStemLength . ' + ' . $falseReturnLength . ')' : $resolvedStemLength"
     :direction="$direction"
     :color="\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($returnColor, $trueColor, 'zinc')"
-    :node-end="false"
+    :node-end="$falseOpen && $nodeEnd"
+    :joint-arrow-end="false"
     :dev-counter-end="false"
     :z-index="$zIndex"
     :dev-mode="$resolvedDev"
@@ -196,7 +205,9 @@
     :side="$routeSide"
     :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $id . '.false.stem.anchorNode-end')"
     :arc-radius="$arcRadius ?? $arcSize"
-    :bridge-length="$falseBypass ? $sharedSpan : $alignedFalseLength"
+    :bridge-length="$falseBypass ? ($falseOpen ? 'calc(' . $sharedSpan . ' + ' . $falseReturnOffset . ')' : $sharedSpan) : $alignedFalseLength"
+    :bridge-out-length="$falseOpen && !$falseBypass ? 'calc(' . $alignedFalseLength . ' + ' . $falseReturnOffset . ')' : null"
+    :line-jumps="$falseLineJumps"
     :bridge-label="$falseBypass ? null : $ifEnd"
     :direction="$direction"
     :color="$falseColor"
@@ -211,14 +222,26 @@
 
 @php
     $sharedEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $id . '.false.anchorNode-end');
+    if ($falseOpen) {
+        $sharedEnd['x'] = 'calc(' . $sharedEnd['x'] . ($side === 'right' ? ' - ' : ' + ') . $falseReturnOffset . ')';
+        $sharedEnd['y'] = 'calc(' . $sharedEnd['y'] . ($direction === 'top-bottom' ? ' - ' : ' + ') . $falseReturnLength . ')';
+    }
     // Preserve the owning False node color; expose the shared True rail separately.
     $sharedEnd['returnColor'] = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($returnColor, $trueColor, 'zinc');
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, $id . '.anchorNode-start', $decisionBranchAnchor);
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, $id . '.anchorNode-end', $sharedEnd);
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, $id . '.true.anchorNode-return', $sharedEnd);
     \Gunreip\TranslationWorkbench\Support\TwGraph\ReturnColorRegistry::rail($resolvedGraphId, $id . '.true.anchorNode-return', [], [$id . '.anchorNode-end']);
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, $id . '.false.anchorNode-return', $sharedEnd);
+    \Gunreip\TranslationWorkbench\Support\TwGraph\ReturnColorRegistry::rail($resolvedGraphId, $id . '.false.anchorNode-return', [], [$id . '.anchorNode-end']);
     // Former public output IDs remain attachable and now represent the common continuation.
     foreach (['anchorNode-true', 'anchorNode-false', 'left.anchorNode-end', 'right.anchorNode-end'] as $alias) {
         \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, $id . '.' . $alias, $sharedEnd);
+    }
+@endphp
+
+@php
+    } finally {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
     }
 @endphp

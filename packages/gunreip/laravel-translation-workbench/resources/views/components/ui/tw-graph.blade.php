@@ -82,6 +82,7 @@
 	    @if ($slot->isNotEmpty())
 	        <div class="tw-graph-protocol-canvas tw-graph-protocol-canvas-slot content-center">
 	            {{ $slot }}
+                <x-translation-workbench::ui.tw-graph.line-jump-templates />
                 <x-translation-workbench::ui.tw-graph.return-colors :graph-id="$context['graphId']" />
                 @if ($dev && $showCoordinates)
                     <x-translation-workbench::ui.tw-graph.canvas-dimensions

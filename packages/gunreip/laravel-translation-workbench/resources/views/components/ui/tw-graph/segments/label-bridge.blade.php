@@ -16,6 +16,8 @@
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'direction' => 'left-right',
     'bridgeLength' => null,
+    'bridgeInJoinLength' => null,
+    'devCounterJoin' => 'J',
     'lineJumps' => [],
     'labelWidth' => null,
     'geometry' => null,
@@ -53,6 +55,8 @@
 
 <x-translation-workbench::ui.tw-graph.segments.path :segment="[
     'id' => $id . '.bridge-in',
+    'joinLength' => $bridgeInJoinLength,
+    'devCounterJoin' => $devCounterJoin,
     'direction' => $direction,
     'length' => $resolvedBridgeLength,
     'anchorStart' => $anchorStart,

@@ -7,6 +7,7 @@
         <flux:tab name="flow-step">{{ __('Flow step') }}</flux:tab>
         <flux:tab name="flow-branch-steps">{{ __('Flow branch steps') }}</flux:tab>
         <flux:tab name="flow-if">{{ __('Flow IF') }}</flux:tab>
+        <flux:tab name="flow-switch-case">{{ __('Flow SWITCH/CASE') }}</flux:tab>
     </flux:tabs>
     <flux:tab.panel name="flow-start">
         @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-start')
@@ -32,7 +33,14 @@
     <flux:tab.panel name="flow-if">
         @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-if')
             <div wire:key="documentation-flow-if">
-                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-if')
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.if.index')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="flow-switch-case">
+        @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-switch-case')
+            <div wire:key="documentation-flow-switch-case">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.switch-case.index')
             </div>
         @endif
     </flux:tab.panel>

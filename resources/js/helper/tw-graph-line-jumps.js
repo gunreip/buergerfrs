@@ -42,21 +42,47 @@ export function jumpDrawing(owner, jumps) {
     const width = owner.width + (horizontal ? 0 : padding * 2);
     const height = owner.height + (horizontal ? padding * 2 : 0);
     const center = padding + owner.thickness / 2;
-    const paths = jumps.map(({ position: p, radius: r, side }) => horizontal
-        ? `M ${p - r} ${center} A ${r} ${r} 0 0 ${side === 'top' ? 1 : 0} ${p + r} ${center}`
-        : `M ${center} ${p - r} A ${r} ${r} 0 0 ${side === 'right' ? 1 : 0} ${center} ${p + r}`);
+    const placements = jumps.map(({ position, radius, side }) => ({
+        side, radius,
+        x: (horizontal ? position : center) - radius,
+        y: (horizontal ? center : position) - radius,
+    }));
     const stops = ['#000 0px'];
     for (const { position, radius } of jumps) {
         stops.push(`#000 ${position - radius}px`, `transparent ${position - radius}px`, `transparent ${position + radius}px`, `#000 ${position + radius}px`);
     }
     stops.push('#000 100%');
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><path d="${paths.join(' ')}" fill="none" stroke="white" stroke-width="${owner.thickness}" stroke-linecap="round"/></svg>`;
     return {
-        width, height, padding,
+        width, height, padding, placements,
         zIndex: Math.max(owner.zIndex ?? 0, ...jumps.map((jump) => jump.targetZIndex ?? 0)) + 1,
         lineMask: `linear-gradient(to ${horizontal ? 'right' : 'bottom'}, ${stops.join(', ')})`,
-        arcMask: `url("data:image/svg+xml,${encodeURIComponent(svg)}")`,
+
     };
+}
+
+// Shapes and round caps come exclusively from the Blade primitive, not from JS paths.
+function primitiveMask(graph, drawing, thickness) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', drawing.width);
+    svg.setAttribute('height', drawing.height);
+    svg.setAttribute('viewBox', `0 0 ${drawing.width} ${drawing.height}`);
+    for (const { side, radius, x, y } of drawing.placements) {
+        const template = graph.querySelector(`[data-tw-graph-line-jump-template="${side}"]`);
+        if (!template) return null;
+        const primitive = template.content.querySelector('svg').cloneNode(true);
+        for (const attr of ['style', 'class', 'data-tw-graph-path']) primitive.removeAttribute(attr);
+        primitive.setAttribute('x', x);
+        primitive.setAttribute('y', y);
+        primitive.setAttribute('width', radius * 2);
+        primitive.setAttribute('height', radius * 2);
+        const path = primitive.querySelector('path');
+        path.removeAttribute('style');
+        path.removeAttribute('vector-effect');
+        path.setAttribute('stroke', 'white');
+        path.setAttribute('stroke-width', thickness / radius);
+        svg.append(primitive);
+    }
+    return `url("data:image/svg+xml,${encodeURIComponent(new XMLSerializer().serializeToString(svg))}")`;
 }
 
 export function setupTwGraphLineJumps() {
@@ -126,26 +152,31 @@ export function setupTwGraphLineJumps() {
             probe.remove();
             if (result.jumps.length) {
                 const drawing = jumpDrawing(owner, result.jumps);
-                line.style.maskImage = drawing.lineMask;
-                // Keep existing endpoint dots/caps outside the line's thin border box visible.
-                line.style.maskClip = 'no-clip';
-                const overlay = document.createElement('span');
-                overlay.dataset.twGraphJumpGenerated = '';
-                overlay.dataset.twGraphLineJumpFor = line.dataset.twGraphPath;
-                overlay.setAttribute('aria-hidden', 'true');
-                // Retain the original line paint, including path tone, gradients and deferred return colors.
-                Object.assign(overlay.style, {
-                    position: 'absolute', pointerEvents: 'none',
-                    left: `calc(${css.left} - ${horizontal ? 0 : drawing.padding}px)`,
-                    top: `calc(${css.top} - ${horizontal ? drawing.padding : 0}px)`,
-                    width: `${drawing.width}px`, height: `${drawing.height}px`,
-                    backgroundColor: css.backgroundColor, backgroundImage: css.backgroundImage,
-                    backgroundSize: css.backgroundSize, backgroundPosition: css.backgroundPosition,
-                    backgroundRepeat: css.backgroundRepeat, opacity: css.opacity,
-                    zIndex: drawing.zIndex, maskImage: drawing.arcMask, maskRepeat: 'no-repeat',
-                });
-                line.after(overlay);
-                state.overlay = overlay;
+                const arcMask = primitiveMask(graph, drawing, owner.thickness);
+                if (!arcMask) {
+                    result.errors.push({ index: 0, over: '', reason: 'Line-jump drawing template is missing.' });
+                } else {
+                    line.style.maskImage = drawing.lineMask;
+                    // Keep existing endpoint dots/caps outside the line's thin border box visible.
+                    line.style.maskClip = 'no-clip';
+                    const overlay = document.createElement('span');
+                    overlay.dataset.twGraphJumpGenerated = '';
+                    overlay.dataset.twGraphLineJumpFor = line.dataset.twGraphPath;
+                    overlay.setAttribute('aria-hidden', 'true');
+                    // Retain the original line paint, including path tone, gradients and deferred return colors.
+                    Object.assign(overlay.style, {
+                        position: 'absolute', pointerEvents: 'none',
+                        left: `calc(${css.left} - ${horizontal ? 0 : drawing.padding}px)`,
+                        top: `calc(${css.top} - ${horizontal ? drawing.padding : 0}px)`,
+                        width: `${drawing.width}px`, height: `${drawing.height}px`,
+                        backgroundColor: css.backgroundColor, backgroundImage: css.backgroundImage,
+                        backgroundSize: css.backgroundSize, backgroundPosition: css.backgroundPosition,
+                        backgroundRepeat: css.backgroundRepeat, opacity: css.opacity,
+                        zIndex: drawing.zIndex, maskImage: arcMask, maskRepeat: 'no-repeat',
+                    });
+                    line.after(overlay);
+                    state.overlay = overlay;
+                }
             }
             if (result.errors.length && graph.dataset.twGraphDev === 'true') {
                 const badge = document.createElement('span');

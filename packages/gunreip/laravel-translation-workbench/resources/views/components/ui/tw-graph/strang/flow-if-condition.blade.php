@@ -45,6 +45,9 @@
 ])
 
 @php
+    // Keep the authoring ID throughout the internal component chain.
+    $previousRootIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::enter($id);
+    try {
     $isRight = $side === 'right';
     $resolvedGraphId = filled($graphId ?? null) ? (string) $graphId : 'tw-graph';
     $id = filled($id) ? (string) $id : 'strang.flow.if-condition';
@@ -293,3 +296,9 @@
         'dev' => $resolvedDev,
     ]" />
 @endif
+
+@php
+    } finally {
+        \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
+    }
+@endphp

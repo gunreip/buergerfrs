@@ -46,7 +46,7 @@
 @if ($lines->isNotEmpty())
     <span
         data-tw-graph-path="{{ $devIdentifier }}"
-        title="{{ $devIdentifier }}"
+        title="{{ $devIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
         {{ $attributes->class([
                 'tw-graph-protocol-primitive',
                 'tw-graph-protocol-primitive-text',
@@ -69,7 +69,7 @@
                 data-tw-graph-dev-box="{{ $id . '.dev-box' }}"
                 class="tw-graph-protocol-dev-only pointer-events-none absolute rounded border border-dashed"
                 style="inset: -0.35rem; border-color: rgb(14 165 233 / 0.6);"
-                title="{{ $devIdentifier }}"
+                title="{{ $devIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
                 aria-hidden="true"
             ></span>
         @endif

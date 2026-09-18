@@ -467,7 +467,7 @@
             left: calc(var(--tw-graph-protocol-trunk-x) + {{ $arcOutEnd['x'] }});
             bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ $arcOutEnd['y'] }} + 1rem);
         "
-        title="{{ $nodeLabelMismatchTitle }}"
+        title="{{ $nodeLabelMismatchTitle }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
     >
         <flux:badge color="red">
             {{ $nodeLabelMismatchText }}
@@ -482,7 +482,7 @@
             left: calc(var(--tw-graph-protocol-trunk-x) + {{ $arcOutEnd['x'] }});
             bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ $arcOutEnd['y'] }} + 3rem);
         "
-        title="{{ $nodeLabelEndOverrideText }}"
+        title="{{ $nodeLabelEndOverrideText }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
     >
         <flux:badge color="amber">
             {{ $nodeLabelEndOverrideText }}
