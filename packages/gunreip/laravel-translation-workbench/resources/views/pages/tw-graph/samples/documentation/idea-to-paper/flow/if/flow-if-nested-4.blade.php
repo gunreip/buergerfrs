@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('IF nested 4') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-nested-4" />
         <flux:callout.text>
             {{ __('The amber inner IF belongs to the last outer ELSEIF (deferred). It is entered only when the earlier conditions are false and the final ELSEIF is true. Earlier successful actions and the final fallback bypass the inner block. Its return joins the common outer end directly, with no subsequent ELSEIF action.') }}
         </flux:callout.text>

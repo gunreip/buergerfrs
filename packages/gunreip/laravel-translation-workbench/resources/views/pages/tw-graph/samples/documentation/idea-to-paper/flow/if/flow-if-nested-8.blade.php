@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('IF nested 8') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-nested-8" />
         <flux:callout.text>
             {{ __('Mixed sides: an outer left IF contains an inner right IF, and the second example reverses both sides. The last outer ELSEIF opens the inner block. Its wider outgoing bridge reserves space for the opposite-facing actions. Each inner return rejoins its own outer output; explicit line-jumps distinguish crossings from connections.') }}
         </flux:callout.text>

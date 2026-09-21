@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('IF ELSEIF multi') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-elseif-multi" />
         <flux:callout.text>
             {{ __('IF ELSEIF multi supports one or more individually defined ELSEIF branches. Each False output reaches the next condition; the first matching condition executes its action and skips all later tests. If none matches, the final plain bypass reaches Continue process. Both examples explicitly list three ELSEIF branches with stable keys, individual colors and different action widths.') }}
         </flux:callout.text>

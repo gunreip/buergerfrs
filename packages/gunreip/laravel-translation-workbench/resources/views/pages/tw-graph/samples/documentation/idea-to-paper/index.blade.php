@@ -5,7 +5,12 @@
     $coordinates = $coordinates ?? false;
 @endphp
 
-<section class="mt-6 space-y-6">
+<section
+    id="tw-graph-documentation"
+    class="mt-6 space-y-6"
+    x-data="{}"
+    x-on:tw-graph-documentation-navigate.window="$nextTick(() => document.getElementById($event.detail.target)?.scrollIntoView({ block: 'start' }))"
+>
     @isset($documentationTabs)
         <div
             class="z-100 fixed inset-0 items-center justify-center bg-white/60 backdrop-blur-sm dark:bg-zinc-950/60"
@@ -42,6 +47,8 @@
             scrollable:fade
             scrollable:scrollbar="hide"
         >
+            <flux:tab name="idea-to-paper-inventory">{{ __('Inventory') }}</flux:tab>
+            <flux:tab name="idea-to-paper-props-and-connections">{{ __('Deep Reference') }}</flux:tab>
             <flux:tab name="idea-to-paper-canvas">
                 {{ __('Canvas') }}
             </flux:tab>
@@ -74,6 +81,20 @@
             </flux:tab>
         </flux:tabs>
 
+        <flux:tab.panel name="idea-to-paper-inventory">
+            @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-inventory')
+                <div wire:key="documentation-inventory">
+                    @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.inventory.index')
+                </div>
+            @endif
+        </flux:tab.panel>
+        <flux:tab.panel name="idea-to-paper-props-and-connections">
+            @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-props-and-connections')
+                <div wire:key="documentation-props-and-connections">
+                    @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.props-and-connections.index')
+                </div>
+            @endif
+        </flux:tab.panel>
         <flux:tab.panel name="idea-to-paper-canvas">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-canvas')
                 <div wire:key="documentation-idea-to-paper-canvas">
@@ -230,6 +251,7 @@
     </flux:tab.group>
 
     <flux:callout
+        id="tw-graph-documentation-results"
         color="zinc"
         icon="waypoints"
     >

@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('IF ELSEIF') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-elseif" />
         <flux:callout.text>
             {{ __('The first matching condition selects one action. IF reviewApproved executes Publish paper. Only its False route reaches ELSEIF changesRequested, which may execute Revise draft. When both conditions are false, a plain bypass reaches the common output without an action. Continue process runs after any of these three routes. Each side is authored as a separate component example.') }}
         </flux:callout.text>

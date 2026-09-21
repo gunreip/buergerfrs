@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('IF nested 2') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-nested-2" />
         <flux:callout.text>
             {{ __('The amber inner IF belongs to the second outer ELSEIF (sources). Earlier successful actions bypass this nested block. Every inner result returns to the outer output rail. Outer ELSEIF conditions are reached exclusively through the outer False route.') }}
         </flux:callout.text>

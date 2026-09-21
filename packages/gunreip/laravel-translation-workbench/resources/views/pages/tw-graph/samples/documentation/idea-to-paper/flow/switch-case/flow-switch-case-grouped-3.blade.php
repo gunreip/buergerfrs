@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('CASE grouped (3)') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.switch-case.flow-switch-case-grouped-3" />
         <flux:callout.text>
             {{ __('One SWITCH expression selects a CASE. Draft, review and revision share one action: Open editor. Published displays the article; DEFAULT shows a status hint. Each selected action leaves the switch via the common output. Separate CASE entry lanes merge before one shared action and one break; no subsequent action is executed.') }}
         </flux:callout.text>
@@ -112,7 +113,7 @@
                 </flux:table.row>
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal">cases[].exitLabel</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal">break; half</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">BREAK; half</flux:table.cell>
                     <flux:table.cell class="whitespace-normal">Exit annotation after the case action (once per group).
                         Supports text, align, width, color and connector options. Alignment defaults to center. Use
                         false to hide the annotation; routing stays unchanged.</flux:table.cell>
@@ -188,6 +189,17 @@
                 </flux:table.row>
             </flux:table.rows>
         </flux:table>
+        <x-translation-workbench::ui.tw-graph.language-examples
+            source-view="translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.switch-case.flow-switch-case-grouped-3"
+            example="switch-grouped-3"
+        >
+            <flux:text class="mt-2 text-sm">
+                {{ __('Three CASE values share one action. Adding another entry adds a case label, not another action.') }}
+            </flux:text>
+            <flux:text class="mt-2 text-sm">
+                {{ __('Action functions are supplied by the application. These are syntax excerpts; enclosing functions, classes and imports are omitted. C and C++ use enums instead of string cases. Left and right layouts represent the same logic unless different entry counts are shown.') }}
+            </flux:text>
+        </x-translation-workbench::ui.tw-graph.language-examples>
 
     </flux:callout>
     <flux:callout
@@ -434,5 +446,8 @@
                 {{-- flow-switch-case-grouped-3-example-2:end --}}
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            .../flow/switch-case/flow-switch-case-grouped-3.blade.php
+        </flux:field>
     </flux:callout>
 </section>

@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Merge aggregated') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.merge.merge-aggregated" />
         <flux:callout.text>
             {{ __('Aggregated merge stems keep many related origins readable without rendering every origin as a full merge strand. The aggregate label names the group; continuation labels identify representative rows.') }}
         </flux:callout.text>

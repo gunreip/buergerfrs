@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Start compare') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.trunk.trunk-start-compare" />
         <flux:callout.text>
             {{ __('The left example keeps trunk-start on its defaults. The right example changes only the trunk-start props: start length, centered start label, and left/right labels at the first anchor node.') }}
         </flux:callout.text>

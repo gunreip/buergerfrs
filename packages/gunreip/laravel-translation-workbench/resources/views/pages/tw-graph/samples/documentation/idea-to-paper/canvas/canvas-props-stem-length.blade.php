@@ -1,6 +1,7 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
     <flux:callout color="indigo" icon="file-text" class="min-w-0">
         <flux:callout.heading>{{ __('Stem length') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="canvas.canvas-props-stem-length" />
         <p class="mt-4 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
             {{ __('stem-length controls the default length of vertical stem segments. A plain trunk inherits this value for its repeated stem path unless a more specific stem length is set on the trunk itself.') }}
         </p>

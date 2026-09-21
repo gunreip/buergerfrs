@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Merge') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.merge.merge-default" />
         <flux:callout.text>
             {{ __('A merge strand collects a side path and leads it back toward the central chain. This default example only places left and right merge strands at a trunk anchor; all merge geometry and labels stay on their defaults.') }}
         </flux:callout.text>

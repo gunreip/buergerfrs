@@ -1,3 +1,4 @@
+<x-translation-workbench::ui.tw-graph.documentation-links example="00-graph-final" />
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/idea-to-paper/graph-final.blade.php --}}
 
 @php

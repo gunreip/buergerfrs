@@ -1,6 +1,7 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
     <flux:callout color="indigo" icon="file-text" class="min-w-0">
         <flux:callout.heading>{{ __('Start default') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.trunk.trunk-start-default" />
         <flux:callout.text>{{ __('Handmade trunk example with individually adjustable props.') }}</flux:callout.text>
         @php
             $trunkExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(

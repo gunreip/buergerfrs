@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Default') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.trunk.trunk-default" />
         <flux:callout.text>
             {{ __('Default renders the trunk exactly as configured by the graph defaults. No trunk prop changes the visual output here.') }}
         </flux:callout.text>

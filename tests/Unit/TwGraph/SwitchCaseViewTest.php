@@ -39,7 +39,7 @@ it('aligns switch case outputs and skips subsequent actions on the return rail',
     @$dom->loadHTML($html);
     $xpath = new DOMXPath($dom);
     expect($xpath->query('//*[@data-tw-graph-path="status.expression.label"]')->length)->toBeGreaterThan(0);
-    expect($dom->textContent)->toContain('CASE draft', 'CASE review', 'CASE published', 'DEFAULT', 'break', 'END SWITCH');
+    expect($dom->textContent)->toContain('CASE draft', 'CASE review', 'CASE published', 'DEFAULT', 'BREAK', 'END SWITCH');
     expect($xpath->query('//*[contains(@class, "tw-graph-protocol-primitive-text-line") and not(ancestor::*[@aria-hidden="true"]) and normalize-space(text())="Edit"]')->length)->toBe(1);
     expect($xpath->query('//*[contains(@class, "tw-graph-protocol-primitive-text-line") and not(ancestor::*[@aria-hidden="true"]) and normalize-space(text())="CASE review"]')->length)->toBe(1);
     $fusion = $get('case.draft.fusion.anchorNode-end');
@@ -52,18 +52,42 @@ it('aligns switch case outputs and skips subsequent actions on the return rail',
     expect(RootIdentifier::tooltipSuffix())->toBe('');
 })->with(['left', 'right'])->with(['bottom-top', 'top-bottom']);
 
-it('renders the handmade switch sample with a source code box and preview tools', function (): void {
-    $html = view('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.switch-case.flow-switch-case-test')->render();
+it('renders mixed switch sides with explicit bridge jumps and independent return anchors', function (string $leaf, string $rootId): void {
+    $html = view('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.switch-case.'.$leaf)->render();
     $dom = new DOMDocument;
     @$dom->loadHTML($html);
     $xpath = new DOMXPath($dom);
-    expect($xpath->query('//pre/code')->length)->toBe(1);
-    $canvas = $xpath->query('//*[@id="idea-to-paper-flow-switch-case-test"]')->item(0);
-    expect($canvas->textContent)->toContain('SWITCH ($status)', 'CASE draft', 'CASE published', 'Prepare article', 'Display article', 'Continue process', 'fall-through');
-    expect(AnchorRegistry::get('idea-to-paper-flow-switch-case-test', 'literature.switch.1.status.case.draft.return.anchorNode-end'))->toBeNull();
-    expect($canvas->textContent)->not->toContain('{--', ':cases=', '=>');
-    expect($html)->toContain('x-model="previewDev"', 'x-model="previewBoxes"', 'wire:click="$refresh"');
-});
+    expect($xpath->query('//pre/code')->length)->toBe(8);
+    foreach (['' => 1, '-right' => -1] as $suffix => $innerSign) {
+        $graph = 'idea-to-paper-'.$leaf.$suffix;
+        $root = 'literature.switch.1.'.$rootId.$suffix;
+        $canvas = $xpath->query('//*[@id="'.$graph.'"]')->item(0);
+        expect($canvas)->not->toBeNull();
+        expect($canvas->textContent)->toContain('SWITCH ($status)', 'SWITCH ($format)', 'Continue process');
+        expect($canvas->textContent)->not->toContain(':cases=', '=>', '{--');
+        $get = fn ($key) => AnchorRegistry::get($graph, $root.'.'.$key);
+        $number = fn ($value) => BoundsRegistry::evaluateRemExpression($value);
+        foreach (['x', 'y'] as $axis) {
+            expect($number($get('inner.anchorNode-start')[$axis]))->toBe($number($get('outer.case.editable.anchorNode-end')[$axis]));
+            expect($number($get('inner-return.stem.anchorNode-end')[$axis]))->toBe($number($get('outer.case.editable.anchorNode-return')[$axis]));
+        }
+        expect($get('outer.case.editable.return.anchorNode-end'))->toBeNull();
+        expect($innerSign * ($number($get('inner.anchorNode-end')['x']) - $number($get('inner.anchorNode-start')['x'])))->toBeGreaterThan(0);
+        expect($innerSign * ($number($get('inner.anchorNode-end')['x']) - $number($get('outer.anchorNode-start')['x'])))->toBeGreaterThan(0);
+        expect($number($get('outer.case.editable.anchorNode-return')['y']))->toBeGreaterThanOrEqual($number($get('inner-return.anchorNode-end')['y']));
+        $owners = $xpath->query('.//*[@data-tw-graph-line-jumps]', $canvas);
+        expect($owners->length)->toBe(4);
+        foreach ($owners as $owner) {
+            $jump = json_decode($owner->getAttribute('data-tw-graph-line-jumps'), true)[0];
+            expect($jump['over'])->toBe($root.'.outer.case.published.entry');
+            expect($xpath->query('.//*[@data-tw-graph-path="'.$jump['over'].'"]', $canvas)->length)->toBeGreaterThan(0);
+        }
+        expect($get('outer.anchorNode-end')['returnColor'])->toBe('amber');
+    }
+})->with([
+    ['flow-switch-case-two-nested-3', 'two-nested-3'],
+]);
+
 
 it('resolves each switch entry stem independently with explicit first-case precedence', function (?string $expressionStem, ?string $firstStem, string $expectedFirst, string $direction): void {
     $expression = ['text' => ['SWITCH status'], 'stemLength' => $expressionStem];
@@ -139,7 +163,7 @@ it('customizes switch exit and default annotations independently of actions', fu
     @$dom->loadHTML($html);
     $xpath = new DOMXPath($dom);
     expect($dom->textContent)->toContain('First action', 'Second action', 'Fallback action', 'Leave case', 'No matching case', 'Continue here');
-    expect($dom->textContent)->not->toContain('DEFAULT', 'END SWITCH', 'break');
+    expect($dom->textContent)->not->toContain('DEFAULT', 'END SWITCH', 'BREAK');
     foreach (['Leave case' => 'right', 'No matching case' => 'left', 'Continue here' => 'right'] as $text => $align) {
         expect($xpath->query('//*[contains(@class, "tw-graph-protocol-primitive-text-line") and normalize-space(.)="' . $text . '"]/ancestor::*[contains(@style, "text-align: ' . $align . '")]')->length)->toBe(1);
     }
@@ -180,7 +204,7 @@ it('renders independent left and right grouped case examples with matching outpu
     $dom = new DOMDocument;
     @$dom->loadHTML($html);
     $xpath = new DOMXPath($dom);
-    expect($xpath->query('//pre/code')->length)->toBe(2);
+    expect($xpath->query('//pre/code')->length)->toBe($variant === '-multi' ? 14 : 8);
     foreach (['', '-right'] as $suffix) {
         $graph = 'idea-to-paper-flow-switch-case-grouped'.$variant.$suffix;
         $prefix = 'literature.switch.1.grouped'.$variant.$suffix.'.status';
@@ -251,7 +275,7 @@ it('keeps the saved nested switch examples handmade and connected on both sides'
     $dom = new DOMDocument;
     @$dom->loadHTML($html);
     $xpath = new DOMXPath($dom);
-    expect($xpath->query('//pre/code')->length)->toBe(2);
+    expect($xpath->query('//pre/code')->length)->toBe(8);
     foreach (['' => -1, '-right' => 1] as $suffix => $sign) {
         $graph = 'idea-to-paper-flow-switch-case-nested'.$suffix;
         $canvas = $xpath->query('//*[@id="'.$graph.'"]')->item(0);

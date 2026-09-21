@@ -1,6 +1,7 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
     <flux:callout color="indigo" icon="file-text" class="min-w-0">
         <flux:callout.heading>{{ __('Canvas height') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="canvas.canvas-height" />
         <p class="mt-4 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
             {{ __('This compares the configured minimum height with the automatically calculated content height. The first graph sets min-height below the calculated graph bounds, so the bounds still win. The second graph sets min-height above the calculated bounds, so the visible canvas grows.') }}
         </p>

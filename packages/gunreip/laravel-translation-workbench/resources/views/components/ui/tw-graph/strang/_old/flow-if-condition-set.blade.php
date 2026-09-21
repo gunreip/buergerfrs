@@ -91,7 +91,7 @@
     $elseifCounterStart = $counterStart + 5;
 @endphp
 
-<x-translation-workbench::ui.tw-graph.strang.flow-if-condition
+<x-translation-workbench::ui.tw-graph.strang._old.flow-if-condition
     :side="$side"
     :id="$resolvedIfId"
     :then-end-side="$elseifConditions->isEmpty() ? $thenEndSide : null"
@@ -118,7 +118,7 @@
     :dev-counter-color="$devCounterColor"
 />
 
-<x-translation-workbench::ui.tw-graph.strang.flow-if-elseif-group
+<x-translation-workbench::ui.tw-graph.strang._old.flow-if-elseif-group
     :side="$side"
     :id="$resolvedElseifId"
     :then-end-side="$thenEndSide"

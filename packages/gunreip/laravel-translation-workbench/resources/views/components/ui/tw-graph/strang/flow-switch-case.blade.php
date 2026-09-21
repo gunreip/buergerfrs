@@ -48,7 +48,8 @@
             'label' => $case['label'] ?? 'CASE ' . $key,
             'entries' => $case['entries'] ?? [],
             'entryStemLength' => $case['entryStemLength'] ?? null,
-            'exitLabel' => $case['exitLabel'] ?? (!empty($case['fallThrough']) ? 'fall-through' : 'break'),
+            'entryDetour' => $case['entryDetour'] ?? null,
+            'exitLabel' => $case['exitLabel'] ?? (!empty($case['fallThrough']) ? 'fall-through' : 'BREAK'),
             'bridgeOutLength' => data_get($case, 'actionLabel.bridgeOutLength'),
             'fallThroughJoinLength' => $case['fallThroughJoinLength'] ?? $arcRadius,
             'fallThrough' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($case['fallThrough'] ?? false),
@@ -65,8 +66,17 @@
         'bypass' => $caseDefault === false,
         'bridgeOutLength' => data_get($caseDefault, 'bridgeOutLength'),
         'stemLength' => data_get($caseDefault, 'stemLength') ?? $stemLength,
+        'entryDetour' => data_get($caseDefault, 'entryDetour'),
     ];
     foreach ($rows as $row) {
+        if (($row['entryDetour'] ?? null) !== null) {
+            if (!is_array($row['entryDetour']) || !empty($row['entries'])) {
+                throw new \InvalidArgumentException('entryDetour requires an array on a single CASE or DEFAULT; grouped entries are not supported.');
+            }
+            if (array_diff(array_keys($row['entryDetour']), ['side', 'bridgeLength', 'arcRadius', 'beforeLength', 'afterLength'])) {
+                throw new \InvalidArgumentException('Unknown entryDetour option.');
+            }
+        }
         if (!empty($row['fallThrough']) && !$row['return']) {
             throw new \InvalidArgumentException('A CASE cannot combine fallThrough with actionLabel.return = false.');
         }
@@ -197,6 +207,22 @@
             @endphp
         @endif
     @else
+    @if ($row['entryDetour'] !== null)
+        <x-translation-workbench::ui.tw-graph.paths.stem-detour
+            :id="$routeId . '.entry'" :anchor-start="$cursor" :length="$row['stemLength']" :direction="$direction"
+            :side="$row['entryDetour']['side'] ?? 'right'"
+            :bridge-length="$row['entryDetour']['bridgeLength'] ?? '4rem'"
+            :arc-radius="$row['entryDetour']['arcRadius'] ?? '2rem'"
+            :before-length="$row['entryDetour']['beforeLength'] ?? '0rem'"
+            :after-length="$row['entryDetour']['afterLength'] ?? '2rem'"
+            :node-label-left="$side === 'right' ? $caseLabel : null"
+            :node-label-right="$side === 'left' ? $caseLabel : null"
+            :color="$resolvedColor" :dev-counter-start="$counter" :dev-mode="$resolvedDev" :z-index="$zIndex"
+        />
+        @php
+            $counter = (int) \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $routeId . '.entry.anchorNode-end')['devCounterNext'];
+        @endphp
+    @else
     <x-translation-workbench::ui.tw-graph.parts.start
         :id="$routeId . '.entry'" :anchor-start="$cursor" :direction="$direction"
         :length="$row['stemLength']" :gradient="false"
@@ -204,6 +230,7 @@
         :node-label-right="$side === 'left' ? $caseLabel : null"
         :color="$resolvedColor" :dev-counter-end="$counter++" :dev-mode="$resolvedDev" :z-index="$zIndex"
     />
+    @endif
     @php
         $cursor = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $routeId . '.entry.anchorNode-end');
     @endphp

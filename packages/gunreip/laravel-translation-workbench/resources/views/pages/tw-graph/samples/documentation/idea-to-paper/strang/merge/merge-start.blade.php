@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Merge start') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.merge.merge-start" />
         <flux:callout.text>
             {{ __('The merge start is the semantic entry point of a merge strand. It can carry its own centered label and node labels before the path turns into the bridge.') }}
         </flux:callout.text>

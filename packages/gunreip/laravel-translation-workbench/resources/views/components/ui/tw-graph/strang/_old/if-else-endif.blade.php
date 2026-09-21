@@ -76,7 +76,7 @@
     $endCounterStart = $conditionCounterStart + ($conditionRows * 5);
 @endphp
 
-<x-translation-workbench::ui.tw-graph.strang.flow-if-start
+<x-translation-workbench::ui.tw-graph.strang._old.flow-if-start
     :side="$side"
     :id="$startId"
     :attach-to="$attachTo"
@@ -95,7 +95,7 @@
     :dev-counter-color="$devCounterColor"
 />
 
-<x-translation-workbench::ui.tw-graph.strang.flow-if-condition-set
+<x-translation-workbench::ui.tw-graph.strang._old.flow-if-condition-set
     :side="$side"
     :id="$conditionsId"
     :if-id="$id . '.if'"
@@ -120,7 +120,7 @@
     :dev-counter-color="$devCounterColor"
 />
 
-<x-translation-workbench::ui.tw-graph.strang.flow-if-end
+<x-translation-workbench::ui.tw-graph.strang._old.flow-if-end
     :side="$side"
     :id="$endId"
     :attach-to="$conditionsId . '.then.anchorNode-end'"
@@ -139,7 +139,7 @@
 
 
 @if (\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($bypass))
-    <x-translation-workbench::ui.tw-graph.strang.flow-if-bypass
+    <x-translation-workbench::ui.tw-graph.strang._old.flow-if-bypass
         :side="$side"
         :id="$id . '.bypass'"
         :attach-to="$startId . '.anchorNode-end'"

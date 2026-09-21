@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('IF nested 3') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-nested-3" />
         <flux:callout.text>
             {{ __('The amber inner IF belongs to the outer ELSE fallback. It is entered only when every outer condition is false. Successful outer actions bypass it and continue at the common output. Every inner result rejoins that same output.') }}
         </flux:callout.text>

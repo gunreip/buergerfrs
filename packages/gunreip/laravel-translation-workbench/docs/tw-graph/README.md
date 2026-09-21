@@ -22,6 +22,25 @@ many future graph types.
 - Sample pages: `resources/views/pages/tw-graph/samples`
 - Historical working notes: `../tw-praph-concept.md`
 
+## Component Inventory
+
+The first documentation tab, **Inventory**, reads static Blade component calls into
+`Strang → Paths → Parts → Segments → Primitives` paths. Skipped layers stay empty;
+same-layer calls share a cell. Branches receive separate rows. Filter by entry
+component; results are paginated in groups of 50. Click a component to inspect its
+source, or the conditional call's line reference to inspect its caller.
+
+`ComponentInventory` excludes Blade/HTML comments and PHP blocks from call
+detection, includes conditional/loop calls without evaluating them, and marks
+cycles or unresolved components. Dynamically constructed component names and
+helpers outside the five layers are not resolved. This is a source inventory,
+not a trace of a particular rendered graph. The `_old` archive is selected
+separately and is hidden by default. Refresh rescans the source files.
+
+- [Strang inventory and proposed layer assignments (2026-09-18)](strang-inventory.md)
+
+- [Old IF capability review and archive decision](old-if-review.md)
+
 ## Layer Model
 
 `tw-graph`

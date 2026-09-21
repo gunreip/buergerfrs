@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Stem lengths') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.trunk.trunk-stem-lengths" />
         <flux:callout.text>
             {{ __('This builds on the previous stem-count example. Only selected stem lengths are overridden; missing or null entries continue to use the default stem length. Stem indexes name the rendered stem sections; they are not the same as DEV node counters, which usually appear one step higher at the stem end anchor.') }}
         </flux:callout.text>

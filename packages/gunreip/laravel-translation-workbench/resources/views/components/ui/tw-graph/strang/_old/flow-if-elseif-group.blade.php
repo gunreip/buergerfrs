@@ -94,7 +94,7 @@
         $conditionLabel['width'] = $conditionRail;
     @endphp
 
-    <x-translation-workbench::ui.tw-graph.strang.flow-if-condition
+    <x-translation-workbench::ui.tw-graph.strang._old.flow-if-condition
         :side="$side"
         :id="$conditionId"
         :then-end-side="$loop->last ? $thenEndSide : null"

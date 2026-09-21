@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Direction') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.trunk.trunk-direction" />
         <flux:callout.text>
             {{ __('Only direction is changed here. The default bottom-to-top flow is replaced by top-to-bottom rendering.') }}
         </flux:callout.text>

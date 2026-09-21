@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Default + trunk') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="canvas.canvas-default-trunk" />
         <p class="mt-4 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
             {{ __('This keeps the canvas at its defaults and adds a default trunk. It shows why canvas sizing props become necessary once real graph content is added (missing coordinates, padding, margin, and related frame space).') }}
         </p>

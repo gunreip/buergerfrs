@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('IF ternär') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-ternary" />
         <flux:callout.text>
             {{ __('A ternary expression evaluates a condition and yields exactly one selected value. Only the selected branch is evaluated. True and False are explanatory node labels; the alternatives are embedded in the bridges. Here: $label = $name !== null ? $name : "Unknown". The assignment is a separate step after the common output; it is not part of the ternary expression itself.') }}
         </flux:callout.text>

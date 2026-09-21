@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Flow start') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.flow-start" />
         <flux:callout.text>
             {{ __('Flow start defines only the entry into an Ablaufdiagramm. The public API mirrors trunk-start: one start label, one first anchor node, and optional left/right labels. Internally it still delegates to parts.start, so the existing part and segment chain remains the single geometry source.') }}
         </flux:callout.text>

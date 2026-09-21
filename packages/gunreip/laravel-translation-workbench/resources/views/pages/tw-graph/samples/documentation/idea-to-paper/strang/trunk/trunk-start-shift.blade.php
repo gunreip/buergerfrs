@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Start shift') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.trunk.trunk-start-shift" />
         <flux:callout.text>
             {{ __('Start shift is off by default. When enabled explicitly, it moves only the trunk-start origin away from the first regular trunk stem; downstream attach-to points stay stable. The merge is shown only as a reference attached to stem-1.') }}
         </flux:callout.text>

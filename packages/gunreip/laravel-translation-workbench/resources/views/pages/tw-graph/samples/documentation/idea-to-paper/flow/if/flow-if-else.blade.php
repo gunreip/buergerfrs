@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('IF ELSE') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-else" />
         <flux:callout.text>
             {{ __('An IF ELSE first evaluates its question inside a step. True executes Publish paper; False executes Revise draft. Continue process follows the common output. The shared output splits into two stacked action bridges pointing in the same direction. True routes sideways first and then follows a stem; False follows its stem first and then routes sideways. Both paths meet at one end anchor. Per execution only one branch is taken. Node labels remain optional explanations; the question and results are embedded in the path.') }}
         </flux:callout.text>

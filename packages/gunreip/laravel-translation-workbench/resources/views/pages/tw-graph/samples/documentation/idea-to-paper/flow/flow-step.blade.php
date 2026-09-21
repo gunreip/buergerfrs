@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Flow step') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.flow-step" />
         <flux:callout.text>
             {{ __('Flow step adds a labeled process step after an existing flow anchor. The centered step label describes the shared process state; optional node labels at the end anchor carry concrete facts about the next hand-authored decision point.') }}
         </flux:callout.text>

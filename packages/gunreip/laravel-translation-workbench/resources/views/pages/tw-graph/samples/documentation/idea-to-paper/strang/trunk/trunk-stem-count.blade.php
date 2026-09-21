@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Stem count') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.trunk.trunk-stem-count" />
         <flux:callout.text>
             {{ __('Only :stem-count is changed here. The default stem count is replaced by 4 rendered trunk stems.') }}
         </flux:callout.text>

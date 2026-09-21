@@ -1,6 +1,7 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
     <flux:callout color="indigo" icon="file-text" class="min-w-0">
         <flux:callout.heading>{{ __('Part chain') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="parts.parts-chain" />
         <flux:callout.text>{{ __('One explicitly authored start → sideways → end sequence demonstrates automatic continuation anchors. The parts array is the API of parts.chain; each entry is written here individually and can be edited independently. Unlike separate part calls, only the first starting anchor is required.') }}</flux:callout.text>
         @php
             $exampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(

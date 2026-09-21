@@ -1,6 +1,7 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
     <flux:callout color="indigo" icon="file-text" class="min-w-0">
         <flux:callout.heading>{{ __('End part') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="parts.parts-end" />
         <flux:callout.text>{{ __('Two individually authored endings demonstrate both vertical directions and different cap lengths. Each part calculates its final anchor and places the end label there.') }}</flux:callout.text>
         @php
             $exampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(

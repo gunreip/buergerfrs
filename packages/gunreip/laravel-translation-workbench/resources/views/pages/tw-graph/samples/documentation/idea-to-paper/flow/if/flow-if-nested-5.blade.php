@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('IF nested 5') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-nested-5" />
         <flux:callout.text>
             {{ __('Two independent inner IF blocks belong to different outer ELSEIF actions: automatic approval (sky) and deferred review (amber). Only the selected outer branch enters its inner block. The automatic block returns to the successful output rail at sources; the deferred block returns to the common outer end. Neither inner block enters the other.') }}
         </flux:callout.text>

@@ -1,6 +1,7 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
     <flux:callout class="min-w-0" color="indigo" icon="file-text">
         <flux:callout.heading>parts.fusion</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="parts.parts-fusion" />
         <flux:callout.text>Two or more independent inputs converge on one shared output dot. All entry arcs share one radius. Outer inputs join the next inner arc end through a plain stem without an extra dot or arrow. Only the innermost input on each side continues through segments.fusion to the output. Inputs at the output height continue straight. The labeled straight input lines are helper segments. The examples show two, three and four inputs in both horizontal directions, with individual colors and unequal spacing.</flux:callout.text>
         <flux:callout.text class="mt-3">
             The configured arc-radius is a starting value. Closely spaced inputs can reduce it.

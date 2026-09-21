@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('IF') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-simple" />
         <flux:callout.text>
             {{ __('A simple IF executes its action only when the condition is true. False follows a plain bypass with no action label in the bridge. Both routes join at the same output and continue with the next step. True and False are informational node labels. These two examples are authored separately for side=left and side=right.') }}
         </flux:callout.text>

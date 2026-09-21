@@ -9,10 +9,8 @@ use Tests\TestCase;
 uses(TestCase::class);
 
 it('renders the idea to paper documentation index with top level tabs and result tabs', function (): void {
-    $html = view('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.index', [
-        'dev' => true,
-        'coordinates' => false,
-    ])->render();
+    $component = \Livewire\Livewire::test(\Gunreip\TranslationWorkbench\Livewire\TwGraphDocumentation::class);
+    $html = $component->html();
 
     expect($html)
         ->toContain('Authoring story: from thought draft to visible graph')
@@ -24,7 +22,11 @@ it('renders the idea to paper documentation index with top level tabs and result
         ->toContain('name="idea-to-paper-draft"')
         ->toContain('name="idea-to-paper-result"')
         ->toContain('tw-graph-sample-idea-to-paper-thought-draft')
-        ->toContain('tw-graph-sample-idea-to-paper-current-result');
+        ->not->toContain('tw-graph-sample-idea-to-paper-current-result');
+
+    $component->set('tabs.results', 'idea-to-paper-result')
+        ->assertSee('tw-graph-sample-idea-to-paper-current-result', false)
+        ->assertDontSee('tw-graph-sample-idea-to-paper-thought-draft', false);
 });
 
 it('renders idea to paper split branch and rekey documentation fragments', function (): void {

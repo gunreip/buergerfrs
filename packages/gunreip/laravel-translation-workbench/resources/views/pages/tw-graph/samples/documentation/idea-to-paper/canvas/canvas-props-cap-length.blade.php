@@ -1,6 +1,7 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
     <flux:callout color="indigo" icon="file-text" class="min-w-0">
         <flux:callout.heading>{{ __('Cap length') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="canvas.canvas-props-cap-length" />
         <p class="mt-4 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
             {{ __('cap-length controls the visible cap used by end-like segments. On this plain trunk it is easiest to see at the final trunk end.') }}
         </p>

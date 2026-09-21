@@ -1,6 +1,7 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
     <flux:callout color="indigo" icon="file-text" class="min-w-0">
         <flux:callout.heading>{{ __('Line width') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="canvas.canvas-props-line" />
         <p class="mt-4 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
             {{ __('line-width is the central/common thickness used as the fallback for stems, bridges, caps, connectors, and similar line-based pieces. In the more specific strang examples this same idea may appear with contextual names such as stem-width or bridge-width.') }}
         </p>

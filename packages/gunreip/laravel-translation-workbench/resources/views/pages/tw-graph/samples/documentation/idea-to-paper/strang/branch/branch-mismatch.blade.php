@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Branch mismatch') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.branch.branch-mismatch" />
         <flux:callout.text>{{ __('Handmade example with individually configurable components.') }}</flux:callout.text>
         @php
             $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(

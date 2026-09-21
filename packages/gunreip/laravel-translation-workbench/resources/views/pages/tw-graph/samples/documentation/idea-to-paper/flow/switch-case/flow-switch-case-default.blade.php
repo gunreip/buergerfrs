@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('CASEs single') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.switch-case.flow-switch-case-default" />
         <flux:callout.text>
             {{ __('One SWITCH expression selects a CASE. Draft opens the editor; published displays the article; DEFAULT shows a status hint. Each selected action leaves the switch via the common output. This first example has no fall-through.') }}
         </flux:callout.text>
@@ -286,5 +287,8 @@
                 {{-- flow-switch-case-default-example-2:end --}}
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            .../flow/switch-case/flow-switch-case-default.blade.php
+        </flux:field>
     </flux:callout>
 </section>

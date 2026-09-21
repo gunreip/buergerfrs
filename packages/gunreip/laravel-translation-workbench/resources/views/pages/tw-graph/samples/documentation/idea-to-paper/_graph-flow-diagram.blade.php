@@ -1,3 +1,4 @@
+<x-translation-workbench::ui.tw-graph.documentation-links example="_graph-flow-diagram" />
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/_graph-flow-diagram.blade.php --}}
 
 @php

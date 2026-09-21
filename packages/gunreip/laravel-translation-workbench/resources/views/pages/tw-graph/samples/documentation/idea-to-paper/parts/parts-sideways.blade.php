@@ -1,6 +1,7 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
     <flux:callout color="indigo" icon="file-text" class="min-w-0">
         <flux:callout.heading>{{ __('Sideways part') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="parts.parts-sideways" />
         <flux:callout.text>{{ __('Two individually authored arc–bridge–arc connections show both sides and vertical directions. The lower cyan connection uses side=left and travels right; the upper violet connection uses side=right and travels left, followed by an extension. Side names refer to the incoming arc side.') }}</flux:callout.text>
         @php
             $exampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(

@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('IF nested 6') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-nested-6" />
         <flux:callout.text>
             {{ __('Three nested levels: the outer deferred action enters the amber review IF. Its sources action enters the sky reference-validation IF. The deepest return joins only the middle IF output; the middle return then joins the outer output. All other actions and fallbacks stay on their own level.') }}
         </flux:callout.text>

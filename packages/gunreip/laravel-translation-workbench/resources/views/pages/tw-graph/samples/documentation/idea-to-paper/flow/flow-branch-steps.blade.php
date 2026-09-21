@@ -1,6 +1,7 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
     <flux:callout color="indigo" icon="file-text" class="min-w-0">
         <flux:callout.heading>{{ __('Flow branch steps') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.flow-branch-steps" />
         <flux:callout.text>{{ __('After the decision, the same flow-step component can continue on each decision output. The branch steps are anchored to the left and right ends of flow-if-else, so the center line stays stopped at the decision point.') }}</flux:callout.text>
         @php
             $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(

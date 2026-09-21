@@ -21,6 +21,7 @@
         <flux:tab name="idea-to-paper-paths-branch-return">{{ __('Branch return') }}</flux:tab>
         <flux:tab name="idea-to-paper-paths-branch-return-extension">{{ __('Branch return extension') }}</flux:tab>
         <flux:tab name="idea-to-paper-paths-branch-return-bridge">{{ __('Branch return bridge') }}</flux:tab>
+        <flux:tab name="idea-to-paper-paths-stem-detour">{{ __('Stem detour') }}</flux:tab>
     </flux:tabs>
     <flux:tab.panel name="idea-to-paper-paths-trunk">
         @if (!isset($documentationTabs) || $documentationTabs['paths_index'] === 'idea-to-paper-paths-trunk')
@@ -75,6 +76,13 @@
         @if (!isset($documentationTabs) || $documentationTabs['paths_index'] === 'idea-to-paper-paths-branch-return-bridge')
             <div wire:key="documentation-idea-to-paper-paths-branch-return-bridge">
                 @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-branch-return-bridge')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="idea-to-paper-paths-stem-detour">
+        @if (!isset($documentationTabs) || $documentationTabs['paths_index'] === 'idea-to-paper-paths-stem-detour')
+            <div wire:key="documentation-idea-to-paper-paths-stem-detour">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.paths-stem-detour')
             </div>
         @endif
     </flux:tab.panel>

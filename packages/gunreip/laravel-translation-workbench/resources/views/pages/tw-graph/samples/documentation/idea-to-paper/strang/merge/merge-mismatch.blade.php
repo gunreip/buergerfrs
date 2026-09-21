@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Merge mismatch') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.merge.merge-mismatch" />
         <flux:callout.text>
             {{ __('A merge can only render node labels for existing label anchors. If numeric node-label keys exceed the available merge anchors, DEV mode reports nodeLabel-Mismatch. If a numeric end label and the explicit end alias are both set, end wins and DEV mode reports nodeLabel-EndOverride.') }}
         </flux:callout.text>

@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Rekey target') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.rekey.rekey-target" />
         <flux:callout.text>{{ __('Handmade example with individually configurable components.') }}</flux:callout.text>
         @php
             $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(

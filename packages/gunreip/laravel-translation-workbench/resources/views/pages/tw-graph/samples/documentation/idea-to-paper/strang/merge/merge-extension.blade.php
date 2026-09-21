@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Merge extension') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="strang.merge.merge-extension" />
         <flux:callout.text>
             {{ __('Merge extensions continue an existing merge side outward. Use them when multiple sources belong to the same merge relation but should still remain visually inspectable.') }}
         </flux:callout.text>

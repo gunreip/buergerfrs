@@ -1,6 +1,7 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
     <flux:callout color="indigo" icon="file-text" class="min-w-0">
         <flux:callout.heading>{{ __('Start part') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="parts.parts-start" />
         <flux:callout.text>{{ __('Two individually authored starts compare an upward gradient line with a downward plain stem. Both calculate the endpoint from direction and length; the plain stem uses a joint arrow.') }}</flux:callout.text>
         @php
             $exampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(

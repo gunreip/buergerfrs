@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('IF nested 9') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-nested-9" />
         <flux:callout.text>
             {{ __('Action sequence inside one outer branch: prepare review data, run the nested IF, then save the result. Every inner result reaches the final action before the branch returns to the outer IF. Other outer actions and the fallback bypass the entire sequence. Both mixed-side orientations are shown.') }}
         </flux:callout.text>

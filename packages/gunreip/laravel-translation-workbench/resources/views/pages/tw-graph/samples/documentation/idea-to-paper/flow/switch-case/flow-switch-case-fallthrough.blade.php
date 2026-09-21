@@ -5,6 +5,7 @@
         icon="file-text"
     >
         <flux:callout.heading>{{ __('CASE fallthrough') }}</flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.documentation-links example="flow.switch-case.flow-switch-case-fallthrough" />
         <flux:callout.text>
             {{ __('One SWITCH expression selects a CASE. Draft prepares the article and falls through to Display article. Published enters Display article directly. Its break leaves the SWITCH. Other values use DEFAULT. Unlike grouped CASEs, fall-through executes two distinct actions in sequence.') }}
         </flux:callout.text>
@@ -145,7 +146,7 @@
                 </flux:table.row>
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal">cases[].exitLabel</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal">break; half</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal">BREAK; half</flux:table.cell>
                     <flux:table.cell class="whitespace-normal">Exit annotation after the case action (once per group).
                         Supports text, align, width, color and connector options. Alignment defaults to center. Use
                         false to hide the annotation; routing stays unchanged.</flux:table.cell>
@@ -221,6 +222,17 @@
                 </flux:table.row>
             </flux:table.rows>
         </flux:table>
+        <x-translation-workbench::ui.tw-graph.language-examples
+            source-view="translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.switch-case.flow-switch-case-fallthrough"
+            example="switch-fallthrough"
+        >
+            <flux:text class="mt-2 text-sm">
+                {{ __('Draft prepares the article and then displays it; published only displays it. C# requires goto case for this transfer. C++17 marks intentional fall-through with [[fallthrough]]; PHP, JavaScript, C and Java omit break.') }}
+            </flux:text>
+            <flux:text class="mt-2 text-sm">
+                {{ __('Action functions are supplied by the application. These are syntax excerpts; enclosing functions, classes and imports are omitted. C and C++ use enums instead of string cases. Left and right layouts represent the same logic unless different entry counts are shown.') }}
+            </flux:text>
+        </x-translation-workbench::ui.tw-graph.language-examples>
 
     </flux:callout>
     <flux:callout
@@ -289,7 +301,7 @@
                                     'width' => 'default',
                                     'color' => 'green',
                                 ],
-                                'exitLabel' => ['text' => ['break'], 'align' => 'right'],
+                                'exitLabel' => ['text' => ['BREAK'], 'align' => 'right'],
                             ],
                         ]"
                         :case-default="[
@@ -362,7 +374,7 @@
                                     'width' => 'default',
                                     'color' => 'green',
                                 ],
-                                'exitLabel' => ['text' => ['break'], 'align' => 'left'],
+                                'exitLabel' => ['text' => ['BREAK'], 'align' => 'left'],
                             ],
                         ]"
                         :case-default="[
@@ -383,5 +395,8 @@
                 {{-- flow-switch-case-fallthrough-example-2:end --}}
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
+        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
+            .../flow/switch-case/flow-switch-case-fallthrough.blade.php
+        </flux:field>
     </flux:callout>
 </section>
