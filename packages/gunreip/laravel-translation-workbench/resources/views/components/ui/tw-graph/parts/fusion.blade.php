@@ -46,7 +46,7 @@
         <x-translation-workbench::ui.tw-graph.segments.arc :segment="array_merge($common, [
             'id' => $laneId . '.arc-in', 'anchorStart' => $lane['bendStart'], 'anchorEnd' => $lane['arcEnd'],
             'startAnchor' => $lane['sy'] > 0 ? 's' : 'n', 'endAnchor' => $sx > 0 ? 'e' : 'w',
-            'arcSize' => $plan['radius'] . 'rem',
+            'arcRadius' => $plan['radius'] . 'rem',
             'nodeStart' => true, 'nodeStartDot' => false, 'jointArrowStart' => true,
             'jointArrowStartDirection' => $sx > 0 ? 'right' : 'left', 'devCounterStart' => false,
             'nodeEnd' => true, 'nodeEndDot' => false, 'jointArrowEnd' => true,

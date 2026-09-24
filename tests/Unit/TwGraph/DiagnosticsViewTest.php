@@ -15,7 +15,7 @@ beforeEach(function (): void {
     BoundsRegistry::forgetGraph('diagnostics-non-canvas-test');
 });
 
-it('registers dev box canvas bounds even when the diagnostic overlay is hidden', function (): void {
+it('registers drawing primitives independently of DEV and ignores diagnostic box extents', function (): void {
     $html = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph graph-id="diagnostics-hidden-test" :dev="false" :coordinates="false" horizontal-padding="4rem">
             <x-translation-workbench::ui.tw-graph.parts.start id="diagnostics.center.1.start" />
@@ -25,8 +25,6 @@ it('registers dev box canvas bounds even when the diagnostic overlay is hidden',
                 y="3rem"
                 width="6rem"
                 height="8rem"
-                metrics-scope="canvas"
-                metrics-side="left"
             />
         </x-translation-workbench::ui.tw-graph>
     BLADE);
@@ -37,14 +35,9 @@ it('registers dev box canvas bounds even when the diagnostic overlay is hidden',
 
     $summary = BoundsRegistry::summary('diagnostics-hidden-test');
 
-    expect($summary['left']['count'])
-        ->toBe(1)
-        ->and($summary['left']['items'][0]['renderId'])
-        ->toBe('diagnostics.left.1.bounds')
-        ->and($summary['left']['items'][0]['x'])
-        ->toBe('-10rem')
-        ->and($summary['left']['items'][0]['width'])
-        ->toBe('6rem');
+    expect($summary['left']['count'])->toBe(0)
+        ->and($summary['center']['count'])->toBeGreaterThan(0)
+        ->and(BoundsRegistry::canvasMetrics('diagnostics-hidden-test')['minXRem'])->toBeGreaterThan(-10.0);
 });
 
 it('renders canvas coordinate diagnostics only when dev mode and coordinates are enabled together', function (): void {
@@ -57,8 +50,6 @@ it('renders canvas coordinate diagnostics only when dev mode and coordinates are
                 y="0rem"
                 width="4rem"
                 height="7rem"
-                metrics-scope="canvas"
-                metrics-side="center"
             />
         </x-translation-workbench::ui.tw-graph>
     BLADE);
@@ -72,8 +63,6 @@ it('renders canvas coordinate diagnostics only when dev mode and coordinates are
                 y="0rem"
                 width="4rem"
                 height="7rem"
-                metrics-scope="canvas"
-                metrics-side="center"
             />
         </x-translation-workbench::ui.tw-graph>
     BLADE);
@@ -96,8 +85,6 @@ it('does not register non canvas dev boxes as graph layout bounds', function ():
                 y="4rem"
                 width="8rem"
                 height="9rem"
-                metrics-scope="debug"
-                metrics-side="left"
             />
         </x-translation-workbench::ui.tw-graph>
     BLADE);
@@ -118,8 +105,6 @@ it('keeps diagnostic dev boxes behind graph elements while preserving hover labe
             y="4rem"
             width="8rem"
             height="1.5rem"
-            metrics-scope="canvas"
-            metrics-side="left"
             :dev="true"
         />
     BLADE);
@@ -138,7 +123,7 @@ it('shows configured minimum dimensions and padding without changing the content
 
         return Blade::render(<<<'BLADE'
             <x-translation-workbench::ui.tw-graph graph-id="diagnostics-minimum-frame" :dev="true" :coordinates="$coordinates" min-width="20rem" min-height="15rem" horizontal-padding="3rem">
-                <x-translation-workbench::ui.tw-graph.dev-box id="minimum-frame-content" :dev="true" x="-30rem" y="-4rem" width="70rem" height="50rem" metrics-scope="canvas" metrics-side="center" />
+                <x-translation-workbench::ui.tw-graph.dev-box id="minimum-frame-content" :dev="true" x="-30rem" y="-4rem" width="70rem" height="50rem" />
             </x-translation-workbench::ui.tw-graph>
         BLADE, ['coordinates' => $coordinates]);
     };
@@ -151,8 +136,8 @@ it('shows configured minimum dimensions and padding without changing the content
     expect($hidden)->not->toContain('data-tw-graph-canvas-minimum')
         ->and($visible)->toContain('data-tw-graph-canvas-minimum', 'data-tw-graph-canvas-padding', '20rem × 15rem', 'x=3rem, y=2rem')
         ->and($after)->toBe($before)
-        ->and($after['widthRem'])->toBe(76.0)
-        ->and($after['heightRem'])->toBe(54.0);
+        ->and($after['widthRem'])->toBe(6.0)
+        ->and($after['heightRem'])->toBe(4.0);
 });
 
 it('uses the resolved protocol minimum dimensions and hides configuration lines without dev mode', function (): void {
@@ -160,7 +145,7 @@ it('uses the resolved protocol minimum dimensions and hides configuration lines 
         <x-translation-workbench::ui.tw-graph :protocol="['geometry' => ['minWidth' => '55rem', 'minHeight' => '26rem']]" :dev="true" :coordinates="true" />
     BLADE);
     expect($html)->toContain('data-tw-graph-canvas-minimum', '55rem × 26rem')
-        ->not->toContain('data-tw-graph-canvas-padding');
+        ->toContain('data-tw-graph-canvas-padding');
 
     $hidden = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph :dev="false" :coordinates="true" min-width="55rem" min-height="26rem">

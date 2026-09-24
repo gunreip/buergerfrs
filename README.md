@@ -12,6 +12,10 @@
 
 Exact locally installed versions are recorded in [VERSIONS.md](VERSIONS.md).
 
+Application, Translation Workbench and TW-Graph versions are managed independently
+in `versions.json`. See [component versioning](docs/development/versioning.md) for
+Artisan commands, local Watch counters and release tags.
+
 ## Requirements
 
 - PHP 8.3 or newer

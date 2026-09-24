@@ -17,10 +17,6 @@
     This is a pure diagnostic overlay. It must not affect graph geometry.
 --}}
 
-@aware([
-    'graphId' => null,
-])
-
 @props([
     'id' => 'tw-graph.dev-box',
     'x' => '0rem',
@@ -30,8 +26,6 @@
     'color' => 'sky',
     'label' => null,
     'dev' => false,
-    'metricsScope' => null,
-    'metricsSide' => null,
 ])
 
 @php
@@ -39,17 +33,6 @@
     $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '14 165 233');
     $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($label ?? $id);
 
-    if (filled($graphId ?? null) && $metricsScope === 'canvas') {
-        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
-            (string) $graphId,
-            (string) $id,
-            (string) $x,
-            (string) $y,
-            (string) $width,
-            (string) $height,
-            filled($metricsSide) ? (string) $metricsSide : null,
-        );
-    }
 @endphp
 
 @if ($dev)

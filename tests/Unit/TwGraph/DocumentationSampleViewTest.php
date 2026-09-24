@@ -131,7 +131,7 @@ it('renders the idea to paper canvas documentation with default and prop compari
         ->toContain('name="canvas-height"')
         ->toContain('name="canvas-props"')
         ->toContain('Default renders an empty graph canvas exactly as configured by the graph defaults.')
-        ->toContain('This keeps the canvas at its defaults and adds a default trunk')
+        ->toContain('Each drawing primitive declares its bounds')
         ->toContain('literature.center.1.paper')
         ->toContain('idea-to-paper-step-01-coordinates')
         ->toContain('idea-to-paper-step-01-content-height')
@@ -151,35 +151,32 @@ it('keeps each canvas subtab handmade in its own file', function (): void {
             ->not->toContain('canvasPropsVariant')
             ->not->toContain('@foreach')
             ->not->toContain('@include');
-        expect(strpos($source, '<flux:table '))->toBeGreaterThan(strpos($source, '</x-translation-workbench::ui.tw-graph.code-box>'));
-        expect(strpos($source, '</flux:table>'))->toBeLessThan(strpos($source, '</flux:callout>'));
         expect($source)->toContain("{{ __('Prop') }}")->toContain("{{ __('Default') }}")->toContain("{{ __('Purpose') }}");
         $html = view('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas.' . $name, ['dev' => false, 'coordinates' => false])->render();
         expect($html)->toContain('data-tw-graph-preview-tools')->toContain('tw-graph-protocol');
+        $dom = new DOMDocument;
+        @$dom->loadHTML('<?xml encoding="UTF-8">'.$html);
+        $xpath = new DOMXPath($dom);
+        $callout = $xpath->query('//section/*[@data-flux-callout]')->item(0);
+        expect($callout)->not->toBeNull($name);
+        $code = $xpath->query('.//pre/code', $callout)->item(0);
+        $table = $xpath->query('.//table', $callout)->item(0);
+        expect($code)->not->toBeNull($name);
+        expect($table)->not->toBeNull($name);
+        expect($xpath->query('following::table', $code)->item(0)?->isSameNode($table))->toBeTrue($name);
+
     }
 });
 
 it('keeps idea to paper canvas default examples free of hidden visual overrides', function (): void {
-    $defaultPanelMatches = [1 => file_get_contents(View::getFinder()->find(
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas.canvas-default',
-    ))];
-    $defaultTrunkPanelMatches = [1 => file_get_contents(View::getFinder()->find(
-        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas.canvas-default-trunk',
-    ))];
-    preg_match('/<x-translation-workbench::ui\.tw-graph\.code-box[^>]*>(.*?)<\/x-translation-workbench::ui\.tw-graph\.code-box>/s', $defaultPanelMatches[1], $defaultPanelMatches);
-    preg_match('/<x-translation-workbench::ui\.tw-graph\.code-box[^>]*>(.*?)<\/x-translation-workbench::ui\.tw-graph\.code-box>/s', $defaultTrunkPanelMatches[1], $defaultTrunkPanelMatches);
-
-    expect($defaultPanelMatches[1] ?? '')
-        ->toContain('&lt;x-translation-workbench::ui.tw-graph&gt;&lt;/x-translation-workbench::ui.tw-graph&gt;')
-        ->not->toContain(':dev=')
-        ->not->toContain('color=');
-
-    expect($defaultTrunkPanelMatches[1] ?? '')
-        ->toContain('&lt;x-translation-workbench::ui.tw-graph&gt;' . "\n"
-            . '    &lt;x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" /&gt;' . "\n"
-            . '&lt;/x-translation-workbench::ui.tw-graph&gt;')
-        ->not->toContain('stem-length=')
-        ->not->toContain('color=');
+    foreach (['canvas-default', 'canvas-default-trunk'] as $name) {
+        $code = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+            'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas.'.$name,
+        )->example($name.'-1');
+        expect($code)->not->toContain('stem-length=')->not->toContain('color=')
+            ->not->toContain('min-height=')->not->toContain('min-width=')
+            ->toContain(':dev="true"')->toContain(':coordinates="true"');
+    }
 });
 
 it('keeps idea to paper canvas prop examples visually scoped and explicitly colored', function (): void {
@@ -195,11 +192,11 @@ it('keeps idea to paper canvas prop examples visually scoped and explicitly colo
         ->toContain('name="canvas-props-node-size"')
         ->toContain('name="canvas-props-cap-length"')
         ->toContain('name="canvas-props-min-width"')
-        ->toContain('<span class="text-lime-300">line-width="0.5rem"</span>')
-        ->toContain('<span class="text-lime-300">stem-length="8rem"</span>')
-        ->toContain('<span class="text-lime-300">color="emerald"</span>')
-        ->toContain('<span class="text-amber-300">min-height="88rem"</span>')
-        ->toContain('<span class="text-amber-300">horizontal-padding="24rem"</span>')
+        ->toContain('line-width="0.5rem"')
+        ->toContain('stem-length="8rem"')
+        ->toContain('color="emerald"')
+        ->toContain('min-height="88rem"')
+        ->toContain('horizontal-padding="24rem"')
         ->not->toContain(':dev="$dev"')
         ->not->toContain(':coordinates="$coordinates"');
 });
@@ -211,11 +208,11 @@ it('keeps canvas height examples focused on content and minimum height differenc
 
     expect($source)
         ->toContain('graph-id="idea-to-paper-step-01-content-height"')
-        ->toContain('<span class="text-lime-300">min-height="30rem"</span>')
-        ->toContain('min-height sets a lower bound; larger graph content expands the canvas.')
+        ->toContain('min-height="30rem"')
+        ->toContain('canvas-height-1:start')
         ->toContain('graph-id="idea-to-paper-step-01-min-height"')
-        ->toContain('<span class="text-lime-300">min-height="88rem"</span>')
-        ->toContain('min-height overrides the visible minimum height of the graph canvas.')
+        ->toContain('min-height="88rem"')
+        ->toContain('canvas-height-2:start')
         ->toContain('The first graph sets min-height below the calculated graph bounds')
         ->toContain('The second graph sets min-height above the calculated bounds');
 });
@@ -722,7 +719,7 @@ it('keeps idea to paper canvas prop examples paired as default and custom previe
         expect($source)
             ->toContain($example['defaultId'])
             ->toContain($example['customId'])
-            ->toContain('<span class="text-lime-300">' . $example['prop'] . '</span>');
+            ->toContain('' . $example['prop'] . '');
     }
 
     expect($source)
@@ -918,7 +915,7 @@ it('renders handmade line examples with matching lengths endpoints and direction
     $view = 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.primitives.primitives-line';
     $source = file_get_contents(View::getFinder()->find($view));
     expect($source)->not->toContain('@foreach')->not->toContain('@include');
-    expect(substr_count($source, '&lt;x-translation-workbench::ui.tw-graph.primitives.line'))->toBe(1);
+    expect($source)->toContain("\$lineSource->example('line-complete-example')");
     $html = view($view, ['dev' => false, 'coordinates' => false])->render();
     $dom = new DOMDocument;
     @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
@@ -976,12 +973,15 @@ it('renders handmade marker and connector primitive examples', function (string 
     $view = 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.primitives.primitives-' . $kind;
     $source = file_get_contents(View::getFinder()->find($view));
     expect($source)->not->toContain('@foreach')->not->toContain('@include');
-    expect(substr_count($source, '&lt;x-translation-workbench::ui.tw-graph.primitives.' . $kind))->toBe(1);
     $html = view($view, ['dev' => false, 'coordinates' => false])->render();
     $dom = new DOMDocument;
     @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
     $xpath = new DOMXPath($dom);
     expect($xpath->query('//*[@data-primitive-example]')->length)->toBe($count);
+    $code = $xpath->query('//pre/code')->item(0)->textContent;
+    expect($code)->toStartWith('<x-translation-workbench::ui.tw-graph' . "\n    graph-id=")
+        ->toContain("\n    <x-translation-workbench::ui.tw-graph.primitives." . $kind)
+        ->toContain("\n        id=");
     expect($html)->toContain('x-model="previewDev"')->toContain('x-model="previewBoxes"')->toContain('x-model="previewCoordinates"');
     if ($kind === 'node') {
         foreach (['small' => '0.5rem', 'medium' => '1.5rem', 'large' => '2rem'] as $name => $size) {
@@ -1197,3 +1197,55 @@ it('connects both saved ELSEIF nested examples to their own outer return rails',
         expect($xpath->query('//*[@data-tw-graph-path="' . $prefix . '.outer.elseif.sources.true.stem"]')->length)->toBe(0);
     }
 });
+
+it('demonstrates line endpoint combinations without stacking a Dot and arrow at the same endpoint', function (): void {
+    $html = view('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.primitives.primitives-line')->render();
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    expect($xpath->query('//*[@data-line-endpoints]')->length)->toBe(8);
+    foreach ([
+        'plain' => [false, false, false, false],
+        'arrow-start' => [false, false, true, false],
+        'arrows-both' => [false, false, true, true],
+        'dot-start' => [true, false, false, false],
+        'dot-end' => [false, true, false, false],
+        'dots-both' => [true, true, false, false],
+        'dot-arrow' => [true, false, false, true],
+        'arrow-dot' => [false, true, true, false],
+    ] as $key => [$dotStart, $dotEnd, $arrowStart, $arrowEnd]) {
+        $cell = $xpath->query('//*[@data-line-endpoints="'.$key.'"]')->item(0);
+        $id = 'literature.primitives.line.endpoints.'.$key;
+        $line = $xpath->query('.//*[@data-tw-graph-path="'.$id.'"]', $cell)->item(0);
+        expect($line)->not->toBeNull();
+        expect(str_contains($line->getAttribute('class'), 'primitive-line-node-start'))->toBe($dotStart);
+        expect(str_contains($line->getAttribute('class'), 'primitive-line-node-end'))->toBe($dotEnd);
+        foreach (['start' => [$arrowStart, '2rem'], 'end' => [$arrowEnd, '6rem']] as $end => [$visible, $y]) {
+            $arrow = $xpath->query('.//*[@data-tw-graph-path="'.$id.'.'.$end.'.joint-arrow"]', $cell)->item(0);
+            expect($arrow !== null)->toBe($visible);
+            if ($visible) {
+                expect($arrow->getAttribute('class'))->toContain('primitive-joint-arrow-top');
+                expect($arrow->getAttribute('style'))->toContain('--tw-graph-protocol-anchor-y: '.$y.';');
+            }
+        }
+        expect($cell->textContent)->not->toContain('{--', ':node-start=');
+    }
+});
+
+it('shows the actual authored Canvas preview source in every code box', function (string $name): void {
+    $view = 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas.'.$name;
+    $source = file_get_contents(View::getFinder()->find($view));
+    preg_match_all("/\\\$canvasSource->example\\('([^']+)'\\)/", $source, $markers);
+    $examples = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView($view);
+    $dom = new DOMDocument;
+    @$dom->loadHTML('<?xml encoding="UTF-8">'.view($view)->render());
+    $boxes = (new DOMXPath($dom))->query('//pre/code');
+    expect($boxes->length)->toBe(count($markers[1]));
+    foreach ($markers[1] as $index => $marker) {
+        expect($boxes->item($index)->textContent)->toBe($examples->example($marker));
+    }
+})->with([
+    'canvas-default', 'canvas-default-trunk', 'canvas-borders', 'canvas-coordinates', 'canvas-height',
+    'canvas-props-cap-length', 'canvas-props-line', 'canvas-props-min-width',
+    'canvas-props-node-size', 'canvas-props-stem-length',
+]);

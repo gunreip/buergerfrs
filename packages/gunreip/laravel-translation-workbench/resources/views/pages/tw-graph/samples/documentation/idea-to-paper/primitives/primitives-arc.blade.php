@@ -25,10 +25,10 @@
         start-anchor="w"
         end-anchor="n"
         start-x="-2.75rem"
-        start-y="2rem"
+        start-y="4rem"
         end-x="0rem"
-        end-y="4.75rem"
-        arc-size="2.75rem"
+        end-y="6.75rem"
+        arc-radius="2.75rem"
         color="cyan"
     /&gt;
 
@@ -37,9 +37,9 @@
         direction="bottom-top"
         length="2rem"
         start-x="-2.75rem"
-        start-y="0rem"
+        start-y="2rem"
         end-x="-2.75rem"
-        end-y="2rem"
+        end-y="4rem"
         color="zinc"
     /&gt;
 
@@ -48,9 +48,9 @@
         direction="left-right"
         length="2rem"
         start-x="0rem"
-        start-y="4.75rem"
+        start-y="6.75rem"
         end-x="2rem"
-        end-y="4.75rem"
+        end-y="6.75rem"
         color="zinc"
     /&gt;
 
@@ -58,7 +58,7 @@
         id="literature.primitives.arc.west-north.start.joint-arrow"
         direction="top"
         anchor-x="-2.75rem"
-        anchor-y="2rem"
+        anchor-y="4rem"
         color="zinc"
     /&gt;
 
@@ -66,7 +66,7 @@
         id="literature.primitives.arc.west-north.end.joint-arrow"
         direction="right"
         anchor-x="0rem"
-        anchor-y="4.75rem"
+        anchor-y="6.75rem"
         color="zinc"
     /&gt;
 &lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
@@ -109,9 +109,9 @@ color="yellow"</x-translation-workbench::ui.tw-graph.code-box>
         <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="n"
 end-anchor="w"
 start-x="0rem"
-start-y="4.75rem"
+start-y="6.75rem"
 end-x="-2.75rem"
-end-y="2rem"
+end-y="4rem"
 color="fuchsia"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
@@ -120,17 +120,17 @@ color="fuchsia"</x-translation-workbench::ui.tw-graph.code-box>
         <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="n"
 end-anchor="e"
 start-x="0rem"
-start-y="4.75rem"
+start-y="6.75rem"
 end-x="2.75rem"
-end-y="2rem"
+end-y="4rem"
 color="rose"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >west-south</flux:heading>
         <x-translation-workbench::ui.tw-graph.code-box class="mt-2">end-anchor="s"
-start-y="4.75rem"
-end-y="2rem"
+start-y="6.75rem"
+end-y="4rem"
 color="blue"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
@@ -139,8 +139,8 @@ color="blue"</x-translation-workbench::ui.tw-graph.code-box>
         <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="e"
 end-anchor="s"
 start-x="2.75rem"
-start-y="4.75rem"
-end-y="2rem"
+start-y="6.75rem"
+end-y="4rem"
 color="violet"</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
@@ -203,11 +203,11 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                             end endpoint; positive values point up.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-size
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-radius
                         </flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Inherits the canvas
-                            arc-size. Coordinates must match the chosen arc size.</flux:table.cell>
+                            arc-radius. Coordinates must match the chosen arc size.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">:node-start
@@ -317,10 +317,10 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 start-anchor="w"
                                 end-anchor="n"
                                 start-x="-2.75rem"
-                                start-y="2rem"
+                                start-y="4rem"
                                 end-x="0rem"
-                                end-y="4.75rem"
-                                arc-size="2.75rem"
+                                end-y="6.75rem"
+                                arc-radius="2.75rem"
                                 color="cyan"
                             />
 
@@ -329,9 +329,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="bottom-top"
                                 length="2rem"
                                 start-x="-2.75rem"
-                                start-y="0rem"
+                                start-y="2rem"
                                 end-x="-2.75rem"
-                                end-y="2rem"
+                                end-y="4rem"
                                 color="zinc"
                             />
 
@@ -340,9 +340,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="left-right"
                                 length="2rem"
                                 start-x="0rem"
-                                start-y="4.75rem"
+                                start-y="6.75rem"
                                 end-x="2rem"
-                                end-y="4.75rem"
+                                end-y="6.75rem"
                                 color="zinc"
                             />
 
@@ -350,7 +350,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.west-north.start.joint-arrow"
                                 direction="top"
                                 anchor-x="-2.75rem"
-                                anchor-y="2rem"
+                                anchor-y="4rem"
                                 color="zinc"
                             />
 
@@ -358,7 +358,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.west-north.end.joint-arrow"
                                 direction="right"
                                 anchor-x="0rem"
-                                anchor-y="4.75rem"
+                                anchor-y="6.75rem"
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
@@ -384,10 +384,10 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 start-anchor="e"
                                 end-anchor="n"
                                 start-x="2.75rem"
-                                start-y="2rem"
+                                start-y="4rem"
                                 end-x="0rem"
-                                end-y="4.75rem"
-                                arc-size="2.75rem"
+                                end-y="6.75rem"
+                                arc-radius="2.75rem"
                                 color="red"
                             />
 
@@ -396,9 +396,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="bottom-top"
                                 length="2rem"
                                 start-x="2.75rem"
-                                start-y="0rem"
+                                start-y="2rem"
                                 end-x="2.75rem"
-                                end-y="2rem"
+                                end-y="4rem"
                                 color="zinc"
                             />
 
@@ -407,9 +407,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="right-left"
                                 length="2rem"
                                 start-x="0rem"
-                                start-y="4.75rem"
+                                start-y="6.75rem"
                                 end-x="-2rem"
-                                end-y="4.75rem"
+                                end-y="6.75rem"
                                 color="zinc"
                             />
 
@@ -417,7 +417,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.east-north.start.joint-arrow"
                                 direction="top"
                                 anchor-x="2.75rem"
-                                anchor-y="2rem"
+                                anchor-y="4rem"
                                 color="zinc"
                             />
 
@@ -425,7 +425,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.east-north.end.joint-arrow"
                                 direction="left"
                                 anchor-x="0rem"
-                                anchor-y="4.75rem"
+                                anchor-y="6.75rem"
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
@@ -452,10 +452,10 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 start-anchor="s"
                                 end-anchor="w"
                                 start-x="0rem"
-                                start-y="2rem"
+                                start-y="4rem"
                                 end-x="-2.75rem"
-                                end-y="4.75rem"
-                                arc-size="2.75rem"
+                                end-y="6.75rem"
+                                arc-radius="2.75rem"
                                 color="green"
                             />
 
@@ -464,9 +464,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="bottom-top"
                                 length="2rem"
                                 start-x="-2.75rem"
-                                start-y="4.75rem"
+                                start-y="6.75rem"
                                 end-x="-2.75rem"
-                                end-y="6.75rem"
+                                end-y="8.75rem"
                                 color="zinc"
                             />
 
@@ -475,9 +475,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="right-left"
                                 length="2rem"
                                 start-x="2rem"
-                                start-y="2rem"
+                                start-y="4rem"
                                 end-x="0rem"
-                                end-y="2rem"
+                                end-y="4rem"
                                 color="zinc"
                             />
 
@@ -485,7 +485,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.south-west.start.joint-arrow"
                                 direction="left"
                                 anchor-x="0rem"
-                                anchor-y="2rem"
+                                anchor-y="4rem"
                                 color="zinc"
                             />
 
@@ -493,7 +493,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.south-west.end.joint-arrow"
                                 direction="top"
                                 anchor-x="-2.75rem"
-                                anchor-y="4.75rem"
+                                anchor-y="6.75rem"
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
@@ -520,10 +520,10 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 start-anchor="s"
                                 end-anchor="e"
                                 start-x="0rem"
-                                start-y="2rem"
+                                start-y="4rem"
                                 end-x="2.75rem"
-                                end-y="4.75rem"
-                                arc-size="2.75rem"
+                                end-y="6.75rem"
+                                arc-radius="2.75rem"
                                 color="yellow"
                             />
 
@@ -532,9 +532,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="bottom-top"
                                 length="2rem"
                                 start-x="2.75rem"
-                                start-y="4.75rem"
+                                start-y="6.75rem"
                                 end-x="2.75rem"
-                                end-y="6.75rem"
+                                end-y="8.75rem"
                                 color="zinc"
                             />
 
@@ -543,9 +543,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="left-right"
                                 length="2rem"
                                 start-x="-2rem"
-                                start-y="2rem"
+                                start-y="4rem"
                                 end-x="0rem"
-                                end-y="2rem"
+                                end-y="4rem"
                                 color="zinc"
                             />
 
@@ -553,7 +553,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.south-east.start.joint-arrow"
                                 direction="right"
                                 anchor-x="0rem"
-                                anchor-y="2rem"
+                                anchor-y="4rem"
                                 color="zinc"
                             />
 
@@ -561,7 +561,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.south-east.end.joint-arrow"
                                 direction="top"
                                 anchor-x="2.75rem"
-                                anchor-y="4.75rem"
+                                anchor-y="6.75rem"
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
@@ -587,10 +587,10 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 start-anchor="n"
                                 end-anchor="w"
                                 start-x="0rem"
-                                start-y="4.75rem"
+                                start-y="6.75rem"
                                 end-x="-2.75rem"
-                                end-y="2rem"
-                                arc-size="2.75rem"
+                                end-y="4rem"
+                                arc-radius="2.75rem"
                                 color="fuchsia"
                             />
 
@@ -599,9 +599,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="top-bottom"
                                 length="2rem"
                                 start-x="-2.75rem"
-                                start-y="2rem"
+                                start-y="4rem"
                                 end-x="-2.75rem"
-                                end-y="0rem"
+                                end-y="2rem"
                                 color="zinc"
                             />
 
@@ -610,9 +610,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="right-left"
                                 length="2rem"
                                 start-x="2rem"
-                                start-y="4.75rem"
+                                start-y="6.75rem"
                                 end-x="0rem"
-                                end-y="4.75rem"
+                                end-y="6.75rem"
                                 color="zinc"
                             />
 
@@ -620,7 +620,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.north-west.start.joint-arrow"
                                 direction="left"
                                 anchor-x="0rem"
-                                anchor-y="4.75rem"
+                                anchor-y="6.75rem"
                                 color="zinc"
                             />
 
@@ -628,7 +628,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.north-west.end.joint-arrow"
                                 direction="bottom"
                                 anchor-x="-2.75rem"
-                                anchor-y="2rem"
+                                anchor-y="4rem"
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
@@ -655,10 +655,10 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 start-anchor="n"
                                 end-anchor="e"
                                 start-x="0rem"
-                                start-y="4.75rem"
+                                start-y="6.75rem"
                                 end-x="2.75rem"
-                                end-y="2rem"
-                                arc-size="2.75rem"
+                                end-y="4rem"
+                                arc-radius="2.75rem"
                                 color="rose"
                             />
 
@@ -667,9 +667,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="top-bottom"
                                 length="2rem"
                                 start-x="2.75rem"
-                                start-y="2rem"
+                                start-y="4rem"
                                 end-x="2.75rem"
-                                end-y="0rem"
+                                end-y="2rem"
                                 color="zinc"
                             />
 
@@ -678,9 +678,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="left-right"
                                 length="2rem"
                                 start-x="-2rem"
-                                start-y="4.75rem"
+                                start-y="6.75rem"
                                 end-x="0rem"
-                                end-y="4.75rem"
+                                end-y="6.75rem"
                                 color="zinc"
                             />
 
@@ -688,7 +688,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.north-east.start.joint-arrow"
                                 direction="right"
                                 anchor-x="0rem"
-                                anchor-y="4.75rem"
+                                anchor-y="6.75rem"
                                 color="zinc"
                             />
 
@@ -696,7 +696,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.north-east.end.joint-arrow"
                                 direction="bottom"
                                 anchor-x="2.75rem"
-                                anchor-y="2rem"
+                                anchor-y="4rem"
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
@@ -723,10 +723,10 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 start-anchor="w"
                                 end-anchor="s"
                                 start-x="-2.75rem"
-                                start-y="4.75rem"
+                                start-y="6.75rem"
                                 end-x="0rem"
-                                end-y="2rem"
-                                arc-size="2.75rem"
+                                end-y="4rem"
+                                arc-radius="2.75rem"
                                 color="blue"
                             />
 
@@ -735,9 +735,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="top-bottom"
                                 length="2rem"
                                 start-x="-2.75rem"
-                                start-y="6.75rem"
+                                start-y="8.75rem"
                                 end-x="-2.75rem"
-                                end-y="4.75rem"
+                                end-y="6.75rem"
                                 color="zinc"
                             />
 
@@ -746,9 +746,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="left-right"
                                 length="2rem"
                                 start-x="0rem"
-                                start-y="2rem"
+                                start-y="4rem"
                                 end-x="2rem"
-                                end-y="2rem"
+                                end-y="4rem"
                                 color="zinc"
                             />
 
@@ -756,7 +756,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.west-south.start.joint-arrow"
                                 direction="bottom"
                                 anchor-x="-2.75rem"
-                                anchor-y="4.75rem"
+                                anchor-y="6.75rem"
                                 color="zinc"
                             />
 
@@ -764,7 +764,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.west-south.end.joint-arrow"
                                 direction="right"
                                 anchor-x="0rem"
-                                anchor-y="2rem"
+                                anchor-y="4rem"
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
@@ -791,10 +791,10 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 start-anchor="e"
                                 end-anchor="s"
                                 start-x="2.75rem"
-                                start-y="4.75rem"
+                                start-y="6.75rem"
                                 end-x="0rem"
-                                end-y="2rem"
-                                arc-size="2.75rem"
+                                end-y="4rem"
+                                arc-radius="2.75rem"
                                 color="violet"
                             />
 
@@ -803,9 +803,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="top-bottom"
                                 length="2rem"
                                 start-x="2.75rem"
-                                start-y="6.75rem"
+                                start-y="8.75rem"
                                 end-x="2.75rem"
-                                end-y="4.75rem"
+                                end-y="6.75rem"
                                 color="zinc"
                             />
 
@@ -814,9 +814,9 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 direction="right-left"
                                 length="2rem"
                                 start-x="0rem"
-                                start-y="2rem"
+                                start-y="4rem"
                                 end-x="-2rem"
-                                end-y="2rem"
+                                end-y="4rem"
                                 color="zinc"
                             />
 
@@ -824,7 +824,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.east-south.start.joint-arrow"
                                 direction="bottom"
                                 anchor-x="2.75rem"
-                                anchor-y="4.75rem"
+                                anchor-y="6.75rem"
                                 color="zinc"
                             />
 
@@ -832,7 +832,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 id="literature.primitives.arc.east-south.end.joint-arrow"
                                 direction="left"
                                 anchor-x="0rem"
-                                anchor-y="2rem"
+                                anchor-y="4rem"
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>

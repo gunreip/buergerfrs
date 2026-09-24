@@ -90,7 +90,7 @@ export function setupTwGraphLineJumps() {
     const states = new Map();
     let frame = null;
     const schedule = () => { frame ??= requestAnimationFrame(refresh); };
-    const generated = (node) => node.nodeType === 1 && node.hasAttribute('data-tw-graph-jump-generated');
+    const generated = (node) => node.nodeType === 1 && (node.hasAttribute('data-tw-graph-jump-generated') || node.hasAttribute('data-tw-graph-bounds-resolver'));
     const clear = (line, state) => {
         line.style.maskImage = state.originalMask;
         line.style.maskClip = state.originalMaskClip;
@@ -163,6 +163,21 @@ export function setupTwGraphLineJumps() {
                     overlay.dataset.twGraphJumpGenerated = '';
                     overlay.dataset.twGraphLineJumpFor = line.dataset.twGraphPath;
                     overlay.setAttribute('aria-hidden', 'true');
+                    // This renderer owns the generated jump geometry and publishes it to the common bounds model.
+                    const origin = graph.querySelector('[data-tw-graph-bounds-origin]');
+                    if (origin) {
+                        const originStyle = getComputedStyle(origin);
+                        const canvasStyle = getComputedStyle(line.closest('.tw-graph-protocol-canvas'));
+                        overlay.dataset.twGraphBounds = JSON.stringify({
+                            id: line.dataset.twGraphPath + '.line-jumps', kind: 'derived', side: 'center',
+                            rects: [{
+                                x: `${parseFloat(css.left) - parseFloat(originStyle.left) - (horizontal ? 0 : drawing.padding)}px`,
+                                y: `${parseFloat(canvasStyle.height) - parseFloat(css.top) + (horizontal ? drawing.padding : 0) - drawing.height - parseFloat(originStyle.bottom)}px`,
+                                width: `${drawing.width}px`, height: `${drawing.height}px`,
+                            }],
+                        });
+                    }
+
                     // Retain the original line paint, including path tone, gradients and deferred return colors.
                     Object.assign(overlay.style, {
                         position: 'absolute', pointerEvents: 'none',

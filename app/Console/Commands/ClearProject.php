@@ -12,6 +12,8 @@
 
 namespace App\Console\Commands;
 
+use App\Support\AppVersion;
+use App\Support\WatchVersion;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
@@ -159,7 +161,20 @@ class ClearProject extends Command
             $this->newLine();
             $this->line('▶ Change detected at ' . now()->format('Y-m-d H:i:s'));
 
+            $buildCommit = app(AppVersion::class)->commit();
             $exitCode = $this->clearProject(rebuildViews: true, buildAssets: true);
+
+            // Do not attribute a build to a different checkout if HEAD moved during it.
+            if ($buildCommit === app(AppVersion::class)->commit()) {
+                try {
+                    $watch = app(WatchVersion::class)->record($buildCommit, $exitCode === self::SUCCESS, true);
+                    if ($watch !== null) {
+                        $this->line('Watch build: '.$watch['count']);
+                    }
+                } catch (Throwable $exception) {
+                    $this->warn('Watch version could not be saved: '.$exception->getMessage());
+                }
+            }
 
             if ($exitCode !== self::SUCCESS) {
                 $this->warn('⚠ Watcher continues after the failed rebuild.');

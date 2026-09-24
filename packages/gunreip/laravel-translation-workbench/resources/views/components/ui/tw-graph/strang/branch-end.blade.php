@@ -133,8 +133,6 @@
     :color="$resolvedColor"
     :label="$id"
     :dev="$resolvedDev"
-    metrics-scope="canvas"
-    :metrics-side="$resolvedSide"
 />
 
 <x-translation-workbench::ui.tw-graph.segments.end

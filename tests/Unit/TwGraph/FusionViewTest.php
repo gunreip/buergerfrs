@@ -33,7 +33,7 @@ it('merges multiple parallel inputs with one output dot and no negative compensa
     if (in_array((min($levels) + max($levels)) / 2, $levels)) {
         expect($xpath->query('//*[contains(@data-tw-graph-path, ".bridge-in.start.joint-arrow")]')->length)->toBeGreaterThan(0);
     }
-    expect($html)->not->toMatch('/--tw-graph-protocol-(?:line-length|arc-size):\s*-\d/');
+    expect($html)->not->toMatch('/--tw-graph-protocol-(?:line-length|arc-radius):\s*-\d/');
 })->with(['left-right', 'right-left'])->with([
     'two close inputs' => [[0, 1], 0.5],
     'three with straight middle' => [[-4, 0, 4], 2.75],
@@ -78,7 +78,7 @@ it('uses the adjusted radius for the shared output and rendered stems', function
         expect($xpath->query('//*[@data-tw-graph-path="minimum.inputs.'.$key.'.arc-out.start.joint-arrow"]')->length)->toBe(0);
         $stem = $xpath->query('//*[@data-tw-graph-path="minimum.inputs.'.$key.'.stem"]')->item(0);
         expect($stem->getAttribute('style'))->toContain('--tw-graph-protocol-local-length: 0rem');
-        expect($xpath->query('//*[@data-tw-graph-path="minimum.inputs.'.$key.'.arc-in" and contains(@style, "--tw-graph-protocol-local-arc-size: 1.5rem")]')->length)->toBe(1);
+        expect($xpath->query('//*[@data-tw-graph-path="minimum.inputs.'.$key.'.arc-in" and contains(@style, "--tw-graph-protocol-local-arc-radius: 1.5rem")]')->length)->toBe(1);
     }
 })->with(['left-right', 'right-left']);
 
@@ -101,7 +101,7 @@ it('joins outer lanes to inner arc ends with a shared radius and only two exit a
     foreach (range(0, 3) as $i) {
         $arc = $xpath->query('//*[@data-tw-graph-path="shared.inputs.lane'.$i.'.arc-in" and contains(@class, "tw-graph-protocol-primitive-arc")]')->item(0);
         expect($arc)->not->toBeNull();
-        expect($arc->getAttribute('style'))->toContain('--tw-graph-protocol-local-arc-size: '.$plan['radius'].'rem');
+        expect($arc->getAttribute('style'))->toContain('--tw-graph-protocol-local-arc-radius: '.$plan['radius'].'rem');
         expect($xpath->query('//*[@data-tw-graph-path="shared.inputs.lane'.$i.'.arc-out" and contains(@class, "tw-graph-protocol-primitive-arc")]')->length)->toBe(in_array($i, [1, 2]) ? 1 : 0);
     }
     foreach ([0, 3] as $i) {

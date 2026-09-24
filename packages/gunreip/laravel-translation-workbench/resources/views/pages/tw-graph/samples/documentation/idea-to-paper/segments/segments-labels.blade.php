@@ -1,13 +1,16 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
+
+    {{-- CodeBox And Props Table --}}
     <flux:callout
         class="min-w-0"
         color="indigo"
         icon="file-text"
     >
         <flux:callout.heading>{{ __('Label segments') }}</flux:callout.heading>
-        <flux:callout.text>
+        <flux:callout.text class="hyphens-auto text-justify">
             {{ __('A label attaches information to a visible anchor through a connector. The zinc path and dot are reference geometry. A label bridge places text inside the horizontal flow: bridge-in, text label, bridge-out. These individually authored examples show all four label positions and both label-bridge directions. Text alignment is independent of placement and traversal direction.') }}
         </flux:callout.text>
+
         @php
             $labelsExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.segments-labels',
@@ -19,291 +22,488 @@
             $labelsBridgeLeftRightCode = $labelsExampleSource->example('segment-bridge-left-right');
             $labelsBridgeRightLeftCode = $labelsExampleSource->example('segment-bridge-right-left');
         @endphp
-        <flux:heading
+
+        <flux:separator
             class="mt-4"
-            size="sm"
-        >Label · right</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $labelsLabelRightCode }}</x-translation-workbench::ui.tw-graph.code-box>
-        <flux:heading
+            text="Segment label code examples"
+        />
+
+        <flux:accordion
+            transition
+            exclusive
+        >
+            <flux:accordion.item expanded>
+                <flux:callout
+                    icon="tag"
+                    color="indigo"
+                >
+                    <flux:accordion.heading>Label · right</flux:accordion.heading>
+                </flux:callout>
+                <flux:accordion.content>
+                    <x-translation-workbench::ui.tw-graph.code-box class="mt-3">
+                        {{ $labelsLabelRightCode }}
+                    </x-translation-workbench::ui.tw-graph.code-box>
+                </flux:accordion.content>
+            </flux:accordion.item>
+
+            <flux:accordion.item>
+                <flux:callout
+                    icon="tag"
+                    color="indigo"
+                >
+                    <flux:accordion.heading>Label · left</flux:accordion.heading>
+                </flux:callout>
+                <flux:accordion.content>
+                    <x-translation-workbench::ui.tw-graph.code-box class="mt-3">
+                        {{ $labelsLabelLeftCode }}
+                    </x-translation-workbench::ui.tw-graph.code-box>
+                </flux:accordion.content>
+            </flux:accordion.item>
+
+            <flux:accordion.item>
+                <flux:callout
+                    icon="tag"
+                    color="indigo"
+                >
+                    <flux:accordion.heading>Label · top</flux:accordion.heading>
+                </flux:callout>
+                <flux:accordion.content>
+                    <x-translation-workbench::ui.tw-graph.code-box class="mt-3">
+                        {{ $labelsLabelTopCode }}
+                    </x-translation-workbench::ui.tw-graph.code-box>
+                </flux:accordion.content>
+            </flux:accordion.item>
+
+            <flux:accordion.item>
+                <flux:callout
+                    icon="tag"
+                    color="indigo"
+                >
+                    <flux:accordion.heading>Label · bottom</flux:accordion.heading>
+                </flux:callout>
+                <flux:accordion.content>
+                    <x-translation-workbench::ui.tw-graph.code-box class="mt-3">
+                        {{ $labelsLabelBottomCode }}
+                    </x-translation-workbench::ui.tw-graph.code-box>
+                </flux:accordion.content>
+            </flux:accordion.item>
+
+            <flux:accordion.item>
+                <flux:callout
+                    icon="tag"
+                    color="indigo"
+                >
+                    <flux:accordion.heading>Label bridge · left-right</flux:accordion.heading>
+                </flux:callout>
+                <flux:accordion.content>
+                    <x-translation-workbench::ui.tw-graph.code-box class="mt-3">
+                        {{ $labelsBridgeLeftRightCode }}
+                    </x-translation-workbench::ui.tw-graph.code-box>
+                </flux:accordion.content>
+            </flux:accordion.item>
+
+            <flux:accordion.item>
+                <flux:callout
+                    icon="tag"
+                    color="indigo"
+                >
+                    <flux:accordion.heading>Label bridge · right-left</flux:accordion.heading>
+                </flux:callout>
+                <flux:accordion.content>
+                    <x-translation-workbench::ui.tw-graph.code-box class="mt-3">
+                        {{ $labelsBridgeRightLeftCode }}
+                    </x-translation-workbench::ui.tw-graph.code-box>
+                </flux:accordion.content>
+            </flux:accordion.item>
+        </flux:accordion>
+
+        <flux:separator
             class="mt-4"
-            size="sm"
-        >Label · left</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $labelsLabelLeftCode }}</x-translation-workbench::ui.tw-graph.code-box>
-        <flux:heading
+            text="Segment label props"
+        />
+
+        {{-- Label Props --}}
+        <flux:callout color="indigo">
+            <flux:callout.heading icon="variable">
+                {{ __('Segment Label props') }}
+            </flux:callout.heading>
+            <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
+                {{-- Table --}}
+                <flux:table container:class="max-h-80">
+                    <flux:table.columns
+                        class="dark:bg-zinc-900"
+                        sticky
+                    >
+                        <flux:table.column>{{ __('Prop / label field') }}</flux:table.column>
+                        <flux:table.column>{{ __('Default') }}</flux:table.column>
+                        <flux:table.column>{{ __('Purpose') }}</flux:table.column>
+                    </flux:table.columns>
+                    <flux:table.rows>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">id
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                segment.label
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ 'Identifier for the text and its connector.' }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">:label
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">[]
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Text configuration; see the shared label fields below.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">anchor-x
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">0rem
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('X coordinate of an existing visible anchor.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">anchor-y
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">0rem
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Y coordinate of that anchor.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">side
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">right
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Label and connector position: right, left, top, bottom. Set on the component, not in label.side.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">color
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">zinc
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Fallback label and connector color.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">:dev
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">false
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Enable the text diagnostic box.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                label.connectorLength
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">inherited
+                                / graph
+                                connector_length</flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Connector length; fallback 2rem.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                label.connectorGap
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">inherited
+                                / graph
+                                connector_gap</flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Gap around the connector; fallback 0.25rem.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                    </flux:table.rows>
+                </flux:table>
+            </div>
+        </flux:callout>
+
+        <flux:separator
             class="mt-4"
-            size="sm"
-        >Label · top</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $labelsLabelTopCode }}</x-translation-workbench::ui.tw-graph.code-box>
-        <flux:heading
+            text="Segment label bridge props"
+        />
+
+        {{-- Label Bridge Props --}}
+        <flux:callout color="indigo">
+            <flux:callout.heading icon="variable">
+                {{ __('Label bridge props') }}
+            </flux:callout.heading>
+            <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
+                {{-- Table --}}
+                <flux:table container:class="max-h-80">
+                    <flux:table.columns
+                        class="dark:bg-zinc-900"
+                        sticky
+                    >
+                        <flux:table.column>{{ __('Prop / label field') }}</flux:table.column>
+                        <flux:table.column>{{ __('Default') }}</flux:table.column>
+                        <flux:table.column>{{ __('Purpose') }}</flux:table.column>
+                    </flux:table.columns>
+                    <flux:table.rows>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">id
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                segment.label-bridge
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Identifier for the bridge and child elements.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">label-id
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">id +
+                                .label.center.1
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Optional custom text identifier.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">:label
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">[]
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Text configuration; side remains centered inside the bridge.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                :anchor-start
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                [&#x27;x&#x27;
+                                =&gt;
+                                &#x27;0rem&#x27;, &#x27;y&#x27; =&gt; &#x27;0rem&#x27;]</flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Starting coordinates; the remaining bridge anchors are calculated.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">direction
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">left-right
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('left-right or right-left.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                bridge-length
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">null →
+                                1.15rem
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Length of each bridge section. Omitted value 0.75rem resolves to 1.15rem; rem values are clamped by LabelBridge.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                label-width
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">from
+                                label.width
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Reserved width for the label. Normally use label.width to keep geometry and rendering consistent.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">color
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">zinc
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Bridge color, blending toward the label color.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">path-tone
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">line
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Palette tone of the bridge sections.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">z-index
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">null
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Stacking-order override.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">:dev
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">null
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Enable path diagnostics and the text box.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                    </flux:table.rows>
+                </flux:table>
+            </div>
+        </flux:callout>
+
+        <flux:separator
             class="mt-4"
-            size="sm"
-        >Label · bottom</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $labelsLabelBottomCode }}</x-translation-workbench::ui.tw-graph.code-box>
-        <flux:heading
-            class="mt-4"
-            size="sm"
-        >Label bridge · left-right</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $labelsBridgeLeftRightCode }}</x-translation-workbench::ui.tw-graph.code-box>
-        <flux:heading
-            class="mt-4"
-            size="sm"
-        >Label bridge · right-left</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $labelsBridgeRightLeftCode }}</x-translation-workbench::ui.tw-graph.code-box>
-        <flux:heading
-            class="mt-4"
-            size="sm"
-        >Label props</flux:heading>
-        <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
-            <flux:table container:class="max-h-80">
-                <flux:table.columns sticky>
-                    <flux:table.column>{{ __('Prop / label field') }}</flux:table.column>
-                    <flux:table.column>{{ __('Default') }}</flux:table.column>
-                    <flux:table.column>{{ __('Purpose') }}</flux:table.column>
-                </flux:table.columns>
-                <flux:table.rows>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">id</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">segment.label
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Identifier for the text
-                            and its connector.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:label
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Text configuration; see
-                            the shared label fields below.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">anchor-x
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">0rem</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">X coordinate of an
-                            existing visible anchor.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">anchor-y
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">0rem</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Y coordinate of that
-                            anchor.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">side</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">right</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Label and connector
-                            position: right, left, top, bottom. Set on the component, not in label.side.
-                        </flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">color</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">zinc</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Fallback label and
-                            connector color.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:dev</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">false</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Enable the text
-                            diagnostic box.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label.connectorLength
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">inherited / graph
-                            connector_length</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Connector length;
-                            fallback 2rem.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label.connectorGap
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">inherited / graph
-                            connector_gap</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Gap around the
-                            connector; fallback 0.25rem.</flux:table.cell>
-                    </flux:table.row>
-                </flux:table.rows>
-            </flux:table>
-        </div>
-        <flux:heading
-            class="mt-4"
-            size="sm"
-        >Label bridge props</flux:heading>
-        <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
-            <flux:table container:class="max-h-80">
-                <flux:table.columns sticky>
-                    <flux:table.column>{{ __('Prop / label field') }}</flux:table.column>
-                    <flux:table.column>{{ __('Default') }}</flux:table.column>
-                    <flux:table.column>{{ __('Purpose') }}</flux:table.column>
-                </flux:table.columns>
-                <flux:table.rows>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">id</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">segment.label-bridge
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Identifier for the
-                            bridge and child elements.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label-id
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">id + .label.center.1
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional custom text
-                            identifier.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:label
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Text configuration;
-                            side remains centered inside the bridge.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:anchor-start
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[&#x27;x&#x27; =&gt;
-                            &#x27;0rem&#x27;, &#x27;y&#x27; =&gt; &#x27;0rem&#x27;]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Starting coordinates;
-                            the remaining bridge anchors are calculated.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">direction
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">left-right
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">left-right or
-                            right-left.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null → 1.15rem
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Length of each bridge
-                            section. Omitted value 0.75rem resolves to 1.15rem; rem values are clamped by LabelBridge.
-                        </flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label-width
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">from label.width
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Reserved width for the
-                            label. Normally use label.width to keep geometry and rendering consistent.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">color</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">zinc</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Bridge color, blending
-                            toward the label color.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">path-tone
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">line</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Palette tone of the
-                            bridge sections.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">z-index
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Stacking-order
-                            override.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:dev</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Enable path diagnostics
-                            and the text box.</flux:table.cell>
-                    </flux:table.row>
-                </flux:table.rows>
-            </flux:table>
-        </div>
-        <flux:heading
-            class="mt-4"
-            size="sm"
-        >Shared label fields</flux:heading>
-        <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
-            <flux:table container:class="max-h-80">
-                <flux:table.columns sticky>
-                    <flux:table.column>{{ __('Prop / label field') }}</flux:table.column>
-                    <flux:table.column>{{ __('Default') }}</flux:table.column>
-                    <flux:table.column>{{ __('Purpose') }}</flux:table.column>
-                </flux:table.columns>
-                <flux:table.rows>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label.text
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">unset
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Text content as a
-                            string or an array of lines.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label.width
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">default
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">half, default,
-                            halfLong, or long.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label.align
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">center
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Alignment of text
-                            inside its box; independent of side and direction.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label.justify
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">false
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Justify the text.
-                        </flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label.maxLines
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">3</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Maximum visible lines.
-                        </flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label.badge
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">true</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Render the label as a
-                            badge.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label.color
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">component color
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Label color; also
-                            colors the connector for segments.label.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label.badgeColor
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">label color
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Override badge color;
-                            label-bridge blends toward this color.</flux:table.cell>
-                    </flux:table.row>
-                </flux:table.rows>
-            </flux:table>
-        </div>
+            text="Segment shared label fields props"
+        />
+
+        <flux:callout color="indigo">
+            <flux:callout.heading icon="variable">
+                {{ __('Shared label fields') }}
+            </flux:callout.heading>
+            <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
+                <flux:table container:class="max-h-80">
+                    <flux:table.columns
+                        class="dark:bg-zinc-900"
+                        sticky
+                    >
+                        <flux:table.column>{{ __('Prop / label field') }}</flux:table.column>
+                        <flux:table.column>{{ __('Default') }}</flux:table.column>
+                        <flux:table.column>{{ __('Purpose') }}</flux:table.column>
+                    </flux:table.columns>
+                    <flux:table.rows>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">label.text
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">unset
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Text content as a string or an array of lines.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                label.width
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">default
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('half, default, halfLong, or long.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                label.align
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">center
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Alignment of text inside its box; independent of side and direction.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                label.justify
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">false
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Justify the text.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                label.maxLines
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">3
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Maximum visible lines.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                label.badge
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">true
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Render the label as a badge.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                label.color
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">component
+                                color
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Label color; also colors the connector for segments.label.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        {{-- Row --}}
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                label.badgeColor
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">label
+                                color
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                                {{ __('Override badge color; label-bridge blends toward this color.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                    </flux:table.rows>
+                </flux:table>
+            </div>
+        </flux:callout>
     </flux:callout>
+
+    {{-- Preview --}}
     <flux:callout
         class="min-w-0"
-        color="zinc"
+        color="emerald"
         icon="eye"
     >
         <flux:callout.heading>{{ __('Label segment preview') }}</flux:callout.heading>
@@ -323,22 +523,22 @@
                             :coordinates="true"
                             min-height="20rem"
                             min-width="24rem"
-                            horizontal-padding="10rem"
+                            horizontal-padding="5rem"
                         >
                             {{-- Reference path owns the visible anchor for the label. --}}
                             <x-translation-workbench::ui.tw-graph.segments.path
                                 id="literature.segments.label-right.reference"
                                 direction="bottom-top"
                                 length="4rem"
-                                :anchor-start="['x' => '-4rem', 'y' => '4rem']"
-                                :anchor-end="['x' => '-4rem', 'y' => '8rem']"
+                                :anchor-start="['x' => '4rem', 'y' => '4rem']"
+                                :anchor-end="['x' => '4rem', 'y' => '8rem']"
                                 :node-end="true"
                                 color="zinc"
                                 :dev="true"
                             />
                             <x-translation-workbench::ui.tw-graph.segments.label
                                 id="literature.segments.label-right"
-                                anchor-x="-4rem"
+                                anchor-x="4rem"
                                 anchor-y="8rem"
                                 side="right"
                                 :label="[
@@ -366,7 +566,7 @@
                             :coordinates="true"
                             min-height="20rem"
                             min-width="24rem"
-                            horizontal-padding="10rem"
+                            horizontal-padding="5rem"
                         >
                             {{-- Reference path owns the visible anchor for the label. --}}
                             <x-translation-workbench::ui.tw-graph.segments.path
@@ -409,22 +609,22 @@
                             :coordinates="true"
                             min-height="20rem"
                             min-width="24rem"
-                            horizontal-padding="10rem"
+                            horizontal-padding="5rem"
                         >
                             {{-- Reference path owns the visible anchor for the label. --}}
                             <x-translation-workbench::ui.tw-graph.segments.path
                                 id="literature.segments.label-top.reference"
                                 direction="left-right"
                                 length="4rem"
-                                :anchor-start="['x' => '-4rem', 'y' => '8rem']"
-                                :anchor-end="['x' => '0rem', 'y' => '8rem']"
+                                :anchor-start="['x' => '4rem', 'y' => '8rem']"
+                                :anchor-end="['x' => '8rem', 'y' => '8rem']"
                                 :node-end="true"
                                 color="zinc"
                                 :dev="true"
                             />
                             <x-translation-workbench::ui.tw-graph.segments.label
                                 id="literature.segments.label-top"
-                                anchor-x="0rem"
+                                anchor-x="8rem"
                                 anchor-y="8rem"
                                 side="top"
                                 :label="[
@@ -452,22 +652,22 @@
                             :coordinates="true"
                             min-height="20rem"
                             min-width="24rem"
-                            horizontal-padding="10rem"
+                            horizontal-padding="5rem"
                         >
                             {{-- Reference path owns the visible anchor for the label. --}}
                             <x-translation-workbench::ui.tw-graph.segments.path
                                 id="literature.segments.label-bottom.reference"
                                 direction="left-right"
                                 length="4rem"
-                                :anchor-start="['x' => '-4rem', 'y' => '8rem']"
-                                :anchor-end="['x' => '0rem', 'y' => '8rem']"
+                                :anchor-start="['x' => '4rem', 'y' => '8rem']"
+                                :anchor-end="['x' => '8rem', 'y' => '8rem']"
                                 :node-end="true"
                                 color="zinc"
                                 :dev="true"
                             />
                             <x-translation-workbench::ui.tw-graph.segments.label
                                 id="literature.segments.label-bottom"
-                                anchor-x="0rem"
+                                anchor-x="8rem"
                                 anchor-y="8rem"
                                 side="bottom"
                                 :label="[
@@ -495,7 +695,7 @@
                             :coordinates="true"
                             min-height="20rem"
                             min-width="24rem"
-                            horizontal-padding="10rem"
+                            horizontal-padding="5rem"
                         >
                             <x-translation-workbench::ui.tw-graph.segments.label-bridge
                                 id="literature.segments.bridge-left-right"
@@ -525,7 +725,7 @@
                             :coordinates="true"
                             min-height="20rem"
                             min-width="24rem"
-                            horizontal-padding="10rem"
+                            horizontal-padding="5rem"
                         >
                             <x-translation-workbench::ui.tw-graph.segments.label-bridge
                                 id="literature.segments.bridge-right-left"

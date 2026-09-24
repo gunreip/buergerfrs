@@ -7,6 +7,18 @@ use Tests\TestCase;
 
 uses(TestCase::class);
 
+it('keeps primitive endpoint palettes consistent unless a transition color is explicit', function (string $primitive, ?string $toColor): void {
+    $html = Blade::render(
+        '<x-translation-workbench::ui.tw-graph.primitives.'.$primitive.' color="cyan" :to-color="$toColor" />',
+        ['toColor' => $toColor],
+    );
+
+    expect($html)
+        ->toContain('--tw-graph-protocol-local-to-color-rgb: '.($toColor === null ? '6 182 212' : '245 158 11'))
+        ->toContain('--tw-graph-protocol-local-to-surface-color-rgb: '.($toColor === null ? '222 248 252' : '254 245 222'))
+        ->toContain('--tw-graph-protocol-local-to-dark-surface-color-rgb: '.($toColor === null ? '14 98 113' : '115 91 31'));
+})->with(['arc', 'line'])->with([null, 'amber']);
+
 it('renders primitive lines with direction caps nodes dashed style and custom sizes', function (): void {
     $html = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph.primitives.line
@@ -96,7 +108,7 @@ it('renders primitive arcs with semantic corner classes and explicit node anchor
             start-y="2rem"
             end-x="6rem"
             end-y="5rem"
-            arc-size="3rem"
+            arc-radius="3rem"
             :node-start="true"
             :node-end="true"
             node-start-size="1rem"
@@ -111,7 +123,7 @@ it('renders primitive arcs with semantic corner classes and explicit node anchor
         ->toContain('primitive.arc.test')
         ->toContain('tw-graph-protocol-primitive-arc-ne')
         ->toContain('tw-graph-protocol-primitive-arc-dashed')
-        ->toContain('--tw-graph-protocol-local-arc-size: 3rem')
+        ->toContain('--tw-graph-protocol-local-arc-radius: 3rem')
         ->toContain('--tw-graph-protocol-local-color-rgb: 245 158 11')
         ->toContain('--tw-graph-protocol-z-index: 22')
         ->toContain('primitive.arc.test.node.start')

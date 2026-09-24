@@ -301,7 +301,7 @@ it('renders compressed rekey source stem continuations', function (): void {
 });
 
 it('uses graph defaults for rekey source arc bridge and stem geometry', function (): void {
-    config()->set('tw-graph-defaults.arc_size', '4rem');
+    config()->set('tw-graph-defaults.arc_radius', '4rem');
     config()->set('tw-graph-defaults.bridge_length', '6rem');
     config()->set('tw-graph-defaults.stem_length', '5rem');
 
@@ -317,7 +317,7 @@ it('uses graph defaults for rekey source arc bridge and stem geometry', function
         ->toContain('strang.rekey.left.source.1.arc-west-north-1')
         ->toContain('strang.rekey.left.source.1.bridge')
         ->toContain('strang.rekey.left.source.1.stem-1')
-        ->toContain('--tw-graph-protocol-local-arc-size: 4rem')
+        ->toContain('--tw-graph-protocol-local-arc-radius: 4rem')
         ->toContain('--tw-graph-protocol-local-length: 6rem')
         ->toContain('--tw-graph-protocol-local-length: 5rem');
 });
@@ -411,7 +411,7 @@ it('renders compressed rekey target stem continuations with named labels', funct
 });
 
 it('uses graph defaults for rekey target arc bridge and stem geometry', function (): void {
-    config()->set('tw-graph-defaults.arc_size', '4rem');
+    config()->set('tw-graph-defaults.arc_radius', '4rem');
     config()->set('tw-graph-defaults.bridge_length', '6rem');
     config()->set('tw-graph-defaults.stem_length', '5rem');
 
@@ -427,7 +427,7 @@ it('uses graph defaults for rekey target arc bridge and stem geometry', function
         ->toContain('strang.rekey.right.target.1.arc-west-north-1')
         ->toContain('strang.rekey.right.target.1.bridge')
         ->toContain('strang.rekey.right.target.1.stem-1')
-        ->toContain('--tw-graph-protocol-local-arc-size: 4rem')
+        ->toContain('--tw-graph-protocol-local-arc-radius: 4rem')
         ->toContain('--tw-graph-protocol-local-length: 6rem')
         ->toContain('--tw-graph-protocol-local-length: 5rem');
 });

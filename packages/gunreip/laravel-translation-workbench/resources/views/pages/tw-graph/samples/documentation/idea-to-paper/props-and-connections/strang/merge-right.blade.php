@@ -77,10 +77,10 @@
                     <flux:table.cell class="whitespace-normal align-top">Node annotation definitions; expand below for this component’s shape.</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">arc-sizes</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">arc-radiuss</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">array</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">[]</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Individual incoming/outgoing arc-size overrides; expand below.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">Individual incoming/outgoing arc-radius overrides; expand below.</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal align-top">stem-lengths</flux:table.cell>
@@ -149,16 +149,16 @@
                     <flux:table.cell class="whitespace-normal align-top">Per-extension bridge continuation lists.</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">extension-arc-size</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">extension-arc-radius</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">length string | null</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">Base extension arc size; null uses canvas arc size.</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">extension-arc-sizes</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">extension-arc-radiuss</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">array</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">[]</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Per-extension arc-size overrides.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">Per-extension arc-radius overrides.</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal align-top">extension-node-labels</flux:table.cell>
@@ -825,7 +825,7 @@
                 </flux:accordion.content>
             </flux:accordion.item>
             <flux:accordion.item>
-                <flux:accordion.heading>arc-sizes</flux:accordion.heading>
+                <flux:accordion.heading>arc-radiuss</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:text>Independent arc sizes. Numeric keys 1/2 take precedence over in/out.</flux:text>
                     <flux:table class="mt-3">
@@ -837,25 +837,25 @@
                         </flux:table.columns>
                         <flux:table.rows>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">arc-sizes.in</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">arc-radiuss.in</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Canvas arc-size → 2.75rem</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">Canvas arc-radius → 2.75rem</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">Incoming arc size.</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">arc-sizes.out</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">arc-radiuss.out</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Canvas arc-size → 2.75rem</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">Canvas arc-radius → 2.75rem</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">Outgoing arc size.</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">arc-sizes.1</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">arc-radiuss.1</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">in → canvas</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">Numeric incoming override.</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">arc-sizes.2</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">arc-radiuss.2</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">out → canvas</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">Numeric outgoing override.</flux:table.cell>
@@ -1731,7 +1731,7 @@
                 </flux:accordion.content>
             </flux:accordion.item>
             <flux:accordion.item>
-                <flux:accordion.heading>extension-arc-sizes</flux:accordion.heading>
+                <flux:accordion.heading>extension-arc-radiuss</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:text>Per-extension arc sizes.</flux:text>
                     <flux:table class="mt-3">
@@ -1743,9 +1743,9 @@
                         </flux:table.columns>
                         <flux:table.rows>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">extension-arc-sizes.[n]</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">extension-arc-radiuss.[n]</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">extension-arc-size</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">extension-arc-radius</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">Override the arc size of extension n; indices start at 1.</flux:table.cell>
                             </flux:table.row>
                         </flux:table.rows>

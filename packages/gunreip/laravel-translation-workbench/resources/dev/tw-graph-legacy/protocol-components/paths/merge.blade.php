@@ -21,7 +21,7 @@
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'startLength' => null,
-    'arcSize' => '2.75rem',
+    'arcRadius' => '2.75rem',
     'connectorLength' => '3rem',
     'verticalLength' => '2rem',
     'color' => 'amber',
@@ -45,7 +45,7 @@
     $arcOutEndAnchor = $isLeft ? 'e' : 'w';
     $connectorDirection = $isLeft ? 'left-right' : 'right-left';
     $connectorDelta = $isLeft ? $connectorLength : $neg($connectorLength);
-    $startLength = $startLength ?? $arcSize;
+    $startLength = $startLength ?? $arcRadius;
     $startEnd = [
         'x' => $currentAnchor['x'],
         'y' => $add($currentAnchor['y'], $startLength),
@@ -55,16 +55,16 @@
         'y' => $add($startEnd['y'], $verticalLength),
     ];
     $arcInEnd = [
-        'x' => $add($verticalEnd['x'], $isLeft ? $arcSize : $neg($arcSize)),
-        'y' => $add($verticalEnd['y'], $arcSize),
+        'x' => $add($verticalEnd['x'], $isLeft ? $arcRadius : $neg($arcRadius)),
+        'y' => $add($verticalEnd['y'], $arcRadius),
     ];
     $connectorEnd = [
         'x' => $add($arcInEnd['x'], $connectorDelta),
         'y' => $arcInEnd['y'],
     ];
     $arcOutEnd = [
-        'x' => $add($connectorEnd['x'], $isLeft ? $arcSize : $neg($arcSize)),
-        'y' => $add($connectorEnd['y'], $arcSize),
+        'x' => $add($connectorEnd['x'], $isLeft ? $arcRadius : $neg($arcRadius)),
+        'y' => $add($connectorEnd['y'], $arcRadius),
     ];
     $pathBoxPadding = '0.75rem';
     $pathBoxX = $isLeft ? $currentAnchor['x'] : $arcOutEnd['x'];

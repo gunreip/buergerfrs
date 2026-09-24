@@ -22,6 +22,23 @@ final class TranslationWorkbenchVersion
         $exactTag = $this->exactVersionTag();
         $dirty = $this->hasDirtyPackageState();
 
+        // Host applications may manage component versions independently of Git tags.
+        // Keep this package usable without depending on the host's App namespace.
+        $manifestPath = base_path('versions.json');
+        $manifest = is_readable($manifestPath)
+            ? json_decode(file_get_contents($manifestPath), true)
+            : null;
+        $managedVersion = $manifest['translation-workbench'] ?? null;
+        if (is_string($managedVersion) && preg_match('/^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/D', $managedVersion)) {
+            return [
+                'label' => 'v'.$managedVersion.($dirty ? '-dirty' : ''),
+                'version' => $managedVersion,
+                'commit' => $commit,
+                'dirty' => $dirty,
+                'source' => 'manifest',
+            ];
+        }
+
         if ($exactTag !== null) {
             $version = $this->normalizeTag($exactTag);
 

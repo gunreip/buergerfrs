@@ -68,7 +68,7 @@
     );
     $resolvedArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString(
         $arcRadius ?? null,
-        'arc_size',
+        'arc_radius',
         '2.75rem',
     );
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
@@ -118,7 +118,7 @@
     $advanceSideways = function (array $anchor, array $part) use ($add, $neg, $partValue, $resolvedArcRadius, $resolvedBridgeLength, $resolvedDirection): array {
         $isLeft = $partValue($part, 'side', 'left') !== 'right';
         $arcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
-            $partValue($part, ['arcRadius', 'arc-radius', 'arc_radius', 'arcSize', 'arc-size', 'arc_size']),
+            $partValue($part, ['arcRadius', 'arc-radius', 'arc_radius']),
             null,
             $resolvedArcRadius,
         );
@@ -188,7 +188,7 @@
             :direction="$partValue($part, 'direction', $resolvedDirection)"
             :side="$partValue($part, 'side', 'left')"
             :anchor-start="$anchor"
-            :arc-radius="$partValue($part, ['arcRadius', 'arc-radius', 'arc_radius', 'arcSize', 'arc-size', 'arc_size'], $resolvedArcRadius)"
+            :arc-radius="$partValue($part, ['arcRadius', 'arc-radius', 'arc_radius'], $resolvedArcRadius)"
             :bridge-length="$partValue($part, ['bridgeLength', 'bridge-length', 'bridge_length'], $resolvedBridgeLength)"
             :extension="data_get($part, 'extension')"
             :node-end="$partValue($part, ['nodeEnd', 'node-end', 'node_end'], true)"

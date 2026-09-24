@@ -87,14 +87,14 @@
     $endCounterOffset = data_get($segment, 'devCounterEndOffset', $defaultEndCounterOffset);
     $boxPadding = '0.35rem';
     $boxX = match ($corner) {
-        'se' => 'calc(' . data_get($anchors, 'e.x', $startX) . ' - var(--tw-graph-protocol-arc-size) + var(--tw-graph-protocol-path-half))',
+        'se' => 'calc(' . data_get($anchors, 'e.x', $startX) . ' - var(--tw-graph-protocol-arc-radius) + var(--tw-graph-protocol-path-half))',
         'sw' => 'calc(' . data_get($anchors, 'w.x', $startX) . ' - var(--tw-graph-protocol-path-half))',
         'nw' => 'calc(' . data_get($anchors, 'w.x', $endX) . ' - var(--tw-graph-protocol-path-half))',
-        default => 'calc(' . data_get($anchors, 'e.x', $endX) . ' - var(--tw-graph-protocol-arc-size) + var(--tw-graph-protocol-path-half))',
+        default => 'calc(' . data_get($anchors, 'e.x', $endX) . ' - var(--tw-graph-protocol-arc-radius) + var(--tw-graph-protocol-path-half))',
     };
     $boxY = match ($corner) {
         'se', 'sw' => 'calc(' . data_get($anchors, 's.y', $endY) . ' - var(--tw-graph-protocol-path-half))',
-        default => 'calc(' . data_get($anchors, 'n.y', $startY) . ' - var(--tw-graph-protocol-arc-size) + var(--tw-graph-protocol-path-half))',
+        default => 'calc(' . data_get($anchors, 'n.y', $startY) . ' - var(--tw-graph-protocol-arc-radius) + var(--tw-graph-protocol-path-half))',
     };
 @endphp
 
@@ -102,8 +102,8 @@
     :id="$id . '.dev-box'"
     :x="'calc(' . $boxX . ' - ' . $boxPadding . ')'"
     :y="'calc(' . $boxY . ' - ' . $boxPadding . ')'"
-    :width="'calc(var(--tw-graph-protocol-arc-size) + (' . $boxPadding . ' * 2))'"
-    :height="'calc(var(--tw-graph-protocol-arc-size) + (' . $boxPadding . ' * 2))'"
+    :width="'calc(var(--tw-graph-protocol-arc-radius) + (' . $boxPadding . ' * 2))'"
+    :height="'calc(var(--tw-graph-protocol-arc-radius) + (' . $boxPadding . ' * 2))'"
     color="sky"
     :label="$id"
     :dev="$devMode"

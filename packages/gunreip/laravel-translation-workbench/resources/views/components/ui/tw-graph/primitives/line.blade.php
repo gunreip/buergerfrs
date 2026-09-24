@@ -46,7 +46,7 @@
     $darkSurfaceColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::darkSurfaceRgb($color, $surfaceColorRgb);
     $toColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($toColor, $colorRgb);
     $toSurfaceColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::surfaceRgb($toColor, $surfaceColorRgb);
-    $toDarkSurfaceColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::darkSurfaceRgb($toColor, $toSurfaceColorRgb);
+    $toDarkSurfaceColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::darkSurfaceRgb($toColor, $darkSurfaceColorRgb);
     $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id);
     $resolvedLineJumps = array_map(static function ($jump) {
         if (is_array($jump) && is_string($jump['over'] ?? null)) {
@@ -58,6 +58,7 @@
 @endphp
 
 <span
+    data-tw-graph-bounds="{{ json_encode(\Gunreip\TranslationWorkbench\Support\TwGraph\PrimitiveBounds::line($id, $direction, $startX, $startY, $endX, $endY, $length, (bool) $nodeStart, (bool) $nodeEnd, $nodeStartSize, $nodeEndSize, (bool) $capStart, (bool) $resolvedCapEnd, $capLength)) }}"
     {{ $attributes->class([
         'tw-graph-protocol-primitive',
         'tw-graph-protocol-primitive-line',

@@ -39,8 +39,8 @@
     'startShiftLength' => null,
     'lineLength' => null,
     'lineWidth' => null,
-    'arcSize' => null,
-    'arcSizes' => [],
+    'arcRadius' => null,
+    'arcRadiuss' => [],
     'bridgeLength' => null,
     'stemLengths' => [],
     'stemContinuation' => [],
@@ -74,15 +74,15 @@
     $isLeft = $side === 'left';
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedLineWidth = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineWidth ?? null, 'line_width', '0.25rem');
-    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
+    $resolvedArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
     $resolvedArcInSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
-        data_get($arcSizes, 1, data_get($arcSizes, 'in')),
-        $resolvedArcSize,
+        data_get($arcRadiuss, 1, data_get($arcRadiuss, 'in')),
+        $resolvedArcRadius,
         '2.75rem',
     );
     $resolvedArcOutSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
-        data_get($arcSizes, 2, data_get($arcSizes, 'out')),
-        $resolvedArcSize,
+        data_get($arcRadiuss, 2, data_get($arcRadiuss, 'out')),
+        $resolvedArcRadius,
         '2.75rem',
     );
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
@@ -342,7 +342,7 @@
                 'endAnchor' => $arcInEndAnchor,
                 'anchorStart' => $stemContinuationEnd,
                 'anchorEnd' => $arcInEnd,
-                'arcSize' => $resolvedArcInSize,
+                'arcRadius' => $resolvedArcInSize,
                 'nodeStart' => false,
                 'nodeEnd' => true,
                 'nodeEndDot' => false,
@@ -379,7 +379,7 @@
                 'endAnchor' => $arcOutEndAnchor,
                 'anchorStart' => $bridgeEnd,
                 'anchorEnd' => $arcOutEnd,
-                'arcSize' => $resolvedArcOutSize,
+                'arcRadius' => $resolvedArcOutSize,
                 'nodeStart' => true,
                 'nodeEnd' => true,
                 'nodeStartDot' => false,

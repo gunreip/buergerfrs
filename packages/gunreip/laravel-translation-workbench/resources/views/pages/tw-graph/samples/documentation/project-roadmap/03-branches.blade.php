@@ -115,7 +115,7 @@
                             >:branch-extension="[...]"</span><span class="text-zinc-500">default: []</span></span>
                         <span class="grid grid-cols-[minmax(28rem,1fr)_minmax(12rem,18rem)] gap-8 ps-4"><span
                                 class="text-amber-300"
-                            >arc-size="2.75rem"</span><span class="text-zinc-500">default: graph arc-size</span></span>
+                            >arc-radius="2.75rem"</span><span class="text-zinc-500">default: graph arc-radius</span></span>
                         <span class="grid grid-cols-[minmax(28rem,1fr)_minmax(12rem,18rem)] gap-8 ps-4"><span
                                 class="text-amber-300"
                             >:counter-start="1"</span><span class="text-zinc-500">default: 1</span></span>
@@ -341,8 +341,8 @@
                                 class="text-amber-300">:branch-return="[...]"</span><span
                                 class="text-zinc-500">default: []</span></span>
                         <span class="grid grid-cols-[minmax(30rem,1fr)_minmax(16rem,20rem)] gap-8 ps-4"><span
-                                class="text-amber-300">arc-size="2.75rem"</span><span class="text-zinc-500">default:
-                                graph arc-size</span></span>
+                                class="text-amber-300">arc-radius="2.75rem"</span><span class="text-zinc-500">default:
+                                graph arc-radius</span></span>
                         <span class="block"><span class="text-zinc-400">/&gt;</span></span></code></div>
 
                 <div class="mt-4 grid gap-4 xl:grid-cols-2">

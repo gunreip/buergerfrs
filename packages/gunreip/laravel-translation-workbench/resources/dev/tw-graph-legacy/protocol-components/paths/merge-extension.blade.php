@@ -22,7 +22,7 @@
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'startLength' => null,
-    'arcSize' => '2.75rem',
+    'arcRadius' => '2.75rem',
     'verticalLength' => '2rem',
     'connectorLength' => '3rem',
     'labels' => [],
@@ -44,9 +44,9 @@
     $arcStartAnchor = $isLeft ? 'w' : 'e';
     $arcEndAnchor = 'n';
     $connectorDirection = $isLeft ? 'left-right' : 'right-left';
-    $arcDelta = $isLeft ? $arcSize : $neg($arcSize);
+    $arcDelta = $isLeft ? $arcRadius : $neg($arcRadius);
     $connectorDelta = $isLeft ? $connectorLength : $neg($connectorLength);
-    $startLength = $startLength ?? $arcSize;
+    $startLength = $startLength ?? $arcRadius;
     $startEnd = [
         'x' => $currentAnchor['x'],
         'y' => $add($currentAnchor['y'], $startLength),
@@ -57,7 +57,7 @@
     ];
     $arcEnd = [
         'x' => $add($verticalEnd['x'], $arcDelta),
-        'y' => $add($verticalEnd['y'], $arcSize),
+        'y' => $add($verticalEnd['y'], $arcRadius),
     ];
     $connectorEnd = [
         'x' => $add($arcEnd['x'], $connectorDelta),

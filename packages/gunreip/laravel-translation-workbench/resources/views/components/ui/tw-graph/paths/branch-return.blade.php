@@ -30,7 +30,7 @@
     'id' => 'path.branch-return',
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
-    'arcSize' => null,
+    'arcRadius' => null,
     'bridgeLength' => null,
     'color' => null,
     'zIndex' => null,
@@ -50,7 +50,7 @@
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
-    $arcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
+    $arcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
     $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', '4rem'));
     $renderFallbackStyle = (bool) $fallbackUsed && (bool) $fallback;
 
@@ -60,12 +60,12 @@
     $bridgeJointArrowDirection = $isLeft ? 'right' : 'left';
     $arcOutStartAnchor = 's';
     $arcOutEndAnchor = $isLeft ? 'e' : 'w';
-    $arcDelta = $isLeft ? $arcSize : $neg($arcSize);
+    $arcDelta = $isLeft ? $arcRadius : $neg($arcRadius);
     $bridgeDelta = $isLeft ? $bridgeLength : $neg($bridgeLength);
 
     $arcInEnd = [
         'x' => $add($currentAnchor['x'], $arcDelta),
-        'y' => $add($currentAnchor['y'], $arcSize),
+        'y' => $add($currentAnchor['y'], $arcRadius),
     ];
     $bridgeEnd = [
         'x' => $add($arcInEnd['x'], $bridgeDelta),
@@ -73,7 +73,7 @@
     ];
     $arcOutEnd = [
         'x' => $add($bridgeEnd['x'], $arcDelta),
-        'y' => $add($bridgeEnd['y'], $arcSize),
+        'y' => $add($bridgeEnd['y'], $arcRadius),
     ];
     $pathBoxPadding = '0.75rem';
     $pathBoxX = $isLeft ? $currentAnchor['x'] : $arcOutEnd['x'];
@@ -90,7 +90,7 @@
                 'id' => $id . '.arc.in',
                 'startAnchor' => $arcInStartAnchor,
                 'endAnchor' => $arcInEndAnchor,
-                'arcSize' => $arcSize,
+                'arcRadius' => $arcRadius,
                 'anchorStart' => $currentAnchor,
                 'anchorEnd' => $arcInEnd,
                 'nodeStart' => false,
@@ -132,7 +132,7 @@
                 'id' => $id . '.arc.out',
                 'startAnchor' => $arcOutStartAnchor,
                 'endAnchor' => $arcOutEndAnchor,
-                'arcSize' => $arcSize,
+                'arcRadius' => $arcRadius,
                 'anchorStart' => $bridgeEnd,
                 'anchorEnd' => $arcOutEnd,
                 'nodeStart' => false,

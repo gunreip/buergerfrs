@@ -6,38 +6,18 @@
     >
         <flux:callout.heading>{{ __('Line') }}</flux:callout.heading>
         <flux:callout.text>
-            {{ __('Four directions with 4rem lines in the first row and 8rem lines in the second row. Each zinc joint arrow is a visual aid marking the line endpoint and direction. The endpoints are set explicitly to match the direction and length; positive Y coordinates point up.') }}
+            {{ __('Four directions with 4rem and 8rem lines, followed by additional bottom-top 4rem endpoint combinations. Each zinc joint arrow is a visual aid marking the line endpoint and direction. The endpoints are set explicitly to match the direction and length; positive Y coordinates point up.') }}
         </flux:callout.text>
+        @php
+            $lineSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+                'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.primitives.primitives-line',
+            );
+        @endphp
         <flux:heading
             class="mt-4"
             size="sm"
         >{{ __('Complete example: bottom-top · 4rem') }}</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">&lt;x-translation-workbench::ui.tw-graph
-    graph-id="idea-to-paper-primitives-line-bottom-top-4"
-    :dev="true"
-    :coordinates="true"
-    min-height="16rem"
-    min-width="14rem"
-    horizontal-padding="6rem"
-&gt;
-    &lt;x-translation-workbench::ui.tw-graph.primitives.line
-        id="literature.primitives.line.bottom-top-4"
-        direction="bottom-top"
-        length="4rem"
-        start-x="0rem"
-        start-y="2rem"
-        end-x="0rem"
-        end-y="6rem"
-        color="cyan"
-    /&gt;
-    &lt;x-translation-workbench::ui.tw-graph.primitives.joint-arrow
-        id="literature.primitives.line.bottom-top-4.end.joint-arrow"
-        direction="top"
-        anchor-x="0rem"
-        anchor-y="6rem"
-        color="zinc"
-    /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $lineSource->example('line-complete-example') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -49,63 +29,98 @@
             class="mt-4"
             size="sm"
         >top-bottom · 4rem</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">direction="top-bottom"
-start-y="6rem"
-end-y="2rem"
-color="red"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ implode("\n", [
+            'direction="top-bottom"',
+            'start-y="6rem"',
+            'end-y="2rem"',
+            'color="red"',
+        ]) }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >left-right · 4rem</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">direction="left-right"
-start-x="-2rem"
-start-y="6rem"
-end-x="2rem"
-color="green"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ implode("\n", [
+            'direction="left-right"',
+            'start-x="-2rem"',
+            'start-y="6rem"',
+            'end-x="2rem"',
+            'color="green"',
+        ]) }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >right-left · 4rem</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">direction="right-left"
-start-x="2rem"
-start-y="6rem"
-end-x="-2rem"
-color="yellow"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ implode("\n", [
+            'direction="right-left"',
+            'start-x="2rem"',
+            'start-y="6rem"',
+            'end-x="-2rem"',
+            'color="yellow"',
+        ]) }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >bottom-top · 8rem</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">length="8rem"
-end-y="10rem"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ implode("\n", [
+            'length="8rem"',
+            'end-y="10rem"',
+        ]) }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >top-bottom · 8rem</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">direction="top-bottom"
-length="8rem"
-start-y="10rem"
-end-y="2rem"
-color="red"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ implode("\n", [
+            'direction="top-bottom"',
+            'length="8rem"',
+            'start-y="10rem"',
+            'end-y="2rem"',
+            'color="red"',
+        ]) }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >left-right · 8rem</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">direction="left-right"
-length="8rem"
-start-x="-4rem"
-start-y="6rem"
-end-x="4rem"
-color="green"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ implode("\n", [
+            'direction="left-right"',
+            'length="8rem"',
+            'start-x="-4rem"',
+            'start-y="6rem"',
+            'end-x="4rem"',
+            'color="green"',
+        ]) }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >right-left · 8rem</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">direction="right-left"
-length="8rem"
-start-x="4rem"
-start-y="6rem"
-end-x="-4rem"
-color="yellow"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ implode("\n", [
+            'direction="right-left"',
+            'length="8rem"',
+            'start-x="4rem"',
+            'start-y="6rem"',
+            'end-x="-4rem"',
+            'color="yellow"',
+        ]) }}</x-translation-workbench::ui.tw-graph.code-box>
+        <flux:heading class="mt-4" size="sm">Endpoint variants · bottom-top · 4rem</flux:heading>
+        <flux:text class="mt-2">The complete example above already shows joint-arrow end. These eight additions keep
+            the same length and coordinates. node-start/node-end render Dots in the line color. Joint-arrows are
+            separate primitives in zinc, placed at the matching start/end coordinates; both point along the line's
+            direction. primitives.line itself has no joint-arrow-start or joint-arrow-end prop.</flux:text>
+        <flux:heading class="mt-4" size="sm">Line only</flux:heading>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('line-plain-example') }}</x-translation-workbench::ui.tw-graph.code-box>
+        <flux:heading class="mt-4" size="sm">Joint-arrow start</flux:heading>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('line-arrow-start-example') }}</x-translation-workbench::ui.tw-graph.code-box>
+        <flux:heading class="mt-4" size="sm">Joint-arrow start + end</flux:heading>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('line-arrows-both-example') }}</x-translation-workbench::ui.tw-graph.code-box>
+        <flux:heading class="mt-4" size="sm">Dot start</flux:heading>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('line-dot-start-example') }}</x-translation-workbench::ui.tw-graph.code-box>
+        <flux:heading class="mt-4" size="sm">Dot end</flux:heading>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('line-dot-end-example') }}</x-translation-workbench::ui.tw-graph.code-box>
+        <flux:heading class="mt-4" size="sm">Dot start + end</flux:heading>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('line-dots-both-example') }}</x-translation-workbench::ui.tw-graph.code-box>
+        <flux:heading class="mt-4" size="sm">Dot start + joint-arrow end</flux:heading>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('line-dot-arrow-example') }}</x-translation-workbench::ui.tw-graph.code-box>
+        <flux:heading class="mt-4" size="sm">Joint-arrow start + dot end</flux:heading>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('line-arrow-dot-example') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -297,7 +312,7 @@ color="yellow"</x-translation-workbench::ui.tw-graph.code-box>
                 <div
                     class="grid grid-cols-4 gap-4"
                     data-line-examples
-                    style="min-width: 60rem;"
+                    style="min-width: 50rem;"
                 >
                     <div
                         class="min-w-0"
@@ -308,6 +323,7 @@ color="yellow"</x-translation-workbench::ui.tw-graph.code-box>
                             size="sm"
                         >bottom-top · 4rem</flux:heading>
                         {{-- Line Bottom-Top 4rem --}}
+                        {{-- line-complete-example:start --}}
                         <x-translation-workbench::ui.tw-graph
                             graph-id="idea-to-paper-primitives-line-bottom-top-4"
                             :dev="true"
@@ -334,6 +350,7 @@ color="yellow"</x-translation-workbench::ui.tw-graph.code-box>
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
+                        {{-- line-complete-example:end --}}
                     </div>
                     <div
                         class="min-w-0"
@@ -587,6 +604,246 @@ color="yellow"</x-translation-workbench::ui.tw-graph.code-box>
                             />
                         </x-translation-workbench::ui.tw-graph>
                     </div>
+                </div>
+            </div>
+            <flux:heading class="mt-6" size="sm">Additional endpoints · bottom-top · 4rem</flux:heading>
+            <flux:text class="mt-2">Compare with bottom-top · 4rem above, which already shows joint-arrow end.
+                Dots follow the cyan line color; zinc arrows point upward at either endpoint.</flux:text>
+            <div class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                <div class="grid grid-cols-4 gap-4" style="min-width: 50rem;" data-line-endpoint-examples>
+                <div class="min-w-0" data-line-endpoints="plain">
+                    <flux:heading class="px-3 pt-3" size="sm">Line only</flux:heading>
+                    <x-translation-workbench::ui.tw-graph
+                        graph-id="idea-to-paper-primitives-line-plain"
+                        :dev="true"
+                        :coordinates="true"
+                        min-height="16rem"
+                        min-width="14rem"
+                        horizontal-padding="6rem"
+                    >
+                        {{-- line-plain-example:start --}}
+                        <x-translation-workbench::ui.tw-graph.primitives.line
+                            id="literature.primitives.line.endpoints.plain"
+                            direction="bottom-top"
+                            length="4rem"
+                            start-x="0rem"
+                            start-y="2rem"
+                            end-x="0rem"
+                            end-y="6rem"
+                            color="cyan"
+                        />
+                        {{-- line-plain-example:end --}}
+                    </x-translation-workbench::ui.tw-graph>
+                </div>
+                <div class="min-w-0" data-line-endpoints="arrow-start">
+                    <flux:heading class="px-3 pt-3" size="sm">Joint-arrow start</flux:heading>
+                    <x-translation-workbench::ui.tw-graph
+                        graph-id="idea-to-paper-primitives-line-arrow-start"
+                        :dev="true"
+                        :coordinates="true"
+                        min-height="16rem"
+                        min-width="14rem"
+                        horizontal-padding="6rem"
+                    >
+                        {{-- line-arrow-start-example:start --}}
+                        <x-translation-workbench::ui.tw-graph.primitives.line
+                            id="literature.primitives.line.endpoints.arrow-start"
+                            direction="bottom-top"
+                            length="4rem"
+                            start-x="0rem"
+                            start-y="2rem"
+                            end-x="0rem"
+                            end-y="6rem"
+                            color="cyan"
+                        />
+                        <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
+                            id="literature.primitives.line.endpoints.arrow-start.start.joint-arrow"
+                            direction="top"
+                            anchor-x="0rem"
+                            anchor-y="2rem"
+                            color="zinc"
+                        />
+                        {{-- line-arrow-start-example:end --}}
+                    </x-translation-workbench::ui.tw-graph>
+                </div>
+                <div class="min-w-0" data-line-endpoints="arrows-both">
+                    <flux:heading class="px-3 pt-3" size="sm">Joint-arrow start + end</flux:heading>
+                    <x-translation-workbench::ui.tw-graph
+                        graph-id="idea-to-paper-primitives-line-arrows-both"
+                        :dev="true"
+                        :coordinates="true"
+                        min-height="16rem"
+                        min-width="14rem"
+                        horizontal-padding="6rem"
+                    >
+                        {{-- line-arrows-both-example:start --}}
+                        <x-translation-workbench::ui.tw-graph.primitives.line
+                            id="literature.primitives.line.endpoints.arrows-both"
+                            direction="bottom-top"
+                            length="4rem"
+                            start-x="0rem"
+                            start-y="2rem"
+                            end-x="0rem"
+                            end-y="6rem"
+                            color="cyan"
+                        />
+                        <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
+                            id="literature.primitives.line.endpoints.arrows-both.start.joint-arrow"
+                            direction="top"
+                            anchor-x="0rem"
+                            anchor-y="2rem"
+                            color="zinc"
+                        />
+                        <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
+                            id="literature.primitives.line.endpoints.arrows-both.end.joint-arrow"
+                            direction="top"
+                            anchor-x="0rem"
+                            anchor-y="6rem"
+                            color="zinc"
+                        />
+                        {{-- line-arrows-both-example:end --}}
+                    </x-translation-workbench::ui.tw-graph>
+                </div>
+                <div class="min-w-0" data-line-endpoints="dot-start">
+                    <flux:heading class="px-3 pt-3" size="sm">Dot start</flux:heading>
+                    <x-translation-workbench::ui.tw-graph
+                        graph-id="idea-to-paper-primitives-line-dot-start"
+                        :dev="true"
+                        :coordinates="true"
+                        min-height="16rem"
+                        min-width="14rem"
+                        horizontal-padding="6rem"
+                    >
+                        {{-- line-dot-start-example:start --}}
+                        <x-translation-workbench::ui.tw-graph.primitives.line
+                            id="literature.primitives.line.endpoints.dot-start"
+                            direction="bottom-top"
+                            length="4rem"
+                            start-x="0rem"
+                            start-y="2rem"
+                            end-x="0rem"
+                            end-y="6rem"
+                            :node-start="true"
+                            color="cyan"
+                        />
+                        {{-- line-dot-start-example:end --}}
+                    </x-translation-workbench::ui.tw-graph>
+                </div>
+                <div class="min-w-0" data-line-endpoints="dot-end">
+                    <flux:heading class="px-3 pt-3" size="sm">Dot end</flux:heading>
+                    <x-translation-workbench::ui.tw-graph
+                        graph-id="idea-to-paper-primitives-line-dot-end"
+                        :dev="true"
+                        :coordinates="true"
+                        min-height="16rem"
+                        min-width="14rem"
+                        horizontal-padding="6rem"
+                    >
+                        {{-- line-dot-end-example:start --}}
+                        <x-translation-workbench::ui.tw-graph.primitives.line
+                            id="literature.primitives.line.endpoints.dot-end"
+                            direction="bottom-top"
+                            length="4rem"
+                            start-x="0rem"
+                            start-y="2rem"
+                            end-x="0rem"
+                            end-y="6rem"
+                            :node-end="true"
+                            color="cyan"
+                        />
+                        {{-- line-dot-end-example:end --}}
+                    </x-translation-workbench::ui.tw-graph>
+                </div>
+                <div class="min-w-0" data-line-endpoints="dots-both">
+                    <flux:heading class="px-3 pt-3" size="sm">Dot start + end</flux:heading>
+                    <x-translation-workbench::ui.tw-graph
+                        graph-id="idea-to-paper-primitives-line-dots-both"
+                        :dev="true"
+                        :coordinates="true"
+                        min-height="16rem"
+                        min-width="14rem"
+                        horizontal-padding="6rem"
+                    >
+                        {{-- line-dots-both-example:start --}}
+                        <x-translation-workbench::ui.tw-graph.primitives.line
+                            id="literature.primitives.line.endpoints.dots-both"
+                            direction="bottom-top"
+                            length="4rem"
+                            start-x="0rem"
+                            start-y="2rem"
+                            end-x="0rem"
+                            end-y="6rem"
+                            :node-start="true"
+                            :node-end="true"
+                            color="cyan"
+                        />
+                        {{-- line-dots-both-example:end --}}
+                    </x-translation-workbench::ui.tw-graph>
+                </div>
+                <div class="min-w-0" data-line-endpoints="dot-arrow">
+                    <flux:heading class="px-3 pt-3" size="sm">Dot start + joint-arrow end</flux:heading>
+                    <x-translation-workbench::ui.tw-graph
+                        graph-id="idea-to-paper-primitives-line-dot-arrow"
+                        :dev="true"
+                        :coordinates="true"
+                        min-height="16rem"
+                        min-width="14rem"
+                        horizontal-padding="6rem"
+                    >
+                        {{-- line-dot-arrow-example:start --}}
+                        <x-translation-workbench::ui.tw-graph.primitives.line
+                            id="literature.primitives.line.endpoints.dot-arrow"
+                            direction="bottom-top"
+                            length="4rem"
+                            start-x="0rem"
+                            start-y="2rem"
+                            end-x="0rem"
+                            end-y="6rem"
+                            :node-start="true"
+                            color="cyan"
+                        />
+                        <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
+                            id="literature.primitives.line.endpoints.dot-arrow.end.joint-arrow"
+                            direction="top"
+                            anchor-x="0rem"
+                            anchor-y="6rem"
+                            color="zinc"
+                        />
+                        {{-- line-dot-arrow-example:end --}}
+                    </x-translation-workbench::ui.tw-graph>
+                </div>
+                <div class="min-w-0" data-line-endpoints="arrow-dot">
+                    <flux:heading class="px-3 pt-3" size="sm">Joint-arrow start + dot end</flux:heading>
+                    <x-translation-workbench::ui.tw-graph
+                        graph-id="idea-to-paper-primitives-line-arrow-dot"
+                        :dev="true"
+                        :coordinates="true"
+                        min-height="16rem"
+                        min-width="14rem"
+                        horizontal-padding="6rem"
+                    >
+                        {{-- line-arrow-dot-example:start --}}
+                        <x-translation-workbench::ui.tw-graph.primitives.line
+                            id="literature.primitives.line.endpoints.arrow-dot"
+                            direction="bottom-top"
+                            length="4rem"
+                            start-x="0rem"
+                            start-y="2rem"
+                            end-x="0rem"
+                            end-y="6rem"
+                            :node-end="true"
+                            color="cyan"
+                        />
+                        <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
+                            id="literature.primitives.line.endpoints.arrow-dot.start.joint-arrow"
+                            direction="top"
+                            anchor-x="0rem"
+                            anchor-y="2rem"
+                            color="zinc"
+                        />
+                        {{-- line-arrow-dot-example:end --}}
+                    </x-translation-workbench::ui.tw-graph>
+                </div>
                 </div>
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>

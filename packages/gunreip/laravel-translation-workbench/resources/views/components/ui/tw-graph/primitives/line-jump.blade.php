@@ -25,6 +25,7 @@
 @endphp
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 2 2" overflow="visible"
     @unless ($template)
+    data-tw-graph-bounds="{{ json_encode(\Gunreip\TranslationWorkbench\Support\TwGraph\PrimitiveBounds::jump($id, $anchorX, $anchorY, $radius, $lineWidth)) }}"
     data-tw-graph-path="{{ \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id) }}"
     data-tw-graph-jump-side="{{ $side }}"
     {{ $attributes->class(['tw-graph-protocol-primitive', 'tw-graph-protocol-primitive-line-jump', 'tw-graph-protocol-tone-surface' => $tone === 'surface'])->style([

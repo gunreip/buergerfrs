@@ -15,7 +15,7 @@
     'dev' => false,
     'lineLength' => null,
     'lineWidth' => null,
-    'arcSize' => null,
+    'arcRadius' => null,
     'bridgeLength' => null,
     'stemLength' => null,
 ])
@@ -38,7 +38,7 @@
     'startShiftLength' => null,
     'startLabel' => null,
     'nodeLabels' => [],
-    'arcSizes' => [],
+    'arcRadiuss' => [],
     'stemContinuation' => [],
     'compressedStemParts' => [
         'beforeLength' => '0.75rem',
@@ -62,9 +62,9 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
     );
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
-    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
-    $resolvedArcInSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($arcSizes, 1, data_get($arcSizes, 'in')), $resolvedArcSize, '2.75rem');
-    $resolvedArcOutSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($arcSizes, 2, data_get($arcSizes, 'out')), $resolvedArcSize, '2.75rem');
+    $resolvedArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
+    $resolvedArcInSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($arcRadiuss, 1, data_get($arcRadiuss, 'in')), $resolvedArcRadius, '2.75rem');
+    $resolvedArcOutSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($arcRadiuss, 2, data_get($arcRadiuss, 'out')), $resolvedArcRadius, '2.75rem');
     $resolvedStartLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedArcInSize, '2.75rem');
     $resolvedStartShiftEnabled = $startShiftEnabled === null
         ? \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphBool('rekey_source_start_shift_enabled', false)
@@ -141,8 +141,6 @@
     :color="$resolvedColor"
     :label="$id"
     :dev="$resolvedDev"
-    metrics-scope="canvas"
-    metrics-side="right"
 />
 
 <x-translation-workbench::ui.tw-graph.paths.merge
@@ -156,8 +154,8 @@
     :stem-lengths="[1 => $resolvedStemLength]"
     :stem-continuation="$stemContinuationEntries"
     :compressed-stem-parts="$compressedStemParts"
-    :arc-size="$resolvedArcSize"
-    :arc-sizes="$arcSizes"
+    :arc-radius="$resolvedArcRadius"
+    :arc-radiuss="$arcRadiuss"
     :start-label="$startLabel"
     :color="$resolvedColor"
     :z-index="$zIndex"

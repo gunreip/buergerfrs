@@ -20,7 +20,7 @@
     'id' => 'path.branch-extension',
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
-    'arcSize' => '2.75rem',
+    'arcRadius' => '2.75rem',
     'connectorLength' => '3rem',
     'verticalLength' => '2rem',
     'color' => 'rose',
@@ -43,7 +43,7 @@
     $arcStartAnchor = 's';
     $arcEndAnchor = $isLeft ? 'w' : 'e';
     $connectorDelta = $isLeft ? $neg($connectorLength) : $connectorLength;
-    $arcDelta = $isLeft ? $neg($arcSize) : $arcSize;
+    $arcDelta = $isLeft ? $neg($arcRadius) : $arcRadius;
 
     $connectorEnd = [
         'x' => $add($currentAnchor['x'], $connectorDelta),
@@ -51,7 +51,7 @@
     ];
     $arcEnd = [
         'x' => $add($connectorEnd['x'], $arcDelta),
-        'y' => $add($connectorEnd['y'], $arcSize),
+        'y' => $add($connectorEnd['y'], $arcRadius),
     ];
     $verticalEnd = [
         'x' => $arcEnd['x'],

@@ -67,10 +67,10 @@ it('falls back from blank data driven booleans to central graph booleans', funct
 });
 
 it('returns zero rem values for non numeric defaults', function (): void {
-    config()->set('tw-graph-defaults.arc_size', 'wide');
+    config()->set('tw-graph-defaults.arc_radius', 'wide');
     config()->set('tw-graph-data-driven-defaults.stem_length', 'compact');
 
-    expect(Defaults::graphRem('arc_size', '4rem'))->toBe(0.0)
+    expect(Defaults::graphRem('arc_radius', '4rem'))->toBe(0.0)
         ->and(Defaults::dataDrivenRem('stem_length', '4rem'))->toBe(0.0);
 });
 
@@ -191,7 +191,7 @@ it('keeps central tw graph layout defaults available for every graph family', fu
         'line_width',
         'node_size',
         'node_image_size',
-        'arc_size',
+        'arc_radius',
         'cap_length',
         'bridge_length',
         'stem_length',
@@ -222,7 +222,7 @@ it('keeps central tw graph layout defaults available for every graph family', fu
 
 it('keeps graph specific defaults partial instead of duplicating all central defaults', function (): void {
     expect(config('tw-graph-data-driven-defaults'))->toHaveKeys([
-        'arc_size',
+        'arc_radius',
         'stem_length',
         'merge_layout',
         'colors',
@@ -287,14 +287,14 @@ it('keeps canvas line defaults separate from context specific geometry defaults'
 });
 
 it('keeps blank graph specific geometry overrides on the central default chain', function (): void {
-    config()->set('tw-graph-defaults.arc_size', '3.25rem');
+    config()->set('tw-graph-defaults.arc_radius', '3.25rem');
     config()->set('tw-graph-defaults.stem_length', '6rem');
     config()->set('tw-graph-defaults.bridge_length', '18rem');
-    config()->set('tw-graph-data-driven-defaults.arc_size', '');
+    config()->set('tw-graph-data-driven-defaults.arc_radius', '');
     config()->set('tw-graph-data-driven-defaults.stem_length', null);
     config()->set('tw-graph-data-driven-defaults.bridge_length', '22rem');
 
-    expect(Defaults::dataDrivenString('arc_size', '2rem'))->toBe('3.25rem')
+    expect(Defaults::dataDrivenString('arc_radius', '2rem'))->toBe('3.25rem')
         ->and(Defaults::dataDrivenString('stem_length', '2rem'))->toBe('6rem')
         ->and(Defaults::dataDrivenString('bridge_length', '2rem'))->toBe('22rem');
 });

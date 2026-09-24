@@ -32,7 +32,7 @@
     'dev' => false,
     'lineLength' => null,
     'lineWidth' => null,
-    'arcSize' => null,
+    'arcRadius' => null,
     'bridgeLength' => null,
     'stemLength' => null,
 ])
@@ -55,7 +55,7 @@
     'startShiftLength' => null,
     'startLabel' => null,
     'nodeLabels' => [],
-    'arcSizes' => [],
+    'arcRadiuss' => [],
     'stemLengths' => [],
     'extensionCount' => 0,
     'extensionStartLength' => null,
@@ -67,8 +67,8 @@
     'extensionStemContinuations' => [],
     'extensionBridgeLength' => null,
     'extensionBridgeContinuations' => [],
-    'extensionArcSize' => null,
-    'extensionArcSizes' => [],
+    'extensionArcRadius' => null,
+    'extensionArcRadiuss' => [],
     'extensionNodeLabels' => [],
     'counterStart' => 1,
     'zIndex' => 10,
@@ -91,15 +91,15 @@
     );
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedLineWidth = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineWidth ?? null, 'line_width', '0.25rem');
-    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
+    $resolvedArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
     $resolvedArcInSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
-        data_get($arcSizes, 1, data_get($arcSizes, 'in')),
-        $resolvedArcSize,
+        data_get($arcRadiuss, 1, data_get($arcRadiuss, 'in')),
+        $resolvedArcRadius,
         '2.75rem',
     );
     $resolvedArcOutSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
-        data_get($arcSizes, 2, data_get($arcSizes, 'out')),
-        $resolvedArcSize,
+        data_get($arcRadiuss, 2, data_get($arcRadiuss, 'out')),
+        $resolvedArcRadius,
         '2.75rem',
     );
     $resolvedStartLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedArcInSize, '2.75rem');
@@ -235,7 +235,7 @@
         'y' => $add($node4['y'], $resolvedArcOutSize),
     ];
     $resolvedExtensionCount = max(0, (int) $extensionCount);
-    $resolvedExtensionStartLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($extensionStartLength, $resolvedArcSize, '2.75rem');
+    $resolvedExtensionStartLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($extensionStartLength, $resolvedArcRadius, '2.75rem');
     $resolvedExtensionStartShiftEnabled = $extensionStartShiftEnabled === null
         ? \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphBool('merge_extension_start_shift_enabled', false)
         : (filter_var($extensionStartShiftEnabled, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false);
@@ -247,7 +247,7 @@
     $resolvedExtensionStartShiftSegmentLength = $resolvedExtensionStartShiftEnabled ? $resolvedExtensionStartShiftLength : '0rem';
     $resolvedExtensionStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($extensionStemLength, $resolvedStemLength, '4rem');
     $resolvedExtensionBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($extensionBridgeLength, $resolvedBridgeLength, '4rem');
-    $resolvedExtensionArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($extensionArcSize, $resolvedArcSize, '2.75rem');
+    $resolvedExtensionArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($extensionArcRadius, $resolvedArcRadius, '2.75rem');
     $extensionStemContinuationFor = function (int $extensionIndex) use ($extensionStemContinuations): array {
         $continuation = data_get($extensionStemContinuations, $extensionIndex, []);
 
@@ -273,10 +273,10 @@
             ?? $resolvedExtensionBridgeLength
         );
     };
-    $extensionArcSizeFor = function (int $extensionIndex) use ($extensionArcSizes, $resolvedExtensionArcSize): string {
+    $extensionArcRadiusFor = function (int $extensionIndex) use ($extensionArcRadiuss, $resolvedExtensionArcRadius): string {
         return (string) (
-            data_get($extensionArcSizes, $extensionIndex)
-            ?? $resolvedExtensionArcSize
+            data_get($extensionArcRadiuss, $extensionIndex)
+            ?? $resolvedExtensionArcRadius
         );
     };
     $extensionStemLengthFor = function (int $extensionIndex) use ($extensionStemLengths, $resolvedExtensionStemLength): string {
@@ -290,7 +290,7 @@
     $extensionResolvedStemLengths = [];
     $extensionResolvedStemContinuations = [];
     $extensionResolvedBridgeLengths = [];
-    $extensionResolvedArcSizes = [];
+    $extensionResolvedArcRadiuss = [];
     $extensionCounterStarts = [];
     $nextExtensionCounterStart = $counterStart + 3 + $stemLengthCount + $stemContinuationCount;
     $nextExtensionTarget = $node3;
@@ -300,9 +300,9 @@
         $currentExtensionStemContinuation = $extensionStemContinuationFor($extensionIndex);
         $currentExtensionStemContinuationTotal = $extensionStemContinuationTotal($currentExtensionStemContinuation);
         $currentExtensionBridgeLength = $extensionBridgeLengthFor($extensionIndex);
-        $currentExtensionArcSize = $extensionArcSizeFor($extensionIndex);
-        $extensionDeltaX = $add($currentExtensionArcSize, $currentExtensionBridgeLength);
-        $extensionDeltaY = $add($add($add($add($resolvedExtensionStartLength, $resolvedExtensionStartShiftSegmentLength), $currentExtensionStemLength), $currentExtensionStemContinuationTotal), $currentExtensionArcSize);
+        $currentExtensionArcRadius = $extensionArcRadiusFor($extensionIndex);
+        $extensionDeltaX = $add($currentExtensionArcRadius, $currentExtensionBridgeLength);
+        $extensionDeltaY = $add($add($add($add($resolvedExtensionStartLength, $resolvedExtensionStartShiftSegmentLength), $currentExtensionStemLength), $currentExtensionStemContinuationTotal), $currentExtensionArcRadius);
         $extensionAnchor = [
             'x' => $add($nextExtensionTarget['x'], $extensionDeltaX),
             'y' => $subtract($nextExtensionTarget['y'], $extensionDeltaY),
@@ -312,7 +312,7 @@
         $extensionResolvedStemLengths[$extensionIndex] = $currentExtensionStemLength;
         $extensionResolvedStemContinuations[$extensionIndex] = $currentExtensionStemContinuation;
         $extensionResolvedBridgeLengths[$extensionIndex] = $currentExtensionBridgeLength;
-        $extensionResolvedArcSizes[$extensionIndex] = $currentExtensionArcSize;
+        $extensionResolvedArcRadiuss[$extensionIndex] = $currentExtensionArcRadius;
         $extensionCounterStarts[$extensionIndex] = $nextExtensionCounterStart;
 
         $extensionNode1 = [
@@ -332,8 +332,8 @@
             'y' => $add($extensionNode2['y'], $currentExtensionStemContinuationTotal),
         ];
         $extensionNode3 = [
-            'x' => $add($extensionStemContinuationEnd['x'], $neg($currentExtensionArcSize)),
-            'y' => $add($extensionStemContinuationEnd['y'], $currentExtensionArcSize),
+            'x' => $add($extensionStemContinuationEnd['x'], $neg($currentExtensionArcRadius)),
+            'y' => $add($extensionStemContinuationEnd['y'], $currentExtensionArcRadius),
         ];
         $extensionNode4 = [
             'x' => $add($extensionNode3['x'], $neg($currentExtensionBridgeLength)),
@@ -422,8 +422,6 @@
     :color="$resolvedColor"
     :label="$id"
     :dev="$resolvedDev"
-    metrics-scope="canvas"
-    metrics-side="right"
 />
 
 @foreach (array_reverse($extensionAnchors, true) as $extensionIndex => $extensionAnchor)
@@ -436,7 +434,7 @@
         :stem-length="$extensionResolvedStemLengths[$extensionIndex]"
         :stem-continuation="$extensionResolvedStemContinuations[$extensionIndex]"
         :bridge-length="$extensionResolvedBridgeLengths[$extensionIndex]"
-        :arc-size="$extensionResolvedArcSizes[$extensionIndex]"
+        :arc-radius="$extensionResolvedArcRadiuss[$extensionIndex]"
         :node-labels="data_get($extensionNodeLabels, $extensionIndex, [])"
         :color="$resolvedColor"
         :z-index="$zIndex"
@@ -456,8 +454,8 @@
         :bridge-length="$resolvedBridgeLength"
         :stem-lengths="$resolvedStemLengths"
         :stem-continuation="$stemContinuationEntries"
-        :arc-size="$resolvedArcSize"
-        :arc-sizes="$arcSizes"
+        :arc-radius="$resolvedArcRadius"
+        :arc-radiuss="$arcRadiuss"
     :start-label="$startLabel"
     :color="$resolvedColor"
     :z-index="$zIndex"

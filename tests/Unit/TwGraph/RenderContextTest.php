@@ -14,7 +14,7 @@ it('uses geometry values ahead of inherited render defaults for protocol renderi
                 'minHeight' => '80rem',
                 'pathWidth' => '0.5rem',
                 'nodeSize' => '1.25rem',
-                'arcSize' => '4rem',
+                'arcRadius' => '4rem',
             ],
         ],
         'context-test',
@@ -35,7 +35,7 @@ it('uses geometry values ahead of inherited render defaults for protocol renderi
             'minHeight' => '80rem',
             'pathWidth' => '0.5rem',
             'nodeSize' => '1.25rem',
-            'arcSize' => '4rem',
+            'arcRadius' => '4rem',
         ])
         ->and($context['colorRgb'])->toBe('245 158 11');
 });
@@ -61,7 +61,7 @@ it('uses explicit minimum dimensions for manually authored graphs', function ():
             'minHeight' => '66rem',
             'pathWidth' => '0.25rem',
             'nodeSize' => '0.95rem',
-            'arcSize' => '2.75rem',
+            'arcRadius' => '2.75rem',
         ])
         ->and($context['colorRgb'])->toBe('44 144 103');
 });

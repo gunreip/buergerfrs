@@ -17,7 +17,6 @@
     'stepCaps' => true,
     'capLength' => null,
     'arcRadius' => null,
-    'arcSize' => null,
     'bridgeLength' => null,
     'trueBridgeLength' => null,
     'stemLength' => '8rem',
@@ -69,7 +68,6 @@
     :step-caps="$stepCaps"
     :cap-length="$capLength"
     :arc-radius="$arcRadius"
-    :arc-size="$arcSize"
     :bridge-length="$bridgeLength"
     :true-bridge-length="$trueBridgeLength"
     :stem-length="$stemLength"

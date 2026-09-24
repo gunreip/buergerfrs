@@ -190,7 +190,7 @@
     $mergeAnchorIndex = max(1, min((int) ($mergeNodeIndex ?? $defaultTestAnchorIndex), $anchorExpressions->count()));
     $branchAnchorIndex = max(1, min((int) ($branchNodeIndex ?? $defaultTestAnchorIndex), $anchorExpressions->count()));
     $mergeStartY = $anchorExpressions->get($mergeAnchorIndex - 1, $anchorExpressions->first());
-    $chainArcDelta = "calc(var(--tw-graph-v2-arc-size) - var(--tw-graph-v2-path-width))";
+    $chainArcDelta = "calc(var(--tw-graph-v2-arc-radius) - var(--tw-graph-v2-path-width))";
     $chainPoints = collect();
 
     $mergeLeftStartX = "var(--tw-graph-v2-anchor-arc-offset)";

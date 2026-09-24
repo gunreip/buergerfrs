@@ -31,7 +31,7 @@
     'id' => 'path.branch-return-bridge',
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
-    'arcSize' => null,
+    'arcRadius' => null,
     'bridgeLength' => null,
     'color' => null,
     'zIndex' => null,
@@ -51,14 +51,14 @@
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
-    $arcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
+    $arcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
     $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', '4rem'));
 
     $arcStartAnchor = $isLeft ? 'w' : 'e';
     $arcEndAnchor = 'n';
     $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
     $bridgeJointArrowDirection = $isLeft ? 'right' : 'left';
-    $arcDelta = $isLeft ? $arcSize : $neg($arcSize);
+    $arcDelta = $isLeft ? $arcRadius : $neg($arcRadius);
     $bridgeDelta = $isLeft ? $bridgeLength : $neg($bridgeLength);
     $normalizeLabel = fn (mixed $label, ?string $side = null): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, $side, $resolvedColor);
     $pathNodeLabels = function (mixed $label): array {
@@ -90,7 +90,7 @@
 
     $arcEnd = [
         'x' => $add($currentAnchor['x'], $arcDelta),
-        'y' => $add($currentAnchor['y'], $arcSize),
+        'y' => $add($currentAnchor['y'], $arcRadius),
     ];
     $bridgeEnd = [
         'x' => $add($arcEnd['x'], $bridgeDelta),
@@ -111,7 +111,7 @@
                 'id' => $id . '.arc',
                 'startAnchor' => $arcStartAnchor,
                 'endAnchor' => $arcEndAnchor,
-                'arcSize' => $arcSize,
+                'arcRadius' => $arcRadius,
                 'anchorStart' => $currentAnchor,
                 'anchorEnd' => $arcEnd,
                 'nodeStart' => false,

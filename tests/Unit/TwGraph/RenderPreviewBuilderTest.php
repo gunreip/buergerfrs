@@ -359,10 +359,10 @@ it('applies data driven trunk layout corrections to rendered preview path length
 it('uses data driven graph defaults ahead of central graph defaults in render previews', function (): void {
     config()->set('tw-graph-defaults.stem_length', '4rem');
     config()->set('tw-graph-defaults.bridge_length', '4rem');
-    config()->set('tw-graph-defaults.arc_size', '2.75rem');
+    config()->set('tw-graph-defaults.arc_radius', '2.75rem');
     config()->set('tw-graph-data-driven-defaults.stem_length', '9rem');
     config()->set('tw-graph-data-driven-defaults.bridge_length', '11rem');
-    config()->set('tw-graph-data-driven-defaults.arc_size', '4.75rem');
+    config()->set('tw-graph-data-driven-defaults.arc_radius', '4.75rem');
 
     $preview = RenderPreviewBuilder::build([
         'id' => 914,
@@ -396,7 +396,7 @@ it('uses data driven graph defaults ahead of central graph defaults in render pr
 
     expect($preview['graph']['stem_length'])->toBe('9rem')
         ->and($preview['graph']['bridge_length'])->toBe('11rem')
-        ->and($preview['graph']['arc_size'])->toBe('4.75rem')
+        ->and($preview['graph']['arc_radius'])->toBe('4.75rem')
         ->and($preview['trunk']['path_lengths'][1])->toMatchArray([
             'component' => 'path',
         ])

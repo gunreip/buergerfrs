@@ -61,11 +61,11 @@
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-radius</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">canvas arc-size / 2.75rem</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">canvas arc-radius / 2.75rem</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Radius of both arcs.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-size</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-radius</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Alias when arc-radius is omitted.</flux:table.cell>
                     </flux:table.row>

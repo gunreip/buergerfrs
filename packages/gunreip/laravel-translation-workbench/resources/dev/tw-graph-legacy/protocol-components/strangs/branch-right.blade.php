@@ -38,7 +38,7 @@
 
     // Base anchor / shared geometry
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
-    'arcSize' => '2.75rem',
+    'arcRadius' => '2.75rem',
     'color' => 'violet',
     'zIndex' => 40,
 
@@ -105,12 +105,12 @@
     $extensionReturnCounterStart = $extensionContinuationCounter + 1;
 
     $branchConnectorEnd = [
-        'x' => $add($add($anchor['x'], $arcSize), $connectorLength),
-        'y' => $add($anchor['y'], $arcSize),
+        'x' => $add($add($anchor['x'], $arcRadius), $connectorLength),
+        'y' => $add($anchor['y'], $arcRadius),
     ];
     $branchEnd = [
-        'x' => $add($branchConnectorEnd['x'], $arcSize),
-        'y' => $add($add($branchConnectorEnd['y'], $arcSize), $verticalLength),
+        'x' => $add($branchConnectorEnd['x'], $arcRadius),
+        'y' => $add($add($branchConnectorEnd['y'], $arcRadius), $verticalLength),
     ];
     $branchContinuationEnd = filled($branchEndPathLength)
         ? ['x' => $branchEnd['x'], 'y' => $add($branchEnd['y'], (string) $branchEndPathLength)]
@@ -130,16 +130,16 @@
             'y' => $add($branchContinuationEnd['y'], (string) $branchReturnVerticalLength),
         ];
         $branchReturnArcInEnd = [
-            'x' => $subtract($branchReturnVerticalEnd['x'], $arcSize),
-            'y' => $add($branchReturnVerticalEnd['y'], $arcSize),
+            'x' => $subtract($branchReturnVerticalEnd['x'], $arcRadius),
+            'y' => $add($branchReturnVerticalEnd['y'], $arcRadius),
         ];
         $branchReturnConnectorEnd = [
             'x' => $subtract($branchReturnArcInEnd['x'], (string) $branchReturnConnectorLength),
             'y' => $branchReturnArcInEnd['y'],
         ];
         $branchReturnEnd = [
-            'x' => $subtract($branchReturnConnectorEnd['x'], $arcSize),
-            'y' => $add($branchReturnConnectorEnd['y'], $arcSize),
+            'x' => $subtract($branchReturnConnectorEnd['x'], $arcRadius),
+            'y' => $add($branchReturnConnectorEnd['y'], $arcRadius),
         ];
         $strangPoints[] = $branchReturnVerticalEnd;
         $strangPoints[] = $branchReturnArcInEnd;
@@ -167,8 +167,8 @@
             'y' => $currentExtensionAnchor['y'],
         ];
         $extensionEnd = [
-            'x' => $add($extensionConnectorEnd['x'], $arcSize),
-            'y' => $add($add($extensionConnectorEnd['y'], $arcSize), $extensionVerticalLength),
+            'x' => $add($extensionConnectorEnd['x'], $arcRadius),
+            'y' => $add($add($extensionConnectorEnd['y'], $arcRadius), $extensionVerticalLength),
         ];
         $extensionEnds[$extensionIndex] = $extensionEnd;
         $extensionContinuationEnd = filled($extensionEndPathLength)
@@ -183,12 +183,12 @@
 
         if ($hasExtensionBranch) {
             $extensionBranchConnectorEnd = [
-                'x' => $add($add($extensionEnd['x'], $arcSize), $extensionBranchConnectorLength),
-                'y' => $add($extensionEnd['y'], $arcSize),
+                'x' => $add($add($extensionEnd['x'], $arcRadius), $extensionBranchConnectorLength),
+                'y' => $add($extensionEnd['y'], $arcRadius),
             ];
             $extensionBranchEnd = [
-                'x' => $add($extensionBranchConnectorEnd['x'], $arcSize),
-                'y' => $add($add($extensionBranchConnectorEnd['y'], $arcSize), $extensionBranchVerticalLength),
+                'x' => $add($extensionBranchConnectorEnd['x'], $arcRadius),
+                'y' => $add($add($extensionBranchConnectorEnd['y'], $arcRadius), $extensionBranchVerticalLength),
             ];
             $strangPoints[] = $extensionBranchConnectorEnd;
             $strangPoints[] = $extensionBranchEnd;
@@ -201,8 +201,8 @@
                     'y' => $add($extensionBranchEnd['y'], $extensionBranchReturnVerticalLength),
                 ];
                 $extensionBranchReturnArcEnd = [
-                    'x' => $subtract($extensionBranchReturnVerticalEnd['x'], $arcSize),
-                    'y' => $add($extensionBranchReturnVerticalEnd['y'], $arcSize),
+                    'x' => $subtract($extensionBranchReturnVerticalEnd['x'], $arcRadius),
+                    'y' => $add($extensionBranchReturnVerticalEnd['y'], $arcRadius),
                 ];
                 $extensionBranchReturnEnd = [
                     'x' => $subtract($extensionBranchReturnArcEnd['x'], $extensionBranchReturnConnectorLength),
@@ -222,16 +222,16 @@
                 'y' => $add($extensionContinuationEnd['y'], $extensionReturnVerticalLength),
             ];
             $extensionReturnArcInEnd = [
-                'x' => $subtract($extensionReturnVerticalEnd['x'], $arcSize),
-                'y' => $add($extensionReturnVerticalEnd['y'], $arcSize),
+                'x' => $subtract($extensionReturnVerticalEnd['x'], $arcRadius),
+                'y' => $add($extensionReturnVerticalEnd['y'], $arcRadius),
             ];
             $extensionReturnConnectorEnd = [
                 'x' => $subtract($extensionReturnArcInEnd['x'], $extensionReturnConnectorLength),
                 'y' => $extensionReturnArcInEnd['y'],
             ];
             $extensionReturnEnd = [
-                'x' => $subtract($extensionReturnConnectorEnd['x'], $arcSize),
-                'y' => $add($extensionReturnConnectorEnd['y'], $arcSize),
+                'x' => $subtract($extensionReturnConnectorEnd['x'], $arcRadius),
+                'y' => $add($extensionReturnConnectorEnd['y'], $arcRadius),
             ];
             $strangPoints[] = $extensionReturnVerticalEnd;
             $strangPoints[] = $extensionReturnArcInEnd;
@@ -282,7 +282,7 @@
     :anchor-start="$anchor"
     :connector-length="$connectorLength"
     :vertical-length="$verticalLength"
-    :arc-size="$arcSize"
+    :arc-radius="$arcRadius"
     :color="$color"
     :z-index="$zIndex"
     :dev="$dev"
@@ -314,7 +314,7 @@
         :anchor-start="$branchContinuationEnd"
         :vertical-length="$branchReturnVerticalLength"
         :connector-length="$branchReturnConnectorLength"
-        :arc-size="$arcSize"
+        :arc-radius="$arcRadius"
         :color="$branchReturnColor"
         :z-index="$zIndex"
         :counter-start="$branchReturnCounterStart"
@@ -337,8 +337,8 @@
         $extensionBranchVerticalLength = (string) data_get($extensionBranchVerticalLengths, $extensionIndex, $verticalLength);
         $extensionBranchEnd = filled($extensionEnd)
             ? [
-                'x' => $add($add($add($extensionEnd['x'], $arcSize), $extensionBranchConnectorLength), $arcSize),
-                'y' => $add($add($extensionEnd['y'], $arcSize), $add($arcSize, $extensionBranchVerticalLength)),
+                'x' => $add($add($add($extensionEnd['x'], $arcRadius), $extensionBranchConnectorLength), $arcRadius),
+                'y' => $add($add($extensionEnd['y'], $arcRadius), $add($arcRadius, $extensionBranchVerticalLength)),
             ]
             : null;
     @endphp
@@ -349,7 +349,7 @@
         :anchor-start="$extensionAnchor"
         :connector-length="$extensionResolvedConnectorLengths[$extensionIndex]"
         :vertical-length="$extensionResolvedVerticalLengths[$extensionIndex]"
-        :arc-size="$arcSize"
+        :arc-radius="$arcRadius"
         :color="$extensionColor"
         :z-index="$extensionResolvedZIndexes[$extensionIndex]"
         :dev="$dev"
@@ -381,7 +381,7 @@
             :anchor-start="$extensionEnd"
             :connector-length="$extensionBranchConnectorLength"
             :vertical-length="$extensionBranchVerticalLength"
-            :arc-size="$arcSize"
+            :arc-radius="$arcRadius"
             :color="(string) data_get($extensionBranchColors, $extensionIndex, 'red')"
             :z-index="max(1, $extensionResolvedZIndexes[$extensionIndex] - 2)"
             :counter-start="$extensionBranchCounterStart"
@@ -396,7 +396,7 @@
             :anchor-start="$extensionBranchEnd"
             :vertical-length="(string) data_get($extensionBranchReturnVerticalLengths, $extensionIndex, $branchReturnVerticalLength)"
             :connector-length="(string) data_get($extensionBranchReturnConnectorLengths, $extensionIndex, $branchReturnConnectorLength)"
-            :arc-size="$arcSize"
+            :arc-radius="$arcRadius"
             :color="(string) data_get($extensionBranchReturnColors, $extensionIndex, data_get($extensionBranchColors, $extensionIndex, 'red'))"
             :z-index="max(1, $extensionResolvedZIndexes[$extensionIndex] - 4)"
             :counter-start="$extensionBranchReturnCounterStart"
@@ -411,7 +411,7 @@
             :anchor-start="$extensionContinuationEnd"
             :vertical-length="(string) data_get($extensionReturnVerticalLengths, $extensionIndex, $branchReturnVerticalLength)"
             :connector-length="(string) data_get($extensionReturnConnectorLengths, $extensionIndex, $branchReturnConnectorLength)"
-            :arc-size="$arcSize"
+            :arc-radius="$arcRadius"
             :color="(string) data_get($extensionReturnColors, $extensionIndex, $extensionColor)"
             :z-index="max(1, $extensionResolvedZIndexes[$extensionIndex] - 1)"
             :counter-start="$extensionReturnCounterStart"

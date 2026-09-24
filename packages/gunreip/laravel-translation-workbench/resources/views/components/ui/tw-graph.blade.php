@@ -23,7 +23,7 @@
     'lineLength' => null,
     'lineWidth' => null,
     'nodeSize' => null,
-    'arcSize' => null,
+    'arcRadius' => null,
     'capLength' => null,
     'bridgeLength' => null,
     'stemLength' => null,
@@ -42,7 +42,7 @@
     $lineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($lineLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('line_length', '4rem'));
     $lineWidth = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($lineWidth, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('line_width', '0.25rem'));
     $nodeSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($nodeSize, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('node_size', '0.95rem'));
-    $arcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($arcSize, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('arc_size', '2.75rem'));
+    $arcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($arcRadius, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('arc_radius', '2.75rem'));
     $capLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($capLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('cap_length', '1.75rem'));
     $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $lineLength));
     $stemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', $lineLength));
@@ -58,14 +58,16 @@
         $color,
         $lineWidth,
         $nodeSize,
-        $arcSize,
+        $arcRadius,
         $minWidth,
         $minHeight,
     );
+    ob_start();
 @endphp
 
 <div class="tw-graph-protocol-viewport">
     <div
+        data-tw-graph-bounds-model="true"
         data-tw-graph-dev="{{ $dev ? 'true' : 'false' }}"
         data-tw-graph-direction="{{ $context['direction'] }}"
         data-tw-graph-path-tone="{{ $surfacePaths ? 'surface' : 'line' }}"
@@ -76,12 +78,14 @@
                 '--tw-graph-protocol-min-height: ' . $context['minHeight'],
                 '--tw-graph-protocol-path-width: ' . $context['pathWidth'],
                 '--tw-graph-protocol-node-size: ' . $context['nodeSize'],
-                '--tw-graph-protocol-arc-size: ' . $context['arcSize'],
+                '--tw-graph-protocol-arc-radius: ' . $context['arcRadius'],
             ]) }}
 >
 	    @if ($slot->isNotEmpty())
 	        <div class="tw-graph-protocol-canvas tw-graph-protocol-canvas-slot content-center">
 	            {{ $slot }}
+                {{-- Measurement origin and padding use the same coordinate system as every primitive. --}}
+                <span data-tw-graph-bounds-origin aria-hidden="true" style="position:absolute; pointer-events:none; visibility:hidden; left:var(--tw-graph-protocol-trunk-x); bottom:var(--tw-graph-protocol-origin-bottom); width:{{ $horizontalPadding }}; height:2rem;"></span>
                 <x-translation-workbench::ui.tw-graph.line-jump-templates />
                 <x-translation-workbench::ui.tw-graph.return-colors :graph-id="$context['graphId']" />
                 @if ($dev && $showCoordinates)
@@ -102,22 +106,30 @@
                     />
                 @endforeach
 
-	                <x-translation-workbench::ui.tw-graph.canvas-metrics
-                    :graph-id="$context['graphId']"
-                    :dev="$dev"
-                    :coordinates="$showCoordinates"
-                    :horizontal-padding="$horizontalPadding"
-            />
+                <!--tw-graph-bounds-output-->
+
         </div>
     @else
         <x-translation-workbench::ui.tw-graph.canvas
                 :protocol="$protocol"
+                :horizontal-padding="$horizontalPadding"
                 :direction="$context['direction']"
                 :dev="$dev"
                 :coordinates="$showCoordinates"
                 :min-width="$context['minWidth']"
                 :min-height="$context['minHeight']"
             />
+            <!--tw-graph-bounds-output-->
         @endif
     </div>
 </div>
+
+@php
+    $graphMarkup = ob_get_clean();
+    $boundsRecords = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::capture($context['graphId'], $graphMarkup, $context);
+    $boundsOutput = view('translation-workbench::components.ui.tw-graph.canvas-metrics', [
+        'graphId' => $context['graphId'], 'dev' => $dev, 'coordinates' => $showCoordinates,
+        'horizontalPadding' => $horizontalPadding, 'records' => $boundsRecords,
+    ])->render();
+@endphp
+{!! str_replace('<!--tw-graph-bounds-output-->', $boundsOutput, $graphMarkup) !!}

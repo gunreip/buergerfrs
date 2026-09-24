@@ -38,7 +38,7 @@
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'lineLength' => null,
-    'arcSize' => null,
+    'arcRadius' => null,
     'entryStemLength' => '0rem',
     'bridgeLength' => null,
     'bridgeContinuation' => [],
@@ -62,7 +62,7 @@
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
-    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
+    $resolvedArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $resolvedEntryStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($entryStemLength, null, '0rem');
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $resolvedLineLength), '4rem');
@@ -128,14 +128,14 @@
     $stemJointArrowDirection = 'top';
     $arcOutStartAnchor = 's';
     $arcOutEndAnchor = $isLeft ? 'w' : 'e';
-    $arcDelta = $isLeft ? $neg($resolvedArcSize) : $resolvedArcSize;
+    $arcDelta = $isLeft ? $neg($resolvedArcRadius) : $resolvedArcRadius;
     $branchStartAnchor = [
         'x' => $currentAnchor['x'],
         'y' => $add($currentAnchor['y'], $resolvedEntryStemLength),
     ];
     $arcInEnd = [
         'x' => $add($branchStartAnchor['x'], $arcDelta),
-        'y' => $add($branchStartAnchor['y'], $resolvedArcSize),
+        'y' => $add($branchStartAnchor['y'], $resolvedArcRadius),
     ];
     $bridgeEntries = is_array($bridgeContinuation) && $bridgeContinuation !== []
         ? $bridgeContinuation
@@ -185,7 +185,7 @@
 
     $arcOutEnd = [
         'x' => $add($bridgeEnd['x'], $arcDelta),
-        'y' => $add($bridgeEnd['y'], $resolvedArcSize),
+        'y' => $add($bridgeEnd['y'], $resolvedArcRadius),
     ];
     $stepConfig = is_array($step)
         ? $step
@@ -352,7 +352,7 @@
                 'id' => $id . '.arc.in',
                 'startAnchor' => $arcInStartAnchor,
                 'endAnchor' => $arcInEndAnchor,
-                'arcSize' => $resolvedArcSize,
+                'arcRadius' => $resolvedArcRadius,
                 'anchorStart' => $branchStartAnchor,
                 'anchorEnd' => $arcInEnd,
                 'nodeStart' => false,
@@ -375,7 +375,7 @@
                 'id' => $id . '.arc.out',
                 'startAnchor' => $arcOutStartAnchor,
                 'endAnchor' => $arcOutEndAnchor,
-                'arcSize' => $resolvedArcSize,
+                'arcRadius' => $resolvedArcRadius,
                 'anchorStart' => $bridgeEnd,
                 'anchorEnd' => $arcOutEnd,
                 'nodeStart' => false,

@@ -474,7 +474,7 @@
                     :line-length="$twGraphDataDrivenPreviewGraph->get('line_length', '4rem')"
                     :line-width="$twGraphDataDrivenPreviewGraph->get('line_width', '0.25rem')"
                     :node-size="$twGraphDataDrivenPreviewGraph->get('node_size', '0.95rem')"
-                    :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size', '2.75rem')"
+                    :arc-radius="$twGraphDataDrivenPreviewGraph->get('arc_radius', '2.75rem')"
                     :cap-length="$twGraphDataDrivenPreviewGraph->get('cap_length', '1.75rem')"
                     :bridge-length="$twGraphDataDrivenPreviewGraph->get('bridge_length', '4rem')"
                     :stem-length="$twGraphDataDrivenPreviewGraph->get('stem_length', '4rem')"
@@ -559,7 +559,7 @@
                                     $twGraphDataDrivenPreviewGraph->get('bridge_length')"
                                 :stem-length="$rekeyPreview->get('stem_length') ??
                                     $twGraphDataDrivenPreviewGraph->get('stem_length')"
-                                :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
+                                :arc-radius="$twGraphDataDrivenPreviewGraph->get('arc_radius')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
                                 :start-label="$rekeyPreview->get('start_label')"
                                 :node-labels="$rekeyPreview->get('node_labels', [])"
@@ -575,7 +575,7 @@
                                     $twGraphDataDrivenPreviewGraph->get('bridge_length')"
                                 :stem-length="$rekeyPreview->get('stem_length') ??
                                     $twGraphDataDrivenPreviewGraph->get('stem_length')"
-                                :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
+                                :arc-radius="$twGraphDataDrivenPreviewGraph->get('arc_radius')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
                                 :start-label="$rekeyPreview->get('start_label')"
                                 :node-labels="$rekeyPreview->get('node_labels', [])"
@@ -591,7 +591,7 @@
                                     $twGraphDataDrivenPreviewGraph->get('bridge_length')"
                                 :stem-length="$rekeyPreview->get('stem_length') ??
                                     $twGraphDataDrivenPreviewGraph->get('stem_length')"
-                                :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
+                                :arc-radius="$twGraphDataDrivenPreviewGraph->get('arc_radius')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
                                 :end-length="$rekeyPreview->get('end_length')"
                                 :cap-length="$rekeyPreview->get('cap_length')"
@@ -609,7 +609,7 @@
                                     $twGraphDataDrivenPreviewGraph->get('bridge_length')"
                                 :stem-length="$rekeyPreview->get('stem_length') ??
                                     $twGraphDataDrivenPreviewGraph->get('stem_length')"
-                                :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
+                                :arc-radius="$twGraphDataDrivenPreviewGraph->get('arc_radius')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
                                 :end-length="$rekeyPreview->get('end_length')"
                                 :cap-length="$rekeyPreview->get('cap_length')"
@@ -694,16 +694,16 @@
                                         $twGraphDataDrivenPreviewGraph->get('bridge_length')"
                                     :stem-lengths="[1 => $mergePreview->get('stem_length') ??
                                         $twGraphDataDrivenPreviewGraph->get('stem_length')]"
-                                    :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
+                                    :arc-radius="$twGraphDataDrivenPreviewGraph->get('arc_radius')"
                                     :stem-continuation="$mergePreview->get('stem_continuation', [])"
-                                    :arc-sizes="$mergePreview->get('arc_sizes', [])"
+                                    :arc-radiuss="$mergePreview->get('arc_radiuss', [])"
                                     :start-label="$mergePreview->get('start_label')"
                                     :node-labels="$mergePreview->get('node_labels', [])"
                                     :extension-count="$mergePreview->get('extension_count', 0)"
                                     :extension-stem-lengths="$mergePreview->get('extension_stem_lengths', [])"
                                     :extension-stem-continuations="$mergePreview->get('extension_stem_continuations', [])"
                                     :extension-bridge-continuations="$mergePreview->get('extension_bridge_continuations', [])"
-                                    :extension-arc-sizes="$mergePreview->get('extension_arc_sizes', [])"
+                                    :extension-arc-radiuss="$mergePreview->get('extension_arc_radiuss', [])"
                                     :extension-node-labels="$mergePreview->get('extension_node_labels', [])"
                                 />
                             @else
@@ -716,16 +716,16 @@
                                         $twGraphDataDrivenPreviewGraph->get('bridge_length')"
                                     :stem-lengths="[1 => $mergePreview->get('stem_length') ??
                                         $twGraphDataDrivenPreviewGraph->get('stem_length')]"
-                                    :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
+                                    :arc-radius="$twGraphDataDrivenPreviewGraph->get('arc_radius')"
                                     :stem-continuation="$mergePreview->get('stem_continuation', [])"
-                                    :arc-sizes="$mergePreview->get('arc_sizes', [])"
+                                    :arc-radiuss="$mergePreview->get('arc_radiuss', [])"
                                     :start-label="$mergePreview->get('start_label')"
                                     :node-labels="$mergePreview->get('node_labels', [])"
                                     :extension-count="$mergePreview->get('extension_count', 0)"
                                     :extension-stem-lengths="$mergePreview->get('extension_stem_lengths', [])"
                                     :extension-stem-continuations="$mergePreview->get('extension_stem_continuations', [])"
                                     :extension-bridge-continuations="$mergePreview->get('extension_bridge_continuations', [])"
-                                    :extension-arc-sizes="$mergePreview->get('extension_arc_sizes', [])"
+                                    :extension-arc-radiuss="$mergePreview->get('extension_arc_radiuss', [])"
                                     :extension-node-labels="$mergePreview->get('extension_node_labels', [])"
                                 />
                             @endif
@@ -808,7 +808,7 @@
                                 :step="$branchPreview->get('step')"
                                 :stem-length="$branchPreview->get('stem_length') ??
                                     $twGraphDataDrivenPreviewGraph->get('stem_length')"
-                                :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
+                                :arc-radius="$twGraphDataDrivenPreviewGraph->get('arc_radius')"
                                 :stem-continuation="$branchPreview->get('stem_continuation', [])"
                                 :branch-extension="$branchPreview->get('branch_extension', [])"
                                 :node-labels="$branchPreview->get('node_labels', [])"
@@ -839,7 +839,7 @@
                                 :step="$branchPreview->get('step')"
                                 :stem-length="$branchPreview->get('stem_length') ??
                                     $twGraphDataDrivenPreviewGraph->get('stem_length')"
-                                :arc-size="$twGraphDataDrivenPreviewGraph->get('arc_size')"
+                                :arc-radius="$twGraphDataDrivenPreviewGraph->get('arc_radius')"
                                 :stem-continuation="$branchPreview->get('stem_continuation', [])"
                                 :branch-extension="$branchPreview->get('branch_extension', [])"
                                 :node-labels="$branchPreview->get('node_labels', [])"

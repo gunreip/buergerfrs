@@ -167,14 +167,14 @@
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-radius
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">canvas arc-size /
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">canvas arc-radius /
                             2.75rem</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Radius of the route
                             arcs.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-size
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-radius
                         </flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
@@ -331,7 +331,7 @@
                         color="amber"
                         before-length="2rem"
                         after-length="2rem"
-                        arc-size="2.75rem"
+                        arc-radius="2.75rem"
                         side="left"
                         stem-length="2rem"
                         bridge-length="2rem"
@@ -391,7 +391,7 @@
                         color="cyan"
                         before-length="2rem"
                         after-length="2rem"
-                        arc-size="2.75rem"
+                        arc-radius="2.75rem"
                         side="right"
                         stem-length="4rem"
                         bridge-length="2rem"

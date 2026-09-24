@@ -7,21 +7,24 @@ use Livewire\Attributes\Url;
 use Livewire\Attributes\Locked;
 use Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\DocumentationLinks;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class TwGraphDocumentation extends Component
 {
+    use WithPagination;
+
     // Only navigation IDs are client state. View names remain in the authored Blade includes.
     private const TABS = [
         'main' => ['idea-to-paper-inventory', 'idea-to-paper-props-and-connections', 'idea-to-paper-canvas', 'idea-to-paper-primitives', 'idea-to-paper-segments', 'idea-to-paper-parts', 'idea-to-paper-paths', 'idea-to-paper-trunk', 'idea-to-paper-merge', 'idea-to-paper-branch', 'idea-to-paper-rekey', 'idea-to-paper-flow'],
         'reference_index' => ['reference-strang', 'reference-parts'],
-        'reference_strang' => ['reference-flow-switch-case', 'reference-flow-start', 'reference-flow-step', 'reference-flow-if', 'reference-flow-if-else', 'reference-flow-if-elseif', 'reference-flow-if-elseif-multi', 'reference-flow-if-ternary', 'reference-trunk', 'reference-merge-left', 'reference-merge-right', 'reference-branch-left', 'reference-branch-right', 'reference-branch-end', 'reference-rekey-source-left', 'reference-rekey-source-right', 'reference-rekey-target-left', 'reference-rekey-target-right'],
+        'reference_strang' => ['reference-flow-switch-case', 'reference-flow-while', 'reference-flow-start', 'reference-flow-step', 'reference-flow-if', 'reference-flow-if-else', 'reference-flow-if-elseif', 'reference-flow-if-elseif-multi', 'reference-flow-if-ternary', 'reference-trunk', 'reference-merge-left', 'reference-merge-right', 'reference-branch-left', 'reference-branch-right', 'reference-branch-end', 'reference-rekey-source-left', 'reference-rekey-source-right', 'reference-rekey-target-left', 'reference-rekey-target-right'],
         'reference_parts' => ['reference-parts-start', 'reference-parts-end', 'reference-parts-sideways', 'reference-parts-chain', 'reference-parts-fusion'],
         'results' => ['idea-to-paper-draft', 'idea-to-paper-result', 'idea-to-paper-flow-result'],
         'canvas_canvas_props' => ['canvas-props-line', 'canvas-props-stem-length', 'canvas-props-node-size', 'canvas-props-cap-length', 'canvas-props-min-width'],
         'canvas_index' => ['canvas-default', 'canvas-borders', 'canvas-default-trunk', 'canvas-coordinates', 'canvas-height', 'canvas-props'],
         'flow_flow_if' => ['flow-if-simple', 'flow-if-else', 'flow-if-elseif', 'flow-if-elseif-multi', 'flow-if-ternary', 'flow-if-nested-1', 'flow-if-nested-2', 'flow-if-nested-3', 'flow-if-nested-4', 'flow-if-nested-5', 'flow-if-nested-6', 'flow-if-nested-7', 'flow-if-nested-8', 'flow-if-nested-9'],
         'flow_index' => ['flow-start', 'flow-step', 'flow-branch-steps', 'flow-if', 'flow-switch-case', 'flow-while'],
-        'flow_while' => ['flow-while-test'],
+        'flow_while' => ['flow-while-test', 'flow-while-basic', 'flow-while-multiple-actions', 'flow-while-if', 'flow-while-nested', 'flow-while-independent', 'flow-while-mixed', 'flow-while-action-sequence'],
         'flow_switch_case' => ['flow-switch-case-default', 'flow-switch-case-grouped', 'flow-switch-case-grouped-3', 'flow-switch-case-grouped-multi', 'flow-switch-case-nested', 'flow-switch-case-without-default', 'flow-switch-case-fallthrough', 'flow-switch-case-nested-1', 'flow-switch-case-nested-2', 'flow-switch-case-two-nested-1', 'flow-switch-case-two-nested-2', 'flow-switch-case-two-nested-3', 'flow-switch-case-action-sequence'],
         'parts_index' => ['idea-to-paper-parts-start', 'idea-to-paper-parts-end', 'idea-to-paper-parts-sideways', 'idea-to-paper-parts-chain', 'idea-to-paper-parts-fusion'],
         'paths_index' => ['idea-to-paper-paths-trunk', 'idea-to-paper-paths-merge', 'idea-to-paper-paths-merge-extension', 'idea-to-paper-paths-branch', 'idea-to-paper-paths-branch-extension', 'idea-to-paper-paths-branch-return', 'idea-to-paper-paths-branch-return-extension', 'idea-to-paper-paths-branch-return-bridge', 'idea-to-paper-paths-stem-detour'],
@@ -47,7 +50,6 @@ class TwGraphDocumentation extends Component
 
     public string $inventoryRoot = '';
 
-    public int $inventoryPage = 1;
 
     public string $inventorySource = '';
 
@@ -101,13 +103,13 @@ class TwGraphDocumentation extends Component
 
     public function updatedInventoryRoot(): void
     {
-        $this->inventoryPage = 1;
+        $this->resetPage('inventoryPage');
     }
 
     public function updatedInventoryArchive(): void
     {
         $this->inventoryRoot = '';
-        $this->inventoryPage = 1;
+        $this->resetPage('inventoryPage');
         $this->inventorySource = '';
     }
 

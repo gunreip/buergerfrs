@@ -22,7 +22,6 @@
     'attachTo' => null,
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcRadius' => null,
-    'arcSize' => null,
     'bridgeLength' => null,
     'trueBridgeLength' => null,
     'falseBridgeLength' => null,
@@ -155,7 +154,7 @@
     :node-label-right="data_get($trueNodeLabels, 'right')"
     :side="$routeSide"
     :anchor-start="$decisionBranchAnchor"
-    :arc-radius="$arcRadius ?? $arcSize"
+    :arc-radius="$arcRadius"
     :bridge-length="$alignedTrueLength"
     :bridge-out-length="! \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($ifStart, 'return'), true) && filled(data_get($ifStart, 'returnOffset')) ? 'calc(' . $alignedTrueLength . ' + ' . $ifStart['returnOffset'] . ')' : null"
     :bridge-label="$ifStart"
@@ -204,7 +203,7 @@
     :id="$id . '.false'"
     :side="$routeSide"
     :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $id . '.false.stem.anchorNode-end')"
-    :arc-radius="$arcRadius ?? $arcSize"
+    :arc-radius="$arcRadius"
     :bridge-length="$falseBypass ? ($falseOpen ? 'calc(' . $sharedSpan . ' + ' . $falseReturnOffset . ')' : $sharedSpan) : $alignedFalseLength"
     :bridge-out-length="$falseOpen && !$falseBypass ? 'calc(' . $alignedFalseLength . ' + ' . $falseReturnOffset . ')' : null"
     :line-jumps="$falseLineJumps"

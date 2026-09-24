@@ -79,7 +79,7 @@ it('passes branch extension scalar stem labels through without null option fallb
 });
 
 it('uses graph defaults for branch extension arc stem and bridge geometry', function (): void {
-    config()->set('tw-graph-defaults.arc_size', '4rem');
+    config()->set('tw-graph-defaults.arc_radius', '4rem');
     config()->set('tw-graph-defaults.stem_length', '5rem');
     config()->set('tw-graph-defaults.bridge_length', '6rem');
 
@@ -97,7 +97,7 @@ it('uses graph defaults for branch extension arc stem and bridge geometry', func
         ->toContain('defaulted.bridge')
         ->toContain('defaulted.arc')
         ->toContain('defaulted.stem')
-        ->toContain('--tw-graph-protocol-local-arc-size: 4rem')
+        ->toContain('--tw-graph-protocol-local-arc-radius: 4rem')
         ->toContain('--tw-graph-protocol-local-length: 5rem')
         ->toContain('--tw-graph-protocol-local-length: 6rem')
         ->toContain('--tw-graph-protocol-anchor-x: calc(calc(-12rem + calc(6rem * -1)) + calc(4rem * -1))')
@@ -110,7 +110,7 @@ it('renders branch returns solid when fallback styling is explicitly disabled', 
             id="orders.left.1.payment-return"
             side="left"
             :anchor-start="['x' => '-12rem', 'y' => '8rem']"
-            arc-size="2.75rem"
+            arc-radius="2.75rem"
             bridge-length="8rem"
             color="green"
             :fallback-used="true"
@@ -134,7 +134,7 @@ it('renders branch returns dashed when fallback styling is active', function ():
             id="orders.right.1.payment-return"
             side="right"
             :anchor-start="['x' => '12rem', 'y' => '8rem']"
-            arc-size="2.75rem"
+            arc-radius="2.75rem"
             bridge-length="8rem"
             color="amber"
             :fallback-used="true"
@@ -158,7 +158,7 @@ it('renders branch returns solid by default for hand authored graphs', function 
             id="orders.left.1.default-return"
             side="left"
             :anchor-start="['x' => '-12rem', 'y' => '8rem']"
-            arc-size="2.75rem"
+            arc-radius="2.75rem"
             bridge-length="8rem"
             color="green"
             :dev="true"
@@ -204,7 +204,7 @@ it('renders branch return joint arrows in return flow direction', function (): v
 });
 
 it('uses graph defaults for branch return arc and bridge geometry', function (): void {
-    config()->set('tw-graph-defaults.arc_size', '4rem');
+    config()->set('tw-graph-defaults.arc_radius', '4rem');
     config()->set('tw-graph-defaults.bridge_length', '6rem');
 
     $html = Blade::render(<<<'BLADE'
@@ -221,7 +221,7 @@ it('uses graph defaults for branch return arc and bridge geometry', function ():
         ->toContain('orders.left.1.defaulted-return.arc.in')
         ->toContain('orders.left.1.defaulted-return.bridge')
         ->toContain('orders.left.1.defaulted-return.arc.out')
-        ->toContain('--tw-graph-protocol-local-arc-size: 4rem')
+        ->toContain('--tw-graph-protocol-local-arc-radius: 4rem')
         ->toContain('--tw-graph-protocol-local-length: 6rem')
         ->toContain('--tw-graph-protocol-anchor-x: calc(-12rem + 4rem)')
         ->toContain('--tw-graph-protocol-anchor-y: calc(calc(8rem + 4rem) + 4rem)');
@@ -233,7 +233,7 @@ it('passes return bridge node labels through with width alignment and color', fu
             id="orders.left.1.refund-return-bridge"
             side="left"
             :anchor-start="['x' => '-16rem', 'y' => '12rem']"
-            arc-size="2.75rem"
+            arc-radius="2.75rem"
             bridge-length="10rem"
             color="rose"
             :node-labels="[
@@ -326,7 +326,7 @@ it('keeps geometric branch returns separate from label carrying return bridges',
 });
 
 it('uses graph defaults for branch return bridge arc and bridge geometry', function (): void {
-    config()->set('tw-graph-defaults.arc_size', '4rem');
+    config()->set('tw-graph-defaults.arc_radius', '4rem');
     config()->set('tw-graph-defaults.bridge_length', '6rem');
 
     $html = Blade::render(<<<'BLADE'
@@ -342,7 +342,7 @@ it('uses graph defaults for branch return bridge arc and bridge geometry', funct
     expect($html)
         ->toContain('orders.left.1.defaulted-return-bridge.arc')
         ->toContain('orders.left.1.defaulted-return-bridge.bridge')
-        ->toContain('--tw-graph-protocol-local-arc-size: 4rem')
+        ->toContain('--tw-graph-protocol-local-arc-radius: 4rem')
         ->toContain('--tw-graph-protocol-local-length: 6rem')
         ->toContain('--tw-graph-protocol-anchor-x: calc(-16rem + 4rem)')
         ->toContain('--tw-graph-protocol-end-y: calc(12rem + 4rem)');
@@ -354,7 +354,7 @@ it('renders branch return extensions with outward stem arc and bridge geometry',
             id="orders.left.1.refund-extension-return"
             side="left"
             :anchor-start="['x' => '-20rem', 'y' => '10rem']"
-            arc-size="2.75rem"
+            arc-radius="2.75rem"
             stem-length="3rem"
             bridge-length="9rem"
             color="green"
@@ -377,7 +377,7 @@ it('renders branch return extensions with outward stem arc and bridge geometry',
 });
 
 it('uses graph defaults for branch return extension geometry', function (): void {
-    config()->set('tw-graph-defaults.arc_size', '4rem');
+    config()->set('tw-graph-defaults.arc_radius', '4rem');
     config()->set('tw-graph-defaults.stem_length', '5rem');
     config()->set('tw-graph-defaults.bridge_length', '6rem');
 
@@ -397,7 +397,7 @@ it('uses graph defaults for branch return extension geometry', function (): void
         ->toContain('orders.left.1.defaulted-return-extension.arc')
         ->toContain('orders.left.1.defaulted-return-extension.bridge')
         ->toContain('--tw-graph-protocol-local-length: 5rem')
-        ->toContain('--tw-graph-protocol-local-arc-size: 4rem')
+        ->toContain('--tw-graph-protocol-local-arc-radius: 4rem')
         ->toContain('--tw-graph-protocol-local-length: 6rem')
         ->toContain('--tw-graph-protocol-anchor-x: calc(-20rem + 4rem)')
         ->toContain('--tw-graph-protocol-anchor-y: calc(calc(10rem + 5rem) + 4rem)');
@@ -409,7 +409,7 @@ it('mirrors branch return extension geometry on the right side', function (): vo
             id="orders.right.1.defaulted-return-extension"
             side="right"
             :anchor-start="['x' => '20rem', 'y' => '10rem']"
-            arc-size="4rem"
+            arc-radius="4rem"
             stem-length="5rem"
             bridge-length="6rem"
             color="amber"
@@ -424,7 +424,7 @@ it('mirrors branch return extension geometry on the right side', function (): vo
         ->toContain('orders.right.1.defaulted-return-extension.bridge')
         ->toContain('tw-graph-protocol-primitive-line-right-left')
         ->toContain('--tw-graph-protocol-local-length: 5rem')
-        ->toContain('--tw-graph-protocol-local-arc-size: 4rem')
+        ->toContain('--tw-graph-protocol-local-arc-radius: 4rem')
         ->toContain('--tw-graph-protocol-local-length: 6rem')
         ->toContain('--tw-graph-protocol-anchor-x: calc(20rem + calc(4rem * -1))')
         ->toContain('--tw-graph-protocol-anchor-y: calc(calc(10rem + 5rem) + 4rem)')
@@ -455,7 +455,7 @@ it('mirrors return bridge node labels on right side paths', function (): void {
             id="orders.right.1.refund-return-bridge"
             side="right"
             :anchor-start="['x' => '16rem', 'y' => '12rem']"
-            arc-size="2.75rem"
+            arc-radius="2.75rem"
             bridge-length="10rem"
             color="amber"
             :node-labels="[

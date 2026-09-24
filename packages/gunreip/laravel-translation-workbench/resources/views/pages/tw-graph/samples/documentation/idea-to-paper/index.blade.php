@@ -6,8 +6,8 @@
 @endphp
 
 <section
-    id="tw-graph-documentation"
     class="mt-6 space-y-6"
+    id="tw-graph-documentation"
     x-data="{}"
     x-on:tw-graph-documentation-navigate.window="$nextTick(() => document.getElementById($event.detail.target)?.scrollIntoView({ block: 'start' }))"
 >
@@ -28,8 +28,10 @@
             </div>
         </div>
     @endisset
+
+    {{-- Authoring Story --}}
     <flux:callout
-        color="zinc"
+        color="red"
         icon="file-text"
     >
         <flux:callout.heading>
@@ -40,6 +42,7 @@
         </flux:callout.text>
     </flux:callout>
 
+    {{-- Tab Group --}}
     <flux:tab.group class="min-w-0 max-w-full">
         <flux:tabs
             wire:model.live="tabs.main"
@@ -47,8 +50,12 @@
             scrollable:fade
             scrollable:scrollbar="hide"
         >
-            <flux:tab name="idea-to-paper-inventory">{{ __('Inventory') }}</flux:tab>
-            <flux:tab name="idea-to-paper-props-and-connections">{{ __('Deep Reference') }}</flux:tab>
+            <flux:tab name="idea-to-paper-inventory">
+                {{ __('Inventory') }}
+            </flux:tab>
+            <flux:tab name="idea-to-paper-props-and-connections">
+                {{ __('Deep Reference') }}
+            </flux:tab>
             <flux:tab name="idea-to-paper-canvas">
                 {{ __('Canvas') }}
             </flux:tab>
@@ -81,6 +88,7 @@
             </flux:tab>
         </flux:tabs>
 
+        {{-- Inventory --}}
         <flux:tab.panel name="idea-to-paper-inventory">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-inventory')
                 <div wire:key="documentation-inventory">
@@ -88,6 +96,8 @@
                 </div>
             @endif
         </flux:tab.panel>
+
+        {{-- Props And Connections --}}
         <flux:tab.panel name="idea-to-paper-props-and-connections">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-props-and-connections')
                 <div wire:key="documentation-props-and-connections">
@@ -95,6 +105,8 @@
                 </div>
             @endif
         </flux:tab.panel>
+
+        {{-- Canvas --}}
         <flux:tab.panel name="idea-to-paper-canvas">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-canvas')
                 <div wire:key="documentation-idea-to-paper-canvas">
@@ -111,6 +123,7 @@
             @endif
         </flux:tab.panel>
 
+        {{-- Primitives --}}
         <flux:tab.panel name="idea-to-paper-primitives">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-primitives')
                 <div wire:key="documentation-idea-to-paper-primitives">
@@ -127,6 +140,7 @@
             @endif
         </flux:tab.panel>
 
+        {{-- Segments --}}
         <flux:tab.panel name="idea-to-paper-segments">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-segments')
                 <div wire:key="documentation-idea-to-paper-segments">
@@ -143,6 +157,7 @@
             @endif
         </flux:tab.panel>
 
+        {{-- Parts --}}
         <flux:tab.panel name="idea-to-paper-parts">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-parts')
                 <div wire:key="documentation-idea-to-paper-parts">
@@ -153,6 +168,7 @@
             @endif
         </flux:tab.panel>
 
+        {{-- Paths --}}
         <flux:tab.panel name="idea-to-paper-paths">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-paths')
                 <div wire:key="documentation-idea-to-paper-paths">
@@ -169,6 +185,7 @@
             @endif
         </flux:tab.panel>
 
+        {{-- Strang Trunk --}}
         <flux:tab.panel name="idea-to-paper-trunk">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-trunk')
                 <div wire:key="documentation-idea-to-paper-trunk">
@@ -185,6 +202,7 @@
             @endif
         </flux:tab.panel>
 
+        {{-- Strang Merge --}}
         <flux:tab.panel name="idea-to-paper-merge">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-merge')
                 <div wire:key="documentation-idea-to-paper-merge">
@@ -201,6 +219,7 @@
             @endif
         </flux:tab.panel>
 
+        {{-- Strang Branch --}}
         <flux:tab.panel name="idea-to-paper-branch">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-branch')
                 <div wire:key="documentation-idea-to-paper-branch">
@@ -217,6 +236,7 @@
             @endif
         </flux:tab.panel>
 
+        {{-- Strang Rekey --}}
         <flux:tab.panel name="idea-to-paper-rekey">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-rekey')
                 <div wire:key="documentation-idea-to-paper-rekey">
@@ -233,6 +253,7 @@
             @endif
         </flux:tab.panel>
 
+        {{-- Flow --}}
         <flux:tab.panel name="idea-to-paper-flow">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-flow')
                 <div wire:key="documentation-idea-to-paper-flow">
@@ -252,7 +273,7 @@
 
     <flux:callout
         id="tw-graph-documentation-results"
-        color="zinc"
+        color="sky"
         icon="waypoints"
     >
         <flux:callout.heading>
@@ -262,6 +283,7 @@
             {{ __('The draft tab preserves the original thought sketch. The result tab uses a separate copy that can be adjusted into the final graph without changing the draft. The flow diagram tab assembles the flow components as they are introduced above.') }}
         </flux:callout.text>
 
+        {{-- Tab Group --}}
         <flux:tab.group class="mt-4 min-w-0 max-w-full">
             <flux:tabs
                 wire:model.live="tabs.results"
@@ -269,17 +291,23 @@
                 scrollable:fade
                 scrollable:scrollbar="hide"
             >
+                {{-- Thought Draft --}}
                 <flux:tab name="idea-to-paper-draft">
                     {{ __('Thought draft') }}
                 </flux:tab>
+
+                {{-- Current Result --}}
                 <flux:tab name="idea-to-paper-result">
                     {{ __('Current result') }}
                 </flux:tab>
+
+                {{-- Flow Diagram --}}
                 <flux:tab name="idea-to-paper-flow-result">
                     {{ __('Flow diagram') }}
                 </flux:tab>
             </flux:tabs>
 
+            {{-- Thought Draft --}}
             <flux:tab.panel name="idea-to-paper-draft">
                 @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-draft')
                     <div wire:key="documentation-idea-to-paper-draft">
@@ -303,6 +331,7 @@
                 @endif
             </flux:tab.panel>
 
+            {{-- Current Result --}}
             <flux:tab.panel name="idea-to-paper-result">
                 @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-result')
                     <div wire:key="documentation-idea-to-paper-result">
@@ -326,6 +355,7 @@
                 @endif
             </flux:tab.panel>
 
+            {{-- Flow Diagram --}}
             <flux:tab.panel name="idea-to-paper-flow-result">
                 @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-flow-result')
                     <div wire:key="documentation-idea-to-paper-flow-result">

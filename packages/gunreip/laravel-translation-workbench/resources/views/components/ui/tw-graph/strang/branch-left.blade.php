@@ -36,7 +36,7 @@
     'color' => null,
     'dev' => false,
     'lineLength' => null,
-    'arcSize' => null,
+    'arcRadius' => null,
     'bridgeLength' => null,
     'stemLength' => null,
     'labelGap' => null,
@@ -84,7 +84,7 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
     );
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
-    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
+    $resolvedArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
     $localEntryStemLength = $attributes->get('entry-stem-length');
     $localBridgeLength = $attributes->get('bridge-length');
     $localStemLength = $attributes->get('stem-length');
@@ -121,8 +121,8 @@
     ];
 
     $node1 = [
-        'x' => $subtract($branchStartAnchor['x'], $resolvedArcSize),
-        'y' => $add($branchStartAnchor['y'], $resolvedArcSize),
+        'x' => $subtract($branchStartAnchor['x'], $resolvedArcRadius),
+        'y' => $add($branchStartAnchor['y'], $resolvedArcRadius),
         'source' => $id . '.paths.branch.arc.in',
         'sourceType' => 'arc',
         'sourceAnchor' => 'end',
@@ -153,8 +153,8 @@
     }
 
     $node3 = [
-        'x' => $subtract($node2['x'], $resolvedArcSize),
-        'y' => $add($node2['y'], $resolvedArcSize),
+        'x' => $subtract($node2['x'], $resolvedArcRadius),
+        'y' => $add($node2['y'], $resolvedArcRadius),
         'source' => $id . '.paths.branch.arc.out',
         'sourceType' => 'arc',
         'sourceAnchor' => 'end',
@@ -436,8 +436,8 @@
 
             if ($extensionStartsFromStem) {
                 $extensionBridgeStart = [
-                    'x' => $subtract($extensionAnchor['x'], $resolvedArcSize),
-                    'y' => $add($extensionAnchor['y'], $resolvedArcSize),
+                    'x' => $subtract($extensionAnchor['x'], $resolvedArcRadius),
+                    'y' => $add($extensionAnchor['y'], $resolvedArcRadius),
                     'source' => $id . '.extension.' . ($branchExtensionRenderIndex + 1) . '.arc.in',
                     'sourceType' => 'arc',
                     'sourceAnchor' => 'end',
@@ -454,8 +454,8 @@
                 'direction' => 'right-left',
             ];
             $extensionArcEnd = [
-                'x' => $subtract($extensionBridgeEnd['x'], $resolvedArcSize),
-                'y' => $add($extensionBridgeEnd['y'], $resolvedArcSize),
+                'x' => $subtract($extensionBridgeEnd['x'], $resolvedArcRadius),
+                'y' => $add($extensionBridgeEnd['y'], $resolvedArcRadius),
                 'source' => $id . '.extension.' . ($branchExtensionRenderIndex + 1) . '.arc',
                 'sourceType' => 'arc',
                 'sourceAnchor' => 'end',
@@ -577,8 +577,8 @@
                 : [];
             $returnBridgeAnchor = data_get($extensionConfig, 'end');
             $returnBridgeArcEnd = [
-                'x' => $add($returnBridgeAnchor['x'], $resolvedArcSize),
-                'y' => $add($returnBridgeAnchor['y'], $resolvedArcSize),
+                'x' => $add($returnBridgeAnchor['x'], $resolvedArcRadius),
+                'y' => $add($returnBridgeAnchor['y'], $resolvedArcRadius),
                 'source' => $id . '.extension.' . $extensionNumber . '.return-bridge.' . $returnBridgeNumber . '.arc',
                 'sourceType' => 'arc',
                 'sourceAnchor' => 'end',
@@ -678,16 +678,16 @@
         $forceCloseNode(is_array($returnEntry) ? data_get($returnEntry, 'closeTo', data_get($returnEntry, 'closedTo')) : null);
 
         $returnNode1 = [
-            'x' => $add($returnAnchor['x'], $resolvedArcSize),
-            'y' => $add($returnAnchor['y'], $resolvedArcSize),
+            'x' => $add($returnAnchor['x'], $resolvedArcRadius),
+            'y' => $add($returnAnchor['y'], $resolvedArcRadius),
         ];
         $returnNode2 = [
             'x' => $add($returnNode1['x'], $returnBridgeLength),
             'y' => $returnNode1['y'],
         ];
         $returnNode3 = [
-            'x' => $add($returnNode2['x'], $resolvedArcSize),
-            'y' => $add($returnNode2['y'], $resolvedArcSize),
+            'x' => $add($returnNode2['x'], $resolvedArcRadius),
+            'y' => $add($returnNode2['y'], $resolvedArcRadius),
         ];
 
         array_push($branchReturnBoundsPoints, $returnAnchor, $returnNode1, $returnNode2, $returnNode3);
@@ -797,8 +797,6 @@
     :color="$resolvedColor"
     :label="$id"
     :dev="$resolvedDev"
-    metrics-scope="canvas"
-    metrics-side="left"
 />
 
 <x-translation-workbench::ui.tw-graph.paths.branch
@@ -811,7 +809,7 @@
     :step="$step"
     :stem-length="$resolvedStemLength"
     :stem-continuation="$stemContinuation"
-    :arc-size="$resolvedArcSize"
+    :arc-radius="$resolvedArcRadius"
     :color="$resolvedColor"
     :z-index="$zIndex"
     :node-labels="$nodeLabels"
@@ -827,7 +825,7 @@
         :bridge-length="$extensionConfig['bridgeLength']"
         :step="$extensionConfig['step']"
         :stem-length="$extensionConfig['stemLength']"
-        :arc-size="$resolvedArcSize"
+        :arc-radius="$resolvedArcRadius"
         :color="$extensionConfig['color']"
         :z-index="$zIndex - (2 + (int) $extensionConfig['renderIndex'])"
         :counter-start="$extensionConfig['counterStart']"
@@ -845,7 +843,7 @@
         side="left"
         :anchor-start="$returnBridgeConfig['anchor']"
         :bridge-length="$returnBridgeConfig['bridgeLength']"
-        :arc-size="$resolvedArcSize"
+        :arc-radius="$resolvedArcRadius"
         :color="$returnBridgeConfig['color']"
         :node-labels="$returnBridgeConfig['nodeLabels']"
         :z-index="$zIndex - 1"
@@ -860,7 +858,7 @@
         side="left"
         :anchor-start="$returnConfig['anchor']"
         :bridge-length="$returnConfig['bridgeLength']"
-        :arc-size="$resolvedArcSize"
+        :arc-radius="$resolvedArcRadius"
         :color="$returnConfig['color']"
         :z-index="$zIndex - 1"
         :counter-start="$returnConfig['counterStart']"

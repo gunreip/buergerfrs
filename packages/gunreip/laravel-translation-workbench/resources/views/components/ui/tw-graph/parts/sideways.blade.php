@@ -26,7 +26,7 @@
     'color' => null,
     'dev' => false,
     'lineLength' => null,
-    'arcSize' => null,
+    'arcRadius' => null,
     'bridgeLength' => null,
     'connectorLength' => null,
     'connectorGap' => null,
@@ -34,7 +34,6 @@
 
 @php
     $inheritedColor = $color ?? null;
-
 
 
 @endphp
@@ -45,7 +44,6 @@
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'arcRadius' => null,
-    'arcSize' => null,
     'bridgeLength' => null,
     'bridgeLabel' => null,
     'bridgeOutLength' => null,
@@ -84,9 +82,9 @@
         'line_length',
         '4rem',
     );
-    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString(
-        $arcRadius ?? ($arcSize ?? null),
-        'arc_size',
+    $resolvedArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString(
+        $arcRadius,
+        'arc_radius',
         '2.75rem',
     );
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
@@ -109,9 +107,9 @@
         ? $value
         : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn(string $value): string => 'calc(' . $value . ' * -1)';
-    $arcDelta = $isLeft ? $resolvedArcSize : $neg($resolvedArcSize);
+    $arcDelta = $isLeft ? $resolvedArcRadius : $neg($resolvedArcRadius);
     $bridgeDelta = $isLeft ? $resolvedBridgeLength : $neg($resolvedBridgeLength);
-    $verticalDelta = $isTopBottom ? $neg($resolvedArcSize) : $resolvedArcSize;
+    $verticalDelta = $isTopBottom ? $neg($resolvedArcRadius) : $resolvedArcRadius;
     $extensionDelta = $isTopBottom ? $neg($resolvedExtension) : $resolvedExtension;
     $arcInStartAnchor = $isLeft ? 'w' : 'e';
     $arcInEndAnchor = $isTopBottom ? 's' : 'n';
@@ -208,87 +206,6 @@
     $nodeLabelRight = $normalizeNodeLabel($nodeLabelRight, 'right');
     $nodeLabelLeft = $normalizeNodeLabel($nodeLabelLeft, 'left');
     $nodeImage = $normalizeNodeImage($nodeImage);
-    $labelWidth = function (?array $label): string {
-        if ($label === null) {
-            return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.default', '12rem');
-        }
-
-        if ((bool) data_get($label, 'long', false) || data_get($label, 'width') === 'long') {
-            return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.long', '24rem');
-        }
-
-        if ((bool) data_get($label, 'halfLong', false) || in_array(data_get($label, 'width'), ['halfLong', 'half-long', 'half_long'], true)) {
-            return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.half_long', '18rem');
-        }
-
-        if ((bool) data_get($label, 'half', false) || in_array(data_get($label, 'width'), ['half', 'halfWidth', 'half-width', 'half_width'], true)) {
-            return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.half', '6rem');
-        }
-
-        return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.default', '12rem');
-    };
-    $labelHeight = fn (?array $label): string => ((1.75 + (max(1, (int) data_get($label, 'maxLines', 3)) * 1.25)) . 'rem');
-    $resolvedConnectorLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor(
-        $connectorLength ?? null,
-        null,
-        'connector_length',
-        '2rem',
-    );
-    $resolvedConnectorGap = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor(
-        $connectorGap ?? null,
-        null,
-        'connector_gap',
-        '0.25rem',
-    );
-    $nodeHalf = 'calc(' . \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('node_size', '0.95rem') . ' / 2)';
-    $putSideLabelBounds = function (string $boundsId, ?array $label, string $side, array $anchor) use ($resolvedGraphId, $labelWidth, $labelHeight, $resolvedConnectorLength, $resolvedConnectorGap, $nodeHalf): void {
-        if ($label === null) {
-            return;
-        }
-
-        $reach = 'calc(' . $nodeHalf . ' + ' . $resolvedConnectorLength . ' + ' . $resolvedConnectorGap . ' + ' . $labelWidth($label) . ')';
-        $height = $labelHeight($label);
-
-        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
-            $resolvedGraphId,
-            $boundsId,
-            $side === 'left' ? 'calc(' . $anchor['x'] . ' - ' . $reach . ')' : $anchor['x'],
-            'calc(' . $anchor['y'] . ' - (' . $height . ' / 2))',
-            $reach,
-            $height,
-            $side,
-        );
-    };
-    $geometryBounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints(
-        [$anchorStart, $arcInEnd, $bridgeEnd, $arcOutEnd, $labelAnchor, $continuationEnd],
-        '1rem',
-    );
-
-    // Slot-mode canvas metrics depend on explicit bounds registration for manual parts.
-    \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
-        $resolvedGraphId,
-        $id . '.bounds',
-        $geometryBounds['left'],
-        $geometryBounds['bottom'],
-        $geometryBounds['width'],
-        $geometryBounds['height'],
-        $isLeft ? 'left' : 'right',
-    );
-    if ($labelBridgeGeometry !== null) {
-        $bridgeLabelWidth = $labelWidth($bridgeLabel);
-        $bridgeLabelHeight = $labelHeight($bridgeLabel);
-        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
-            $resolvedGraphId,
-            $id . '.bridge1.label.bounds',
-            'calc(' . $labelBridgeGeometry['labelAnchor']['x'] . ' - (' . $bridgeLabelWidth . ' / 2))',
-            'calc(' . $labelBridgeGeometry['labelAnchor']['y'] . ' - (' . $bridgeLabelHeight . ' / 2))',
-            $bridgeLabelWidth,
-            $bridgeLabelHeight,
-            $isLeft ? 'left' : 'right',
-        );
-    }
-    $putSideLabelBounds($id . '.anchorNode-end.label-1.bounds', $nodeLabelRight, 'right', $labelAnchor);
-    $putSideLabelBounds($id . '.anchorNode-end.label-2.bounds', $nodeLabelLeft, 'left', $labelAnchor);
 
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, $id . '.anchorNode-end', [
         'x' => $labelAnchor['x'],
@@ -301,18 +218,6 @@
         'zIndex' => (string) $zIndex,
     ]);
 
-    if ($nodeImage !== null) {
-        $nodeImageSize = data_get($nodeImage, 'size', \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('node_image_size', '3rem'));
-        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
-            $resolvedGraphId,
-            $id . '.anchorNode-end.image.bounds',
-            'calc(' . $labelAnchor['x'] . ' - (' . $nodeImageSize . ' / 2))',
-            'calc(' . $labelAnchor['y'] . ' - (' . $nodeImageSize . ' / 2))',
-            $nodeImageSize,
-            $nodeImageSize,
-            'center',
-        );
-    }
     $segments = [
         [
             'component' => 'arc',
@@ -320,7 +225,7 @@
                 'id' => $id . '.arc1-' . $arcInName,
                 'startAnchor' => $arcInStartAnchor,
                 'endAnchor' => $arcInEndAnchor,
-                'arcSize' => $resolvedArcSize,
+                'arcRadius' => $resolvedArcRadius,
                 'anchorStart' => $anchorStart,
                 'anchorEnd' => $arcInEnd,
                 'nodeStart' => false,
@@ -355,7 +260,7 @@
                 'id' => $id . '.arc2-' . $arcOutName,
                 'startAnchor' => $arcOutStartAnchor,
                 'endAnchor' => $arcOutEndAnchor,
-                'arcSize' => $resolvedArcSize,
+                'arcRadius' => $resolvedArcRadius,
                 'anchorStart' => $bridgeEnd,
                 'anchorEnd' => $arcOutEnd,
                 'nodeStart' => false,

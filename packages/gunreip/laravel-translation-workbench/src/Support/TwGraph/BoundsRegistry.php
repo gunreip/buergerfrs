@@ -11,6 +11,59 @@ final class BoundsRegistry
      */
     private static array $bounds = [];
 
+    /** Rebuild from the primitives actually emitted by this render; no stale per-part estimates. */
+    public static function capture(string $graphId, string $markup, array $context): array
+    {
+        self::forgetGraph($graphId);
+        preg_match_all('/data-tw-graph-bounds="([^"]+)"/', $markup, $matches);
+        if (substr_count($markup, 'data-tw-graph-bounds-model="true"') > 1) {
+            $dom = new \DOMDocument;
+            $previous = libxml_use_internal_errors(true);
+            try {
+                $dom->loadHTML('<?xml encoding="UTF-8">'.$markup);
+                $nodes = (new \DOMXPath($dom))->query('//*[@data-tw-graph-bounds][count(ancestor::*[@data-tw-graph-bounds-model]) <= 1]');
+                $matches[1] = [];
+                foreach ($nodes as $node) {
+                    $matches[1][] = htmlspecialchars($node->getAttribute('data-tw-graph-bounds'), ENT_QUOTES, 'UTF-8');
+                }
+            } finally {
+                libxml_clear_errors();
+                libxml_use_internal_errors($previous);
+            }
+        }
+
+        $variables = [
+            'var(--tw-graph-protocol-path-width)' => $context['pathWidth'],
+            'var(--tw-graph-protocol-node-size)' => $context['nodeSize'],
+            'var(--tw-graph-protocol-node-half)' => 'calc('.$context['nodeSize'].' / 2)',
+            'var(--tw-graph-protocol-path-half)' => 'calc('.$context['pathWidth'].' / 2)',
+            'var(--tw-graph-protocol-arc-radius)' => $context['arcRadius'],
+        ];
+        $records = [];
+        foreach ($matches[1] as $encoded) {
+            $record = json_decode(html_entity_decode($encoded, ENT_QUOTES | ENT_HTML5, 'UTF-8'), true, flags: JSON_THROW_ON_ERROR);
+            foreach ($record['rects'] as &$rect) {
+                foreach ($rect as &$value) {
+                    $value = strtr($value, $variables);
+                    $numeric = self::evaluateRemExpression($value);
+                    if ($numeric !== null) {
+                        $value = $numeric.'rem';
+                    }
+                }
+                unset($value);
+            }
+            unset($rect);
+            $record['side'] = self::inferSide(ElementIdentifier::normalize($record['id']));
+            $records[] = $record;
+            foreach ($record['rects'] as $index => $rect) {
+                self::put($graphId, $record['id'].'.bounds.'.count($records).'.'.$index,
+                    $rect['x'], $rect['y'], $rect['width'], $rect['height'], $record['side']);
+            }
+        }
+
+        return $records;
+    }
+
     public static function forgetGraph(string $graphId): void
     {
         unset(self::$bounds[$graphId]);
@@ -90,7 +143,7 @@ final class BoundsRegistry
             ->values()
             ->all();
         $rights = $items
-            ->map(fn (array $item): string => 'calc(' . $item['x'] . ' + ' . $item['width'] . ')')
+            ->map(fn (array $item): string => 'calc('.$item['x'].' + '.$item['width'].')')
             ->values()
             ->all();
         $bottoms = $items
@@ -99,7 +152,7 @@ final class BoundsRegistry
             ->values()
             ->all();
         $tops = $items
-            ->map(fn (array $item): string => 'calc(' . $item['y'] . ' + ' . $item['height'] . ')')
+            ->map(fn (array $item): string => 'calc('.$item['y'].' + '.$item['height'].')')
             ->values()
             ->all();
 
@@ -107,18 +160,18 @@ final class BoundsRegistry
         $maxX = self::cssMax(['0rem', ...$rights]);
         $minXRem = self::minRem(['0rem', ...$lefts]);
         $maxXRem = self::maxRem(['0rem', ...$rights]);
-        $widthRem = $minXRem !== null && $maxXRem !== null
+        $widthRem = $minXRem !== null && $maxXRem !== null && self::evaluateRemExpression($horizontalPadding) !== null
             ? round($maxXRem - $minXRem + (self::evaluateRemExpression($horizontalPadding) ?? 0.0) * 2, 3)
             : null;
-        $originLeftRem = $minXRem !== null
+        $originLeftRem = $minXRem !== null && self::evaluateRemExpression($horizontalPadding) !== null
             ? round(($minXRem * -1) + (self::evaluateRemExpression($horizontalPadding) ?? 0.0), 3)
             : null;
-        $originLeft = 'calc((' . $minX . ') * -1 + ' . $horizontalPadding . ')';
-        $width = 'calc(' . $maxX . ' - ' . $minX . ' + (' . $horizontalPadding . ' * 2))';
+        $originLeft = 'calc(('.$minX.') * -1 + '.$horizontalPadding.')';
+        $width = 'calc('.$maxX.' - '.$minX.' + ('.$horizontalPadding.' * 2))';
         $minY = self::cssMin(['0rem', ...$bottoms]);
         $maxY = self::cssMax(['0rem', ...$tops]);
-        $originBottom = 'calc((' . $minY . ') * -1 + ' . $padding . ')';
-        $height = 'calc(' . $maxY . ' - ' . $minY . ' + (' . $padding . ' * 2))';
+        $originBottom = 'calc(('.$minY.') * -1 + '.$padding.')';
+        $height = 'calc('.$maxY.' - '.$minY.' + ('.$padding.' * 2))';
 
         return [
             'minX' => $minX,
@@ -159,7 +212,7 @@ final class BoundsRegistry
      */
     private static function sideSummary(array $items): array
     {
-        $tops = array_map(fn (array $item): string => 'calc(' . $item['y'] . ' + ' . $item['height'] . ')', $items);
+        $tops = array_map(fn (array $item): string => 'calc('.$item['y'].' + '.$item['height'].')', $items);
         $top = self::cssMax($tops);
         $height = self::cssMax(array_map(fn (array $item): string => $item['height'], $items));
         $topRem = self::maxRem($tops);
@@ -187,11 +240,16 @@ final class BoundsRegistry
             return '0rem';
         }
 
+        $numeric = self::maxRem($values);
+        if ($numeric !== null) {
+            return $numeric.'rem';
+        }
+
         if (count($values) === 1) {
             return $values[0];
         }
 
-        return 'max(' . implode(', ', $values) . ')';
+        return 'max('.implode(', ', $values).')';
     }
 
     /**
@@ -205,11 +263,16 @@ final class BoundsRegistry
             return '0rem';
         }
 
+        $numeric = self::minRem($values);
+        if ($numeric !== null) {
+            return $numeric.'rem';
+        }
+
         if (count($values) === 1) {
             return $values[0];
         }
 
-        return 'min(' . implode(', ', $values) . ')';
+        return 'min('.implode(', ', $values).')';
     }
 
     /**
@@ -217,10 +280,10 @@ final class BoundsRegistry
      */
     private static function maxRem(array $values): ?float
     {
-        $resolved = array_values(array_filter(
-            array_map(fn (string $value): ?float => self::evaluateRemExpression($value), $values),
-            fn (?float $value): bool => $value !== null,
-        ));
+        $resolved = array_map(fn (string $value): ?float => self::evaluateRemExpression($value), $values);
+        if (in_array(null, $resolved, true)) {
+            return null;
+        }
 
         return $resolved === [] ? null : max($resolved);
     }
@@ -255,7 +318,7 @@ final class BoundsRegistry
 
         try {
             /** @var int|float $result */
-            $result = eval('return ' . $arithmetic . ';');
+            $result = eval('return '.$arithmetic.';');
         } catch (\Throwable) {
             return null;
         }
@@ -268,10 +331,10 @@ final class BoundsRegistry
      */
     private static function minRem(array $values): ?float
     {
-        $resolved = array_values(array_filter(
-            array_map(fn (string $value): ?float => self::evaluateRemExpression($value), $values),
-            fn (?float $value): bool => $value !== null,
-        ));
+        $resolved = array_map(fn (string $value): ?float => self::evaluateRemExpression($value), $values);
+        if (in_array(null, $resolved, true)) {
+            return null;
+        }
 
         return $resolved === [] ? null : min($resolved);
     }
@@ -297,7 +360,7 @@ final class BoundsRegistry
                 return null;
             }
 
-            $resolved = substr($resolved, 0, $start) . $value . 'rem' . substr($resolved, $close + 1);
+            $resolved = substr($resolved, 0, $start).$value.'rem'.substr($resolved, $close + 1);
         }
 
         return $resolved;

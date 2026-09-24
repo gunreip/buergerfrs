@@ -37,7 +37,7 @@
     'startLength' => null,
     'startShiftLength' => null,
     'lineLength' => null,
-    'arcSize' => null,
+    'arcRadius' => null,
     'stemLength' => null,
     'stemContinuation' => [],
     'bridgeLength' => null,
@@ -68,7 +68,7 @@
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
-    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
+    $resolvedArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', $resolvedLineLength), '4rem');
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $resolvedLineLength), '4rem');
@@ -77,9 +77,9 @@
     $arcStartAnchor = $isLeft ? 'w' : 'e';
     $arcEndAnchor = 'n';
     $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
-    $arcDelta = $isLeft ? $resolvedArcSize : $neg($resolvedArcSize);
+    $arcDelta = $isLeft ? $resolvedArcRadius : $neg($resolvedArcRadius);
     $bridgeDelta = $isLeft ? $resolvedBridgeLength : $neg($resolvedBridgeLength);
-    $startLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedArcSize, '2.75rem');
+    $startLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedArcRadius, '2.75rem');
     $startShiftLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startShiftLength, null, '0rem');
     $hasStartShiftJoint = $toRem($startShiftLength) >= 1.0;
     $startShiftLength = $hasStartShiftJoint ? $startShiftLength : '0rem';
@@ -139,7 +139,7 @@
 
     $arcEnd = [
         'x' => $add($stemContinuationEnd['x'], $arcDelta),
-        'y' => $add($stemContinuationEnd['y'], $resolvedArcSize),
+        'y' => $add($stemContinuationEnd['y'], $resolvedArcRadius),
     ];
     $bridgeEnd = [
         'x' => $add($arcEnd['x'], $bridgeDelta),
@@ -266,7 +266,7 @@
                 'id' => $id . '.arc',
                 'startAnchor' => $arcStartAnchor,
                 'endAnchor' => $arcEndAnchor,
-                'arcSize' => $resolvedArcSize,
+                'arcRadius' => $resolvedArcRadius,
                 'anchorStart' => $stemContinuationEnd,
                 'anchorEnd' => $arcEnd,
                 'nodeStart' => false,

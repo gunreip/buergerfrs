@@ -38,7 +38,7 @@
                     <flux:table.cell class="whitespace-normal align-top">arc-radius</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">length string | null</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">1.375rem</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Arc radius; null falls back to arc-size / canvas arc-size (2.75rem).</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">Arc radius; null uses the shared arc radius (2.75rem).</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal align-top">min-stem-length</flux:table.cell>

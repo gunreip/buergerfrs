@@ -406,7 +406,7 @@ it('accepts public kebab case keys in hand authored part chain arrays', function
         ->toContain('sample.center.1.public-start.label.right.1')
         ->toContain('Public start key')
         ->toContain('sample.left.1.public-sideways.arc1-west-north')
-        ->toContain('--tw-graph-protocol-local-arc-size: 4rem')
+        ->toContain('--tw-graph-protocol-local-arc-radius: 4rem')
         ->toContain('sample.left.1.public-sideways.bridge1')
         ->toContain('--tw-graph-protocol-local-length: 5rem')
         ->toContain('sample.left.1.public-sideways.anchorNode-end.label-2')
@@ -467,7 +467,7 @@ it('accepts backend friendly snake case keys in hand authored part chain arrays'
         ->toContain('sample.center.1.snake-start.label.right.1')
         ->toContain('Snake start key')
         ->toContain('sample.right.1.snake-sideways.arc1-east-north')
-        ->toContain('--tw-graph-protocol-local-arc-size: 4rem')
+        ->toContain('--tw-graph-protocol-local-arc-radius: 4rem')
         ->toContain('sample.right.1.snake-sideways.bridge1')
         ->toContain('--tw-graph-protocol-local-length: 5rem')
         ->toContain('sample.right.1.snake-sideways.anchorNode-end.label-1')
@@ -814,7 +814,7 @@ it('treats string false dev props as disabled across root and nested graph eleme
 it('uses central graph defaults for root canvas geometry styles', function (): void {
     config()->set('tw-graph-defaults.line_width', '0.5rem');
     config()->set('tw-graph-defaults.node_size', '1.5rem');
-    config()->set('tw-graph-defaults.arc_size', '4rem');
+    config()->set('tw-graph-defaults.arc_radius', '4rem');
     config()->set('tw-graph-defaults.min_height', '64rem');
 
     $html = Blade::render(<<<'BLADE'
@@ -827,14 +827,14 @@ it('uses central graph defaults for root canvas geometry styles', function (): v
         ->toContain('id="root-defaults-test"')
         ->toContain('--tw-graph-protocol-path-width: 0.5rem')
         ->toContain('--tw-graph-protocol-node-size: 1.5rem')
-        ->toContain('--tw-graph-protocol-arc-size: 4rem')
+        ->toContain('--tw-graph-protocol-arc-radius: 4rem')
         ->toContain('--tw-graph-protocol-min-height: 64rem');
 });
 
 it('keeps local root canvas geometry props ahead of central graph defaults', function (): void {
     config()->set('tw-graph-defaults.line_width', '0.5rem');
     config()->set('tw-graph-defaults.node_size', '1.5rem');
-    config()->set('tw-graph-defaults.arc_size', '4rem');
+    config()->set('tw-graph-defaults.arc_radius', '4rem');
 
     $html = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph
@@ -842,7 +842,7 @@ it('keeps local root canvas geometry props ahead of central graph defaults', fun
             color="green"
             line-width="0.75rem"
             node-size="2rem"
-            arc-size="5rem"
+            arc-radius="5rem"
             :dev="false"
             :coordinates="false"
         >
@@ -854,13 +854,13 @@ it('keeps local root canvas geometry props ahead of central graph defaults', fun
         ->toContain('id="root-local-defaults-test"')
         ->toContain('--tw-graph-protocol-path-width: 0.75rem')
         ->toContain('--tw-graph-protocol-node-size: 2rem')
-        ->toContain('--tw-graph-protocol-arc-size: 5rem')
+        ->toContain('--tw-graph-protocol-arc-radius: 5rem')
         ->not->toContain('--tw-graph-protocol-path-width: 0.5rem')
         ->not->toContain('--tw-graph-protocol-node-size: 1.5rem')
-        ->not->toContain('--tw-graph-protocol-arc-size: 4rem');
+        ->not->toContain('--tw-graph-protocol-arc-radius: 4rem');
 });
 
-it('renders slot canvas metrics only for slot based manual graphs', function (): void {
+it('uses the same primitive bounds model for manual and protocol graphs', function (): void {
     $slotHtml = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph graph-id="root-slot-test" :dev="true" :coordinates="false">
             <x-translation-workbench::ui.tw-graph.parts.start id="slot.center.1.start" />
@@ -875,7 +875,7 @@ it('renders slot canvas metrics only for slot based manual graphs', function ():
         ->toContain('--tw-graph-protocol-calculated-width')
         ->and($protocolHtml)
         ->not->toContain('tw-graph-protocol-canvas-slot')
-        ->not->toContain('--tw-graph-protocol-calculated-width');
+        ->toContain('--tw-graph-protocol-calculated-width');
 });
 
 it('passes node images and extension geometry through chained handmade parts', function (): void {
@@ -971,7 +971,7 @@ it('routes a question into true and false action bridges with attachable final a
                 before-length="2rem"
                 label-gap="6rem"
                 after-length="3rem"
-                arc-size="2rem"
+                arc-radius="2rem"
                 left-bridge-length="2rem"
                 right-bridge-length="3rem"
                 :condition-label="['text' => ['IF approved?', 'Review completed'], 'width' => 'halfLong']"
@@ -1038,7 +1038,7 @@ it('routes a question into true and false action bridges with attachable final a
 
 it('keeps chain continuation aligned with the rendered sideways radius', function (string $direction, string $side, ?string $override): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph graph-id="chain-radius-test" arc-size="2.75rem">
+        <x-translation-workbench::ui.tw-graph graph-id="chain-radius-test" arc-radius="2.75rem">
             <x-translation-workbench::ui.tw-graph.parts.chain
                 :direction="$direction"
                 arc-radius="2rem"

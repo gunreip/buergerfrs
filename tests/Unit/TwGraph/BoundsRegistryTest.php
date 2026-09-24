@@ -118,8 +118,8 @@ it('keeps equal canonical ids isolated by render id and graph id', function (): 
 it('exposes origin bottom and canvas height helpers from canvas metrics', function (): void {
     BoundsRegistry::put('tw-graph-bounds-test', 'trunk.center.1.bounds', '-1rem', '-3rem', '2rem', '11rem', 'center');
 
-    expect(BoundsRegistry::originBottom('tw-graph-bounds-test', '2rem'))->toBe('calc((min(0rem, -3rem)) * -1 + 2rem)')
-        ->and(BoundsRegistry::canvasHeight('tw-graph-bounds-test', '2rem'))->toBe('calc(max(0rem, calc(-3rem + 11rem)) - min(0rem, -3rem) + (2rem * 2))');
+    expect(BoundsRegistry::originBottom('tw-graph-bounds-test', '2rem'))->toBe('calc((-3rem) * -1 + 2rem)')
+        ->and(BoundsRegistry::canvasHeight('tw-graph-bounds-test', '2rem'))->toBe('calc(8rem - -3rem + (2rem * 2))');
 });
 
 it('returns stable zero metrics for graphs without registered bounds', function (): void {
@@ -153,7 +153,7 @@ it('infers sides from concise canonical element ids', function (): void {
         ->and($summary['center']['items'][0]['side'])->toBe('center');
 });
 
-it('keeps css var expressions while evaluating the safe numeric parts', function (): void {
+it('keeps unresolved css geometry explicit instead of dropping it from numeric bounds', function (): void {
     BoundsRegistry::put(
         'tw-graph-bounds-test',
         'trunk.center.1.label',
@@ -168,9 +168,9 @@ it('keeps css var expressions while evaluating the safe numeric parts', function
 
     expect($metrics['minX'])->toBe('min(0rem, calc(var(--tw-graph-x) - 4rem))')
         ->and($metrics['maxX'])->toBe('max(0rem, calc(calc(var(--tw-graph-x) - 4rem) + 8rem))')
-        ->and($metrics['minXRem'])->toBe(0.0)
-        ->and($metrics['maxXRem'])->toBe(0.0)
-        ->and($metrics['widthRem'])->toBe(4.0);
+        ->and($metrics['minXRem'])->toBeNull()
+        ->and($metrics['maxXRem'])->toBeNull()
+        ->and($metrics['widthRem'])->toBeNull();
 });
 
 it('evaluates nested css min max calc expressions for numeric canvas metrics', function (): void {
@@ -228,8 +228,8 @@ it('uses separate horizontal padding for canvas width without changing vertical 
         'originBottomRem' => 4.0,
         'heightRem' => 16.0,
     ])
-        ->and($metrics['originLeft'])->toBe('calc((min(0rem, -10rem, 4rem)) * -1 + 5rem)')
-        ->and($metrics['originBottom'])->toBe('calc((min(0rem, -2rem, 6rem)) * -1 + 2rem)');
+        ->and($metrics['originLeft'])->toBe('calc((-10rem) * -1 + 5rem)')
+        ->and($metrics['originBottom'])->toBe('calc((-2rem) * -1 + 2rem)');
 });
 
 it('spans canvas metrics across left center and right registered bounds', function (): void {

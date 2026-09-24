@@ -30,7 +30,6 @@
     $inheritedColor = $color ?? null;
 
 
-
 @endphp
 
 @props([
@@ -141,72 +140,7 @@
     $nodeLabelRight = $normalizeNodeLabel($nodeLabelRight, 'right');
     $nodeLabelLeft = $normalizeNodeLabel($nodeLabelLeft, 'left');
     $nodeImage = $normalizeNodeImage($nodeImage);
-    $labelWidth = function (?array $label): string {
-        if ($label === null) {
-            return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.default', '12rem');
-        }
-
-        if ((bool) data_get($label, 'long', false) || data_get($label, 'width') === 'long') {
-            return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.long', '24rem');
-        }
-
-        if ((bool) data_get($label, 'halfLong', false) || in_array(data_get($label, 'width'), ['halfLong', 'half-long', 'half_long'], true)) {
-            return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.half_long', '18rem');
-        }
-
-        if ((bool) data_get($label, 'half', false) || in_array(data_get($label, 'width'), ['half', 'halfWidth', 'half-width', 'half_width'], true)) {
-            return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.half', '6rem');
-        }
-
-        return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_width.default', '12rem');
-    };
-    $labelHeight = fn (?array $label): string => ((1.75 + (max(1, (int) data_get($label, 'maxLines', 3)) * 1.25)) . 'rem');
-    $resolvedConnectorLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor(
-        $connectorLength ?? null,
-        null,
-        'connector_length',
-        '2rem',
-    );
-    $resolvedConnectorGap = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor(
-        $connectorGap ?? null,
-        null,
-        'connector_gap',
-        '0.25rem',
-    );
-    $nodeHalf = 'calc(' . \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('node_size', '0.95rem') . ' / 2)';
-    $putSideLabelBounds = function (string $boundsId, ?array $label, string $side, array $anchor) use ($resolvedGraphId, $labelWidth, $labelHeight, $resolvedConnectorLength, $resolvedConnectorGap, $nodeHalf): void {
-        if ($label === null) {
-            return;
-        }
-
-        $reach = 'calc(' . $nodeHalf . ' + ' . $resolvedConnectorLength . ' + ' . $resolvedConnectorGap . ' + ' . $labelWidth($label) . ')';
-        $height = $labelHeight($label);
-
-        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
-            $resolvedGraphId,
-            $boundsId,
-            $side === 'left' ? 'calc(' . $anchor['x'] . ' - ' . $reach . ')' : $anchor['x'],
-            'calc(' . $anchor['y'] . ' - (' . $height . ' / 2))',
-            $reach,
-            $height,
-            $side,
-        );
-    };
     $startLabel = $normalizeLabel($startLabel);
-    $geometryBounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([$anchorStart, $anchorEnd], '1rem');
-
-    // Slot-mode canvas metrics depend on explicit bounds registration for manual parts.
-    \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
-        $resolvedGraphId,
-        $id . '.bounds',
-        $geometryBounds['left'],
-        $geometryBounds['bottom'],
-        $geometryBounds['width'],
-        $geometryBounds['height'],
-        'center',
-    );
-    $putSideLabelBounds($id . '.anchorNode-end.label-1.bounds', $nodeLabelRight, 'right', $anchorEnd);
-    $putSideLabelBounds($id . '.anchorNode-end.label-2.bounds', $nodeLabelLeft, 'left', $anchorEnd);
 
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, $id . '.anchorNode-end', [
         'x' => $anchorEnd['x'],
@@ -219,18 +153,6 @@
         'zIndex' => (string) $zIndex,
     ]);
 
-    if ($nodeImage !== null) {
-        $nodeImageSize = data_get($nodeImage, 'size', \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('node_image_size', '3rem'));
-        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
-            $resolvedGraphId,
-            $id . '.anchorNode-end.image.bounds',
-            'calc(' . $anchorEnd['x'] . ' - (' . $nodeImageSize . ' / 2))',
-            'calc(' . $anchorEnd['y'] . ' - (' . $nodeImageSize . ' / 2))',
-            $nodeImageSize,
-            $nodeImageSize,
-            'center',
-        );
-    }
 
     if ($startLabel !== null) {
         $startLabelSide = data_get($startLabel, 'side', 'bottom');
@@ -240,28 +162,6 @@
             default => $startLabelSide,
         };
         $startLabel['side'] = $startLabelSide;
-        $startLabelWidth = $labelWidth($startLabel);
-        $startLabelHeight = $labelHeight($startLabel);
-        $startLabelX = match ($startLabelSide) {
-            'left' => 'calc(' . $anchorStart['x'] . ' - ' . $startLabelWidth . ')',
-            'right' => $anchorStart['x'],
-            default => 'calc(' . $anchorStart['x'] . ' - (' . $startLabelWidth . ' / 2))',
-        };
-        $startLabelY = match ($startLabelSide) {
-            'top' => $anchorStart['y'],
-            'bottom' => 'calc(' . $anchorStart['y'] . ' - ' . $startLabelHeight . ')',
-            default => 'calc(' . $anchorStart['y'] . ' - (' . $startLabelHeight . ' / 2))',
-        };
-
-        \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
-            $resolvedGraphId,
-            $id . '.startLabel.bounds',
-            $startLabelX,
-            $startLabelY,
-            $startLabelWidth,
-            $startLabelHeight,
-            in_array($startLabelSide, ['left', 'right'], true) ? $startLabelSide : 'center',
-        );
     }
     $nodeEnd = $nodeEnd === true && ($nodeLabelRight || $nodeLabelLeft)
         ? [$nodeLabelRight, $nodeLabelLeft]

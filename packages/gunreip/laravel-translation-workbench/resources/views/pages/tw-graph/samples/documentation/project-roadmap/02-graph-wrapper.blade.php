@@ -28,7 +28,7 @@
 <span class="block ps-4 text-zinc-500">&#123;&#123;-- potential &#x40;props for this tag x-translation-workbench::ui.tw-graph --&#125;&#125;</span>
 <span class="grid grid-cols-[minmax(24rem,1fr)_minmax(12rem,18rem)] gap-8 ps-4"><span class="text-amber-300">node-size="0.95rem"</span><span class="text-zinc-500">default: 0.95rem</span></span>
 <span class="grid grid-cols-[minmax(24rem,1fr)_minmax(12rem,18rem)] gap-8 ps-4"><span class="text-amber-300">line-width="0.25rem"</span><span class="text-zinc-500">default: 0.25rem</span></span>
-<span class="grid grid-cols-[minmax(24rem,1fr)_minmax(12rem,18rem)] gap-8 ps-4"><span class="text-amber-300">arc-size="2.75rem"</span><span class="text-zinc-500">default: 2.75rem</span></span>
+<span class="grid grid-cols-[minmax(24rem,1fr)_minmax(12rem,18rem)] gap-8 ps-4"><span class="text-amber-300">arc-radius="2.75rem"</span><span class="text-zinc-500">default: 2.75rem</span></span>
 <span class="grid grid-cols-[minmax(24rem,1fr)_minmax(12rem,18rem)] gap-8 ps-4"><span class="text-amber-300">cap-length="1.75rem"</span><span class="text-zinc-500">default: 1.75rem</span></span>
 <span class="grid grid-cols-[minmax(24rem,1fr)_minmax(12rem,18rem)] gap-8 ps-4"><span class="text-amber-300">connector-length="2rem"</span><span class="text-zinc-500">default: 2rem</span></span>
 <span class="grid grid-cols-[minmax(24rem,1fr)_minmax(12rem,18rem)] gap-8 ps-4"><span class="text-amber-300">connector-gap="0.25rem"</span><span class="text-zinc-500">default: 0.25rem</span></span>

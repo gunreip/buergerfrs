@@ -34,7 +34,11 @@
         ?? ['text' => [], 'color' => $color, 'side' => 'center'];
     $labelColor = data_get($label, 'badgeColor', data_get($label, 'color', $color));
     $resolvedLabelWidth = \Gunreip\TranslationWorkbench\Support\TwGraph\LabelBridge::labelWidth($label, $labelWidth);
-    $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\LabelBridge::bridgeLength($bridgeLength);
+    // Explicit geometry owns its bridge lengths as well as its endpoints.
+    // Re-normalizing only the incoming line would detach it from that geometry.
+    $resolvedBridgeLength = is_array($geometry)
+        ? 'calc((' . data_get($geometry, 'bridgeInEnd.x', '0rem') . ' - ' . data_get($anchorStart, 'x', '0rem') . ') * ' . ($direction === 'right-left' ? '-1' : '1') . ')'
+        : \Gunreip\TranslationWorkbench\Support\TwGraph\LabelBridge::bridgeLength($bridgeLength);
     $geometry = is_array($geometry)
         ? $geometry
         : \Gunreip\TranslationWorkbench\Support\TwGraph\LabelBridge::geometry(

@@ -30,6 +30,7 @@
 @endphp
 
 <span
+    data-tw-graph-bounds="{{ json_encode(\Gunreip\TranslationWorkbench\Support\TwGraph\PrimitiveBounds::connector($id, $placement, $anchorX, $anchorY, $length, $gap)) }}"
     {{ $attributes->class([
         'tw-graph-protocol-primitive',
         'tw-graph-protocol-primitive-connector',

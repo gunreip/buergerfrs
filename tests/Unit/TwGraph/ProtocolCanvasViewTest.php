@@ -14,7 +14,7 @@ it('renders tw graph wrapper props as shared canvas css variables and metrics pa
             color="emerald"
             line-width="0.5rem"
             node-size="1.5rem"
-            arc-size="4rem"
+            arc-radius="4rem"
             horizontal-padding="18rem"
             min-width="72rem"
             min-height="88rem"
@@ -33,7 +33,7 @@ it('renders tw graph wrapper props as shared canvas css variables and metrics pa
         ->toContain('--tw-graph-protocol-min-height: 88rem')
         ->toContain('--tw-graph-protocol-path-width: 0.5rem')
         ->toContain('--tw-graph-protocol-node-size: 1.5rem')
-        ->toContain('--tw-graph-protocol-arc-size: 4rem')
+        ->toContain('--tw-graph-protocol-arc-radius: 4rem')
         ->toContain('wrapper.center.1.start')
         ->toContain('tw-graph-protocol-coordinate-only')
         ->not->toContain('tw-graph-protocol-coordinates-disabled');
@@ -226,3 +226,17 @@ it('uses the configured minimum height unless the canvas overrides it', function
     BLADE, ['height' => $height]);
     expect($html)->toContain('--tw-graph-protocol-min-height: ' . $expected);
 })->with([[null, '64rem'], ['20rem', '20rem']]);
+
+it('provides browser bounds measurement independently of DEV for both graph renderers', function (bool $dev, bool $handmade): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="bounds-renderer-test" :dev="$dev" horizontal-padding="3rem">
+            @if ($handmade)
+                <x-translation-workbench::ui.tw-graph.strang.flow-step id="bounds.step" :label="['text' => ['First line', 'Second line']]" />
+            @endif
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, compact('dev', 'handmade'));
+
+    expect($html)->toContain('data-tw-graph-bounds-model="true"')
+        ->and(substr_count($html, 'data-tw-graph-bounds-origin'))->toBe(1)
+        ->and($html)->toContain('width:3rem; height:2rem;');
+})->with([true, false])->with([true, false]);

@@ -257,7 +257,7 @@
         <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
             'id' => $routeId . '.arc-out', 'anchorStart' => $actionEnd, 'anchorEnd' => $routeEnd,
             'startAnchor' => $sy > 0 ? 's' : 'n', 'endAnchor' => $sx > 0 ? 'e' : 'w',
-            'arcSize' => $arcRadius, 'color' => $row['color'], 'dev' => $resolvedDev, 'zIndex' => $zIndex,
+            'arcRadius' => $arcRadius, 'color' => $row['color'], 'dev' => $resolvedDev, 'zIndex' => $zIndex,
             'nodeEnd' => true, 'nodeEndDot' => $exitLabel !== null, 'jointArrowEnd' => $exitLabel === null,
             'jointArrowEndDirection' => $sy > 0 ? 'top' : 'bottom', 'devCounterEnd' => $counter++,
             'endLabel' => $exitLabel === null ? null : array_replace($exitLabel, ['side' => $side]),
@@ -345,7 +345,7 @@
             'startAnchor' => $side === 'left' ? 'e' : 'w',
             'endAnchor' => $direction === 'bottom-top' ? 'n' : 's',
             // The destination bridge owns the joining Dot; this arc passes underneath.
-            'arcSize' => $turnRadius, 'color' => $row['color'], 'dev' => $resolvedDev, 'zIndex' => $zIndex - 1,
+            'arcRadius' => $turnRadius, 'color' => $row['color'], 'dev' => $resolvedDev, 'zIndex' => $zIndex - 1,
             'nodeEnd' => false, 'nodeEndDot' => false, 'jointArrowEnd' => false, 'devCounterEnd' => false,
         ]" />
         @php

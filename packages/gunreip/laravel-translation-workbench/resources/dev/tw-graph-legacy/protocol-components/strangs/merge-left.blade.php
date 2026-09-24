@@ -29,7 +29,7 @@
 
     // Base anchor / shared geometry
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
-    'arcSize' => '2.75rem',
+    'arcRadius' => '2.75rem',
     'color' => 'amber',
 
     // Trunk-nearest merge path: paths.merge left
@@ -56,7 +56,7 @@
         'y' => data_get($anchorStart, 'y', '0rem'),
     ];
     $extensionCount = max(0, (int) $extensionCount);
-    $extensionStartLength = $extensionStartLength ?? $arcSize;
+    $extensionStartLength = $extensionStartLength ?? $arcRadius;
     $extensionVerticalLength = $extensionVerticalLength ?? $verticalLength;
     $extensionConnectorLength = $extensionConnectorLength ?? $connectorLength;
     $lengthAsFloat = function (string $value): float {
@@ -79,18 +79,18 @@
     $extensionAnchors = [];
     $extensionResolvedVerticalLengths = [];
     $extensionResolvedConnectorLengths = [];
-    $mergeStartLength = $startLength ?? $arcSize;
+    $mergeStartLength = $startLength ?? $arcRadius;
     $mergeAnchorPoint4 = [
-        'x' => $add($mergeAnchor['x'], $arcSize),
-        'y' => $add($add($add($mergeAnchor['y'], $mergeStartLength), $verticalLength), $arcSize),
+        'x' => $add($mergeAnchor['x'], $arcRadius),
+        'y' => $add($add($add($mergeAnchor['y'], $mergeStartLength), $verticalLength), $arcRadius),
     ];
     $nextTargetAnchor = $mergeAnchorPoint4;
 
     for ($extensionIndex = 1; $extensionIndex <= $extensionCount; $extensionIndex++) {
         $currentExtensionVerticalLength = $extensionVerticalLengthFor($extensionIndex);
         $currentExtensionConnectorLength = $extensionConnectorLengthFor($extensionIndex);
-        $extensionDeltaX = $add($arcSize, $currentExtensionConnectorLength);
-        $extensionDeltaY = $add($add($extensionStartLength, $currentExtensionVerticalLength), $arcSize);
+        $extensionDeltaX = $add($arcRadius, $currentExtensionConnectorLength);
+        $extensionDeltaY = $add($add($extensionStartLength, $currentExtensionVerticalLength), $arcRadius);
         $extensionAnchor = [
             'x' => $subtract($nextTargetAnchor['x'], $extensionDeltaX),
             'y' => $subtract($nextTargetAnchor['y'], $extensionDeltaY),
@@ -113,8 +113,8 @@
         ? ($extensionAnchors[$longestExtensionIndex] ?? $outermostExtensionAnchor)
         : $outermostExtensionAnchor;
     $mergeTopAnchor = [
-        'x' => $add($mergeAnchorPoint4['x'], $add($connectorLength, $arcSize)),
-        'y' => $add($mergeAnchorPoint4['y'], $arcSize),
+        'x' => $add($mergeAnchorPoint4['x'], $add($connectorLength, $arcRadius)),
+        'y' => $add($mergeAnchorPoint4['y'], $arcRadius),
     ];
     $strangBounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([
         $outermostExtensionAnchor,
@@ -157,7 +157,7 @@
         :start-length="$extensionStartLength"
         :vertical-length="$extensionResolvedVerticalLengths[$extensionIndex]"
         :connector-length="$extensionResolvedConnectorLengths[$extensionIndex]"
-        :arc-size="$arcSize"
+        :arc-radius="$arcRadius"
         :labels="data_get($extensionLabels, $extensionIndex, data_get($extensionLabels, $extensionIndex - 1, []))"
         :color="$color"
         :dev="$dev"
@@ -171,7 +171,7 @@
     :start-length="$startLength"
     :vertical-length="$verticalLength"
     :connector-length="$connectorLength"
-    :arc-size="$arcSize"
+    :arc-radius="$arcRadius"
     :color="$color"
     :dev="$dev"
 />

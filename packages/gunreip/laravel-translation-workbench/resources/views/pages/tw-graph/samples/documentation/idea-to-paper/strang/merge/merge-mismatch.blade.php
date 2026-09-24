@@ -127,7 +127,7 @@
                     :dev="true"
                     :coordinates="true"
                     color="amber"
-                    arc-size="2.75rem"
+                    arc-radius="2.75rem"
                     bridge-length="18rem"
                     stem-length="5rem"
                     horizontal-padding="12rem"

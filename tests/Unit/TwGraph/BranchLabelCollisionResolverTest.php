@@ -9,7 +9,7 @@ beforeEach(function (): void {
     config()->set('tw-graph-defaults.line_length', '4rem');
     config()->set('tw-graph-defaults.bridge_length', '4rem');
     config()->set('tw-graph-defaults.stem_length', '4rem');
-    config()->set('tw-graph-defaults.arc_size', '2.75rem');
+    config()->set('tw-graph-defaults.arc_radius', '2.75rem');
     config()->set('tw-graph-defaults.connector_length', '2rem');
     config()->set('tw-graph-defaults.connector_gap', '0.25rem');
     config()->set('tw-graph-defaults.node_size', '0.95rem');

@@ -165,7 +165,7 @@ it('renders merge stem continuations with compressed geometry', function (): voi
 });
 
 it('uses graph defaults for merge arc and bridge geometry without auto-rendering a stem', function (): void {
-    config()->set('tw-graph-defaults.arc_size', '4rem');
+    config()->set('tw-graph-defaults.arc_radius', '4rem');
     config()->set('tw-graph-defaults.bridge_length', '6rem');
     config()->set('tw-graph-defaults.stem_length', '5rem');
 
@@ -181,7 +181,7 @@ it('uses graph defaults for merge arc and bridge geometry without auto-rendering
         ->toContain('strang.merge.left.1.arc-west-north-1')
         ->toContain('strang.merge.left.1.bridge')
         ->not->toContain('strang.merge.left.1.stem-1')
-        ->toContain('--tw-graph-protocol-local-arc-size: 4rem')
+        ->toContain('--tw-graph-protocol-local-arc-radius: 4rem')
         ->toContain('--tw-graph-protocol-local-length: 6rem')
         ->not->toContain('--tw-graph-protocol-local-length: 5rem');
 });

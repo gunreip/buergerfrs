@@ -1,123 +1,151 @@
-<section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
-    <flux:callout color="indigo" icon="file-text" class="min-w-0">
-        <flux:callout.heading>{{ __('Canvas + coord') }}</flux:callout.heading>
-        <x-translation-workbench::ui.tw-graph.documentation-links example="canvas.canvas-coordinates" />
-        <p class="mt-4 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
-            {{ __('This builds on the default trunk example. Only coordinate and dimension props are added so the same trunk can be framed without changing the trunk itself.') }}
-        </p>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-4">&lt;x-translation-workbench::ui.tw-graph
-    <span class="text-lime-300">graph-id="idea-to-paper-step-01-coordinates"</span>
-    <span class="text-lime-300">:dev="true"</span>
-    <span class="text-lime-300">:coordinates="true"</span>
-    <span class="text-lime-300">horizontal-padding="24rem"</span>
-    <span class="text-lime-300">min-width="40rem"</span>
-    <span class="text-lime-300">min-height="42rem"</span>
-&gt;
-    &lt;x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
-        <div class="mt-4 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
-            <flux:table container:class="max-h-80">
-                <flux:table.columns class="bg-white dark:bg-zinc-900" sticky>
-                    <flux:table.column>{{ __('Prop') }}</flux:table.column>
-                    <flux:table.column>{{ __('Default') }}</flux:table.column>
-                    <flux:table.column>{{ __('Purpose') }}</flux:table.column>
-                </flux:table.columns>
-                <flux:table.rows>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>protocol</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>[]</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Data array for the older protocol renderer when no slot content is used. Handmade graphs normally leave this empty.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>graph-id</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>auto id</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Stable DOM id and registry scope for anchors, bounds, DEV counters, and canvas metrics.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>:dev</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>false</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Enables DEV rendering such as node counters, debug boxes, and reduced graph opacity.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>:coordinates</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>false</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Shows or hides coordinate badges. Calculations still run either way.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>color</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>config colors.graph / &#x27;zinc&#x27;</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Base semantic color inherited by child components unless they set their own color.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>line-length</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>4rem</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Internal fallback length for line-based pieces. Authoring usually uses the more specific stem, bridge, start, or end length props.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>line-width</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>0.25rem</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Central/common thickness for graph lines. Specific strangs may expose this as stem-width, bridge-width, cap-width, or connector-width in their own context.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>node-size</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>0.95rem</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Diameter of visible anchor dots and transverse size of joint arrows.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>arc-size</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>2.75rem</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Radius footprint used by arc segments and by geometry calculations around arcs.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>cap-length</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>1.75rem</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Length of end caps used by end-like segments.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>bridge-length</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>line-length</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Default length for bridge segments.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>stem-length</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>line-length</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Default length for stem segments.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>connector-length</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>2rem</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Default helper line length between an anchor node and a text label.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>connector-gap</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>0.25rem</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Gap between a connector and its related label/node edge.</flux:table.cell>
-                    </flux:table.row>
+@php
+    $canvasSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas.canvas-coordinates',
+    );
+@endphp
 
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>horizontal-padding</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>12rem</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Extra left/right canvas room for labels and side strangs.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>min-width</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>calculated</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Optional hard minimum width override for the graph viewport.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>min-height</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs"><code>config / 52rem; protocol: calculated</code></flux:table.cell>
-                        <flux:table.cell class="align-top whitespace-normal break-words text-xs">Minimum canvas height. Handmade graphs default to config / 52rem; protocol graphs use their geometry. Content bounds and padding can require more space.</flux:table.cell>
-                    </flux:table.row>
-                </flux:table.rows>
-            </flux:table>
-        </div>
+<section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
+
+    {{-- CodeBox And Props Table --}}
+    <flux:callout
+        class="min-w-0"
+        color="indigo"
+        icon="file-text"
+    >
+        <flux:callout.heading>
+            {{ __('Canvas + coord') }}
+        </flux:callout.heading>
+        <flux:callout.text class="mt-4 hyphens-auto text-justify text-sm leading-6 text-zinc-600 dark:text-zinc-300">
+            {{ __('This builds on the default trunk example. Only coordinate and dimension props are added so the same trunk can be framed without changing the trunk itself.') }}
+        </flux:callout.text>
+
+        <flux:separator
+            class="mt-4"
+            :text="__('Deep reference links')"
+        />
+
+        <x-translation-workbench::ui.tw-graph.documentation-links example="canvas.canvas-coordinates" />
+
+        <flux:separator :text="__('Code examples')" />
+
+        <x-translation-workbench::ui.tw-graph.code-box
+            class="">{{ $canvasSource->example('canvas-coordinates-1') }}</x-translation-workbench::ui.tw-graph.code-box>
+
+        <flux:separator
+            class="mt-4"
+            :text="__('Props used in this example')"
+        />
+
+        <flux:callout color="indigo">
+            <flux:callout.heading icon="variable">
+                {{ __('Props for Canvas Coordinates') }}
+            </flux:callout.heading>
+            <div class="mt-4 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
+                <flux:table container:class="max-h-80">
+                    <flux:table.columns
+                        class="bg-white dark:bg-zinc-900"
+                        sticky
+                    >
+                        <flux:table.column>{{ __('Prop') }}</flux:table.column>
+                        <flux:table.column>{{ __('Default') }}</flux:table.column>
+                        <flux:table.column>{{ __('Purpose') }}</flux:table.column>
+                    </flux:table.columns>
+                    <flux:table.rows>
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>graph-id</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>{{ __('auto id') }}</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                {{ __('Stable DOM id and registry scope for anchors, bounds, DEV counters, and canvas metrics.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>:dev</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>false</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                {{ __('Enables DEV rendering such as node counters, debug boxes, and reduced graph opacity.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>:coordinates</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>false</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                {{ __('Renders coordinate guides and measurement badges when DEV mode is enabled. Preview tools control their visibility; geometry calculations run independently.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>horizontal-padding</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>12rem</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                {{ __('Space outside the calculated graph bounds, including labels. The coordinate origin stays anchored by this padding; min-width or a wider viewport may leave extra space on the right.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>min-width</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>{{ __('calculated') }}</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                {{ __('Optional hard minimum width override for the graph viewport.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>min-height</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>{{ __('config / 52rem; protocol: calculated') }}</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                {{ __('Minimum canvas height. Handmade graphs default to config / 52rem; protocol graphs use their geometry. Content bounds and padding can require more space.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        <flux:table.row>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>id (strang.trunk)</code></flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>null</code></flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                {{ __('Explicit root ID of the trunk; used to derive its child component and anchor IDs.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                    </flux:table.rows>
+                </flux:table>
+            </div>
+        </flux:callout>
     </flux:callout>
-    <flux:callout color="zinc" icon="square-dashed-text" class="min-w-0">
-        <flux:callout.heading>{{ __('Preview') }}</flux:callout.heading>
-        <x-translation-workbench::ui.tw-graph.preview-tools :dev="$dev ?? true" :coordinates="$coordinates ?? false">
-            <div class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+
+    <flux:callout
+        class="min-w-0"
+        color="zinc"
+        icon="square-dashed-text"
+    >
+        <flux:callout.heading>{{ __('Preview') }}
+
+        </flux:callout.heading>
+        <x-translation-workbench::ui.tw-graph.preview-tools
+            :dev="$dev ?? true"
+            :coordinates="$coordinates ?? false"
+        >
+            <div
+                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                 <div class="min-w-0">
+                    {{-- canvas-coordinates-1:start --}}
                     <x-translation-workbench::ui.tw-graph
                         graph-id="idea-to-paper-step-01-coordinates"
                         :dev="true"
@@ -128,6 +156,7 @@
                     >
                         <x-translation-workbench::ui.tw-graph.strang.trunk id="literature.center.1.paper" />
                     </x-translation-workbench::ui.tw-graph>
+                    {{-- canvas-coordinates-1:end --}}
                 </div>
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>

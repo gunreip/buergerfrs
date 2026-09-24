@@ -1,4 +1,6 @@
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
+
+    {{-- CodeBox And Props Table --}}
     <flux:callout
         class="min-w-0"
         color="indigo"
@@ -6,7 +8,7 @@
     >
         <flux:callout.heading>{{ __('Arc segments') }}</flux:callout.heading>
         <flux:callout.text>
-            {{ __('Four arc shapes and their reverse traversal, shown in two rows. Each example uses an individually authored segment array. A labeled start dot and an end joint arrow indicate the direction. Reversing an arc swaps both the semantic anchors and their coordinates; the joint arrow direction must match the outgoing tangent. Coordinates must agree with arcSize.') }}
+            {{ __('Four arc shapes and their reverse traversal, shown in two rows. Each example uses an individually authored segment array. A labeled start dot and an end joint arrow indicate the direction. Reversing an arc swaps both the semantic anchors and their coordinates; the joint arrow direction must match the outgoing tangent. Coordinates must agree with arcRadius.') }}
         </flux:callout.text>
         @php
             $arcExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
@@ -25,281 +27,379 @@
             class="mt-4"
             size="sm"
         >w → n</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcWNCode }}</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box
+            class="mt-3">{{ $arcWNCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >e → n</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcENCode }}</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box
+            class="mt-3">{{ $arcENCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >s → w</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcSWCode }}</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box
+            class="mt-3">{{ $arcSWCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >s → e</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcSECode }}</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box
+            class="mt-3">{{ $arcSECode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >n → w</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcNWCode }}</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box
+            class="mt-3">{{ $arcNWCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >n → e</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcNECode }}</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box
+            class="mt-3">{{ $arcNECode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >w → s</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcWSCode }}</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box
+            class="mt-3">{{ $arcWSCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >e → s</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcESCode }}</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box
+            class="mt-3">{{ $arcESCode }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
-        >{{ __('Arc segment props') }}</flux:heading>
+        >
+            {{ __('Arc segment props') }}
+        </flux:heading>
         <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
+            {{-- Table --}}
             <flux:table container:class="max-h-80">
-                <flux:table.columns sticky>
+                <flux:table.columns
+                    class="dark:bg-zinc-900"
+                    sticky
+                >
                     <flux:table.column>{{ __('Prop / segment key') }}</flux:table.column>
                     <flux:table.column>{{ __('Default') }}</flux:table.column>
                     <flux:table.column>{{ __('Purpose') }}</flux:table.column>
                 </flux:table.columns>
                 <flux:table.rows>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:segment
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">:segment
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Component prop
-                            containing the arc configuration. The following rows describe keys inside this array.
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">[]
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Component prop containing the arc configuration. The following rows describe keys inside this array.') }}
                         </flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">:dev</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Component prop;
-                            overrides segment.dev.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">id</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">segment.arc
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">:dev
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Identifier for the arc
-                            and its child elements.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">startAnchor
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">null
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">n</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Semantic start: n, e,
-                            s, or w. Use one of the eight adjacent pairs shown here.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">endAnchor
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Component prop; overrides segment.dev.') }}
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">w</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Semantic end. Swap this
-                            with startAnchor and swap coordinates to reverse traversal.</flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">anchorStart
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">id
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[&#x27;x&#x27; =&gt;
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">segment.arc
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Identifier for the arc and its child elements.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">startAnchor
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">n
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Semantic start: n, e, s, or w. Use one of the eight adjacent pairs shown here.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">endAnchor
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">w
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Semantic end. Swap this with startAnchor and swap coordinates to reverse traversal.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">anchorStart
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">[&#x27;x&#x27;
+                            =&gt;
                             &#x27;0rem&#x27;, &#x27;y&#x27; =&gt; &#x27;0rem&#x27;]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Explicit starting
-                            coordinates; must match the semantic anchor and arc size.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">anchorEnd
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Explicit starting coordinates; must match the semantic anchor and arc size.') }}
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">[&#x27;x&#x27; =&gt;
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">anchorEnd
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">[&#x27;x&#x27;
+                            =&gt;
                             &#x27;0rem&#x27;, &#x27;y&#x27; =&gt; &#x27;0rem&#x27;]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Explicit endpoint
-                            coordinates; not calculated by this segment.</flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Explicit endpoint coordinates; not calculated by this segment.') }}
+                        </flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arcSize
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">arcRadius
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">canvas arc-size
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">canvas arc-radius
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Arc dimensions. These
-                            examples use 2.75rem.</flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Arc dimensions. These examples use 2.75rem.') }}
+                        </flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">nodeStart
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">nodeStart
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">false</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Enable the start
-                            anchor, its optional label and DEV counter.</flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">false
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Enable the start anchor, its optional label and DEV counter.') }}
+                        </flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">nodeEnd
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">nodeEnd
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">false</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Enable the end anchor,
-                            its optional label and DEV counter.</flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">false
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Enable the end anchor, its optional label and DEV counter.') }}
+                        </flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">nodeStartDot
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">nodeStartDot
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">follows nodeStart
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">follows nodeStart
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Control the visual
-                            start dot independently of the enabled anchor.</flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Control the visual start dot independently of the enabled anchor.') }}
+                        </flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">nodeEndDot
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">nodeEndDot
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">follows nodeEnd
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">follows nodeEnd
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Set false to use an end
-                            joint arrow instead of a dot.</flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Set false to use an end joint arrow instead of a dot.') }}
+                        </flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">nodeStartSize
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">nodeStartSize
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional start-dot
-                            size; otherwise inherited from the canvas.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">nodeEndSize
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">null
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional end-dot size;
-                            otherwise inherited from the canvas.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">jointArrowStart
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Optional start-dot size; otherwise inherited from the canvas.') }}
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">false</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Show a start joint
-                            arrow when nodeStart is true and nodeStartDot is false.</flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">jointArrowEnd
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">nodeEndSize
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">false</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Show an end joint arrow
-                            when nodeEnd is true and nodeEndDot is false.</flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">null
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Optional end-dot size; otherwise inherited from the canvas.') }}
+                        </flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">jointArrowStart
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">false
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Show a start joint arrow when nodeStart is true and nodeStartDot is false.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">jointArrowEnd
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">false
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Show an end joint arrow when nodeEnd is true and nodeEndDot is false.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
                             jointArrowStartDirection</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">right</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Explicit arrow
-                            direction: top, bottom, left, or right.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">jointArrowEndDirection
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">right
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">right</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Match the outgoing
-                            tangent. It is not inferred from the arc anchors.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">startLabel
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">unset</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Label at anchorStart,
-                            shown when nodeStart is true and text is present. Uses segments.label with a connector.
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Explicit arrow direction: top, bottom, left, or right.') }}
                         </flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">endLabel
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            jointArrowEndDirection
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">unset</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Label at anchorEnd,
-                            shown when nodeEnd is true and text is present.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">startLabel.side
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">right
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">right
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Position relative to
-                            the start anchor: top, bottom, left, or right.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">endLabel.side
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">left</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Position relative to
-                            the end anchor: top, bottom, left, or right.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">startLabel.width
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">default
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Label width: half,
-                            default, halfLong, or long.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">endLabel.width
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">default
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Label width: half,
-                            default, halfLong, or long.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">color
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">zinc</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Arc, dot, arrow and
-                            default label color.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">toColor
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">color
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional second arc
-                            color.</flux:table.cell>
-                    </flux:table.row>
-                    <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">dashed
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">false
-                        </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Draw a dashed arc.
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Match the outgoing tangent. It is not inferred from the arc anchors.') }}
                         </flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">tone</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">line</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Palette tone.
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">startLabel
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">unset
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Label at anchorStart, shown when nodeStart is true and text is present. Uses segments.label with a connector.') }}
                         </flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">zIndex
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">endLabel
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">null</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional
-                            stacking-order override.</flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">unset
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Label at anchorEnd, shown when nodeEnd is true and text is present.') }}
+                        </flux:table.cell>
                     </flux:table.row>
+                    {{-- Row --}}
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">dev</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">false
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">startLabel.side
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Diagnostic boxes and
-                            counters inside the segment configuration; overridden by :dev.</flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">right
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Position relative to the start anchor: top, bottom, left, or right.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">endLabel.side
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">left
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Position relative to the end anchor: top, bottom, left, or right.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">startLabel.width
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">default
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Label width: half, default, halfLong, or long.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">endLabel.width
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">default
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Label width: half, default, halfLong, or long.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">color
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">zinc
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Arc, dot, arrow and default label color.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">toColor
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">color
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Optional second arc color.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">dashed
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">false
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Draw a dashed arc.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">tone
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">line
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Palette tone.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">zIndex
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">null
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Optional stacking-order override.') }}
+                        </flux:table.cell>
+                    </flux:table.row>
+                    {{-- Row --}}
+                    <flux:table.row>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">dev
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">false
+                        </flux:table.cell>
+                        <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
+                            {{ __('Diagnostic boxes and counters inside the segment configuration; overridden by :dev.') }}
+                        </flux:table.cell>
                     </flux:table.row>
                 </flux:table.rows>
             </flux:table>
         </div>
     </flux:callout>
+    {{-- Preview --}}
     <flux:callout
         class="min-w-0"
-        color="zinc"
+        color="emerald"
         icon="eye"
     >
         <flux:callout.heading>{{ __('Arc segment preview') }}</flux:callout.heading>
@@ -308,7 +408,7 @@
             :coordinates="$coordinates ?? false"
         >
             <div class="mt-4 overflow-x-auto">
-                <div class="grid min-w-[48rem] grid-cols-4 gap-4">
+                <div class="grid min-w-[48rem] grid-cols-2 gap-4">
                     <div class="min-w-0">
                         <flux:heading size="sm">w → n</flux:heading>
                         <div
@@ -329,7 +429,7 @@
                                         'endAnchor' => 'n',
                                         'anchorStart' => ['x' => '-1.375rem', 'y' => '6rem'],
                                         'anchorEnd' => ['x' => '1.375rem', 'y' => '8.75rem'],
-                                        'arcSize' => '2.75rem',
+                                        'arcRadius' => '2.75rem',
                                         'nodeStart' => true,
                                         'nodeEnd' => true,
                                         'nodeEndDot' => false,
@@ -369,7 +469,7 @@
                                         'endAnchor' => 'n',
                                         'anchorStart' => ['x' => '1.375rem', 'y' => '6rem'],
                                         'anchorEnd' => ['x' => '-1.375rem', 'y' => '8.75rem'],
-                                        'arcSize' => '2.75rem',
+                                        'arcRadius' => '2.75rem',
                                         'nodeStart' => true,
                                         'nodeEnd' => true,
                                         'nodeEndDot' => false,
@@ -409,7 +509,7 @@
                                         'endAnchor' => 'w',
                                         'anchorStart' => ['x' => '1.375rem', 'y' => '6rem'],
                                         'anchorEnd' => ['x' => '-1.375rem', 'y' => '8.75rem'],
-                                        'arcSize' => '2.75rem',
+                                        'arcRadius' => '2.75rem',
                                         'nodeStart' => true,
                                         'nodeEnd' => true,
                                         'nodeEndDot' => false,
@@ -449,7 +549,7 @@
                                         'endAnchor' => 'e',
                                         'anchorStart' => ['x' => '-1.375rem', 'y' => '6rem'],
                                         'anchorEnd' => ['x' => '1.375rem', 'y' => '8.75rem'],
-                                        'arcSize' => '2.75rem',
+                                        'arcRadius' => '2.75rem',
                                         'nodeStart' => true,
                                         'nodeEnd' => true,
                                         'nodeEndDot' => false,
@@ -489,7 +589,7 @@
                                         'endAnchor' => 'w',
                                         'anchorStart' => ['x' => '1.375rem', 'y' => '6.75rem'],
                                         'anchorEnd' => ['x' => '-1.375rem', 'y' => '4rem'],
-                                        'arcSize' => '2.75rem',
+                                        'arcRadius' => '2.75rem',
                                         'nodeStart' => true,
                                         'nodeEnd' => true,
                                         'nodeEndDot' => false,
@@ -529,7 +629,7 @@
                                         'endAnchor' => 'e',
                                         'anchorStart' => ['x' => '-1.375rem', 'y' => '6.75rem'],
                                         'anchorEnd' => ['x' => '1.375rem', 'y' => '4rem'],
-                                        'arcSize' => '2.75rem',
+                                        'arcRadius' => '2.75rem',
                                         'nodeStart' => true,
                                         'nodeEnd' => true,
                                         'nodeEndDot' => false,
@@ -569,7 +669,7 @@
                                         'endAnchor' => 's',
                                         'anchorStart' => ['x' => '-1.375rem', 'y' => '6.75rem'],
                                         'anchorEnd' => ['x' => '1.375rem', 'y' => '4rem'],
-                                        'arcSize' => '2.75rem',
+                                        'arcRadius' => '2.75rem',
                                         'nodeStart' => true,
                                         'nodeEnd' => true,
                                         'nodeEndDot' => false,
@@ -609,7 +709,7 @@
                                         'endAnchor' => 's',
                                         'anchorStart' => ['x' => '1.375rem', 'y' => '6.75rem'],
                                         'anchorEnd' => ['x' => '-1.375rem', 'y' => '4rem'],
-                                        'arcSize' => '2.75rem',
+                                        'arcRadius' => '2.75rem',
                                         'nodeStart' => true,
                                         'nodeEnd' => true,
                                         'nodeEndDot' => false,

@@ -46,7 +46,7 @@
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-radius</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">canvas arc-size / 2.75rem</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">canvas arc-radius / 2.75rem</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Default arc radius.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>

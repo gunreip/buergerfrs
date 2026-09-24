@@ -117,13 +117,13 @@
                             question-step caps.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-size
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-radius
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph arc-size /
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph arc-radius /
                             2.75rem</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Size of the incoming
-                            and final arcs. arc-radius is the existing alias.</flux:table.cell>
+                            and final arcs.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length
@@ -314,7 +314,7 @@
                         color="cyan"
                         before-length="2rem"
                         after-length="2rem"
-                        arc-size="2.75rem"
+                        arc-radius="2.75rem"
                         side="left"
                         stem-length="4rem"
                         bridge-length="2rem"

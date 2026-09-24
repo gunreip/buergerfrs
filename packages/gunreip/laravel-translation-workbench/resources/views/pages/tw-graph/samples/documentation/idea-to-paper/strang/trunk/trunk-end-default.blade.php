@@ -57,7 +57,7 @@
                     line-length="4rem"
                     line-width="0.25rem"
                     node-size="0.95rem"
-                    arc-size="2.75rem"
+                    arc-radius="2.75rem"
                     cap-length="1.75rem"
                     bridge-length="18rem"
                     stem-length="5rem"

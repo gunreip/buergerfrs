@@ -1,10 +1,14 @@
-<section class="space-y-4 min-w-0">
-    <flux:heading size="lg">Deep Reference</flux:heading>
-    <flux:text>Component reference: public props, nested array options and connection anchors. Example tables continue to describe only the props used in their example. Select a public Strang or Parts component below. Each has its own reference, including nested array fields and connection semantics. Archived components are excluded.</flux:text>
+<section class="min-w-0 space-y-4">
+    <flux:heading size="lg">{{ __('Deep Reference') }}</flux:heading>
+    <flux:text>
+        {{ __('Component reference: public props, nested array options and connection anchors. Example tables continue
+                to describe only the props used in their example. Select a public Strang or Parts component below. Each has its
+                own reference, including nested array fields and connection semantics. Archived components are excluded.') }}
+    </flux:text>
     <flux:tab.group class="min-w-0 max-w-full">
         <flux:tabs wire:model.live="tabs.reference_index">
-            <flux:tab name="reference-strang">Strang</flux:tab>
-            <flux:tab name="reference-parts">Parts</flux:tab>
+            <flux:tab name="reference-strang">{{ __('Strang') }}</flux:tab>
+            <flux:tab name="reference-parts">{{ __('Parts') }}</flux:tab>
         </flux:tabs>
         <flux:tab.panel name="reference-strang">
             @if (!isset($documentationTabs) || $documentationTabs['reference_index'] === 'reference-strang')

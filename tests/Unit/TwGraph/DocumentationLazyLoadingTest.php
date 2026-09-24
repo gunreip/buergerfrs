@@ -304,6 +304,19 @@ it('lazy loads the handmade fusion documentation for each component level', func
 })->with(['segments', 'parts']);
 
 
+it('paginates inventory through Flux and resets the page when filtering', function () {
+    Livewire::test(TwGraphDocumentation::class)
+        ->assertSee('data-flux-pagination', false)
+        ->call('nextPage', 'inventoryPage')
+        ->assertSet('paginators.inventoryPage', 2)
+        ->call('previousPage', 'inventoryPage')
+        ->assertSet('paginators.inventoryPage', 1)
+        ->call('setPage', 3, 'inventoryPage')
+        ->assertSet('paginators.inventoryPage', 3)
+        ->set('inventoryRoot', 'strang.flow-if')
+        ->assertSet('paginators.inventoryPage', 1);
+});
+
 it('filters inventory chains and opens only known component sources', function () {
     Livewire::test(TwGraphDocumentation::class)
         ->set('inventoryRoot', 'strang.flow-if')
@@ -312,9 +325,9 @@ it('filters inventory chains and opens only known component sources', function (
         ->assertSee('Close source')
         ->set('inventorySource', '../../.env')
         ->assertDontSee('Close source')
-        ->set('inventoryPage', 2)
+        ->call('setPage', 2, 'inventoryPage')
         ->set('inventoryArchive', true)
-        ->assertSet('inventoryPage', 1)
+        ->assertSet('paginators.inventoryPage', 1)
         ->assertSet('inventoryRoot', '')
         ->assertSee('strang._old.if-else-endif');
 });

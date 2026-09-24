@@ -54,7 +54,7 @@
             'lineLength' => '4rem',
             'lineWidth' => '0.25rem',
             'nodeSize' => '0.95rem',
-            'arcSize' => '2.75rem',
+            'arcRadius' => '2.75rem',
             'capLength' => '1.75rem',
             'bridgeLength' => 'lineLength',
             'stemLength' => 'lineLength',

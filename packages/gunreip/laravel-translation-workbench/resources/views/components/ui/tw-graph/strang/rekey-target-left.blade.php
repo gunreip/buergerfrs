@@ -15,7 +15,7 @@
     'color' => null,
     'dev' => false,
     'lineLength' => null,
-    'arcSize' => null,
+    'arcRadius' => null,
     'bridgeLength' => null,
     'stemLength' => null,
 ])
@@ -58,7 +58,7 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
     );
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
-    $resolvedArcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
+    $resolvedArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $resolvedLineLength));
     $resolvedStemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($stemLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', $resolvedLineLength));
     $resolvedEndLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($endLength, $resolvedLineLength, '4rem');
@@ -86,9 +86,9 @@
         'x' => data_get($anchorStart, 'x', '0rem'),
         'y' => data_get($anchorStart, 'y', '0rem'),
     ];
-    $arcInEnd = ['x' => $add($anchor['x'], $neg($resolvedArcSize)), 'y' => $add($anchor['y'], $resolvedArcSize)];
+    $arcInEnd = ['x' => $add($anchor['x'], $neg($resolvedArcRadius)), 'y' => $add($anchor['y'], $resolvedArcRadius)];
     $bridgeEnd = ['x' => $add($arcInEnd['x'], $neg($resolvedBridgeLength)), 'y' => $arcInEnd['y']];
-    $arcOutEnd = ['x' => $add($bridgeEnd['x'], $neg($resolvedArcSize)), 'y' => $add($bridgeEnd['y'], $resolvedArcSize)];
+    $arcOutEnd = ['x' => $add($bridgeEnd['x'], $neg($resolvedArcRadius)), 'y' => $add($bridgeEnd['y'], $resolvedArcRadius)];
     $stemEnd = ['x' => $arcOutEnd['x'], 'y' => $add($arcOutEnd['y'], $stemTotal)];
     $endAnchor = ['x' => $stemEnd['x'], 'y' => $add($stemEnd['y'], $resolvedEndLength)];
     $endLabelConfig = is_array($endLabel)
@@ -139,15 +139,13 @@
     :color="$resolvedColor"
     :label="$id"
     :dev="$resolvedDev"
-    metrics-scope="canvas"
-    metrics-side="left"
 />
 
 <x-translation-workbench::ui.tw-graph.paths.branch
     :id="$id . '.paths.rekey-target'"
     side="left"
     :anchor-start="$anchor"
-    :arc-size="$resolvedArcSize"
+    :arc-radius="$resolvedArcRadius"
     :bridge-length="$resolvedBridgeLength"
     :stem-length="$resolvedStemLength"
     :stem-continuation="$resolvedStemContinuationEntries"

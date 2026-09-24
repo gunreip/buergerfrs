@@ -172,15 +172,15 @@
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-radius</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph arc-size</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph arc-radius</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Radius/size of flow-if-else and flow-if arcs. arc-size is the current canonical prop.</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Radius/size of flow-if-else and flow-if arcs. arc-radius is the current canonical prop.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-size</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph arc-size</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-radius</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph arc-radius</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Radius/size of flow-if-else and flow-if arcs. arc-size is the current canonical prop.</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">Radius/size of flow-if-else and flow-if arcs. arc-radius is the current canonical prop.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">bridge-length</flux:table.cell>
@@ -262,7 +262,7 @@
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">then-arc-reach</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-size</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-radius</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs"></flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Horizontal reach of the THEN/output arc in a flow-if condition row.</flux:table.cell>
                     </flux:table.row>
@@ -305,13 +305,13 @@
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">:elseif-conditions</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">[]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">key, id, color, label, conditionLabel, conditionRailWidth, arcSize, bridgeLength, thenArcReach, leftStemLength, thenStemLength, leftStem, thenContinuation, pathTone, zIndex, devMode, devCounterColor</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">key, id, color, label, conditionLabel, conditionRailWidth, arcRadius, bridgeLength, thenArcReach, leftStemLength, thenStemLength, leftStem, thenContinuation, pathTone, zIndex, devMode, devCounterColor</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Rows after the first IF row. Each entry may be ELSEIF, ELSE, DEFAULT, or any handmade condition label.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">:conditions</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">[]</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">key, id, color, label, conditionLabel, conditionRailWidth, arcSize, bridgeLength, thenArcReach, leftStemLength, thenStemLength, leftStem, thenContinuation, pathTone, zIndex, devMode, devCounterColor</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">key, id, color, label, conditionLabel, conditionRailWidth, arcRadius, bridgeLength, thenArcReach, leftStemLength, thenStemLength, leftStem, thenContinuation, pathTone, zIndex, devMode, devCounterColor</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Rows after the first IF row. Each entry may be ELSEIF, ELSE, DEFAULT, or any handmade condition label.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>

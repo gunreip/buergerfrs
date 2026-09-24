@@ -9,7 +9,7 @@ return [
     'line_width' => '0.25rem',
     'node_size' => '0.95rem',
     'node_image_size' => '3rem',
-    'arc_size' => '2.75rem',
+    'arc_radius' => '2.75rem',
     'cap_length' => '1.75rem',
     'bridge_length' => '20rem',
     'stem_length' => '4rem',

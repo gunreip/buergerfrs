@@ -31,7 +31,7 @@
     'id' => 'path.branch-return-extension',
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
-    'arcSize' => null,
+    'arcRadius' => null,
     'stemLength' => null,
     'bridgeLength' => null,
     'color' => null,
@@ -50,7 +50,7 @@
     $counter = (int) $counterStart;
     $isLeft = $side === 'left';
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
-    $arcSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcSize ?? null, 'arc_size', '2.75rem');
+    $arcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
     $stemLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($stemLength ?? null, 'stem_length', '2rem');
     $bridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', '4rem'));
 
@@ -58,7 +58,7 @@
     $arcEndAnchor = 'n';
     $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
     $bridgeJointArrowDirection = $isLeft ? 'right' : 'left';
-    $arcDelta = $isLeft ? $arcSize : $neg($arcSize);
+    $arcDelta = $isLeft ? $arcRadius : $neg($arcRadius);
     $bridgeDelta = $isLeft ? $bridgeLength : $neg($bridgeLength);
 
     $verticalEnd = [
@@ -67,7 +67,7 @@
     ];
     $arcEnd = [
         'x' => $add($verticalEnd['x'], $arcDelta),
-        'y' => $add($verticalEnd['y'], $arcSize),
+        'y' => $add($verticalEnd['y'], $arcRadius),
     ];
     $bridgeEnd = [
         'x' => $add($arcEnd['x'], $bridgeDelta),
@@ -107,7 +107,7 @@
                 'id' => $id . '.arc',
                 'startAnchor' => $arcStartAnchor,
                 'endAnchor' => $arcEndAnchor,
-                'arcSize' => $arcSize,
+                'arcRadius' => $arcRadius,
                 'anchorStart' => $verticalEnd,
                 'anchorEnd' => $arcEnd,
                 'nodeStart' => false,

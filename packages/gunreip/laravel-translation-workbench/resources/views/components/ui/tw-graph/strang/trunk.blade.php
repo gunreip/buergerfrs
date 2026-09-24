@@ -335,8 +335,6 @@
     :color="$resolvedColor"
     :label="$id"
     :dev="$resolvedDev"
-    metrics-scope="canvas"
-    metrics-side="center"
 />
 
     <x-translation-workbench::ui.tw-graph.paths.trunk

@@ -43,7 +43,7 @@
         'nodeEnd' => true, 'nodeEndDot' => false, 'jointArrowEnd' => true,
         'jointArrowEndDirection' => $sy > 0 ? 'top' : 'bottom',
         'devCounterStart' => false, 'devCounterEnd' => false,
-        'startAnchor' => $sy > 0 ? 's' : 'n', 'endAnchor' => $sx > 0 ? 'e' : 'w', 'arcSize' => $r . 'rem',
+        'startAnchor' => $sy > 0 ? 's' : 'n', 'endAnchor' => $sx > 0 ? 'e' : 'w', 'arcRadius' => $r . 'rem',
     ])" />
     <x-translation-workbench::ui.tw-graph.segments.path :segment="array_merge($common, [
         'id' => $id . '.stem', 'anchorStart' => $a, 'anchorEnd' => $b,
@@ -53,6 +53,6 @@
         'id' => $id . '.arc-out', 'anchorStart' => $b, 'anchorEnd' => $c,
         'nodeStart' => abs($dy) > 2 * $r, 'nodeStartDot' => false, 'jointArrowStart' => true,
         'jointArrowStartDirection' => $sy > 0 ? 'top' : 'bottom', 'devCounterStart' => false,
-        'startAnchor' => $sx > 0 ? 'w' : 'e', 'endAnchor' => $sy > 0 ? 'n' : 's', 'arcSize' => $r . 'rem',
+        'startAnchor' => $sx > 0 ? 'w' : 'e', 'endAnchor' => $sy > 0 ? 'n' : 's', 'arcRadius' => $r . 'rem',
     ])" />
 @endif

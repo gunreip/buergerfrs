@@ -142,7 +142,7 @@
                     :dev="true"
                     :coordinates="true"
                     color="amber"
-                    arc-size="2.75rem"
+                    arc-radius="2.75rem"
                     bridge-length="8rem"
                     stem-length="5rem"
                     horizontal-padding="16rem"

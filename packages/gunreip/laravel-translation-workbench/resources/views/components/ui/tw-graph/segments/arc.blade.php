@@ -76,7 +76,7 @@
     $startY = data_get($segment, 'anchorStart.y', '0rem');
     $endX = data_get($segment, 'anchorEnd.x', '0rem');
     $endY = data_get($segment, 'anchorEnd.y', '0rem');
-    $arcSize = data_get($segment, 'arcSize', 'var(--tw-graph-protocol-arc-size)');
+    $arcRadius = data_get($segment, 'arcRadius', 'var(--tw-graph-protocol-arc-radius)');
     $anchors = collect([
         $startAnchor => ['x' => $startX, 'y' => $startY],
         $endAnchor => ['x' => $endX, 'y' => $endY],
@@ -106,14 +106,14 @@
     $endCounterOffset = data_get($segment, 'devCounterEndOffset', $defaultEndCounterOffset);
     $boxPadding = '0.35rem';
     $boxX = match ($corner) {
-        'se' => 'calc(' . data_get($anchors, 'e.x', $startX) . ' - ' . $arcSize . ' + var(--tw-graph-protocol-path-half))',
+        'se' => 'calc(' . data_get($anchors, 'e.x', $startX) . ' - ' . $arcRadius . ' + var(--tw-graph-protocol-path-half))',
         'sw' => 'calc(' . data_get($anchors, 'w.x', $startX) . ' - var(--tw-graph-protocol-path-half))',
         'nw' => 'calc(' . data_get($anchors, 'w.x', $endX) . ' - var(--tw-graph-protocol-path-half))',
-        default => 'calc(' . data_get($anchors, 'e.x', $endX) . ' - ' . $arcSize . ' + var(--tw-graph-protocol-path-half))',
+        default => 'calc(' . data_get($anchors, 'e.x', $endX) . ' - ' . $arcRadius . ' + var(--tw-graph-protocol-path-half))',
     };
     $boxY = match ($corner) {
         'se', 'sw' => 'calc(' . data_get($anchors, 's.y', $endY) . ' - var(--tw-graph-protocol-path-half))',
-        default => 'calc(' . data_get($anchors, 'n.y', $startY) . ' - ' . $arcSize . ' + var(--tw-graph-protocol-path-half))',
+        default => 'calc(' . data_get($anchors, 'n.y', $startY) . ' - ' . $arcRadius . ' + var(--tw-graph-protocol-path-half))',
     };
 @endphp
 
@@ -121,8 +121,8 @@
     :id="$id . '.dev-box'"
     :x="'calc(' . $boxX . ' - ' . $boxPadding . ')'"
     :y="'calc(' . $boxY . ' - ' . $boxPadding . ')'"
-    :width="'calc(' . $arcSize . ' + (' . $boxPadding . ' * 2))'"
-    :height="'calc(' . $arcSize . ' + (' . $boxPadding . ' * 2))'"
+    :width="'calc(' . $arcRadius . ' + (' . $boxPadding . ' * 2))'"
+    :height="'calc(' . $arcRadius . ' + (' . $boxPadding . ' * 2))'"
     color="sky"
     :label="$id"
     :dev="$devMode"
@@ -136,7 +136,7 @@
     :start-y="data_get($segment, 'anchorStart.y', '0rem')"
         :end-x="data_get($segment, 'anchorEnd.x', '0rem')"
     :end-y="data_get($segment, 'anchorEnd.y', '0rem')"
-        :arc-size="$arcSize"
+        :arc-radius="$arcRadius"
         :node-start="false"
         :node-end="false"
         :node-start-size="data_get($segment, 'nodeStartSize')"

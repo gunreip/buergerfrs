@@ -29,7 +29,7 @@ it('renders each public component reference with nested fields and the shared vi
     ['strang.branch-right', 'branch-extension[n].returnBridge[m].nodeLabels[n].left.text'],
     ['strang.branch-end', 'end-label.offset'],
     ['strang.rekey-source-left', 'compressed-stem-parts.gapLength'],
-    ['strang.rekey-source-right', 'arc-sizes.in'],
+    ['strang.rekey-source-right', 'arc-radiuss.in'],
     ['strang.rekey-target-left', 'end-label.text'],
     ['strang.rekey-target-right', 'stem-continuation[].labels.left.connectorLength'],
     ['parts.start', 'node-image.source'],

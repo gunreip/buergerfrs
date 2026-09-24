@@ -27,7 +27,7 @@
     'startY' => '0rem',
     'endX' => '0rem',
     'endY' => '0rem',
-    'arcSize' => null,
+    'arcRadius' => null,
     'nodeStart' => false,
     'nodeEnd' => false,
     'nodeStartSize' => null,
@@ -74,13 +74,14 @@
     $darkSurfaceColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::darkSurfaceRgb($color, $surfaceColorRgb);
     $toColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($toColor, $colorRgb);
     $toSurfaceColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::surfaceRgb($toColor, $surfaceColorRgb);
-    $toDarkSurfaceColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::darkSurfaceRgb($toColor, $toSurfaceColorRgb);
+    $toDarkSurfaceColorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::darkSurfaceRgb($toColor, $darkSurfaceColorRgb);
     $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id);
     $devNodeStartIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id . '.node.start');
     $devNodeEndIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($id . '.node.end');
 @endphp
 
 <span
+    data-tw-graph-bounds="{{ json_encode(\Gunreip\TranslationWorkbench\Support\TwGraph\PrimitiveBounds::arc($id, $corner, $styleStartX, $styleStartY, $styleEndX, $styleEndY, $arcRadius)) }}"
     {{ $attributes->class([
         'tw-graph-protocol-primitive',
         'tw-graph-protocol-primitive-arc',
@@ -92,7 +93,7 @@
         '--tw-graph-protocol-start-y: ' . $styleStartY,
         '--tw-graph-protocol-end-x: ' . $styleEndX,
         '--tw-graph-protocol-end-y: ' . $styleEndY,
-        '--tw-graph-protocol-local-arc-size: ' . $arcSize => filled($arcSize),
+        '--tw-graph-protocol-local-arc-radius: ' . $arcRadius => filled($arcRadius),
         '--tw-graph-protocol-local-color-rgb: ' . $colorRgb,
         '--tw-graph-protocol-local-surface-color-rgb: ' . $surfaceColorRgb,
         '--tw-graph-protocol-local-dark-surface-color-rgb: ' . $darkSurfaceColorRgb,
@@ -108,6 +109,7 @@
 
 @if ($nodeStart)
     <span
+        data-tw-graph-bounds="{{ json_encode(\Gunreip\TranslationWorkbench\Support\TwGraph\PrimitiveBounds::node($id . '.node.start', $startX, $startY, $nodeStartSize)) }}"
         @class([
             'tw-graph-protocol-primitive',
             'tw-graph-protocol-primitive-node',
@@ -134,6 +136,7 @@
 
 @if ($nodeEnd)
     <span
+        data-tw-graph-bounds="{{ json_encode(\Gunreip\TranslationWorkbench\Support\TwGraph\PrimitiveBounds::node($id . '.node.end', $endX, $endY, $nodeEndSize)) }}"
         @class([
             'tw-graph-protocol-primitive',
             'tw-graph-protocol-primitive-node',

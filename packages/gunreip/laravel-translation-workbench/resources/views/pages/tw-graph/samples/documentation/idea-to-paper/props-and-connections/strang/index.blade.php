@@ -18,6 +18,7 @@
         <flux:tab name="reference-rekey-source-right">rekey-source-right</flux:tab>
         <flux:tab name="reference-rekey-target-left">rekey-target-left</flux:tab>
         <flux:tab name="reference-rekey-target-right">rekey-target-right</flux:tab>
+        <flux:tab name="reference-flow-while">flow-while</flux:tab>
     </flux:tabs>
     <flux:tab.panel name="reference-flow-switch-case">
         @if (!isset($documentationTabs) || $documentationTabs['reference_strang'] === 'reference-flow-switch-case')
@@ -142,6 +143,13 @@
         @if (!isset($documentationTabs) || $documentationTabs['reference_strang'] === 'reference-rekey-target-right')
             <div wire:key="reference-rekey-target-right">
                 @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.props-and-connections.strang.rekey-target-right')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="reference-flow-while">
+        @if (!isset($documentationTabs) || $documentationTabs['reference_strang'] === 'reference-flow-while')
+            <div wire:key="reference-flow-while">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.props-and-connections.strang.flow-while')
             </div>
         @endif
     </flux:tab.panel>

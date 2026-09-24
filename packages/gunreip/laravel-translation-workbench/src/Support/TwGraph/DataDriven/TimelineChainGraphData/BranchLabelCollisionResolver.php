@@ -420,12 +420,12 @@ final class BranchLabelCollisionResolver
 
         $endSegmentBox = (array) data_get($collision, 'endSegmentBox', []);
         if (is_numeric($endSegmentBox['yStart'] ?? null)) {
-            $arcSize = self::toRem($endBranch['arc_size'] ?? self::defaultArcSize()) ?: self::defaultArcSizeRem();
+            $arcRadius = self::toRem($endBranch['arc_radius'] ?? self::defaultArcRadius()) ?: self::defaultArcRadiusRem();
             $entryStemLength = self::toRem($endBranch['entry_stem_length'] ?? '0rem');
             $stepHeight = self::stepHeight((array) ($endBranch['step'] ?? []));
             $stemHeight = self::stemLabelHeight(self::effectiveStemEntries($endBranch));
             $pathNumber = self::trunkPathNumberForAnchorY(
-                (float) $endSegmentBox['yStart'] - $entryStemLength - (2 * $arcSize) - $stepHeight - $stemHeight,
+                (float) $endSegmentBox['yStart'] - $entryStemLength - (2 * $arcRadius) - $stepHeight - $stemHeight,
                 $trunkNodeAnchors,
             );
 
@@ -593,10 +593,10 @@ final class BranchLabelCollisionResolver
         $anchorY = self::anchorY($branch);
         $bridgeLength = self::branchBridgeLength($branch);
         $entryStemLength = self::toRem($branch['entry_stem_length'] ?? '0rem');
-        $arcSize = self::toRem($branch['arc_size'] ?? self::defaultArcSize()) ?: self::defaultArcSizeRem();
+        $arcRadius = self::toRem($branch['arc_radius'] ?? self::defaultArcRadius()) ?: self::defaultArcRadiusRem();
         $direction = $side === 'left' ? -1.0 : 1.0;
-        $stemX = $direction * ($bridgeLength + (2 * $arcSize));
-        $arcOutY = $anchorY + $entryStemLength + (2 * $arcSize);
+        $stemX = $direction * ($bridgeLength + (2 * $arcRadius));
+        $arcOutY = $anchorY + $entryStemLength + (2 * $arcRadius);
         $step = (array) ($branch['step'] ?? []);
         $stepHeight = self::stepHeight($step);
         $stepEndY = $arcOutY + $stepHeight;
@@ -732,11 +732,11 @@ final class BranchLabelCollisionResolver
         $anchorY = self::anchorY($branch);
         $bridgeLength = self::branchBridgeLength($branch);
         $entryStemLength = self::toRem($branch['entry_stem_length'] ?? '0rem');
-        $arcSize = self::toRem($branch['arc_size'] ?? self::defaultArcSize()) ?: self::defaultArcSizeRem();
+        $arcRadius = self::toRem($branch['arc_radius'] ?? self::defaultArcRadius()) ?: self::defaultArcRadiusRem();
         $direction = $side === 'left' ? -1.0 : 1.0;
-        $xStart = $direction * $arcSize;
-        $xEnd = $direction * ($arcSize + $bridgeLength);
-        $y = $anchorY + $entryStemLength + $arcSize;
+        $xStart = $direction * $arcRadius;
+        $xEnd = $direction * ($arcRadius + $bridgeLength);
+        $y = $anchorY + $entryStemLength + $arcRadius;
         $halfHeight = self::debugBoundBridgeHeight() / 2;
 
         return [[
@@ -760,13 +760,13 @@ final class BranchLabelCollisionResolver
         $anchorY = self::anchorY($branch);
         $bridgeLength = self::branchBridgeLength($branch);
         $entryStemLength = self::toRem($branch['entry_stem_length'] ?? '0rem');
-        $arcSize = self::toRem($branch['arc_size'] ?? self::defaultArcSize()) ?: self::defaultArcSizeRem();
+        $arcRadius = self::toRem($branch['arc_radius'] ?? self::defaultArcRadius()) ?: self::defaultArcRadiusRem();
         $endLength = self::toRem($branch['end_length'] ?? Defaults::dataDrivenString('line_length', '4rem'));
         $direction = $side === 'left' ? -1.0 : 1.0;
-        $x = $direction * ($bridgeLength + (2 * $arcSize));
+        $x = $direction * ($bridgeLength + (2 * $arcRadius));
         $yStart = $anchorY
             + $entryStemLength
-            + (2 * $arcSize)
+            + (2 * $arcRadius)
             + self::stepHeight((array) ($branch['step'] ?? []))
             + self::stemLabelHeight(self::effectiveStemEntries($branch));
         $halfWidth = max(self::debugBoundEndSegmentWidth(), self::debugBoundLabelReach()) / 2;
@@ -1188,14 +1188,14 @@ final class BranchLabelCollisionResolver
         return (float) $matches[0];
     }
 
-    private static function defaultArcSize(): string
+    private static function defaultArcRadius(): string
     {
-        return Defaults::dataDrivenString('arc_size', '2.75rem');
+        return Defaults::dataDrivenString('arc_radius', '2.75rem');
     }
 
-    private static function defaultArcSizeRem(): float
+    private static function defaultArcRadiusRem(): float
     {
-        return self::toRem(self::defaultArcSize()) ?: 2.75;
+        return self::toRem(self::defaultArcRadius()) ?: 2.75;
     }
 
     private static function rem(float $value): string

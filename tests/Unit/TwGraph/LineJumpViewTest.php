@@ -69,5 +69,13 @@ it('documents four independently authored line-jump primitives', function (): vo
     foreach (['top', 'bottom', 'left', 'right'] as $side) {
         expect($html)->toContain('data-line-jump-example="' . $side . '"');
     }
-    expect($html)->toContain('radius=&quot;2rem&quot;')->toContain('x-model="previewDev"');
+    $dom = new DOMDocument;
+    @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
+    $xpath = new DOMXPath($dom);
+    $code = $xpath->query('//pre/code')->item(0);
+    expect($code)->not->toBeNull();
+    $expected = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView($view)
+        ->example('primitive-line-jump-top');
+    expect(trim($code->textContent))->toBe(trim($expected));
+    expect($html)->toContain('x-model="previewDev"');
 });

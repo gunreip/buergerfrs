@@ -27,7 +27,6 @@
     $inheritedColor = $color ?? null;
 
 
-
 @endphp
 
 @props([
@@ -100,17 +99,6 @@
             'y' => 'calc(' . $anchorStart['y'] . ' + ' . $resolvedLength . ')',
         ],
     };
-    $geometryBounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([$anchorStart, $anchorEnd], '1rem');
-
-    \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::put(
-        $resolvedGraphId,
-        $id . '.bounds',
-        $geometryBounds['left'],
-        $geometryBounds['bottom'],
-        $geometryBounds['width'],
-        $geometryBounds['height'],
-        'center',
-    );
 
     if (is_array($endLabel)) {
         $endLabelSide = data_get($endLabel, 'side');

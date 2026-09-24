@@ -136,6 +136,12 @@
                     <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">Explicit DEV override; null inherits canvas dev.</flux:table.cell>
                 </flux:table.row>
+                <flux:table.row>
+                    <flux:table.cell class="whitespace-normal align-top">joint-arrow-end</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">Render a technical end arrow when node-end is true and node-end-dot is false. Its direction follows the step direction; the anchor and DEV counter remain available.</flux:table.cell>
+                </flux:table.row>
             </flux:table.rows>
         </flux:table>
     </flux:callout>

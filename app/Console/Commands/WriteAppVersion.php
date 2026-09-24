@@ -5,6 +5,7 @@
 namespace App\Console\Commands;
 
 use App\Support\ActivityLog\ConsoleActivityContext;
+use App\Support\AppVersion;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -22,10 +23,11 @@ class WriteAppVersion extends Command
      */
     public function handle(): int
     {
-        // Ermittle die Version aus Git (Tag, Commits seit Tag, Hash)
-        $version = trim(shell_exec('git describe --tags --always --dirty')); // Fallback: Hash, falls keine Tags
-        if (! $version) {
-            $version = 'dev-unknown';
+        $version = app(AppVersion::class)->gitVersion();
+        if ($version === null) {
+            $this->error('Git-Version konnte nicht ermittelt werden; version.txt bleibt unverändert.');
+
+            return self::FAILURE;
         }
         $file = public_path('version.txt');
         file_put_contents($file, $version);

@@ -111,7 +111,7 @@
             '--tw-graph-protocol-min-height: ' . ($minHeight ?: data_get($geometry, 'minHeight', $canvasHeight)),
             '--tw-graph-protocol-path-width: ' . data_get($geometry, 'pathWidth', '0.25rem'),
             '--tw-graph-protocol-node-size: ' . data_get($geometry, 'nodeSize', '1rem'),
-            '--tw-graph-protocol-arc-size: ' . data_get($geometry, 'arcSize', '2.75rem'),
+            '--tw-graph-protocol-arc-radius: ' . data_get($geometry, 'arcRadius', '2.75rem'),
         ]) }}
 >
     <x-ui.tw-graph-protocol.canvas

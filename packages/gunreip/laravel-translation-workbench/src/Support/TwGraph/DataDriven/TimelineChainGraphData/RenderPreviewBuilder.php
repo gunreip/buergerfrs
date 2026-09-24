@@ -470,7 +470,7 @@ final class RenderPreviewBuilder
                 'line_length' => Defaults::dataDrivenString('line_length', '4rem'),
                 'line_width' => Defaults::dataDrivenString('line_width', '0.25rem'),
                 'node_size' => Defaults::dataDrivenString('node_size', '0.95rem'),
-                'arc_size' => Defaults::dataDrivenString('arc_size', '2.75rem'),
+                'arc_radius' => Defaults::dataDrivenString('arc_radius', '2.75rem'),
                 'cap_length' => Defaults::dataDrivenString('cap_length', '1.75rem'),
                 'bridge_length' => Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')),
                 'stem_length' => Defaults::dataDrivenString('stem_length', Defaults::dataDrivenString('line_length', '4rem')),
@@ -2686,7 +2686,7 @@ final class RenderPreviewBuilder
                     'attach_to' => $attachTo,
                     'anchor_y_rem' => $attachPath !== null ? ($trunkAnchors[$attachPath + 1] ?? null) : null,
                     'bridge_length' => $preview['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')),
-                    'arc_size' => data_get($preview, 'arc_size', data_get($preview, 'arc_sizes.1', self::defaultArcSize())),
+                    'arc_radius' => data_get($preview, 'arc_radius', data_get($preview, 'arc_radiuss.1', self::defaultArcRadius())),
                     'entry_stem_length' => '0rem',
                     'step' => [],
                     'stem_length' => self::rem($stemLength),
@@ -2804,11 +2804,11 @@ final class RenderPreviewBuilder
         $attachY = $trunkAnchors[$attachPath + 1] ?? 0.0;
         $bridgeHeight = 1.5;
         $bridgeLength = self::toRem($mergePreview['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')));
-        $arcOutSize = self::toRem(data_get($mergePreview, 'arc_sizes.2', data_get($mergePreview, 'arc_sizes.out', self::defaultArcSize()))) ?: self::defaultArcSizeRem();
+        $arcOutSize = self::toRem(data_get($mergePreview, 'arc_radiuss.2', data_get($mergePreview, 'arc_radiuss.out', self::defaultArcRadius()))) ?: self::defaultArcRadiusRem();
         $startLength = self::toRem($mergePreview['start_length'] ?? $arcOutSize . 'rem');
         $stemLength = self::toRem($mergePreview['stem_length'] ?? Defaults::dataDrivenString('stem_length', Defaults::dataDrivenString('line_length', '4rem')));
         $stemContinuationLength = self::stemContinuationLength((array) ($mergePreview['stem_continuation'] ?? []), $stemLength);
-        $arcInSize = self::toRem(data_get($mergePreview, 'arc_sizes.1', data_get($mergePreview, 'arc_sizes.in', self::defaultArcSize()))) ?: self::defaultArcSizeRem();
+        $arcInSize = self::toRem(data_get($mergePreview, 'arc_radiuss.1', data_get($mergePreview, 'arc_radiuss.in', self::defaultArcRadius()))) ?: self::defaultArcRadiusRem();
         $mainInnerX = $direction * $arcOutSize;
         $mainOuterX = $direction * ($arcOutSize + $bridgeLength);
         $mainBridgeY = $attachY - $arcOutSize;
@@ -2857,9 +2857,9 @@ final class RenderPreviewBuilder
         $extensionBridgeDefault = self::toRem($mergePreview['extension_bridge_length'] ?? $mergePreview['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')));
         $extensionTargetX = $mainOuterX;
         $extensionTargetY = $mainBridgeY;
-        $extensionStartLength = self::toRem($mergePreview['extension_start_length'] ?? self::defaultArcSize());
+        $extensionStartLength = self::toRem($mergePreview['extension_start_length'] ?? self::defaultArcRadius());
         $extensionStemDefault = self::toRem($mergePreview['extension_stem_length'] ?? $mergePreview['stem_length'] ?? Defaults::dataDrivenString('stem_length', Defaults::dataDrivenString('line_length', '4rem')));
-        $extensionArcDefault = self::toRem($mergePreview['extension_arc_size'] ?? self::defaultArcSize());
+        $extensionArcDefault = self::toRem($mergePreview['extension_arc_radius'] ?? self::defaultArcRadius());
 
         for ($extensionIndex = 1; $extensionIndex <= $extensionCount; $extensionIndex++) {
             $extensionBridgeLength = self::toRem(data_get($mergePreview, 'extension_bridge_continuations.' . $extensionIndex, $extensionBridgeDefault));
@@ -2868,10 +2868,10 @@ final class RenderPreviewBuilder
                 (array) data_get($mergePreview, 'extension_stem_continuations.' . $extensionIndex, []),
                 $extensionStemLength,
             );
-            $extensionArcSize = self::toRem(data_get($mergePreview, 'extension_arc_sizes.' . $extensionIndex, $extensionArcDefault)) ?: self::defaultArcSizeRem();
+            $extensionArcRadius = self::toRem(data_get($mergePreview, 'extension_arc_radiuss.' . $extensionIndex, $extensionArcDefault)) ?: self::defaultArcRadiusRem();
             $extensionOuterX = $extensionTargetX + ($direction * $extensionBridgeLength);
-            $extensionStemX = $extensionOuterX + ($direction * $extensionArcSize);
-            $extensionStemEndY = $extensionTargetY - $extensionArcSize;
+            $extensionStemX = $extensionOuterX + ($direction * $extensionArcRadius);
+            $extensionStemEndY = $extensionTargetY - $extensionArcRadius;
             $extensionStartY = $extensionStemEndY - $extensionStemContinuationLength - $extensionStemLength - $extensionStartLength;
             $extensionLabels = (array) data_get($mergePreview, 'extension_node_labels.' . $extensionIndex, []);
             $extensionStartStemId = $componentId . '.extension' . $extensionIndex . '.path.merge-extension.start-stem';
@@ -2934,8 +2934,8 @@ final class RenderPreviewBuilder
         $attachY = $trunkAnchors[$attachPath + 1] ?? 0.0;
         $bridgeHeight = 1.5;
         $bridgeLength = self::toRem($rekeyPreview['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')));
-        $arcOutSize = self::toRem(data_get($rekeyPreview, 'arc_sizes.2', data_get($rekeyPreview, 'arc_sizes.out', self::defaultArcSize()))) ?: self::defaultArcSizeRem();
-        $arcInSize = self::toRem(data_get($rekeyPreview, 'arc_sizes.1', data_get($rekeyPreview, 'arc_sizes.in', self::defaultArcSize()))) ?: self::defaultArcSizeRem();
+        $arcOutSize = self::toRem(data_get($rekeyPreview, 'arc_radiuss.2', data_get($rekeyPreview, 'arc_radiuss.out', self::defaultArcRadius()))) ?: self::defaultArcRadiusRem();
+        $arcInSize = self::toRem(data_get($rekeyPreview, 'arc_radiuss.1', data_get($rekeyPreview, 'arc_radiuss.in', self::defaultArcRadius()))) ?: self::defaultArcRadiusRem();
         $startLength = self::toRem($rekeyPreview['start_length'] ?? $arcInSize . 'rem');
         $stemLength = self::toRem($rekeyPreview['stem_length'] ?? Defaults::dataDrivenString('stem_length', Defaults::dataDrivenString('line_length', '4rem')));
         $stemContinuation = (array) ($rekeyPreview['stem_continuation'] ?? []);
@@ -3022,17 +3022,17 @@ final class RenderPreviewBuilder
         $attachY = $trunkAnchors[$attachPath + 1] ?? 0.0;
         $bridgeHeight = 1.5;
         $bridgeLength = self::toRem($rekeyPreview['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')));
-        $arcSize = self::toRem(data_get($rekeyPreview, 'arc_size', data_get($rekeyPreview, 'arc_sizes.1', self::defaultArcSize()))) ?: self::defaultArcSizeRem();
+        $arcRadius = self::toRem(data_get($rekeyPreview, 'arc_radius', data_get($rekeyPreview, 'arc_radiuss.1', self::defaultArcRadius()))) ?: self::defaultArcRadiusRem();
         $stemLength = self::toRem($rekeyPreview['stem_length'] ?? Defaults::dataDrivenString('stem_length', Defaults::dataDrivenString('line_length', '4rem')));
         $stemEntries = self::effectiveStemContinuationEntries((array) ($rekeyPreview['stem_continuation'] ?? []), $stemLength);
         $endLength = self::toRem($rekeyPreview['end_length'] ?? Defaults::dataDrivenString('line_length', '4rem'));
         $endLabel = (array) ($rekeyPreview['end_label'] ?? []);
 
-        $bridgeStartX = $direction * $arcSize;
-        $bridgeEndX = $direction * ($arcSize + $bridgeLength);
-        $bridgeY = $attachY + $arcSize;
-        $stemX = $direction * ($bridgeLength + (2 * $arcSize));
-        $stemStartY = $attachY + (2 * $arcSize);
+        $bridgeStartX = $direction * $arcRadius;
+        $bridgeEndX = $direction * ($arcRadius + $bridgeLength);
+        $bridgeY = $attachY + $arcRadius;
+        $stemX = $direction * ($bridgeLength + (2 * $arcRadius));
+        $stemStartY = $attachY + (2 * $arcRadius);
         $stemEndY = $stemStartY;
         $padding = 0.75;
         $bodyBounds = [
@@ -3666,14 +3666,14 @@ final class RenderPreviewBuilder
         );
     }
 
-    private static function defaultArcSize(): string
+    private static function defaultArcRadius(): string
     {
-        return Defaults::dataDrivenString('arc_size', '2.75rem');
+        return Defaults::dataDrivenString('arc_radius', '2.75rem');
     }
 
-    private static function defaultArcSizeRem(): float
+    private static function defaultArcRadiusRem(): float
     {
-        return self::toRem(self::defaultArcSize()) ?: 2.75;
+        return self::toRem(self::defaultArcRadius()) ?: 2.75;
     }
 
     /**

@@ -53,8 +53,8 @@
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Starting coordinates of the arc, matching the reference extension stem endpoint in these examples.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-size</flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph arc_size</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-radius</flux:table.cell>
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph arc_radius</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Size of the incoming arc.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
@@ -115,7 +115,7 @@
                         id="literature.paths.branch-return-bridge.left-right.reference"
                         side="left"
                         :anchor-start="['x' => '6.75rem', 'y' => '5rem']"
-                        arc-size="2.75rem"
+                        arc-radius="2.75rem"
                         bridge-length="8rem"
                         stem-length="4rem"
                         :end-length="null"
@@ -127,7 +127,7 @@
                         id="literature.paths.branch-return-bridge.left-right"
                         side="left"
                         :anchor-start="['x' => '-4rem', 'y' => '11.75rem']"
-                        arc-size="2.75rem"
+                        arc-radius="2.75rem"
                         bridge-length="8rem"
                         :node-labels="[
                             2 => [
@@ -163,7 +163,7 @@
                         id="literature.paths.branch-return-bridge.right-left.reference"
                         side="right"
                         :anchor-start="['x' => '-6.75rem', 'y' => '5rem']"
-                        arc-size="2.75rem"
+                        arc-radius="2.75rem"
                         bridge-length="8rem"
                         stem-length="4rem"
                         :end-length="null"
@@ -175,7 +175,7 @@
                         id="literature.paths.branch-return-bridge.right-left"
                         side="right"
                         :anchor-start="['x' => '4rem', 'y' => '11.75rem']"
-                        arc-size="2.75rem"
+                        arc-radius="2.75rem"
                         bridge-length="8rem"
                         :node-labels="[
                             2 => [

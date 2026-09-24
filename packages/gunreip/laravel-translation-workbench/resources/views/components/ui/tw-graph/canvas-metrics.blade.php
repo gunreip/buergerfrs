@@ -7,11 +7,13 @@
 
     Rule:
     Shows the current BoundsRegistry summary for left/center/right graph areas.
-    This is diagnostic only and must not affect graph geometry.
+    Primitive geometry owns the bounds. Text dimensions are explicitly provisional until
+    font layout is available. Geometry mismatches are reported, never corrected by measurement.
 --}}
 
 @props([
     'graphId' => null,
+    'records' => [],
     'dev' => false,
     'coordinates' => true,
     'horizontalPadding' => '12rem',
@@ -85,9 +87,15 @@
 @endphp
 
 @if (filled($graphId))
+    <script type="application/json" data-tw-graph-bounds-records>{!! json_encode($records, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
     <style>
         #{{ $graphId }} {
             --tw-graph-protocol-trunk-x: {{ $originLeft }};
+            --tw-graph-protocol-content-min-x: {{ $minX }};
+            --tw-graph-protocol-content-max-x: {{ $maxX }};
+            --tw-graph-protocol-content-min-y: {{ $canvasMetrics['minY'] }};
+            --tw-graph-protocol-content-width: calc({{ $maxX }} - {{ $minX }});
+            --tw-graph-protocol-content-height: calc({{ $canvasMetrics['maxY'] }} - {{ $canvasMetrics['minY'] }});
             --tw-graph-protocol-calculated-width: {{ $canvasWidth }};
             --tw-graph-protocol-origin-bottom: {{ $originBottom }};
             --tw-graph-protocol-calculated-height: {{ $canvasHeight }};
@@ -96,6 +104,11 @@
 @endif
 
 @if ($dev)
+    <div data-tw-graph-bounds-warning hidden class="tw-graph-protocol-dev-only absolute left-2 top-16 z-50 max-w-xl rounded border border-amber-500 bg-amber-50 p-2 text-xs text-amber-950">
+        <strong>Bounds mismatch — geometry was not overridden</strong>
+        <pre data-tw-graph-bounds-warning-details class="max-h-48 overflow-auto whitespace-pre-wrap"></pre>
+    </div>
+    <span data-tw-graph-bounds-state class="tw-graph-protocol-dev-only absolute bottom-2 right-2 z-50 rounded bg-zinc-900 px-2 py-1 text-xs text-white">Bounds: geometry calculated; text dimensions provisional</span>
     @php
         $displayOriginBottom =
             $formatRem(data_get($canvasMetrics, 'originBottomRem')) ??
@@ -113,11 +126,14 @@
         $displayMaxX = $formatRem(data_get($canvasMetrics, 'maxXRem')) ?? (strlen($maxX) > 24 ? 'max(...)' : $maxX);
     @endphp
 
+        <span data-tw-graph-content-bounds data-tw-graph-dev-box="{{ $graphId }}.content-bounds" class="tw-graph-protocol-dev-only pointer-events-none absolute z-40" aria-hidden="true"
+            style="left:calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-content-min-x, 0rem)); bottom:calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-content-min-y, 0rem)); width:var(--tw-graph-protocol-content-width, 0rem); height:var(--tw-graph-protocol-content-height, 0rem); outline:1px dashed rgb(56 189 248 / .7);"></span>
+
     @if ($showCoordinates)
         <span
             class="tw-graph-protocol-dev-only tw-graph-protocol-coordinate-only pointer-events-none absolute bottom-0 top-0 z-40 w-px"
             style="
-                left: calc(var(--tw-graph-protocol-trunk-x) + {{ $minX }});
+                left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-content-min-x, {{ $minX }}));
                 background-color: rgb(244 114 182 / 0.8);
             "
         ></span>
@@ -131,7 +147,7 @@
         <span
             class="tw-graph-protocol-dev-only tw-graph-protocol-coordinate-only pointer-events-none absolute bottom-0 top-0 z-40 w-px"
             style="
-                left: calc(var(--tw-graph-protocol-trunk-x) + {{ $maxX }});
+                left: calc(var(--tw-graph-protocol-trunk-x) + var(--tw-graph-protocol-content-max-x, {{ $maxX }}));
                 background-color: rgb(168 85 247 / 0.8);
             "
         ></span>
@@ -139,7 +155,7 @@
         <span
             class="tw-graph-protocol-dev-only tw-graph-protocol-coordinate-only pointer-events-none absolute left-0 right-0 z-40 h-px"
             style="
-                bottom: {{ $originBottom }};
+                bottom: var(--tw-graph-protocol-origin-bottom);
                 background-color: rgb(239 68 68 / 0.75);
             "
         ></span>
@@ -159,7 +175,7 @@
                 class="tw-graph-protocol-dev-only tw-graph-protocol-coordinate-only pointer-events-none absolute z-40 h-px"
                 style="
                     {{ $linePositions[$side] }}
-                    bottom: calc({{ $originBottom }} + {{ $top }});
+                    bottom: calc(var(--tw-graph-protocol-origin-bottom) + var(--tw-graph-protocol-side-{{ $side }}-top, {{ $top }}));
                     background-color: rgb({{ $lineColors[$side] }} / 0.85);
                 "
             ></span>
@@ -170,37 +186,35 @@
                 <span class="block uppercase tracking-wide">
                     {{ $labels[$side] }}
                 </span>
-                <span class="block">
+                <span class="block" data-tw-graph-side-value="{{ $side }}.top">
                     top={{ $resultTop }}
                 </span>
-                <span class="block">
+                <span class="block" data-tw-graph-side-value="{{ $side }}.height">
                     h={{ $resultHeight }}
                 </span>
-                <span class="block">
+                <span class="block" data-tw-graph-side-value="{{ $side }}.count">
                     n={{ data_get($sideSummary, 'count', 0) }}
                 </span>
-                @if ($largestSide === $side)
-                    <span class="mt-0.5 block rounded bg-red-500/15 px-1 text-red-700 dark:text-red-300">
-                        largest
-                    </span>
-                @endif
+                <span data-tw-graph-side-largest="{{ $side }}" @if ($largestSide !== $side) hidden @endif class="mt-0.5 rounded bg-red-500/15 px-1 text-red-700 dark:text-red-300">
+                    largest
+                </span>
                 @if ($side === 'center')
-                    <span class="block">
+                    <span class="block" data-tw-graph-bound-value="left">
                         left={{ $displayOriginLeft }}
                     </span>
-                    <span class="block">
+                    <span class="block" data-tw-graph-bound-value="width">
                         width={{ $displayCanvasWidth }}
                     </span>
-                    <span class="block">
+                    <span class="block" data-tw-graph-bound-value="minX">
                         minX={{ $displayMinX }}
                     </span>
-                    <span class="block">
+                    <span class="block" data-tw-graph-bound-value="maxX">
                         maxX={{ $displayMaxX }}
                     </span>
-                    <span class="block">
+                    <span class="block" data-tw-graph-bound-value="bottom">
                         bottom={{ $displayOriginBottom }}
                     </span>
-                    <span class="block">
+                    <span class="block" data-tw-graph-bound-value="height">
                         height={{ $displayCanvasHeight }}
                     </span>
                 @endif

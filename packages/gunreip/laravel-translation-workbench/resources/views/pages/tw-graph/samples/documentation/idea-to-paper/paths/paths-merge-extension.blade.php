@@ -62,7 +62,7 @@
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">start-length
                         </flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">resolved incoming
-                            arc-size</flux:table.cell>
+                            arc-radius</flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Length of the start
                             section.</flux:table.cell>
                     </flux:table.row>
@@ -82,9 +82,9 @@
                             used to resolve path dimensions.</flux:table.cell>
                     </flux:table.row>
                     <flux:table.row>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-size
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">arc-radius
                         </flux:table.cell>
-                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph arc_size
+                        <flux:table.cell class="whitespace-normal break-words align-top text-xs">graph arc_radius
                         </flux:table.cell>
                         <flux:table.cell class="whitespace-normal break-words align-top text-xs">Size of the arc before the bridge.</flux:table.cell>
                     </flux:table.row>
@@ -178,7 +178,7 @@
                         :anchor-start="['x' => '3.25rem', 'y' => '5rem']"
                         start-length="2.5rem"
                         :stem-lengths="[1 => '4rem']"
-                        arc-size="2.75rem"
+                        arc-radius="2.75rem"
                         bridge-length="4rem"
                         :start-label="['text' => ['Merge reference'], 'width' => 'half']"
                         color="zinc"
@@ -190,7 +190,7 @@
                         :anchor-start="['x' => '-4.75rem', 'y' => '5rem']"
                         start-length="2.5rem"
                         stem-length="4rem"
-                        arc-size="2.75rem"
+                        arc-radius="2.75rem"
                         bridge-length="8rem"
                         :node-labels="[
                             'start' => ['text' => ['Merge extension start'], 'width' => 'half'],
@@ -231,7 +231,7 @@
                         :anchor-start="['x' => '4.75rem', 'y' => '5rem']"
                         start-length="4.5rem"
                         :stem-lengths="[1 => '4rem']"
-                        arc-size="2.75rem"
+                        arc-radius="2.75rem"
                         bridge-length="4rem"
                         :start-label="['text' => ['Merge reference'], 'width' => 'half']"
                         color="zinc"
@@ -243,7 +243,7 @@
                         :anchor-start="['x' => '14.75rem', 'y' => '5rem']"
                         start-length="4.5rem"
                         stem-length="4rem"
-                        arc-size="2.75rem"
+                        arc-radius="2.75rem"
                         bridge-length="10rem"
                         :node-labels="[
                             'start' => ['text' => ['Merge extension start'], 'width' => 'half'],

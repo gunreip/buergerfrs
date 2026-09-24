@@ -6,7 +6,7 @@ return [
      * override config/tw-graph-defaults.php only for this graph family.
      */
     // '' => '',
-    'arc_size' => '2.75rem',
+    'arc_radius' => '2.75rem',
     'stem_length' => '5.75rem',
     // 'label_offset' => '0.75rem',
     // 'merge_end_label_connector_length' => '5rem',

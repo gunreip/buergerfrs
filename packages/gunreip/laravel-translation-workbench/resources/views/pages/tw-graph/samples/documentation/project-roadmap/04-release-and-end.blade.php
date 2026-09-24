@@ -90,7 +90,7 @@
                         <span class="grid grid-cols-[minmax(28rem,1fr)_minmax(12rem,18rem)] gap-8 ps-4"><span
                                 class="text-amber-300"
                             >extension-start-length="2.75rem"</span><span class="text-zinc-500">default:
-                                arc-size</span></span>
+                                arc-radius</span></span>
                         <span class="grid grid-cols-[minmax(28rem,1fr)_minmax(12rem,18rem)] gap-8 ps-4"><span
                                 class="text-amber-300"
                             >extension-stem-length="4rem"</span><span class="text-zinc-500">default:
@@ -101,8 +101,8 @@
                                 bridge-length</span></span>
                         <span class="grid grid-cols-[minmax(28rem,1fr)_minmax(12rem,18rem)] gap-8 ps-4"><span
                                 class="text-amber-300"
-                            >extension-arc-size="2.75rem"</span><span class="text-zinc-500">default:
-                                arc-size</span></span>
+                            >extension-arc-radius="2.75rem"</span><span class="text-zinc-500">default:
+                                arc-radius</span></span>
                         <span class="grid grid-cols-[minmax(28rem,1fr)_minmax(12rem,18rem)] gap-8 ps-4"><span
                                 class="text-amber-300"
                             >:extension-node-labels="[...]"</span><span class="text-zinc-500">default: []</span></span>

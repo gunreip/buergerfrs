@@ -31,6 +31,7 @@
 @endphp
 
 <span
+    data-tw-graph-bounds="{{ json_encode(\Gunreip\TranslationWorkbench\Support\TwGraph\PrimitiveBounds::node($id, $anchorX, $anchorY, $size)) }}"
     {{ $attributes->class([
         'tw-graph-protocol-primitive',
         'tw-graph-protocol-primitive-node',

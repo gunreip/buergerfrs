@@ -513,7 +513,7 @@ it('derives branch continuation counters from rendered stems without explicit sa
 });
 
 it('uses graph defaults for branch arc bridge and stem geometry', function (): void {
-    config()->set('tw-graph-defaults.arc_size', '4rem');
+    config()->set('tw-graph-defaults.arc_radius', '4rem');
     config()->set('tw-graph-defaults.bridge_length', '7rem');
     config()->set('tw-graph-defaults.stem_length', '5rem');
 
@@ -548,7 +548,7 @@ it('uses graph defaults for branch arc bridge and stem geometry', function (): v
         ->toContain('sample.left.1.branch.extension.1.stem')
         ->toContain('sample.left.1.branch.return.1.arc.in')
         ->toContain('sample.left.1.branch.return.1.bridge')
-        ->toContain('--tw-graph-protocol-local-arc-size: 4rem')
+        ->toContain('--tw-graph-protocol-local-arc-radius: 4rem')
         ->toContain('--tw-graph-protocol-local-length: 7rem')
         ->toContain('--tw-graph-protocol-local-length: 5rem');
 });

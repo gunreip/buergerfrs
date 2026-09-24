@@ -46,7 +46,7 @@ final class MergePreviewBuilder
                     ->filter(static fn(array $continuation): bool => $continuation !== [])
                     ->all()
                     : [];
-                $mainPreview['extension_arc_sizes'] = [];
+                $mainPreview['extension_arc_radiuss'] = [];
                 $mainPreview['extension_node_labels'] = $extensions
                     ->mapWithKeys(static function (array $extension, int $extensionOffset) use ($side): array {
                         return [
@@ -259,7 +259,7 @@ final class MergePreviewBuilder
             'color' => self::color('merge', 'amber'),
             'attach_to' => 'strang.trunk.path.1.end',
             'stem_continuation' => $stemContinuation,
-            'arc_sizes' => [],
+            'arc_radiuss' => [],
             'start_label' => [
                 'text' => array_values(array_filter([$firstRootLabel, LabelFormatter::graphTimestampLabel($firstTimestamp)])),
                 'side' => 'bottom',

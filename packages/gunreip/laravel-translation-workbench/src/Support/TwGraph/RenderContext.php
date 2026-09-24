@@ -24,7 +24,7 @@ final class RenderContext
      *     minHeight: string,
      *     pathWidth: string,
      *     nodeSize: string,
-     *     arcSize: string
+     *     arcRadius: string
      * }
      */
     public static function make(
@@ -33,7 +33,7 @@ final class RenderContext
         mixed $color,
         string $lineWidth,
         string $nodeSize,
-        string $arcSize,
+        string $arcRadius,
         mixed $minWidth,
         mixed $minHeight,
     ): array {
@@ -57,7 +57,7 @@ final class RenderContext
             'minHeight' => (string) ($minHeight ?: data_get($geometry, 'minHeight', $canvasHeight)),
             'pathWidth' => (string) data_get($geometry, 'pathWidth', $lineWidth),
             'nodeSize' => (string) data_get($geometry, 'nodeSize', $nodeSize),
-            'arcSize' => (string) data_get($geometry, 'arcSize', $arcSize),
+            'arcRadius' => (string) data_get($geometry, 'arcRadius', $arcRadius),
         ];
     }
 

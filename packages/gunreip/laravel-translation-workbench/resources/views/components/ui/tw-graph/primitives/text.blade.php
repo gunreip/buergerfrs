@@ -45,6 +45,7 @@
 
 @if ($lines->isNotEmpty())
     <span
+    data-tw-graph-bounds="{{ json_encode(\Gunreip\TranslationWorkbench\Support\TwGraph\PrimitiveBounds::text($id, $anchorX, $anchorY, $side, $offset, (bool) $badge, (bool) $long, (bool) $halfLong, (bool) $half, $lines->count())) }}"
         data-tw-graph-path="{{ $devIdentifier }}"
         title="{{ $devIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
         {{ $attributes->class([

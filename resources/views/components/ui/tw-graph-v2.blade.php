@@ -12,7 +12,7 @@
     path-width="0.25rem" Shared path/border width. Prefer pixel-friendly values.
     node-core-size="0.1rem" Inner node core; border grows it to node-size.
     node-size="1rem" Shared node diameter.
-    arc-size="2.75rem" Shared arc box size.
+    arc-radius="2.75rem" Shared arc box size.
     path-start-stop="85%" Gradient stop for path-start.
     dev="true|false" Render graph primitives with transparent debug opacity.
     anchor-points="true|false" Root display mode. true shows only <x-ui.tw-graph-v2.anchor-points>; false shows graph parts and hides anchor-points.
@@ -35,7 +35,7 @@
     'pathWidth' => '0.25rem',
     'nodeCoreSize' => '0.1rem',
     'nodeSize' => '1rem',
-    'arcSize' => '2.75rem',
+    'arcRadius' => '2.75rem',
     'pathStartStop' => '85%',
     'graphId' => null,
     'dev' => false,
@@ -55,7 +55,7 @@
         '--tw-graph-v2-path-width: ' . $pathWidth,
         '--tw-graph-v2-node-core-size: ' . $nodeCoreSize,
         '--tw-graph-v2-node-size: ' . $nodeSize,
-        '--tw-graph-v2-arc-size: ' . $arcSize,
+        '--tw-graph-v2-arc-radius: ' . $arcRadius,
         '--tw-graph-v2-path-start-stop: ' . $pathStartStop,
     ];
 @endphp

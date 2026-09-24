@@ -7,6 +7,7 @@ import './notices/validation-notices';
 import { setupGlobalTooltips } from './tooltips/global-tooltip';
 import { setupShowHideLayoutRefresh } from './helper/show-hide';
 import { setupTwGraphLineJumps } from './helper/tw-graph-line-jumps';
+import { setupTwGraphBounds } from './helper/tw-graph-bounds';
 import { setupTwGraphDevTools } from './helper/tw-graph-dev';
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -14,4 +15,5 @@ document.addEventListener('DOMContentLoaded', function () {
     setupShowHideLayoutRefresh();
     setupTwGraphDevTools();
     setupTwGraphLineJumps();
+    setupTwGraphBounds();
 });
