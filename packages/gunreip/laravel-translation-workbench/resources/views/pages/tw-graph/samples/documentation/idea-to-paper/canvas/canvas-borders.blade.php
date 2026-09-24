@@ -18,13 +18,13 @@
             {{ __('An empty canvas illustrates its minimum dimensions and padding. The yellow frame marks the minimum area; the dashed box marks the area inside the padding. The annotations are ordinary HTML and do not contribute graph bounds.') }}
         </flux:callout.text>
 
-
         <flux:separator
             class="mt-4"
             :text="__('Code examples')"
         />
 
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-4">{{ $canvasSource->example('canvas-borders-1') }}</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box
+            class="mt-4">{{ $canvasSource->example('canvas-borders-1') }}</x-translation-workbench::ui.tw-graph.code-box>
 
         <flux:separator
             class="mt-4"
@@ -47,7 +47,8 @@
                     <flux:table.rows>
                         <flux:table.row>
                             <flux:table.cell class="align-top"><code>min-width</code></flux:table.cell>
-                            <flux:table.cell class="whitespace-normal align-top">{{ __('calculated; empty canvas: 40rem') }}
+                            <flux:table.cell class="whitespace-normal align-top">
+                                {{ __('calculated; empty canvas: 40rem') }}
                             </flux:table.cell>
                             <flux:table.cell class="whitespace-normal">
                                 {{ __('Minimum width of the yellow frame (40rem here). The canvas may grow to fit its container or graph content.') }}
@@ -68,22 +69,30 @@
                             </flux:table.cell>
                         </flux:table.row>
                         <flux:table.row>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>graph-id</code></flux:table.cell>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>{{ __('auto id') }}</code></flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>graph-id</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>{{ __('auto id') }}</code>
+                            </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                 {{ __('Identifies this canvas and scopes its diagnostic elements.') }}
                             </flux:table.cell>
                         </flux:table.row>
                         <flux:table.row>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>:dev</code></flux:table.cell>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>false</code></flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>:dev</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>false</code>
+                            </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                 {{ __('Enables the diagnostic frame for this illustration.') }}
                             </flux:table.cell>
                         </flux:table.row>
                         <flux:table.row>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>:coordinates</code></flux:table.cell>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>false</code></flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>:coordinates</code>
+                            </flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>false</code>
+                            </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                 {{ __('Renders the yellow dimension guides, kept visible here without preview tools.') }}
                             </flux:table.cell>
@@ -99,10 +108,11 @@
 
     <flux:callout
         class="min-w-0"
-        color="zinc"
-        icon="square-dashed-text"
+        color="emerald"
     >
-        <flux:callout.heading>{{ __('Preview') }}</flux:callout.heading>
+        <flux:callout.heading icon="square-dashed-text">
+            {{ __('Preview') }}
+        </flux:callout.heading>
         <div
             class="mt-4"
             data-canvas-borders-example

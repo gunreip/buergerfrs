@@ -28,8 +28,8 @@ final class ExampleSource
     public function example(string $marker): string
     {
         $source = str_replace(["\r\n", "\r"], "\n", $this->source);
-        $start = '/^[\t ]*' . preg_quote('{{-- ' . $marker . ':start --}}', '/') . '[\t ]*$/m';
-        $end = '/^[\t ]*' . preg_quote('{{-- ' . $marker . ':end --}}', '/') . '[\t ]*$/m';
+        $start = '/^[\t ]*'.preg_quote('{{-- '.$marker.':start --}}', '/').'[\t ]*$/m';
+        $end = '/^[\t ]*'.preg_quote('{{-- '.$marker.':end --}}', '/').'[\t ]*$/m';
 
         if (preg_match_all($start, $source, $starts, PREG_OFFSET_CAPTURE) !== 1
             || preg_match_all($end, $source, $ends, PREG_OFFSET_CAPTURE) !== 1) {
@@ -59,5 +59,59 @@ final class ExampleSource
             static fn (string $line): string => substr($line, $indent),
             $lines,
         ));
+    }
+
+    /**
+     * Compare authored props, without evaluating Blade/PHP or copying their values.
+     * Markers must contain exactly one opening tag of the requested component.
+     * Identifier-only changes are excluded unless the caller opts in.
+     */
+    public function changedProps(string $marker, string $baseline, string $component, array $ignore = ['id', 'graph-id']): string
+    {
+        $current = $this->attributes($marker, $component);
+        $original = $this->attributes($baseline, $component);
+        $changes = [];
+
+        foreach ($current as $name => $attribute) {
+            if (! in_array(ltrim($name, ':'), $ignore, true) && ($original[$name] ?? null) !== $attribute) {
+                $changes[] = $attribute;
+            }
+        }
+        foreach (array_diff_key($original, $current) as $name => $attribute) {
+            if (! in_array(ltrim($name, ':'), $ignore, true)) {
+                $changes[] = '{{-- '.$name.' is omitted in this example; the component fallback applies. --}}';
+            }
+        }
+
+        return implode("\n", $changes);
+    }
+
+    private function attributes(string $marker, string $component): array
+    {
+        $source = preg_replace('/\{\{--.*?--\}\}/s', '', $this->example($marker));
+        // A quoted Blade prop may contain PHP arrays, arrows and greater-than signs.
+        $quoted = '"[^"]*"|\'[^\']*\'';
+        $pattern = '~<'.preg_quote($component, '~').'(?=[\\s/>])((?:'.$quoted.'|[^\'">])*)>~s';
+        if (preg_match_all($pattern, $source, $matches) !== 1) {
+            throw new LogicException("Example [{$marker}] in [{$this->name}] must contain exactly one [{$component}] component.");
+        }
+
+        $text = rtrim(trim($matches[1][0]), '/');
+        $attributes = [];
+        $offset = 0;
+        $pattern = '~\\G\\s*([:@A-Za-z_][:@A-Za-z0-9_.-]*)(?:\\s*=\\s*('.$quoted.'))?~s';
+        while ($offset < strlen(rtrim($text))) {
+            if (! preg_match($pattern, $text, $match, 0, $offset)) {
+                throw new LogicException("Unsupported attribute syntax in example [{$marker}] in [{$this->name}].");
+            }
+            $name = $match[1];
+            if (array_key_exists($name, $attributes)) {
+                throw new LogicException("Duplicate attribute [{$name}] in example [{$marker}] in [{$this->name}].");
+            }
+            $attributes[$name] = $name.(isset($match[2]) ? '='.$match[2] : '');
+            $offset += strlen($match[0]);
+        }
+
+        return $attributes;
     }
 }

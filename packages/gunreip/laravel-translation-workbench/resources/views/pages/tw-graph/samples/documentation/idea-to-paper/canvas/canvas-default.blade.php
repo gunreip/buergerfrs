@@ -23,7 +23,8 @@
             :text="__('Code examples')"
         />
 
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-4">{{ $canvasSource->example('canvas-default-1') }}</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box
+            class="mt-4">{{ $canvasSource->example('canvas-default-1') }}</x-translation-workbench::ui.tw-graph.code-box>
 
         <flux:separator
             class="mt-4"
@@ -89,10 +90,12 @@
     {{-- Preview --}}
     <flux:callout
         class="min-w-0"
-        color="zinc"
-        icon="square-dashed-text"
+        color="emerald"
     >
-        <flux:callout.heading>{{ __('Preview') }}</flux:callout.heading>
+        <flux:callout.heading icon="square-dashed-text">
+            {{ __('Preview') }}
+        </flux:callout.heading>
+
         <x-translation-workbench::ui.tw-graph.preview-tools
             :dev="$dev ?? true"
             :coordinates="$coordinates ?? false"

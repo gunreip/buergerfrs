@@ -172,8 +172,10 @@
                             </flux:table.cell>
                         </flux:table.row>
                         <flux:table.row>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>id (strang.trunk)</code></flux:table.cell>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>null</code></flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>id
+                                    (strang.trunk)</code></flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>null</code>
+                            </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                 {{ __('Explicit root ID of the trunk; used to derive its child component and anchor IDs.') }}
                             </flux:table.cell>
@@ -186,10 +188,11 @@
 
     <flux:callout
         class="min-w-0"
-        color="zinc"
-        icon="square-dashed-text"
+        color="emerald"
     >
-        <flux:callout.heading>{{ __('Preview') }}</flux:callout.heading>
+        <flux:callout.heading icon="square-dashed-text">
+            {{ __('Preview') }}
+        </flux:callout.heading>
         <x-translation-workbench::ui.tw-graph.preview-tools
             :dev="$dev ?? true"
             :coordinates="$coordinates ?? false"

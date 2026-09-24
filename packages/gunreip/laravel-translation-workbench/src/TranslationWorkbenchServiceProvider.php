@@ -65,6 +65,7 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'translation-workbench');
         Blade::anonymousComponentPath(__DIR__ . '/../resources/views/components', 'translation-workbench');
+        Blade::component(\Gunreip\TranslationWorkbench\View\Components\HeadingCounterGroup::class, 'translation-workbench::ui.common.heading-counter-group');
 
         Livewire::component('translation-workbench.tw-graph.documentation', TwGraphDocumentation::class);
         Livewire::component('translation-workbench.entries', TranslationWorkbenchEntries::class);

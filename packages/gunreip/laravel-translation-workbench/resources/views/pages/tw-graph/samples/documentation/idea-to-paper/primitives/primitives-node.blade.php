@@ -31,19 +31,19 @@
             size="sm"
         >0.5rem</flux:heading>
         <x-translation-workbench::ui.tw-graph.code-box
-            class="mt-2">{{ implode("\n", ['size="0.5rem"', 'color="red"']) }}</x-translation-workbench::ui.tw-graph.code-box>
+            class="mt-2">{{ $source->changedProps('source-node-small', 'primitive-node-complete', 'x-translation-workbench::ui.tw-graph.primitives.node') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >1.5rem</flux:heading>
         <x-translation-workbench::ui.tw-graph.code-box
-            class="mt-2">{{ implode("\n", ['size="1.5rem"', 'color="green"']) }}</x-translation-workbench::ui.tw-graph.code-box>
+            class="mt-2">{{ $source->changedProps('source-node-medium', 'primitive-node-complete', 'x-translation-workbench::ui.tw-graph.primitives.node') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >2rem</flux:heading>
         <x-translation-workbench::ui.tw-graph.code-box
-            class="mt-2">{{ implode("\n", ['size="2rem"', 'color="violet"']) }}</x-translation-workbench::ui.tw-graph.code-box>
+            class="mt-2">{{ $source->changedProps('source-node-large', 'primitive-node-complete', 'x-translation-workbench::ui.tw-graph.primitives.node') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -150,6 +150,7 @@
                         class="m-3"
                         size="sm"
                     >0.5rem</flux:heading>
+                    {{-- source-node-small:start --}}
                     <x-translation-workbench::ui.tw-graph
                         graph-id="idea-to-paper-primitives-node-small"
                         :dev="true"
@@ -166,6 +167,7 @@
                             color="red"
                         />
                     </x-translation-workbench::ui.tw-graph>
+                    {{-- source-node-small:end --}}
                 </div>
                 <div
                     class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
@@ -175,6 +177,7 @@
                         class="m-3"
                         size="sm"
                     >1.5rem</flux:heading>
+                    {{-- source-node-medium:start --}}
                     <x-translation-workbench::ui.tw-graph
                         graph-id="idea-to-paper-primitives-node-medium"
                         :dev="true"
@@ -191,6 +194,7 @@
                             color="green"
                         />
                     </x-translation-workbench::ui.tw-graph>
+                    {{-- source-node-medium:end --}}
                 </div>
                 <div
                     class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
@@ -200,6 +204,7 @@
                         class="m-3"
                         size="sm"
                     >2rem</flux:heading>
+                    {{-- source-node-large:start --}}
                     <x-translation-workbench::ui.tw-graph
                         graph-id="idea-to-paper-primitives-node-large"
                         :dev="true"
@@ -216,6 +221,7 @@
                             color="violet"
                         />
                     </x-translation-workbench::ui.tw-graph>
+                    {{-- source-node-large:end --}}
                 </div>
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>

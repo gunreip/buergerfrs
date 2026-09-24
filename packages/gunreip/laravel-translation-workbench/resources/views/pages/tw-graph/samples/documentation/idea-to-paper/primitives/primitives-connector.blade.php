@@ -31,43 +31,43 @@
             size="sm"
         >left · 2rem</flux:heading>
         <x-translation-workbench::ui.tw-graph.code-box
-            class="mt-2">{{ implode("\n", ['placement="left"', 'color="red"']) }}</x-translation-workbench::ui.tw-graph.code-box>
+            class="mt-2">{{ $source->changedProps('source-connector-left-2', 'primitive-connector-complete', 'x-translation-workbench::ui.tw-graph.primitives.connector') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >top · 2rem</flux:heading>
         <x-translation-workbench::ui.tw-graph.code-box
-            class="mt-2">{{ implode("\n", ['placement="top"', 'color="green"']) }}</x-translation-workbench::ui.tw-graph.code-box>
+            class="mt-2">{{ $source->changedProps('source-connector-top-2', 'primitive-connector-complete', 'x-translation-workbench::ui.tw-graph.primitives.connector') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >bottom · 2rem</flux:heading>
         <x-translation-workbench::ui.tw-graph.code-box
-            class="mt-2">{{ implode("\n", ['placement="bottom"', 'color="violet"']) }}</x-translation-workbench::ui.tw-graph.code-box>
+            class="mt-2">{{ $source->changedProps('source-connector-bottom-2', 'primitive-connector-complete', 'x-translation-workbench::ui.tw-graph.primitives.connector') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >right · 4rem</flux:heading>
         <x-translation-workbench::ui.tw-graph.code-box
-            class="mt-2">{{ implode("\n", ['length="4rem"', 'gap="0.75rem"']) }}</x-translation-workbench::ui.tw-graph.code-box>
+            class="mt-2">{{ $source->changedProps('source-connector-right-4', 'primitive-connector-complete', 'x-translation-workbench::ui.tw-graph.primitives.connector') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >left · 4rem</flux:heading>
         <x-translation-workbench::ui.tw-graph.code-box
-            class="mt-2">{{ implode("\n", ['placement="left"', 'length="4rem"', 'gap="0.75rem"', 'color="red"']) }}</x-translation-workbench::ui.tw-graph.code-box>
+            class="mt-2">{{ $source->changedProps('source-connector-left-4', 'primitive-connector-complete', 'x-translation-workbench::ui.tw-graph.primitives.connector') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >top · 4rem</flux:heading>
         <x-translation-workbench::ui.tw-graph.code-box
-            class="mt-2">{{ implode("\n", ['placement="top"', 'length="4rem"', 'gap="0.75rem"', 'color="green"']) }}</x-translation-workbench::ui.tw-graph.code-box>
+            class="mt-2">{{ $source->changedProps('source-connector-top-4', 'primitive-connector-complete', 'x-translation-workbench::ui.tw-graph.primitives.connector') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >bottom · 4rem</flux:heading>
         <x-translation-workbench::ui.tw-graph.code-box
-            class="mt-2">{{ implode("\n", ['placement="bottom"', 'length="4rem"', 'gap="0.75rem"', 'color="violet"']) }}</x-translation-workbench::ui.tw-graph.code-box>
+            class="mt-2">{{ $source->changedProps('source-connector-bottom-4', 'primitive-connector-complete', 'x-translation-workbench::ui.tw-graph.primitives.connector') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -185,6 +185,7 @@
                         class="m-3"
                         size="sm"
                     >left · 2rem</flux:heading>
+                    {{-- source-connector-left-2:start --}}
                     <x-translation-workbench::ui.tw-graph
                         graph-id="idea-to-paper-primitives-connector-left-2"
                         :dev="true"
@@ -209,6 +210,7 @@
                             color="zinc"
                         />
                     </x-translation-workbench::ui.tw-graph>
+                    {{-- source-connector-left-2:end --}}
                 </div>
                 <div
                     class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
@@ -218,6 +220,7 @@
                         class="m-3"
                         size="sm"
                     >top · 2rem</flux:heading>
+                    {{-- source-connector-top-2:start --}}
                     <x-translation-workbench::ui.tw-graph
                         graph-id="idea-to-paper-primitives-connector-top-2"
                         :dev="true"
@@ -242,6 +245,7 @@
                             color="zinc"
                         />
                     </x-translation-workbench::ui.tw-graph>
+                    {{-- source-connector-top-2:end --}}
                 </div>
                 <div
                     class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
@@ -251,6 +255,7 @@
                         class="m-3"
                         size="sm"
                     >bottom · 2rem</flux:heading>
+                    {{-- source-connector-bottom-2:start --}}
                     <x-translation-workbench::ui.tw-graph
                         graph-id="idea-to-paper-primitives-connector-bottom-2"
                         :dev="true"
@@ -275,6 +280,7 @@
                             color="zinc"
                         />
                     </x-translation-workbench::ui.tw-graph>
+                    {{-- source-connector-bottom-2:end --}}
                 </div>
                 <div
                     class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
@@ -284,6 +290,7 @@
                         class="m-3"
                         size="sm"
                     >right · 4rem</flux:heading>
+                    {{-- source-connector-right-4:start --}}
                     <x-translation-workbench::ui.tw-graph
                         graph-id="idea-to-paper-primitives-connector-right-4"
                         :dev="true"
@@ -308,6 +315,7 @@
                             color="zinc"
                         />
                     </x-translation-workbench::ui.tw-graph>
+                    {{-- source-connector-right-4:end --}}
                 </div>
                 <div
                     class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
@@ -317,6 +325,7 @@
                         class="m-3"
                         size="sm"
                     >left · 4rem</flux:heading>
+                    {{-- source-connector-left-4:start --}}
                     <x-translation-workbench::ui.tw-graph
                         graph-id="idea-to-paper-primitives-connector-left-4"
                         :dev="true"
@@ -341,6 +350,7 @@
                             color="zinc"
                         />
                     </x-translation-workbench::ui.tw-graph>
+                    {{-- source-connector-left-4:end --}}
                 </div>
                 <div
                     class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
@@ -350,6 +360,7 @@
                         class="m-3"
                         size="sm"
                     >top · 4rem</flux:heading>
+                    {{-- source-connector-top-4:start --}}
                     <x-translation-workbench::ui.tw-graph
                         graph-id="idea-to-paper-primitives-connector-top-4"
                         :dev="true"
@@ -374,6 +385,7 @@
                             color="zinc"
                         />
                     </x-translation-workbench::ui.tw-graph>
+                    {{-- source-connector-top-4:end --}}
                 </div>
                 <div
                     class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
@@ -383,6 +395,7 @@
                         class="m-3"
                         size="sm"
                     >bottom · 4rem</flux:heading>
+                    {{-- source-connector-bottom-4:start --}}
                     <x-translation-workbench::ui.tw-graph
                         graph-id="idea-to-paper-primitives-connector-bottom-4"
                         :dev="true"
@@ -407,6 +420,7 @@
                             color="zinc"
                         />
                     </x-translation-workbench::ui.tw-graph>
+                    {{-- source-connector-bottom-4:end --}}
                 </div>
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>

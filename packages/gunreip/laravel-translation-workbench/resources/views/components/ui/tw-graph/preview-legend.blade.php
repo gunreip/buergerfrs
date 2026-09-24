@@ -5,8 +5,9 @@
     x-cloak
     x-show="previewDev && (previewBoxes || previewCoordinates || previewGrid)"
 >
-    <flux:heading size="sm">{{ __('DEV legend') }}</flux:heading>
-    <div class="mt-1 flex min-h-24 flex-wrap content-start gap-x-4 gap-y-1 text-xs text-zinc-600 dark:text-zinc-300">
+    <flux:heading class="mb-3">{{ __('DEV legend') }}</flux:heading>
+    {{-- <div class="mt-1 flex min-h-24 flex-wrap content-start gap-x-4 gap-y-1 text-xs text-zinc-600 dark:text-zinc-300"> --}}
+    <div class="mt-1 grid min-h-24 grid-cols-3 content-start gap-x-4 gap-y-1 text-sm text-zinc-600 dark:text-zinc-300">
         <span
             class="inline-flex items-center gap-2"
             x-show="previewBoxes"

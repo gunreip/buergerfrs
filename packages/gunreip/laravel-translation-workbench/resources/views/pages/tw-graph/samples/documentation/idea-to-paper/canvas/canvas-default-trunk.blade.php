@@ -86,8 +86,10 @@
                             </flux:table.cell>
                         </flux:table.row>
                         <flux:table.row>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>id (strang.trunk)</code></flux:table.cell>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>null</code></flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>id
+                                    (strang.trunk)</code></flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>null</code>
+                            </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                 {{ __('Explicit root ID of the trunk; used to derive its child component and anchor IDs.') }}
                             </flux:table.cell>
@@ -140,7 +142,8 @@
                             </flux:table.cell>
                         </flux:table.row>
                         <flux:table.row>
-                            <flux:table.cell class="whitespace-normal align-top">{{ __('Coordinates') }}</flux:table.cell>
+                            <flux:table.cell class="whitespace-normal align-top">{{ __('Coordinates') }}
+                            </flux:table.cell>
                             <flux:table.cell class="whitespace-normal align-top">
                                 {{ __('Shows the available coordinate guides and measurement badges for the rendered graph bounds. The yellow guides additionally explain canvas dimensions, minimum sizes and padding; they are not the bounding box of an individual component. Requires DEV mode and coordinate diagnostics rendered by the graph.') }}
                             </flux:table.cell>
@@ -252,9 +255,9 @@
 
     <flux:callout
         class="min-w-0"
-        icon="square-dashed-text"
+        color="emerald"
     >
-        <flux:callout.heading>
+        <flux:callout.heading icon="square-dashed-text">
             {{ __('Preview') }}
         </flux:callout.heading>
         {{-- canvas-preview-tools:start --}}

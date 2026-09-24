@@ -1,3 +1,8 @@
+@php
+    $arcSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.primitives.primitives-arc',
+    );
+@endphp
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
     <flux:callout
         class="min-w-0"
@@ -12,64 +17,7 @@
             class="mt-4"
             size="sm"
         >{{ __('Complete example: west → north') }}</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">&lt;x-translation-workbench::ui.tw-graph
-    graph-id="idea-to-paper-primitives-arc-west-north"
-    :dev="true"
-    :coordinates="true"
-    min-height="12rem"
-    min-width="14rem"
-    horizontal-padding="4rem"
-&gt;
-    &lt;x-translation-workbench::ui.tw-graph.primitives.arc
-        id="literature.primitives.arc.west-north"
-        start-anchor="w"
-        end-anchor="n"
-        start-x="-2.75rem"
-        start-y="4rem"
-        end-x="0rem"
-        end-y="6.75rem"
-        arc-radius="2.75rem"
-        color="cyan"
-    /&gt;
-
-    &lt;x-translation-workbench::ui.tw-graph.primitives.line
-        id="literature.primitives.arc.west-north.stem"
-        direction="bottom-top"
-        length="2rem"
-        start-x="-2.75rem"
-        start-y="2rem"
-        end-x="-2.75rem"
-        end-y="4rem"
-        color="zinc"
-    /&gt;
-
-    &lt;x-translation-workbench::ui.tw-graph.primitives.line
-        id="literature.primitives.arc.west-north.bridge"
-        direction="left-right"
-        length="2rem"
-        start-x="0rem"
-        start-y="6.75rem"
-        end-x="2rem"
-        end-y="6.75rem"
-        color="zinc"
-    /&gt;
-
-    &lt;x-translation-workbench::ui.tw-graph.primitives.joint-arrow
-        id="literature.primitives.arc.west-north.start.joint-arrow"
-        direction="top"
-        anchor-x="-2.75rem"
-        anchor-y="4rem"
-        color="zinc"
-    /&gt;
-
-    &lt;x-translation-workbench::ui.tw-graph.primitives.joint-arrow
-        id="literature.primitives.arc.west-north.end.joint-arrow"
-        direction="right"
-        anchor-x="0rem"
-        anchor-y="6.75rem"
-        color="zinc"
-    /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $arcSource->example('source-arc-west-north') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -81,67 +29,37 @@
             class="mt-4"
             size="sm"
         >east-north</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="e"
-start-x="2.75rem"
-color="red"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $arcSource->changedProps('source-arc-east-north', 'source-arc-west-north', 'x-translation-workbench::ui.tw-graph.primitives.arc') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >south-west</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="s"
-end-anchor="w"
-start-x="0rem"
-end-x="-2.75rem"
-color="green"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $arcSource->changedProps('source-arc-south-west', 'source-arc-west-north', 'x-translation-workbench::ui.tw-graph.primitives.arc') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >south-east</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="s"
-end-anchor="e"
-start-x="0rem"
-end-x="2.75rem"
-color="yellow"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $arcSource->changedProps('source-arc-south-east', 'source-arc-west-north', 'x-translation-workbench::ui.tw-graph.primitives.arc') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >north-west</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="n"
-end-anchor="w"
-start-x="0rem"
-start-y="6.75rem"
-end-x="-2.75rem"
-end-y="4rem"
-color="fuchsia"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $arcSource->changedProps('source-arc-north-west', 'source-arc-west-north', 'x-translation-workbench::ui.tw-graph.primitives.arc') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >north-east</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="n"
-end-anchor="e"
-start-x="0rem"
-start-y="6.75rem"
-end-x="2.75rem"
-end-y="4rem"
-color="rose"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $arcSource->changedProps('source-arc-north-east', 'source-arc-west-north', 'x-translation-workbench::ui.tw-graph.primitives.arc') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >west-south</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">end-anchor="s"
-start-y="6.75rem"
-end-y="4rem"
-color="blue"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $arcSource->changedProps('source-arc-west-south', 'source-arc-west-north', 'x-translation-workbench::ui.tw-graph.primitives.arc') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >east-south</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">start-anchor="e"
-end-anchor="s"
-start-x="2.75rem"
-start-y="6.75rem"
-end-y="4rem"
-color="violet"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $arcSource->changedProps('source-arc-east-south', 'source-arc-west-north', 'x-translation-workbench::ui.tw-graph.primitives.arc') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -304,6 +222,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                             size="sm"
                         >west-north</flux:heading>
                         {{-- Arc-West-North --}}
+                        {{-- source-arc-west-north:start --}}
                         <x-translation-workbench::ui.tw-graph
                             graph-id="idea-to-paper-primitives-arc-west-north"
                             :dev="true"
@@ -362,6 +281,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
+                        {{-- source-arc-west-north:end --}}
                     </div>
                     <div
                         class="min-w-0"
@@ -371,6 +291,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                             class="px-3 pt-3"
                             size="sm"
                         >east-north</flux:heading>
+                        {{-- source-arc-east-north:start --}}
                         <x-translation-workbench::ui.tw-graph
                             graph-id="idea-to-paper-primitives-arc-east-north"
                             :dev="true"
@@ -429,6 +350,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
+                        {{-- source-arc-east-north:end --}}
                     </div>
                     <div
                         class="min-w-0"
@@ -439,6 +361,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                             size="sm"
                         >south-west</flux:heading>
                         {{-- Arc-South-West --}}
+                        {{-- source-arc-south-west:start --}}
                         <x-translation-workbench::ui.tw-graph
                             graph-id="idea-to-paper-primitives-arc-south-west"
                             :dev="true"
@@ -497,6 +420,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
+                        {{-- source-arc-south-west:end --}}
                     </div>
                     <div
                         class="min-w-0"
@@ -507,6 +431,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                             size="sm"
                         >south-east</flux:heading>
                         {{-- Arc-South-East --}}
+                        {{-- source-arc-south-east:start --}}
                         <x-translation-workbench::ui.tw-graph
                             graph-id="idea-to-paper-primitives-arc-south-east"
                             :dev="true"
@@ -565,6 +490,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
+                        {{-- source-arc-south-east:end --}}
                     </div>
                     <div
                         class="min-w-0"
@@ -574,6 +500,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                             class="px-3 pt-3"
                             size="sm"
                         >north-west</flux:heading>
+                        {{-- source-arc-north-west:start --}}
                         <x-translation-workbench::ui.tw-graph
                             graph-id="idea-to-paper-primitives-arc-north-west"
                             :dev="true"
@@ -632,6 +559,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
+                        {{-- source-arc-north-west:end --}}
                     </div>
                     <div
                         class="min-w-0"
@@ -642,6 +570,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                             size="sm"
                         >north-east</flux:heading>
                         {{-- Arc-North-East --}}
+                        {{-- source-arc-north-east:start --}}
                         <x-translation-workbench::ui.tw-graph
                             graph-id="idea-to-paper-primitives-arc-north-east"
                             :dev="true"
@@ -700,6 +629,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
+                        {{-- source-arc-north-east:end --}}
                     </div>
                     <div
                         class="min-w-0"
@@ -710,6 +640,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                             size="sm"
                         >west-south</flux:heading>
                         {{-- Arc-West-South --}}
+                        {{-- source-arc-west-south:start --}}
                         <x-translation-workbench::ui.tw-graph
                             graph-id="idea-to-paper-primitives-arc-west-south"
                             :dev="true"
@@ -768,6 +699,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
+                        {{-- source-arc-west-south:end --}}
                     </div>
                     <div
                         class="min-w-0"
@@ -778,6 +710,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                             size="sm"
                         >east-south</flux:heading>
                         {{-- Arc-East-South --}}
+                        {{-- source-arc-east-south:start --}}
                         <x-translation-workbench::ui.tw-graph
                             graph-id="idea-to-paper-primitives-arc-east-south"
                             :dev="true"
@@ -836,6 +769,7 @@ color="violet"</x-translation-workbench::ui.tw-graph.code-box>
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
+                        {{-- source-arc-east-south:end --}}
                     </div>
                 </div>
             </div>

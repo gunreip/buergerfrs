@@ -26,9 +26,7 @@
             class="mt-4"
             size="sm"
         >{{ __('Changed props for the other examples') }}</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">side="bottom" color="blue"
-            side="left" color="amber"
-            side="right" color="green"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ implode("\n\n", [$source->changedProps('primitive-line-jump-bottom', 'primitive-line-jump-top', 'x-translation-workbench::ui.tw-graph.primitives.line-jump'), $source->changedProps('primitive-line-jump-left', 'primitive-line-jump-top', 'x-translation-workbench::ui.tw-graph.primitives.line-jump'), $source->changedProps('primitive-line-jump-right', 'primitive-line-jump-top', 'x-translation-workbench::ui.tw-graph.primitives.line-jump')]) }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:text class="mt-2">
             {{ __('Only changed line-jump props are listed above. For left/right, the helper lines rotate as well: the crossed line is horizontal and the two adjoining pieces are vertical stems.') }}
         </flux:text>

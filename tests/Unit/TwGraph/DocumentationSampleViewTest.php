@@ -866,7 +866,7 @@ it('renders eight handmade primitive arcs with connected lines and reversed join
     $view = 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.primitives.primitives-arc';
     $source = file_get_contents(View::getFinder()->find($view));
     expect($source)->not->toContain('@foreach')->not->toContain('@include');
-    expect(substr_count($source, '&lt;x-translation-workbench::ui.tw-graph.primitives.arc'))->toBe(1);
+    expect($source)->not->toContain('&lt;x-translation-workbench::ui.tw-graph.primitives.arc');
     $html = view($view, ['dev' => false, 'coordinates' => false])->render();
     $dom = new DOMDocument;
     @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
@@ -951,7 +951,7 @@ it('renders all four text primitive widths with the same content and optional di
     $view = 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.primitives.primitives-text-label';
     $source = file_get_contents(View::getFinder()->find($view));
     expect($source)->not->toContain('@foreach')->not->toContain('@include');
-    expect(substr_count($source, '&lt;x-translation-workbench::ui.tw-graph.primitives.text'))->toBe(1);
+    expect($source)->not->toContain('&lt;x-translation-workbench::ui.tw-graph.primitives.text');
     $html = view($view, ['dev' => false, 'coordinates' => false])->render();
     $dom = new DOMDocument;
     @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);

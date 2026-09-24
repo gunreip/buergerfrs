@@ -1,3 +1,8 @@
+@php
+    $textSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
+        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.primitives.primitives-text-label',
+    );
+@endphp
 <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
     <flux:callout
         class="min-w-0"
@@ -11,77 +16,45 @@
         <flux:heading
             class="mt-4"
             size="sm"
-        >{{ __('Complete example: default · 12rem') }}</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">&lt;x-translation-workbench::ui.tw-graph
-    graph-id="idea-to-paper-primitives-text-preview"
-    :dev="true"
-    :coordinates="true"
-    min-height="41rem"
-    min-width="34rem"
-    horizontal-padding="4rem"
-&gt;
-    &lt;x-translation-workbench::ui.tw-graph.primitives.text
-        id="literature.primitives.text.default"
-        :text="['Text label', 'Two lines of information']"
-        anchor-x="0rem"
-        anchor-y="29rem"
-        side="right"
-        align="left"
-        badge-color="cyan"
-        :dev="true"
-    /&gt;
-&lt;/x-translation-workbench::ui.tw-graph&gt;</x-translation-workbench::ui.tw-graph.code-box>
+        >{{ __('Complete preview: seven text labels') }}</flux:heading>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-3">{{ $textSource->example('source-text-preview') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >{{ __('Changed props for the other examples') }}</flux:heading>
         <flux:text class="mt-2">
-            {{ __('Only text props that differ from the complete two-line default example are listed below, including content, color, and maxLines. anchor-y places the examples on separate rows; the width flags select the text width independently of side and align.') }}
+            {{ __('Only text props that differ from the two-line default label in the complete preview are listed below, including content, color, and maxLines. anchor-y places the examples on separate rows; the width flags select the text width independently of side and align.') }}
         </flux:text>
         <flux:heading
             class="mt-4"
             size="sm"
         >half · 6rem · two lines</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">anchor-y="34rem"
-badge-color="red"
-:half="true"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $textSource->changedProps('text-half', 'text-default', 'x-translation-workbench::ui.tw-graph.primitives.text') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >default · 12rem · one line</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">:text="['Text label']"
-anchor-y="25rem"
-badge-color="green"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $textSource->changedProps('text-default-one-line', 'text-default', 'x-translation-workbench::ui.tw-graph.primitives.text') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >default · 12rem · four lines</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">:text="['Text label', 'Second line', 'Third line', 'Fourth line']"
-anchor-y="20rem"
-badge-color="fuchsia"
-maxLines="4"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $textSource->changedProps('text-default-four-lines', 'text-default', 'x-translation-workbench::ui.tw-graph.primitives.text') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >half-long · 18rem · two lines</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">anchor-y="14rem"
-badge-color="emerald"
-:half-long="true"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $textSource->changedProps('text-half-long', 'text-default', 'x-translation-workbench::ui.tw-graph.primitives.text') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >long · 24rem · two lines</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">anchor-y="9rem"
-badge-color="rose"
-:long="true"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $textSource->changedProps('text-long', 'text-default', 'x-translation-workbench::ui.tw-graph.primitives.text') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
         >long · 24rem · three lines</flux:heading>
-        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">:text="['Text label', 'Three lines of information', 'Additional line']"
-anchor-y="3rem"
-badge-color="sky"
-:long="true"</x-translation-workbench::ui.tw-graph.code-box>
+        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $textSource->changedProps('text-long-three-lines', 'text-default', 'x-translation-workbench::ui.tw-graph.primitives.text') }}</x-translation-workbench::ui.tw-graph.code-box>
         <flux:heading
             class="mt-4"
             size="sm"
@@ -218,6 +191,7 @@ badge-color="sky"
         >
             <div
                 class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                {{-- source-text-preview:start --}}
                 <x-translation-workbench::ui.tw-graph
                     graph-id="idea-to-paper-primitives-text-preview"
                     :dev="true"
@@ -227,6 +201,7 @@ badge-color="sky"
                     horizontal-padding="4rem"
                 >
                     {{-- half: 6rem text width. --}}
+                    {{-- text-half:start --}}
                     <x-translation-workbench::ui.tw-graph.primitives.text
                         id="literature.primitives.text.half"
                         :text="['Text label', 'Two lines of information']"
@@ -238,7 +213,9 @@ badge-color="sky"
                         :half="true"
                         :dev="true"
                     />
+                    {{-- text-half:end --}}
                     {{-- default: 12rem text width. --}}
+                    {{-- text-default:start --}}
                     <x-translation-workbench::ui.tw-graph.primitives.text
                         id="literature.primitives.text.default"
                         :text="['Text label', 'Two lines of information']"
@@ -249,7 +226,9 @@ badge-color="sky"
                         badge-color="cyan"
                         :dev="true"
                     />
+                    {{-- text-default:end --}}
                     {{-- default: 12rem text width. --}}
+                    {{-- text-default-one-line:start --}}
                     <x-translation-workbench::ui.tw-graph.primitives.text
                         id="literature.primitives.text.default"
                         :text="['Text label']"
@@ -260,7 +239,9 @@ badge-color="sky"
                         badge-color="green"
                         :dev="true"
                     />
+                    {{-- text-default-one-line:end --}}
                     {{-- default: 12rem text width. --}}
+                    {{-- text-default-four-lines:start --}}
                     <x-translation-workbench::ui.tw-graph.primitives.text
                         id="literature.primitives.text.default"
                         :text="['Text label', 'Second line', 'Third line', 'Fourth line']"
@@ -272,7 +253,9 @@ badge-color="sky"
                         maxLines="4"
                         :dev="true"
                     />
+                    {{-- text-default-four-lines:end --}}
                     {{-- half-long: 18rem text width. --}}
+                    {{-- text-half-long:start --}}
                     <x-translation-workbench::ui.tw-graph.primitives.text
                         id="literature.primitives.text.half-long"
                         :text="['Text label', 'Two lines of information']"
@@ -284,7 +267,9 @@ badge-color="sky"
                         :half-long="true"
                         :dev="true"
                     />
+                    {{-- text-half-long:end --}}
                     {{-- long: 24rem text width. --}}
+                    {{-- text-long:start --}}
                     <x-translation-workbench::ui.tw-graph.primitives.text
                         id="literature.primitives.text.long"
                         :text="['Text label', 'Two lines of information']"
@@ -296,7 +281,9 @@ badge-color="sky"
                         :long="true"
                         :dev="true"
                     />
+                    {{-- text-long:end --}}
                     {{-- long: 24rem text width. --}}
+                    {{-- text-long-three-lines:start --}}
                     <x-translation-workbench::ui.tw-graph.primitives.text
                         id="literature.primitives.text.long"
                         :text="['Text label', 'Three lines of information', 'Additional line']"
@@ -308,7 +295,9 @@ badge-color="sky"
                         :long="true"
                         :dev="true"
                     />
+                    {{-- text-long-three-lines:end --}}
                 </x-translation-workbench::ui.tw-graph>
+                {{-- source-text-preview:end --}}
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
         <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">

@@ -86,7 +86,8 @@
                         <flux:table.row>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>graph-id</code>
                             </flux:table.cell>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>{{ __('auto id') }}</code>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>{{ __('auto id') }}</code>
                             </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                 {{ __('Stable DOM id and registry scope for anchors, bounds, DEV counters, and canvas metrics.') }}
@@ -134,7 +135,8 @@
                         <flux:table.row>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>min-width</code>
                             </flux:table.cell>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>{{ __('calculated') }}</code>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>{{ __('calculated') }}</code>
                             </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                 {{ __('Optional hard minimum width override for the graph viewport.') }}
@@ -143,14 +145,17 @@
                         <flux:table.row>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>min-height</code>
                             </flux:table.cell>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>{{ __('config / 52rem; protocol: calculated') }}</code></flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                <code>{{ __('config / 52rem; protocol: calculated') }}</code></flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                 {{ __('Minimum canvas height. Handmade graphs default to config / 52rem; protocol graphs use their geometry. Content bounds and padding can require more space.') }}
                             </flux:table.cell>
                         </flux:table.row>
                         <flux:table.row>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>id (strang.trunk)</code></flux:table.cell>
-                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>null</code></flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>id
+                                    (strang.trunk)</code></flux:table.cell>
+                            <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>null</code>
+                            </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                 {{ __('Explicit root ID of the trunk; used to derive its child component and anchor IDs.') }}
                             </flux:table.cell>
@@ -163,10 +168,11 @@
 
     <flux:callout
         class="min-w-0"
-        color="zinc"
-        icon="square-dashed-text"
+        color="emerald"
     >
-        <flux:callout.heading>{{ __('Preview') }}</flux:callout.heading>
+        <flux:callout.heading icon="square-dashed-text">
+            {{ __('Preview') }}
+        </flux:callout.heading>
         <x-translation-workbench::ui.tw-graph.preview-tools
             :dev="$dev ?? true"
             :coordinates="$coordinates ?? false"
