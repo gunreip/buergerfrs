@@ -1,4 +1,4 @@
-<flux:heading size="lg">Trunk start</flux:heading>
+<flux:heading size="lg">{{ __('Trunk start') }}</flux:heading>
 
 <flux:tab.group class="mt-4 min-w-0 max-w-full">
     <flux:tabs wire:model.live="tabs.strang_trunk_trunk_start" scrollable scrollable:fade scrollable:scrollbar="hide">

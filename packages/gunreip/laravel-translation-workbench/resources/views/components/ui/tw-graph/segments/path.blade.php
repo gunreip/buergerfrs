@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/segments/path.blade.php --}}
 {{--
     Segment: path
@@ -68,7 +72,6 @@
     'colorGradient' => false,
     'tone' => 'line',
     'zIndex' => null,
-    'dev' => null,
 ])
 
 @php
@@ -98,7 +101,7 @@
             'colorGradient' => $colorGradient,
             'tone' => $tone,
             'zIndex' => $zIndex,
-            'dev' => $dev,
+
         ];
     }
 
@@ -142,10 +145,7 @@
     };
     $jointArrowStartColor = data_get($segment, 'jointArrowStartColor', $color);
     $jointArrowEndColor = data_get($segment, 'jointArrowEndColor', $color);
-    $devMode = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $dev,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($segment, 'dev', false)),
-    );
+
     $isHorizontal = in_array($direction, ['left-right', 'right-left'], true);
     $counterDistance = 'calc(var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half))';
     $negativeCounterDistance = 'calc((var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half)) * -1)';
@@ -236,7 +236,6 @@
     :height="'calc(' . $pathBoxHeight . ' + (' . $boxPadding . ' * 2))'"
     color="sky"
     :label="$id"
-    :dev="$devMode"
 />
 
 	<x-translation-workbench::ui.tw-graph.primitives.line
@@ -288,7 +287,7 @@
         />
         <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
             :id="$id . '.node.join.dev-counter'" :anchor-x="$joinAnchor['x']" :anchor-y="$joinAnchor['y']"
-            :counter="data_get($segment, 'devCounterJoin', 'J')" :dev="$devMode" :color="$color" placement="top"
+            :counter="data_get($segment, 'devCounterJoin', 'J')" :color="$color" placement="top"
         />
     @endif
 
@@ -334,7 +333,7 @@
 	@foreach ($devCounterPairs as $devCounterPair)
     <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
         :id="$devCounterPair['id']"
-        :dev="$devMode && $devCounterPair['visible']"
+        :visible="$devCounterPair['visible']"
         :anchor-x="$devCounterPair['x']"
         :anchor-y="$devCounterPair['y']"
         :offset-x="$devCounterPair['offsetX']"
@@ -362,7 +361,6 @@
             @endphp
 
             <x-translation-workbench::ui.tw-graph.segments.label
-                :dev="$devMode"
                 :id="$labelId"
                 :label="$label"
                 :side="$side"

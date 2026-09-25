@@ -1,3 +1,8 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev;
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/paths/branch.blade.php --}}
 {{--
     Path: branch
@@ -49,7 +54,6 @@
     'zIndex' => null,
     'nodeLabels' => [],
     'counterStart' => 1,
-    'dev' => false,
 ])
 
 @php
@@ -176,7 +180,7 @@
                 'devCounterColor' => $color,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ];
 
@@ -312,7 +316,7 @@
                 'devCounterColor' => $color,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ];
 
@@ -343,7 +347,7 @@
                 'devCounterColor' => $color,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ]] : []),
         [
@@ -365,7 +369,7 @@
                 'devCounterColor' => $color,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
         ...$bridgeSegments,
@@ -388,7 +392,7 @@
                 'devCounterColor' => $color,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
         ...($hasStep ? [[
@@ -408,7 +412,7 @@
                 'devCounterColor' => $color,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ]] : []),
         ...$stemSegments,
@@ -423,7 +427,6 @@
     :height="'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2))'"
     color="amber"
     :label="$id"
-    :dev="$dev"
 />
 
 @if ($dev && $nodeLabelMismatch)
@@ -447,12 +450,10 @@
     @elseif ($segment['component'] === 'step')
         <x-translation-workbench::ui.tw-graph.segments.step
             :segment="$segment['segment']"
-            :dev="$dev"
         />
     @elseif ($segment['component'] === 'stem-compressed')
         <x-translation-workbench::ui.tw-graph.segments.stem-compressed
             :segment="$segment['segment']"
-            :dev="$dev"
         />
     @else
         <x-translation-workbench::ui.tw-graph.segments.path :segment="$segment['segment']" />

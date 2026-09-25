@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/segments/label-bridge.blade.php --}}
 {{--
     Segment: label-bridge
@@ -24,7 +28,7 @@
     'color' => 'zinc',
     'pathTone' => 'line',
     'zIndex' => null,
-    'dev' => null,
+
     'devCounterEnd' => 'E',
     'devCounterColor' => 'zinc',
 ])
@@ -72,7 +76,7 @@
     'colorGradient' => true,
     'tone' => $pathTone,
     'zIndex' => $zIndex,
-    'dev' => $dev,
+
 ]" />
 
 <x-translation-workbench::ui.tw-graph.primitives.text
@@ -97,7 +101,6 @@
 
 <x-translation-workbench::ui.tw-graph.primitives.text
     :id="$labelId"
-    :dev="$dev"
     :text="data_get($label, 'text')"
     side="center"
     :anchor-x="data_get($labelAnchor, 'x', '0rem')"
@@ -133,5 +136,5 @@
     'colorGradient' => true,
     'tone' => $pathTone,
     'zIndex' => $zIndex,
-    'dev' => $dev,
+
 ]" />

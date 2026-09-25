@@ -9,24 +9,25 @@ uses(TestCase::class);
 
 it('passes branch path scalar stem labels through without null option fallbacks', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch
-            id="paths.branch.scalar-label"
-            side="left"
-            :anchor-start="['x' => '0rem', 'y' => '0rem']"
-            bridge-length="8rem"
-            stem-length="4rem"
-            color="green"
-            :stem-continuation="[
-                1 => [
-                    'left' => 'finding ID #42|ui.checkout.save|2026-04-14 11:36',
-                    'width' => 'halfLong',
-                    'align' => 'right',
-                    'justify' => true,
-                    'color' => 'amber',
-                ],
-            ]"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch
+                id="paths.branch.scalar-label"
+                side="left"
+                :anchor-start="['x' => '0rem', 'y' => '0rem']"
+                bridge-length="8rem"
+                stem-length="4rem"
+                color="green"
+                :stem-continuation="[
+                    1 => [
+                        'left' => 'finding ID #42|ui.checkout.save|2026-04-14 11:36',
+                        'width' => 'halfLong',
+                        'align' => 'right',
+                        'justify' => true,
+                        'color' => 'amber',
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -45,24 +46,25 @@ it('passes branch path scalar stem labels through without null option fallbacks'
 
 it('passes branch extension scalar stem labels through without null option fallbacks', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-extension
-            id="paths.branch-extension.scalar-label"
-            side="right"
-            :anchor-start="['x' => '0rem', 'y' => '0rem']"
-            bridge-length="8rem"
-            stem-length="4rem"
-            color="green"
-            :node-labels="[
-                3 => [
-                    'left' => 'event ID #12|needs review',
-                    'width' => 'halfLong',
-                    'align' => 'right',
-                    'justify' => true,
-                    'color' => 'amber',
-                ],
-            ]"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-extension
+                id="paths.branch-extension.scalar-label"
+                side="right"
+                :anchor-start="['x' => '0rem', 'y' => '0rem']"
+                bridge-length="8rem"
+                stem-length="4rem"
+                color="green"
+                :node-labels="[
+                    3 => [
+                        'left' => 'event ID #12|needs review',
+                        'width' => 'halfLong',
+                        'align' => 'right',
+                        'justify' => true,
+                        'color' => 'amber',
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -84,13 +86,14 @@ it('uses graph defaults for branch extension arc stem and bridge geometry', func
     config()->set('tw-graph-defaults.bridge_length', '6rem');
 
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-extension
-            id="paths.branch-extension.defaulted"
-            side="left"
-            :anchor-start="['x' => '-12rem', 'y' => '8rem']"
-            color="green"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-extension
+                id="paths.branch-extension.defaulted"
+                side="left"
+                :anchor-start="['x' => '-12rem', 'y' => '8rem']"
+                color="green"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -106,17 +109,18 @@ it('uses graph defaults for branch extension arc stem and bridge geometry', func
 
 it('renders branch returns solid when fallback styling is explicitly disabled', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return
-            id="orders.left.1.payment-return"
-            side="left"
-            :anchor-start="['x' => '-12rem', 'y' => '8rem']"
-            arc-radius="2.75rem"
-            bridge-length="8rem"
-            color="green"
-            :fallback-used="true"
-            :fallback="false"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return
+                id="orders.left.1.payment-return"
+                side="left"
+                :anchor-start="['x' => '-12rem', 'y' => '8rem']"
+                arc-radius="2.75rem"
+                bridge-length="8rem"
+                color="green"
+                :fallback-used="true"
+                :fallback="false"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -130,17 +134,18 @@ it('renders branch returns solid when fallback styling is explicitly disabled', 
 
 it('renders branch returns dashed when fallback styling is active', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return
-            id="orders.right.1.payment-return"
-            side="right"
-            :anchor-start="['x' => '12rem', 'y' => '8rem']"
-            arc-radius="2.75rem"
-            bridge-length="8rem"
-            color="amber"
-            :fallback-used="true"
-            :fallback="true"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return
+                id="orders.right.1.payment-return"
+                side="right"
+                :anchor-start="['x' => '12rem', 'y' => '8rem']"
+                arc-radius="2.75rem"
+                bridge-length="8rem"
+                color="amber"
+                :fallback-used="true"
+                :fallback="true"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -154,15 +159,16 @@ it('renders branch returns dashed when fallback styling is active', function ():
 
 it('renders branch returns solid by default for hand authored graphs', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return
-            id="orders.left.1.default-return"
-            side="left"
-            :anchor-start="['x' => '-12rem', 'y' => '8rem']"
-            arc-radius="2.75rem"
-            bridge-length="8rem"
-            color="green"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return
+                id="orders.left.1.default-return"
+                side="left"
+                :anchor-start="['x' => '-12rem', 'y' => '8rem']"
+                arc-radius="2.75rem"
+                bridge-length="8rem"
+                color="green"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -175,22 +181,24 @@ it('renders branch returns solid by default for hand authored graphs', function 
 
 it('renders branch return joint arrows in return flow direction', function (): void {
     $leftHtml = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return
-            id="orders.left.1.default-return"
-            side="left"
-            :anchor-start="['x' => '-12rem', 'y' => '8rem']"
-            color="green"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return
+                id="orders.left.1.default-return"
+                side="left"
+                :anchor-start="['x' => '-12rem', 'y' => '8rem']"
+                color="green"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
     $rightHtml = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return
-            id="orders.right.1.default-return"
-            side="right"
-            :anchor-start="['x' => '12rem', 'y' => '8rem']"
-            color="green"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return
+                id="orders.right.1.default-return"
+                side="right"
+                :anchor-start="['x' => '12rem', 'y' => '8rem']"
+                color="green"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($leftHtml)
@@ -208,13 +216,14 @@ it('uses graph defaults for branch return arc and bridge geometry', function ():
     config()->set('tw-graph-defaults.bridge_length', '6rem');
 
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return
-            id="orders.left.1.defaulted-return"
-            side="left"
-            :anchor-start="['x' => '-12rem', 'y' => '8rem']"
-            color="green"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return
+                id="orders.left.1.defaulted-return"
+                side="left"
+                :anchor-start="['x' => '-12rem', 'y' => '8rem']"
+                color="green"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -229,29 +238,30 @@ it('uses graph defaults for branch return arc and bridge geometry', function ():
 
 it('passes return bridge node labels through with width alignment and color', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
-            id="orders.left.1.refund-return-bridge"
-            side="left"
-            :anchor-start="['x' => '-16rem', 'y' => '12rem']"
-            arc-radius="2.75rem"
-            bridge-length="10rem"
-            color="rose"
-            :node-labels="[
-                1 => [
-                    'text' => ['Return starts'],
-                    'width' => 'halfLong',
-                    'align' => 'right',
-                ],
-                2 => [
-                    'top' => [
-                        'text' => ['Refund queued'],
-                        'width' => 'long',
-                        'align' => 'left',
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
+                id="orders.left.1.refund-return-bridge"
+                side="left"
+                :anchor-start="['x' => '-16rem', 'y' => '12rem']"
+                arc-radius="2.75rem"
+                bridge-length="10rem"
+                color="rose"
+                :node-labels="[
+                    1 => [
+                        'text' => ['Return starts'],
+                        'width' => 'halfLong',
+                        'align' => 'right',
                     ],
-                ],
-            ]"
-            :dev="true"
-        />
+                    2 => [
+                        'top' => [
+                            'text' => ['Refund queued'],
+                            'width' => 'long',
+                            'align' => 'left',
+                        ],
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -268,16 +278,17 @@ it('passes return bridge node labels through with width alignment and color', fu
 
 it('keeps labeled branch return bridge anchors as dots and unlabeled bridge anchors as joint arrows', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
-            id="orders.left.1.return-bridge"
-            side="left"
-            :anchor-start="['x' => '-16rem', 'y' => '12rem']"
-            color="rose"
-            :node-labels="[
-                1 => ['text' => ['Return starts']],
-            ]"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
+                id="orders.left.1.return-bridge"
+                side="left"
+                :anchor-start="['x' => '-16rem', 'y' => '12rem']"
+                color="rose"
+                :node-labels="[
+                    1 => ['text' => ['Return starts']],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -288,29 +299,31 @@ it('keeps labeled branch return bridge anchors as dots and unlabeled bridge anch
 
 it('keeps geometric branch returns separate from label carrying return bridges', function (): void {
     $returnHtml = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return
-            id="orders.left.1.geometric-return"
-            side="left"
-            :anchor-start="['x' => '-12rem', 'y' => '8rem']"
-            color="green"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return
+                id="orders.left.1.geometric-return"
+                side="left"
+                :anchor-start="['x' => '-12rem', 'y' => '8rem']"
+                color="green"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
     $returnBridgeHtml = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
-            id="orders.left.1.labeled-return"
-            side="left"
-            :anchor-start="['x' => '-12rem', 'y' => '8rem']"
-            color="green"
-            :node-labels="[
-                1 => [
-                    'text' => ['Labeled return'],
-                    'width' => 'half',
-                    'align' => 'center',
-                ],
-            ]"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
+                id="orders.left.1.labeled-return"
+                side="left"
+                :anchor-start="['x' => '-12rem', 'y' => '8rem']"
+                color="green"
+                :node-labels="[
+                    1 => [
+                        'text' => ['Labeled return'],
+                        'width' => 'half',
+                        'align' => 'center',
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($returnHtml)
@@ -330,13 +343,14 @@ it('uses graph defaults for branch return bridge arc and bridge geometry', funct
     config()->set('tw-graph-defaults.bridge_length', '6rem');
 
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
-            id="orders.left.1.defaulted-return-bridge"
-            side="left"
-            :anchor-start="['x' => '-16rem', 'y' => '12rem']"
-            color="green"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
+                id="orders.left.1.defaulted-return-bridge"
+                side="left"
+                :anchor-start="['x' => '-16rem', 'y' => '12rem']"
+                color="green"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -350,17 +364,18 @@ it('uses graph defaults for branch return bridge arc and bridge geometry', funct
 
 it('renders branch return extensions with outward stem arc and bridge geometry', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return-extension
-            id="orders.left.1.refund-extension-return"
-            side="left"
-            :anchor-start="['x' => '-20rem', 'y' => '10rem']"
-            arc-radius="2.75rem"
-            stem-length="3rem"
-            bridge-length="9rem"
-            color="green"
-            :counter-start="4"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return-extension
+                id="orders.left.1.refund-extension-return"
+                side="left"
+                :anchor-start="['x' => '-20rem', 'y' => '10rem']"
+                arc-radius="2.75rem"
+                stem-length="3rem"
+                bridge-length="9rem"
+                color="green"
+                :counter-start="4"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -382,14 +397,15 @@ it('uses graph defaults for branch return extension geometry', function (): void
     config()->set('tw-graph-defaults.bridge_length', '6rem');
 
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return-extension
-            id="orders.left.1.defaulted-return-extension"
-            side="left"
-            :anchor-start="['x' => '-20rem', 'y' => '10rem']"
-            color="green"
-            :counter-start="4"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return-extension
+                id="orders.left.1.defaulted-return-extension"
+                side="left"
+                :anchor-start="['x' => '-20rem', 'y' => '10rem']"
+                color="green"
+                :counter-start="4"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -405,17 +421,18 @@ it('uses graph defaults for branch return extension geometry', function (): void
 
 it('mirrors branch return extension geometry on the right side', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return-extension
-            id="orders.right.1.defaulted-return-extension"
-            side="right"
-            :anchor-start="['x' => '20rem', 'y' => '10rem']"
-            arc-radius="4rem"
-            stem-length="5rem"
-            bridge-length="6rem"
-            color="amber"
-            :counter-start="4"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return-extension
+                id="orders.right.1.defaulted-return-extension"
+                side="right"
+                :anchor-start="['x' => '20rem', 'y' => '10rem']"
+                arc-radius="4rem"
+                stem-length="5rem"
+                bridge-length="6rem"
+                color="amber"
+                :counter-start="4"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -433,14 +450,15 @@ it('mirrors branch return extension geometry on the right side', function (): vo
 
 it('renders branch return extension joint arrows for unlabeled continuation anchors', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return-extension
-            id="orders.right.1.return-extension"
-            side="right"
-            :anchor-start="['x' => '20rem', 'y' => '10rem']"
-            color="amber"
-            :counter-start="4"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return-extension
+                id="orders.right.1.return-extension"
+                side="right"
+                :anchor-start="['x' => '20rem', 'y' => '10rem']"
+                color="amber"
+                :counter-start="4"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -451,29 +469,30 @@ it('renders branch return extension joint arrows for unlabeled continuation anch
 
 it('mirrors return bridge node labels on right side paths', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
-            id="orders.right.1.refund-return-bridge"
-            side="right"
-            :anchor-start="['x' => '16rem', 'y' => '12rem']"
-            arc-radius="2.75rem"
-            bridge-length="10rem"
-            color="amber"
-            :node-labels="[
-                1 => [
-                    'text' => ['Right return starts'],
-                    'width' => 'halfLong',
-                    'align' => 'left',
-                ],
-                2 => [
-                    'bottom' => [
-                        'text' => ['Back to trunk'],
-                        'width' => 'half',
-                        'align' => 'right',
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.paths.branch-return-bridge
+                id="orders.right.1.refund-return-bridge"
+                side="right"
+                :anchor-start="['x' => '16rem', 'y' => '12rem']"
+                arc-radius="2.75rem"
+                bridge-length="10rem"
+                color="amber"
+                :node-labels="[
+                    1 => [
+                        'text' => ['Right return starts'],
+                        'width' => 'halfLong',
+                        'align' => 'left',
                     ],
-                ],
-            ]"
-            :dev="true"
-        />
+                    2 => [
+                        'bottom' => [
+                            'text' => ['Back to trunk'],
+                            'width' => 'half',
+                            'align' => 'right',
+                        ],
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)

@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/segments/start.blade.php --}}
 {{--
     Segment: start
@@ -22,7 +26,6 @@
 
 @props([
     'segment' => [],
-    'dev' => null,
 ])
 
 @aware([
@@ -51,13 +54,11 @@
 
 <x-translation-workbench::ui.tw-graph.segments.path
     :segment="$startSegment"
-    :dev="$dev"
 />
 
 @if (filled(data_get($startSegment, 'startLabel.text')))
     @php($startLabelSide = data_get($startSegment, 'startLabel.side', 'bottom'))
     <x-translation-workbench::ui.tw-graph.primitives.text
-        :dev="\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($startSegment, 'dev', false)))"
         :id="data_get($startSegment, 'id', 'segment.start') . '.label.' . $startLabelSide . '.1'"
         :text="data_get($startSegment, 'startLabel.text')"
         :anchor-x="data_get($startSegment, 'anchorStart.x', '0rem')"

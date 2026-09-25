@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/parts/sideways.blade.php --}}
 {{--
     Part: sideways
@@ -24,7 +28,7 @@
 @aware([
     'graphId' => null,
     'color' => null,
-    'dev' => false,
+
     'lineLength' => null,
     'arcRadius' => null,
     'bridgeLength' => null,
@@ -61,7 +65,6 @@
     'devCounterEnd' => 1,
     'devCounterColor' => null,
     'zIndex' => 20,
-    'devMode' => null,
 ])
 
 @php
@@ -94,10 +97,7 @@
     );
     $resolvedExtension = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($extension, null, '0rem');
     $hasExtension = filled($extension) && ! in_array($resolvedExtension, ['0', '0rem'], true);
-    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $devMode,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
-    );
+
     $anchorStart = is_array($anchorStart) ? $anchorStart : ['x' => '0rem', 'y' => '0rem'];
     $anchorStart = [
         'x' => data_get($anchorStart, 'x', '0rem'),
@@ -233,7 +233,7 @@
                 'devCounterEnd' => false,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $resolvedDev,
+
             ],
         ],
         [
@@ -251,7 +251,7 @@
                 'devCounterEnd' => false,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $resolvedDev,
+
             ],
         ],
         [
@@ -278,7 +278,7 @@
                 ),
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $resolvedDev,
+
             ],
         ],
     ];
@@ -305,7 +305,7 @@
                 ),
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $resolvedDev,
+
             ],
         ];
         $segments[] = [
@@ -324,7 +324,7 @@
                 'devCounterEnd' => false,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $resolvedDev,
+
             ],
         ];
     }
@@ -342,7 +342,6 @@
     @if ($segment['component'] === 'arc')
         <x-translation-workbench::ui.tw-graph.segments.arc
             :segment="$segment['segment']['id'] === $id . '.bridge1' ? array_replace($segment['segment'], ['joinLength' => $bridgeInJoinLength, 'devCounterJoin' => $devCounterJoin]) : $segment['segment']"
-            :dev="$resolvedDev"
         />
     @elseif ($segment['segment']['id'] === $id . '.bridge1' && $bridgeLabel !== null)
         <x-translation-workbench::ui.tw-graph.segments.label-bridge
@@ -356,13 +355,11 @@
             :geometry="$labelBridgeGeometry"
             :color="$resolvedColor"
             :z-index="$zIndex"
-            :dev="$resolvedDev"
             :dev-counter-end="false"
         />
     @else
         <x-translation-workbench::ui.tw-graph.segments.path
             :segment="$segment['segment']['id'] === $id . '.bridge1' ? array_replace($segment['segment'], ['joinLength' => $bridgeInJoinLength, 'devCounterJoin' => $devCounterJoin]) : $segment['segment']"
-            :dev="$resolvedDev"
         />
     @endif
 @endforeach
@@ -390,7 +387,6 @@
 
 @if ($nodeEnd && $nodeLabelRight)
     <x-translation-workbench::ui.tw-graph.segments.label
-        :dev="$resolvedDev"
         :id="$id . '.anchorNode-end.label-1'"
         :label="$nodeLabelRight"
         side="right"
@@ -402,7 +398,6 @@
 
 @if ($nodeEnd && $nodeLabelLeft)
     <x-translation-workbench::ui.tw-graph.segments.label
-        :dev="$resolvedDev"
         :id="$id . '.anchorNode-end.label-2'"
         :label="$nodeLabelLeft"
         side="left"

@@ -57,7 +57,7 @@
                                 <code>graph-id</code>
                             </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                <code>{{ __('auto id') }}</code>
+                                <code>auto id</code>
                             </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                 {{ __('Stable DOM id and registry scope for anchors, bounds, DEV counters, and canvas metrics.') }}
@@ -266,7 +266,9 @@
             :coordinates="$coordinates ?? false"
         >
             <div
-                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                class="mt-4 rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40"
+                {{-- class="mt-4 grid min-w-0 gap-4 xl:grid-cols-1" --}}
+            >
                 <div class="min-w-0">
                     {{-- canvas-default-trunk-1:start --}}
                     <x-translation-workbench::ui.tw-graph

@@ -1,5 +1,5 @@
-<flux:heading size="lg">Strang Branch</flux:heading>
-<flux:text>Each example contains its own handmade components, source code, props table and preview controls.</flux:text>
+<flux:heading size="lg">{{ __('Strang Branch') }}</flux:heading>
+<flux:text>{{ __('Each example contains its own handmade components, source code, props table and preview controls.') }}</flux:text>
 
 <flux:tab.group class="mt-4 min-w-0 max-w-full">
     <flux:tabs wire:model.live="tabs.strang_branch_index" scrollable scrollable:fade scrollable:scrollbar="hide">

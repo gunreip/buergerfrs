@@ -88,7 +88,7 @@
                                 <code>graph-id</code>
                             </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                <code>{{ __('auto id') }}</code>
+                                <code>auto id</code>
                             </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                 {{ __('Stable DOM id and registry scope for anchors, bounds, DEV counters, and canvas metrics.') }}
@@ -197,11 +197,14 @@
             :dev="$dev ?? true"
             :coordinates="$coordinates ?? false"
         >
-            <div
-                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                <div class="grid gap-4 xl:grid-cols-2">
-                    <div class="min-w-0">
-                        <flux:heading size="sm">{{ __('Default') }}</flux:heading>
+            <div class="mt-4 grid min-w-0 gap-4 xl:grid-cols-2">
+                <div class="min-w-0">
+                    <flux:heading
+                        class="m-3"
+                        size="sm"
+                    >{{ __('Default') }}</flux:heading>
+                    <div
+                        class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                         {{-- canvas-props-cap-length-1:start --}}
                         <x-translation-workbench::ui.tw-graph
                             graph-id="idea-to-paper-step-01-props-cap-default"
@@ -216,8 +219,14 @@
                         </x-translation-workbench::ui.tw-graph>
                         {{-- canvas-props-cap-length-1:end --}}
                     </div>
-                    <div class="min-w-0">
-                        <flux:heading size="sm">{{ __('Custom') }}</flux:heading>
+                </div>
+                <div class="min-w-0">
+                    <flux:heading
+                        class="m-3"
+                        size="sm"
+                    >{{ __('Custom') }}</flux:heading>
+                    <div
+                        class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                         {{-- canvas-props-cap-length-2:start --}}
                         <x-translation-workbench::ui.tw-graph
                             graph-id="idea-to-paper-step-01-props-cap-custom"

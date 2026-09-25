@@ -1,8 +1,12 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- Authored branch definitions; the component owns repeated anchor wiring, not the example view. --}}
-@aware(['graphId' => null, 'color' => null, 'dev' => false])
+@aware(['graphId' => null, 'color' => null])
 @php
     $inheritedColor = $color;
-    $inheritedDev = $dev;
+
 @endphp
 @props([
     'id' => null,
@@ -25,7 +29,7 @@
     'nodeLabels' => [],
     'nodeEnd' => true,
     'color' => null,
-    'devMode' => null,
+
     'zIndex' => 20,
 ])
 
@@ -40,7 +44,7 @@
     $resolvedGraphId = $graphId ?: 'tw-graph';
     $id = filled($id) ? (string) $id : $resolvedGraphId . '.flow.if-elseif-multi.' . max(1, (int) $componentCounter);
     $resolvedColor = $color ?? $inheritedColor ?? 'zinc';
-    $resolvedDev = $devMode ?? $inheritedDev;
+
     $rows = [[
         'id' => $id . '.if',
         'conditionLabel' => $conditionLabel,
@@ -132,7 +136,6 @@
             :false-stem-counter="$counter + 2"
             :right-counter-end="$counter + 3"
             :color="$row['color']"
-            :dev-mode="$resolvedDev"
             :z-index="$zIndex"
         />
     @else
@@ -147,7 +150,6 @@
             :node-labels="[$falseSide => $falseInformation]"
             :counter-end="$counter"
             :color="$row['color']"
-            :dev-mode="$resolvedDev"
             :z-index="$zIndex"
         />
         <x-translation-workbench::ui.tw-graph.parts.sideways
@@ -163,7 +165,6 @@
             :node-label-right="$side === 'right' ? $trueInformation : null"
             :dev-counter-end="$counter + 1"
             :color="$row['actionColor']"
-            :dev-mode="$resolvedDev"
             :z-index="$zIndex"
         />
     @endif
@@ -194,7 +195,7 @@
             :direction="$direction"
             :length="$direction === 'top-bottom' ? 'calc(' . $returnRow['actionEnd']['y'] . ' - ' . $returnTarget['y'] . ')' : 'calc(' . $returnTarget['y'] . ' - ' . $returnRow['actionEnd']['y'] . ')'"
             :gradient="false" :node-end="false" :dev-counter-end="false"
-            :color="$returnColor" :dev-mode="$resolvedDev" :z-index="$zIndex"
+            :color="$returnColor" :z-index="$zIndex"
         />
     @endif
 @endforeach

@@ -1,3 +1,8 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev;
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/rekey-target-left.blade.php --}}
 {{--
     Strang: rekey-target-left
@@ -13,7 +18,7 @@
 @aware([
     'graphId' => null,
     'color' => null,
-    'dev' => false,
+
     'lineLength' => null,
     'arcRadius' => null,
     'bridgeLength' => null,
@@ -42,7 +47,6 @@
     'nodeLabels' => [],
     'counterStart' => 1,
     'zIndex' => 7,
-    'devMode' => null,
 ])
 
 @php
@@ -53,10 +57,7 @@
     $resolvedComponentCounter = max(1, (int) $componentCounter);
     $id = filled($id) ? (string) $id : $resolvedGraphId . '.strang.rekey-target-left.' . $resolvedComponentCounter;
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
-    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $devMode,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
-    );
+
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
     $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($bridgeLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', $resolvedLineLength));
@@ -110,7 +111,7 @@
         'devCounterColor' => $resolvedColor,
         'color' => $resolvedColor,
         'zIndex' => $zIndex,
-        'dev' => $resolvedDev,
+
         'endLabel' => $endLabelConfig,
     ];
     $bounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([$anchor, $arcInEnd, $bridgeEnd, $arcOutEnd, $stemEnd, $endAnchor], '1rem');
@@ -120,7 +121,7 @@
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.rekey-target-left.end', $endAnchor);
 @endphp
 
-@if ($resolvedDev && $missingAttachTarget)
+@if ($dev && $missingAttachTarget)
     <span
         class="tw-graph-protocol-dev-only absolute z-50"
         style="left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($anchorStart, 'x', '0rem') }}); bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($anchorStart, 'y', '0rem') }});"
@@ -138,7 +139,6 @@
     :height="$bounds['height']"
     :color="$resolvedColor"
     :label="$id"
-    :dev="$resolvedDev"
 />
 
 <x-translation-workbench::ui.tw-graph.paths.branch
@@ -153,12 +153,10 @@
     :z-index="$zIndex"
     :node-labels="$nodeLabels"
     :counter-start="$counterStart"
-    :dev="$resolvedDev"
 />
 
 <x-translation-workbench::ui.tw-graph.segments.end
     :segment="$endSegment"
-    :dev="$resolvedDev"
 />
 
 @php

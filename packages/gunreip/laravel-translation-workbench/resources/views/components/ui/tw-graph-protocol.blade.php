@@ -119,6 +119,5 @@
     <x-translation-workbench::ui.tw-graph.canvas
         :protocol="$protocol"
         :direction="$resolvedDirection"
-        :dev="$dev"
     />
 </div>

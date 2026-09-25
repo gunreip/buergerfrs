@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/segments/stem-compressed.blade.php --}}
 {{--
     Segment: stem-compressed
@@ -31,7 +35,6 @@
 
 @props([
     'segment' => [],
-    'dev' => null,
 ])
 
 @php
@@ -110,10 +113,7 @@
     $anchorBeforeEnd = $advance($anchorStart, $beforeLength);
     $anchorGapEnd = $advance($anchorBeforeEnd, $gapLength);
     $anchorEnd ??= $advance($anchorGapEnd, $afterLength);
-    $devMode = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $dev,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($compressedSegment, 'dev', false)),
-    );
+
 
     $beforeSegment = array_replace($compressedSegment, [
         'id' => data_get($compressedSegment, 'id', 'segment.stem-compressed') . '.stem.before',
@@ -154,15 +154,12 @@
 
 <x-translation-workbench::ui.tw-graph.segments.path
     :segment="$beforeSegment"
-    :dev="$devMode"
 />
 
 <x-translation-workbench::ui.tw-graph.segments.path
     :segment="$dottedSegment"
-    :dev="$devMode"
 />
 
 <x-translation-workbench::ui.tw-graph.segments.path
     :segment="$afterSegment"
-    :dev="$devMode"
 />

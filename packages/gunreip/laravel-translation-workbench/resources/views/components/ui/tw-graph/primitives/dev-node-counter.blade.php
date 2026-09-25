@@ -1,10 +1,14 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev;
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/primitives/dev-node-counter.blade.php --}}
 {{--
     Primitive: dev-node-counter
 
     Usage:
     <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
-        :dev="true"
         :segment="$segment"
         counter="1"
     />
@@ -19,6 +23,7 @@
 @props([
     'id' => 'dev-node-counter',
     'counter' => null,
+    'visible' => true,
     'segment' => [],
     'anchorX' => null,
     'anchorY' => null,
@@ -27,12 +32,11 @@
     'direction' => null,
     'side' => 'right',
     'placement' => null,
-    'dev' => false,
+
     'color' => 'zinc',
 ])
 
 @php
-    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev);
     $resolvedAnchorX = $anchorX ?? data_get($segment, 'anchorStart.x', '0rem');
     $resolvedAnchorY = $anchorY ?? data_get($segment, 'anchorStart.y', '0rem');
     $resolvedOffsetX = $offsetX ?? data_get($segment, 'devCounterOffset.x');
@@ -43,7 +47,7 @@
     $hasOffset = filled($resolvedOffsetX) || filled($resolvedOffsetY);
 @endphp
 
-@if ($dev && $counter !== false && filled($counter))
+@if ($dev && $visible && $counter !== false && filled($counter))
     <span
         {{ $attributes->class([
             'tw-graph-protocol-primitive',

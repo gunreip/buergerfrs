@@ -1,3 +1,9 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev;
+    $coordinates = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->coordinates;
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/canvas-metrics.blade.php --}}
 {{--
     DEV overlay: canvas bounds metrics
@@ -14,14 +20,13 @@
 @props([
     'graphId' => null,
     'records' => [],
-    'dev' => false,
-    'coordinates' => true,
+
+
     'horizontalPadding' => '12rem',
 ])
 
 @php
-    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev);
-    $showCoordinates = filter_var($coordinates, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? (bool) $coordinates;
+    $showCoordinates = $coordinates;
     $summary = filled($graphId)
         ? \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::summary((string) $graphId)
         : ['left' => [], 'center' => [], 'right' => []];

@@ -1,3 +1,8 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev;
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/rekey-source-right.blade.php --}}
 {{--
     Strang: rekey-source-right
@@ -12,7 +17,7 @@
 @aware([
     'graphId' => null,
     'color' => null,
-    'dev' => false,
+
     'lineLength' => null,
     'lineWidth' => null,
     'arcRadius' => null,
@@ -46,7 +51,6 @@
     ],
     'counterStart' => 1,
     'zIndex' => 8,
-    'devMode' => null,
 ])
 
 @php
@@ -57,10 +61,7 @@
     $resolvedComponentCounter = max(1, (int) $componentCounter);
     $id = filled($id) ? (string) $id : $resolvedGraphId . '.strang.rekey-source-right.' . $resolvedComponentCounter;
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
-    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $devMode,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
-    );
+
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
     $resolvedArcInSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($arcRadiuss, 1, data_get($arcRadiuss, 'in')), $resolvedArcRadius, '2.75rem');
@@ -122,7 +123,7 @@
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.rekey-source-right.end', $attachAnchor);
 @endphp
 
-@if ($resolvedDev && $missingAttachTarget)
+@if ($dev && $missingAttachTarget)
     <span
         class="tw-graph-protocol-dev-only absolute z-50"
         style="left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($anchorStart, 'x', '0rem') }}); bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($anchorStart, 'y', '0rem') }});"
@@ -140,7 +141,6 @@
     :height="$bounds['height']"
     :color="$resolvedColor"
     :label="$id"
-    :dev="$resolvedDev"
 />
 
 <x-translation-workbench::ui.tw-graph.paths.merge
@@ -161,7 +161,6 @@
     :z-index="$zIndex"
     :node-labels="$nodeLabels"
     :counter-start="$counterStart"
-    :dev="$resolvedDev"
     :show-dev-box="false"
 />
 

@@ -121,13 +121,7 @@
                     <flux:table.cell class="whitespace-normal align-top">Default path and label color. Actions and
                         grouped entries can override it.</flux:table.cell>
                 </flux:table.row>
-                <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">dev-mode</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">bool | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Canvas dev</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Explicit DEV override; otherwise inherits the
-                        canvas setting.</flux:table.cell>
-                </flux:table.row>
+
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal align-top">z-index</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
@@ -1682,7 +1676,7 @@
     >
         <flux:callout.heading>Inheritance and calculated geometry</flux:callout.heading>
         <flux:text>Canvas settings provide line thickness, node size, text-width presets, connector defaults and
-            path-tone rendering. color and dev-mode can be overridden at this component; side, direction, stem-length,
+            path-tone rendering. color can be overridden at this component; DEV and coordinates belong to the canvas; side, direction, stem-length,
             arc-radius and bridge-length use the defaults listed above. pathTone is configured on the canvas, not in an
             action array.</flux:text>
         <flux:text>CASE action widths are normalized into a common route span. Grouped entries add fusion space. Fusion

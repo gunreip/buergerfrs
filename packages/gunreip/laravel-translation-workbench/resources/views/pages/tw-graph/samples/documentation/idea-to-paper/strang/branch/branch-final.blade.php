@@ -1,6 +1,5 @@
 {{-- Graph-only final snapshot for the documentation master. --}}
 <x-translation-workbench::ui.tw-graph
-    class="px-24 py-16"
     :graph-id="$ideaToPaperGraphId ?? 'idea-to-paper-step-06-branch'"
     :dev="$dev ?? false"
     :coordinates="$coordinates ?? false"
@@ -25,7 +24,6 @@
             start-length="4rem"
             :stem-lengths="[1 => '5rem', 2 => '5rem', 3 => '5rem', 4 => '5rem', 5 => '5rem']"
             end-length="3rem"
-            :dev-mode="false"
             :start-label="[
                 'text' => ['reference trunk'],
                 'width' => 'default',

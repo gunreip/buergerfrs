@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/segments/end.blade.php --}}
 {{--
     Segment: end
@@ -23,7 +27,6 @@
 
 @props([
     'segment' => [],
-    'dev' => null,
 ])
 
 @aware([
@@ -46,10 +49,7 @@
     ], $segment);
     $endSegment['nodeEnd'] = false;
     $endSegment['cap'] = true;
-    $devMode = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $dev,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($endSegment, 'dev', false)),
-    );
+
     $counterDistance = 'calc(var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half))';
     $negativeCounterDistance = 'calc((var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half)) * -1)';
     $capCounterOffset = match (data_get($endSegment, 'direction', 'bottom-top')) {
@@ -74,12 +74,10 @@
 
 <x-translation-workbench::ui.tw-graph.segments.path
     :segment="$endSegment"
-    :dev="$dev"
 />
 
 <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
     :id="data_get($endSegment, 'id', 'segment.end') . '.cap.end'"
-    :dev="$devMode"
     :anchor-x="data_get($endSegment, 'anchorEnd.x', '0rem')"
     :anchor-y="data_get($endSegment, 'anchorEnd.y', '0rem')"
     :offset-x="data_get($endSegment, 'devCounterEndOffset.x', data_get($capCounterOffset, 'x', '0rem'))"
@@ -91,7 +89,6 @@
 @if (filled(data_get($endSegment, 'endLabel.text')))
     @php($resolvedEndLabelSide = data_get($endSegment, 'endLabel.side', $endLabelSide))
     <x-translation-workbench::ui.tw-graph.primitives.text
-        :dev="$devMode"
         :id="data_get($endSegment, 'id', 'segment.end') . '.label.' . $resolvedEndLabelSide . '.1'"
         :text="data_get($endSegment, 'endLabel.text')"
         :anchor-x="data_get($endSegment, 'anchorEnd.x', '0rem')"

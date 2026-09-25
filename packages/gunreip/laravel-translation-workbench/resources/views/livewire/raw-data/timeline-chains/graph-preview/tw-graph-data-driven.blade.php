@@ -485,7 +485,6 @@
                 >
                     <x-translation-workbench::ui.tw-graph.strang.trunk
                         :color="$twGraphDataDrivenPreviewTrunk->get('color', 'green')"
-                        :dev-mode="$twGraphDataDrivenDevEnabled"
                         :stem-length="$twGraphDataDrivenPreviewGraph->get('stem_length')"
                         :start-length="$twGraphDataDrivenPreviewTrunk->get('start_length')"
                         :start-shift-enabled="false"
@@ -553,7 +552,6 @@
                             <x-translation-workbench::ui.tw-graph.strang.rekey-source-right
                                 :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
                                 :color="$rekeyPreview->get('color', 'sky')"
-                                :dev-mode="$twGraphDataDrivenDevEnabled"
                                 :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.1.end')"
                                 :bridge-length="$rekeyPreview->get('bridge_length') ??
                                     $twGraphDataDrivenPreviewGraph->get('bridge_length')"
@@ -569,7 +567,6 @@
                             <x-translation-workbench::ui.tw-graph.strang.rekey-source-left
                                 :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
                                 :color="$rekeyPreview->get('color', 'sky')"
-                                :dev-mode="$twGraphDataDrivenDevEnabled"
                                 :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.1.end')"
                                 :bridge-length="$rekeyPreview->get('bridge_length') ??
                                     $twGraphDataDrivenPreviewGraph->get('bridge_length')"
@@ -585,7 +582,6 @@
                             <x-translation-workbench::ui.tw-graph.strang.rekey-target-left
                                 :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
                                 :color="$rekeyPreview->get('color', 'sky')"
-                                :dev-mode="$twGraphDataDrivenDevEnabled"
                                 :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.3.end')"
                                 :bridge-length="$rekeyPreview->get('bridge_length') ??
                                     $twGraphDataDrivenPreviewGraph->get('bridge_length')"
@@ -603,7 +599,6 @@
                             <x-translation-workbench::ui.tw-graph.strang.rekey-target-right
                                 :component-counter="$rekeyPreview->get('component_counter', $rekeyIndex + 1)"
                                 :color="$rekeyPreview->get('color', 'sky')"
-                                :dev-mode="$twGraphDataDrivenDevEnabled"
                                 :attach-to="$rekeyPreview->get('attach_to', 'strang.trunk.path.3.end')"
                                 :bridge-length="$rekeyPreview->get('bridge_length') ??
                                     $twGraphDataDrivenPreviewGraph->get('bridge_length')"
@@ -688,7 +683,6 @@
                                 <x-translation-workbench::ui.tw-graph.strang.merge-right
                                     :component-counter="$mergeIndex + 1"
                                     :color="$mergePreview->get('color', 'amber')"
-                                    :dev-mode="$twGraphDataDrivenDevEnabled"
                                     :attach-to="$mergePreview->get('attach_to', 'strang.trunk.path.1.end')"
                                     :bridge-length="$mergePreview->get('bridge_length') ??
                                         $twGraphDataDrivenPreviewGraph->get('bridge_length')"
@@ -710,7 +704,6 @@
                                 <x-translation-workbench::ui.tw-graph.strang.merge-left
                                     :component-counter="$mergeIndex + 1"
                                     :color="$mergePreview->get('color', 'amber')"
-                                    :dev-mode="$twGraphDataDrivenDevEnabled"
                                     :attach-to="$mergePreview->get('attach_to', 'strang.trunk.path.1.end')"
                                     :bridge-length="$mergePreview->get('bridge_length') ??
                                         $twGraphDataDrivenPreviewGraph->get('bridge_length')"
@@ -800,7 +793,6 @@
                                 :id="$branchPreview->get('id')"
                                 :component-counter="$branchPreview->get('component_counter', $branchIndex + 1)"
                                 :color="$branchPreview->get('color', 'red')"
-                                :dev-mode="$twGraphDataDrivenDevEnabled"
                                 :attach-to="$branchPreview->get('attach_to', 'strang.trunk.path.1.end')"
                                 :entry-stem-length="$branchPreview->get('entry_stem_length')"
                                 :bridge-length="$branchPreview->get('bridge_length') ??
@@ -818,7 +810,6 @@
                                 side="right"
                                 :component-counter="$branchPreview->get('component_counter', $branchIndex + 1)"
                                 :color="$branchPreview->get('color', 'red')"
-                                :dev-mode="$twGraphDataDrivenDevEnabled"
                                 attach-to="strang.branch-right.end"
                                 :length="$branchPreview->get('end_length')"
                                 :cap-length="$branchPreview->get('end_cap_length')"
@@ -831,7 +822,6 @@
                                 :id="$branchPreview->get('id')"
                                 :component-counter="$branchPreview->get('component_counter', $branchIndex + 1)"
                                 :color="$branchPreview->get('color', 'red')"
-                                :dev-mode="$twGraphDataDrivenDevEnabled"
                                 :attach-to="$branchPreview->get('attach_to', 'strang.trunk.path.1.end')"
                                 :entry-stem-length="$branchPreview->get('entry_stem_length')"
                                 :bridge-length="$branchPreview->get('bridge_length') ??
@@ -849,7 +839,6 @@
                                 side="left"
                                 :component-counter="$branchPreview->get('component_counter', $branchIndex + 1)"
                                 :color="$branchPreview->get('color', 'red')"
-                                :dev-mode="$twGraphDataDrivenDevEnabled"
                                 attach-to="strang.branch-left.end"
                                 :length="$branchPreview->get('end_length')"
                                 :cap-length="$branchPreview->get('end_cap_length')"

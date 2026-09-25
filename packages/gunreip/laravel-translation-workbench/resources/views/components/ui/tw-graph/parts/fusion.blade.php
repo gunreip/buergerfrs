@@ -1,13 +1,17 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- Multiple parallel horizontal inputs converge on one shared output. --}}
-@aware(['graphId' => null, 'color' => null, 'dev' => false])
+@aware(['graphId' => null, 'color' => null])
 @php
     $inheritedColor = $color;
-    $inheritedDev = $dev;
+
 @endphp
-@props(['id' => 'part.fusion', 'inputs' => [], 'direction' => 'right-left', 'arcRadius' => '1.375rem', 'minStemLength' => '1rem', 'color' => null, 'devMode' => null, 'devCounterEnd' => 1, 'zIndex' => 20])
+@props(['id' => 'part.fusion', 'inputs' => [], 'direction' => 'right-left', 'arcRadius' => '1.375rem', 'minStemLength' => '1rem', 'color' => null, 'devCounterEnd' => 1, 'zIndex' => 20])
 @php
     $color = $color ?? $inheritedColor ?? 'zinc';
-    $devMode = $devMode ?? $inheritedDev;
+
     $graphId = $graphId ?: 'tw-graph';
     if (!is_array($inputs) || count($inputs) < 2) {
         throw new \InvalidArgumentException('parts.fusion requires at least two inputs.');
@@ -26,14 +30,14 @@
     @php
         $laneId = $id . '.inputs.' . $lane['key'];
         $laneColor = $lane['color'] ?? $color;
-        $common = ['color' => $laneColor, 'dev' => $devMode, 'zIndex' => $zIndex, 'nodeStart' => false, 'nodeEnd' => false];
+        $common = ['color' => $laneColor,  'zIndex' => $zIndex, 'nodeStart' => false, 'nodeEnd' => false];
         \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($graphId, $laneId, $lane['anchor']);
     @endphp
     @if ($lane['straight'] || $lane['next'] === null)
         <x-translation-workbench::ui.tw-graph.segments.fusion
             :id="$laneId" :anchor-start="$lane['anchor']" :anchor-end="$output"
             :direction="$direction" :arc-radius="$plan['radius'] > 0 ? $plan['radius'] . 'rem' : $arcRadius"
-            min-stem-length="0rem" :color="$laneColor" :dev="$devMode" :z-index="$zIndex"
+            min-stem-length="0rem" :color="$laneColor" :z-index="$zIndex"
         />
     @else
         @php $lead = abs($number($lane['bendStart']['x']) - $lane['x']); @endphp
@@ -64,7 +68,7 @@
 <x-translation-workbench::ui.tw-graph.segments.path :segment="[
     'id' => $id . '.output', 'anchorStart' => $output, 'anchorEnd' => $output, 'length' => '0rem',
     'direction' => $direction, 'nodeEnd' => true, 'nodeEndDot' => true,
-    'devCounterEnd' => $devCounterEnd, 'color' => $color, 'dev' => $devMode, 'zIndex' => $zIndex + 1,
+    'devCounterEnd' => $devCounterEnd, 'color' => $color,  'zIndex' => $zIndex + 1,
 ]" />
 @php
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($graphId, $id . '.anchorNode-end', $output);

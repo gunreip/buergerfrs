@@ -1,5 +1,9 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- One horizontal lane changes level through two opposed arcs and a compensating stem. --}}
-@props(['id' => 'segment.fusion', 'anchorStart', 'anchorEnd', 'direction' => 'right-left', 'arcRadius' => '1.375rem', 'minStemLength' => '1rem', 'color' => 'zinc', 'dev' => false, 'zIndex' => 20])
+@props(['id' => 'segment.fusion', 'anchorStart', 'anchorEnd', 'direction' => 'right-left', 'arcRadius' => '1.375rem', 'minStemLength' => '1rem', 'color' => 'zinc', 'zIndex' => 20])
 @php
     $number = fn ($value) => \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression((string) $value);
     $x = $number($anchorStart['x']); $y = $number($anchorStart['y']);
@@ -25,7 +29,7 @@
     $a = $point($endX - $sx * $r, $y + $sy * $r);
     $b = $point($endX - $sx * $r, $endY - $sy * $r);
     $c = $anchorEnd;
-    $common = ['color' => $color, 'dev' => $dev, 'zIndex' => $zIndex, 'nodeStart' => false, 'nodeEnd' => false];
+    $common = ['color' => $color,  'zIndex' => $zIndex, 'nodeStart' => false, 'nodeEnd' => false];
 @endphp
 @if ($lead > 0)
     <x-translation-workbench::ui.tw-graph.segments.path :segment="array_merge($common, [

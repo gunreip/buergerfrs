@@ -1,3 +1,9 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev;
+    $coordinates = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->coordinates;
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/canvas.blade.php --}}
 {{--
     Package-local graph protocol canvas.
@@ -10,8 +16,8 @@
 @props([
     'protocol' => [],
     'direction' => 'bottom-top',
-    'dev' => false,
-    'coordinates' => false,
+
+
     'minWidth' => '40rem',
     'minHeight' => '18rem',
     'horizontalPadding' => '12rem',
@@ -149,29 +155,24 @@
         @elseif ($type === 'arc')
             <x-translation-workbench::ui.tw-graph.segments.arc
                 :segment="$segment"
-                :dev="$dev"
             />
         @elseif ($segmentName === 'trunk-start')
             <x-translation-workbench::ui.tw-graph.segments.start
                 :segment="$segment"
-                :dev="$dev"
             />
         @elseif ($segmentName === 'trunk-end' || (bool) data_get($segment, 'cap', false))
             <x-translation-workbench::ui.tw-graph.segments.end
                 :segment="$segment"
-                :dev="$dev"
             />
         @else
             <x-translation-workbench::ui.tw-graph.segments.path
                 :segment="$segment"
-                :dev="$dev"
             />
         @endif
     @endforeach
 
     @foreach ($texts as $text)
         <x-translation-workbench::ui.tw-graph.segments.label
-            :dev="$dev"
             :id="$text['id']"
             :label="[
                 'text' => $text['text'],

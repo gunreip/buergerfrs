@@ -1,5 +1,5 @@
-<flux:heading size="lg">Flow</flux:heading>
-<flux:text>Flow components assemble connected process steps, decisions and conditional branches. Each example remains individually authored.</flux:text>
+<flux:heading size="lg">{{ __('Flow') }}</flux:heading>
+<flux:text>{{ __('Flow components assemble connected process steps, decisions and conditional branches. Each example remains individually authored.') }}</flux:text>
 
 <flux:tab.group class="mt-4 min-w-0 max-w-full">
     <flux:tabs wire:model.live="tabs.flow_index" scrollable scrollable:fade scrollable:scrollbar="hide">

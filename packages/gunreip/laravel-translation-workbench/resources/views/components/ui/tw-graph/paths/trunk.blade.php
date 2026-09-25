@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/paths/trunk.blade.php --}}
 {{--
     Path: trunk
@@ -28,7 +32,7 @@
 @aware([
     'graphId' => null,
     'color' => null,
-    'dev' => false,
+
     'lineLength' => null,
     'capLength' => null,
     'labelGap' => null,
@@ -59,7 +63,7 @@
     'color' => null,
     'zIndex' => null,
     'counterStart' => 1,
-    'devMode' => null,
+
     'showDevBox' => true,
     'showLayoutSpacer' => true,
 ])
@@ -73,10 +77,7 @@
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedPathCount = max(0, (int) ($pathCount ?? $defaultPathSegments));
-    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $devMode,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
-    );
+
     $startLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedLineLength, '4rem');
     $startShiftLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startShiftLength, null, '0rem');
     $pathLengthOverrides = is_array($pathLengths) ? $pathLengths : [];
@@ -259,7 +260,7 @@
                 'startLabel' => $resolvedStartLabel,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $resolvedDev,
+
             ],
         ];
         $currentAnchor = $nextAnchor;
@@ -279,7 +280,7 @@
                 'nodeEnd' => false,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $resolvedDev,
+
             ],
         ];
         $currentAnchor = $nextAnchor;
@@ -312,7 +313,7 @@
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $resolvedDev,
+
             ],
         ];
         $currentAnchor = $nextAnchor;
@@ -335,7 +336,7 @@
                 'endLabel' => $resolvedEndLabel,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $resolvedDev,
+
             ],
         ];
         $currentAnchor = $nextAnchor;
@@ -377,7 +378,6 @@
         :height="'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2))'"
         color="amber"
         :label="$id"
-        :dev="$dev"
     />
 @endif
 

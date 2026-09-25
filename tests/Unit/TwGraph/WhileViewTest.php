@@ -676,7 +676,7 @@ it('finalizes a group after inner FALSE and returns only after advancing the out
     expect($point('body-return.anchorNode-end'))->toBe($point('loop.anchorNode-start'));
     expect($html)->toContain('Prepare group', 'Finalize group', 'groupIndex = groupIndex + 1');
     $source = file_get_contents(app('view')->getFinder()->find('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.'.$view));
-    expect($source)->toContain('id="'.$root.'.finalize"' . "\n" . '                        attach-to="'.$root.'.inner-loop.anchorNode-end"');
+    expect(preg_replace('/\s+/', ' ', $source))->toContain('id="'.$root.'.finalize" attach-to="'.$root.'.inner-loop.anchorNode-end"');
 })->with([
     ['flow-while-test', 'idea-to-paper-while-basic', 'literature.while.1'],
     ['flow-while-action-sequence', 'idea-to-paper-while-action-sequence-left', 'literature.while.action-sequence.left'],

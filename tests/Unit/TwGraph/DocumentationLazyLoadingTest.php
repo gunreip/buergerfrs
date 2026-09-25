@@ -57,15 +57,23 @@ it('loads each authored parts example with code props and preview controls', fun
         ->set('tabs.main', 'idea-to-paper-parts')
         ->set('tabs.parts_index', 'idea-to-paper-parts-' . $part)
         ->assertSet('tabs.parts_index', 'idea-to-paper-parts-' . $part)
-        ->assertSee('id="idea-to-paper-parts-' . $part . '-preview"', false)
         ->assertSee('data-tw-graph-preview-tools', false)
         ->assertSee('Default')
         ->assertSee('Purpose')
         ->assertSee('&lt;x-translation-workbench::ui.tw-graph', false)
         ->assertDontSee('&amp;gt;', false);
 
+    $variants = match ($part) {
+        'start', 'end' => ['bottom-top', 'top-bottom'],
+        'sideways' => ['left', 'right'],
+        'chain' => ['preview'],
+    };
+    foreach ($variants as $variant) {
+        $component->assertSee('id="idea-to-paper-parts-' . $part . '-' . $variant . '"', false);
+    }
+
     foreach (array_diff(['start', 'end', 'sideways', 'chain'], [$part]) as $other) {
-        $component->assertDontSee('id="idea-to-paper-parts-' . $other . '-preview"', false);
+        $component->assertDontSee('id="idea-to-paper-parts-' . $other . '-', false);
     }
 })->with(['start', 'end', 'sideways', 'chain']);
 
@@ -299,7 +307,7 @@ it('lazy loads the handmade fusion documentation for each component level', func
     $dom = new DOMDocument;
     @$dom->loadHTML($html);
     $xpath = new DOMXPath($dom);
-    expect($xpath->query('//pre/code')->length)->toBe(1);
+    expect($xpath->query('//pre/code')->length)->toBe(6);
     expect($xpath->query('//*[contains(@class, "tw-graph-protocol-canvas-slot")]')->length)->toBe(6);
 })->with(['segments', 'parts']);
 

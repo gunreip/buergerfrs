@@ -1,3 +1,8 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev;
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/branch-end.blade.php --}}
 {{--
     Strang: branch-end
@@ -21,7 +26,7 @@
 @aware([
     'graphId' => null,
     'color' => null,
-    'dev' => false,
+
     'lineLength' => null,
     'capLength' => null,
 ])
@@ -45,7 +50,6 @@
     'endLabel' => null,
     'counterStart' => null,
     'zIndex' => 10,
-    'devMode' => null,
 ])
 
 @php
@@ -59,10 +63,7 @@
         ? (string) $id
         : $resolvedGraphId . '.strang.branch-end.' . $resolvedSide . '.' . $resolvedComponentCounter;
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
-    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $devMode,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
-    );
+
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($length, $resolvedLineLength, '4rem');
     $resolvedCapLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor($capLength, null, 'cap_length', '1.75rem');
@@ -97,7 +98,7 @@
         'devCounterColor' => $resolvedColor,
         'color' => $resolvedColor,
         'zIndex' => $zIndex,
-        'dev' => $resolvedDev,
+
         'endLabel' => $endLabelConfig,
     ];
     $bounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([
@@ -109,7 +110,7 @@
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-end.' . $resolvedSide . '.end', $endAnchor);
 @endphp
 
-@if ($resolvedDev && $missingAttachTarget)
+@if ($dev && $missingAttachTarget)
     <span
         class="tw-graph-protocol-dev-only absolute z-50"
         style="
@@ -132,12 +133,10 @@
     :height="$bounds['height']"
     :color="$resolvedColor"
     :label="$id"
-    :dev="$resolvedDev"
 />
 
 <x-translation-workbench::ui.tw-graph.segments.end
     :segment="$segment"
-    :dev="$resolvedDev"
 />
 
 @php

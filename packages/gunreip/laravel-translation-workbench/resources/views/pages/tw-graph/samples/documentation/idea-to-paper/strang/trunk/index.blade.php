@@ -1,5 +1,5 @@
-<flux:heading size="lg">Strang Trunk</flux:heading>
-<flux:text>The trunk combines paths and segments into a complete graph strand. Each example is authored separately with its own source code, props table, and preview controls.</flux:text>
+<flux:heading size="lg">{{ __('Strang Trunk') }}</flux:heading>
+<flux:text>{{ __('The trunk combines paths and segments into a complete graph strand. Each example is authored separately with its own source code, props table, and preview controls.') }}</flux:text>
 
 <flux:tab.group class="mt-4 min-w-0 max-w-full">
     <flux:tabs wire:model.live="tabs.strang_trunk_index" scrollable scrollable:fade scrollable:scrollbar="hide">

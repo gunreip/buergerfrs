@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/segments/step.blade.php --}}
 {{--
     Segment: step
@@ -39,7 +43,6 @@
 
 @props([
     'segment' => [],
-    'dev' => null,
 ])
 
 @aware([
@@ -111,10 +114,6 @@
         ? ['x' => data_get($anchorEnd, 'x', '0rem'), 'y' => data_get($anchorEnd, 'y', '0rem')]
         : $advance($anchorAfterStart, $afterLength);
 
-    $devMode = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $dev,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($stepSegment, 'dev', false)),
-    );
     $direction = data_get($stepSegment, 'direction', 'bottom-top');
     $stepLabelSide = 'center';
 
@@ -157,12 +156,10 @@
 
 <x-translation-workbench::ui.tw-graph.segments.path
     :segment="$beforeSegment"
-    :dev="$devMode"
 />
 
 @if (is_array($stepLabelConfig) && filled(data_get($stepLabelConfig, 'text')))
     <x-translation-workbench::ui.tw-graph.primitives.text
-        :dev="$devMode"
         :id="data_get($stepSegment, 'id', 'segment.step') . '.label'"
         :text="data_get($stepLabelConfig, 'text')"
         :anchor-x="data_get($anchorMiddle, 'x', '0rem')"
@@ -182,5 +179,4 @@
 
 <x-translation-workbench::ui.tw-graph.segments.path
     :segment="$afterSegment"
-    :dev="$devMode"
 />

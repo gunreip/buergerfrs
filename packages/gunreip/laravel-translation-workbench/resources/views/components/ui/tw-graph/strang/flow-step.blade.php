@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/flow-step.blade.php --}}
 {{--
     Strang: flow-step
@@ -9,7 +13,6 @@
 @aware([
     'graphId' => null,
     'color' => null,
-    'dev' => false,
 ])
 
 @php
@@ -37,7 +40,6 @@
     'counterStart' => 'S',
     'counterEnd' => 1,
     'zIndex' => 20,
-    'devMode' => null,
 ])
 
 @php
@@ -54,10 +56,7 @@
         $inheritedColor ?? null,
         'zinc',
     );
-    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $devMode,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
-    );
+
     $attachTarget = filled($attachTo)
         ? \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, (string) $attachTo)
         : null;
@@ -136,7 +135,7 @@
         'capLength' => $capLength ?? \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('cap_length', '1.75rem'),
         'color' => $resolvedColor,
         'zIndex' => $zIndex,
-        'dev' => $resolvedDev,
+
         'devCounterStart' => $counterStart,
         'devCounterEnd' => $counterEnd,
         'devCounterColor' => $resolvedColor,
@@ -145,7 +144,6 @@
 
 <x-translation-workbench::ui.tw-graph.segments.step
     :segment="$segment"
-    :dev="$resolvedDev"
 />
 
 @php

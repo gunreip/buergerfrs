@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/paths/merge-extension.blade.php --}}
 {{--
     Path: merge-extension
@@ -45,7 +49,7 @@
     'color' => null,
     'zIndex' => null,
     'counterStart' => 1,
-    'dev' => false,
+
     'showDevBox' => true,
 ])
 
@@ -131,7 +135,7 @@
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ];
         $stemContinuationStart = $stemContinuationEnd;
@@ -197,7 +201,7 @@
                 'startLabel' => $startLabel,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
     ];
@@ -217,7 +221,7 @@
                 'devCounterColor' => $color,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ];
     }
@@ -240,7 +244,7 @@
                 'devCounterColor' => $color,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
     ];
@@ -276,7 +280,7 @@
                 'endLabel' => $arcNodeLabel($arcNodeNumber, 'top'),
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
         [
@@ -293,7 +297,7 @@
                 'devCounterColor' => $color,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
     ];
@@ -308,7 +312,6 @@
         :height="'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2))'"
         color="amber"
         :label="$id"
-        :dev="$dev"
     />
 @endif
 

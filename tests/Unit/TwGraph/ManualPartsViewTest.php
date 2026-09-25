@@ -707,14 +707,15 @@ it('renders ordinal label fragments with superscript suffixes', function (): voi
 
 it('renders stem-compressed with proportional split when anchor end is configured', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.segments.stem-compressed
-            :dev="true"
-            :segment="[
-                'id' => 'segment.compressed.test',
-                'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
-                'anchorEnd' => ['x' => '0rem', 'y' => '12rem'],
-            ]"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.segments.stem-compressed
+                :segment="[
+                    'id' => 'segment.compressed.test',
+                    'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
+                    'anchorEnd' => ['x' => '0rem', 'y' => '12rem'],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -774,7 +775,7 @@ it('renders joint arrows with explicit direction color and z index', function ()
         ->toContain('--tw-graph-protocol-z-index: 33');
 });
 
-it('renders root graph dev transparency and coordinate visibility flags independently', function (): void {
+it('requires canvas DEV mode for coordinate visibility', function (): void {
     $devHtml = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph graph-id="root-dev-test" :dev="true" :coordinates="false" />
     BLADE);
@@ -789,7 +790,7 @@ it('renders root graph dev transparency and coordinate visibility flags independ
         ->and($coordinatesHtml)
         ->toContain('id="root-coordinates-test"')
         ->toContain('--tw-graph-protocol-color-alpha: 1')
-        ->not->toContain('tw-graph-protocol-coordinates-disabled');
+        ->toContain('tw-graph-protocol-coordinates-disabled');
 });
 
 it('treats string false dev props as disabled across root and nested graph elements', function (): void {
@@ -932,10 +933,12 @@ it('passes node images and extension geometry through chained handmade parts', f
 
 it('bounds label bridges using the rendered text box instead of a fixed line height', function (array $text, int $maxLines, bool $dev): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.segments.label-bridge
-            id="label-bounds" :dev="$dev"
-            :label="['text' => $text, 'width' => 'half', 'maxLines' => $maxLines]"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="$dev">
+            <x-translation-workbench::ui.tw-graph.segments.label-bridge
+                id="label-bounds"
+                :label="['text' => $text, 'width' => 'half', 'maxLines' => $maxLines]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE, compact('text', 'maxLines', 'dev'));
     $document = new DOMDocument;
     @$document->loadHTML($html);

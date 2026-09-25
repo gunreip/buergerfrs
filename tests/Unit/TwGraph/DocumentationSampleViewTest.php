@@ -196,7 +196,7 @@ it('keeps idea to paper canvas prop examples visually scoped and explicitly colo
         ->toContain('stem-length="8rem"')
         ->toContain('color="emerald"')
         ->toContain('min-height="88rem"')
-        ->toContain('horizontal-padding="24rem"')
+        ->toContain('horizontal-padding="6rem"')
         ->not->toContain(':dev="$dev"')
         ->not->toContain(':coordinates="$coordinates"');
 });
@@ -711,7 +711,7 @@ it('keeps idea to paper canvas prop examples paired as default and custom previe
         'width' => [
             'defaultId' => 'idea-to-paper-step-01-props-width-default',
             'customId' => 'idea-to-paper-step-01-props-width-custom',
-            'prop' => 'min-width="72rem"',
+            'prop' => 'min-width="24rem"',
         ],
     ];
 
@@ -956,7 +956,17 @@ it('renders all four text primitive widths with the same content and optional di
     $dom = new DOMDocument;
     @$dom->loadHTML('<?xml encoding="UTF-8">' . $html);
     $xpath = new DOMXPath($dom);
-    expect($xpath->query('//*[@data-tw-graph-path and contains(@class, "tw-graph-protocol-primitive-text-label")]')->length)->toBe(7);
+    $comparison = $dom->getElementById('idea-to-paper-primitives-text-preview');
+    expect($comparison)->not->toBeNull();
+    expect($xpath->query('.//*[@data-tw-graph-path and contains(@class, "tw-graph-protocol-primitive-text-label")]', $comparison)->length)->toBe(7);
+    expect($xpath->query('//*[@data-text-example]')->length)->toBe(7);
+    foreach (['default', 'half', 'default-one-line', 'default-four-lines', 'half-long', 'long', 'long-three-lines'] as $example) {
+        $canvas = $dom->getElementById('idea-to-paper-primitives-text-single-' . $example);
+        expect($canvas)->not->toBeNull();
+        $labels = $xpath->query('.//*[@data-tw-graph-path and contains(@class, "tw-graph-protocol-primitive-text-label")]', $canvas);
+        expect($labels->length)->toBe(1);
+        expect($labels->item(0)->getAttribute('data-tw-graph-path'))->toBe('literature.primitives.text.single.' . $example);
+    }
     foreach (['half' => 'w-24', 'default' => 'w-48', 'half-long' => 'w-72', 'long' => 'w-96'] as $name => $widthClass) {
         $id = 'literature.primitives.text.' . $name;
         $label = $xpath->query('//*[@data-tw-graph-path="' . $id . '"]')->item(0);
@@ -1029,7 +1039,8 @@ it('renders the handmade trunk path example through its segment chain', function
         ->not->toContain('= & gt;');
 
     preg_match('/^[ \t]*\{\{-- trunk-example:start --\}\}\R(.*?)^[ \t]*\{\{-- trunk-example:end --\}\}/ms', $source, $example);
-    $expectedCode = preg_replace('/^ {24}/m', '', rtrim($example[1]));
+    preg_match('/^ */', $example[1], $indent);
+    $expectedCode = preg_replace('/^'.preg_quote($indent[0], '/').'/m', '', rtrim($example[1]));
     expect($code)->toBe($expectedCode);
     expect($xpath->query('//pre/code/*[not(self::span[@class="tw-graph-code-comment" or @class="tw-graph-code-component"])]')->length)->toBe(0);
 
@@ -1042,7 +1053,8 @@ it('renders the handmade trunk path example through its segment chain', function
     $downCode = $xpath->query('//pre/code')->item(1)->textContent;
     expect($downCode)->toContain('direction="top-bottom"')->toContain("'y' => '22rem'");
     preg_match('/^[ \t]*\{\{-- trunk-top-bottom-example:start --\}\}\R(.*?)^[ \t]*\{\{-- trunk-top-bottom-example:end --\}\}/ms', $source, $downExample);
-    expect($downCode)->toBe(preg_replace('/^ {24}/m', '', rtrim($downExample[1])));
+    preg_match('/^ */', $downExample[1], $downIndent);
+    expect($downCode)->toBe(preg_replace('/^'.preg_quote($downIndent[0], '/').'/m', '', rtrim($downExample[1])));
     foreach ([1 => '3rem', 2 => '4rem', 3 => '5rem'] as $index => $length) {
         $line = $xpath->query('//*[@data-tw-graph-path="literature.paths.trunk-top-bottom.stem' . $index . '"]')->item(0);
         expect($line)->not->toBeNull();

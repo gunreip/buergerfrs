@@ -99,14 +99,15 @@ it('does not register non canvas dev boxes as graph layout bounds', function ():
 
 it('keeps diagnostic dev boxes behind graph elements while preserving hover labels', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.dev-box
-            id="strang.branch-left.1.main.path.branch.bridge1.bounds"
-            x="-12rem"
-            y="4rem"
-            width="8rem"
-            height="1.5rem"
-            :dev="true"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.dev-box
+                id="strang.branch-left.1.main.path.branch.bridge1.bounds"
+                x="-12rem"
+                y="4rem"
+                width="8rem"
+                height="1.5rem"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)

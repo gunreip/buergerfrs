@@ -114,8 +114,8 @@
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas.index',
                             [
-                                'dev' => $dev,
-                                'coordinates' => $coordinates,
+
+
                             ]
                         )
                     </div>
@@ -131,8 +131,8 @@
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.primitives.index',
                             [
-                                'dev' => $dev,
-                                'coordinates' => $coordinates,
+
+
                             ]
                         )
                     </div>
@@ -148,8 +148,8 @@
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.index',
                             [
-                                'dev' => $dev,
-                                'coordinates' => $coordinates,
+
+
                             ]
                         )
                     </div>
@@ -176,8 +176,8 @@
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.index',
                             [
-                                'dev' => $dev,
-                                'coordinates' => $coordinates,
+
+
                             ]
                         )
                     </div>
@@ -193,8 +193,8 @@
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.trunk.index',
                             [
-                                'dev' => $dev,
-                                'coordinates' => $coordinates,
+
+
                             ]
                         )
                     </div>
@@ -210,8 +210,8 @@
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.merge.index',
                             [
-                                'dev' => $dev,
-                                'coordinates' => $coordinates,
+
+
                             ]
                         )
                     </div>
@@ -227,8 +227,8 @@
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.branch.index',
                             [
-                                'dev' => $dev,
-                                'coordinates' => $coordinates,
+
+
                             ]
                         )
                     </div>
@@ -244,8 +244,8 @@
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.rekey.index',
                             [
-                                'dev' => $dev,
-                                'coordinates' => $coordinates,
+
+
                             ]
                         )
                     </div>
@@ -261,8 +261,8 @@
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.index',
                             [
-                                'dev' => $dev,
-                                'coordinates' => $coordinates,
+
+
                             ]
                         )
                     </div>

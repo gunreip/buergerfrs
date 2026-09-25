@@ -1,8 +1,12 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- One IF followed by one ELSEIF. The second test belongs exclusively to the first False route. --}}
-@aware(['graphId' => null, 'color' => null, 'dev' => false])
+@aware(['graphId' => null, 'color' => null])
 @php
     $inheritedColor = $color;
-    $inheritedDev = $dev;
+
 @endphp
 @props([
     'id' => null,
@@ -25,7 +29,7 @@
     'nodeLabels' => [],
     'nodeEnd' => true,
     'color' => null,
-    'devMode' => null,
+
     'zIndex' => 20,
 ])
 
@@ -45,7 +49,7 @@
     $resolvedGraphId = $graphId ?: 'tw-graph';
     $id = filled($id) ? (string) $id : $resolvedGraphId . '.flow.if-elseif.' . max(1, (int) $componentCounter);
     $resolvedColor = $color ?? $inheritedColor ?? 'zinc';
-    $resolvedDev = $devMode ?? $inheritedDev;
+
     $questionAnchor = (filled($attachTo)
         ? \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, (string) $attachTo)
         : null) ?: $anchorStart;
@@ -85,7 +89,6 @@
     :node-labels="[$falseSide => $falseInformation]"
     :counter-end="1"
     :color="$resolvedColor"
-    :dev-mode="$resolvedDev"
     :z-index="$zIndex"
 />
 
@@ -112,7 +115,6 @@
     :false-stem-counter="5"
     :right-counter-end="6"
     :color="$elseifColor"
-    :dev-mode="$resolvedDev"
     :z-index="$zIndex"
 />
 
@@ -128,7 +130,6 @@
     :node-label-right="$side === 'right' ? $trueLabel : null"
     :dev-counter-end="2"
     :color="$ifActionColor"
-    :dev-mode="$resolvedDev"
     :z-index="$zIndex"
 />
 @php
@@ -151,7 +152,6 @@
     :node-end="false"
     :dev-counter-end="false"
     :color="$ifActionColor"
-    :dev-mode="$resolvedDev"
     :z-index="$zIndex"
 />
 @endif

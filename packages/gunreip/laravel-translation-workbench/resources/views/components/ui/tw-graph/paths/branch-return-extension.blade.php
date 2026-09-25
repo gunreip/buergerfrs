@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/paths/branch-return-extension.blade.php --}}
 {{--
     Path: branch-return-extension
@@ -37,7 +41,6 @@
     'color' => null,
     'zIndex' => null,
     'counterStart' => 1,
-    'dev' => false,
 ])
 
 @php
@@ -98,7 +101,7 @@
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
         [
@@ -119,7 +122,7 @@
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
         [
@@ -138,7 +141,7 @@
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
     ];
@@ -152,7 +155,6 @@
     :height="'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2))'"
     color="amber"
     :label="$id"
-    :dev="$dev"
 />
 
 @foreach ($segments as $segment)

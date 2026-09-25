@@ -134,37 +134,38 @@ it('renders primitive arcs with semantic corner classes and explicit node anchor
 
 it('renders primitive nodes connectors and counters with direct props', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.primitives.node
-            id="primitive.node.test"
-            anchor-x="-2rem"
-            anchor-y="8rem"
-            size="1.75rem"
-            color="rose"
-        />
-        <x-translation-workbench::ui.tw-graph.primitives.connector
-            id="primitive.connector.test"
-            placement="left"
-            anchor-x="-2rem"
-            anchor-y="8rem"
-            length="3rem"
-            gap="0.5rem"
-            color="green"
-        />
-        <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
-            id="primitive.counter.test"
-            :dev="true"
-            counter="12"
-            anchor-x="-2rem"
-            anchor-y="8rem"
-            offset-x="1rem"
-            offset-y="-1rem"
-            color="amber"
-        />
-        <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
-            id="primitive.counter.hidden"
-            :dev="false"
-            counter="13"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.primitives.node
+                id="primitive.node.test"
+                anchor-x="-2rem"
+                anchor-y="8rem"
+                size="1.75rem"
+                color="rose"
+            />
+            <x-translation-workbench::ui.tw-graph.primitives.connector
+                id="primitive.connector.test"
+                placement="left"
+                anchor-x="-2rem"
+                anchor-y="8rem"
+                length="3rem"
+                gap="0.5rem"
+                color="green"
+            />
+            <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
+                id="primitive.counter.test"
+                counter="12"
+                anchor-x="-2rem"
+                anchor-y="8rem"
+                offset-x="1rem"
+                offset-y="-1rem"
+                color="amber"
+            />
+            <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
+                id="primitive.counter.hidden"
+                :visible="false"
+                counter="13"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -326,11 +327,12 @@ it('renders mixed primitive text lines without leaking array values', function (
 
 it('omits disabled or empty dev counters while preserving zero', function (mixed $counter, bool $visible): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
-            id="counter.visibility"
-            :dev="true"
-            :counter="$counter"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
+                id="counter.visibility"
+                :counter="$counter"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE, ['counter' => $counter]);
 
     if ($visible) {

@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/segments/arc.blade.php --}}
 {{--
     Segment: arc
@@ -21,7 +25,7 @@
     nodeStartZIndex/nodeEndZIndex: optional dot layer; defaults to path zIndex + 1
     jointArrowStart=true|false
     jointArrowEnd=true|false
-    dev=true|false
+    DEV diagnostics are controlled by the enclosing tw-graph canvas.
     devCounterColor
     startLabel{text, side, connectorLength, connectorGap, color, badgeColor}
     endLabel{text, side, connectorLength, connectorGap, color, badgeColor}
@@ -29,7 +33,6 @@
 
 @props([
     'segment' => [],
-    'dev' => null,
 ])
 
 @php
@@ -48,10 +51,7 @@
     $jointArrowEnd = $nodeEnd && ! $nodeEndDot && (bool) data_get($segment, 'jointArrowEnd', false);
     $jointArrowStartDirection = data_get($segment, 'jointArrowStartDirection', 'right');
     $jointArrowEndDirection = data_get($segment, 'jointArrowEndDirection', 'right');
-    $devMode = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $dev,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($segment, 'dev', false)),
-    );
+
     $counterSize = 'var(--tw-graph-protocol-dev-node-counter-width)';
     $counterDistance = 'calc(var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half))';
     $negativeCounterDistance = 'calc((var(--tw-graph-protocol-node-half) + var(--tw-graph-protocol-dev-node-counter-half)) * -1)';
@@ -125,7 +125,6 @@
     :height="'calc(' . $arcRadius . ' + (' . $boxPadding . ' * 2))'"
     color="sky"
     :label="$id"
-    :dev="$devMode"
 />
 
     <x-translation-workbench::ui.tw-graph.primitives.arc
@@ -190,7 +189,6 @@
 @if ($nodeStart)
     <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
         :id="$id . '.node.start'"
-        :dev="$devMode"
         :anchor-x="data_get($segment, 'anchorStart.x', '0rem')"
         :anchor-y="data_get($segment, 'anchorStart.y', '0rem')"
         :offset-x="data_get($startCounterOffset, 'x', '0rem')"
@@ -203,7 +201,6 @@
 @if ($nodeEnd)
     <x-translation-workbench::ui.tw-graph.primitives.dev-node-counter
         :id="$id . '.node.end'"
-        :dev="$devMode"
         :anchor-x="data_get($segment, 'anchorEnd.x', '0rem')"
         :anchor-y="data_get($segment, 'anchorEnd.y', '0rem')"
         :offset-x="data_get($endCounterOffset, 'x', '0rem')"
@@ -216,7 +213,6 @@
 @if ($nodeStart && filled(data_get($segment, 'startLabel.text')))
     @php($startLabelSide = data_get($segment, 'startLabel.side', 'right'))
     <x-translation-workbench::ui.tw-graph.segments.label
-        :dev="$devMode"
         :id="$id . '.label.' . $startLabelSide . '.1'"
         :label="data_get($segment, 'startLabel')"
         :side="$startLabelSide"
@@ -229,7 +225,6 @@
 @if ($nodeEnd && filled(data_get($segment, 'endLabel.text')))
     @php($endLabelSide = data_get($segment, 'endLabel.side', 'left'))
     <x-translation-workbench::ui.tw-graph.segments.label
-        :dev="$devMode"
         :id="$id . '.label.' . $endLabelSide . '.1'"
         :label="data_get($segment, 'endLabel')"
         :side="$endLabelSide"

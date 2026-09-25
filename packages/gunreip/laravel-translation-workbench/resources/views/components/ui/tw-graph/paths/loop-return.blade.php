@@ -1,5 +1,9 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- Downward continuation -> stem -> two rounded corners and bridge -> upward loop re-entry. --}}
-@aware(['graphId' => null, 'color' => null, 'dev' => false, 'arcRadius' => null])
+@aware(['graphId' => null, 'color' => null, 'arcRadius' => null])
 @php
     $inheritedColor = $color;
     $inheritedArcRadius = $arcRadius;
@@ -14,14 +18,14 @@
     'arcRadius' => null,
     'counterStart' => 1,
     'color' => null,
-    'devMode' => null,
+
     'zIndex' => 20,
 ])
 @php
     $graph = $graphId ?: 'tw-graph';
     $arcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor($arcRadius, $inheritedArcRadius, 'arc_radius', '2.75rem');
     $routeColor = $color ?? $inheritedColor ?? 'zinc';
-    $routeDev = $devMode ?? $dev;
+
     $start = filled($attachTo) ? \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graph, $attachTo) : $anchorStart;
     $target = filled($returnTo) ? \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graph, $returnTo) : $anchorReturn;
     if (! is_array($start) || ! is_array($target)) {
@@ -46,7 +50,7 @@
     $stemEnd = ['x' => $start['x'], 'y' => $target['y']];
     $bridgeStart = $point($stemEnd, "{$arcRadius} * {$sign}", "{$arcRadius} * -1");
     $bridgeEnd = $point($target, "{$arcRadius} * " . -$sign, "{$arcRadius} * -1");
-    $common = ['color' => $routeColor, 'dev' => $routeDev, 'zIndex' => $zIndex,
+    $common = ['color' => $routeColor,  'zIndex' => $zIndex,
         'devCounterColor' => $routeColor, 'nodeStart' => false, 'nodeEnd' => true,
         'nodeEndDot' => false, 'jointArrowEnd' => true];
     $counterStart = (int) $counterStart;

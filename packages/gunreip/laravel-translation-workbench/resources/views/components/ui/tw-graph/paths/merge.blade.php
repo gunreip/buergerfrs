@@ -1,3 +1,8 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev;
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/paths/merge.blade.php --}}
 {{--
     Path: merge
@@ -50,7 +55,7 @@
     'zIndex' => null,
     'nodeLabels' => [],
     'counterStart' => 1,
-    'dev' => false,
+
     'showDevBox' => true,
 ])
 
@@ -166,7 +171,7 @@
                 'devCounterColor' => $color,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ];
         $stemLengthStart = $stemLengthEnd;
@@ -217,7 +222,7 @@
                 'devCounterColor' => $color,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ];
         $stemContinuationStart = $stemContinuationEnd;
@@ -296,7 +301,7 @@
                 'startLabel' => $resolvedStartLabel,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
     ];
@@ -316,7 +321,7 @@
                 'devCounterColor' => $color,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ];
     }
@@ -353,7 +358,7 @@
                 'color' => $color,
                 'devCounterColor' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
         [
@@ -368,7 +373,7 @@
                 'nodeEnd' => false,
                 'color' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
         [
@@ -392,7 +397,7 @@
                 'color' => $color,
                 'devCounterColor' => $color,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
     ];
@@ -407,7 +412,6 @@
         :height="'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2))'"
         color="amber"
         :label="$id"
-        :dev="$dev"
     />
 @endif
 
@@ -419,7 +423,6 @@
     @elseif ($segment['component'] === 'stem-compressed')
         <x-translation-workbench::ui.tw-graph.segments.stem-compressed
             :segment="$segment['segment']"
-            :dev="$dev"
         />
     @else
         <x-translation-workbench::ui.tw-graph.segments.path :segment="$segment['segment']" />
@@ -449,7 +452,6 @@
         @endphp
 
         <x-translation-workbench::ui.tw-graph.segments.label
-            :dev="$dev"
             :id="$id . '.end.label.' . $side . '.' . ($labelIndex + 1)"
             :label="$label"
             :side="$side"

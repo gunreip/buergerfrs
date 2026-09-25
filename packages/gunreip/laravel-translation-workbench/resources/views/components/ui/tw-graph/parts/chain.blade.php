@@ -17,7 +17,7 @@
 @aware([
     'graphId' => null,
     'color' => null,
-    'dev' => false,
+
     'lineLength' => null,
     'stemLength' => null,
     'bridgeLength' => null,
@@ -175,7 +175,6 @@
             :start-label="$partValue($part, ['startLabel', 'start-label', 'start_label'])"
             :gradient="$partValue($part, 'gradient', true)"
             :z-index="$partValue($part, ['zIndex', 'z-index', 'z_index'], 20)"
-            :dev-mode="$partValue($part, ['devMode', 'dev-mode', 'dev_mode'])"
         />
 
         @php
@@ -199,7 +198,6 @@
             :dev-counter-end="$partValue($part, ['devCounterEnd', 'dev-counter-end', 'dev_counter_end'], 1)"
             :dev-counter-color="$partValue($part, ['devCounterColor', 'dev-counter-color', 'dev_counter_color'])"
             :z-index="$partValue($part, ['zIndex', 'z-index', 'z_index'], 20)"
-            :dev-mode="$partValue($part, ['devMode', 'dev-mode', 'dev_mode'])"
         />
 
         @php
@@ -218,7 +216,6 @@
             :dev-counter-color="$partValue($part, ['devCounterColor', 'dev-counter-color', 'dev_counter_color'])"
             :end-label="$partValue($part, ['endLabel', 'end-label', 'end_label'])"
             :z-index="$partValue($part, ['zIndex', 'z-index', 'z_index'], 20)"
-            :dev-mode="$partValue($part, ['devMode', 'dev-mode', 'dev_mode'])"
         />
 
         @php

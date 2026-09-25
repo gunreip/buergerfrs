@@ -55,6 +55,7 @@
             <flux:callout.heading
                 class="mt-4"
                 size="sm"
+                icon="square-pen"
             >
                 {{ __('Changed props for the other examples') }}
             </flux:callout.heading>
@@ -79,7 +80,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->changedProps('source-line-top-bottom-4', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->changedProps('source-line-top-bottom-4', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -96,7 +98,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->changedProps('source-line-left-right-4', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->changedProps('source-line-left-right-4', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -113,7 +116,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->changedProps('source-line-right-left-4', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->changedProps('source-line-right-left-4', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -130,7 +134,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->changedProps('source-line-bottom-top-8', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->changedProps('source-line-bottom-top-8', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -147,7 +152,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->changedProps('source-line-top-bottom-8', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->changedProps('source-line-top-bottom-8', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -164,7 +170,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->changedProps('source-line-left-right-8', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->changedProps('source-line-left-right-8', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -181,7 +188,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->changedProps('source-line-right-left-8', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->changedProps('source-line-right-left-8', 'line-complete-example', 'x-translation-workbench::ui.tw-graph.primitives.line') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -190,7 +198,10 @@
             <flux:callout.heading
                 class="mt-4"
                 size="sm"
-            >{{ __('Endpoint variants · bottom-top · 4rem') }}</flux:callout.heading>
+                icon="square-pen"
+            >
+                {{ __('Endpoint variants · bottom-top · 4rem') }}
+            </flux:callout.heading>
             <flux:callout.text class="mb-4 mt-2">
                 {{ __('The complete example above already shows joint-arrow end. These eight additions keep the same length and coordinates. node-start/node-end render Dots in the line color. Joint-arrows are separate primitives in zinc, placed at the matching start/end coordinates; both point along the line\'s direction. primitives.line itself has no joint-arrow-start or joint-arrow-end prop.') }}
             </flux:callout.text>
@@ -212,7 +223,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('source-line-plain') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->example('source-line-plain') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -229,7 +241,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('source-line-arrow-start') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->example('source-line-arrow-start') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -246,7 +259,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('source-line-arrows-both') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->example('source-line-arrows-both') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -263,7 +277,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('source-line-dot-start') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->example('source-line-dot-start') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -280,7 +295,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('source-line-dot-end') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->example('source-line-dot-end') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -297,7 +313,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('source-line-dots-both') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->example('source-line-dots-both') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -314,7 +331,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('source-line-dot-arrow') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->example('source-line-dot-arrow') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
 
@@ -331,7 +349,8 @@
                         </x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
-                        <x-translation-workbench::ui.tw-graph.code-box class="mt-2">{{ $lineSource->example('source-line-arrow-dot') }}</x-translation-workbench::ui.tw-graph.code-box>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-2">{{ $lineSource->example('source-line-arrow-dot') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
@@ -358,244 +377,278 @@
                         </flux:table.columns>
                         <flux:table.rows>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">id
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>id</code>
                                 </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">line
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>line</code>
                                 </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Identifier for
-                                    the
-                                    element and diagnostics.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">direction
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">bottom-top
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Direction:
-                                    bottom-top,
-                                    top-bottom, left-right, or right-left.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">length
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">4rem
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Visible line
-                                    length.
-                                    Keep the endpoint coordinates consistent with this length.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">start-x
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">0rem
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">X coordinate
-                                    of the
-                                    start endpoint.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">start-y
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">0rem
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Y coordinate
-                                    of the
-                                    start endpoint; positive values point up.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">end-x
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">0rem
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">X coordinate
-                                    of the
-                                    end endpoint.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">end-y
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">0rem
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Y coordinate
-                                    of
-                                    the
-                                    end endpoint; positive values point up.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">:node-start
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">false
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Renders a dot
-                                    at
-                                    the
-                                    line start.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">:node-end
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">false
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Renders a dot
-                                    at
-                                    the
-                                    line end.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">
-                                    node-start-size
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">null
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional size
-                                    override
-                                    for the start dot.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">node-end-size
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">null
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional size
-                                    override
-                                    for the end dot.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">:gradient
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">false
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Fades the line
-                                    in
-                                    along its direction.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">:cap
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">false
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Enables an end
-                                    cap
-                                    unless cap-end overrides it.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">:cap-start
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">false
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Enables a cap
-                                    at
-                                    the
-                                    start.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">:cap-end
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">null
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional
-                                    override
-                                    for
-                                    the end cap.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">cap-length
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">1.25rem
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Length of the
-                                    cap
-                                    across the line.</flux:table.cell>
-                            </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">:dashed
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">false
-                                </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Renders a
-                                    dashed
-                                    line.
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Identifier for the element and diagnostics.') }}
                                 </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">color
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>direction</code>
                                 </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">zinc
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>bottom-top</code>
                                 </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Line color.
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Direction: bottom-top, top-bottom, left-right, or right-left.') }}
                                 </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">to-color
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>length</code>
                                 </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">null
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>4rem</code>
                                 </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional
-                                    target
-                                    color
-                                    for a color gradient.</flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Visible line length. Keep the endpoint coordinates consistent with this length.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">
-                                    :color-gradient
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>start-x</code>
                                 </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">false
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>0rem</code>
                                 </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Enables a
-                                    gradient
-                                    from color to to-color.</flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('X coordinate of the start endpoint.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">tone
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>start-y</code>
                                 </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">line
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>0rem</code>
                                 </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Use surface
-                                    for
-                                    the
-                                    surface color variant.</flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Y coordinate of the start endpoint; positive values point up.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">z-index
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>end-x</code>
                                 </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">null
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>0rem</code>
                                 </flux:table.cell>
-                                <flux:table.cell class="whitespace-normal break-words align-top text-xs">Optional
-                                    stacking-order override.</flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('X coordinate of the end endpoint.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>end-y</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>0rem</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Y coordinate of the end endpoint; positive values point up.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>:node-start</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>false</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Renders a dot at the line start.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>:node-end</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>false</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Renders a dot at the line end.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>node-start-size</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>null</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Optional size override for the start dot.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>node-end-size</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>null</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Optional size override for the end dot.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>:gradient</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>false</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Fades the line in along its direction.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>:cap</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>false</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Enables an end cap unless cap-end overrides it.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>:cap-start</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>false</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Enables a cap at the start.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>:cap-end</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>null</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Optional override for the end cap.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>cap-length</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>1.25rem</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Length of the cap across the line.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>:dashed</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>false</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Renders a dashed line.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>color</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>zinc</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Line color.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>to-color</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>null</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Optional target color for a color gradient.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>:color-gradient</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>false</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Enables a gradient from color to to-color.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>tone</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>line</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Use surface for the surface color variant.') }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>z-index</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    <code>null</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
+                                    {{ __('Optional stacking-order override.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                         </flux:table.rows>
                     </flux:table>
                 </div>
             </flux:callout>
         </flux:callout>
-
+        {{-- Preview --}}
         <flux:callout
             class="min-w-0"
             color="emerald"
         >
-            <flux:callout.heading icon="eye">{{ __('Line preview') }}</flux:callout.heading>
+            <flux:callout.heading icon="square-dashed-text">{{ __('Primitives line preview') }}</flux:callout.heading>
             <x-translation-workbench::ui.tw-graph.preview-tools
                 :dev="$dev ?? true"
                 :coordinates="$coordinates ?? false"
             >
                 <div
-                    class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                    class="mt-4 grid min-w-0 gap-4 xl:grid-cols-2"
+                    data-line-examples
+                >
                     <div
-                        class="grid grid-cols-2 gap-4"
-                        data-line-examples
-                        style="min-width: 50rem;"
+                        class="min-w-0"
+                        data-line-example="bottom-top-4"
                     >
-                        <div
-                            class="min-w-0"
-                            data-line-example="bottom-top-4"
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="bottom-top-4"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="bottom-top-4"
-                                size="sm"
-                            >
-                                {{ __('bottom-top · 4rem') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('bottom-top · 4rem') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- Line Bottom-Top 4rem --}}
                             {{-- line-complete-example:start --}}
                             <x-translation-workbench::ui.tw-graph
@@ -626,17 +679,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- line-complete-example:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-example="top-bottom-4"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-example="top-bottom-4"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="top-bottom-4"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="top-bottom-4"
-                                size="sm"
-                            >
-                                {{ __('top-bottom · 4rem') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('top-bottom · 4rem') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- Line Top-Bottom 4rem --}}
                             {{-- source-line-top-bottom-4:start --}}
                             <x-translation-workbench::ui.tw-graph
@@ -667,17 +722,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- source-line-top-bottom-4:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-example="left-right-4"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-example="left-right-4"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="left-right-4"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="left-right-4"
-                                size="sm"
-                            >
-                                {{ __('left-right · 4rem') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('left-right · 4rem') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- Line Left-Right 4rem --}}
                             {{-- source-line-left-right-4:start --}}
                             <x-translation-workbench::ui.tw-graph
@@ -708,17 +765,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- source-line-left-right-4:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-example="right-left-4"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-example="right-left-4"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="right-left-4"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="right-left-4"
-                                size="sm"
-                            >
-                                {{ __('right-left · 4rem') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('right-left · 4rem') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- Line Right-Left 4rem --}}
                             {{-- source-line-right-left-4:start --}}
                             <x-translation-workbench::ui.tw-graph
@@ -749,17 +808,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- source-line-right-left-4:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-example="bottom-top-8"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-example="bottom-top-8"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="bottom-top-8"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="bottom-top-8"
-                                size="sm"
-                            >
-                                {{ __('bottom-top · 8rem') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('bottom-top · 8rem') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- Line Bottom-Top 8rem --}}
                             {{-- source-line-bottom-top-8:start --}}
                             <x-translation-workbench::ui.tw-graph
@@ -790,17 +851,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- source-line-bottom-top-8:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-example="top-bottom-8"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-example="top-bottom-8"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="top-bottom-8"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="top-bottom-8"
-                                size="sm"
-                            >
-                                {{ __('top-bottom · 8rem') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('top-bottom · 8rem') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- Line Top-Bottom 8rem --}}
                             {{-- source-line-top-bottom-8:start --}}
                             <x-translation-workbench::ui.tw-graph
@@ -831,17 +894,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- source-line-top-bottom-8:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-example="left-right-8"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-example="left-right-8"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="left-right-8"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="left-right-8"
-                                size="sm"
-                            >
-                                {{ __('left-right · 8rem') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('left-right · 8rem') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- Line Left-Right 8rem --}}
                             {{-- source-line-left-right-8:start --}}
                             <x-translation-workbench::ui.tw-graph
@@ -872,17 +937,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- source-line-left-right-8:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-example="right-left-8"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-example="right-left-8"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="right-left-8"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="right-left-8"
-                                size="sm"
-                            >
-                                {{ __('right-left · 8rem') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('right-left · 8rem') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- Line Right-Left 8rem --}}
                             {{-- source-line-right-left-8:start --}}
                             <x-translation-workbench::ui.tw-graph
@@ -915,30 +982,34 @@
                         </div>
                     </div>
                 </div>
-                <flux:heading
+
+                <flux:callout.heading
                     class="mt-6"
                     size="sm"
-                >Additional endpoints · bottom-top · 4rem</flux:heading>
-                <flux:text class="mt-2">Compare with bottom-top · 4rem above, which already shows joint-arrow end.
-                    Dots follow the cyan line color; zinc arrows point upward at either endpoint.</flux:text>
+                    icon="package-plus"
+                >
+                    {{ __('Additional endpoints · bottom-top · 4rem') }}</flux:callout.heading>
+                <flux:callout.text class="mb-4 mt-2">
+                    {{ __('Compare with bottom-top · 4rem above, which already shows
+                                                                                                                                                                                                                                                                                        joint-arrow end. Dots follow the cyan line color; zinc arrows point upward at either endpoint.') }}
+                </flux:callout.text>
+
                 <div
-                    class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                    class="grid grid-cols-2 gap-4"
+                    data-line-endpoint-examples
+                >
                     <div
-                        class="grid grid-cols-2 gap-4"
-                        data-line-endpoint-examples
-                        style="min-width: 50rem;"
+                        class="min-w-0"
+                        data-line-endpoints="plain"
                     >
-                        <div
-                            class="min-w-0"
-                            data-line-endpoints="plain"
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="no-markers"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="no-markers"
-                                size="sm"
-                            >
-                                {{ __('Line only') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('Line only') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- source-line-plain:start --}}
                             <x-translation-workbench::ui.tw-graph
                                 graph-id="idea-to-paper-primitives-line-plain"
@@ -963,17 +1034,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- source-line-plain:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-endpoints="arrow-start"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-endpoints="arrow-start"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="joint-arrow-start"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="joint-arrow-start"
-                                size="sm"
-                            >
-                                {{ __('Joint-arrow start') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('Joint-arrow start') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- source-line-arrow-start:start --}}
                             <x-translation-workbench::ui.tw-graph
                                 graph-id="idea-to-paper-primitives-line-arrow-start"
@@ -1005,17 +1078,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- source-line-arrow-start:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-endpoints="arrows-both"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-endpoints="arrows-both"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="joint-arrows-both"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="joint-arrows-both"
-                                size="sm"
-                            >
-                                {{ __('Joint-arrow start + end') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('Joint-arrow start + end') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- source-line-arrows-both:start --}}
                             <x-translation-workbench::ui.tw-graph
                                 graph-id="idea-to-paper-primitives-line-arrows-both"
@@ -1054,17 +1129,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- source-line-arrows-both:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-endpoints="dot-start"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-endpoints="dot-start"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="dot-start"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="dot-start"
-                                size="sm"
-                            >
-                                {{ __('Dot start') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('Dot start') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- source-line-dot-start:start --}}
                             <x-translation-workbench::ui.tw-graph
                                 graph-id="idea-to-paper-primitives-line-dot-start"
@@ -1090,17 +1167,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- source-line-dot-start:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-endpoints="dot-end"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-endpoints="dot-end"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="dot-end"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="dot-end"
-                                size="sm"
-                            >
-                                {{ __('Dot end') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('Dot end') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- source-line-dot-end:start --}}
                             <x-translation-workbench::ui.tw-graph
                                 graph-id="idea-to-paper-primitives-line-dot-end"
@@ -1126,17 +1205,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- source-line-dot-end:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-endpoints="dots-both"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-endpoints="dots-both"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="dots-both"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="dots-both"
-                                size="sm"
-                            >
-                                {{ __('Dot start + end') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('Dot start + end') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- source-line-dots-both:start --}}
                             <x-translation-workbench::ui.tw-graph
                                 graph-id="idea-to-paper-primitives-line-dots-both"
@@ -1163,17 +1244,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- source-line-dots-both:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-endpoints="dot-arrow"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-endpoints="dot-arrow"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="dot-start-joint-arrow-end"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="dot-start-joint-arrow-end"
-                                size="sm"
-                            >
-                                {{ __('Dot start + joint-arrow end') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('Dot start + joint-arrow end') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- source-line-dot-arrow:start --}}
                             <x-translation-workbench::ui.tw-graph
                                 graph-id="idea-to-paper-primitives-line-dot-arrow"
@@ -1206,17 +1289,19 @@
                             </x-translation-workbench::ui.tw-graph>
                             {{-- source-line-dot-arrow:end --}}
                         </div>
-                        <div
-                            class="min-w-0"
-                            data-line-endpoints="arrow-dot"
+                    </div>
+                    <div
+                        class="min-w-0"
+                        data-line-endpoints="arrow-dot"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="joint-arrow-start-dot-end"
+                            size="sm"
                         >
-                            <x-translation-workbench::ui.common.heading-counter
-                                class="px-3 pt-3"
-                                example="joint-arrow-start-dot-end"
-                                size="sm"
-                            >
-                                {{ __('Joint-arrow start + dot end') }}
-                            </x-translation-workbench::ui.common.heading-counter>
+                            {{ __('Joint-arrow start + dot end') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- source-line-arrow-dot:start --}}
                             <x-translation-workbench::ui.tw-graph
                                 graph-id="idea-to-paper-primitives-line-arrow-dot"

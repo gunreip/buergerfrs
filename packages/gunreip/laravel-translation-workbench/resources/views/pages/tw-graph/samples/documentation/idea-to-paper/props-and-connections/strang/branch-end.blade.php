@@ -82,12 +82,7 @@
                     <flux:table.cell class="whitespace-normal align-top">10</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">Base drawing layer for this component.</flux:table.cell>
                 </flux:table.row>
-                <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">dev-mode</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">bool | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Explicit DEV override; null inherits canvas dev.</flux:table.cell>
-                </flux:table.row>
+
             </flux:table.rows>
         </flux:table>
     </flux:callout>

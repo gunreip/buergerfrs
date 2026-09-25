@@ -28,7 +28,7 @@
                 <flux:table.row><flux:table.cell class="whitespace-normal">anchorNode-end</flux:table.cell><flux:table.cell class="whitespace-normal">connection</flux:table.cell><flux:table.cell class="whitespace-normal">FALSE exit. Attach the next independent action here.</flux:table.cell></flux:table.row>
                 <flux:table.row><flux:table.cell>id</flux:table.cell><flux:table.cell>required</flux:table.cell><flux:table.cell class="whitespace-normal">Public authoring root ID; retained in DEV tooltips.</flux:table.cell></flux:table.row>
                 <flux:table.row><flux:table.cell>anchor-start</flux:table.cell><flux:table.cell>x=0rem, y=0rem</flux:table.cell><flux:table.cell class="whitespace-normal">Used when attach-to is absent.</flux:table.cell></flux:table.row>
-                <flux:table.row><flux:table.cell>dev-mode</flux:table.cell><flux:table.cell>inherited</flux:table.cell><flux:table.cell class="whitespace-normal">Show DEV geometry and node counters.</flux:table.cell></flux:table.row>
+
                 <flux:table.row><flux:table.cell>z-index</flux:table.cell><flux:table.cell>20</flux:table.cell><flux:table.cell class="whitespace-normal">Layer for the loop paths and labels.</flux:table.cell></flux:table.row>
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal">true-bridge-length</flux:table.cell>

@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/paths/branch-extension.blade.php --}}
 {{--
     Path: branch-extension
@@ -51,7 +55,6 @@
     'endLabel' => null,
     'endLength' => '0rem',
     'capLength' => null,
-    'dev' => false,
 ])
 
 @php
@@ -191,7 +194,7 @@
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ];
     }
@@ -214,7 +217,7 @@
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
         [
@@ -235,7 +238,7 @@
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
         ...($hasStep ? [[
@@ -255,7 +258,7 @@
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ]] : []),
         [
@@ -274,7 +277,7 @@
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
             ],
         ],
     ];
@@ -296,7 +299,7 @@
                 'devCounterColor' => $resolvedColor,
                 'color' => $resolvedColor,
                 'zIndex' => $zIndex,
-                'dev' => $dev,
+
                 'endLabel' => $endLabelConfig,
             ],
         ];
@@ -311,7 +314,6 @@
     :height="'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2))'"
     color="amber"
     :label="$id"
-    :dev="$dev"
 />
 
 @foreach ($segments as $segment)
@@ -320,12 +322,10 @@
     @elseif ($segment['component'] === 'end')
         <x-translation-workbench::ui.tw-graph.segments.end
             :segment="$segment['segment']"
-            :dev="$dev"
         />
     @elseif ($segment['component'] === 'step')
         <x-translation-workbench::ui.tw-graph.segments.step
             :segment="$segment['segment']"
-            :dev="$dev"
         />
     @else
         <x-translation-workbench::ui.tw-graph.segments.path :segment="$segment['segment']" />

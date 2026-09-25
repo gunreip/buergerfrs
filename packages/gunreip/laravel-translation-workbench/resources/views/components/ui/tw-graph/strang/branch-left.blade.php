@@ -1,3 +1,8 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev;
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/branch-left.blade.php --}}
 {{--
     Strang: branch-left
@@ -34,7 +39,7 @@
 @aware([
     'graphId' => null,
     'color' => null,
-    'dev' => false,
+
     'lineLength' => null,
     'arcRadius' => null,
     'bridgeLength' => null,
@@ -66,7 +71,6 @@
     'branchReturn' => [],
     'counterStart' => 1,
     'zIndex' => 10,
-    'devMode' => null,
 ])
 
 @php
@@ -79,10 +83,7 @@
         ? (string) $id
         : $resolvedGraphId . '.strang.branch-left.' . $resolvedComponentCounter;
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
-    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $devMode,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
-    );
+
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
     $localEntryStemLength = $attributes->get('entry-stem-length');
@@ -757,7 +758,7 @@
     }
 @endphp
 
-@if ($resolvedDev && $missingAttachTarget)
+@if ($dev && $missingAttachTarget)
     <span
         class="tw-graph-protocol-dev-only absolute z-50"
         style="
@@ -796,7 +797,6 @@
     :height="$bounds['height']"
     :color="$resolvedColor"
     :label="$id"
-    :dev="$resolvedDev"
 />
 
 <x-translation-workbench::ui.tw-graph.paths.branch
@@ -814,7 +814,6 @@
     :z-index="$zIndex"
     :node-labels="$nodeLabels"
     :counter-start="$counterStart"
-    :dev="$resolvedDev"
 />
 
 @foreach ($branchExtensionConfigs as $extensionNumber => $extensionConfig)
@@ -833,7 +832,6 @@
         :end-label="$extensionConfig['endLabel']"
         :end-length="$extensionConfig['endLength']"
         :cap-length="$extensionConfig['capLength']"
-        :dev="$resolvedDev"
     />
 @endforeach
 
@@ -848,7 +846,6 @@
         :node-labels="$returnBridgeConfig['nodeLabels']"
         :z-index="$zIndex - 1"
         :counter-start="$returnBridgeConfig['counterStart']"
-        :dev="$resolvedDev"
     />
 @endforeach
 
@@ -864,7 +861,6 @@
         :counter-start="$returnConfig['counterStart']"
         :fallback-used="$returnConfig['fallbackUsed']"
         :fallback="$returnConfig['fallback']"
-        :dev="$resolvedDev"
     />
 @endforeach
 

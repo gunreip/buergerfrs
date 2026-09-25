@@ -1,4 +1,4 @@
-<flux:heading size="lg">Flow IF</flux:heading>
+<flux:heading size="lg">{{ __('Flow IF') }}</flux:heading>
 
 <flux:tab.group class="mt-4 min-w-0 max-w-full">
     <flux:tabs wire:model.live="tabs.flow_flow_if" scrollable scrollable:fade scrollable:scrollbar="hide">

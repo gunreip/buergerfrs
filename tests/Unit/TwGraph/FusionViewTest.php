@@ -114,3 +114,27 @@ it('joins outer lanes to inner arc ends with a shared radius and only two exit a
         expect($html)->not->toContain('shared.inputs.lane'.$i.'.stem.end.joint-arrow', 'shared.inputs.lane'.$i.'.stem.node.end');
     }
 })->with(['left-right', 'right-left'])->with([3, 5, 6, 7]);
+
+it('uses canvas diagnostics even when obsolete local attributes disagree', function (bool $canvasDev, ?bool $override, bool $expected): void {
+    $attribute = $override === null ? '' : ($override ? ':dev="true"' : ':dev="false"');
+    $html = Blade::render(<<<BLADE
+        <x-translation-workbench::ui.tw-graph graph-id="fusion-dev-inheritance" :dev="\$canvasDev">
+            <x-translation-workbench::ui.tw-graph.segments.fusion
+                id="fusion.dev" direction="left-right"
+                :anchor-start="['x' => '0rem', 'y' => '0rem']"
+                :anchor-end="['x' => '8rem', 'y' => '6rem']"
+                {$attribute}
+            />
+        </x-translation-workbench::ui.tw-graph>
+        BLADE, compact('canvasDev'));
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    $boxes = $xpath->query('//*[starts-with(@data-tw-graph-dev-box, "fusion.dev.")]');
+    expect($boxes->length > 0)->toBe($expected);
+})->with([
+    'canvas enabled' => [true, null, true],
+    'canvas disabled' => [false, null, false],
+    'local false cannot disable canvas' => [true, false, true],
+    'local true cannot enable canvas' => [false, true, false],
+]);

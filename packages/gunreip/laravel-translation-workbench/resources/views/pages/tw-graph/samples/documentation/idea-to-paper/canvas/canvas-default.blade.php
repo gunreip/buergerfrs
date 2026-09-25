@@ -53,7 +53,7 @@
                                 <code>graph-id</code>
                             </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                <code>{{ __('auto id') }}</code>
+                                <code>auto id</code>
                             </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                 {{ __('Stable DOM id and registry scope for anchors, bounds, DEV counters, and canvas metrics.') }}

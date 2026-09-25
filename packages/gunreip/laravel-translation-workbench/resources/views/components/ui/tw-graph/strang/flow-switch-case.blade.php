@@ -1,8 +1,12 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- SWITCH evaluates one expression; closed case routes merge; explicit fall-through enters the next action. --}}
-@aware(['graphId' => null, 'color' => null, 'dev' => false])
+@aware(['graphId' => null, 'color' => null])
 @php
     $inheritedColor = $color;
-    $inheritedDev = $dev;
+
 @endphp
 @props([
     'id' => null,
@@ -17,14 +21,14 @@
     'arcRadius' => '2.75rem',
     'bridgeLength' => '2rem',
     'color' => null,
-    'devMode' => null,
+
     'zIndex' => 20,
 ])
 @php
     $resolvedGraphId = $graphId ?: 'tw-graph';
     $id = filled($id) ? (string) $id : $resolvedGraphId . '.switch';
     $resolvedColor = $color ?? $inheritedColor ?? 'zinc';
-    $resolvedDev = $devMode ?? $inheritedDev;
+
     $previousRootIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::enter($id);
     try {
 @endphp
@@ -139,7 +143,7 @@
 @endphp
 <x-translation-workbench::ui.tw-graph.strang.flow-step
     :id="$id . '.expression'" :anchor-start="$input" :direction="$direction"
-    :step-label="$caseExpression" :color="$resolvedColor" :dev-mode="$resolvedDev" :z-index="$zIndex"
+    :step-label="$caseExpression" :color="$resolvedColor" :z-index="$zIndex"
 />
 @php
     $cursor = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $id . '.expression.anchorNode-end');
@@ -170,7 +174,7 @@
                 :length="$entryLength" :gradient="false"
                 :node-label-left="$side === 'right' ? $entryLabel : null"
                 :node-label-right="$side === 'left' ? $entryLabel : null"
-                :color="$resolvedColor" :dev-counter-end="$counter++" :dev-mode="$resolvedDev" :z-index="$zIndex"
+                :color="$resolvedColor" :dev-counter-end="$counter++" :z-index="$zIndex"
             />
             @php
                 $cursor = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $entryId . '.entry.anchorNode-end');
@@ -184,7 +188,7 @@
             <x-translation-workbench::ui.tw-graph.segments.path :segment="[
                 'id' => $entryId . '.bridge', 'anchorStart' => $cursor, 'anchorEnd' => $laneEnd,
                 'direction' => $horizontal, 'length' => $bridge, 'color' => $entryColor,
-                'dev' => $resolvedDev, 'zIndex' => $zIndex,
+                 'zIndex' => $zIndex,
             ]" />
             @php
                 $fusionInputs[] = ['key' => $entry['key'], 'anchor' => $laneEnd, 'color' => $entryColor];
@@ -194,8 +198,7 @@
         @if (count($fusionInputs) > 1)
             <x-translation-workbench::ui.tw-graph.parts.fusion
                 :id="$routeId . '.fusion'" :inputs="$fusionInputs" :direction="$horizontal"
-                :arc-radius="$fusionRadius" :color="$row['color']"
-                :dev-mode="$resolvedDev" :dev-counter-end="$counter++" :z-index="$zIndex"
+                :arc-radius="$fusionRadius" :color="$row['color']" :dev-counter-end="$counter++" :z-index="$zIndex"
             />
             @php
                 $actionStart = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $routeId . '.fusion.anchorNode-end');
@@ -217,7 +220,7 @@
             :after-length="$row['entryDetour']['afterLength'] ?? '2rem'"
             :node-label-left="$side === 'right' ? $caseLabel : null"
             :node-label-right="$side === 'left' ? $caseLabel : null"
-            :color="$resolvedColor" :dev-counter-start="$counter" :dev-mode="$resolvedDev" :z-index="$zIndex"
+            :color="$resolvedColor" :dev-counter-start="$counter" :z-index="$zIndex"
         />
         @php
             $counter = (int) \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $routeId . '.entry.anchorNode-end')['devCounterNext'];
@@ -228,7 +231,7 @@
         :length="$row['stemLength']" :gradient="false"
         :node-label-left="$side === 'right' ? $caseLabel : null"
         :node-label-right="$side === 'left' ? $caseLabel : null"
-        :color="$resolvedColor" :dev-counter-end="$counter++" :dev-mode="$resolvedDev" :z-index="$zIndex"
+        :color="$resolvedColor" :dev-counter-end="$counter++" :z-index="$zIndex"
     />
     @endif
     @php
@@ -252,12 +255,12 @@
         <x-translation-workbench::ui.tw-graph.segments.label-bridge
             :id="$routeId . '.bridge1'" :anchor-start="$actionStart" :direction="$horizontal"
             :label="$row['action']" :bridge-in-join-length="$incomingJoinLength" :dev-counter-join="$incomingJoinCounter" :bridge-length="$actionBridgeIn" :geometry="$actionGeometry" :dev-counter-end="false"
-            :color="$row['color']" :dev="$resolvedDev" :z-index="$zIndex"
+            :color="$row['color']" :z-index="$zIndex"
         />
         <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
             'id' => $routeId . '.arc-out', 'anchorStart' => $actionEnd, 'anchorEnd' => $routeEnd,
             'startAnchor' => $sy > 0 ? 's' : 'n', 'endAnchor' => $sx > 0 ? 'e' : 'w',
-            'arcRadius' => $arcRadius, 'color' => $row['color'], 'dev' => $resolvedDev, 'zIndex' => $zIndex,
+            'arcRadius' => $arcRadius, 'color' => $row['color'],  'zIndex' => $zIndex,
             'nodeEnd' => true, 'nodeEndDot' => $exitLabel !== null, 'jointArrowEnd' => $exitLabel === null,
             'jointArrowEndDirection' => $sy > 0 ? 'top' : 'bottom', 'devCounterEnd' => $counter++,
             'endLabel' => $exitLabel === null ? null : array_replace($exitLabel, ['side' => $side]),
@@ -278,7 +281,7 @@
         :bridge-label="$row['action']" :bridge-out-length="$row['bridgeOutLength']" :color="$row['color']"
         :node-label-left="$side === 'left' ? $exitLabel : null"
         :node-label-right="$side === 'right' ? $exitLabel : null"
-        :dev-counter-end="$counter++" :dev-mode="$resolvedDev" :z-index="$zIndex"
+        :dev-counter-end="$counter++" :z-index="$zIndex"
     />
     @endif
     @php
@@ -330,22 +333,20 @@
         <x-translation-workbench::ui.tw-graph.parts.sideways
             :id="$fallThroughId" :anchor-start="$row['end']" :side="$side"
             :direction="$direction" :arc-radius="$turnRadius" :bridge-length="$crossLength"
-            :color="$row['color']" :joint-arrow-end="true" :dev-counter-end="$counter++"
-            :dev-mode="$resolvedDev" :z-index="$zIndex"
+            :color="$row['color']" :joint-arrow-end="true" :dev-counter-end="$counter++" :z-index="$zIndex"
         />
         <x-translation-workbench::ui.tw-graph.parts.start
             :id="$fallThroughId . '.stem'"
             :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $fallThroughId . '.anchorNode-end')"
             :direction="$direction" :length="$riseLength" :gradient="false"
-            :node-end="true" :joint-arrow-end="true" :dev-counter-end="$counter++" :color="$row['color']"
-            :dev-mode="$resolvedDev" :z-index="$zIndex"
+            :node-end="true" :joint-arrow-end="true" :dev-counter-end="$counter++" :color="$row['color']" :z-index="$zIndex"
         />
         <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
             'id' => $fallThroughId . '.join', 'anchorStart' => $joinStart, 'anchorEnd' => $target,
             'startAnchor' => $side === 'left' ? 'e' : 'w',
             'endAnchor' => $direction === 'bottom-top' ? 'n' : 's',
             // The destination bridge owns the joining Dot; this arc passes underneath.
-            'arcRadius' => $turnRadius, 'color' => $row['color'], 'dev' => $resolvedDev, 'zIndex' => $zIndex - 1,
+            'arcRadius' => $turnRadius, 'color' => $row['color'],  'zIndex' => $zIndex - 1,
             'nodeEnd' => false, 'nodeEndDot' => false, 'jointArrowEnd' => false, 'devCounterEnd' => false,
         ]" />
         @php
@@ -363,8 +364,7 @@
     <x-translation-workbench::ui.tw-graph.parts.start
         :id="$id . '.case.' . $row['key'] . '.return'" :anchor-start="$row['railEnd']"
         :direction="$direction" :length="$length" :gradient="false"
-        :node-end="false" :dev-counter-end="false" :color="$resolvedColor"
-        :dev-mode="$resolvedDev" :z-index="$zIndex"
+        :node-end="false" :dev-counter-end="false" :color="$resolvedColor" :z-index="$zIndex"
     />
 @endforeach
 @php

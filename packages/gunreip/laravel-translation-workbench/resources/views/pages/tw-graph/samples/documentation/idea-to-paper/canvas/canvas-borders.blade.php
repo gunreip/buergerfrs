@@ -72,7 +72,7 @@
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>graph-id</code>
                             </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                <code>{{ __('auto id') }}</code>
+                                <code>auto id</code>
                             </flux:table.cell>
                             <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                 {{ __('Identifies this canvas and scopes its diagnostic elements.') }}

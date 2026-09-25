@@ -1,6 +1,5 @@
 {{-- Graph-only final snapshot for the documentation master. --}}
 <x-translation-workbench::ui.tw-graph
-    class="px-20 py-12"
     :graph-id="$ideaToPaperGraphId ?? 'idea-to-paper-step-04-trunk-end'"
     :dev="$dev ?? false"
     :coordinates="$coordinates ?? false"

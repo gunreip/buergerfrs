@@ -1,3 +1,8 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev;
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/merge-right.blade.php --}}
 {{--
     Strang: merge-right
@@ -29,7 +34,7 @@
 @aware([
     'graphId' => null,
     'color' => null,
-    'dev' => false,
+
     'lineLength' => null,
     'lineWidth' => null,
     'arcRadius' => null,
@@ -72,7 +77,6 @@
     'extensionNodeLabels' => [],
     'counterStart' => 1,
     'zIndex' => 10,
-    'devMode' => null,
 ])
 
 @php
@@ -85,10 +89,7 @@
         ? (string) $id
         : $resolvedGraphId . '.strang.merge-right.' . $resolvedComponentCounter;
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
-    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $devMode,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
-    );
+
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
     $resolvedLineWidth = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineWidth ?? null, 'line_width', '0.25rem');
     $resolvedArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($arcRadius ?? null, 'arc_radius', '2.75rem');
@@ -398,7 +399,7 @@
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-right.end', $node5);
 @endphp
 
-@if ($resolvedDev && $missingAttachTarget)
+@if ($dev && $missingAttachTarget)
     <span
         class="tw-graph-protocol-dev-only absolute z-50"
         style="
@@ -421,7 +422,6 @@
     :height="$bounds['height']"
     :color="$resolvedColor"
     :label="$id"
-    :dev="$resolvedDev"
 />
 
 @foreach (array_reverse($extensionAnchors, true) as $extensionIndex => $extensionAnchor)
@@ -439,7 +439,6 @@
         :color="$resolvedColor"
         :z-index="$zIndex"
         :counter-start="$extensionCounterStarts[$extensionIndex]"
-        :dev="$resolvedDev"
         :show-dev-box="false"
     />
 @endforeach
@@ -461,7 +460,6 @@
     :z-index="$zIndex"
     :node-labels="$nodeLabels"
     :counter-start="$counterStart"
-    :dev="$resolvedDev"
     :show-dev-box="false"
 />
 

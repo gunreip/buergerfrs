@@ -13,32 +13,12 @@
     </x-translation-workbench::ui.tw-graph>
 --}}
 
-@props([
-    'protocol' => [],
-    'graphId' => null,
-    'dev' => false,
-    'coordinates' => false,
-    'color' => null,
-    'pathTone' => true,
-    'lineLength' => null,
-    'lineWidth' => null,
-    'nodeSize' => null,
-    'arcRadius' => null,
-    'capLength' => null,
-    'bridgeLength' => null,
-    'stemLength' => null,
-    'connectorLength' => null,
-    'connectorGap' => null,
-    'labelGap' => null,
-    'horizontalPadding' => null,
-    'minWidth' => null,
-    'minHeight' => null,
-])
+{{-- Canvas props are declared once in View\Components\TwGraph, before the slot renders. --}}
 
 @php
     $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev);
     $surfacePaths = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($pathTone, true);
-    $showCoordinates = filter_var($coordinates, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? (bool) $coordinates;
+    $showCoordinates = $twGraphDiagnostics->coordinates;
     $lineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($lineLength, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('line_length', '4rem'));
     $lineWidth = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($lineWidth, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('line_width', '0.25rem'));
     $nodeSize = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($nodeSize, null, \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('node_size', '0.95rem'));
@@ -114,8 +94,6 @@
                 :protocol="$protocol"
                 :horizontal-padding="$horizontalPadding"
                 :direction="$context['direction']"
-                :dev="$dev"
-                :coordinates="$showCoordinates"
                 :min-width="$context['minWidth']"
                 :min-height="$context['minHeight']"
             />

@@ -1,5 +1,9 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- Public WHILE semantics; flow-step owns the condition, paths.loop owns the closed route. --}}
-@aware(['graphId' => null, 'color' => null, 'dev' => false, 'arcRadius' => null])
+@aware(['graphId' => null, 'color' => null, 'arcRadius' => null])
 @php
     $inheritedColor = $color;
     $inheritedArcRadius = $arcRadius;
@@ -18,7 +22,7 @@
     'falseLabel' => ['text' => ['FALSE'], 'width' => 'half'],
     'actionLabel' => ['text' => ['Process next item'], 'width' => 'default'],
     'color' => null,
-    'devMode' => null,
+
     'zIndex' => 20,
 ])
 @php
@@ -27,7 +31,7 @@
         $graph = $graphId ?: 'tw-graph';
         $arcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor($arcRadius, $inheritedArcRadius, 'arc_radius', '2.75rem');
         $loopColor = $color ?? $inheritedColor ?? 'zinc';
-        $loopDev = $devMode ?? $dev;
+
         // Removed props must not silently survive as unused HTML attributes.
         foreach (['beforeLength', 'afterLength', 'labelGap', 'bridgeLength', 'bridgeOutLength'] as $removedProp) {
             if ($attributes->has($removedProp) || $attributes->has(\Illuminate\Support\Str::kebab($removedProp))) {
@@ -67,7 +71,6 @@
     :after-length="$condition['afterLength']"
     :counter-end="(int) $counterStart"
     :color="$loopColor"
-    :dev-mode="$loopDev"
     :z-index="$zIndex"
 />
 @php
@@ -90,7 +93,6 @@
     :entry-label-anchor="$trueLabelAnchor === 'condition' ? $conditionEnd : null"
     :exit-label="$falseLabel"
     :color="$loopColor"
-    :dev-mode="$loopDev"
     :z-index="$zIndex"
 />
 @php

@@ -1,10 +1,14 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- Explicit sideways detour. The endpoint stays on the original vertical axis. --}}
 @aware(['graphId' => null])
 @props([
     'id', 'anchorStart', 'length', 'side' => 'right', 'direction' => 'bottom-top',
     'bridgeLength' => '4rem', 'arcRadius' => '2rem', 'beforeLength' => '0rem', 'afterLength' => '2rem',
     'color' => 'zinc', 'nodeLabelLeft' => null, 'nodeLabelRight' => null,
-    'devMode' => false, 'devCounterStart' => 1, 'zIndex' => 20,
+     'devCounterStart' => 1, 'zIndex' => 20,
 ])
 @php
     if (!in_array($side, ['left', 'right'], true) || !in_array($direction, ['bottom-top', 'top-bottom'], true)) {
@@ -34,7 +38,7 @@
     <x-translation-workbench::ui.tw-graph.parts.start
         :id="$id . '.before'" :anchor-start="$detourCursor" :length="$beforeLength" :direction="$direction"
         :gradient="false" :joint-arrow-end="true" :dev-counter-end="$detourCounter"
-        :color="$color" :dev-mode="$devMode" :z-index="$zIndex"
+        :color="$color" :z-index="$zIndex"
     />
     @php
         $detourCounter++;
@@ -45,7 +49,7 @@
     :id="$id . '.outward'" :anchor-start="$detourCursor" :side="$side === 'right' ? 'left' : 'right'"
     :direction="$direction" :arc-radius="$arcRadius" :bridge-length="$bridgeLength"
     :joint-arrow-end="true" :dev-counter-end="$detourCounter"
-    :color="$color" :dev-mode="$devMode" :z-index="$zIndex"
+    :color="$color" :z-index="$zIndex"
 />
 @php
     $detourCounter++;
@@ -55,7 +59,7 @@
     :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($detourGraph, $id . '.outward.anchorNode-end')"
     :length="$middleLength" :direction="$direction" :gradient="false"
     :joint-arrow-end="true" :dev-counter-end="$detourCounter"
-    :color="$color" :dev-mode="$devMode" :z-index="$zIndex"
+    :color="$color" :z-index="$zIndex"
 />
 @php
     $detourCounter++;
@@ -66,7 +70,7 @@
     :side="$side === 'right' ? 'right' : 'left'" :direction="$direction"
     :arc-radius="$arcRadius" :bridge-length="$bridgeLength"
     :joint-arrow-end="true" :dev-counter-end="$detourCounter"
-    :color="$color" :dev-mode="$devMode" :z-index="$zIndex"
+    :color="$color" :z-index="$zIndex"
 />
 @php
     $detourCounter++;
@@ -76,7 +80,7 @@
     :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($detourGraph, $id . '.inward.anchorNode-end')"
     :length="$afterLength" :direction="$direction" :gradient="false"
     :node-label-left="$nodeLabelLeft" :node-label-right="$nodeLabelRight"
-    :dev-counter-end="$detourCounter" :color="$color" :dev-mode="$devMode" :z-index="$zIndex"
+    :dev-counter-end="$detourCounter" :color="$color" :z-index="$zIndex"
 />
 @php
     $detourCounter++;

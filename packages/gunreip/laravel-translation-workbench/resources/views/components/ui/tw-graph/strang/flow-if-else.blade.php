@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/flow-if-else.blade.php --}}
 {{--
     Strang: flow-if-else
@@ -9,7 +13,6 @@
 @aware([
     'graphId' => null,
     'color' => null,
-    'dev' => false,
 ])
 
 @php
@@ -51,7 +54,6 @@
     'falseStemCounter' => 2,
     'rightCounterEnd' => 3,
     'zIndex' => 20,
-    'devMode' => null,
 ])
 
 @php
@@ -68,10 +70,7 @@
         $inheritedColor ?? null,
         'zinc',
     );
-    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $devMode,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
-    );
+
     $attachTarget = filled($attachTo)
         ? \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, (string) $attachTo)
         : null;
@@ -138,7 +137,6 @@
     :cap-length="$capLength"
     :counter-end="$counterStart"
     :color="$resolvedColor"
-    :dev-mode="$resolvedDev"
     :z-index="$zIndex"
 />
 
@@ -164,7 +162,6 @@
     :joint-arrow-end="true"
     :dev-counter-end="$leftCounterEnd"
     :z-index="$zIndex"
-    :dev-mode="$resolvedDev"
 />
 @if (\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($ifStart, 'return'), true))
 <x-translation-workbench::ui.tw-graph.parts.start
@@ -179,7 +176,6 @@
     :joint-arrow-end="false"
     :dev-counter-end="false"
     :z-index="$zIndex"
-    :dev-mode="$resolvedDev"
 />
 @endif
 
@@ -197,7 +193,6 @@
     :joint-arrow-end="true"
     :dev-counter-end="$falseStemCounter"
     :z-index="$zIndex"
-    :dev-mode="$resolvedDev"
 />
 <x-translation-workbench::ui.tw-graph.parts.sideways
     :id="$id . '.false'"
@@ -216,7 +211,6 @@
     :dev-counter-end="$rightCounterEnd"
     :dev-counter-color="$falseColor"
     :z-index="$zIndex"
-    :dev-mode="$resolvedDev"
 />
 
 @php

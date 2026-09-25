@@ -1,5 +1,5 @@
-<flux:heading size="lg">Strang Merge</flux:heading>
-<flux:text>Merge strands collect side sources and lead them back to the central chain. Each example contains its own component calls, source code, props table and preview controls.</flux:text>
+<flux:heading size="lg">{{ __('Strang Merge') }}</flux:heading>
+<flux:text>{{ __('Merge strands collect side sources and lead them back to the central chain. Each example contains its own component calls, source code, props table and preview controls.') }}</flux:text>
 
 <flux:tab.group class="mt-4 min-w-0 max-w-full">
     <flux:tabs wire:model.live="tabs.strang_merge_index" scrollable scrollable:fade scrollable:scrollbar="hide">

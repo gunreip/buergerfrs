@@ -201,15 +201,7 @@
                             </flux:table.cell>
                         </flux:table.row>
                         {{-- Row --}}
-                        <flux:table.row>
-                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">:dev
-                            </flux:table.cell>
-                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">false
-                            </flux:table.cell>
-                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
-                                {{ __('Enable the text diagnostic box.') }}
-                            </flux:table.cell>
-                        </flux:table.row>
+
                         {{-- Row --}}
                         <flux:table.row>
                             <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
@@ -371,15 +363,7 @@
                             </flux:table.cell>
                         </flux:table.row>
                         {{-- Row --}}
-                        <flux:table.row>
-                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">:dev
-                            </flux:table.cell>
-                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">null
-                            </flux:table.cell>
-                            <flux:table.cell class="wrap-break-words whitespace-normal align-top text-sm">
-                                {{ __('Enable path diagnostics and the text box.') }}
-                            </flux:table.cell>
-                        </flux:table.row>
+
                     </flux:table.rows>
                 </flux:table>
             </div>
@@ -534,7 +518,6 @@
                                 :anchor-end="['x' => '4rem', 'y' => '8rem']"
                                 :node-end="true"
                                 color="zinc"
-                                :dev="true"
                             />
                             <x-translation-workbench::ui.tw-graph.segments.label
                                 id="literature.segments.label-right"
@@ -549,7 +532,6 @@
                                     'connectorGap' => '0.25rem',
                                 ]"
                                 color="cyan"
-                                :dev="true"
                             />
                         </x-translation-workbench::ui.tw-graph>
                         {{-- segment-label-right:end --}}
@@ -577,7 +559,6 @@
                                 :anchor-end="['x' => '4rem', 'y' => '8rem']"
                                 :node-end="true"
                                 color="zinc"
-                                :dev="true"
                             />
                             <x-translation-workbench::ui.tw-graph.segments.label
                                 id="literature.segments.label-left"
@@ -592,7 +573,6 @@
                                     'connectorGap' => '0.25rem',
                                 ]"
                                 color="emerald"
-                                :dev="true"
                             />
                         </x-translation-workbench::ui.tw-graph>
                         {{-- segment-label-left:end --}}
@@ -620,7 +600,6 @@
                                 :anchor-end="['x' => '8rem', 'y' => '8rem']"
                                 :node-end="true"
                                 color="zinc"
-                                :dev="true"
                             />
                             <x-translation-workbench::ui.tw-graph.segments.label
                                 id="literature.segments.label-top"
@@ -635,7 +614,6 @@
                                     'connectorGap' => '0.25rem',
                                 ]"
                                 color="fuchsia"
-                                :dev="true"
                             />
                         </x-translation-workbench::ui.tw-graph>
                         {{-- segment-label-top:end --}}
@@ -663,7 +641,6 @@
                                 :anchor-end="['x' => '8rem', 'y' => '8rem']"
                                 :node-end="true"
                                 color="zinc"
-                                :dev="true"
                             />
                             <x-translation-workbench::ui.tw-graph.segments.label
                                 id="literature.segments.label-bottom"
@@ -678,7 +655,6 @@
                                     'connectorGap' => '0.25rem',
                                 ]"
                                 color="amber"
-                                :dev="true"
                             />
                         </x-translation-workbench::ui.tw-graph>
                         {{-- segment-label-bottom:end --}}
@@ -708,7 +684,6 @@
                                     'align' => 'center',
                                 ]"
                                 color="cyan"
-                                :dev="true"
                             />
                         </x-translation-workbench::ui.tw-graph>
                         {{-- segment-bridge-left-right:end --}}
@@ -738,7 +713,6 @@
                                     'align' => 'center',
                                 ]"
                                 color="emerald"
-                                :dev="true"
                             />
                         </x-translation-workbench::ui.tw-graph>
                         {{-- segment-bridge-right-left:end --}}

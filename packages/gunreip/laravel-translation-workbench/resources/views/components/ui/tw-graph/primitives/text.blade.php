@@ -1,3 +1,8 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev;
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/primitives/text.blade.php --}}
 {{--
     Primitive: text
@@ -30,7 +35,6 @@
     'justify' => false,
     'maxLines' => 3,
     'zIndex' => null,
-    'dev' => false,
 ])
 
 @php
@@ -65,7 +69,8 @@
             ]) }}
         x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
     >
-        @if (\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev))
+        {{-- Hidden mask copies are presentation helpers; the visible label owns its diagnostic box. --}}
+        @if ($dev && ! filter_var($attributes->get('aria-hidden', false), FILTER_VALIDATE_BOOLEAN))
             <span
                 data-tw-graph-dev-box="{{ $id . '.dev-box' }}"
                 class="tw-graph-protocol-dev-only pointer-events-none absolute rounded border border-dashed"

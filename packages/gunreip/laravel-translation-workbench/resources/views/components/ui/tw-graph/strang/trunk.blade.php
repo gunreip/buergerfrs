@@ -1,3 +1,8 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev;
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/trunk.blade.php --}}
 {{--
     Strang: trunk
@@ -25,7 +30,7 @@
 @aware([
     'graphId' => null,
     'color' => null,
-    'dev' => false,
+
     'lineLength' => null,
     'stemLength' => null,
     'capLength' => null,
@@ -60,7 +65,6 @@
     'startShiftLength' => null,
     'zIndex' => 20,
     'counterStart' => 1,
-    'devMode' => null,
 ])
 
 @php
@@ -83,10 +87,7 @@
         ? $resolvedStemLength
         : $resolvedLineLength;
     $resolvedStemCount = max(0, (int) ($stemCount ?? $defaultPathSegments));
-    $resolvedDev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(
-        $devMode,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev),
-    );
+
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $resolvedStartLengthBase = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startLength, $resolvedDefaultPathLength, '4rem');
     $resolvedStartShiftEnabled = $startShiftEnabled === null
@@ -334,7 +335,6 @@
     :height="$devBoxHeight"
     :color="$resolvedColor"
     :label="$id"
-    :dev="$resolvedDev"
 />
 
     <x-translation-workbench::ui.tw-graph.paths.trunk
@@ -355,12 +355,11 @@
     :color="$resolvedColor"
     :z-index="$zIndex"
     :counter-start="$counterStart"
-    :dev-mode="$resolvedDev"
     :show-dev-box="false"
     :show-layout-spacer="false"
 	/>
 
-@if ($resolvedDev && $nodeLabelMismatch)
+@if ($dev && $nodeLabelMismatch)
     <span
         class="tw-graph-protocol-dev-only absolute z-50"
         style="

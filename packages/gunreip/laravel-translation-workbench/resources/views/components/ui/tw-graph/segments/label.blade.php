@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/segments/label.blade.php --}}
 {{--
     Segment: label
@@ -22,7 +26,6 @@
     'anchorY' => '0rem',
     'side' => 'right',
     'color' => 'zinc',
-    'dev' => false,
 ])
 
 @aware([
@@ -68,7 +71,6 @@
 
 <x-translation-workbench::ui.tw-graph.primitives.text
     :id="$id"
-    :dev="$dev"
     :text="data_get($label, 'text')"
     :side="$side"
     :anchor-x="$anchorX"

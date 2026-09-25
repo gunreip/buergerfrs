@@ -9,21 +9,22 @@ uses(TestCase::class);
 
 it('renders start segment labels with width alignment justify and badge color', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.segments.start
-            :dev="true"
-            :segment="[
-                'id' => 'segment.start.test',
-                'color' => 'green',
-                'startLabel' => [
-                    'text' => ['Start label', 'with details'],
-                    'side' => 'top',
-                    'width' => 'halfLong',
-                    'align' => 'left',
-                    'justify' => true,
-                    'badgeColor' => 'amber',
-                ],
-            ]"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.segments.start
+                :segment="[
+                    'id' => 'segment.start.test',
+                    'color' => 'green',
+                    'startLabel' => [
+                        'text' => ['Start label', 'with details'],
+                        'side' => 'top',
+                        'width' => 'halfLong',
+                        'align' => 'left',
+                        'justify' => true,
+                        'badgeColor' => 'amber',
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -39,18 +40,19 @@ it('renders start segment labels with width alignment justify and badge color', 
 
 it('renders end segment cap counter and default top end label', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.segments.end
-            :dev="true"
-            :segment="[
-                'id' => 'segment.end.test',
-                'color' => 'rose',
-                'devCounterEnd' => 7,
-                'endLabel' => [
-                    'text' => ['End label', 'chain end'],
-                    'width' => 'long',
-                ],
-            ]"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.segments.end
+                :segment="[
+                    'id' => 'segment.end.test',
+                    'color' => 'rose',
+                    'devCounterEnd' => 7,
+                    'endLabel' => [
+                        'text' => ['End label', 'chain end'],
+                        'width' => 'long',
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -129,20 +131,21 @@ it('renders step segments with automatic label gap and centered label props', fu
     config()->set('tw-graph-defaults.label_offset', '1rem');
 
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.segments.step
-            :dev="true"
-            :segment="[
-                'id' => 'segment.step.test',
-                'color' => 'amber',
-                'beforeLength' => '1rem',
-                'afterLength' => '3rem',
-                'stepLabel' => [
-                    'text' => ['Source inactive', 'shared obsolete', '9 rows'],
-                    'width' => 'halfLong',
-                    'align' => 'right',
-                ],
-            ]"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.segments.step
+                :segment="[
+                    'id' => 'segment.step.test',
+                    'color' => 'amber',
+                    'beforeLength' => '1rem',
+                    'afterLength' => '3rem',
+                    'stepLabel' => [
+                        'text' => ['Source inactive', 'shared obsolete', '9 rows'],
+                        'width' => 'halfLong',
+                        'align' => 'right',
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -160,20 +163,21 @@ it('renders step segments with automatic label gap and centered label props', fu
 
 it('renders step stems as cap label cap stem dot', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.segments.step
-            :dev="true"
-            :segment="[
-                'id' => 'segment.step.cap-sequence',
-                'beforeLength' => '1.5rem',
-                'labelGap' => '4.25rem',
-                'afterLength' => '2.5rem',
-                'nodeEndDot' => true,
-                'stepLabel' => [
-                    'text' => ['Review loop'],
-                    'width' => 'halfLong',
-                ],
-            ]"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.segments.step
+                :segment="[
+                    'id' => 'segment.step.cap-sequence',
+                    'beforeLength' => '1.5rem',
+                    'labelGap' => '4.25rem',
+                    'afterLength' => '2.5rem',
+                    'nodeEndDot' => true,
+                    'stepLabel' => [
+                        'text' => ['Review loop'],
+                        'width' => 'halfLong',
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -186,17 +190,18 @@ it('renders step stems as cap label cap stem dot', function (): void {
 
 it('renders vertical path node labels on right and left by default', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.segments.path
-            :dev="true"
-            :segment="[
-                'id' => 'segment.path.vertical',
-                'direction' => 'bottom-top',
-                'nodeEnd' => [
-                    ['text' => ['Right label'], 'width' => 'halfLong'],
-                    ['text' => ['Left label'], 'width' => 'half'],
-                ],
-            ]"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.segments.path
+                :segment="[
+                    'id' => 'segment.path.vertical',
+                    'direction' => 'bottom-top',
+                    'nodeEnd' => [
+                        ['text' => ['Right label'], 'width' => 'halfLong'],
+                        ['text' => ['Left label'], 'width' => 'half'],
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -212,19 +217,20 @@ it('renders vertical path node labels on right and left by default', function ()
 
 it('renders horizontal path node labels on top and bottom by default', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.segments.path
-            :dev="true"
-            :segment="[
-                'id' => 'segment.path.horizontal',
-                'direction' => 'left-right',
-                'anchorEnd' => ['x' => '8rem', 'y' => '0rem'],
-                'length' => '8rem',
-                'nodeEnd' => [
-                    ['text' => ['Top label']],
-                    ['text' => ['Bottom label']],
-                ],
-            ]"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.segments.path
+                :segment="[
+                    'id' => 'segment.path.horizontal',
+                    'direction' => 'left-right',
+                    'anchorEnd' => ['x' => '8rem', 'y' => '0rem'],
+                    'length' => '8rem',
+                    'nodeEnd' => [
+                        ['text' => ['Top label']],
+                        ['text' => ['Bottom label']],
+                    ],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -238,15 +244,16 @@ it('renders horizontal path node labels on top and bottom by default', function 
 
 it('keeps dev counters when only the visible node dot is hidden', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.segments.path
-            :dev="true"
-            :segment="[
-                'id' => 'segment.path.hidden-dot',
-                'nodeEnd' => true,
-                'nodeEndDot' => false,
-                'devCounterEnd' => 3,
-            ]"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.segments.path
+                :segment="[
+                    'id' => 'segment.path.hidden-dot',
+                    'nodeEnd' => true,
+                    'nodeEndDot' => false,
+                    'devCounterEnd' => 3,
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)
@@ -257,17 +264,18 @@ it('keeps dev counters when only the visible node dot is hidden', function (): v
 
 it('keeps start dev counters when only the start dot is hidden', function (): void {
     $html = Blade::render(<<<'BLADE'
-        <x-translation-workbench::ui.tw-graph.segments.path
-            :dev="true"
-            :segment="[
-                'id' => 'segment.path.hidden-start-dot',
-                'nodeStart' => true,
-                'nodeStartDot' => false,
-                'devCounterStart' => 1,
-                'nodeEnd' => true,
-                'devCounterEnd' => 2,
-            ]"
-        />
+        <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
+            <x-translation-workbench::ui.tw-graph.segments.path
+                :segment="[
+                    'id' => 'segment.path.hidden-start-dot',
+                    'nodeStart' => true,
+                    'nodeStartDot' => false,
+                    'devCounterStart' => 1,
+                    'nodeEnd' => true,
+                    'devCounterEnd' => 2,
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
     BLADE);
 
     expect($html)

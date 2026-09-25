@@ -28,8 +28,8 @@
 
 @if ($latestSectionView)
     @include($latestSectionView, [
-        'dev' => $ideaToPaperDev,
-        'coordinates' => $ideaToPaperCoordinates,
+
+
         'ideaToPaperGraphId' => $ideaToPaperGraphId,
         'ideaToPaperDev' => $ideaToPaperDev,
         'ideaToPaperCoordinates' => $ideaToPaperCoordinates,

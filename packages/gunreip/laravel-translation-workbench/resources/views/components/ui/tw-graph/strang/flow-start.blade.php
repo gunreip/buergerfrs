@@ -1,3 +1,7 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/flow-start.blade.php --}}
 {{--
     Strang: flow-start
@@ -9,7 +13,6 @@
 
 @aware([
     'color' => null,
-    'dev' => false,
 ])
 
 @php
@@ -34,7 +37,6 @@
     'counterStart' => 1,
     'devCounterColor' => null,
     'zIndex' => 20,
-    'devMode' => null,
 ])
 
 @php
@@ -68,7 +70,6 @@
     :dev-counter-color="$devCounterColor"
     :start-label="$startLabel"
     :z-index="$zIndex"
-    :dev-mode="$devMode"
 />
 
 @php

@@ -1,7 +1,11 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- Closed side loop built from shared arc, path, label-bridge and label segments.
      anchorStart is the upper split; anchorReturn is the lower re-entry on the same axis.
      Names true/false are stable rendered suffixes, not routing conditions. --}}
-@aware(['graphId' => null, 'color' => null, 'dev' => false, 'arcRadius' => null])
+@aware(['graphId' => null, 'color' => null, 'arcRadius' => null])
 @php
     $inheritedColor = $color;
     $inheritedArcRadius = $arcRadius;
@@ -23,7 +27,7 @@
     'entryLabelAnchor' => null,
     'exitLabel' => [],
     'color' => null,
-    'devMode' => null,
+
     'zIndex' => 20,
 ])
 @php
@@ -32,7 +36,7 @@
     $counterStart = (int) $counterStart;
     $closeLoop = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($return, true);
     $loopColor = $color ?? $inheritedColor ?? 'zinc';
-    $loopDev = $devMode ?? $dev;
+
     $bodyColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($bridgeLabel, 'color'), $loopColor, 'zinc');
     $exitColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($exitLabel, 'color'), $loopColor, 'zinc');
     $labelOnBridge = $entryLabelAnchor === null;
@@ -71,7 +75,7 @@
     $turnEnd = $point($bodyEnd, "{$arcRadius} * {$sign}", "{$arcRadius} * -1");
     $exit = $point($questionEnd, '0rem', $exitLength);
 
-    $common = ['color' => $loopColor, 'devCounterColor' => $loopColor, 'dev' => $loopDev, 'zIndex' => $zIndex,
+    $common = ['color' => $loopColor, 'devCounterColor' => $loopColor,  'zIndex' => $zIndex,
         'nodeStart' => false, 'nodeEnd' => true, 'nodeEndDot' => false, 'jointArrowEnd' => true];
     $bodyStyle = array_replace($common, ['color' => $bodyColor, 'devCounterColor' => $bodyColor]);
     $arcs = [
@@ -98,14 +102,13 @@
 <x-translation-workbench::ui.tw-graph.segments.label-bridge
     :id="$id . '.body.bridge'" :anchor-start="$trueBridgeEnd" :geometry="$bodyGeometry"
     :direction="$side === 'left' ? 'right-left' : 'left-right'"
-    :label="$bridgeLabel" :bridge-length="$bridgeLength" :color="$bodyColor"
-    :dev="$loopDev" :z-index="$zIndex" :dev-counter-end="$counterStart + 2" :dev-counter-color="$bodyColor"
+    :label="$bridgeLabel" :bridge-length="$bridgeLength" :color="$bodyColor" :z-index="$zIndex" :dev-counter-end="$counterStart + 2" :dev-counter-color="$bodyColor"
 />
 @if ($closeLoop)
     <x-translation-workbench::ui.tw-graph.paths.loop-return
         :id="$id . '.return'" :anchor-start="$turnEnd" :anchor-return="$start"
         :side="$side" :arc-radius="$arcRadius" :counter-start="$counterStart + 4"
-        :color="$loopColor" :dev-mode="$loopDev" :z-index="$zIndex"
+        :color="$loopColor" :z-index="$zIndex"
     />
 @endif
 <x-translation-workbench::ui.tw-graph.segments.path :segment="array_replace($common, [
@@ -115,9 +118,9 @@
 ])" />
 <x-translation-workbench::ui.tw-graph.segments.label
     :id="$id . '.true.label'" :anchor-x="$labelAnchor['x']" :anchor-y="$labelAnchor['y']"
-    :label="$entryLabel" :side="data_get($entryLabel, 'side', 'top')" :color="$loopColor" :dev="$loopDev"
+    :label="$entryLabel" :side="data_get($entryLabel, 'side', 'top')" :color="$loopColor"
 />
 <x-translation-workbench::ui.tw-graph.segments.label
     :id="$id . '.false.label'" :anchor-x="$exit['x']" :anchor-y="$exit['y']"
-    :label="$exitLabel" :side="data_get($exitLabel, 'side', $side === 'left' ? 'right' : 'left')" :color="$exitColor" :dev="$loopDev"
+    :label="$exitLabel" :side="data_get($exitLabel, 'side', $side === 'left' ? 'right' : 'left')" :color="$exitColor"
 />

@@ -1,8 +1,12 @@
+@php
+    // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
+    $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+@endphp
 {{-- Ternary expression: delegates shared two-route geometry to flow-if-else. --}}
-@aware(['graphId' => null, 'color' => null, 'dev' => false])
+@aware(['graphId' => null, 'color' => null])
 @php
     $inheritedColor = $color;
-    $inheritedDev = $dev;
+
 @endphp
 @props([
     'id' => null,
@@ -24,7 +28,7 @@
     'nodeLabels' => [],
     'nodeEnd' => true,
     'color' => null,
-    'devMode' => null,
+
     'counterStart' => 'D',
     'leftCounterEnd' => 1,
     'falseStemCounter' => 2,
@@ -73,7 +77,6 @@
     :node-labels="$nodeLabels"
     :node-end="$nodeEnd"
     :color="$color ?? $inheritedColor"
-    :dev-mode="$devMode ?? $inheritedDev"
     :counter-start="$counterStart"
     :left-counter-end="$leftCounterEnd"
     :false-stem-counter="$falseStemCounter"

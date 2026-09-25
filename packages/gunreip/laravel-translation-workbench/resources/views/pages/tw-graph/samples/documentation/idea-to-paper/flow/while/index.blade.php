@@ -1,6 +1,5 @@
 <flux:heading size="lg">{{ __('Flow WHILE') }}</flux:heading>
-<flux:text>A WHILE checks its condition before every iteration. TRUE enters the body and returns to the condition; FALSE
-    exits the loop. The body may therefore run zero times.</flux:text>
+<flux:text>{{ __('A WHILE checks its condition before every iteration. TRUE enters the body and returns to the condition; FALSE exits the loop. The body may therefore run zero times.') }}</flux:text>
 
 <flux:tab.group class="mt-4 min-w-0 max-w-full">
     <flux:tabs
