@@ -11,11 +11,12 @@
         <flux:tab name="flow-while-basic">{{ __('WHILE basic') }}</flux:tab>
         <flux:tab name="flow-while-multiple-actions">{{ __('WHILE multiple actions') }}</flux:tab>
         <flux:tab name="flow-while-if">{{ __('WHILE with IF') }}</flux:tab>
+        <flux:tab name="flow-while-switch">{{ __('WHILE with SWITCH') }}</flux:tab>
         <flux:tab name="flow-while-nested">{{ __('Nested WHILE') }}</flux:tab>
         <flux:tab name="flow-while-independent">{{ __('Two independent inner loops') }}</flux:tab>
         <flux:tab name="flow-while-mixed">{{ __('Mixed sides and crossings') }}</flux:tab>
         <flux:tab name="flow-while-action-sequence">{{ __('Action → Nested WHILE → Action') }}</flux:tab>
-        <flux:tab name="flow-while-test">{{ __('WHILE Test') }}</flux:tab>
+        {{-- <flux:tab name="flow-while-test">{{ __('WHILE Test') }}</flux:tab> --}}
     </flux:tabs>
     <flux:tab.panel name="flow-while-basic">
         @if (!isset($documentationTabs) || $documentationTabs['flow_while'] === 'flow-while-basic')
@@ -35,6 +36,13 @@
         @if (!isset($documentationTabs) || $documentationTabs['flow_while'] === 'flow-while-if')
             <div wire:key="documentation-flow-while-if">
                 @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.flow-while-if')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="flow-while-switch">
+        @if (!isset($documentationTabs) || $documentationTabs['flow_while'] === 'flow-while-switch')
+            <div wire:key="documentation-flow-while-switch">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.flow-while-switch')
             </div>
         @endif
     </flux:tab.panel>
@@ -66,6 +74,7 @@
             </div>
         @endif
     </flux:tab.panel>
+    {{-- WHILE Test is retained for later experiments.
     <flux:tab.panel name="flow-while-test">
         @if (!isset($documentationTabs) || $documentationTabs['flow_while'] === 'flow-while-test')
             <div wire:key="documentation-flow-while-test">
@@ -73,4 +82,5 @@
             </div>
         @endif
     </flux:tab.panel>
+    --}}
 </flux:tab.group>

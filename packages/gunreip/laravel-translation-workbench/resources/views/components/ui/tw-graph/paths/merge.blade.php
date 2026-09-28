@@ -60,6 +60,15 @@
 ])
 
 @php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.paths.merge',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
+
+@php
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn (string $value): string => 'calc(' . $value . ' * -1)';
     $toRem = static function (mixed $value): float {
@@ -239,13 +248,6 @@
         'x' => $add($bridgeEnd['x'], $isLeft ? $resolvedArcOutSize : $neg($resolvedArcOutSize)),
         'y' => $add($bridgeEnd['y'], $resolvedArcOutSize),
     ];
-    $pathBoxPadding = '0.75rem';
-    $pathBoxX = $isLeft ? $currentAnchor['x'] : $arcOutEnd['x'];
-    $pathBoxY = $currentAnchor['y'];
-    $pathBoxWidth = $isLeft
-        ? 'calc(' . $arcOutEnd['x'] . ' - ' . $currentAnchor['x'] . ')'
-        : 'calc(' . $currentAnchor['x'] . ' - ' . $arcOutEnd['x'] . ')';
-    $pathBoxHeight = 'calc(' . $arcOutEnd['y'] . ' - ' . $currentAnchor['y'] . ')';
     $stemContinuationSegments = [];
     $stemContinuationCount = count($stemContinuationEntries);
     $arcInNodeNumber = 2 + $stemLengthCount + $stemContinuationCount;
@@ -403,17 +405,7 @@
     ];
 @endphp
 
-@if ($showDevBox)
-    <x-translation-workbench::ui.tw-graph.dev-box
-        :id="$id . '.dev-box'"
-        :x="'calc(' . $pathBoxX . ' - ' . $pathBoxPadding . ')'"
-        :y="'calc(' . $pathBoxY . ' - ' . $pathBoxPadding . ')'"
-        :width="'calc(' . $pathBoxWidth . ' + (' . $pathBoxPadding . ' * 2))'"
-        :height="'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2))'"
-        color="amber"
-        :label="$id"
-    />
-@endif
+
 
 @foreach ($segments as $segment)
     @if ($segment['component'] === 'start')
@@ -490,4 +482,16 @@
             {{ $nodeLabelEndOverrideText }}
         </flux:badge>
     </span>
+@endif
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+            \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($showDevBox, true),
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
 @endif

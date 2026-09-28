@@ -182,3 +182,64 @@ it('includes structured Pest error details as well as assertion failures', funct
     $html = view('translation-workbench::pages.tw-graph.partials.test-failures', compact('check'))->render();
     expect($html)->toContain('first', 'second', 'component.blade.php:42', 'bridge-length', 'color');
 });
+
+it('shows activity for silent checks and preserves captured process output', function (bool $decorated): void {
+    $output = new \Symfony\Component\Console\Output\BufferedOutput(decorated: $decorated);
+    $progress = new \App\Support\Console\ProcessProgress($output, heartbeatSeconds: 0.05);
+    $process = new \Symfony\Component\Process\Process([
+        PHP_BINARY, '-r', 'usleep(250000); echo "{\"tests\":3}"; fwrite(STDERR, "diagnostic");',
+    ]);
+
+    $progress->run($process, 'Silent group', 2, 5);
+
+    $console = $output->fetch();
+    expect($console)->toContain('[2/5 checks completed] running: Silent group')
+        ->toContain('[3/5 checks completed] passed: Silent group')
+        ->not->toContain('{"tests":3}', 'diagnostic');
+    expect(substr_count($console, 'running: Silent group'))->toBeGreaterThan(1);
+    expect($process->getOutput())->toBe('{"tests":3}');
+    expect($process->getErrorOutput())->toBe('diagnostic');
+    expect($process->getExitCode())->toBe(0);
+    if (! $decorated) {
+        expect($console)->not->toContain("\033", "\r");
+    }
+})->with([false, true]);
+
+it('reports a failed check and allows subsequent checks to complete', function (): void {
+    $output = new \Symfony\Component\Console\Output\BufferedOutput;
+    $progress = new \App\Support\Console\ProcessProgress($output);
+    $failed = new \Symfony\Component\Process\Process([PHP_BINARY, '-r', 'fwrite(STDERR, "failure details"); exit(2);']);
+    $next = new \Symfony\Component\Process\Process([PHP_BINARY, '-r', 'echo "next check";']);
+
+    $progress->run($failed, 'First group', 0, 2);
+    $progress->run($next, 'Second group', 1, 2);
+
+    expect($output->fetch())->toContain('[1/2 checks completed] failed: First group')
+        ->toContain('[2/2 checks completed] passed: Second group');
+    expect($failed->getExitCode())->toBe(2);
+    expect($failed->getErrorOutput())->toBe('failure details');
+    expect($next->isSuccessful())->toBeTrue();
+});
+
+it('retains process timeouts and finishes the indicator with a failure', function (): void {
+    $output = new \Symfony\Component\Console\Output\BufferedOutput(decorated: true);
+    $progress = new \App\Support\Console\ProcessProgress($output);
+    $process = new \Symfony\Component\Process\Process([PHP_BINARY, '-r', 'sleep(5);']);
+    $process->setTimeout(0.15);
+
+    expect(fn () => $progress->run($process, 'Timeout group', 0, 1))
+        ->toThrow(\Symfony\Component\Process\Exception\ProcessTimedOutException::class);
+    expect($output->fetch())->toContain('[1/1 checks completed] failed: Timeout group');
+    expect($process->isRunning())->toBeFalse();
+});
+
+it('respects quiet console output', function (): void {
+    $output = new \Symfony\Component\Console\Output\BufferedOutput(
+        verbosity: \Symfony\Component\Console\Output\OutputInterface::VERBOSITY_QUIET,
+    );
+    $process = new \Symfony\Component\Process\Process([PHP_BINARY, '-r', 'echo "result";']);
+    (new \App\Support\Console\ProcessProgress($output))->run($process, 'Quiet group', 0, 1);
+
+    expect($output->fetch())->toBe('');
+    expect($process->getOutput())->toBe('result');
+});

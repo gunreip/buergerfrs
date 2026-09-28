@@ -2042,5 +2042,8 @@
         <flux:callout.heading>Validation and practical limits</flux:callout.heading>
         <flux:text>Missing attachment references can render a DEV mismatch and fall back to anchor-start or a calculated family fallback. Fixed left/right wrappers do not accept an independent side prop.</flux:text>
     </flux:callout>
-    <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../props-and-connections/strang/merge-left.blade.php</flux:field>
+    <x-translation-workbench::ui.common.tw-graph-path-file
+        path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        segments="3"
+    />
 </section>

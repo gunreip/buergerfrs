@@ -1135,5 +1135,8 @@
         <flux:text>IF diagrams do not evaluate expressions or execute actions. Changing label text does not change routing. Use return, if-end text and elseifs to describe topology.</flux:text>
         <flux:text>Exactly one array entry in elseifs is required; other counts are rejected.</flux:text>
     </flux:callout>
-    <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../props-and-connections/strang/flow-if-elseif.blade.php</flux:field>
+    <x-translation-workbench::ui.common.tw-graph-path-file
+        path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        segments="3"
+    />
 </section>

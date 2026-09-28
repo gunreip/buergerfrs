@@ -948,6 +948,13 @@
     z-index: var(--tw-graph-protocol-z-index, 1);
 }
 
+/* Public component regions must stand apart from individual element bounds. */
+[data-tw-graph-region] {
+    border-width: 1px;
+    border-style: solid;
+    z-index: 45;
+}
+
 /* Non-interactive diagnostic background, aligned by the bounds renderer. */
 [data-tw-graph-grid] {
     display: none;

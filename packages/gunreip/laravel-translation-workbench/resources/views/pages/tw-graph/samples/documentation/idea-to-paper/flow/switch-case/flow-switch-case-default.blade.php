@@ -6,19 +6,31 @@
             icon="file-text"
         >
             <flux:callout.heading>{{ __('CASEs single') }}</flux:callout.heading>
-            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.switch-case.flow-switch-case-default" />
             <flux:callout.text>
                 {{ __('One SWITCH expression selects a CASE. Draft opens the editor; published displays the article; DEFAULT shows a status hint. Each selected action leaves the switch via the common output. This first example has no fall-through.') }}
             </flux:callout.text>
+
+            <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+            <x-translation-workbench::ui.tw-graph.documentation-links
+                example="flow.switch-case.flow-switch-case-default" />
+
             @php
                 $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.switch-case.flow-switch-case-default',
                 );
             @endphp
-            <flux:separator class="mt-4" :text="__('Code examples')" />
-            <flux:accordion transition exclusive>
+
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
+            <flux:accordion
+                transition
+                exclusive
+            >
                 <flux:accordion.item expanded>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="flow-switch-case-default-example-1"
                             variant="accordion"
@@ -31,7 +43,10 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
                 <flux:accordion.item>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="flow-switch-case-default-example-2"
                             variant="accordion"
@@ -44,12 +59,15 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
-            <flux:separator class="mt-4" :text="__('Props used in these examples')" />
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('Props and connections') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                     <flux:table container:class="max-h-80">
-                        <flux:table.columns class="bg-white dark:bg-zinc-900" sticky>
+                        <flux:table.columns
+                            class="bg-white dark:bg-zinc-900"
+                            sticky
+                        >
                             <flux:table.column>{{ __('Prop / anchor') }}</flux:table.column>
                             <flux:table.column>{{ __('Default') }}</flux:table.column>
                             <flux:table.column>{{ __('Purpose') }}</flux:table.column>
@@ -235,167 +253,179 @@
                     </flux:table>
                 </div>
             </flux:callout>
+            {{-- Language Code Samples --}}
             <x-translation-workbench::ui.tw-graph.language-examples
                 source-view="translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.switch-case.flow-switch-case-default"
             >
-                <flux:text class="mt-2 text-sm">
+                <flux:callout.text class="mt-2 text-sm">
                     {{ __('The action functions represent the graph actions and are supplied by the application. These are syntax excerpts; enclosing functions, classes and imports are omitted.') }}
-                </flux:text>
-                <flux:text class="mt-2 text-sm">
+                </flux:callout.text>
+                <flux:callout.text class="mt-2 text-sm">
                     {{ __('C and C++ use enum values because their switch statements do not accept strings. PHP compares case values loosely; JavaScript uses strict equality. C# and Java also support string cases. Each example exits the selected case with break and then continues after the switch.') }}
-                </flux:text>
+                </flux:callout.text>
             </x-translation-workbench::ui.tw-graph.language-examples>
         </flux:callout>
+        {{-- Preview --}}
         <flux:callout
             class="min-w-0"
             color="emerald"
         >
             <flux:callout.heading icon="eye">{{ __('Preview') }}</flux:callout.heading>
+            <flux:callout.text class="mb-3">
+                {{ __('Case labels explain selection; actions remain inside their bridges. break marks an exit, not an additional action.') }}
+            </flux:callout.text>
+
             <x-translation-workbench::ui.tw-graph.preview-tools
                 :dev="$dev ?? true"
                 :coordinates="$coordinates ?? false"
             >
-                <flux:text class="m-3">
-                    {{ __('Case labels explain selection; actions remain inside their bridges. break marks an exit, not an additional action.') }}
-                </flux:text>
-                <x-translation-workbench::ui.common.heading-counter
-                    example="flow-switch-case-default-example-1"
-                    size="sm"
-                >{{ __('side="left"') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- flow-switch-case-default-example-1:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-flow-switch-case-default"
-                        :dev="true"
-                        :coordinates="true"
-                        color="cyan"
-                        min-width="68rem"
-                        min-height="44rem"
-                        horizontal-padding="6rem"
+                <div class="mt-4 grid min-w-0 gap-4 xl:grid-cols-1">
+                    <x-translation-workbench::ui.common.heading-counter
+                        example="flow-switch-case-default-example-1"
+                        size="sm"
                     >
-                        <x-translation-workbench::ui.tw-graph.strang.flow-start
-                            id="literature.switch.1.basic.start"
-                            :start-label="['text' => ['Article request'], 'width' => 'half']"
-                        />
-                        <x-translation-workbench::ui.tw-graph.strang.flow-switch-case
-                            id="literature.switch.1.basic.status"
-                            attach-to="literature.switch.1.basic.start.anchorNode-end"
-                            side="left"
-                            stem-length="4rem"
+                        {{ __('side="left"') }}
+                    </x-translation-workbench::ui.common.heading-counter>
+                    <div
+                        class="overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                        {{-- flow-switch-case-default-example-1:start --}}
+                        <x-translation-workbench::ui.tw-graph
+                            graph-id="idea-to-paper-flow-switch-case-default"
+                            :dev="true"
+                            :coordinates="true"
                             color="cyan"
-                            :case-expression="[
-                                'text' => ['SWITCH ($status)'],
-                                'width' => 'halfLong',
-                                'stemLength' => '3rem',
-                            ]"
-                            :cases="[
-                                [
-                                    'key' => 'draft',
-                                    'label' => 'CASE draft',
-                                    'actionLabel' => [
-                                        'text' => ['Open editor'],
-                                        'width' => 'halfLong',
-                                        'color' => 'amber',
+                            min-width="68rem"
+                            min-height="44rem"
+                            horizontal-padding="6rem"
+                        >
+                            <x-translation-workbench::ui.tw-graph.strang.flow-start
+                                id="literature.switch.1.basic.start"
+                                :start-label="['text' => ['Article request'], 'width' => 'half']"
+                            />
+                            <x-translation-workbench::ui.tw-graph.strang.flow-switch-case
+                                id="literature.switch.1.basic.status"
+                                attach-to="literature.switch.1.basic.start.anchorNode-end"
+                                side="left"
+                                stem-length="4rem"
+                                color="cyan"
+                                :case-expression="[
+                                    'text' => ['SWITCH ($status)'],
+                                    'width' => 'halfLong',
+                                    'stemLength' => '3rem',
+                                ]"
+                                :cases="[
+                                    [
+                                        'key' => 'draft',
+                                        'label' => 'CASE draft',
+                                        'actionLabel' => [
+                                            'text' => ['Open editor'],
+                                            'width' => 'halfLong',
+                                            'color' => 'amber',
+                                        ],
                                     ],
-                                ],
-                                [
-                                    'key' => 'published',
-                                    'stemLength' => '4rem',
-                                    'label' => 'CASE published',
-                                    'actionLabel' => [
-                                        'text' => ['Display article'],
-                                        'width' => 'halfLong',
-                                        'color' => 'green',
+                                    [
+                                        'key' => 'published',
+                                        'stemLength' => '4rem',
+                                        'label' => 'CASE published',
+                                        'actionLabel' => [
+                                            'text' => ['Display article'],
+                                            'width' => 'halfLong',
+                                            'color' => 'green',
+                                        ],
                                     ],
-                                ],
-                            ]"
-                            :case-default="[
-                                'text' => ['Show status hint'],
-                                'width' => 'halfLong',
-                                'color' => 'zinc',
-                            ]"
-                        />
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.switch.1.basic.continue"
-                            attach-to="literature.switch.1.basic.status.anchorNode-end"
-                            color="fuchsia"
-                            :step-label="['text' => ['Continue process'], 'width' => 'halfLong']"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- flow-switch-case-default-example-1:end --}}
-                </div>
-                <x-translation-workbench::ui.common.heading-counter
-                    example="flow-switch-case-default-example-2"
-                    size="sm"
-                >{{ __('side="right"') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- flow-switch-case-default-example-2:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-flow-switch-case-default-right"
-                        :dev="true"
-                        :coordinates="true"
-                        color="cyan"
-                        min-width="68rem"
-                        min-height="44rem"
-                        horizontal-padding="6rem"
+                                ]"
+                                :case-default="[
+                                    'text' => ['Show status hint'],
+                                    'width' => 'halfLong',
+                                    'color' => 'zinc',
+                                ]"
+                            />
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.switch.1.basic.continue"
+                                attach-to="literature.switch.1.basic.status.anchorNode-end"
+                                color="fuchsia"
+                                :step-label="['text' => ['Continue process'], 'width' => 'halfLong']"
+                            />
+                        </x-translation-workbench::ui.tw-graph>
+                        {{-- flow-switch-case-default-example-1:end --}}
+                    </div>
+
+                    <x-translation-workbench::ui.common.heading-counter
+                        example="flow-switch-case-default-example-2"
+                        size="sm"
                     >
-                        <x-translation-workbench::ui.tw-graph.strang.flow-start
-                            id="literature.switch.1.basic-right.start"
-                            :start-label="['text' => ['Article request'], 'width' => 'half']"
-                        />
-                        <x-translation-workbench::ui.tw-graph.strang.flow-switch-case
-                            id="literature.switch.1.basic-right.status"
-                            attach-to="literature.switch.1.basic-right.start.anchorNode-end"
-                            side="right"
-                            stem-length="4rem"
+                        {{ __('side="right"') }}
+                    </x-translation-workbench::ui.common.heading-counter>
+                    <div
+                        class="overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                        {{-- flow-switch-case-default-example-2:start --}}
+                        <x-translation-workbench::ui.tw-graph
+                            graph-id="idea-to-paper-flow-switch-case-default-right"
+                            :dev="true"
+                            :coordinates="true"
                             color="cyan"
-                            :case-expression="[
-                                'text' => ['SWITCH ($status)'],
-                                'width' => 'halfLong',
-                                'stemLength' => '3rem',
-                            ]"
-                            :cases="[
-                                [
-                                    'key' => 'draft',
-                                    'label' => 'CASE draft',
-                                    'actionLabel' => [
-                                        'text' => ['Open editor'],
-                                        'width' => 'halfLong',
-                                        'color' => 'amber',
+                            min-width="68rem"
+                            min-height="44rem"
+                            horizontal-padding="6rem"
+                        >
+                            <x-translation-workbench::ui.tw-graph.strang.flow-start
+                                id="literature.switch.1.basic-right.start"
+                                :start-label="['text' => ['Article request'], 'width' => 'half']"
+                            />
+                            <x-translation-workbench::ui.tw-graph.strang.flow-switch-case
+                                id="literature.switch.1.basic-right.status"
+                                attach-to="literature.switch.1.basic-right.start.anchorNode-end"
+                                side="right"
+                                stem-length="4rem"
+                                color="cyan"
+                                :case-expression="[
+                                    'text' => ['SWITCH ($status)'],
+                                    'width' => 'halfLong',
+                                    'stemLength' => '3rem',
+                                ]"
+                                :cases="[
+                                    [
+                                        'key' => 'draft',
+                                        'label' => 'CASE draft',
+                                        'actionLabel' => [
+                                            'text' => ['Open editor'],
+                                            'width' => 'halfLong',
+                                            'color' => 'amber',
+                                        ],
                                     ],
-                                ],
-                                [
-                                    'key' => 'published',
-                                    'stemLength' => '4rem',
-                                    'label' => 'CASE published',
-                                    'actionLabel' => [
-                                        'text' => ['Display article'],
-                                        'width' => 'halfLong',
-                                        'color' => 'green',
+                                    [
+                                        'key' => 'published',
+                                        'stemLength' => '4rem',
+                                        'label' => 'CASE published',
+                                        'actionLabel' => [
+                                            'text' => ['Display article'],
+                                            'width' => 'halfLong',
+                                            'color' => 'green',
+                                        ],
                                     ],
-                                ],
-                            ]"
-                            :case-default="[
-                                'text' => ['Show status hint'],
-                                'width' => 'halfLong',
-                                'color' => 'zinc',
-                            ]"
-                        />
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.switch.1.basic-right.continue"
-                            attach-to="literature.switch.1.basic-right.status.anchorNode-end"
-                            color="fuchsia"
-                            :step-label="['text' => ['Continue process'], 'width' => 'halfLong']"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- flow-switch-case-default-example-2:end --}}
+                                ]"
+                                :case-default="[
+                                    'text' => ['Show status hint'],
+                                    'width' => 'halfLong',
+                                    'color' => 'zinc',
+                                ]"
+                            />
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.switch.1.basic-right.continue"
+                                attach-to="literature.switch.1.basic-right.status.anchorNode-end"
+                                color="fuchsia"
+                                :step-label="['text' => ['Continue process'], 'width' => 'halfLong']"
+                            />
+                        </x-translation-workbench::ui.tw-graph>
+                        {{-- flow-switch-case-default-example-2:end --}}
+                    </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-                .../flow/switch-case/flow-switch-case-default.blade.php
-            </flux:field>
+            {{-- Path/To/File --}}
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/flow/switch-case/flow-switch-case-default.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

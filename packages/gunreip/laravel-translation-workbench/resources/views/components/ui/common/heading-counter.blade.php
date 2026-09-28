@@ -11,7 +11,8 @@
 @endphp
 
 @if ($variant === 'accordion')
-    <flux:accordion.heading {{ $attributes }}>
+    <flux:accordion.heading {{ $attributes->class('relative') }}>
+        <x-translation-workbench::ui.common.component-marker name="translation-workbench::ui.common.heading-counter" />
         @if (filled($prefixText))
             {{ $prefixText }}:
         @endif
@@ -25,8 +26,9 @@
 @else
     <flux:heading
         :size="$size"
-        {{ $attributes }}
+        {{ $attributes->class('relative') }}
     >
+        <x-translation-workbench::ui.common.component-marker name="translation-workbench::ui.common.heading-counter" />
         @if (filled($prefixText))
             {{ $prefixText }}:
         @endif

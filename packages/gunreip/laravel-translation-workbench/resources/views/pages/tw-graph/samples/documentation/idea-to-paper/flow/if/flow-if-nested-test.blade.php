@@ -9,15 +9,23 @@
             <flux:callout.text>
                 {{ __('Action sequence inside one outer branch: prepare review data, run the nested IF, then save the result. Every inner result reaches the final action before the branch returns to the outer IF. Other outer actions and the fallback bypass the entire sequence. Both mixed-side orientations are shown.') }}
             </flux:callout.text>
+
             @php
                 $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.if.flow-if-nested-test',
                 );
             @endphp
-            <flux:separator class="mt-4" :text="__('Code examples')" />
-            <flux:accordion transition exclusive>
+
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
+            <flux:accordion
+                transition
+                exclusive
+            >
                 <flux:accordion.item expanded>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="flow-if-nested-test-example-1"
                             variant="accordion"
@@ -30,7 +38,10 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
                 <flux:accordion.item>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="flow-if-nested-test-example-2"
                             variant="accordion"
@@ -43,12 +54,15 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
-            <flux:separator class="mt-4" :text="__('Props used in these examples')" />
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('Props and connections') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                     <flux:table container:class="max-h-80">
-                        <flux:table.columns class="bg-white dark:bg-zinc-900" sticky>
+                        <flux:table.columns
+                            class="bg-white dark:bg-zinc-900"
+                            sticky
+                        >
                             <flux:table.column>{{ __('Prop / anchor') }}</flux:table.column>
                             <flux:table.column>{{ __('Default') }}</flux:table.column>
                             <flux:table.column>{{ __('Purpose') }}</flux:table.column>
@@ -233,7 +247,8 @@
                 :dev="$dev ?? true"
                 :coordinates="$coordinates ?? false"
             >
-                <flux:text class="m-3">{{ __('Cyan: outer IF · Amber: inner IF · Zinc: fallback routes') }}</flux:text>
+                <flux:text class="m-3">{{ __('Cyan: outer IF · Amber: inner IF · Zinc: fallback routes') }}
+                </flux:text>
                 <x-translation-workbench::ui.common.heading-counter
                     example="flow-if-nested-test-example-1"
                     size="sm"
@@ -307,7 +322,8 @@
                                         'returnOffset' => '48rem',
                                         'lineJumps' => [
                                             [
-                                                'over' => 'literature.flow.1.if-nested-test.outer.elseif.sources.true.stem',
+                                                'over' =>
+                                                    'literature.flow.1.if-nested-test.outer.elseif.sources.true.stem',
                                                 'radius' => '0.65rem',
                                                 'side' => 'top',
                                             ],
@@ -394,7 +410,8 @@
                                 $nestedGraphId,
                                 'literature.flow.1.if-nested-test.outer.elseif.deferred.true.anchorNode-return',
                             );
-                            $returnBridge = 'calc(' . $outerReturn['x'] . ' - ' . $sequenceEnd['x'] . ' - (2 * 2.75rem))';
+                            $returnBridge =
+                                'calc(' . $outerReturn['x'] . ' - ' . $sequenceEnd['x'] . ' - (2 * 2.75rem))';
                         @endphp
                         <x-translation-workbench::ui.tw-graph.parts.sideways
                             id="literature.flow.1.if-nested-test.inner-return"
@@ -430,46 +447,8 @@
                             color="fuchsia"
                             :step-label="['text' => ['Continue process'], 'width' => 'halfLong']"
                         />
-                        @php
-                            $outerInput = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                $nestedGraphId,
-                                'literature.flow.1.if-nested-test.outer.anchorNode-start',
-                            );
-                            $outerEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                $nestedGraphId,
-                                'literature.flow.1.if-nested-test.outer.anchorNode-end',
-                            );
-                            $innerInput = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                $nestedGraphId,
-                                'literature.flow.1.if-nested-test.inner.anchorNode-start',
-                            );
-                            $innerBounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints(
-                                [$innerInput, $innerEnd],
-                                '10rem',
-                            );
-                            $outerBounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints(
-                                [$outerInput, $outerEnd, $innerEnd, $sequenceEnd],
-                                '12rem',
-                            );
-                        @endphp
-                        <x-translation-workbench::ui.tw-graph.dev-box
-                            id="literature.flow.1.if-nested-test.inner.bounds"
-                            label="Inner IF / ELSEIF / ELSE"
-                            :x="$innerBounds['left']"
-                            :y="$innerBounds['bottom']"
-                            :width="$innerBounds['width']"
-                            :height="$innerBounds['height']"
-                            color="amber"
-                        />
-                        <x-translation-workbench::ui.tw-graph.dev-box
-                            id="literature.flow.1.if-nested-test.outer.bounds"
-                            label="Outer IF including nested section"
-                            :x="$outerBounds['left']"
-                            :y="$outerBounds['bottom']"
-                            :width="$outerBounds['width']"
-                            :height="$outerBounds['height']"
-                            color="cyan"
-                        />
+
+
                     </x-translation-workbench::ui.tw-graph>
                     {{-- flow-if-nested-test-example-1:end --}}
                 </div>
@@ -634,7 +613,8 @@
                                 $nestedGraphId,
                                 'literature.flow.1.if-nested-test-right.outer.elseif.deferred.true.anchorNode-return',
                             );
-                            $returnBridge = 'calc(' . $sequenceEnd['x'] . ' - ' . $outerReturn['x'] . ' - (2 * 2.75rem))';
+                            $returnBridge =
+                                'calc(' . $sequenceEnd['x'] . ' - ' . $outerReturn['x'] . ' - (2 * 2.75rem))';
                         @endphp
                         <x-translation-workbench::ui.tw-graph.parts.sideways
                             id="literature.flow.1.if-nested-test-right.inner-return"
@@ -670,52 +650,16 @@
                             color="fuchsia"
                             :step-label="['text' => ['Continue process'], 'width' => 'halfLong']"
                         />
-                        @php
-                            $outerInput = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                $nestedGraphId,
-                                'literature.flow.1.if-nested-test-right.outer.anchorNode-start',
-                            );
-                            $outerEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                $nestedGraphId,
-                                'literature.flow.1.if-nested-test-right.outer.anchorNode-end',
-                            );
-                            $innerInput = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                $nestedGraphId,
-                                'literature.flow.1.if-nested-test-right.inner.anchorNode-start',
-                            );
-                            $innerBounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints(
-                                [$innerInput, $innerEnd],
-                                '10rem',
-                            );
-                            $outerBounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints(
-                                [$outerInput, $outerEnd, $innerEnd, $sequenceEnd],
-                                '12rem',
-                            );
-                        @endphp
-                        <x-translation-workbench::ui.tw-graph.dev-box
-                            id="literature.flow.1.if-nested-test-right.inner.bounds"
-                            label="Inner IF / ELSEIF / ELSE"
-                            :x="$innerBounds['left']"
-                            :y="$innerBounds['bottom']"
-                            :width="$innerBounds['width']"
-                            :height="$innerBounds['height']"
-                            color="amber"
-                        />
-                        <x-translation-workbench::ui.tw-graph.dev-box
-                            id="literature.flow.1.if-nested-test-right.outer.bounds"
-                            label="Outer IF including nested section"
-                            :x="$outerBounds['left']"
-                            :y="$outerBounds['bottom']"
-                            :width="$outerBounds['width']"
-                            :height="$outerBounds['height']"
-                            color="cyan"
-                        />
+
+
                     </x-translation-workbench::ui.tw-graph>
                     {{-- flow-if-nested-test-example-2:end --}}
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/if/flow-if-nested-test.blade.php
-            </flux:field>
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/flow/if/flow-if-nested-test.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

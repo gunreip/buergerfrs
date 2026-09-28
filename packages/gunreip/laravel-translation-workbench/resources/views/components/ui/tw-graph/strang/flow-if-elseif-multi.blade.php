@@ -34,6 +34,15 @@
 ])
 
 @php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.strang.flow-if-elseif-multi',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
+
+@php
     // Keep the authoring ID throughout the internal component chain.
     $previousRootIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::enter($id);
     try {
@@ -237,3 +246,14 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
     }
 @endphp
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
+@endif

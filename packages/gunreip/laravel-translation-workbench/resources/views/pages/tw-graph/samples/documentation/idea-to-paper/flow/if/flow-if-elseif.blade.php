@@ -6,19 +6,30 @@
             icon="file-text"
         >
             <flux:callout.heading>{{ __('IF ELSEIF') }}</flux:callout.heading>
-            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-elseif" />
             <flux:callout.text>
                 {{ __('The first matching condition selects one action. IF reviewApproved executes Publish paper. Only its False route reaches ELSEIF changesRequested, which may execute Revise draft. When both conditions are false, a plain bypass reaches the common output without an action. Continue process runs after any of these three routes. Each side is authored as a separate component example.') }}
             </flux:callout.text>
+
+            <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-elseif" />
+
             @php
                 $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.if.flow-if-elseif',
                 );
             @endphp
-            <flux:separator class="mt-4" :text="__('Code examples')" />
-            <flux:accordion transition exclusive>
+
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
+            <flux:accordion
+                transition
+                exclusive
+            >
                 <flux:accordion.item expanded>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="flow-if-elseif-example-1"
                             variant="accordion"
@@ -31,7 +42,10 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
                 <flux:accordion.item>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="flow-if-elseif-example-2"
                             variant="accordion"
@@ -44,12 +58,15 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
-            <flux:separator class="mt-4" :text="__('Props used in these examples')" />
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('Props') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                     <flux:table container:class="max-h-80">
-                        <flux:table.columns class="bg-white dark:bg-zinc-900" sticky>
+                        <flux:table.columns
+                            class="bg-white dark:bg-zinc-900"
+                            sticky
+                        >
                             <flux:table.column>{{ __('Prop') }}</flux:table.column>
                             <flux:table.column>{{ __('Default') }}</flux:table.column>
                             <flux:table.column>{{ __('Purpose') }}</flux:table.column>
@@ -93,7 +110,8 @@
                                     <code>anchor-start</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    <code>[&#x27;x&#x27; =&gt; &#x27;0rem&#x27;, &#x27;y&#x27; =&gt; &#x27;0rem&#x27;]</code>
+                                    <code>[&#x27;x&#x27; =&gt; &#x27;0rem&#x27;, &#x27;y&#x27; =&gt;
+                                        &#x27;0rem&#x27;]</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Fallback input coordinates.') }}
@@ -324,6 +342,7 @@
                 </div>
             </flux:callout>
         </flux:callout>
+        {{-- Preview --}}
         <flux:callout
             class="min-w-0"
             color="emerald"
@@ -333,157 +352,168 @@
                 :dev="$dev ?? true"
                 :coordinates="$coordinates ?? false"
             >
-                <x-translation-workbench::ui.common.heading-counter
-                    example="flow-if-elseif-example-1"
-                    size="sm"
-                >{{ __('side="left"') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- flow-if-elseif-example-1:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-flow-if-elseif"
-                        :dev="true"
-                        :coordinates="true"
-                        min-width="56rem"
-                        min-height="44rem"
-                        horizontal-padding="6rem"
-                    >
-                        <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif
-                            id="literature.flow.1.if-elseif"
-                            :anchor-start="['x' => '0rem', 'y' => '3rem']"
-                            side="left"
-                            direction="bottom-top"
-                            color="cyan"
-                            arc-radius="2.75rem"
-                            bridge-length="2rem"
-                            before-length="2rem"
-                            after-length="2rem"
-                            elseif-before-length="4rem"
-                            elseif-after-length="2rem"
-                            stem-length="4rem"
-                            :if-end="['color' => 'zinc']"
-                            :condition-label="[
-                                'text' => ['IF reviewApproved?'],
-                                'width' => 'halfLong',
-                                'align' => 'center',
-                            ]"
-                            :if-start="[
-                                'color' => 'green',
-                                'text' => ['Publish paper'],
-                                'width' => 'default',
-                                'align' => 'center',
-                                'badgeColor' => 'green',
-                            ]"
-                            :elseifs="[
-                                [
-                                    'conditionLabel' => [
-                                        'color' => 'violet',
-                                        'text' => ['ELSEIF changesRequested?'],
+                <div class="mt-4 grid min-w-0 gap-4 xl:grid-cols-1">
+                    <div class="min-w-0">
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="flow-if-elseif-example-1"
+                            size="sm"
+                        >
+                            {{ __('side="left"') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                            {{-- flow-if-elseif-example-1:start --}}
+                            <x-translation-workbench::ui.tw-graph
+                                graph-id="idea-to-paper-flow-if-elseif"
+                                :dev="true"
+                                :coordinates="true"
+                                min-width="56rem"
+                                min-height="44rem"
+                                horizontal-padding="6rem"
+                            >
+                                <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif
+                                    id="literature.flow.1.if-elseif"
+                                    :anchor-start="['x' => '0rem', 'y' => '3rem']"
+                                    side="left"
+                                    direction="bottom-top"
+                                    color="cyan"
+                                    arc-radius="2.75rem"
+                                    bridge-length="2rem"
+                                    before-length="2rem"
+                                    after-length="2rem"
+                                    elseif-before-length="4rem"
+                                    elseif-after-length="2rem"
+                                    stem-length="4rem"
+                                    :if-end="['color' => 'zinc']"
+                                    :condition-label="[
+                                        'text' => ['IF reviewApproved?'],
                                         'width' => 'halfLong',
                                         'align' => 'center',
-                                    ],
-                                    'actionLabel' => [
-                                        'text' => ['Revise draft'],
+                                    ]"
+                                    :if-start="[
+                                        'color' => 'green',
+                                        'text' => ['Publish paper'],
+                                        'width' => 'default',
+                                        'align' => 'center',
+                                        'badgeColor' => 'green',
+                                    ]"
+                                    :elseifs="[
+                                        [
+                                            'conditionLabel' => [
+                                                'color' => 'violet',
+                                                'text' => ['ELSEIF changesRequested?'],
+                                                'width' => 'halfLong',
+                                                'align' => 'center',
+                                            ],
+                                            'actionLabel' => [
+                                                'text' => ['Revise draft'],
+                                                'width' => 'halfLong',
+                                                'align' => 'center',
+                                                'badgeColor' => 'amber',
+                                            ],
+                                        ],
+                                    ]"
+                                />
+                                <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                    id="literature.flow.1.if-elseif.continue"
+                                    attach-to="literature.flow.1.if-elseif.anchorNode-end"
+                                    before-length="2rem"
+                                    after-length="2rem"
+                                    color="zinc"
+                                    :step-label="[
+                                        'text' => ['Continue process'],
                                         'width' => 'halfLong',
                                         'align' => 'center',
-                                        'badgeColor' => 'amber',
-                                    ],
-                                ],
-                            ]"
-                        />
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.flow.1.if-elseif.continue"
-                            attach-to="literature.flow.1.if-elseif.anchorNode-end"
-                            before-length="2rem"
-                            after-length="2rem"
-                            color="zinc"
-                            :step-label="[
-                                'text' => ['Continue process'],
-                                'width' => 'halfLong',
-                                'align' => 'center',
-                            ]"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- flow-if-elseif-example-1:end --}}
-                </div>
-                <x-translation-workbench::ui.common.heading-counter
-                    example="flow-if-elseif-example-2"
-                    size="sm"
-                >{{ __('side="right"') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- flow-if-elseif-example-2:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-flow-if-elseif-right"
-                        :dev="true"
-                        :coordinates="true"
-                        min-width="56rem"
-                        min-height="54rem"
-                        horizontal-padding="12rem"
-                    >
-                        <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif
-                            id="literature.flow.1.if-elseif-right"
-                            :anchor-start="['x' => '0rem', 'y' => '3rem']"
-                            side="right"
-                            direction="bottom-top"
-                            color="cyan"
-                            arc-radius="2.75rem"
-                            bridge-length="2rem"
-                            before-length="2rem"
-                            after-length="2rem"
-                            elseif-before-length="3rem"
-                            elseif-after-length="2rem"
-                            stem-length="4rem"
-                            :condition-label="[
-                                'text' => ['IF reviewApproved?'],
-                                'width' => 'halfLong',
-                                'align' => 'center',
-                            ]"
-                            :if-start="[
-                                'color' => 'green',
-                                'text' => ['Publish paper'],
-                                'width' => 'half',
-                                'align' => 'center',
-                                'badgeColor' => 'green',
-                            ]"
-                            :elseifs="[
-                                [
-                                    'conditionLabel' => [
-                                        'color' => 'amber',
-                                        'text' => ['ELSEIF changesRequested?'],
+                                    ]"
+                                />
+                            </x-translation-workbench::ui.tw-graph>
+                            {{-- flow-if-elseif-example-1:end --}}
+                        </div>
+                    </div>
+
+                    <div class="min-w-0">
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="flow-if-elseif-example-2"
+                            size="sm"
+                        >{{ __('side="right"') }}</x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                            {{-- flow-if-elseif-example-2:start --}}
+                            <x-translation-workbench::ui.tw-graph
+                                graph-id="idea-to-paper-flow-if-elseif-right"
+                                :dev="true"
+                                :coordinates="true"
+                                min-width="56rem"
+                                min-height="41rem"
+                                horizontal-padding="3rem"
+                            >
+                                <x-translation-workbench::ui.tw-graph.strang.flow-if-elseif
+                                    id="literature.flow.1.if-elseif-right"
+                                    :anchor-start="['x' => '0rem', 'y' => '3rem']"
+                                    side="right"
+                                    direction="bottom-top"
+                                    color="cyan"
+                                    arc-radius="2.75rem"
+                                    bridge-length="2rem"
+                                    before-length="2rem"
+                                    after-length="2rem"
+                                    elseif-before-length="3rem"
+                                    elseif-after-length="2rem"
+                                    stem-length="4rem"
+                                    :condition-label="[
+                                        'text' => ['IF reviewApproved?'],
                                         'width' => 'halfLong',
                                         'align' => 'center',
-                                    ],
-                                    'actionLabel' => [
-                                        'text' => ['Revise draft'],
+                                    ]"
+                                    :if-start="[
+                                        'color' => 'green',
+                                        'text' => ['Publish paper'],
+                                        'width' => 'half',
+                                        'align' => 'center',
+                                        'badgeColor' => 'green',
+                                    ]"
+                                    :elseifs="[
+                                        [
+                                            'conditionLabel' => [
+                                                'color' => 'amber',
+                                                'text' => ['ELSEIF changesRequested?'],
+                                                'width' => 'halfLong',
+                                                'align' => 'center',
+                                            ],
+                                            'actionLabel' => [
+                                                'text' => ['Revise draft'],
+                                                'width' => 'halfLong',
+                                                'align' => 'center',
+                                                'badgeColor' => 'amber',
+                                            ],
+                                        ],
+                                    ]"
+                                    :if-end="[
+                                        'color' => 'red',
+                                    ]"
+                                />
+                                <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                    id="literature.flow.1.if-elseif-right.continue"
+                                    attach-to="literature.flow.1.if-elseif-right.anchorNode-end"
+                                    before-length="2rem"
+                                    after-length="2rem"
+                                    color="zinc"
+                                    :step-label="[
+                                        'text' => ['Continue process'],
                                         'width' => 'halfLong',
                                         'align' => 'center',
-                                        'badgeColor' => 'amber',
-                                    ],
-                                ],
-                            ]"
-                            :if-end="[
-                                'color' => 'red',
-                            ]"
-                        />
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.flow.1.if-elseif-right.continue"
-                            attach-to="literature.flow.1.if-elseif-right.anchorNode-end"
-                            before-length="2rem"
-                            after-length="2rem"
-                            color="zinc"
-                            :step-label="[
-                                'text' => ['Continue process'],
-                                'width' => 'halfLong',
-                                'align' => 'center',
-                            ]"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- flow-if-elseif-example-2:end --}}
+                                    ]"
+                                />
+                            </x-translation-workbench::ui.tw-graph>
+                            {{-- flow-if-elseif-example-2:end --}}
+                        </div>
+                    </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/if/flow-if-elseif.blade.php
-            </flux:field>
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/flow/if/flow-if-elseif.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

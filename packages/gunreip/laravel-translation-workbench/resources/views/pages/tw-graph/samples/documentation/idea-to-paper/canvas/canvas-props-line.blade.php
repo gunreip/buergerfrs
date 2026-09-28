@@ -17,14 +17,11 @@
             {{ __('line-width is the central/common thickness used as the fallback for stems, bridges, caps, connectors, and similar line-based pieces. In the more specific strang examples this same idea may appear with contextual names such as stem-width or bridge-width.') }}
         </flux:callout.text>
 
-        <flux:separator
-            class="mt-4"
-            :text="__('Deep reference links')"
-        />
+        <x-translation-workbench::ui.common.separator-deep-reference-links />
 
         <x-translation-workbench::ui.tw-graph.documentation-links example="canvas.canvas-props-line" />
 
-        <flux:separator :text="__('Code examples')" />
+        <x-translation-workbench::ui.common.separator-code-example-tw-graph />
 
         <flux:accordion
             transition
@@ -63,10 +60,7 @@
             </flux:accordion.item>
         </flux:accordion>
 
-        <flux:separator
-            class="mt-4"
-            :text="__('Props used in this example')"
-        />
+        <x-translation-workbench::ui.common.separator-props-used-tw-graph />
 
         {{-- Line Width Props --}}
         <flux:callout color="indigo">
@@ -237,8 +231,9 @@
                 </div>
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
-        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-            .../idea-to-paper/canvas/canvas-props-line.blade.php
-        </flux:field>
+        <x-translation-workbench::ui.common.tw-graph-path-file
+            path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/canvas/canvas-props-line.blade.php"
+            segments="3"
+        />
     </flux:callout>
 </section>

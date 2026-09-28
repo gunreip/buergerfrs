@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { canvasLayout, unionBounds, boundsDifference, gridTicks } from '../../resources/js/helper/tw-graph-bounds.js';
+import { canvasLayout, unionBounds, boundsDifference, gridTicks, canvasSummary, captionOffset, componentRegions } from '../../resources/js/helper/tw-graph-bounds.js';
 
 test('canvas uses the same origin-inclusive policy as the server, without centering', () => {
     const layout = canvasLayout({ minX: -320, maxX: 416, minY: 0, maxY: 384 }, 48, 32);
@@ -43,4 +43,40 @@ test('grid ticks include negative coordinates and follow the shifted origin at r
     assert.equal(ticks.find(t => t.value === -5).major, true);
     assert.equal(ticks.find(t => t.value === 1).position, 112);
     assert.equal(gridTicks(240, 112, 16).find(t => t.value === 0).position, 112);
+});
+
+
+test('coordinate summary distinguishes CSS minimum size, tight content and origin-inclusive bounds', () => {
+    const records = [{ rects: [{ x: 32, y: 64, width: 160, height: 320 }] }];
+    const layout = canvasLayout(unionBounds(records[0].rects), 48, 32);
+    assert.deepEqual(canvasSummary(records, layout, 640, 800, 16), {
+        canvas: '40rem × 50rem', content: '10rem × 20rem', spacing: '5rem / 25rem',
+    });
+    assert.deepEqual(canvasSummary(records, null, 640, 800, 16), {
+        canvas: '40rem × 50rem', content: '—', spacing: '—',
+    });
+});
+
+
+test('visible diagnostic captions stay within canvas edges without changing graph dimensions', () => {
+    assert.equal(captionOffset(100, 200, 800), 4);
+    assert.equal(captionOffset(700, 200, 800), -100);
+    assert.equal(captionOffset(-20, 200, 800), 20);
+    assert.equal(captionOffset(700, 800, 800), -700);
+});
+
+
+test('component regions union emitted geometry and measured text, never unrelated calls', () => {
+    const outer = { token: 1, id: 'outer', component: 'strang.flow-if' };
+    const inner = { token: 2, id: 'inner', component: 'strang.flow-if' };
+    const regions = componentRegions([
+        { region: outer, rects: [{ x: -40, y: 0, width: 20, height: 100 }] },
+        { region: outer, kind: 'text', rects: [{ x: -80, y: 100, width: 100, height: 45 }] },
+        { region: inner, rects: [{ x: 200, y: 30, width: 20, height: 60 }] },
+        { region: 1, rects: [{ x: -90, y: 30, width: 10, height: 10 }] },
+        { rects: [{ x: -1000, y: -1000, width: 2000, height: 2000 }] },
+    ]);
+    assert.equal(regions.length, 2);
+    assert.deepEqual(regions[0].bounds, { minX: -90, minY: 0, maxX: 20, maxY: 145 });
+    assert.deepEqual(regions[1].bounds, { minX: 200, minY: 30, maxX: 220, maxY: 90 });
 });

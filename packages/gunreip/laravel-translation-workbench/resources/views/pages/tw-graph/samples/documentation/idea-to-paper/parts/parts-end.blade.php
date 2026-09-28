@@ -1,16 +1,31 @@
 <x-translation-workbench::ui.common.heading-counter-group group="parts-end">
     <section class="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
-        <flux:callout color="indigo" icon="file-text" class="min-w-0">
+        <flux:callout
+            class="min-w-0"
+            color="indigo"
+            icon="file-text"
+        >
             <flux:callout.heading>{{ __('End part') }}</flux:callout.heading>
+            <flux:callout.text>
+                {{ __('Two individually authored endings demonstrate both vertical directions and different cap lengths. Each part calculates its final anchor and places the end label there.') }}
+            </flux:callout.text>
+
+            <x-translation-workbench::ui.common.separator-deep-reference-links />
+
             <x-translation-workbench::ui.tw-graph.documentation-links example="parts.parts-end" />
-            <flux:callout.text>{{ __('Two individually authored endings demonstrate both vertical directions and different cap lengths. Each part calculates its final anchor and places the end label there.') }}</flux:callout.text>
+
             @php
                 $exampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.parts.parts-end',
                 );
             @endphp
-            <flux:separator class="mt-4" :text="__('Code examples')" />
-            <flux:accordion transition exclusive>
+
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
+
+            <flux:accordion
+                transition
+                exclusive
+            >
                 <flux:accordion.item expanded>
                     <flux:callout
                         icon="code"
@@ -44,12 +59,17 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
-            <flux:separator class="mt-4" :text="__('Props used in these examples')" />
+
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
+
             <flux:callout color="indigo">
-                <flux:callout.heading icon="variable">{{ __('Props') }}</flux:callout.heading>
+                <flux:callout.heading icon="variable">{{ __('Props for Parts End') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                     <flux:table container:class="max-h-80">
-                        <flux:table.columns class="bg-white dark:bg-zinc-900" sticky>
+                        <flux:table.columns
+                            class="bg-white dark:bg-zinc-900"
+                            sticky
+                        >
                             <flux:table.column>{{ __('Prop') }}</flux:table.column>
                             <flux:table.column>{{ __('Default') }}</flux:table.column>
                             <flux:table.column>{{ __('Purpose') }}</flux:table.column>
@@ -82,7 +102,8 @@
                                     <code>anchor-start</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    <code>[&#x27;x&#x27; =&gt; &#x27;0rem&#x27;, &#x27;y&#x27; =&gt; &#x27;0rem&#x27;]</code>
+                                    <code>[&#x27;x&#x27; =&gt; &#x27;0rem&#x27;, &#x27;y&#x27; =&gt;
+                                        &#x27;0rem&#x27;]</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Starting coordinates; the part calculates its end anchor.') }}
@@ -193,16 +214,24 @@
                 </div>
             </flux:callout>
         </flux:callout>
-        <flux:callout color="emerald" class="min-w-0">
+        {{-- Preview --}}
+        <flux:callout
+            class="min-w-0"
+            color="emerald"
+        >
             <flux:callout.heading icon="eye">{{ __('Preview') }}</flux:callout.heading>
-            <x-translation-workbench::ui.tw-graph.preview-tools :dev="$dev ?? true" :coordinates="$coordinates ?? false">
+            <x-translation-workbench::ui.tw-graph.preview-tools
+                :dev="$dev ?? true"
+                :coordinates="$coordinates ?? false"
+            >
                 <div class="mt-4 grid min-w-0 gap-4 xl:grid-cols-2">
                     <div class="min-w-0">
                         <x-translation-workbench::ui.common.heading-counter
                             example="bottom-top"
                             size="sm"
                         >{{ __('bottom-top') }}</x-translation-workbench::ui.common.heading-counter>
-                        <div class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                        <div
+                            class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- parts-end-bottom-top:start --}}
                             <x-translation-workbench::ui.tw-graph
                                 graph-id="idea-to-paper-parts-end-bottom-top"
@@ -231,7 +260,8 @@
                             example="top-bottom"
                             size="sm"
                         >{{ __('top-bottom') }}</x-translation-workbench::ui.common.heading-counter>
-                        <div class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                        <div
+                            class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- parts-end-top-bottom:start --}}
                             <x-translation-workbench::ui.tw-graph
                                 graph-id="idea-to-paper-parts-end-top-bottom"
@@ -257,9 +287,10 @@
                     </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-                .../idea-to-paper/parts/parts-end.blade.php
-            </flux:field>
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/parts/parts-end.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

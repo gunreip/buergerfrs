@@ -57,6 +57,15 @@
 ])
 
 @php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.paths.branch',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
+
+@php
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn (string $value): string => 'calc(' . $value . ' * -1)';
     $currentAnchor = [
@@ -322,13 +331,6 @@
 
         $pathEndAnchor = $stemEnd;
     }
-    $pathBoxPadding = '0.75rem';
-    $pathBoxX = $isLeft ? $pathEndAnchor['x'] : $currentAnchor['x'];
-    $pathBoxY = $currentAnchor['y'];
-    $pathBoxWidth = $isLeft
-        ? 'calc(' . $currentAnchor['x'] . ' - ' . $pathEndAnchor['x'] . ')'
-        : 'calc(' . $pathEndAnchor['x'] . ' - ' . $currentAnchor['x'] . ')';
-    $pathBoxHeight = 'calc(' . $pathEndAnchor['y'] . ' - ' . $currentAnchor['y'] . ')';
 
     $segments = [
         ...($resolvedEntryStemLength !== '0rem' ? [[
@@ -419,15 +421,7 @@
     ];
 @endphp
 
-<x-translation-workbench::ui.tw-graph.dev-box
-    :id="$id . '.dev-box'"
-    :x="'calc(' . $pathBoxX . ' - ' . $pathBoxPadding . ')'"
-    :y="'calc(' . $pathBoxY . ' - ' . $pathBoxPadding . ')'"
-    :width="'calc(' . $pathBoxWidth . ' + (' . $pathBoxPadding . ' * 2))'"
-    :height="'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2))'"
-    color="amber"
-    :label="$id"
-/>
+
 
 @if ($dev && $nodeLabelMismatch)
     <span
@@ -459,3 +453,14 @@
         <x-translation-workbench::ui.tw-graph.segments.path :segment="$segment['segment']" />
     @endif
 @endforeach
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
+@endif

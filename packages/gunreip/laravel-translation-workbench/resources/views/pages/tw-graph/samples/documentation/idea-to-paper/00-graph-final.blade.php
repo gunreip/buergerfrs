@@ -1,6 +1,8 @@
-<x-translation-workbench::ui.tw-graph.documentation-links example="00-graph-final" />
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/idea-to-paper/graph-final.blade.php --}}
+{{-- <x-translation-workbench::ui.common.separator-deep-reference-links />
 
+<x-translation-workbench::ui.tw-graph.documentation-links example="00-graph-final" />
+ --}}
 @php
     $ideaToPaperGraphId = $ideaToPaperGraphId ?? 'tw-graph-sample-idea-to-paper-final-draft';
     $ideaToPaperDev = $ideaToPaperDev ?? false;
@@ -9,7 +11,6 @@
 @endphp
 
 <x-translation-workbench::ui.tw-graph
-    class="px-28 py-14"
     :graph-id="$ideaToPaperGraphId"
     :dev="$ideaToPaperDev"
     :coordinates="$ideaToPaperCoordinates"

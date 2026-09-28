@@ -73,6 +73,91 @@ export function canvasLayout(bounds, horizontalPadding, verticalPadding) {
         originLeft: horizontalPadding - minX, originBottom: verticalPadding - minY };
 }
 
+// Tight content bounds are distinct from the origin-inclusive layout and CSS minimum size.
+export function canvasSummary(records, layout, width, height, rem) {
+    const format = value => `${round(value / rem)}rem`;
+    const result = { canvas: `${format(width)} × ${format(height)}`, content: '—', spacing: '—' };
+    const rects = records.flatMap(record => record.rects);
+    if (!layout || !rects.length) return result;
+    const bounds = unionBounds(rects);
+    result.content = `${format(bounds.maxX - bounds.minX)} × ${format(bounds.maxY - bounds.minY)}`;
+    result.spacing = `${format(layout.originLeft + bounds.minX)} / ${format(width - layout.originLeft - bounds.maxX)}`;
+    return result;
+}
+
+// Public calls own regions; internal composition contributes to its caller's region.
+export function componentRegions(records) {
+    const groups = new Map();
+    const definitions = new Map(records.filter(r => r.region?.token).map(r => [r.region.token, r.region]));
+    for (const record of records) {
+        const region = typeof record.region === 'number' ? definitions.get(record.region) : record.region;
+        if (!region?.token || !record.rects.length) continue;
+        if (!groups.has(region.token)) groups.set(region.token, { ...region, rects: [] });
+        groups.get(region.token).rects.push(...record.rects);
+    }
+    return [...groups.values()].map(({ rects, ...region }) => ({ ...region, bounds: unionBounds(rects) }));
+}
+
+function updateComponentRegions(graph, canvas, records, layout) {
+    const regions = new Map(componentRegions(records).map(region => [String(region.token), region]));
+    for (const box of canvas.querySelectorAll('[data-tw-graph-region]')) {
+        if (box.closest(graphSelector) !== graph) continue;
+        const region = regions.get(box.dataset.twGraphRegion);
+        if (!region || !layout) {
+            box.style.visibility = 'hidden';
+            continue;
+        }
+        const { minX, minY, maxX, maxY } = region.bounds;
+        const styles = { left: `${layout.originLeft + minX}px`, bottom: `${layout.originBottom + minY}px`,
+            width: `${maxX - minX}px`, height: `${maxY - minY}px`, visibility: 'visible' };
+        for (const [name, value] of Object.entries(styles)) if (box.style[name] !== value) box.style[name] = value;
+    }
+}
+
+// Keep diagnostic captions visible without extending the canvas scroll area.
+export function captionOffset(boxLeft, captionWidth, canvasWidth, preferred = 4) {
+    return Math.max(-boxLeft, Math.min(preferred, canvasWidth - boxLeft - captionWidth));
+}
+
+function positionDevCaptions(graph, canvas) {
+    const frame = canvas.getBoundingClientRect();
+    const width = parseFloat(getComputedStyle(canvas).width);
+    const height = parseFloat(getComputedStyle(canvas).height);
+    const scaleY = frame.height / height;
+    const scale = frame.width / width;
+    if (!(scale > 0)) return;
+    const occupied = [];
+    const summary = canvas.querySelector('[data-tw-graph-canvas-summary]');
+    if (summary?.getClientRects().length) {
+        const r = summary.getBoundingClientRect();
+        occupied.push({ x: (r.left - frame.left) / scale, y: (r.top - frame.top) / scaleY,
+            width: r.width / scale, height: r.height / scaleY });
+    }
+    for (const caption of canvas.querySelectorAll('[data-tw-graph-dev-caption]')) {
+        if (caption.closest(graphSelector) !== graph || !caption.getClientRects().length) continue;
+        const maxWidth = `${width}px`;
+        if (caption.style.maxWidth !== maxWidth) caption.style.maxWidth = maxWidth;
+        const box = caption.parentElement;
+        const boxLeft = (box.getBoundingClientRect().left - frame.left) / scale + box.clientLeft;
+        const captionWidth = caption.getBoundingClientRect().width / scale;
+        const boxTop = (box.getBoundingClientRect().top - frame.top) / scaleY + box.clientTop;
+        const captionHeight = caption.getBoundingClientRect().height / scaleY;
+        let x = boxLeft + captionOffset(boxLeft, captionWidth, width);
+        let y = Math.max(0, Math.min(boxTop - captionHeight, height - captionHeight));
+        // Keep region names separate from the summary and previously placed captions.
+        for (const obstacle of occupied) {
+            if (x < obstacle.x + obstacle.width && x + captionWidth > obstacle.x &&
+                y < obstacle.y + obstacle.height && y + captionHeight > obstacle.y) {
+                if (obstacle.x + obstacle.width + 4 + captionWidth <= width) x = obstacle.x + obstacle.width + 4;
+                else y = Math.min(height - captionHeight, obstacle.y + obstacle.height + 4);
+            }
+        }
+        occupied.push({ x, y, width: captionWidth, height: captionHeight });
+        const styles = { left: `${x - boxLeft}px`, top: `${y - boxTop}px`, transform: 'none' };
+        for (const [name, value] of Object.entries(styles)) if (caption.style[name] !== value) caption.style[name] = value;
+    }
+}
+
 export function boundsDifference(expected, actual, tolerance = 1.1) {
     return ['minX', 'minY', 'maxX', 'maxY'].filter(key => Math.abs(expected[key] - actual[key]) > tolerance);
 }
@@ -216,45 +301,33 @@ export function setupTwGraphBounds() {
                 graph.dispatchEvent(new CustomEvent('tw-graph-bounds-checked', { detail: { issues } }));
             }
             setText(graph.querySelector('[data-tw-graph-bounds-state]'), issues.length ? `Bounds: ${issues.length} mismatch(es)` : 'Bounds: primitive geometry verified; text measured');
-            if (!layout) continue;
-            const values = { 'trunk-x': layout.originLeft, 'origin-bottom': layout.originBottom,
-                'calculated-width': layout.width, 'calculated-height': layout.height,
-                'content-min-x': layout.minX, 'content-max-x': layout.maxX, 'content-min-y': layout.minY,
-                'content-width': layout.maxX - layout.minX, 'content-height': layout.maxY - layout.minY };
-            for (const [key, value] of Object.entries(values)) set(graph, key, value);
-            const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
-            updateCoordinateGrid(canvas, layout.originLeft, layout.originBottom, rem);
-            const metrics = { left: layout.originLeft, bottom: layout.originBottom, width: layout.width,
-                height: layout.height, minX: layout.minX, maxX: layout.maxX };
-            for (const label of graph.querySelectorAll('[data-tw-graph-bound-value]')) {
-                const key = label.dataset.twGraphBoundValue;
-                setText(label, `${key}=${round(metrics[key] / rem)}rem`);
+            if (layout) {
+                const values = { 'trunk-x': layout.originLeft, 'origin-bottom': layout.originBottom,
+                    'calculated-width': layout.width, 'calculated-height': layout.height,
+                    'content-min-x': layout.minX, 'content-max-x': layout.maxX, 'content-min-y': layout.minY,
+                    'content-width': layout.maxX - layout.minX, 'content-height': layout.maxY - layout.minY };
+                for (const [key, value] of Object.entries(values)) set(graph, key, value);
+                const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+                updateCoordinateGrid(canvas, layout.originLeft, layout.originBottom, rem);
             }
-            let largest = null, largestHeight = -1;
-            for (const side of ['left', 'center', 'right']) {
-                const rects = records.filter(r => (r.side || 'center') === side).flatMap(r => r.rects);
-                const top = rects.length ? Math.max(...rects.map(r => r.y + r.height)) : 0;
-                const height = rects.length ? Math.max(...rects.map(r => r.height)) : 0;
-                if (rects.length && height > largestHeight) { largest = side; largestHeight = height; }
-                set(graph, `side-${side}-top`, top);
-                setText(graph.querySelector(`[data-tw-graph-side-value="${side}.count"]`), `n=${rects.length}`);
-                setText(graph.querySelector(`[data-tw-graph-side-value="${side}.top"]`), `top=${round(top / rem)}rem`);
-                setText(graph.querySelector(`[data-tw-graph-side-value="${side}.height"]`), `h=${round(height / rem)}rem`);
-            }
-            for (const badge of graph.querySelectorAll('[data-tw-graph-side-largest]')) {
-                const hidden = badge.dataset.twGraphSideLargest !== largest;
-                if (badge.hidden !== hidden) badge.hidden = hidden;
+            const style = getComputedStyle(canvas);
+            updateComponentRegions(graph, canvas, records, layout);
+            positionDevCaptions(graph, canvas);
+            const summary = canvasSummary(records, layout, parseFloat(style.width), parseFloat(style.height),
+                parseFloat(getComputedStyle(document.documentElement).fontSize));
+            for (const label of graph.querySelectorAll('[data-tw-graph-canvas-result]')) {
+                if (label.closest(graphSelector) === graph) setText(label, summary[label.dataset.twGraphCanvasResult]);
             }
         }
         for (const element of observed) if (!next.has(element)) resize.unobserve(element);
         for (const element of next) if (!observed.has(element)) resize.observe(element);
         observed = next;
     }
-    const internal = '[data-tw-graph-bounds-resolver], [data-tw-graph-bound-value], [data-tw-graph-side-value], [data-tw-graph-side-largest], [data-tw-graph-bounds-state], [data-tw-graph-bounds-warning]';
+    const internal = '[data-tw-graph-region], [data-tw-graph-dev-caption], [data-tw-graph-bounds-resolver], [data-tw-graph-canvas-summary], [data-tw-graph-bounds-state], [data-tw-graph-bounds-warning]';
     new MutationObserver(records => {
         if (records.some(r => !r.target.closest?.(internal))) schedule();
     }).observe(document, { subtree: true, childList: true, characterData: true, attributes: true,
-        attributeFilter: ['style', 'class', 'hidden', 'data-tw-graph-bounds'] });
+        attributeFilter: ['style', 'class', 'hidden', 'data-boxes', 'data-tw-graph-bounds'] });
     window.addEventListener('resize', schedule);
     document.fonts?.ready.then(schedule);
     document.fonts?.addEventListener('loadingdone', schedule);

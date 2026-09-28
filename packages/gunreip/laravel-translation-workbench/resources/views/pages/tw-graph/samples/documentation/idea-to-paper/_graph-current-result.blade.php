@@ -1,4 +1,3 @@
-<x-translation-workbench::ui.tw-graph.documentation-links example="_graph-current-result" />
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/_graph-current-result.blade.php --}}
 
 @php
@@ -9,7 +8,6 @@
 @endphp
 
 <x-translation-workbench::ui.tw-graph
-    class="px-28 py-14"
     :graph-id="$ideaToPaperGraphId"
     :dev="$ideaToPaperDev"
     :coordinates="$ideaToPaperCoordinates"

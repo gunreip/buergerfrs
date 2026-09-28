@@ -66,7 +66,7 @@ it('renders a handmade while preview with extracted source, tools and six langua
     $xpath = new DOMXPath($dom);
     $graph = $xpath->query('//*[@id="idea-to-paper-while-basic"]')->item(0);
     expect($graph)->not->toBeNull();
-    expect($graph->textContent)->toContain('WHILE groupIndex < groupCount?', 'WHILE itemIndex < itemCount?', 'itemIndex = itemIndex + 1', 'groupIndex = groupIndex + 1', 'Show summary');
+    expect($graph->textContent)->toContain('WHILE index < count?', 'SWITCH item.status', 'Edit draft', 'Display item', 'Record unknown status', 'index = index + 1', 'Show summary');
     expect($graph->textContent)->not->toContain('{--', '=>', ':anchor-start=');
     expect($xpath->query('//pre/code')->length)->toBe(7);
     expect($html)->toContain('data-tw-graph-preview-tools', 'JavaScript', 'C++', 'Java', 'zero');
@@ -74,15 +74,15 @@ it('renders a handmade while preview with extracted source, tools and six langua
 
 it('links the while preview and deep reference in both directions', function () {
     \Livewire\Livewire::test(\Gunreip\TranslationWorkbench\Livewire\TwGraphDocumentation::class)
-        ->call('openExample', 'flow.while.flow-while-test')
+        ->call('openExample', 'flow.while.flow-while-basic')
         ->assertSet('tabs.flow_index', 'flow-while')
-        ->assertSee('id="idea-to-paper-while-basic"', false)
-        ->call('openReference', 'strang.flow-while', 'flow.while.flow-while-test')
+        ->assertSee('id="idea-to-paper-while-basic-left"', false)
+        ->call('openReference', 'strang.flow-while', 'flow.while.flow-while-basic')
         ->assertSet('tabs.reference_strang', 'reference-flow-while')
         ->assertSee('Return stem length')
         ->call('returnToExample')
-        ->assertSet('tabs.flow_while', 'flow-while-test')
-        ->assertSee('id="idea-to-paper-while-basic"', false);
+        ->assertSet('tabs.flow_while', 'flow-while-basic')
+        ->assertSee('id="idea-to-paper-while-basic-left"', false);
 });
 
 it('rejects an unresolved while attachment rather than falling back to the origin', function () {
@@ -185,8 +185,9 @@ it('loads WHILE basic lazily and returns to it from the reference', function () 
         ->call('returnToExample')
         ->assertSet('tabs.flow_while', 'flow-while-basic')
         ->set('tabs.flow_while', 'flow-while-test')
-        ->assertSee('id="flow-while-test-proposals"', false)
-        ->assertDontSee('id="idea-to-paper-while-basic-right"', false);
+        ->assertSet('tabs.flow_while', 'flow-while-basic')
+        ->assertDontSee('id="flow-while-test-proposals"', false)
+        ->assertSee('id="idea-to-paper-while-basic-right"', false);
 });
 
 it('returns only after the independent advance action in the multiple-actions example', function () {
@@ -276,8 +277,9 @@ it('loads the saved multiple-action loops lazily and restores them from deep ref
         ->call('returnToExample')
         ->assertSet('tabs.flow_while', 'flow-while-multiple-actions')
         ->set('tabs.flow_while', 'flow-while-test')
-        ->assertSee('id="flow-while-test-proposals"', false)
-        ->assertDontSee('id="idea-to-paper-while-multiple-right"', false);
+        ->assertSet('tabs.flow_while', 'flow-while-basic')
+        ->assertDontSee('id="flow-while-test-proposals"', false)
+        ->assertSee('id="idea-to-paper-while-basic-right"', false);
 });
 
 it('merges both nested IF lanes before advancing and returns to the outer WHILE condition', function () {
@@ -414,8 +416,9 @@ it('loads WHILE with IF lazily and restores it from deep reference', function ()
         ->call('returnToExample')
         ->assertSet('tabs.flow_while', 'flow-while-if')
         ->set('tabs.flow_while', 'flow-while-test')
-        ->assertSee('id="flow-while-test-proposals"', false)
-        ->assertDontSee('id="idea-to-paper-while-if-right"', false);
+        ->assertSet('tabs.flow_while', 'flow-while-basic')
+        ->assertDontSee('id="flow-while-test-proposals"', false)
+        ->assertSee('id="idea-to-paper-while-basic-right"', false);
 });
 
 it('keeps two independent inner WHILE returns separate and advances the outer index after the second FALSE', function () {
@@ -530,8 +533,9 @@ it('loads saved nested WHILE examples lazily and restores them from deep referen
         ->call('returnToExample')
         ->assertSet('tabs.flow_while', 'flow-while-nested')
         ->set('tabs.flow_while', 'flow-while-test')
-        ->assertSee('id="flow-while-test-proposals"', false)
-        ->assertDontSee('id="idea-to-paper-while-nested-right"', false);
+        ->assertSet('tabs.flow_while', 'flow-while-basic')
+        ->assertDontSee('id="flow-while-test-proposals"', false)
+        ->assertSee('id="idea-to-paper-while-basic-right"', false);
 });
 
 it('saves handmade mirrored independent inner WHILE examples with independent entry and return targets', function () {
@@ -584,8 +588,9 @@ it('loads saved independent inner WHILE examples lazily and restores them from d
         ->call('returnToExample')
         ->assertSet('tabs.flow_while', 'flow-while-independent')
         ->set('tabs.flow_while', 'flow-while-test')
-        ->assertSee('id="flow-while-test-proposals"', false)
-        ->assertDontSee('id="idea-to-paper-while-independent-right"', false);
+        ->assertSet('tabs.flow_while', 'flow-while-basic')
+        ->assertDontSee('id="flow-while-test-proposals"', false)
+        ->assertSee('id="idea-to-paper-while-basic-right"', false);
 });
 
 it('numbers every visible DEV counter once without gaps across composed WHILE examples', function ($view, $count) {
@@ -604,7 +609,8 @@ it('numbers every visible DEV counter once without gaps across composed WHILE ex
         expect($numbers)->toBe(range(1, $count));
     }
 })->with([
-    ['flow-while-test', 30],
+    ['flow-while-test', 19],
+    ['flow-while-switch', 19],
     ['flow-while-nested', 29],
     ['flow-while-action-sequence', 30],
     ['flow-while-mixed', 29],
@@ -653,8 +659,9 @@ it('loads saved mixed-side WHILE examples lazily and restores them from deep ref
         ->call('returnToExample')
         ->assertSet('tabs.flow_while', 'flow-while-mixed')
         ->set('tabs.flow_while', 'flow-while-test')
-        ->assertSee('id="flow-while-test-proposals"', false)
-        ->assertDontSee('.../flow/while/flow-while-mixed.blade.php', false);
+        ->assertSet('tabs.flow_while', 'flow-while-basic')
+        ->assertDontSee('id="flow-while-test-proposals"', false)
+        ->assertSee('id="idea-to-paper-while-basic-right"', false);
 });
 
 it('finalizes a group after inner FALSE and returns only after advancing the outer index', function ($view, $graph, $root) {
@@ -678,7 +685,6 @@ it('finalizes a group after inner FALSE and returns only after advancing the out
     $source = file_get_contents(app('view')->getFinder()->find('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.'.$view));
     expect(preg_replace('/\s+/', ' ', $source))->toContain('id="'.$root.'.finalize" attach-to="'.$root.'.inner-loop.anchorNode-end"');
 })->with([
-    ['flow-while-test', 'idea-to-paper-while-basic', 'literature.while.1'],
     ['flow-while-action-sequence', 'idea-to-paper-while-action-sequence-left', 'literature.while.action-sequence.left'],
     ['flow-while-action-sequence', 'idea-to-paper-while-action-sequence-right', 'literature.while.action-sequence.right'],
 ]);
@@ -694,6 +700,58 @@ it('loads saved action-sequence WHILE examples lazily and restores them from dee
         ->call('returnToExample')
         ->assertSet('tabs.flow_while', 'flow-while-action-sequence')
         ->set('tabs.flow_while', 'flow-while-test')
-        ->assertSee('id="flow-while-test-proposals"', false)
-        ->assertDontSee('id="idea-to-paper-while-action-sequence-right"', false);
+        ->assertSet('tabs.flow_while', 'flow-while-basic')
+        ->assertDontSee('id="flow-while-test-proposals"', false)
+        ->assertSee('id="idea-to-paper-while-basic-right"', false);
+});
+
+it('joins every SWITCH exit before advancing and returning to the enclosing WHILE condition', function (string $name, string $graph, string $root) {
+    $view = 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.'.$name;
+    $html = view($view)->render();
+    $point = function (string $suffix) use ($graph, $root): array {
+        $anchor = AnchorRegistry::get($graph, $root.'.'.$suffix);
+        expect($anchor)->not->toBeNull($suffix);
+
+        return array_map(fn ($axis) => BoundsRegistry::evaluateRemExpression($anchor[$axis]), ['x', 'y']);
+    };
+    expect($point('loop.anchorNode-start'))->toBe($point('initialize.anchorNode-end'));
+    expect($point('inner-switch.anchorNode-start'))->toBe($point('loop.body.anchorNode-end'));
+    expect($point('inner-switch.case.draft.return.anchorNode-end'))->toBe($point('inner-switch.case.published.anchorNode-end'));
+    expect($point('inner-switch.case.published.return.anchorNode-end'))->toBe($point('inner-switch.case.default.anchorNode-end'));
+    expect($point('inner-switch.anchorNode-end'))->toBe($point('inner-switch.case.default.anchorNode-end'));
+    $switchExit = $point('inner-switch.anchorNode-end');
+    expect($point('advance.anchorNode-end'))->toBe([$switchExit[0], $switchExit[1] - 8]);
+    expect($point('body-return.anchorNode-start'))->toBe($point('advance.anchorNode-end'));
+    expect($point('body-return.anchorNode-end'))->toBe($point('loop.anchorNode-return'));
+    expect($point('continue.anchorNode-end')[0])->toBe($point('loop.anchorNode-end')[0]);
+    expect($point('continue.anchorNode-end')[1])->toBeGreaterThan($point('loop.anchorNode-end')[1]);
+    expect($point('body-return.anchorNode-start')[1])->toBeGreaterThan($point('body-return.anchorNode-end')[1]);
+    expect($html)->toContain('CASE draft', 'CASE published', 'DEFAULT', 'BREAK', 'END SWITCH');
+    expect($html)->not->toContain('data-tw-graph-mismatch="true"');
+
+    $source = file_get_contents(app('view')->getFinder()->find($view));
+    expect($source)->not->toContain('@foreach', 'strang.flow-if-else', 'inner-loop');
+    expect($source)->toContain("'return' => false", 'example="while-switch"');
+})->with([
+    ['flow-while-test', 'idea-to-paper-while-basic', 'literature.while.1'],
+    ['flow-while-switch', 'idea-to-paper-while-switch-left', 'literature.while.switch.left'],
+    ['flow-while-switch', 'idea-to-paper-while-switch-right', 'literature.while.switch.right'],
+]);
+
+it('loads both saved WHILE with SWITCH examples and restores their reference link', function () {
+    \Livewire\Livewire::test(\Gunreip\TranslationWorkbench\Livewire\TwGraphDocumentation::class)
+        ->call('openExample', 'flow.while.flow-while-switch')
+        ->assertSet('tabs.flow_while', 'flow-while-switch')
+        ->assertSee('id="idea-to-paper-while-switch-left"', false)
+        ->assertSee('id="idea-to-paper-while-switch-right"', false)
+        ->assertDontSee('id="flow-while-test-proposals"', false)
+        ->call('openReference', 'strang.flow-switch-case', 'flow.while.flow-while-switch')
+        ->assertSet('tabs.reference_strang', 'reference-flow-switch-case')
+        ->call('returnToExample')
+        ->assertSet('tabs.flow_while', 'flow-while-switch')
+        ->assertSee('id="idea-to-paper-while-switch-right"', false)
+        ->set('tabs.flow_while', 'flow-while-test')
+        ->assertSet('tabs.flow_while', 'flow-while-basic')
+        ->assertDontSee('id="flow-while-test-proposals"', false)
+        ->assertSee('id="idea-to-paper-while-basic-right"', false);
 });

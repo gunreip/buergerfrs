@@ -6,19 +6,33 @@
             icon="file-text"
         >
             <flux:callout.heading>{{ __('Action → Nested → Action') }}</flux:callout.heading>
-            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.switch-case.flow-switch-case-action-sequence" />
             <flux:callout.text>
                 {{ __('Action sequence inside one outer CASE: Prepare editing → nested SWITCH on format → Save editing result. Every inner CASE and its DEFAULT reach the final action before returning to the outer SWITCH. CASE published and the outer DEFAULT bypass the complete sequence. The left example shortens the outer bridges and routes the published entry around the inner block; the right example keeps the previous straight entry for comparison.') }}
             </flux:callout.text>
+
+            <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+            <x-translation-workbench::ui.tw-graph.documentation-links
+                example="flow.switch-case.flow-switch-case-action-sequence"
+            />
+
             @php
                 $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.switch-case.flow-switch-case-action-sequence',
                 );
             @endphp
-            <flux:separator class="mt-4" :text="__('Code examples')" />
-            <flux:accordion transition exclusive>
+
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
+
+            <flux:accordion
+                transition
+                exclusive
+            >
                 <flux:accordion.item expanded>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="flow-switch-case-action-sequence-example-1"
                             variant="accordion"
@@ -31,7 +45,10 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
                 <flux:accordion.item>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="flow-switch-case-action-sequence-example-2"
                             variant="accordion"
@@ -44,12 +61,17 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
-            <flux:separator class="mt-4" :text="__('Props used in these examples')" />
+
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
+
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('Props and connections') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                     <flux:table container:class="max-h-80">
-                        <flux:table.columns class="bg-white dark:bg-zinc-900" sticky>
+                        <flux:table.columns
+                            class="bg-white dark:bg-zinc-900"
+                            sticky
+                        >
                             <flux:table.column>{{ __('Prop / anchor') }}</flux:table.column>
                             <flux:table.column>{{ __('Default') }}</flux:table.column>
                             <flux:table.column>{{ __('Purpose') }}</flux:table.column>
@@ -356,424 +378,486 @@
                     </flux:table>
                 </div>
             </flux:callout>
+
             <x-translation-workbench::ui.tw-graph.language-examples
                 source-view="translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.switch-case.flow-switch-case-action-sequence"
                 example="switch-action-sequence"
             >
-                <flux:text class="mt-2 text-sm">
+                <flux:callout.text class="mt-2 text-sm">
                     {{ __('Draft, review and revision share Prepare editing, the inner switch on format, and Save editing result. Inner break statements lead to Save editing result; only the following outer break exits the outer switch.') }}
-                </flux:text>
-                <flux:text class="mt-2 text-sm">
+                </flux:callout.text>
+                <flux:callout.text class="mt-2 text-sm">
                     {{ __('Action functions are supplied by the application. These are syntax excerpts; enclosing functions, classes and imports are omitted. C and C++ use enums instead of string cases. Left and right layouts represent the same logic unless different entry counts are shown.') }}
-                </flux:text>
+                </flux:callout.text>
             </x-translation-workbench::ui.tw-graph.language-examples>
 
         </flux:callout>
+        {{-- Preview --}}
         <flux:callout
             class="min-w-0"
             color="emerald"
         >
             <flux:callout.heading icon="eye">{{ __('Preview') }}</flux:callout.heading>
+            <flux:callout.text class="mb-3">
+                {{ __('Prepare editing is the outer CASE action. actionLabel.return=false opens the nested sequence. A separate flow-step attaches to the common inner output; the return starts at finish.anchorNode-end. CASE published explicitly reserves 32rem for the inner SWITCH, final action and return. In the left example, outer bridge-length=3rem and published.entryDetour explicitly route the selection stem to the right. The detour preserves the 32rem entry height and the original endpoint. The right example retains bridge-length=8rem and a straight entry.') }}
+            </flux:callout.text>
+
             <x-translation-workbench::ui.tw-graph.preview-tools
                 :dev="$dev ?? true"
                 :coordinates="$coordinates ?? false"
             >
-                <flux:text class="m-3">
-                    {{ __('Prepare editing is the outer CASE action. actionLabel.return=false opens the nested sequence. A separate flow-step attaches to the common inner output; the return starts at finish.anchorNode-end. CASE published explicitly reserves 32rem for the inner SWITCH, final action and return. In the left example, outer bridge-length=3rem and published.entryDetour explicitly route the selection stem to the right. The detour preserves the 32rem entry height and the original endpoint. The right example retains bridge-length=8rem and a straight entry.') }}
-                </flux:text>
-                <x-translation-workbench::ui.common.heading-counter
-                    example="flow-switch-case-action-sequence-example-1"
-                    size="sm"
-                >{{ __('Outer left · Inner right · Compact entry detour') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- flow-switch-case-action-sequence-example-1:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-flow-switch-case-action-sequence"
-                        :dev="true"
-                        :coordinates="true"
-                        color="cyan"
-                        min-width="86rem"
-                        min-height="80rem"
-                        horizontal-padding="6rem"
+                <div class="mt-4 grid min-w-0 gap-4 xl:grid-cols-1">
+                    <x-translation-workbench::ui.common.heading-counter
+                        example="flow-switch-case-action-sequence-example-1"
+                        size="sm"
                     >
-                        <x-translation-workbench::ui.tw-graph.strang.flow-start
-                            id="literature.switch.1.action-sequence-saved.start"
-                            :start-label="['text' => ['Article request'], 'width' => 'default']"
-                        />
-
-                        {{-- Outer SWITCH: three CASE entries fuse before the shared action and inner SWITCH. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-switch-case
-                            id="literature.switch.1.action-sequence-saved.outer"
-                            attach-to="literature.switch.1.action-sequence-saved.start.anchorNode-end"
-                            side="left"
-                            bridge-length="3rem"
-                            stem-length="3rem"
+                        {{ __('Outer left · Inner right · Compact entry detour') }}
+                    </x-translation-workbench::ui.common.heading-counter>
+                    <div
+                        class="overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                        {{-- flow-switch-case-action-sequence-example-1:start --}}
+                        <x-translation-workbench::ui.tw-graph
+                            graph-id="idea-to-paper-flow-switch-case-action-sequence"
+                            :dev="true"
+                            :coordinates="true"
                             color="cyan"
-                            :case-expression="[
-                                'text' => ['SWITCH ($status)'],
-                                'width' => 'default',
-                                'stemLength' => '3rem',
-                            ]"
-                            :cases="[
-                                [
-                                    'key' => 'editable',
-                                    'entryStemLength' => '4rem',
-                                    'entries' => [
-                                        [
-                                            'key' => 'draft',
-                                            'label' => ['text' => ['CASE draft'], 'width' => 'default', 'align' => 'left'],
-                                            'color' => 'amber',
-                                        ],
-                                        [
-                                            'key' => 'review',
-                                            'label' => ['text' => ['CASE review'], 'width' => 'default', 'align' => 'left'],
-                                            'color' => 'orange',
-                                        ],
-                                        [
-                                            'key' => 'revision',
-                                            'label' => [
-                                                'text' => ['CASE revision'],
-                                                'width' => 'default',
-                                                'align' => 'left',
+                            min-width="86rem"
+                            min-height="80rem"
+                            horizontal-padding="6rem"
+                        >
+                            <x-translation-workbench::ui.tw-graph.strang.flow-start
+                                id="literature.switch.1.action-sequence-saved.start"
+                                :start-label="['text' => ['Article request'], 'width' => 'default']"
+                            />
+
+                            {{-- Outer SWITCH: three CASE entries fuse before the shared action and inner SWITCH. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-switch-case
+                                id="literature.switch.1.action-sequence-saved.outer"
+                                attach-to="literature.switch.1.action-sequence-saved.start.anchorNode-end"
+                                side="left"
+                                bridge-length="3rem"
+                                stem-length="3rem"
+                                color="cyan"
+                                :case-expression="[
+                                    'text' => ['SWITCH ($status)'],
+                                    'width' => 'default',
+                                    'stemLength' => '3rem',
+                                ]"
+                                :cases="[
+                                    [
+                                        'key' => 'editable',
+                                        'entryStemLength' => '4rem',
+                                        'entries' => [
+                                            [
+                                                'key' => 'draft',
+                                                'label' => [
+                                                    'text' => ['CASE draft'],
+                                                    'width' => 'default',
+                                                    'align' => 'left',
+                                                ],
+                                                'color' => 'amber',
                                             ],
+                                            [
+                                                'key' => 'review',
+                                                'label' => [
+                                                    'text' => ['CASE review'],
+                                                    'width' => 'default',
+                                                    'align' => 'left',
+                                                ],
+                                                'color' => 'orange',
+                                            ],
+                                            [
+                                                'key' => 'revision',
+                                                'label' => [
+                                                    'text' => ['CASE revision'],
+                                                    'width' => 'default',
+                                                    'align' => 'left',
+                                                ],
+                                                'color' => 'violet',
+                                            ],
+                                        ],
+                                        'actionLabel' => [
+                                            'text' => ['Prepare editing'],
+                                            'width' => 'default',
+                                            'color' => 'amber',
+                                            'return' => false,
+                                        ],
+                                        'exitLabel' => [
+                                            'text' => ['Nested SWITCH'],
+                                            'width' => 'default',
+                                            'align' => 'right',
+                                        ],
+                                    ],
+                                    [
+                                        'key' => 'published',
+                                        'stemLength' => '32rem',
+                                        'entryDetour' => [
+                                            'side' => 'right',
+                                            'bridgeLength' => '10rem',
+                                            'arcRadius' => '2rem',
+                                            'beforeLength' => '0rem',
+                                            'afterLength' => '2rem',
+                                        ],
+                                        'label' => [
+                                            'text' => ['CASE published'],
+                                            'width' => 'default',
+                                            'align' => 'left',
+                                        ],
+                                        'actionLabel' => [
+                                            'text' => ['Display article'],
+                                            'width' => 'default',
+                                            'color' => 'green',
+                                        ],
+                                        'exitLabel' => ['text' => ['BREAK'], 'align' => 'right'],
+                                    ],
+                                ]"
+                                :case-default="[
+                                    'text' => ['Show status hint'],
+                                    'width' => 'default',
+                                    'color' => 'zinc',
+                                    'label' => ['text' => ['DEFAULT'], 'width' => 'default', 'align' => 'left'],
+                                    'exitLabel' => [
+                                        'text' => ['END outer SWITCH'],
+                                        'width' => 'default',
+                                        'align' => 'right',
+                                    ],
+                                ]"
+                            />
+
+                            {{-- Inner SWITCH: choose an editor from the article format. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-switch-case
+                                id="literature.switch.1.action-sequence-saved.inner"
+                                attach-to="literature.switch.1.action-sequence-saved.outer.case.editable.anchorNode-end"
+                                side="right"
+                                bridge-length="2rem"
+                                stem-length="2rem"
+                                color="amber"
+                                :case-expression="[
+                                    'text' => ['SWITCH ($format)'],
+                                    'width' => 'default',
+                                    'stemLength' => '3rem',
+                                ]"
+                                :cases="[
+                                    [
+                                        'key' => 'text',
+                                        'label' => ['text' => ['CASE text'], 'width' => 'half', 'align' => 'right'],
+                                        'actionLabel' => [
+                                            'text' => ['Open text editor'],
+                                            'width' => 'default',
                                             'color' => 'violet',
                                         ],
                                     ],
-                                    'actionLabel' => [
-                                        'text' => ['Prepare editing'],
+                                    [
+                                        'key' => 'image',
+                                        'label' => ['text' => ['CASE image'], 'width' => 'half', 'align' => 'right'],
+                                        'actionLabel' => [
+                                            'text' => ['Open image editor'],
+                                            'width' => 'default',
+                                            'color' => 'sky',
+                                        ],
+                                    ],
+                                ]"
+                                :case-default="[
+                                    'text' => ['Open plain editor'],
+                                    'width' => 'default',
+                                    'color' => 'orange',
+                                    'label' => ['text' => ['DEFAULT'], 'width' => 'half', 'align' => 'right'],
+                                    'exitLabel' => [
+                                        'text' => ['END inner SWITCH'],
                                         'width' => 'default',
-                                        'color' => 'amber',
-                                        'return' => false,
+                                        'align' => 'left',
                                     ],
-                                    'exitLabel' => ['text' => ['Nested SWITCH'], 'width' => 'default', 'align' => 'right'],
-                                ],
-                                [
-                                    'key' => 'published',
-                                    'stemLength' => '32rem',
-                                    'entryDetour' => [
-                                        'side' => 'right',
-                                        'bridgeLength' => '10rem',
-                                        'arcRadius' => '2rem',
-                                        'beforeLength' => '0rem',
-                                        'afterLength' => '2rem',
-                                    ],
-                                    'label' => ['text' => ['CASE published'], 'width' => 'default', 'align' => 'left'],
-                                    'actionLabel' => [
-                                        'text' => ['Display article'],
-                                        'width' => 'default',
-                                        'color' => 'green',
-                                    ],
-                                    'exitLabel' => ['text' => ['BREAK'], 'align' => 'right'],
-                                ],
-                            ]"
-                            :case-default="[
-                                'text' => ['Show status hint'],
-                                'width' => 'default',
-                                'color' => 'zinc',
-                                'label' => ['text' => ['DEFAULT'], 'width' => 'default', 'align' => 'left'],
-                                'exitLabel' => ['text' => ['END outer SWITCH'], 'width' => 'default', 'align' => 'right'],
-                            ]"
-                        />
+                                ]"
+                            />
 
-                        {{-- Inner SWITCH: choose an editor from the article format. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-switch-case
-                            id="literature.switch.1.action-sequence-saved.inner"
-                            attach-to="literature.switch.1.action-sequence-saved.outer.case.editable.anchorNode-end"
-                            side="right"
-                            bridge-length="2rem"
-                            stem-length="2rem"
-                            color="amber"
-                            :case-expression="[
-                                'text' => ['SWITCH ($format)'],
-                                'width' => 'default',
-                                'stemLength' => '3rem',
-                            ]"
-                            :cases="[
-                                [
-                                    'key' => 'text',
-                                    'label' => ['text' => ['CASE text'], 'width' => 'half', 'align' => 'right'],
-                                    'actionLabel' => [
-                                        'text' => ['Open text editor'],
-                                        'width' => 'default',
-                                        'color' => 'violet',
-                                    ],
-                                ],
-                                [
-                                    'key' => 'image',
-                                    'label' => ['text' => ['CASE image'], 'width' => 'half', 'align' => 'right'],
-                                    'actionLabel' => [
-                                        'text' => ['Open image editor'],
-                                        'width' => 'default',
-                                        'color' => 'sky',
-                                    ],
-                                ],
-                            ]"
-                            :case-default="[
-                                'text' => ['Open plain editor'],
-                                'width' => 'default',
-                                'color' => 'orange',
-                                'label' => ['text' => ['DEFAULT'], 'width' => 'half', 'align' => 'right'],
-                                'exitLabel' => ['text' => ['END inner SWITCH'], 'width' => 'default', 'align' => 'left'],
-                            ]"
-                        />
+                            {{-- Every inner CASE and DEFAULT reaches this action before the outer BREAK. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.switch.1.action-sequence-saved.finish"
+                                attach-to="literature.switch.1.action-sequence-saved.inner.anchorNode-end"
+                                color="rose"
+                                before-length="2rem"
+                                after-length="2rem"
+                                :step-label="[
+                                    'text' => ['Save editing result'],
+                                    'width' => 'default',
+                                ]"
+                            />
 
-                        {{-- Every inner CASE and DEFAULT reaches this action before the outer BREAK. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.switch.1.action-sequence-saved.finish"
-                            attach-to="literature.switch.1.action-sequence-saved.inner.anchorNode-end"
-                            color="rose"
-                            before-length="2rem"
-                            after-length="2rem"
-                            :step-label="[
-                                'text' => ['Save editing result'],
-                                'width' => 'default',
-                            ]"
-                        />
+                            {{-- Return after Save editing result to this outer CASE output rail. --}}
+                            @php
+                                $nestedGraphId = 'idea-to-paper-flow-switch-case-action-sequence';
+                                $sequenceEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    $nestedGraphId,
+                                    'literature.switch.1.action-sequence-saved.finish.anchorNode-end',
+                                );
+                                $outerReturn = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    $nestedGraphId,
+                                    'literature.switch.1.action-sequence-saved.outer.case.editable.anchorNode-return',
+                                );
+                                $returnBridge =
+                                    'calc(' . $sequenceEnd['x'] . ' - ' . $outerReturn['x'] . ' - (2 * 2.75rem))';
+                            @endphp
+                            <x-translation-workbench::ui.tw-graph.parts.sideways
+                                id="literature.switch.1.action-sequence-saved.inner-return"
+                                :anchor-start="$sequenceEnd"
+                                side="right"
+                                arc-radius="2.75rem"
+                                :bridge-length="$returnBridge"
+                                color="rose"
+                                :joint-arrow-end="true"
+                                dev-counter-end="R"
+                            />
+                            @php
+                                $returnEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    $nestedGraphId,
+                                    'literature.switch.1.action-sequence-saved.inner-return.anchorNode-end',
+                                );
+                            @endphp
+                            <x-translation-workbench::ui.tw-graph.parts.start
+                                id="literature.switch.1.action-sequence-saved.inner-return.stem"
+                                :anchor-start="$returnEnd"
+                                return-to="literature.switch.1.action-sequence-saved.outer.case.editable.anchorNode-return"
+                                :length="'calc(' . $outerReturn['y'] . ' - ' . $returnEnd['y'] . ')'"
+                                :gradient="false"
+                                :node-end="false"
+                                :dev-counter-end="false"
+                                color="rose"
+                            />
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.switch.1.action-sequence-saved.continue"
+                                attach-to="literature.switch.1.action-sequence-saved.outer.anchorNode-end"
+                                color="fuchsia"
+                                :step-label="['text' => ['Continue process'], 'width' => 'default']"
+                            />
+                        </x-translation-workbench::ui.tw-graph>
+                        {{-- flow-switch-case-action-sequence-example-1:end --}}
+                    </div>
 
-                        {{-- Return after Save editing result to this outer CASE output rail. --}}
-                        @php
-                            $nestedGraphId = 'idea-to-paper-flow-switch-case-action-sequence';
-                            $sequenceEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                $nestedGraphId,
-                                'literature.switch.1.action-sequence-saved.finish.anchorNode-end',
-                            );
-                            $outerReturn = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                $nestedGraphId,
-                                'literature.switch.1.action-sequence-saved.outer.case.editable.anchorNode-return',
-                            );
-                            $returnBridge = 'calc(' . $sequenceEnd['x'] . ' - ' . $outerReturn['x'] . ' - (2 * 2.75rem))';
-                        @endphp
-                        <x-translation-workbench::ui.tw-graph.parts.sideways
-                            id="literature.switch.1.action-sequence-saved.inner-return"
-                            :anchor-start="$sequenceEnd"
-                            side="right"
-                            arc-radius="2.75rem"
-                            :bridge-length="$returnBridge"
-                            color="rose"
-                            :joint-arrow-end="true"
-                            dev-counter-end="R"
-                        />
-                        @php
-                            $returnEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                $nestedGraphId,
-                                'literature.switch.1.action-sequence-saved.inner-return.anchorNode-end',
-                            );
-                        @endphp
-                        <x-translation-workbench::ui.tw-graph.parts.start
-                            id="literature.switch.1.action-sequence-saved.inner-return.stem"
-                            :anchor-start="$returnEnd"
-                            return-to="literature.switch.1.action-sequence-saved.outer.case.editable.anchorNode-return"
-                            :length="'calc(' . $outerReturn['y'] . ' - ' . $returnEnd['y'] . ')'"
-                            :gradient="false"
-                            :node-end="false"
-                            :dev-counter-end="false"
-                            color="rose"
-                        />
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.switch.1.action-sequence-saved.continue"
-                            attach-to="literature.switch.1.action-sequence-saved.outer.anchorNode-end"
-                            color="fuchsia"
-                            :step-label="['text' => ['Continue process'], 'width' => 'default']"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- flow-switch-case-action-sequence-example-1:end --}}
-                </div>
-                <x-translation-workbench::ui.common.heading-counter
-                    example="flow-switch-case-action-sequence-example-2"
-                    size="sm"
-                >{{ __('Outer side="right" · Inner side="left"') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- flow-switch-case-action-sequence-example-2:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-flow-switch-case-action-sequence-right"
-                        :dev="true"
-                        :coordinates="true"
-                        color="cyan"
-                        min-width="86rem"
-                        min-height="80rem"
-                        horizontal-padding="6rem"
+                    <x-translation-workbench::ui.common.heading-counter
+                        example="flow-switch-case-action-sequence-example-2"
+                        size="sm"
                     >
-                        <x-translation-workbench::ui.tw-graph.strang.flow-start
-                            id="literature.switch.1.action-sequence-saved-right.start"
-                            :start-label="['text' => ['Article request'], 'width' => 'default']"
-                        />
-
-                        {{-- Outer SWITCH: three CASE entries fuse before the shared action and inner SWITCH. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-switch-case
-                            id="literature.switch.1.action-sequence-saved-right.outer"
-                            attach-to="literature.switch.1.action-sequence-saved-right.start.anchorNode-end"
-                            side="right"
-                            bridge-length="8rem"
-                            stem-length="3rem"
+                        {{ __('Outer side="right" · Inner side="left"') }}
+                    </x-translation-workbench::ui.common.heading-counter>
+                    <div
+                        class="overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                        {{-- flow-switch-case-action-sequence-example-2:start --}}
+                        <x-translation-workbench::ui.tw-graph
+                            graph-id="idea-to-paper-flow-switch-case-action-sequence-right"
+                            :dev="true"
+                            :coordinates="true"
                             color="cyan"
-                            :case-expression="[
-                                'text' => ['SWITCH ($status)'],
-                                'width' => 'default',
-                                'stemLength' => '3rem',
-                            ]"
-                            :cases="[
-                                [
-                                    'key' => 'editable',
-                                    'entryStemLength' => '4rem',
-                                    'entries' => [
-                                        [
-                                            'key' => 'draft',
-                                            'label' => ['text' => ['CASE draft'], 'width' => 'default', 'align' => 'right'],
-                                            'color' => 'amber',
-                                        ],
-                                        [
-                                            'key' => 'review',
-                                            'label' => ['text' => ['CASE review'], 'width' => 'default', 'align' => 'right'],
-                                            'color' => 'orange',
-                                        ],
-                                        [
-                                            'key' => 'revision',
-                                            'label' => [
-                                                'text' => ['CASE revision'],
-                                                'width' => 'default',
-                                                'align' => 'right',
+                            min-width="86rem"
+                            min-height="80rem"
+                            horizontal-padding="6rem"
+                        >
+                            <x-translation-workbench::ui.tw-graph.strang.flow-start
+                                id="literature.switch.1.action-sequence-saved-right.start"
+                                :start-label="['text' => ['Article request'], 'width' => 'default']"
+                            />
+
+                            {{-- Outer SWITCH: three CASE entries fuse before the shared action and inner SWITCH. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-switch-case
+                                id="literature.switch.1.action-sequence-saved-right.outer"
+                                attach-to="literature.switch.1.action-sequence-saved-right.start.anchorNode-end"
+                                side="right"
+                                bridge-length="8rem"
+                                stem-length="3rem"
+                                color="cyan"
+                                :case-expression="[
+                                    'text' => ['SWITCH ($status)'],
+                                    'width' => 'default',
+                                    'stemLength' => '3rem',
+                                ]"
+                                :cases="[
+                                    [
+                                        'key' => 'editable',
+                                        'entryStemLength' => '4rem',
+                                        'entries' => [
+                                            [
+                                                'key' => 'draft',
+                                                'label' => [
+                                                    'text' => ['CASE draft'],
+                                                    'width' => 'default',
+                                                    'align' => 'right',
+                                                ],
+                                                'color' => 'amber',
                                             ],
+                                            [
+                                                'key' => 'review',
+                                                'label' => [
+                                                    'text' => ['CASE review'],
+                                                    'width' => 'default',
+                                                    'align' => 'right',
+                                                ],
+                                                'color' => 'orange',
+                                            ],
+                                            [
+                                                'key' => 'revision',
+                                                'label' => [
+                                                    'text' => ['CASE revision'],
+                                                    'width' => 'default',
+                                                    'align' => 'right',
+                                                ],
+                                                'color' => 'violet',
+                                            ],
+                                        ],
+                                        'actionLabel' => [
+                                            'text' => ['Prepare editing'],
+                                            'width' => 'default',
+                                            'color' => 'amber',
+                                            'return' => false,
+                                        ],
+                                        'exitLabel' => [
+                                            'text' => ['Nested SWITCH'],
+                                            'width' => 'default',
+                                            'align' => 'left',
+                                        ],
+                                    ],
+                                    [
+                                        'key' => 'published',
+                                        'stemLength' => '32rem',
+                                        'label' => [
+                                            'text' => ['CASE published'],
+                                            'width' => 'default',
+                                            'align' => 'right',
+                                        ],
+                                        'actionLabel' => [
+                                            'text' => ['Display article'],
+                                            'width' => 'default',
+                                            'color' => 'green',
+                                        ],
+                                        'exitLabel' => ['text' => ['BREAK'], 'align' => 'left'],
+                                    ],
+                                ]"
+                                :case-default="[
+                                    'text' => ['Show status hint'],
+                                    'width' => 'default',
+                                    'color' => 'zinc',
+                                    'label' => ['text' => ['DEFAULT'], 'width' => 'default', 'align' => 'right'],
+                                    'exitLabel' => [
+                                        'text' => ['END outer SWITCH'],
+                                        'width' => 'default',
+                                        'align' => 'left',
+                                    ],
+                                ]"
+                            />
+
+                            {{-- Inner SWITCH: choose an editor from the article format. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-switch-case
+                                id="literature.switch.1.action-sequence-saved-right.inner"
+                                attach-to="literature.switch.1.action-sequence-saved-right.outer.case.editable.anchorNode-end"
+                                side="left"
+                                bridge-length="2rem"
+                                stem-length="2rem"
+                                color="amber"
+                                :case-expression="[
+                                    'text' => ['SWITCH ($format)'],
+                                    'width' => 'default',
+                                    'stemLength' => '3rem',
+                                ]"
+                                :cases="[
+                                    [
+                                        'key' => 'text',
+                                        'label' => ['text' => ['CASE text'], 'width' => 'half', 'align' => 'left'],
+                                        'actionLabel' => [
+                                            'text' => ['Open text editor'],
+                                            'width' => 'default',
                                             'color' => 'violet',
                                         ],
                                     ],
-                                    'actionLabel' => [
-                                        'text' => ['Prepare editing'],
-                                        'width' => 'default',
-                                        'color' => 'amber',
-                                        'return' => false,
+                                    [
+                                        'key' => 'image',
+                                        'label' => ['text' => ['CASE image'], 'width' => 'half', 'align' => 'left'],
+                                        'actionLabel' => [
+                                            'text' => ['Open image editor'],
+                                            'width' => 'default',
+                                            'color' => 'sky',
+                                        ],
                                     ],
-                                    'exitLabel' => ['text' => ['Nested SWITCH'], 'width' => 'default', 'align' => 'left'],
-                                ],
-                                [
-                                    'key' => 'published',
-                                    'stemLength' => '32rem',
-                                    'label' => ['text' => ['CASE published'], 'width' => 'default', 'align' => 'right'],
-                                    'actionLabel' => [
-                                        'text' => ['Display article'],
+                                ]"
+                                :case-default="[
+                                    'text' => ['Open plain editor'],
+                                    'width' => 'default',
+                                    'color' => 'orange',
+                                    'label' => ['text' => ['DEFAULT'], 'width' => 'half', 'align' => 'left'],
+                                    'exitLabel' => [
+                                        'text' => ['END inner SWITCH'],
                                         'width' => 'default',
-                                        'color' => 'green',
+                                        'align' => 'right',
                                     ],
-                                    'exitLabel' => ['text' => ['BREAK'], 'align' => 'left'],
-                                ],
-                            ]"
-                            :case-default="[
-                                'text' => ['Show status hint'],
-                                'width' => 'default',
-                                'color' => 'zinc',
-                                'label' => ['text' => ['DEFAULT'], 'width' => 'default', 'align' => 'right'],
-                                'exitLabel' => ['text' => ['END outer SWITCH'], 'width' => 'default', 'align' => 'left'],
-                            ]"
-                        />
+                                ]"
+                            />
 
-                        {{-- Inner SWITCH: choose an editor from the article format. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-switch-case
-                            id="literature.switch.1.action-sequence-saved-right.inner"
-                            attach-to="literature.switch.1.action-sequence-saved-right.outer.case.editable.anchorNode-end"
-                            side="left"
-                            bridge-length="2rem"
-                            stem-length="2rem"
-                            color="amber"
-                            :case-expression="[
-                                'text' => ['SWITCH ($format)'],
-                                'width' => 'default',
-                                'stemLength' => '3rem',
-                            ]"
-                            :cases="[
-                                [
-                                    'key' => 'text',
-                                    'label' => ['text' => ['CASE text'], 'width' => 'half', 'align' => 'left'],
-                                    'actionLabel' => [
-                                        'text' => ['Open text editor'],
-                                        'width' => 'default',
-                                        'color' => 'violet',
-                                    ],
-                                ],
-                                [
-                                    'key' => 'image',
-                                    'label' => ['text' => ['CASE image'], 'width' => 'half', 'align' => 'left'],
-                                    'actionLabel' => [
-                                        'text' => ['Open image editor'],
-                                        'width' => 'default',
-                                        'color' => 'sky',
-                                    ],
-                                ],
-                            ]"
-                            :case-default="[
-                                'text' => ['Open plain editor'],
-                                'width' => 'default',
-                                'color' => 'orange',
-                                'label' => ['text' => ['DEFAULT'], 'width' => 'half', 'align' => 'left'],
-                                'exitLabel' => ['text' => ['END inner SWITCH'], 'width' => 'default', 'align' => 'right'],
-                            ]"
-                        />
+                            {{-- Every inner CASE and DEFAULT reaches this action before the outer BREAK. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.switch.1.action-sequence-saved-right.finish"
+                                attach-to="literature.switch.1.action-sequence-saved-right.inner.anchorNode-end"
+                                color="rose"
+                                before-length="2rem"
+                                after-length="2rem"
+                                :step-label="[
+                                    'text' => ['Save editing result'],
+                                    'width' => 'default',
+                                ]"
+                            />
 
-                        {{-- Every inner CASE and DEFAULT reaches this action before the outer BREAK. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.switch.1.action-sequence-saved-right.finish"
-                            attach-to="literature.switch.1.action-sequence-saved-right.inner.anchorNode-end"
-                            color="rose"
-                            before-length="2rem"
-                            after-length="2rem"
-                            :step-label="[
-                                'text' => ['Save editing result'],
-                                'width' => 'default',
-                            ]"
-                        />
-
-                        {{-- Return after Save editing result to this outer CASE output rail. --}}
-                        @php
-                            $nestedGraphId = 'idea-to-paper-flow-switch-case-action-sequence-right';
-                            $sequenceEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                $nestedGraphId,
-                                'literature.switch.1.action-sequence-saved-right.finish.anchorNode-end',
-                            );
-                            $outerReturn = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                $nestedGraphId,
-                                'literature.switch.1.action-sequence-saved-right.outer.case.editable.anchorNode-return',
-                            );
-                            $returnBridge = 'calc(' . $outerReturn['x'] . ' - ' . $sequenceEnd['x'] . ' - (2 * 2.75rem))';
-                        @endphp
-                        <x-translation-workbench::ui.tw-graph.parts.sideways
-                            id="literature.switch.1.action-sequence-saved-right.inner-return"
-                            :anchor-start="$sequenceEnd"
-                            side="left"
-                            arc-radius="2.75rem"
-                            :bridge-length="$returnBridge"
-                            color="rose"
-                            :joint-arrow-end="true"
-                            dev-counter-end="R"
-                        />
-                        @php
-                            $returnEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                $nestedGraphId,
-                                'literature.switch.1.action-sequence-saved-right.inner-return.anchorNode-end',
-                            );
-                        @endphp
-                        <x-translation-workbench::ui.tw-graph.parts.start
-                            id="literature.switch.1.action-sequence-saved-right.inner-return.stem"
-                            :anchor-start="$returnEnd"
-                            return-to="literature.switch.1.action-sequence-saved-right.outer.case.editable.anchorNode-return"
-                            :length="'calc(' . $outerReturn['y'] . ' - ' . $returnEnd['y'] . ')'"
-                            :gradient="false"
-                            :node-end="false"
-                            :dev-counter-end="false"
-                            color="rose"
-                        />
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.switch.1.action-sequence-saved-right.continue"
-                            attach-to="literature.switch.1.action-sequence-saved-right.outer.anchorNode-end"
-                            color="fuchsia"
-                            :step-label="['text' => ['Continue process'], 'width' => 'default']"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- flow-switch-case-action-sequence-example-2:end --}}
+                            {{-- Return after Save editing result to this outer CASE output rail. --}}
+                            @php
+                                $nestedGraphId = 'idea-to-paper-flow-switch-case-action-sequence-right';
+                                $sequenceEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    $nestedGraphId,
+                                    'literature.switch.1.action-sequence-saved-right.finish.anchorNode-end',
+                                );
+                                $outerReturn = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    $nestedGraphId,
+                                    'literature.switch.1.action-sequence-saved-right.outer.case.editable.anchorNode-return',
+                                );
+                                $returnBridge =
+                                    'calc(' . $outerReturn['x'] . ' - ' . $sequenceEnd['x'] . ' - (2 * 2.75rem))';
+                            @endphp
+                            <x-translation-workbench::ui.tw-graph.parts.sideways
+                                id="literature.switch.1.action-sequence-saved-right.inner-return"
+                                :anchor-start="$sequenceEnd"
+                                side="left"
+                                arc-radius="2.75rem"
+                                :bridge-length="$returnBridge"
+                                color="rose"
+                                :joint-arrow-end="true"
+                                dev-counter-end="R"
+                            />
+                            @php
+                                $returnEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    $nestedGraphId,
+                                    'literature.switch.1.action-sequence-saved-right.inner-return.anchorNode-end',
+                                );
+                            @endphp
+                            <x-translation-workbench::ui.tw-graph.parts.start
+                                id="literature.switch.1.action-sequence-saved-right.inner-return.stem"
+                                :anchor-start="$returnEnd"
+                                return-to="literature.switch.1.action-sequence-saved-right.outer.case.editable.anchorNode-return"
+                                :length="'calc(' . $outerReturn['y'] . ' - ' . $returnEnd['y'] . ')'"
+                                :gradient="false"
+                                :node-end="false"
+                                :dev-counter-end="false"
+                                color="rose"
+                            />
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.switch.1.action-sequence-saved-right.continue"
+                                attach-to="literature.switch.1.action-sequence-saved-right.outer.anchorNode-end"
+                                color="fuchsia"
+                                :step-label="['text' => ['Continue process'], 'width' => 'default']"
+                            />
+                        </x-translation-workbench::ui.tw-graph>
+                        {{-- flow-switch-case-action-sequence-example-2:end --}}
+                    </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-                .../flow/switch-case/flow-switch-case-action-sequence.blade.php
-            </flux:field>
+            {{-- Path/To/File --}}
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/flow/switch-case/flow-switch-case-action-sequence.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

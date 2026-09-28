@@ -6,19 +6,30 @@
             icon="file-text"
         >
             <flux:callout.heading>{{ __('IF ternär') }}</flux:callout.heading>
-            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-ternary" />
             <flux:callout.text>
                 {{ __('A ternary expression evaluates a condition and yields exactly one selected value. Only the selected branch is evaluated. True and False are explanatory node labels; the alternatives are embedded in the bridges. Here: $label = $name !== null ? $name : "Unknown". The assignment is a separate step after the common output; it is not part of the ternary expression itself.') }}
             </flux:callout.text>
+
+            <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.if.flow-if-ternary" />
+
             @php
                 $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.if.flow-if-ternary',
                 );
             @endphp
-            <flux:separator class="mt-4" :text="__('Code examples')" />
-            <flux:accordion transition exclusive>
+
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
+            <flux:accordion
+                transition
+                exclusive
+            >
                 <flux:accordion.item expanded>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="flow-if-ternary-example-1"
                             variant="accordion"
@@ -31,7 +42,10 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
                 <flux:accordion.item>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="flow-if-ternary-example-2"
                             variant="accordion"
@@ -44,12 +58,15 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
-            <flux:separator class="mt-4" :text="__('Props used in these examples')" />
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('IF ternär props') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                     <flux:table container:class="max-h-80">
-                        <flux:table.columns class="bg-white dark:bg-zinc-900" sticky>
+                        <flux:table.columns
+                            class="bg-white dark:bg-zinc-900"
+                            sticky
+                        >
                             <flux:table.column>{{ __('Prop') }}</flux:table.column>
                             <flux:table.column>{{ __('Default') }}</flux:table.column>
                             <flux:table.column>{{ __('Array keys') }}</flux:table.column>
@@ -153,7 +170,8 @@
                                     <code>anchor-start</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    <code>[&#x27;x&#x27; =&gt; &#x27;0rem&#x27;, &#x27;y&#x27; =&gt; &#x27;0rem&#x27;]</code>
+                                    <code>[&#x27;x&#x27; =&gt; &#x27;0rem&#x27;, &#x27;y&#x27; =&gt;
+                                        &#x27;0rem&#x27;]</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     x, y
@@ -416,6 +434,7 @@
                 {{ __('Continue with attach-to="…decision-1.anchorNode-end" to use the selected value. The assignment shown here is optional: the expression can also be used in a return statement or a function argument.') }}
             </flux:text>
         </flux:callout>
+        {{-- Preview --}}
         <flux:callout
             class="min-w-0"
             color="emerald"
@@ -425,131 +444,148 @@
                 :dev="$dev ?? true"
                 :coordinates="$coordinates ?? false"
             >
-                <x-translation-workbench::ui.common.heading-counter
-                    example="flow-if-ternary-example-1"
-                    size="sm"
-                >{{ __('side="left"') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- flow-if-ternary-example-1:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-step-08-flow-if-ternary"
-                        :dev="true"
-                        :coordinates="true"
-                        color="zinc"
-                        horizontal-padding="12rem"
-                        min-width="56rem"
-                        min-height="34rem"
-                    >
+                <div class="mt-4 grid min-w-0 gap-4 xl:grid-cols-1">
+                    <div class="min-w-0">
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="flow-if-ternary-example-1"
+                            size="sm"
+                        >
+                            {{ __('side="left"') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                            {{-- flow-if-ternary-example-1:start --}}
+                            <x-translation-workbench::ui.tw-graph
+                                graph-id="idea-to-paper-step-08-flow-if-ternary"
+                                :dev="true"
+                                :coordinates="true"
+                                color="zinc"
+                                horizontal-padding="12rem"
+                                min-width="56rem"
+                                min-height="34rem"
+                            >
 
-                        <x-translation-workbench::ui.tw-graph.strang.flow-if-ternary
-                            id="literature.flow.1.ternary-process.decision-1"
-                            :anchor-start="['x' => '0rem', 'y' => '3rem']"
-                            color="amber"
-                            before-length="2rem"
-                            after-length="2rem"
-                            arc-radius="2.75rem"
-                            side="left"
-                            stem-length="2rem"
-                            bridge-length="2rem"
-                            true-bridge-length="5rem"
-                            false-bridge-length="3rem"
-                            :condition-label="['text' => ['$name !== null?'], 'width' => 'default', 'align' => 'center']"
-                            :if-start="[
-                                'text' => ['$name'],
-                                'width' => 'default',
-                                'align' => 'center',
-                                'badgeColor' => 'green',
-                                'color' => 'green',
-                            ]"
-                            :if-end="[
-                                'text' => ['\'Unknown\''],
-                                'width' => 'half',
-                                'align' => 'center',
-                                'badgeColor' => 'rose',
-                                'color' => 'rose',
-                            ]"
-                        />
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.flow.1.ternary-process.assignment"
-                            attach-to="literature.flow.1.ternary-process.decision-1.anchorNode-end"
-                            before-length="3rem"
-                            after-length="3rem"
-                            color="zinc"
-                            :step-label="[
-                                'text' => ['$label = selected value'],
-                                'width' => 'halfLong',
-                                'align' => 'center',
-                            ]"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- flow-if-ternary-example-1:end --}}
-                </div>
-                <x-translation-workbench::ui.common.heading-counter
-                    example="flow-if-ternary-example-2"
-                    size="sm"
-                >{{ __('side="right"') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- flow-if-ternary-example-2:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-step-08-flow-if-ternary-right"
-                        :dev="true"
-                        :coordinates="true"
-                        color="zinc"
-                        horizontal-padding="12rem"
-                        min-width="56rem"
-                        min-height="34rem"
-                    >
+                                <x-translation-workbench::ui.tw-graph.strang.flow-if-ternary
+                                    id="literature.flow.1.ternary-process.decision-1"
+                                    :anchor-start="['x' => '0rem', 'y' => '3rem']"
+                                    color="amber"
+                                    before-length="2rem"
+                                    after-length="2rem"
+                                    arc-radius="2.75rem"
+                                    side="left"
+                                    stem-length="2rem"
+                                    bridge-length="2rem"
+                                    true-bridge-length="5rem"
+                                    false-bridge-length="3rem"
+                                    :condition-label="[
+                                        'text' => ['$name !== null?'],
+                                        'width' => 'default',
+                                        'align' => 'center',
+                                    ]"
+                                    :if-start="[
+                                        'text' => ['$name'],
+                                        'width' => 'default',
+                                        'align' => 'center',
+                                        'badgeColor' => 'green',
+                                        'color' => 'green',
+                                    ]"
+                                    :if-end="[
+                                        'text' => ['\'Unknown\''],
+                                        'width' => 'half',
+                                        'align' => 'center',
+                                        'badgeColor' => 'rose',
+                                        'color' => 'rose',
+                                    ]"
+                                />
+                                <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                    id="literature.flow.1.ternary-process.assignment"
+                                    attach-to="literature.flow.1.ternary-process.decision-1.anchorNode-end"
+                                    before-length="3rem"
+                                    after-length="3rem"
+                                    color="zinc"
+                                    :step-label="[
+                                        'text' => ['$label = selected value'],
+                                        'width' => 'halfLong',
+                                        'align' => 'center',
+                                    ]"
+                                />
+                            </x-translation-workbench::ui.tw-graph>
+                            {{-- flow-if-ternary-example-1:end --}}
+                        </div>
+                    </div>
 
-                        <x-translation-workbench::ui.tw-graph.strang.flow-if-ternary
-                            id="literature.flow.1.ternary-process-right.decision-1"
-                            :anchor-start="['x' => '0rem', 'y' => '3rem']"
-                            color="cyan"
-                            before-length="2rem"
-                            after-length="2rem"
-                            arc-radius="2.75rem"
-                            side="right"
-                            stem-length="4rem"
-                            bridge-length="2rem"
-                            true-bridge-length="5rem"
-                            false-bridge-length="3rem"
-                            :condition-label="[
-                                'text' => ['$name !== null?'],
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :if-start="[
-                                'text' => ['$name'],
-                                'width' => 'half',
-                                'align' => 'center',
-                                'badgeColor' => 'green',
-                            ]"
-                            :if-end="[
-                                'text' => ['\'Unknown\''],
-                                'width' => 'half',
-                                'align' => 'center',
-                                'badgeColor' => 'rose',
-                            ]"
-                        />
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.flow.1.ternary-process-right.assignment"
-                            attach-to="literature.flow.1.ternary-process-right.decision-1.anchorNode-end"
-                            before-length="2rem"
-                            after-length="2rem"
-                            color="zinc"
-                            :step-label="[
-                                'text' => ['$label = selected value'],
-                                'width' => 'halfLong',
-                                'align' => 'center',
-                            ]"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- flow-if-ternary-example-2:end --}}
+                    <div class="min-w-0">
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="flow-if-ternary-example-2"
+                            size="sm"
+                        >
+                            {{ __('side="right"') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                            {{-- flow-if-ternary-example-2:start --}}
+                            <x-translation-workbench::ui.tw-graph
+                                graph-id="idea-to-paper-step-08-flow-if-ternary-right"
+                                :dev="true"
+                                :coordinates="true"
+                                color="zinc"
+                                horizontal-padding="12rem"
+                                min-width="56rem"
+                                min-height="34rem"
+                            >
+
+                                <x-translation-workbench::ui.tw-graph.strang.flow-if-ternary
+                                    id="literature.flow.1.ternary-process-right.decision-1"
+                                    :anchor-start="['x' => '0rem', 'y' => '3rem']"
+                                    color="cyan"
+                                    before-length="2rem"
+                                    after-length="2rem"
+                                    arc-radius="2.75rem"
+                                    side="right"
+                                    stem-length="4rem"
+                                    bridge-length="2rem"
+                                    true-bridge-length="5rem"
+                                    false-bridge-length="3rem"
+                                    :condition-label="[
+                                        'text' => ['$name !== null?'],
+                                        'width' => 'default',
+                                        'align' => 'center',
+                                    ]"
+                                    :if-start="[
+                                        'text' => ['$name'],
+                                        'width' => 'half',
+                                        'align' => 'center',
+                                        'badgeColor' => 'green',
+                                    ]"
+                                    :if-end="[
+                                        'text' => ['\'Unknown\''],
+                                        'width' => 'half',
+                                        'align' => 'center',
+                                        'badgeColor' => 'rose',
+                                    ]"
+                                />
+                                <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                    id="literature.flow.1.ternary-process-right.assignment"
+                                    attach-to="literature.flow.1.ternary-process-right.decision-1.anchorNode-end"
+                                    before-length="2rem"
+                                    after-length="2rem"
+                                    color="zinc"
+                                    :step-label="[
+                                        'text' => ['$label = selected value'],
+                                        'width' => 'halfLong',
+                                        'align' => 'center',
+                                    ]"
+                                />
+                            </x-translation-workbench::ui.tw-graph>
+                            {{-- flow-if-ternary-example-2:end --}}
+                        </div>
+                    </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/if/flow-if-ternary.blade.php
-            </flux:field>
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/flow/if/flow-if-ternary.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

@@ -69,7 +69,7 @@ it('renders canvas coordinate diagnostics only when dev mode and coordinates are
 
     expect($visibleHtml)
         ->toContain('tw-graph-protocol-coordinate-only')
-        ->toContain('canvas-center-top')
+        ->toContain('data-tw-graph-canvas-summary')
         ->and($hiddenHtml)
         ->not->toContain('tw-graph-protocol-coordinate-only')
         ->toContain('--tw-graph-protocol-calculated-width');
@@ -97,7 +97,7 @@ it('does not register non canvas dev boxes as graph layout bounds', function ():
         ->not->toContain('diagnostics.left.3.visual-only');
 });
 
-it('keeps diagnostic dev boxes behind graph elements while preserving hover labels', function (): void {
+it('keeps diagnostic dev boxes behind graph elements and keeps captions visible with bounding boxes', function (): void {
     $html = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph graph-id="diagnostic-fixture" :dev="true">
             <x-translation-workbench::ui.tw-graph.dev-box
@@ -113,7 +113,10 @@ it('keeps diagnostic dev boxes behind graph elements while preserving hover labe
     expect($html)
         ->toContain('tw-graph-protocol-dev-only group pointer-events-none absolute rounded border border-dashed')
         ->toContain('title="strang.branch.left.1.bridge-1"')
-        ->toContain('border-color: rgb(14 165 233 / 0.35)')
+        ->toContain('data-tw-graph-dev-caption')
+        ->not->toContain('data-flux-tooltip', 'opacity-0')
+        ->not->toContain('group-hover:opacity-100')
+        ->toContain('border-color: rgb(14 165 233 / 1)')
         ->not->toContain('absolute z-50 rounded border border-dashed')
         ->not->toContain('absolute z-40 rounded border border-dashed');
 });
@@ -154,4 +157,27 @@ it('uses the resolved protocol minimum dimensions and hides configuration lines 
         </x-translation-workbench::ui.tw-graph>
     BLADE);
     expect($hidden)->not->toContain('data-tw-graph-canvas-minimum');
+});
+
+it('labels enclosing IF regions permanently while individual elements retain copyable tooltips', function (): void {
+    $html = view('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.if.flow-if-nested-1')->render();
+    $document = new DOMDocument;
+    @$document->loadHTML($html);
+    $xpath = new DOMXPath($document);
+    $captions = $xpath->query('//*[@data-tw-graph-dev-caption]');
+    expect($captions->length)->toBe(12);
+    foreach ($captions as $caption) {
+        $sourceId = substr($caption->parentNode->getAttribute('data-tw-graph-dev-box'), 0, -strlen('.dev-box'));
+        expect($caption->textContent)
+            ->toContain('...::ui.tw-graph.', 'id="'.$sourceId.'"')
+            ->not->toContain('Inner IF / ELSEIF / ELSE', 'Outer IF including nested section');
+    }
+    foreach (['primitive-line', 'primitive-arc', 'primitive-text', 'primitive-node', 'primitive-joint-arrow', 'primitive-dev-node-counter'] as $kind) {
+        $elements = $xpath->query('//*[contains(@class, "tw-graph-protocol-'.$kind.'") and @data-tw-graph-path and @title]');
+        expect($elements->length)->toBeGreaterThan(0, $kind);
+        foreach ($elements as $element) {
+            expect($element->getAttribute('title'))->toContain($element->getAttribute('data-tw-graph-path'));
+            expect($element->getAttribute('x-on:click.stop'))->toContain('navigator.clipboard?.writeText($el.dataset.twGraphPath)');
+        }
+    }
 });

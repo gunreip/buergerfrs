@@ -35,6 +35,32 @@ const directory = process.argv[2] || path.join(require('node:os').tmpdir(), 'tw-
                     return { id: graph.id, issues: result?.issues || [], count: result?.records.length || 0,
                         checked: !!graph.dataset.twGraphBoundsIssues };
                 }));
+                if (item.name.endsWith('flow-if-nested-1')) {
+                    const regions = await page.evaluate(() => [...document.querySelectorAll('[data-tw-graph-bounds-model]')].map(graph => {
+                        const canvas = graph.querySelector('.tw-graph-protocol-canvas');
+                        const frame = canvas.getBoundingClientRect();
+                        return { width: frame.width, scroll: canvas.scrollWidth,
+                            boxes: [...canvas.querySelectorAll('[data-tw-graph-region]')].map(box => {
+                                const caption = box.querySelector('[data-tw-graph-dev-caption]');
+                                const rect = caption.getBoundingClientRect();
+                                const style = getComputedStyle(box);
+                                return { text: caption.textContent,
+                                    visibleFrame: style.visibility === 'visible' && style.borderTopStyle === 'solid' &&
+                                        parseFloat(style.borderTopWidth) === 1 && parseInt(style.zIndex) >= 40,
+                                    withinCanvas: rect.left >= frame.left - 1 &&
+                                    rect.right <= frame.right + 1 && rect.top >= frame.top - 1 && rect.bottom <= frame.bottom + 1 };
+                            }) };
+                    }));
+                    for (const region of regions) {
+                        assert.equal(region.boxes.length, 6, 'Every independently authored public call has a region');
+                        assert.ok(region.boxes.every(box => box.withinCanvas), 'Region captions stay inside the canvas');
+                        assert.ok(region.boxes.every(box => box.visibleFrame), 'Component regions have distinct visible frames');
+                        assert.ok(Math.abs(region.width - region.scroll) < 1, 'Region captions do not add scrolling');
+                        for (const name of ['strang.flow-start', 'strang.flow-step', 'parts.sideways', 'parts.start']) {
+                            assert.ok(region.boxes.some(box => box.text.includes(name)), name);
+                        }
+                    }
+                }
                 results.push({ name: item.name, graphs, errors });
                 // A deliberately broken geometry must be reported, and must not redefine the canvas bounds.
                 if (!regressionChecked && item.name.endsWith('flow-while-test')) {

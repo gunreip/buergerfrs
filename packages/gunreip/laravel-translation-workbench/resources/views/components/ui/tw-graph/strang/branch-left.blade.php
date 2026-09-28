@@ -51,7 +51,6 @@
     $inheritedColor = $color ?? null;
 
 
-
 @endphp
 
 @props([
@@ -72,6 +71,15 @@
     'counterStart' => 1,
     'zIndex' => 10,
 ])
+
+@php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.strang.branch-left',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
 
 @php
     // Keep the authoring ID throughout the internal component chain.
@@ -266,10 +274,9 @@
         }
     }
 
-    $branchExtensionBoundsPoints = [];
     $branchExtensionConfigs = [];
     $branchExtensionAliases = [];
-    $branchExtensionReturnBridgeBoundsPoints = [];
+
     $branchExtensionReturnBridgeConfigs = [];
     $fallbackWarnings = [];
     $branchExtensionCounterStart = $counterStart + 2 + count($bridgeAnchors) + count($stemAnchors) + ($hasStep ? 1 : 0);
@@ -504,15 +511,6 @@
                 'direction' => 'bottom-top',
             ];
 
-            $extensionBoundsPoints = [
-                $extensionAnchor,
-                $extensionBridgeStart,
-                $extensionBridgeEnd,
-                $extensionArcEnd,
-                ...($extensionHasStep ? [$extensionStepEnd] : []),
-                $extensionVerticalEnd,
-            ];
-            array_push($branchExtensionBoundsPoints, ...$extensionBoundsPoints);
             $branchExtensionRenderIndex++;
             $extensionKey = (string) $branchExtensionRenderIndex;
             $branchExtensionAliases[$legacyExtensionKey] = $extensionKey;
@@ -594,7 +592,6 @@
                 'direction' => 'left-right',
             ];
 
-            array_push($branchExtensionReturnBridgeBoundsPoints, $returnBridgeAnchor, $returnBridgeArcEnd, $returnBridgeEnd);
             $branchExtensionReturnBridgeConfigs[] = [
                 'extensionNumber' => $extensionNumber,
                 'returnBridgeNumber' => $returnBridgeNumber,
@@ -611,7 +608,7 @@
     }
 
     $branchReturnEntries = is_array($branchReturn) ? $branchReturn : [];
-    $branchReturnBoundsPoints = [];
+
     $branchReturnConfigs = [];
     $branchReturnCounterStart = $branchExtensionReturnBridgeCounterStart;
     $forceCloseNode = static function (mixed $closeTo) use ($attachTo, $resolvedGraphId, $resolvedComponentCounter): void {
@@ -691,7 +688,6 @@
             'y' => $add($returnNode2['y'], $resolvedArcRadius),
         ];
 
-        array_push($branchReturnBoundsPoints, $returnAnchor, $returnNode1, $returnNode2, $returnNode3);
         $branchReturnConfigs[(int) $returnIndex] = [
             'anchor' => $returnAnchor,
             'bridgeLength' => $returnBridgeLength,
@@ -702,18 +698,6 @@
         ];
     }
 
-    $bounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([
-        $anchor,
-        $branchStartAnchor,
-        $node1,
-        $node2,
-        $node3,
-        ...($hasStep ? [$stepEnd] : []),
-        $stemEnd,
-        ...$branchExtensionBoundsPoints,
-        ...$branchExtensionReturnBridgeBoundsPoints,
-        ...$branchReturnBoundsPoints,
-    ], '1rem');
     $branchEndDevCounterNext = $counterStart + 2 + count($bridgeAnchors) + count($stemAnchors) + ($hasStep ? 1 : 0);
     $branchEndAnchor = array_replace($stemEnd, [
         'devCounterNext' => $branchEndDevCounterNext,
@@ -789,15 +773,6 @@
     </span>
 @endforeach
 
-<x-translation-workbench::ui.tw-graph.dev-box
-    :id="$id . '.dev-box'"
-    :x="$bounds['left']"
-    :y="$bounds['bottom']"
-    :width="$bounds['width']"
-    :height="$bounds['height']"
-    :color="$resolvedColor"
-    :label="$id"
-/>
 
 <x-translation-workbench::ui.tw-graph.paths.branch
     :id="$id . '.paths.branch'"
@@ -869,3 +844,14 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
     }
 @endphp
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
+@endif

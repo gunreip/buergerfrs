@@ -44,6 +44,15 @@
 ])
 
 @php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.paths.branch-return-extension',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
+
+@php
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn (string $value): string => 'calc(' . $value . ' * -1)';
     $currentAnchor = [
@@ -76,13 +85,6 @@
         'x' => $add($arcEnd['x'], $bridgeDelta),
         'y' => $arcEnd['y'],
     ];
-    $pathBoxPadding = '0.75rem';
-    $pathBoxX = $isLeft ? $currentAnchor['x'] : $bridgeEnd['x'];
-    $pathBoxY = $currentAnchor['y'];
-    $pathBoxWidth = $isLeft
-        ? 'calc(' . $bridgeEnd['x'] . ' - ' . $currentAnchor['x'] . ')'
-        : 'calc(' . $currentAnchor['x'] . ' - ' . $bridgeEnd['x'] . ')';
-    $pathBoxHeight = 'calc(' . $bridgeEnd['y'] . ' - ' . $currentAnchor['y'] . ')';
 
     $segments = [
         [
@@ -147,15 +149,7 @@
     ];
 @endphp
 
-<x-translation-workbench::ui.tw-graph.dev-box
-    :id="$id . '.dev-box'"
-    :x="'calc(' . $pathBoxX . ' - ' . $pathBoxPadding . ')'"
-    :y="'calc(' . $pathBoxY . ' - ' . $pathBoxPadding . ')'"
-    :width="'calc(' . $pathBoxWidth . ' + (' . $pathBoxPadding . ' * 2))'"
-    :height="'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2))'"
-    color="amber"
-    :label="$id"
-/>
+
 
 @foreach ($segments as $segment)
     @if ($segment['component'] === 'arc')
@@ -164,3 +158,14 @@
         <x-translation-workbench::ui.tw-graph.segments.path :segment="$segment['segment']" />
     @endif
 @endforeach
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
+@endif

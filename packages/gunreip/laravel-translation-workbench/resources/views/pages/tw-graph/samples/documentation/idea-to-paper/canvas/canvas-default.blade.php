@@ -18,18 +18,12 @@
             {{ __('Default renders an empty graph canvas exactly as configured by the graph defaults. No canvas prop changes the visual output here.') }}
         </flux:callout.text>
 
-        <flux:separator
-            class="mt-4"
-            :text="__('Code examples')"
-        />
+        <x-translation-workbench::ui.common.separator-code-example-tw-graph />
 
         <x-translation-workbench::ui.tw-graph.code-box
             class="mt-4">{{ $canvasSource->example('canvas-default-1') }}</x-translation-workbench::ui.tw-graph.code-box>
 
-        <flux:separator
-            class="mt-4"
-            :text="__('Props used in this example')"
-        />
+        <x-translation-workbench::ui.common.separator-props-used-tw-graph />
 
         {{-- Canvas Props --}}
         <flux:callout color="indigo">
@@ -113,8 +107,9 @@
                 </div>
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
-        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-            .../idea-to-paper/canvas/canvas-default.blade.php
-        </flux:field>
+        <x-translation-workbench::ui.common.tw-graph-path-file
+            path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/canvas/canvas-default.blade.php"
+            segments="3"
+        />
     </flux:callout>
 </section>

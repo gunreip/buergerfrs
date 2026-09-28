@@ -13,7 +13,7 @@
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.rekey.rekey-source',
                 );
             @endphp
-            <flux:separator class="mt-4" :text="__('Code examples')" />
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
             <flux:accordion transition exclusive>
                 <flux:accordion.item expanded>
                     <flux:callout icon="code" color="indigo">
@@ -29,7 +29,7 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
-            <flux:separator class="mt-4" :text="__('Props used in these examples')" />
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('Rekey source props') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
@@ -243,9 +243,10 @@
                     </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-                .../idea-to-paper/strang/rekey/rekey-source.blade.php
-            </flux:field>
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/strang/rekey/rekey-source.blade.php"
+                segments="4"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

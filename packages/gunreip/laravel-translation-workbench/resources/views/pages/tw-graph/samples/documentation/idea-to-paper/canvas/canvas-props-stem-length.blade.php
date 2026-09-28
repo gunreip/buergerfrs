@@ -17,14 +17,11 @@
             {{ __('stem-length controls the default length of vertical stem segments. A plain trunk inherits this value for its repeated stem path unless a more specific stem length is set on the trunk itself.') }}
         </flux:callout.text>
 
-        <flux:separator
-            class="mt-4"
-            :text="__('Deep reference links')"
-        />
+        <x-translation-workbench::ui.common.separator-deep-reference-links />
 
         <x-translation-workbench::ui.tw-graph.documentation-links example="canvas.canvas-props-stem-length" />
 
-        <flux:separator :text="__('Code examples')" />
+        <x-translation-workbench::ui.common.separator-code-example-tw-graph />
 
         <flux:accordion
             transition
@@ -63,10 +60,7 @@
             </flux:accordion.item>
         </flux:accordion>
 
-        <flux:separator
-            class="mt-4"
-            :text="__('Props used in this example')"
-        />
+        <x-translation-workbench::ui.common.separator-props-used-tw-graph />
 
         {{-- Stem Length Props --}}
         <flux:callout color="indigo">
@@ -248,8 +242,9 @@
                 </div>
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
-        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-            .../idea-to-paper/canvas/canvas-props-stem-length.blade.php
-        </flux:field>
+        <x-translation-workbench::ui.common.tw-graph-path-file
+            path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/canvas/canvas-props-stem-length.blade.php"
+            segments="3"
+        />
     </flux:callout>
 </section>

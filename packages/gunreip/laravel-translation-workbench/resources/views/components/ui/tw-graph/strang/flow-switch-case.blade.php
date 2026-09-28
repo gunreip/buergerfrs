@@ -14,6 +14,7 @@
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
     'side' => 'left',
     'direction' => 'bottom-top',
+    'counterStart' => 1,
     'caseExpression' => ['text' => ['SWITCH expression'], 'width' => 'halfLong'],
     'cases' => [],
     'caseDefault' => ['text' => ['Default action'], 'width' => 'halfLong'],
@@ -24,6 +25,15 @@
 
     'zIndex' => 20,
 ])
+
+@php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.strang.flow-switch-case',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
 @php
     $resolvedGraphId = $graphId ?: 'tw-graph';
     $id = filled($id) ? (string) $id : $resolvedGraphId . '.switch';
@@ -137,13 +147,13 @@
 
         return $normalized === null ? null : array_replace(['width' => $width], $normalized);
     };
-    $counter = 2;
+    $counter = (int) $counterStart + 1;
     $input = filled($attachTo) ? \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $attachTo) : null;
     $input = $input ?: $anchorStart;
 @endphp
 <x-translation-workbench::ui.tw-graph.strang.flow-step
     :id="$id . '.expression'" :anchor-start="$input" :direction="$direction"
-    :step-label="$caseExpression" :color="$resolvedColor" :z-index="$zIndex"
+    :step-label="$caseExpression" :counter-end="(int) $counterStart" :color="$resolvedColor" :z-index="$zIndex"
 />
 @php
     $cursor = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $id . '.expression.anchorNode-end');
@@ -169,12 +179,13 @@
                 $entryLabel = $normalizeCaseLabel($entry['label'] ?? 'CASE ' . $entry['key'], $entryColor);
                 $entryLength = $loop->first ? $row['stemLength'] : ($row['entryStemLength'] ?? $fusionEntrySpacing);
             @endphp
+            @php $nodeCounter = $counter++; @endphp
             <x-translation-workbench::ui.tw-graph.parts.start
                 :id="$entryId . '.entry'" :anchor-start="$cursor" :direction="$direction"
                 :length="$entryLength" :gradient="false"
                 :node-label-left="$side === 'right' ? $entryLabel : null"
                 :node-label-right="$side === 'left' ? $entryLabel : null"
-                :color="$resolvedColor" :dev-counter-end="$counter++" :z-index="$zIndex"
+                :color="$resolvedColor" :dev-counter-end="$nodeCounter" :z-index="$zIndex"
             />
             @php
                 $cursor = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $entryId . '.entry.anchorNode-end');
@@ -196,9 +207,10 @@
             @endphp
         @endforeach
         @if (count($fusionInputs) > 1)
+            @php $nodeCounter = $counter++; @endphp
             <x-translation-workbench::ui.tw-graph.parts.fusion
                 :id="$routeId . '.fusion'" :inputs="$fusionInputs" :direction="$horizontal"
-                :arc-radius="$fusionRadius" :color="$row['color']" :dev-counter-end="$counter++" :z-index="$zIndex"
+                :arc-radius="$fusionRadius" :color="$row['color']" :dev-counter-end="$nodeCounter" :z-index="$zIndex"
             />
             @php
                 $actionStart = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $routeId . '.fusion.anchorNode-end');
@@ -226,12 +238,13 @@
             $counter = (int) \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $routeId . '.entry.anchorNode-end')['devCounterNext'];
         @endphp
     @else
+    @php $nodeCounter = $counter++; @endphp
     <x-translation-workbench::ui.tw-graph.parts.start
         :id="$routeId . '.entry'" :anchor-start="$cursor" :direction="$direction"
         :length="$row['stemLength']" :gradient="false"
         :node-label-left="$side === 'right' ? $caseLabel : null"
         :node-label-right="$side === 'left' ? $caseLabel : null"
-        :color="$resolvedColor" :dev-counter-end="$counter++" :z-index="$zIndex"
+        :color="$resolvedColor" :dev-counter-end="$nodeCounter" :z-index="$zIndex"
     />
     @endif
     @php
@@ -257,12 +270,13 @@
             :label="$row['action']" :bridge-in-join-length="$incomingJoinLength" :dev-counter-join="$incomingJoinCounter" :bridge-length="$actionBridgeIn" :geometry="$actionGeometry" :dev-counter-end="false"
             :color="$row['color']" :z-index="$zIndex"
         />
+        @php $nodeCounter = $counter++; @endphp
         <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
             'id' => $routeId . '.arc-out', 'anchorStart' => $actionEnd, 'anchorEnd' => $routeEnd,
             'startAnchor' => $sy > 0 ? 's' : 'n', 'endAnchor' => $sx > 0 ? 'e' : 'w',
             'arcRadius' => $arcRadius, 'color' => $row['color'],  'zIndex' => $zIndex,
             'nodeEnd' => true, 'nodeEndDot' => $exitLabel !== null, 'jointArrowEnd' => $exitLabel === null,
-            'jointArrowEndDirection' => $sy > 0 ? 'top' : 'bottom', 'devCounterEnd' => $counter++,
+            'jointArrowEndDirection' => $sy > 0 ? 'top' : 'bottom', 'devCounterEnd' => $nodeCounter,
             'endLabel' => $exitLabel === null ? null : array_replace($exitLabel, ['side' => $side]),
         ]" />
         @php
@@ -274,6 +288,7 @@
             ? 'calc((' . $rowBridge . ' * 2) - ' . $row['bridgeOutLength'] . ')'
             : $rowBridge;
     @endphp
+    @php $nodeCounter = $counter++; @endphp
     <x-translation-workbench::ui.tw-graph.parts.sideways
         :id="$routeId" :anchor-start="$actionStart" :side="$side === 'left' ? 'right' : 'left'"
         :direction="$direction" :arc-radius="$arcRadius" :bridge-length="$actionBridgeIn"
@@ -281,7 +296,7 @@
         :bridge-label="$row['action']" :bridge-out-length="$row['bridgeOutLength']" :color="$row['color']"
         :node-label-left="$side === 'left' ? $exitLabel : null"
         :node-label-right="$side === 'right' ? $exitLabel : null"
-        :dev-counter-end="$counter++" :z-index="$zIndex"
+        :dev-counter-end="$nodeCounter" :z-index="$zIndex"
     />
     @endif
     @php
@@ -330,16 +345,18 @@
             }
             $fallThroughId = $id . '.case.' . $row['key'] . '.fall-through';
         @endphp
+        @php $nodeCounter = $counter++; @endphp
         <x-translation-workbench::ui.tw-graph.parts.sideways
             :id="$fallThroughId" :anchor-start="$row['end']" :side="$side"
             :direction="$direction" :arc-radius="$turnRadius" :bridge-length="$crossLength"
-            :color="$row['color']" :joint-arrow-end="true" :dev-counter-end="$counter++" :z-index="$zIndex"
+            :color="$row['color']" :joint-arrow-end="true" :dev-counter-end="$nodeCounter" :z-index="$zIndex"
         />
+        @php $nodeCounter = $counter++; @endphp
         <x-translation-workbench::ui.tw-graph.parts.start
             :id="$fallThroughId . '.stem'"
             :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $fallThroughId . '.anchorNode-end')"
             :direction="$direction" :length="$riseLength" :gradient="false"
-            :node-end="true" :joint-arrow-end="true" :dev-counter-end="$counter++" :color="$row['color']" :z-index="$zIndex"
+            :node-end="true" :joint-arrow-end="true" :dev-counter-end="$nodeCounter" :color="$row['color']" :z-index="$zIndex"
         />
         <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
             'id' => $fallThroughId . '.join', 'anchorStart' => $joinStart, 'anchorEnd' => $target,
@@ -391,3 +408,14 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
     }
 @endphp
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
+@endif

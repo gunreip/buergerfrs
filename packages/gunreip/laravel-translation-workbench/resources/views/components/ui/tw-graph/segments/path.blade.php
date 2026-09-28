@@ -236,6 +236,7 @@
     :height="'calc(' . $pathBoxHeight . ' + (' . $boxPadding . ' * 2))'"
     color="sky"
     :label="$id"
+    :show-label="false"
 />
 
 	<x-translation-workbench::ui.tw-graph.primitives.line

@@ -16,6 +16,7 @@ final class BoundsRegistry
     {
         self::forgetGraph($graphId);
         preg_match_all('/data-tw-graph-bounds="([^"]+)"/', $markup, $matches);
+        preg_match_all('/<script[^>]*data-tw-graph-component-region[^>]*>(.*?)<\/script>/s', $markup, $regionMatches);
         if (substr_count($markup, 'data-tw-graph-bounds-model="true"') > 1) {
             $dom = new \DOMDocument;
             $previous = libxml_use_internal_errors(true);
@@ -26,12 +27,21 @@ final class BoundsRegistry
                 foreach ($nodes as $node) {
                     $matches[1][] = htmlspecialchars($node->getAttribute('data-tw-graph-bounds'), ENT_QUOTES, 'UTF-8');
                 }
+                $regionMatches[1] = [];
+                foreach ((new \DOMXPath($dom))->query('//*[@data-tw-graph-component-region][count(ancestor::*[@data-tw-graph-bounds-model]) <= 1]') as $node) {
+                    $regionMatches[1][] = $node->textContent;
+                }
             } finally {
                 libxml_clear_errors();
                 libxml_use_internal_errors($previous);
             }
         }
 
+        $regions = [];
+        foreach ($regionMatches[1] as $json) {
+            $region = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
+            $regions[$region['token']] = $region;
+        }
         $variables = [
             'var(--tw-graph-protocol-path-width)' => $context['pathWidth'],
             'var(--tw-graph-protocol-node-size)' => $context['nodeSize'],
@@ -42,6 +52,9 @@ final class BoundsRegistry
         $records = [];
         foreach ($matches[1] as $encoded) {
             $record = json_decode(html_entity_decode($encoded, ENT_QUOTES | ENT_HTML5, 'UTF-8'), true, flags: JSON_THROW_ON_ERROR);
+            if (isset($record['region'])) {
+                $record['region'] = $regions[$record['region']] ?? null;
+            }
             foreach ($record['rects'] as &$rect) {
                 foreach ($rect as &$value) {
                     $value = strtr($value, $variables);

@@ -10,6 +10,15 @@
     'color' => 'zinc', 'nodeLabelLeft' => null, 'nodeLabelRight' => null,
      'devCounterStart' => 1, 'zIndex' => 20,
 ])
+
+@php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.paths.stem-detour',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
 @php
     if (!in_array($side, ['left', 'right'], true) || !in_array($direction, ['bottom-top', 'top-bottom'], true)) {
         throw new \InvalidArgumentException('stem-detour requires left/right and bottom-top/top-bottom.');
@@ -90,3 +99,14 @@
         ['devCounterNext' => (string) $detourCounter],
     ));
 @endphp
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
+@endif

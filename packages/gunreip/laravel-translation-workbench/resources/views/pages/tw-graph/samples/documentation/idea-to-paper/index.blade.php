@@ -6,11 +6,39 @@
 @endphp
 
 <section
-    class="mt-6 space-y-6"
+    class="space-y-6"
     id="tw-graph-documentation"
-    x-data="{}"
+    x-data="{ components: $persist(@js(\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($components ?? false))).as('idea-to-paper-components') }"
+    :data-ui-components="components ? 'on' : 'off'"
     x-on:tw-graph-documentation-navigate.window="$nextTick(() => document.getElementById($event.detail.target)?.scrollIntoView({ block: 'start' }))"
 >
+    <style>
+        [data-ui-component-marker] {
+            display: none;
+        }
+
+        [data-ui-components="on"] [data-ui-component-marker] {
+            display: inline-flex !important;
+        }
+    </style>
+    <x-ui.headers.page
+        :title="__('Idea To Paper')"
+        :description="__(
+            'Hand-authored tw-graph authoring story for notes, drafts, review, revision, and publication without database-backed timeline data.',
+        )"
+    >
+        <flux:toggle
+            size="sm"
+            color="red"
+            x-model="components"
+            :label="__('Components')"
+            :tooltip="__('Mark shared UI components; graph components and direct Flux elements are excluded.')"
+        >
+            <x-slot:icon>
+                <flux:icon.component class="size-4" />
+            </x-slot:icon>
+        </flux:toggle>
+    </x-ui.headers.page>
     @isset($documentationTabs)
         <div
             class="z-100 fixed inset-0 items-center justify-center bg-white/60 backdrop-blur-sm dark:bg-zinc-950/60"
@@ -113,10 +141,7 @@
                     <div class="mt-4">
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.canvas.index',
-                            [
-
-
-                            ]
+                            []
                         )
                     </div>
                 </div>
@@ -130,10 +155,7 @@
                     <div class="mt-4">
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.primitives.index',
-                            [
-
-
-                            ]
+                            []
                         )
                     </div>
                 </div>
@@ -147,10 +169,7 @@
                     <div class="mt-4">
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.index',
-                            [
-
-
-                            ]
+                            []
                         )
                     </div>
                 </div>
@@ -175,10 +194,7 @@
                     <div class="mt-4">
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.paths.index',
-                            [
-
-
-                            ]
+                            []
                         )
                     </div>
                 </div>
@@ -192,10 +208,7 @@
                     <div class="mt-4">
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.trunk.index',
-                            [
-
-
-                            ]
+                            []
                         )
                     </div>
                 </div>
@@ -209,10 +222,7 @@
                     <div class="mt-4">
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.merge.index',
-                            [
-
-
-                            ]
+                            []
                         )
                     </div>
                 </div>
@@ -226,10 +236,7 @@
                     <div class="mt-4">
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.branch.index',
-                            [
-
-
-                            ]
+                            []
                         )
                     </div>
                 </div>
@@ -243,10 +250,7 @@
                     <div class="mt-4">
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.strang.rekey.index',
-                            [
-
-
-                            ]
+                            []
                         )
                     </div>
                 </div>
@@ -260,10 +264,7 @@
                     <div class="mt-4">
                         @include(
                             'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.index',
-                            [
-
-
-                            ]
+                            []
                         )
                     </div>
                 </div>
@@ -310,6 +311,13 @@
             {{-- Thought Draft --}}
             <flux:tab.panel name="idea-to-paper-draft">
                 @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-draft')
+                    <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+                    <x-translation-workbench::ui.tw-graph.documentation-links
+                        example="00-graph-final"
+                        gridCols="6"
+                    />
+
                     <div wire:key="documentation-idea-to-paper-draft">
                         <x-translation-workbench::ui.tw-graph.preview-tools
                             :dev="$dev"
@@ -334,6 +342,13 @@
             {{-- Current Result --}}
             <flux:tab.panel name="idea-to-paper-result">
                 @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-result')
+                    <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+                    <x-translation-workbench::ui.tw-graph.documentation-links
+                        example="_graph-current-result"
+                        gridCols="6"
+                    />
+
                     <div wire:key="documentation-idea-to-paper-result">
                         <x-translation-workbench::ui.tw-graph.preview-tools
                             :dev="$dev"
@@ -358,6 +373,13 @@
             {{-- Flow Diagram --}}
             <flux:tab.panel name="idea-to-paper-flow-result">
                 @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-flow-result')
+                    <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+                    <x-translation-workbench::ui.tw-graph.documentation-links
+                        example="_graph-flow-diagram"
+                        gridCols="6"
+                    />
+
                     <div wire:key="documentation-idea-to-paper-flow-result">
                         <x-translation-workbench::ui.tw-graph.preview-tools
                             :dev="$dev"

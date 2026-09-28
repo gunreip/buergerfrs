@@ -57,6 +57,15 @@
 ])
 
 @php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.strang.flow-if-else',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
+
+@php
     // Keep the authoring ID throughout the internal component chain.
     $previousRootIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::enter($id);
     try {
@@ -98,6 +107,10 @@
         '8rem',
     );
     $falseOpen = ! \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool(data_get($ifEnd, 'return'), true);
+    $falseExitDirection = data_get($ifEnd, 'exitDirection');
+    if (! $falseOpen && $falseExitDirection !== null && $falseExitDirection !== $direction) {
+        throw new \InvalidArgumentException('flow-if-else ifEnd.exitDirection requires return=false when changing the exit direction.');
+    }
     $falseReturnOffset = $falseOpen ? \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($ifEnd, 'returnOffset'), null, '12rem') : '0rem';
     $falseReturnLength = $falseOpen ? \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($ifEnd, 'returnLength'), null, '8rem') : '0rem';
     $falseLineJumps = data_get($ifEnd, 'lineJumps', []);
@@ -196,6 +209,7 @@
 />
 <x-translation-workbench::ui.tw-graph.parts.sideways
     :id="$id . '.false'"
+    :exit-direction="$falseExitDirection"
     :side="$routeSide"
     :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($resolvedGraphId, $id . '.false.stem.anchorNode-end')"
     :arc-radius="$arcRadius"
@@ -238,3 +252,14 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
     }
 @endphp
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
+@endif

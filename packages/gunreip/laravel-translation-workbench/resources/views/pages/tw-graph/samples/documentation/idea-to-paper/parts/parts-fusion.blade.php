@@ -6,22 +6,25 @@
             icon="file-text"
         >
             <flux:callout.heading>parts.fusion</flux:callout.heading>
-            <x-translation-workbench::ui.tw-graph.documentation-links example="parts.parts-fusion" />
             <flux:callout.text>
                 {{ __('Two or more independent inputs converge on one shared output dot. All entry arcs share one radius. Outer inputs join the next inner arc end through a plain stem without an extra dot or arrow. Only the innermost input on each side continues through segments.fusion to the output. Inputs at the output height continue straight. The labeled straight input lines are helper segments. The examples show two, three and four inputs in both horizontal directions, with individual colors and unequal spacing.') }}
             </flux:callout.text>
             <flux:callout.text class="mt-3">
                 {{ __('The configured arc-radius is a starting value. Closely spaced inputs can reduce it. The nearest off-center input determines the shared radius for all lanes. When a positive compensating stem would be shorter than min-stem-length, the radius increases to half the input-to-output height difference and the stem disappears. The arcs then share one joint. Longer stems retain the configured radius. A segment with fixed endpoints must provide enough horizontal space; parts.fusion calculates the required output position automatically. In SWITCH/CASE the starting fusion radius is half the switch arc-radius, and entryStemLength must be at least 3rem. Two symmetric inputs 3rem apart have a 1.5rem offset to their shared output and use 0.75rem bends.') }}
             </flux:callout.text>
+
+            <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+            <x-translation-workbench::ui.tw-graph.documentation-links example="parts.parts-fusion" />
+
             @php
                 $exampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.parts.parts-fusion',
                 );
             @endphp
-            <flux:separator
-                class="mt-4"
-                :text="__('Code examples')"
-            />
+
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
+
             <flux:accordion
                 transition
                 exclusive
@@ -123,10 +126,9 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
-            <flux:separator
-                class="mt-4"
-                :text="__('Props used in these examples')"
-            />
+
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
+
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('Props and anchors') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
@@ -256,6 +258,7 @@
                 </div>
             </flux:callout>
         </flux:callout>
+        {{-- Preview --}}
         <flux:callout
             class="min-w-0"
             color="emerald"
@@ -780,9 +783,10 @@
                     </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-                .../idea-to-paper/parts/parts-fusion.blade.php
-            </flux:field>
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/parts/parts-fusion.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

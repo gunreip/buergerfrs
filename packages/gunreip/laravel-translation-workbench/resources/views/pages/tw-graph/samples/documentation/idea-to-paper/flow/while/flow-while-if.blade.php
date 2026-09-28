@@ -6,16 +6,31 @@
             icon="file-text"
         >
             <flux:callout.heading>{{ __('WHILE with IF / ELSE') }}</flux:callout.heading>
-            <flux:callout.text>{{ __('Read the current item inside the WHILE body. The nested IF processes enabled items or records disabled items as skipped. Both IF branches merge before the shared index increment. Only then does the loop return to its own condition. An empty list follows the WHILE FALSE exit directly. All components and the extra vertical space are explicitly authored below.') }}</flux:callout.text>
+            <flux:callout.text>
+                {{ __('Read the current item inside the WHILE body. The nested IF processes enabled items or records disabled items as skipped. Both IF branches merge before the shared index increment. Only then does the loop return to its own condition. An empty list follows the WHILE FALSE exit directly. All components and the extra vertical space are explicitly authored below.') }}
+            </flux:callout.text>
+
+            <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.while.flow-while-if" />
+
             @php
                 $whileSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.flow-while-if',
                 );
             @endphp
-            <flux:separator class="mt-4" :text="__('Code examples')" />
-            <flux:accordion transition exclusive>
+
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
+
+            <flux:accordion
+                transition
+                exclusive
+            >
                 <flux:accordion.item expanded>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="while-if-left-example"
                             variant="accordion"
@@ -28,7 +43,10 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
                 <flux:accordion.item>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="while-if-right-example"
                             variant="accordion"
@@ -42,13 +60,15 @@
                 </flux:accordion.item>
             </flux:accordion>
 
-            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.while.flow-while-if" />
-                    <flux:separator class="mt-4" :text="__('Props used in these examples')" />
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('Props and connections') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                     <flux:table container:class="max-h-80">
-                        <flux:table.columns class="bg-white dark:bg-zinc-900" sticky>
+                        <flux:table.columns
+                            class="bg-white dark:bg-zinc-900"
+                            sticky
+                        >
                             <flux:table.column>{{ __('Prop / anchor') }}</flux:table.column>
                             <flux:table.column>{{ __('Default') }}</flux:table.column>
                             <flux:table.column>{{ __('Purpose') }}</flux:table.column>
@@ -448,285 +468,299 @@
                 example="while-if"
             />
         </flux:callout>
+        {{-- Preview --}}
         <flux:callout
             class="min-w-0"
             color="emerald"
         >
             <flux:callout.heading icon="eye">{{ __('WHILE with IF · left / right') }}</flux:callout.heading>
+            <flux:callout.text class="mb-3">
+                {{ __('Both previews place an IF / ELSE inside the WHILE body. Processing and skipping an item rejoin before the shared index increment, which returns to the WHILE condition. Compare the mirrored layouts while following the same control flow.') }}
+            </flux:callout.text>
+
             <x-translation-workbench::ui.tw-graph.preview-tools
                 :dev="$dev ?? true"
                 :coordinates="$coordinates ?? false"
             >
-                <x-translation-workbench::ui.common.heading-counter
-                    example="while-if-left-example"
-                    size="sm"
-                >{{ __('side="left"') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- while-if-left-example:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-while-if-left"
-                        :dev="true"
-                        :coordinates="true"
-                        horizontalPadding="6rem"
-                        min-height="56rem"
-                        min-width="74rem"
+                <div class="mt-4 grid min-w-0 gap-4 xl:grid-cols-1">
+                    <x-translation-workbench::ui.common.heading-counter
+                        example="while-if-left-example"
+                        size="sm"
                     >
-                        {{-- Initialization runs once. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.if.left.initialize"
-                            :anchor-start="['x' => '0rem', 'y' => '2rem']"
-                            :step-label="['text' => ['Load items', 'index = 0'], 'width' => 'default']"
-                            afterLength="5rem"
-                            color="zinc"
-                            :node-end="false"
-                        />
-                        {{-- TRUE reads one item; the open body continues into the nested IF. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-while
-                            id="literature.while.if.left.loop"
-                            attach-to="literature.while.if.left.initialize.anchorNode-end"
-                            side="left"
-                            color="cyan"
-                            arc-radius="2.75rem"
-                            true-bridge-length="4rem"
-                            stem-length="3.5rem"
-                            :condition-label="[
-                                'beforeLength' => '2rem',
-                                'labelGap' => '4rem',
-                                'afterLength' => '19rem',
-                                'text' => ['WHILE index < count?'],
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :action-label="[
-                                'beforeLength' => '2rem',
-                                'afterLength' => '2rem',
-                                'text' => ['Read current item'],
-                                'color' => 'green',
-                                'return' => false,
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :true-label="[
-                                'text' => ['TRUE'],
-                                'width' => 'half',
-                                'anchor' => 'condition',
-                                'side' => 'right',
-                                'color' => 'green',
-                            ]"
-                            :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'right', 'color' => 'red']"
-                        />
-                        {{-- Both IF branches rejoin before the shared index increment. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-if-else
-                            id="literature.while.if.left.inner-if"
-                            attach-to="literature.while.if.left.loop.body.anchorNode-end"
-                            direction="top-bottom"
-                            side="left"
-                            arc-radius="2.75rem"
-                            bridge-length="2rem"
-                            stem-length="4rem"
-                            before-length="1rem"
-                            label-gap="4rem"
-                            after-length="1rem"
-                            :condition-label="[
-                                'text' => ['IF item enabled?'],
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :if-start="[
-                                'text' => ['Process item'],
-                                'width' => 'default',
-                                'color' => 'green',
-                            ]"
-                            :if-end="[
-                                'text' => ['Record skipped item'],
-                                'width' => 'default',
-                                'color' => 'red',
-                            ]"
-                            :true-node-labels="[
-                                'left' => ['text' => ['TRUE'], 'width' => 'half'],
-                            ]"
-                            :false-node-labels="[
-                                'right' => ['text' => ['FALSE'], 'width' => 'half'],
-                            ]"
-                            :counter-start="7"
-                            :left-counter-end="8"
-                            :false-stem-counter="9"
-                            :right-counter-end="10"
-                            color="sky"
-                        />
-                        {{-- The next action is an independent component inside the body. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.if.left.advance"
-                            attach-to="literature.while.if.left.inner-if.anchorNode-end"
-                            direction="top-bottom"
-                            before-length="2rem"
-                            label-gap="4rem"
-                            after-length="2rem"
-                            :step-label="['text' => ['index = index + 1'], 'width' => 'default']"
-                            :node-end-dot="false"
-                            :joint-arrow-end="true"
-                            :counter-end="11"
-                            color="cyan"
-                        />
-                        {{-- Return only after advancing, to the same condition (not initialization). --}}
-                        <x-translation-workbench::ui.tw-graph.paths.loop-return
-                            id="literature.while.if.left.body-return"
-                            attach-to="literature.while.if.left.advance.anchorNode-end"
-                            return-to="literature.while.if.left.loop.anchorNode-return"
-                            side="left"
-                            arc-radius="2.75rem"
-                            :counter-start="12"
-                            color="cyan"
-                        />
-                        {{-- FALSE continues here, including when the item list starts empty. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.if.left.continue"
-                            attach-to="literature.while.if.left.loop.anchorNode-end"
-                            beforeLength="4rem"
-                            :step-label="['text' => ['Show summary'], 'width' => 'default']"
-                            color="violet"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- while-if-left-example:end --}}
-                </div>
-                <x-translation-workbench::ui.common.heading-counter
-                    example="while-if-right-example"
-                    size="sm"
-                >{{ __('side="right"') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- while-if-right-example:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-while-if-right"
-                        :dev="true"
-                        :coordinates="true"
-                        horizontalPadding="6rem"
-                        min-height="56rem"
-                        min-width="74rem"
+                        {{ __('side="left"') }}
+                    </x-translation-workbench::ui.common.heading-counter>
+                    <div
+                        class="overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                        {{-- while-if-left-example:start --}}
+                        <x-translation-workbench::ui.tw-graph
+                            graph-id="idea-to-paper-while-if-left"
+                            :dev="true"
+                            :coordinates="true"
+                            horizontalPadding="6rem"
+                            min-height="56rem"
+                            min-width="74rem"
+                        >
+                            {{-- Initialization runs once. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.if.left.initialize"
+                                :anchor-start="['x' => '0rem', 'y' => '2rem']"
+                                :step-label="['text' => ['Load items', 'index = 0'], 'width' => 'default']"
+                                afterLength="5rem"
+                                color="zinc"
+                                :node-end="false"
+                            />
+                            {{-- TRUE reads one item; the open body continues into the nested IF. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-while
+                                id="literature.while.if.left.loop"
+                                attach-to="literature.while.if.left.initialize.anchorNode-end"
+                                side="left"
+                                color="cyan"
+                                arc-radius="2.75rem"
+                                true-bridge-length="4rem"
+                                stem-length="3.5rem"
+                                :condition-label="[
+                                    'beforeLength' => '2rem',
+                                    'labelGap' => '4rem',
+                                    'afterLength' => '19rem',
+                                    'text' => ['WHILE index < count?'],
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :action-label="[
+                                    'beforeLength' => '2rem',
+                                    'afterLength' => '2rem',
+                                    'text' => ['Read current item'],
+                                    'color' => 'green',
+                                    'return' => false,
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :true-label="[
+                                    'text' => ['TRUE'],
+                                    'width' => 'half',
+                                    'anchor' => 'condition',
+                                    'side' => 'right',
+                                    'color' => 'green',
+                                ]"
+                                :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'right', 'color' => 'red']"
+                            />
+                            {{-- Both IF branches rejoin before the shared index increment. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-if-else
+                                id="literature.while.if.left.inner-if"
+                                attach-to="literature.while.if.left.loop.body.anchorNode-end"
+                                direction="top-bottom"
+                                side="left"
+                                arc-radius="2.75rem"
+                                bridge-length="2rem"
+                                stem-length="4rem"
+                                before-length="1rem"
+                                label-gap="4rem"
+                                after-length="1rem"
+                                :condition-label="[
+                                    'text' => ['IF item enabled?'],
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :if-start="[
+                                    'text' => ['Process item'],
+                                    'width' => 'default',
+                                    'color' => 'green',
+                                ]"
+                                :if-end="[
+                                    'text' => ['Record skipped item'],
+                                    'width' => 'default',
+                                    'color' => 'red',
+                                ]"
+                                :true-node-labels="[
+                                    'left' => ['text' => ['TRUE'], 'width' => 'half'],
+                                ]"
+                                :false-node-labels="[
+                                    'right' => ['text' => ['FALSE'], 'width' => 'half'],
+                                ]"
+                                :counter-start="7"
+                                :left-counter-end="8"
+                                :false-stem-counter="9"
+                                :right-counter-end="10"
+                                color="sky"
+                            />
+                            {{-- The next action is an independent component inside the body. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.if.left.advance"
+                                attach-to="literature.while.if.left.inner-if.anchorNode-end"
+                                direction="top-bottom"
+                                before-length="2rem"
+                                label-gap="4rem"
+                                after-length="2rem"
+                                :step-label="['text' => ['index = index + 1'], 'width' => 'default']"
+                                :node-end-dot="false"
+                                :joint-arrow-end="true"
+                                :counter-end="11"
+                                color="cyan"
+                            />
+                            {{-- Return only after advancing, to the same condition (not initialization). --}}
+                            <x-translation-workbench::ui.tw-graph.paths.loop-return
+                                id="literature.while.if.left.body-return"
+                                attach-to="literature.while.if.left.advance.anchorNode-end"
+                                return-to="literature.while.if.left.loop.anchorNode-return"
+                                side="left"
+                                arc-radius="2.75rem"
+                                :counter-start="12"
+                                color="cyan"
+                            />
+                            {{-- FALSE continues here, including when the item list starts empty. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.if.left.continue"
+                                attach-to="literature.while.if.left.loop.anchorNode-end"
+                                beforeLength="4rem"
+                                :step-label="['text' => ['Show summary'], 'width' => 'default']"
+                                color="violet"
+                            />
+                        </x-translation-workbench::ui.tw-graph>
+                        {{-- while-if-left-example:end --}}
+                    </div>
+
+                    <x-translation-workbench::ui.common.heading-counter
+                        example="while-if-right-example"
+                        size="sm"
                     >
-                        {{-- Initialization runs once. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.if.right.initialize"
-                            :anchor-start="['x' => '0rem', 'y' => '2rem']"
-                            :step-label="['text' => ['Load items', 'index = 0'], 'width' => 'default']"
-                            afterLength="5rem"
-                            color="zinc"
-                            :node-end="false"
-                        />
-                        {{-- TRUE reads one item; the open body continues into the nested IF. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-while
-                            id="literature.while.if.right.loop"
-                            attach-to="literature.while.if.right.initialize.anchorNode-end"
-                            side="right"
-                            color="cyan"
-                            arc-radius="2.75rem"
-                            true-bridge-length="4rem"
-                            stem-length="3.5rem"
-                            :condition-label="[
-                                'beforeLength' => '2rem',
-                                'labelGap' => '4rem',
-                                'afterLength' => '19rem',
-                                'text' => ['WHILE index < count?'],
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :action-label="[
-                                'beforeLength' => '2rem',
-                                'afterLength' => '2rem',
-                                'text' => ['Read current item'],
-                                'color' => 'green',
-                                'return' => false,
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :true-label="[
-                                'text' => ['TRUE'],
-                                'width' => 'half',
-                                'anchor' => 'condition',
-                                'side' => 'left',
-                                'color' => 'green',
-                            ]"
-                            :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'left', 'color' => 'red']"
-                        />
-                        {{-- Both IF branches rejoin before the shared index increment. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-if-else
-                            id="literature.while.if.right.inner-if"
-                            attach-to="literature.while.if.right.loop.body.anchorNode-end"
-                            direction="top-bottom"
-                            side="right"
-                            arc-radius="2.75rem"
-                            bridge-length="2rem"
-                            stem-length="4rem"
-                            before-length="1rem"
-                            label-gap="4rem"
-                            after-length="1rem"
-                            :condition-label="[
-                                'text' => ['IF item enabled?'],
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :if-start="[
-                                'text' => ['Process item'],
-                                'width' => 'default',
-                                'color' => 'green',
-                            ]"
-                            :if-end="[
-                                'text' => ['Record skipped item'],
-                                'width' => 'default',
-                                'color' => 'red',
-                            ]"
-                            :true-node-labels="[
-                                'right' => ['text' => ['TRUE'], 'width' => 'half'],
-                            ]"
-                            :false-node-labels="[
-                                'left' => ['text' => ['FALSE'], 'width' => 'half'],
-                            ]"
-                            :counter-start="7"
-                            :left-counter-end="8"
-                            :false-stem-counter="9"
-                            :right-counter-end="10"
-                            color="sky"
-                        />
-                        {{-- The next action is an independent component inside the body. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.if.right.advance"
-                            attach-to="literature.while.if.right.inner-if.anchorNode-end"
-                            direction="top-bottom"
-                            before-length="2rem"
-                            label-gap="4rem"
-                            after-length="2rem"
-                            :step-label="['text' => ['index = index + 1'], 'width' => 'default']"
-                            :node-end-dot="false"
-                            :joint-arrow-end="true"
-                            :counter-end="11"
-                            color="cyan"
-                        />
-                        {{-- Return only after advancing, to the same condition (not initialization). --}}
-                        <x-translation-workbench::ui.tw-graph.paths.loop-return
-                            id="literature.while.if.right.body-return"
-                            attach-to="literature.while.if.right.advance.anchorNode-end"
-                            return-to="literature.while.if.right.loop.anchorNode-return"
-                            side="right"
-                            arc-radius="2.75rem"
-                            :counter-start="12"
-                            color="cyan"
-                        />
-                        {{-- FALSE continues here, including when the item list starts empty. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.if.right.continue"
-                            attach-to="literature.while.if.right.loop.anchorNode-end"
-                            beforeLength="4rem"
-                            :step-label="['text' => ['Show summary'], 'width' => 'default']"
-                            color="violet"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- while-if-right-example:end --}}
+                        {{ __('side="right"') }}
+                    </x-translation-workbench::ui.common.heading-counter>
+                    <div
+                        class="overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                        {{-- while-if-right-example:start --}}
+                        <x-translation-workbench::ui.tw-graph
+                            graph-id="idea-to-paper-while-if-right"
+                            :dev="true"
+                            :coordinates="true"
+                            horizontalPadding="6rem"
+                            min-height="56rem"
+                            min-width="74rem"
+                        >
+                            {{-- Initialization runs once. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.if.right.initialize"
+                                :anchor-start="['x' => '0rem', 'y' => '2rem']"
+                                :step-label="['text' => ['Load items', 'index = 0'], 'width' => 'default']"
+                                afterLength="5rem"
+                                color="zinc"
+                                :node-end="false"
+                            />
+                            {{-- TRUE reads one item; the open body continues into the nested IF. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-while
+                                id="literature.while.if.right.loop"
+                                attach-to="literature.while.if.right.initialize.anchorNode-end"
+                                side="right"
+                                color="cyan"
+                                arc-radius="2.75rem"
+                                true-bridge-length="4rem"
+                                stem-length="3.5rem"
+                                :condition-label="[
+                                    'beforeLength' => '2rem',
+                                    'labelGap' => '4rem',
+                                    'afterLength' => '19rem',
+                                    'text' => ['WHILE index < count?'],
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :action-label="[
+                                    'beforeLength' => '2rem',
+                                    'afterLength' => '2rem',
+                                    'text' => ['Read current item'],
+                                    'color' => 'green',
+                                    'return' => false,
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :true-label="[
+                                    'text' => ['TRUE'],
+                                    'width' => 'half',
+                                    'anchor' => 'condition',
+                                    'side' => 'left',
+                                    'color' => 'green',
+                                ]"
+                                :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'left', 'color' => 'red']"
+                            />
+                            {{-- Both IF branches rejoin before the shared index increment. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-if-else
+                                id="literature.while.if.right.inner-if"
+                                attach-to="literature.while.if.right.loop.body.anchorNode-end"
+                                direction="top-bottom"
+                                side="right"
+                                arc-radius="2.75rem"
+                                bridge-length="2rem"
+                                stem-length="4rem"
+                                before-length="1rem"
+                                label-gap="4rem"
+                                after-length="1rem"
+                                :condition-label="[
+                                    'text' => ['IF item enabled?'],
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :if-start="[
+                                    'text' => ['Process item'],
+                                    'width' => 'default',
+                                    'color' => 'green',
+                                ]"
+                                :if-end="[
+                                    'text' => ['Record skipped item'],
+                                    'width' => 'default',
+                                    'color' => 'red',
+                                ]"
+                                :true-node-labels="[
+                                    'right' => ['text' => ['TRUE'], 'width' => 'half'],
+                                ]"
+                                :false-node-labels="[
+                                    'left' => ['text' => ['FALSE'], 'width' => 'half'],
+                                ]"
+                                :counter-start="7"
+                                :left-counter-end="8"
+                                :false-stem-counter="9"
+                                :right-counter-end="10"
+                                color="sky"
+                            />
+                            {{-- The next action is an independent component inside the body. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.if.right.advance"
+                                attach-to="literature.while.if.right.inner-if.anchorNode-end"
+                                direction="top-bottom"
+                                before-length="2rem"
+                                label-gap="4rem"
+                                after-length="2rem"
+                                :step-label="['text' => ['index = index + 1'], 'width' => 'default']"
+                                :node-end-dot="false"
+                                :joint-arrow-end="true"
+                                :counter-end="11"
+                                color="cyan"
+                            />
+                            {{-- Return only after advancing, to the same condition (not initialization). --}}
+                            <x-translation-workbench::ui.tw-graph.paths.loop-return
+                                id="literature.while.if.right.body-return"
+                                attach-to="literature.while.if.right.advance.anchorNode-end"
+                                return-to="literature.while.if.right.loop.anchorNode-return"
+                                side="right"
+                                arc-radius="2.75rem"
+                                :counter-start="12"
+                                color="cyan"
+                            />
+                            {{-- FALSE continues here, including when the item list starts empty. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.if.right.continue"
+                                attach-to="literature.while.if.right.loop.anchorNode-end"
+                                beforeLength="4rem"
+                                :step-label="['text' => ['Show summary'], 'width' => 'default']"
+                                color="violet"
+                            />
+                        </x-translation-workbench::ui.tw-graph>
+                        {{-- while-if-right-example:end --}}
+                    </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="mt-3 flex justify-end font-mono text-xs text-zinc-400">
-                .../flow/while/flow-while-if.blade.php
-            </flux:field>
+            {{-- Path/To/File --}}
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/flow/while/flow-while-if.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

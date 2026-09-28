@@ -16,6 +16,11 @@
 {{-- Canvas props are declared once in View\Components\TwGraph, before the slot renders. --}}
 
 @php
+    $canvasInputDefaults = [
+        'min-width' => blank($minWidth) && data_get($protocol, 'geometry.minWidth') === null,
+        'min-height' => blank($minHeight) && ($slot->isNotEmpty() || data_get($protocol, 'geometry.minHeight') === null),
+        'horizontal-padding' => blank($horizontalPadding),
+    ];
     $dev = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev);
     $surfacePaths = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($pathTone, true);
     $showCoordinates = $twGraphDiagnostics->coordinates;
@@ -108,6 +113,8 @@
     $boundsOutput = view('translation-workbench::components.ui.tw-graph.canvas-metrics', [
         'graphId' => $context['graphId'], 'dev' => $dev, 'coordinates' => $showCoordinates,
         'horizontalPadding' => $horizontalPadding, 'records' => $boundsRecords,
+        'canvasInputs' => ['min-width' => $context['minWidth'], 'min-height' => $context['minHeight'], 'horizontal-padding' => $horizontalPadding],
+        'canvasInputDefaults' => $canvasInputDefaults,
     ])->render();
 @endphp
 {!! str_replace('<!--tw-graph-bounds-output-->', $boundsOutput, $graphMarkup) !!}

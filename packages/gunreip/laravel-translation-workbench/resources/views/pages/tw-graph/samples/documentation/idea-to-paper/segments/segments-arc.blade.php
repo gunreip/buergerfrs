@@ -11,15 +11,14 @@
             <flux:callout.text>
                 {{ __('Four arc shapes and their reverse traversal, shown in eight individual previews. Each example uses an individually authored segment array. A labeled start dot and an end joint arrow indicate the direction. Reversing an arc swaps both the semantic anchors and their coordinates; the joint arrow direction must match the outgoing tangent. Coordinates must agree with arcRadius.') }}
             </flux:callout.text>
+
             @php
                 $arcExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.segments.segments-arc',
                 );
             @endphp
-            <flux:separator
-                class="mt-4"
-                :text="__('Code examples')"
-            />
+
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
             <flux:accordion
                 transition
                 exclusive
@@ -153,10 +152,7 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
-            <flux:separator
-                class="mt-4"
-                :text="__('Props used in these examples')"
-            />
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('Arc segment props') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
@@ -227,7 +223,8 @@
                                     <code>anchorStart</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    <code>[&#x27;x&#x27; =&gt; &#x27;0rem&#x27;, &#x27;y&#x27; =&gt; &#x27;0rem&#x27;]</code>
+                                    <code>[&#x27;x&#x27; =&gt; &#x27;0rem&#x27;, &#x27;y&#x27; =&gt;
+                                        &#x27;0rem&#x27;]</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Explicit starting coordinates; must match the semantic anchor and arc size.') }}
@@ -239,7 +236,8 @@
                                     <code>anchorEnd</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    <code>[&#x27;x&#x27; =&gt; &#x27;0rem&#x27;, &#x27;y&#x27; =&gt; &#x27;0rem&#x27;]</code>
+                                    <code>[&#x27;x&#x27; =&gt; &#x27;0rem&#x27;, &#x27;y&#x27; =&gt;
+                                        &#x27;0rem&#x27;]</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Explicit endpoint coordinates; not calculated by this segment.') }}
@@ -545,32 +543,31 @@
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
                             >
-                                <x-translation-workbench::ui.tw-graph.segments.arc
-                                    :segment="[
-                                        'id' => 'literature.segments.arc.w-n',
-                                        'startAnchor' => 'w',
-                                        'endAnchor' => 'n',
-                                        'anchorStart' => ['x' => '-1.375rem', 'y' => '6rem'],
-                                        'anchorEnd' => ['x' => '1.375rem', 'y' => '8.75rem'],
-                                        'arcRadius' => '2.75rem',
-                                        'nodeStart' => true,
-                                        'nodeEnd' => true,
-                                        'nodeEndDot' => false,
-                                        'jointArrowEnd' => true,
-                                        'jointArrowEndDirection' => 'right',
-                                        'startLabel' => [
-                                            'text' => ['Start'],
-                                            'side' => 'bottom',
-                                            'width' => 'half',
-                                            'align' => 'center',
-                                        ],
-                                        'color' => 'cyan',
-                                    ]"
-                                />
+                                <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                    'id' => 'literature.segments.arc.w-n',
+                                    'startAnchor' => 'w',
+                                    'endAnchor' => 'n',
+                                    'anchorStart' => ['x' => '-1.375rem', 'y' => '6rem'],
+                                    'anchorEnd' => ['x' => '1.375rem', 'y' => '8.75rem'],
+                                    'arcRadius' => '2.75rem',
+                                    'nodeStart' => true,
+                                    'nodeEnd' => true,
+                                    'nodeEndDot' => false,
+                                    'jointArrowEnd' => true,
+                                    'jointArrowEndDirection' => 'right',
+                                    'startLabel' => [
+                                        'text' => ['Start'],
+                                        'side' => 'bottom',
+                                        'width' => 'half',
+                                        'align' => 'center',
+                                    ],
+                                    'color' => 'cyan',
+                                ]" />
                             </x-translation-workbench::ui.tw-graph>
                             {{-- segment-arc-w-n:end --}}
                         </div>
                     </div>
+
                     <div class="min-w-0">
                         <x-translation-workbench::ui.common.heading-counter
                             example="e-n"
@@ -589,32 +586,31 @@
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
                             >
-                                <x-translation-workbench::ui.tw-graph.segments.arc
-                                    :segment="[
-                                        'id' => 'literature.segments.arc.e-n',
-                                        'startAnchor' => 'e',
-                                        'endAnchor' => 'n',
-                                        'anchorStart' => ['x' => '1.375rem', 'y' => '6rem'],
-                                        'anchorEnd' => ['x' => '-1.375rem', 'y' => '8.75rem'],
-                                        'arcRadius' => '2.75rem',
-                                        'nodeStart' => true,
-                                        'nodeEnd' => true,
-                                        'nodeEndDot' => false,
-                                        'jointArrowEnd' => true,
-                                        'jointArrowEndDirection' => 'left',
-                                        'startLabel' => [
-                                            'text' => ['Start'],
-                                            'side' => 'bottom',
-                                            'width' => 'half',
-                                            'align' => 'center',
-                                        ],
-                                        'color' => 'red',
-                                    ]"
-                                />
+                                <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                    'id' => 'literature.segments.arc.e-n',
+                                    'startAnchor' => 'e',
+                                    'endAnchor' => 'n',
+                                    'anchorStart' => ['x' => '1.375rem', 'y' => '6rem'],
+                                    'anchorEnd' => ['x' => '-1.375rem', 'y' => '8.75rem'],
+                                    'arcRadius' => '2.75rem',
+                                    'nodeStart' => true,
+                                    'nodeEnd' => true,
+                                    'nodeEndDot' => false,
+                                    'jointArrowEnd' => true,
+                                    'jointArrowEndDirection' => 'left',
+                                    'startLabel' => [
+                                        'text' => ['Start'],
+                                        'side' => 'bottom',
+                                        'width' => 'half',
+                                        'align' => 'center',
+                                    ],
+                                    'color' => 'red',
+                                ]" />
                             </x-translation-workbench::ui.tw-graph>
                             {{-- segment-arc-e-n:end --}}
                         </div>
                     </div>
+
                     <div class="min-w-0">
                         <x-translation-workbench::ui.common.heading-counter
                             example="s-w"
@@ -633,32 +629,31 @@
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
                             >
-                                <x-translation-workbench::ui.tw-graph.segments.arc
-                                    :segment="[
-                                        'id' => 'literature.segments.arc.s-w',
-                                        'startAnchor' => 's',
-                                        'endAnchor' => 'w',
-                                        'anchorStart' => ['x' => '1.375rem', 'y' => '6rem'],
-                                        'anchorEnd' => ['x' => '-1.375rem', 'y' => '8.75rem'],
-                                        'arcRadius' => '2.75rem',
-                                        'nodeStart' => true,
-                                        'nodeEnd' => true,
-                                        'nodeEndDot' => false,
-                                        'jointArrowEnd' => true,
-                                        'jointArrowEndDirection' => 'top',
-                                        'startLabel' => [
-                                            'text' => ['Start'],
-                                            'side' => 'bottom',
-                                            'width' => 'half',
-                                            'align' => 'center',
-                                        ],
-                                        'color' => 'green',
-                                    ]"
-                                />
+                                <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                    'id' => 'literature.segments.arc.s-w',
+                                    'startAnchor' => 's',
+                                    'endAnchor' => 'w',
+                                    'anchorStart' => ['x' => '1.375rem', 'y' => '6rem'],
+                                    'anchorEnd' => ['x' => '-1.375rem', 'y' => '8.75rem'],
+                                    'arcRadius' => '2.75rem',
+                                    'nodeStart' => true,
+                                    'nodeEnd' => true,
+                                    'nodeEndDot' => false,
+                                    'jointArrowEnd' => true,
+                                    'jointArrowEndDirection' => 'top',
+                                    'startLabel' => [
+                                        'text' => ['Start'],
+                                        'side' => 'bottom',
+                                        'width' => 'half',
+                                        'align' => 'center',
+                                    ],
+                                    'color' => 'green',
+                                ]" />
                             </x-translation-workbench::ui.tw-graph>
                             {{-- segment-arc-s-w:end --}}
                         </div>
                     </div>
+
                     <div class="min-w-0">
                         <x-translation-workbench::ui.common.heading-counter
                             example="s-e"
@@ -677,28 +672,26 @@
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
                             >
-                                <x-translation-workbench::ui.tw-graph.segments.arc
-                                    :segment="[
-                                        'id' => 'literature.segments.arc.s-e',
-                                        'startAnchor' => 's',
-                                        'endAnchor' => 'e',
-                                        'anchorStart' => ['x' => '-1.375rem', 'y' => '6rem'],
-                                        'anchorEnd' => ['x' => '1.375rem', 'y' => '8.75rem'],
-                                        'arcRadius' => '2.75rem',
-                                        'nodeStart' => true,
-                                        'nodeEnd' => true,
-                                        'nodeEndDot' => false,
-                                        'jointArrowEnd' => true,
-                                        'jointArrowEndDirection' => 'top',
-                                        'startLabel' => [
-                                            'text' => ['Start'],
-                                            'side' => 'bottom',
-                                            'width' => 'half',
-                                            'align' => 'center',
-                                        ],
-                                        'color' => 'yellow',
-                                    ]"
-                                />
+                                <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                    'id' => 'literature.segments.arc.s-e',
+                                    'startAnchor' => 's',
+                                    'endAnchor' => 'e',
+                                    'anchorStart' => ['x' => '-1.375rem', 'y' => '6rem'],
+                                    'anchorEnd' => ['x' => '1.375rem', 'y' => '8.75rem'],
+                                    'arcRadius' => '2.75rem',
+                                    'nodeStart' => true,
+                                    'nodeEnd' => true,
+                                    'nodeEndDot' => false,
+                                    'jointArrowEnd' => true,
+                                    'jointArrowEndDirection' => 'top',
+                                    'startLabel' => [
+                                        'text' => ['Start'],
+                                        'side' => 'bottom',
+                                        'width' => 'half',
+                                        'align' => 'center',
+                                    ],
+                                    'color' => 'yellow',
+                                ]" />
                             </x-translation-workbench::ui.tw-graph>
                             {{-- segment-arc-s-e:end --}}
                         </div>
@@ -721,28 +714,26 @@
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
                             >
-                                <x-translation-workbench::ui.tw-graph.segments.arc
-                                    :segment="[
-                                        'id' => 'literature.segments.arc.n-w',
-                                        'startAnchor' => 'n',
-                                        'endAnchor' => 'w',
-                                        'anchorStart' => ['x' => '1.375rem', 'y' => '6.75rem'],
-                                        'anchorEnd' => ['x' => '-1.375rem', 'y' => '4rem'],
-                                        'arcRadius' => '2.75rem',
-                                        'nodeStart' => true,
-                                        'nodeEnd' => true,
-                                        'nodeEndDot' => false,
-                                        'jointArrowEnd' => true,
-                                        'jointArrowEndDirection' => 'bottom',
-                                        'startLabel' => [
-                                            'text' => ['Start'],
-                                            'side' => 'top',
-                                            'width' => 'half',
-                                            'align' => 'center',
-                                        ],
-                                        'color' => 'fuchsia',
-                                    ]"
-                                />
+                                <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                    'id' => 'literature.segments.arc.n-w',
+                                    'startAnchor' => 'n',
+                                    'endAnchor' => 'w',
+                                    'anchorStart' => ['x' => '1.375rem', 'y' => '6.75rem'],
+                                    'anchorEnd' => ['x' => '-1.375rem', 'y' => '4rem'],
+                                    'arcRadius' => '2.75rem',
+                                    'nodeStart' => true,
+                                    'nodeEnd' => true,
+                                    'nodeEndDot' => false,
+                                    'jointArrowEnd' => true,
+                                    'jointArrowEndDirection' => 'bottom',
+                                    'startLabel' => [
+                                        'text' => ['Start'],
+                                        'side' => 'top',
+                                        'width' => 'half',
+                                        'align' => 'center',
+                                    ],
+                                    'color' => 'fuchsia',
+                                ]" />
                             </x-translation-workbench::ui.tw-graph>
                             {{-- segment-arc-n-w:end --}}
                         </div>
@@ -765,28 +756,26 @@
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
                             >
-                                <x-translation-workbench::ui.tw-graph.segments.arc
-                                    :segment="[
-                                        'id' => 'literature.segments.arc.n-e',
-                                        'startAnchor' => 'n',
-                                        'endAnchor' => 'e',
-                                        'anchorStart' => ['x' => '-1.375rem', 'y' => '6.75rem'],
-                                        'anchorEnd' => ['x' => '1.375rem', 'y' => '4rem'],
-                                        'arcRadius' => '2.75rem',
-                                        'nodeStart' => true,
-                                        'nodeEnd' => true,
-                                        'nodeEndDot' => false,
-                                        'jointArrowEnd' => true,
-                                        'jointArrowEndDirection' => 'bottom',
-                                        'startLabel' => [
-                                            'text' => ['Start'],
-                                            'side' => 'top',
-                                            'width' => 'half',
-                                            'align' => 'center',
-                                        ],
-                                        'color' => 'rose',
-                                    ]"
-                                />
+                                <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                    'id' => 'literature.segments.arc.n-e',
+                                    'startAnchor' => 'n',
+                                    'endAnchor' => 'e',
+                                    'anchorStart' => ['x' => '-1.375rem', 'y' => '6.75rem'],
+                                    'anchorEnd' => ['x' => '1.375rem', 'y' => '4rem'],
+                                    'arcRadius' => '2.75rem',
+                                    'nodeStart' => true,
+                                    'nodeEnd' => true,
+                                    'nodeEndDot' => false,
+                                    'jointArrowEnd' => true,
+                                    'jointArrowEndDirection' => 'bottom',
+                                    'startLabel' => [
+                                        'text' => ['Start'],
+                                        'side' => 'top',
+                                        'width' => 'half',
+                                        'align' => 'center',
+                                    ],
+                                    'color' => 'rose',
+                                ]" />
                             </x-translation-workbench::ui.tw-graph>
                             {{-- segment-arc-n-e:end --}}
                         </div>
@@ -809,28 +798,26 @@
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
                             >
-                                <x-translation-workbench::ui.tw-graph.segments.arc
-                                    :segment="[
-                                        'id' => 'literature.segments.arc.w-s',
-                                        'startAnchor' => 'w',
-                                        'endAnchor' => 's',
-                                        'anchorStart' => ['x' => '-1.375rem', 'y' => '6.75rem'],
-                                        'anchorEnd' => ['x' => '1.375rem', 'y' => '4rem'],
-                                        'arcRadius' => '2.75rem',
-                                        'nodeStart' => true,
-                                        'nodeEnd' => true,
-                                        'nodeEndDot' => false,
-                                        'jointArrowEnd' => true,
-                                        'jointArrowEndDirection' => 'right',
-                                        'startLabel' => [
-                                            'text' => ['Start'],
-                                            'side' => 'top',
-                                            'width' => 'half',
-                                            'align' => 'center',
-                                        ],
-                                        'color' => 'blue',
-                                    ]"
-                                />
+                                <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                    'id' => 'literature.segments.arc.w-s',
+                                    'startAnchor' => 'w',
+                                    'endAnchor' => 's',
+                                    'anchorStart' => ['x' => '-1.375rem', 'y' => '6.75rem'],
+                                    'anchorEnd' => ['x' => '1.375rem', 'y' => '4rem'],
+                                    'arcRadius' => '2.75rem',
+                                    'nodeStart' => true,
+                                    'nodeEnd' => true,
+                                    'nodeEndDot' => false,
+                                    'jointArrowEnd' => true,
+                                    'jointArrowEndDirection' => 'right',
+                                    'startLabel' => [
+                                        'text' => ['Start'],
+                                        'side' => 'top',
+                                        'width' => 'half',
+                                        'align' => 'center',
+                                    ],
+                                    'color' => 'blue',
+                                ]" />
                             </x-translation-workbench::ui.tw-graph>
                             {{-- segment-arc-w-s:end --}}
                         </div>
@@ -853,37 +840,36 @@
                                 min-width="15rem"
                                 horizontal-padding="7.5rem"
                             >
-                                <x-translation-workbench::ui.tw-graph.segments.arc
-                                    :segment="[
-                                        'id' => 'literature.segments.arc.e-s',
-                                        'startAnchor' => 'e',
-                                        'endAnchor' => 's',
-                                        'anchorStart' => ['x' => '1.375rem', 'y' => '6.75rem'],
-                                        'anchorEnd' => ['x' => '-1.375rem', 'y' => '4rem'],
-                                        'arcRadius' => '2.75rem',
-                                        'nodeStart' => true,
-                                        'nodeEnd' => true,
-                                        'nodeEndDot' => false,
-                                        'jointArrowEnd' => true,
-                                        'jointArrowEndDirection' => 'left',
-                                        'startLabel' => [
-                                            'text' => ['Start'],
-                                            'side' => 'top',
-                                            'width' => 'half',
-                                            'align' => 'center',
-                                        ],
-                                        'color' => 'violet',
-                                    ]"
-                                />
+                                <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                    'id' => 'literature.segments.arc.e-s',
+                                    'startAnchor' => 'e',
+                                    'endAnchor' => 's',
+                                    'anchorStart' => ['x' => '1.375rem', 'y' => '6.75rem'],
+                                    'anchorEnd' => ['x' => '-1.375rem', 'y' => '4rem'],
+                                    'arcRadius' => '2.75rem',
+                                    'nodeStart' => true,
+                                    'nodeEnd' => true,
+                                    'nodeEndDot' => false,
+                                    'jointArrowEnd' => true,
+                                    'jointArrowEndDirection' => 'left',
+                                    'startLabel' => [
+                                        'text' => ['Start'],
+                                        'side' => 'top',
+                                        'width' => 'half',
+                                        'align' => 'center',
+                                    ],
+                                    'color' => 'violet',
+                                ]" />
                             </x-translation-workbench::ui.tw-graph>
                             {{-- segment-arc-e-s:end --}}
                         </div>
                     </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-                .../idea-to-paper/segments/segments-arc.blade.php
-            </flux:field>
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/segments/segments-arc.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

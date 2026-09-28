@@ -40,7 +40,6 @@
     $inheritedColor = $color ?? null;
 
 
-
 @endphp
 
 @props([
@@ -66,6 +65,15 @@
     'zIndex' => 20,
     'counterStart' => 1,
 ])
+
+@php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.strang.trunk',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
 
 @php
     // Keep the authoring ID throughout the internal component chain.
@@ -286,56 +294,8 @@
         $canonicalTrunkPrefix . '.end.anchorNode-end',
     ], $pathEndAnchor);
 
-    $pathBoxPadding = '1rem';
-    $pathBoxX = data_get($pathStartAnchor, 'x', '0rem');
-    $pathBoxY = data_get($pathStartAnchor, 'y', '0rem');
-    $pathBoxWidth = 'var(--tw-graph-protocol-node-size)';
-    $pathBoxHeight = '0rem';
-    $resolvedStartLabelSpace = filled($startLabelSpace) ? (string) $startLabelSpace : '0rem';
-    $pathBoxStartPadding = match ($direction) {
-        'top-bottom' => ['x' => '0rem', 'y' => '0rem', 'width' => '0rem', 'height' => $resolvedStartLabelSpace],
-        'left-right' => ['x' => $resolvedStartLabelSpace, 'y' => '0rem', 'width' => $resolvedStartLabelSpace, 'height' => '0rem'],
-        'right-left' => ['x' => '0rem', 'y' => '0rem', 'width' => $resolvedStartLabelSpace, 'height' => '0rem'],
-        default => ['x' => '0rem', 'y' => $resolvedStartLabelSpace, 'width' => '0rem', 'height' => $resolvedStartLabelSpace],
-    };
-    $isHorizontalPath = in_array($direction, ['left-right', 'right-left'], true);
-    $pathBoxX = match ($direction) {
-        'right-left' => data_get($pathEndAnchor, 'x', '0rem'),
-        'left-right' => data_get($pathStartAnchor, 'x', '0rem'),
-        default => 'calc(' . data_get($pathStartAnchor, 'x', '0rem') . ' - var(--tw-graph-protocol-node-half))',
-    };
-    $pathBoxY = match ($direction) {
-        'top-bottom' => data_get($pathEndAnchor, 'y', '0rem'),
-        'left-right', 'right-left' => 'calc(' . data_get($pathStartAnchor, 'y', '0rem') . ' - var(--tw-graph-protocol-node-half))',
-        default => data_get($pathStartAnchor, 'y', '0rem'),
-    };
-    $pathBoxWidth = $isHorizontalPath
-        ? 'calc(' . data_get($pathEndAnchor, 'x', '0rem') . ' - ' . data_get($pathStartAnchor, 'x', '0rem') . ')'
-        : 'var(--tw-graph-protocol-node-size)';
-    if ($direction === 'right-left') {
-        $pathBoxWidth = 'calc(' . data_get($pathStartAnchor, 'x', '0rem') . ' - ' . data_get($pathEndAnchor, 'x', '0rem') . ')';
-    }
-    $pathBoxHeight = $isHorizontalPath
-        ? 'var(--tw-graph-protocol-node-size)'
-        : 'calc(' . data_get($pathEndAnchor, 'y', '0rem') . ' - ' . data_get($pathStartAnchor, 'y', '0rem') . ')';
-    if ($direction === 'top-bottom') {
-        $pathBoxHeight = 'calc(' . data_get($pathStartAnchor, 'y', '0rem') . ' - ' . data_get($pathEndAnchor, 'y', '0rem') . ')';
-    }
-    $devBoxX = 'calc(' . $pathBoxX . ' - ' . $pathBoxPadding . ' - ' . $pathBoxStartPadding['x'] . ')';
-    $devBoxY = 'calc(' . $pathBoxY . ' - ' . $pathBoxPadding . ' - ' . $pathBoxStartPadding['y'] . ')';
-    $devBoxWidth = 'calc(' . $pathBoxWidth . ' + (' . $pathBoxPadding . ' * 2) + ' . $pathBoxStartPadding['width'] . ')';
-    $devBoxHeight = 'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2) + ' . $pathBoxStartPadding['height'] . ')';
 @endphp
 
-<x-translation-workbench::ui.tw-graph.dev-box
-    :id="$id . '.dev-box'"
-    :x="$devBoxX"
-    :y="$devBoxY"
-    :width="$devBoxWidth"
-    :height="$devBoxHeight"
-    :color="$resolvedColor"
-    :label="$id"
-/>
 
     <x-translation-workbench::ui.tw-graph.paths.trunk
         :id="$id . '.paths.trunk'"
@@ -379,3 +339,14 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
     }
 @endphp
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
+@endif

@@ -132,6 +132,11 @@ final class PrimitiveBounds
 
     private static function record(string $id, string $kind, array $rects): array
     {
-        return ['id' => $id, 'kind' => $kind, 'rects' => $rects];
+        $record = ['id' => $id, 'kind' => $kind, 'rects' => $rects];
+        if (($region = ComponentRegion::current()) !== null) {
+            $record['region'] = $region;
+        }
+
+        return $record;
     }
 }

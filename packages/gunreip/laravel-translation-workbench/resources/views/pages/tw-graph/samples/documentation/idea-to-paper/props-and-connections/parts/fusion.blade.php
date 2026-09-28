@@ -180,5 +180,8 @@
         <flux:callout.heading>Validation and practical limits</flux:callout.heading>
         <flux:text>Requires at least two inputs, resolvable rem coordinates/radius/min-stem-length, positive radius and left-right or right-left direction.</flux:text>
     </flux:callout>
-    <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../props-and-connections/parts/fusion.blade.php</flux:field>
+    <x-translation-workbench::ui.common.tw-graph-path-file
+        path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/fusion.blade.php"
+        segments="3"
+    />
 </section>

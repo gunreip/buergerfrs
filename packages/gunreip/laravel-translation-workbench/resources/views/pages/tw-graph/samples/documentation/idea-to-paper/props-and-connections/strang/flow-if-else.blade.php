@@ -16,7 +16,8 @@
                 <flux:table.column>Meaning and limits</flux:table.column>
             </flux:table.columns>
             <flux:table.rows>
-                <flux:table.row>
+
+                    <flux:table.row>
                     <flux:table.cell class="whitespace-normal align-top">id</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">string | null</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
@@ -543,6 +544,12 @@
                                 <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">false opens this route for a nested block. Author the return explicitly.</flux:table.cell>
                             </flux:table.row>
+                            <flux:table.row>
+                        <flux:table.cell class="whitespace-normal align-top"><code>if-end.exitDirection</code></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal align-top"><code>bottom-top / top-bottom</code></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal align-top"><code>direction</code></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal align-top">{{ __('Selects the outgoing arc direction of the open false lane. Changing direction requires return=false; the author connects its continuation.') }}</flux:table.cell>
+                    </flux:table.row>
                             <flux:table.row>
                                 <flux:table.cell class="whitespace-normal align-top">if-end.returnOffset</flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
@@ -1351,5 +1358,8 @@
         <flux:callout.heading>Validation and practical limits</flux:callout.heading>
         <flux:text>IF diagrams do not evaluate expressions or execute actions. Changing label text does not change routing. Use return, if-end text and elseifs to describe topology.</flux:text>
     </flux:callout>
-    <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../props-and-connections/strang/flow-if-else.blade.php</flux:field>
+    <x-translation-workbench::ui.common.tw-graph-path-file
+        path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        segments="3"
+    />
 </section>

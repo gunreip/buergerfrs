@@ -204,7 +204,8 @@ it('renders independent left and right grouped case examples with matching outpu
     $dom = new DOMDocument;
     @$dom->loadHTML($html);
     $xpath = new DOMXPath($dom);
-    expect($xpath->query('//pre/code')->length)->toBe($variant === '-multi' ? 14 : 8);
+    // Two graph source examples and one shared set of six language examples.
+    expect($xpath->query('//pre/code')->length)->toBe(8);
     foreach (['', '-right'] as $suffix) {
         $graph = 'idea-to-paper-flow-switch-case-grouped'.$variant.$suffix;
         $prefix = 'literature.switch.1.grouped'.$variant.$suffix.'.status';
@@ -398,3 +399,29 @@ it('honors visible fall-through bridge and join lengths without implicit shorten
     $joinOffset = $number($get('case.next.entry.anchorNode-end')['x']) - $number($get('case.next.anchorNode-action')['x']);
     expect($joinOffset)->toBe(2.75 + 3.25);
 })->with([null, '2rem', '3rem']);
+
+it('numbers SWITCH counters once from the explicit start in either direction', function (string $side, string $direction) {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="switch-counter-test" :dev="true">
+            <x-translation-workbench::ui.tw-graph.strang.flow-switch-case
+                id="status"
+                :side="$side"
+                :direction="$direction"
+                :counter-start="7"
+                :cases="[
+                    ['key' => 'draft', 'actionLabel' => ['text' => ['Edit draft']]],
+                    ['key' => 'published', 'actionLabel' => ['text' => ['Display item']]],
+                ]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+        BLADE, compact('side', 'direction'));
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    $numbers = [];
+    foreach ($xpath->query('//*[contains(concat(" ", normalize-space(@class), " "), " tw-graph-protocol-primitive-dev-node-counter ")]') as $counter) {
+        $numbers[] = (int) trim($counter->textContent);
+    }
+    sort($numbers);
+    expect($numbers)->toBe(range(7, 13));
+})->with(['left', 'right'])->with(['bottom-top', 'top-bottom']);

@@ -8,6 +8,7 @@
     :data-boxes="previewBoxes ? 'on' : 'off'"
 >
     <flux:fieldset class="z-100 sticky top-0 rounded-lg bg-white p-3 dark:bg-zinc-900">
+        <x-translation-workbench::ui.common.component-marker name="translation-workbench::ui.tw-graph.preview-tools" />
         <div class="flex flex-wrap items-center gap-4 *:gap-x-2">
             <flux:toggle
                 class="hover:cursor-pointer"

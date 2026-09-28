@@ -9,6 +9,11 @@
         <flux:tab name="flow-if">{{ __('Flow IF') }}</flux:tab>
         <flux:tab name="flow-switch-case">{{ __('Flow SWITCH/CASE') }}</flux:tab>
         <flux:tab name="flow-while">{{ __('Flow WHILE') }}</flux:tab>
+        <flux:tab name="flow-for">{{ __('Flow FOR') }}</flux:tab>
+        <flux:tab name="flow-foreach">{{ __('Flow FOREACH') }}</flux:tab>
+        <flux:tab name="flow-do-while">{{ __('Flow DO WHILE') }}</flux:tab>
+        <flux:tab name="flow-try-catch">{{ __('Flow TRY/CATCH/FINALLY') }}</flux:tab>
+        <flux:tab name="flow-break-continue">{{ __('Flow BREAK / CONTINUE') }}</flux:tab>
     </flux:tabs>
     <flux:tab.panel name="flow-start">
         @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-start')
@@ -49,6 +54,41 @@
         @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-while')
             <div wire:key="documentation-flow-while">
                 @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.index')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="flow-for">
+        @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-for')
+            <div wire:key="documentation-flow-for">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.for.index')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="flow-foreach">
+        @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-foreach')
+            <div wire:key="documentation-flow-foreach">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.foreach.index')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="flow-do-while">
+        @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-do-while')
+            <div wire:key="documentation-flow-do-while">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.do-while.index')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="flow-try-catch">
+        @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-try-catch')
+            <div wire:key="documentation-flow-try-catch">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.try-catch.index')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="flow-break-continue">
+        @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-break-continue')
+            <div wire:key="documentation-flow-break-continue">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.break-continue.index')
             </div>
         @endif
     </flux:tab.panel>

@@ -35,7 +35,6 @@
     $inheritedColor = $color ?? null;
 
 
-
 @endphp
 
 @props([
@@ -51,6 +50,15 @@
     'counterStart' => null,
     'zIndex' => 10,
 ])
+
+@php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.strang.branch-end',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
 
 @php
     // Keep the authoring ID throughout the internal component chain.
@@ -101,10 +109,6 @@
 
         'endLabel' => $endLabelConfig,
     ];
-    $bounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([
-        $anchor,
-        $endAnchor,
-    ], '1rem');
 
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-end.' . $resolvedSide . '.start', $anchor);
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.branch-end.' . $resolvedSide . '.end', $endAnchor);
@@ -125,15 +129,6 @@
     </span>
 @endif
 
-<x-translation-workbench::ui.tw-graph.dev-box
-    :id="$id . '.dev-box'"
-    :x="$bounds['left']"
-    :y="$bounds['bottom']"
-    :width="$bounds['width']"
-    :height="$bounds['height']"
-    :color="$resolvedColor"
-    :label="$id"
-/>
 
 <x-translation-workbench::ui.tw-graph.segments.end
     :segment="$segment"
@@ -144,3 +139,14 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
     }
 @endphp
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
+@endif

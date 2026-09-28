@@ -18,22 +18,16 @@
             {{ __('This adds a default trunk. Each drawing primitive declares its bounds. The canvas and coordinate display use their combined geometry, independently of DEV mode. Text boxes are provisional on the server and updated after font layout. Browser checks report geometry mismatches instead of overriding the declared geometry. Horizontal padding positions the coordinate origin; min-width may leave extra space on the right. The dashed cyan frame shows the resulting bounds; yellow borders show the configured canvas dimensions.') }}
         </flux:callout.text>
 
-        <flux:separator
-            class="mt-4"
-            :text="__('Deep reference links')"
-        />
+        <x-translation-workbench::ui.common.separator-deep-reference-links />
 
         <x-translation-workbench::ui.tw-graph.documentation-links example="canvas.canvas-default-trunk" />
 
-        <flux:separator :text="__('Code examples')" />
+        <x-translation-workbench::ui.common.separator-code-example-tw-graph />
 
         <x-translation-workbench::ui.tw-graph.code-box
             class="">{{ $canvasSource->example('canvas-default-trunk-1') }}</x-translation-workbench::ui.tw-graph.code-box>
 
-        <flux:separator
-            class="mt-4"
-            :text="__('Props used in this example')"
-        />
+        <x-translation-workbench::ui.common.separator-props-used-tw-graph />
 
         <flux:callout color="indigo">
             <flux:callout.heading icon="variable">
@@ -283,8 +277,9 @@
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
         {{-- canvas-preview-tools:end --}}
-        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-            .../idea-to-paper/canvas/canvas-default-trunk.blade.php
-        </flux:field>
+        <x-translation-workbench::ui.common.tw-graph-path-file
+            path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/canvas/canvas-default-trunk.blade.php"
+            segments="3"
+        />
     </flux:callout>
 </section>

@@ -23,10 +23,7 @@
             $labelsBridgeRightLeftCode = $labelsExampleSource->example('segment-bridge-right-left');
         @endphp
 
-        <flux:separator
-            class="mt-4"
-            text="Segment label code examples"
-        />
+        <x-translation-workbench::ui.common.separator-code-example-tw-graph />
 
         <flux:accordion
             transition
@@ -117,10 +114,7 @@
             </flux:accordion.item>
         </flux:accordion>
 
-        <flux:separator
-            class="mt-4"
-            text="Segment label props"
-        />
+        <x-translation-workbench::ui.common.separator-props-used-tw-graph />
 
         {{-- Label Props --}}
         <flux:callout color="indigo">
@@ -231,10 +225,7 @@
             </div>
         </flux:callout>
 
-        <flux:separator
-            class="mt-4"
-            text="Segment label bridge props"
-        />
+        <x-translation-workbench::ui.common.separator-props-used-tw-graph />
 
         {{-- Label Bridge Props --}}
         <flux:callout color="indigo">
@@ -369,10 +360,7 @@
             </div>
         </flux:callout>
 
-        <flux:separator
-            class="mt-4"
-            text="Segment shared label fields props"
-        />
+        <x-translation-workbench::ui.common.separator-props-used-tw-graph />
 
         <flux:callout color="indigo">
             <flux:callout.heading icon="variable">
@@ -720,8 +708,9 @@
                 </div>
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
-        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-            .../idea-to-paper/segments/segments-labels.blade.php
-        </flux:field>
+        <x-translation-workbench::ui.common.tw-graph-path-file
+            path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/segments/segments-labels.blade.php"
+            segments="3"
+        />
     </flux:callout>
 </section>

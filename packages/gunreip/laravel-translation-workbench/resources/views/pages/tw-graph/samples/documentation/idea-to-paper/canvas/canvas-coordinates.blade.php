@@ -19,22 +19,16 @@
             {{ __('This builds on the default trunk example. Only coordinate and dimension props are added so the same trunk can be framed without changing the trunk itself.') }}
         </flux:callout.text>
 
-        <flux:separator
-            class="mt-4"
-            :text="__('Deep reference links')"
-        />
+        <x-translation-workbench::ui.common.separator-deep-reference-links />
 
         <x-translation-workbench::ui.tw-graph.documentation-links example="canvas.canvas-coordinates" />
 
-        <flux:separator :text="__('Code examples')" />
+        <x-translation-workbench::ui.common.separator-code-example-tw-graph />
 
         <x-translation-workbench::ui.tw-graph.code-box
             class="">{{ $canvasSource->example('canvas-coordinates-1') }}</x-translation-workbench::ui.tw-graph.code-box>
 
-        <flux:separator
-            class="mt-4"
-            :text="__('Props used in this example')"
-        />
+        <x-translation-workbench::ui.common.separator-props-used-tw-graph />
 
         <flux:callout color="indigo">
             <flux:callout.heading icon="variable">
@@ -163,8 +157,9 @@
                 </div>
             </div>
         </x-translation-workbench::ui.tw-graph.preview-tools>
-        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-            .../idea-to-paper/canvas/canvas-coordinates.blade.php
-        </flux:field>
+        <x-translation-workbench::ui.common.tw-graph-path-file
+            path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/canvas/canvas-coordinates.blade.php"
+            segments="3"
+        />
     </flux:callout>
 </section>

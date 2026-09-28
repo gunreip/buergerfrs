@@ -251,5 +251,8 @@
         <flux:callout.heading>Validation and practical limits</flux:callout.heading>
         <flux:text>A capped end is terminal. Do not attach another component to a nonexistent {id}.anchorNode-end; use an explicitly authored coordinate or a preceding part’s published anchor.</flux:text>
     </flux:callout>
-    <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../props-and-connections/parts/end.blade.php</flux:field>
+    <x-translation-workbench::ui.common.tw-graph-path-file
+        path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/end.blade.php"
+        segments="3"
+    />
 </section>

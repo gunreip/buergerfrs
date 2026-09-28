@@ -170,6 +170,7 @@ export function setupTwGraphLineJumps() {
                         const canvasStyle = getComputedStyle(line.closest('.tw-graph-protocol-canvas'));
                         overlay.dataset.twGraphBounds = JSON.stringify({
                             id: line.dataset.twGraphPath + '.line-jumps', kind: 'derived', side: 'center',
+                            region: JSON.parse(line.dataset.twGraphBounds || '{}').region ?? null,
                             rects: [{
                                 x: `${parseFloat(css.left) - parseFloat(originStyle.left) - (horizontal ? 0 : drawing.padding)}px`,
                                 y: `${parseFloat(canvasStyle.height) - parseFloat(css.top) + (horizontal ? drawing.padding : 0) - drawing.height - parseFloat(originStyle.bottom)}px`,

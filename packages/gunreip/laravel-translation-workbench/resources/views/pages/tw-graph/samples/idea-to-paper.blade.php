@@ -2,13 +2,6 @@
 
 <x-layouts::app :title="__('TW-Graph Sample: Idea To Paper')">
     <flux:card class="translation-workbench">
-        <x-ui.headers.page
-            :title="__('Idea To Paper')"
-            :description="__(
-                'Hand-authored tw-graph authoring story for notes, drafts, review, revision, and publication without database-backed timeline data.',
-            )"
-        />
-
         @php
             $ideaToPaperDev = true;
             $ideaToPaperCoordinates = false;

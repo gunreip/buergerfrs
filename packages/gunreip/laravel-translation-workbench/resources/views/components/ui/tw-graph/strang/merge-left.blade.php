@@ -46,7 +46,6 @@
     $inheritedColor = $color ?? null;
 
 
-
 @endphp
 
 @props([
@@ -78,6 +77,15 @@
     'counterStart' => 1,
     'zIndex' => 10,
 ])
+
+@php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.strang.merge-left',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
 
 @php
     // Keep the authoring ID throughout the internal component chain.
@@ -181,10 +189,6 @@
         'x' => $add($anchor['x'], $mergeWidth),
         'y' => $add($anchor['y'], $mergeHeight),
     ];
-    $bounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([
-        $anchor,
-        $attachAnchor,
-    ], '1rem');
 
     $node1 = [
         'x' => $anchor['x'],
@@ -287,7 +291,7 @@
         );
     };
     $extensionAnchors = [];
-    $extensionBoundsPoints = [];
+
     $extensionResolvedStemLengths = [];
     $extensionResolvedStemContinuations = [];
     $extensionResolvedBridgeLengths = [];
@@ -309,7 +313,7 @@
             'y' => $subtract($nextExtensionTarget['y'], $extensionDeltaY),
         ];
         $extensionAnchors[$extensionIndex] = $extensionAnchor;
-        $extensionBoundsPoints[] = $extensionAnchor;
+
         $extensionResolvedStemLengths[$extensionIndex] = $currentExtensionStemLength;
         $extensionResolvedStemContinuations[$extensionIndex] = $currentExtensionStemContinuation;
         $extensionResolvedBridgeLengths[$extensionIndex] = $currentExtensionBridgeLength;
@@ -340,7 +344,7 @@
             'x' => $add($extensionNode3['x'], $currentExtensionBridgeLength),
             'y' => $extensionNode3['y'],
         ];
-        array_push($extensionBoundsPoints, $extensionNode1, $extensionNode2, $extensionStemContinuationEnd, $extensionNode3, $extensionNode4);
+
 
         \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.start', $extensionAnchor);
         \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.node.1', $extensionNode1);
@@ -363,11 +367,6 @@
         $nextExtensionCounterStart += 4 + count($currentExtensionStemContinuation);
     }
 
-    $bounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([
-        $anchor,
-        $attachAnchor,
-        ...$extensionBoundsPoints,
-    ], '1rem');
 
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.start', $anchor);
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.node.1', $node1);
@@ -414,15 +413,6 @@
     </span>
 @endif
 
-<x-translation-workbench::ui.tw-graph.dev-box
-    :id="$id . '.dev-box'"
-    :x="$bounds['left']"
-    :y="$bounds['bottom']"
-    :width="$bounds['width']"
-    :height="$bounds['height']"
-    :color="$resolvedColor"
-    :label="$id"
-/>
 
 @foreach (array_reverse($extensionAnchors, true) as $extensionIndex => $extensionAnchor)
     <x-translation-workbench::ui.tw-graph.paths.merge-extension
@@ -468,3 +458,14 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
     }
 @endphp
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
+@endif

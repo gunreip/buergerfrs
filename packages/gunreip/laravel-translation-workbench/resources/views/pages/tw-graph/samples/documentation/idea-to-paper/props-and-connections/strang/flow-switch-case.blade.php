@@ -129,6 +129,12 @@
                     <flux:table.cell class="whitespace-normal align-top">Base drawing layer; the fall-through joining
                         arc sits one level lower.</flux:table.cell>
                 </flux:table.row>
+                <flux:table.row>
+                    <flux:table.cell class="whitespace-normal align-top">counter-start</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">int</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">1</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('First DEV counter, assigned to the SWITCH expression. Set explicitly when composing with preceding components; subsequent SWITCH counters advance from this value.') }}</flux:table.cell>
+                </flux:table.row>
             </flux:table.rows>
         </flux:table>
     </flux:callout>
@@ -1800,8 +1806,10 @@
             raise errors. Fall-through also rejects insufficient routing space. Unknown nested array keys are not
             generally rejected: only the fields consumed by this component chain have an effect.</flux:text>
     </flux:callout>
-    <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-        .../props-and-connections/strang/flow-switch-case.blade.php</flux:field>
+    <x-translation-workbench::ui.common.tw-graph-path-file
+        path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        segments="3"
+    />
     <flux:callout color="green" icon="brackets" class="min-w-0 space-y-3">
         <flux:callout.heading>Array props: explicit entry detours</flux:callout.heading>
         <flux:text>stemLength remains the complete vertical distance. The middle stem is stemLength − beforeLength − afterLength − 4 × arcRadius. Insufficient height, negative lengths, invalid sides/directions and unknown detour keys are rejected; the component does not enlarge or shorten the entry to make it fit. Omit entryDetour to retain the ordinary straight entry. The existing entry.anchorNode-end is preserved.</flux:text>

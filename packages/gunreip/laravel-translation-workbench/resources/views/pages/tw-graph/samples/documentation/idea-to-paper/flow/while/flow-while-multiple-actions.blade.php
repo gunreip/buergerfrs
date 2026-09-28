@@ -6,16 +6,31 @@
             icon="file-text"
         >
             <flux:callout.heading>{{ __('WHILE · Multiple body actions') }}</flux:callout.heading>
-            <flux:callout.text>{{ __('Initialize the item list and index once. WHILE index &lt; count: process the current item, then advance the index in a separate action. Only the final action returns to the condition. FALSE goes directly to the summary, including when the list is empty. The condition\'s afterLength explicitly reserves vertical room for the second action; the remaining return stem is derived from its actual endpoint.') }}</flux:callout.text>
+            <flux:callout.text>
+                {{ __('Initialize the item list and index once. WHILE index &lt; count: process the current item, then advance the index in a separate action. Only the final action returns to the condition. FALSE goes directly to the summary, including when the list is empty. The condition\'s afterLength explicitly reserves vertical room for the second action; the remaining return stem is derived from its actual endpoint.') }}
+            </flux:callout.text>
+
+            <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.while.flow-while-multiple-actions" />
+
             @php
                 $whileSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.flow-while-multiple-actions',
                 );
             @endphp
-            <flux:separator class="mt-4" :text="__('Code examples')" />
-            <flux:accordion transition exclusive>
+
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
+
+            <flux:accordion
+                transition
+                exclusive
+            >
                 <flux:accordion.item expanded>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="while-multiple-left-example"
                             variant="accordion"
@@ -28,7 +43,10 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
                 <flux:accordion.item>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="while-multiple-right-example"
                             variant="accordion"
@@ -42,13 +60,16 @@
                 </flux:accordion.item>
             </flux:accordion>
 
-            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.while.flow-while-multiple-actions" />
-                    <flux:separator class="mt-4" :text="__('Props used in these examples')" />
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
+
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('Props and connections') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                     <flux:table container:class="max-h-80">
-                        <flux:table.columns class="bg-white dark:bg-zinc-900" sticky>
+                        <flux:table.columns
+                            class="bg-white dark:bg-zinc-900"
+                            sticky
+                        >
                             <flux:table.column>{{ __('Prop / anchor') }}</flux:table.column>
                             <flux:table.column>{{ __('Default') }}</flux:table.column>
                             <flux:table.column>{{ __('Purpose') }}</flux:table.column>
@@ -300,196 +321,215 @@
                     </flux:table>
                 </div>
             </flux:callout>
+
             <x-translation-workbench::ui.tw-graph.language-examples
                 source-view="translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.flow-while-multiple-actions"
                 example="while-multiple"
             />
         </flux:callout>
+        {{-- Preview --}}
         <flux:callout
             class="min-w-0"
             color="emerald"
         >
-            <flux:callout.heading icon="eye">{{ __('WHILE multiple actions · left / right') }}</flux:callout.heading>
+            <flux:callout.heading icon="eye">{{ __('WHILE multiple actions · left / right') }}
+            </flux:callout.heading>
+            <flux:callout.text class="mb-3">
+                {{ __('The left and right previews separate processing the current item from advancing the index. Follow both actions in sequence: only the index increment returns to the condition. FALSE bypasses both actions and continues to the summary.') }}
+            </flux:callout.text>
+
             <x-translation-workbench::ui.tw-graph.preview-tools
                 :dev="$dev ?? true"
                 :coordinates="$coordinates ?? false"
             >
-                <x-translation-workbench::ui.common.heading-counter
-                    example="while-multiple-left-example"
-                    size="sm"
-                >{{ __('side="left"') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- while-multiple-left-example:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-while-multiple-left"
-                        :dev="true"
-                        :coordinates="true"
-                        min-height="44rem"
-                        min-width="36rem"
+                <div class="mt-4 grid min-w-0 gap-4 xl:grid-cols-1">
+
+                    <x-translation-workbench::ui.common.heading-counter
+                        example="while-multiple-left-example"
+                        size="sm"
                     >
-                        {{-- Initialization runs once. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.multiple.left.initialize"
-                            :anchor-start="['x' => '0rem', 'y' => '2rem']"
-                            :step-label="['text' => ['Load items', 'index = 0'], 'width' => 'default']"
-                            afterLength="5rem"
-                            color="zinc"
-                            :node-end="false"
-                        />
-                        {{-- TRUE processes one item; the body stays open for the advance action. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-while
-                            id="literature.while.multiple.left.loop"
-                            attach-to="literature.while.multiple.left.initialize.anchorNode-end"
-                            side="left"
-                            color="cyan"
-                            arc-radius="2.75rem"
-                            true-bridge-length="4rem"
-                            stem-length="5.5rem"
-                            :condition-label="[
-                                'beforeLength' => '2rem',
-                                'labelGap' => '4rem',
-                                'afterLength' => '4rem',
-                                'text' => ['WHILE index < count?'],
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :action-label="[
-                                'beforeLength' => '2rem',
-                                'afterLength' => '2rem',
-                                'text' => ['Process current item'],
-                                'return' => false,
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :true-label="['text' => ['TRUE'], 'width' => 'half', 'side' => 'top', 'color' => 'green']"
-                            :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'right', 'color' => 'red']"
-                        />
-                        {{-- The next action is an independent component inside the body. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.multiple.left.advance"
-                            attach-to="literature.while.multiple.left.loop.body.anchorNode-end"
-                            direction="top-bottom"
-                            before-length="2rem"
-                            label-gap="4rem"
-                            after-length="2rem"
-                            :step-label="['text' => ['index = index + 1'], 'width' => 'default']"
-                            :node-end-dot="false"
-                            :joint-arrow-end="true"
-                            :counter-end="7"
-                            color="cyan"
-                        />
-                        {{-- Return only after advancing, to the same condition (not initialization). --}}
-                        <x-translation-workbench::ui.tw-graph.paths.loop-return
-                            id="literature.while.multiple.left.body-return"
-                            attach-to="literature.while.multiple.left.advance.anchorNode-end"
-                            return-to="literature.while.multiple.left.loop.anchorNode-return"
-                            side="left"
-                            arc-radius="2.75rem"
-                            :counter-start="8"
-                            color="cyan"
-                        />
-                        {{-- FALSE continues here, including when the queue starts empty. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.multiple.left.continue"
-                            attach-to="literature.while.multiple.left.loop.anchorNode-end"
-                            beforeLength="4rem"
-                            :step-label="['text' => ['Show summary'], 'width' => 'default']"
-                            color="violet"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- while-multiple-left-example:end --}}
-                </div>
-                <x-translation-workbench::ui.common.heading-counter
-                    example="while-multiple-right-example"
-                    size="sm"
-                >{{ __('side="right"') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- while-multiple-right-example:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-while-multiple-right"
-                        :dev="true"
-                        :coordinates="true"
-                        min-height="52rem"
-                        min-width="36rem"
+                        {{ __('side="left"') }}
+                    </x-translation-workbench::ui.common.heading-counter>
+                    <div
+                        class="overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                        {{-- while-multiple-left-example:start --}}
+                        <x-translation-workbench::ui.tw-graph
+                            graph-id="idea-to-paper-while-multiple-left"
+                            :dev="true"
+                            :coordinates="true"
+                            min-height="44rem"
+                            min-width="36rem"
+                            horizontal-padding="2rem"
+                        >
+                            {{-- Initialization runs once. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.multiple.left.initialize"
+                                :anchor-start="['x' => '0rem', 'y' => '2rem']"
+                                :step-label="['text' => ['Load items', 'index = 0'], 'width' => 'default']"
+                                afterLength="5rem"
+                                color="zinc"
+                                :node-end="false"
+                            />
+                            {{-- TRUE processes one item; the body stays open for the advance action. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-while
+                                id="literature.while.multiple.left.loop"
+                                attach-to="literature.while.multiple.left.initialize.anchorNode-end"
+                                side="left"
+                                color="cyan"
+                                arc-radius="2.75rem"
+                                true-bridge-length="4rem"
+                                stem-length="5.5rem"
+                                :condition-label="[
+                                    'beforeLength' => '2rem',
+                                    'labelGap' => '4rem',
+                                    'afterLength' => '4rem',
+                                    'text' => ['WHILE index < count?'],
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :action-label="[
+                                    'beforeLength' => '2rem',
+                                    'afterLength' => '2rem',
+                                    'text' => ['Process current item'],
+                                    'return' => false,
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :true-label="['text' => ['TRUE'], 'width' => 'half', 'side' => 'top', 'color' => 'green']"
+                                :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'right', 'color' => 'red']"
+                            />
+                            {{-- The next action is an independent component inside the body. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.multiple.left.advance"
+                                attach-to="literature.while.multiple.left.loop.body.anchorNode-end"
+                                direction="top-bottom"
+                                before-length="2rem"
+                                label-gap="4rem"
+                                after-length="2rem"
+                                :step-label="['text' => ['index = index + 1'], 'width' => 'default']"
+                                :node-end-dot="false"
+                                :joint-arrow-end="true"
+                                :counter-end="7"
+                                color="cyan"
+                            />
+                            {{-- Return only after advancing, to the same condition (not initialization). --}}
+                            <x-translation-workbench::ui.tw-graph.paths.loop-return
+                                id="literature.while.multiple.left.body-return"
+                                attach-to="literature.while.multiple.left.advance.anchorNode-end"
+                                return-to="literature.while.multiple.left.loop.anchorNode-return"
+                                side="left"
+                                arc-radius="2.75rem"
+                                :counter-start="8"
+                                color="cyan"
+                            />
+                            {{-- FALSE continues here, including when the queue starts empty. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.multiple.left.continue"
+                                attach-to="literature.while.multiple.left.loop.anchorNode-end"
+                                beforeLength="4rem"
+                                :step-label="['text' => ['Show summary'], 'width' => 'default']"
+                                color="violet"
+                            />
+                        </x-translation-workbench::ui.tw-graph>
+                        {{-- while-multiple-left-example:end --}}
+                    </div>
+
+                    <x-translation-workbench::ui.common.heading-counter
+                        example="while-multiple-right-example"
+                        size="sm"
                     >
-                        {{-- Initialization runs once. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.multiple.right.initialize"
-                            :anchor-start="['x' => '0rem', 'y' => '2rem']"
-                            :step-label="['text' => ['Load items', 'index = 0'], 'width' => 'default']"
-                            afterLength="5rem"
-                            color="zinc"
-                            :node-end="false"
-                        />
-                        {{-- TRUE processes one item; the body stays open for the advance action. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-while
-                            id="literature.while.multiple.right.loop"
-                            attach-to="literature.while.multiple.right.initialize.anchorNode-end"
-                            side="right"
-                            color="cyan"
-                            arc-radius="2.75rem"
-                            true-bridge-length="4rem"
-                            stem-length="5.5rem"
-                            :condition-label="[
-                                'beforeLength' => '6rem',
-                                'labelGap' => '4rem',
-                                'afterLength' => '4rem',
-                                'text' => ['WHILE index < count?'],
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :action-label="[
-                                'beforeLength' => '2rem',
-                                'afterLength' => '2rem',
-                                'text' => ['Process current item'],
-                                'return' => false,
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :true-label="['text' => ['TRUE'], 'width' => 'half', 'side' => 'top', 'color' => 'green']"
-                            :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'left', 'color' => 'red']"
-                        />
-                        {{-- The next action is an independent component inside the body. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.multiple.right.advance"
-                            attach-to="literature.while.multiple.right.loop.body.anchorNode-end"
-                            direction="top-bottom"
-                            before-length="2rem"
-                            label-gap="4rem"
-                            after-length="2rem"
-                            :step-label="['text' => ['index = index + 1'], 'width' => 'default']"
-                            :node-end-dot="false"
-                            :joint-arrow-end="true"
-                            :counter-end="7"
-                            color="cyan"
-                        />
-                        {{-- Return only after advancing, to the same condition (not initialization). --}}
-                        <x-translation-workbench::ui.tw-graph.paths.loop-return
-                            id="literature.while.multiple.right.body-return"
-                            attach-to="literature.while.multiple.right.advance.anchorNode-end"
-                            return-to="literature.while.multiple.right.loop.anchorNode-return"
-                            side="right"
-                            arc-radius="2.75rem"
-                            :counter-start="8"
-                            color="cyan"
-                        />
-                        {{-- FALSE continues here, including when the queue starts empty. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.multiple.right.continue"
-                            attach-to="literature.while.multiple.right.loop.anchorNode-end"
-                            beforeLength="4rem"
-                            :step-label="['text' => ['Show summary'], 'width' => 'default']"
-                            color="violet"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- while-multiple-right-example:end --}}
+                        {{ __('side="right"') }}
+                    </x-translation-workbench::ui.common.heading-counter>
+                    <div
+                        class="overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                        {{-- while-multiple-right-example:start --}}
+                        <x-translation-workbench::ui.tw-graph
+                            graph-id="idea-to-paper-while-multiple-right"
+                            :dev="true"
+                            :coordinates="true"
+                            min-height="52rem"
+                            min-width="36rem"
+                            horizontal-padding="2rem"
+                        >
+                            {{-- Initialization runs once. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.multiple.right.initialize"
+                                :anchor-start="['x' => '0rem', 'y' => '2rem']"
+                                :step-label="['text' => ['Load items', 'index = 0'], 'width' => 'default']"
+                                afterLength="5rem"
+                                color="zinc"
+                                :node-end="false"
+                            />
+                            {{-- TRUE processes one item; the body stays open for the advance action. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-while
+                                id="literature.while.multiple.right.loop"
+                                attach-to="literature.while.multiple.right.initialize.anchorNode-end"
+                                side="right"
+                                color="cyan"
+                                arc-radius="2.75rem"
+                                true-bridge-length="4rem"
+                                stem-length="5.5rem"
+                                :condition-label="[
+                                    'beforeLength' => '6rem',
+                                    'labelGap' => '4rem',
+                                    'afterLength' => '4rem',
+                                    'text' => ['WHILE index < count?'],
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :action-label="[
+                                    'beforeLength' => '2rem',
+                                    'afterLength' => '2rem',
+                                    'text' => ['Process current item'],
+                                    'return' => false,
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :true-label="['text' => ['TRUE'], 'width' => 'half', 'side' => 'top', 'color' => 'green']"
+                                :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'left', 'color' => 'red']"
+                            />
+                            {{-- The next action is an independent component inside the body. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.multiple.right.advance"
+                                attach-to="literature.while.multiple.right.loop.body.anchorNode-end"
+                                direction="top-bottom"
+                                before-length="2rem"
+                                label-gap="4rem"
+                                after-length="2rem"
+                                :step-label="['text' => ['index = index + 1'], 'width' => 'default']"
+                                :node-end-dot="false"
+                                :joint-arrow-end="true"
+                                :counter-end="7"
+                                color="cyan"
+                            />
+                            {{-- Return only after advancing, to the same condition (not initialization). --}}
+                            <x-translation-workbench::ui.tw-graph.paths.loop-return
+                                id="literature.while.multiple.right.body-return"
+                                attach-to="literature.while.multiple.right.advance.anchorNode-end"
+                                return-to="literature.while.multiple.right.loop.anchorNode-return"
+                                side="right"
+                                arc-radius="2.75rem"
+                                :counter-start="8"
+                                color="cyan"
+                            />
+                            {{-- FALSE continues here, including when the queue starts empty. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.multiple.right.continue"
+                                attach-to="literature.while.multiple.right.loop.anchorNode-end"
+                                beforeLength="4rem"
+                                :step-label="['text' => ['Show summary'], 'width' => 'default']"
+                                color="violet"
+                            />
+                        </x-translation-workbench::ui.tw-graph>
+                        {{-- while-multiple-right-example:end --}}
+                    </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="mt-3 flex justify-end font-mono text-xs text-zinc-400">
-                .../flow/while/flow-while-multiple-actions.blade.php
-            </flux:field>
+            {{-- Path/To/File --}}
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/flow/while/flow-while-multiple-actions.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

@@ -18,15 +18,9 @@
                 );
             @endphp
 
-            {{-- <flux:separator
-            class="mt-4"
-            :text="__('Deep reference links')"
-        /> --}}
+            {{-- <x-translation-workbench::ui.common.separator-deep-reference-links /> --}}
 
-            <flux:separator
-                class="mt-4"
-                :text="__('Code examples')"
-            />
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
 
             <flux:accordion
                 transition
@@ -355,10 +349,7 @@
                 </flux:accordion.item>
             </flux:accordion>
 
-            <flux:separator
-                class="mt-4"
-                text="Props used in this examples"
-            />
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
 
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">
@@ -1337,9 +1328,10 @@
                     </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-                .../idea-to-paper/primitives/primitives-line.blade.php
-            </flux:field>
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/primitives/primitives-line.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

@@ -1,6 +1,10 @@
 {{-- Navigation UI only; destinations are defined in DocumentationLinks. --}}
-@props(['example' => null, 'reference' => null])
+@props(['example' => null, 'reference' => null, 'gridCols' => 3])
 @php
+    $columnCount = filter_var($gridCols, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+    if ($columnCount === false) {
+        throw new \InvalidArgumentException('documentation-links grid-cols must be a positive integer.');
+    }
     $catalog = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\DocumentationLinks::class;
     $interactive = isset($this) && $this instanceof \Gunreip\TranslationWorkbench\Livewire\TwGraphDocumentation;
     $exampleDefinition = $example !== null ? $catalog::EXAMPLES[$example] ?? null : null;
@@ -8,10 +12,13 @@
     $origin = $interactive && $this->referenceOriginComponent === $reference ? $this->referenceOrigin : null;
 @endphp
 <nav
-    class="mb-3 flex min-w-0 flex-wrap items-center gap-2"
+    class="relative mb-3 grid min-w-0 items-center gap-2"
+    style="grid-template-columns: repeat({{ $columnCount }}, minmax(0, 1fr));"
     data-tw-graph-documentation-links
     aria-label="{{ __('Related documentation') }}"
+    {{-- class="mb-3 flex min-w-0 flex-wrap items-center gap-2" --}}
 >
+    <x-translation-workbench::ui.common.component-marker name="translation-workbench::ui.tw-graph.documentation-links" />
     @if ($exampleDefinition)
         {{-- <flux:text size="sm">Deep Reference:</flux:text> --}}
         @foreach ($exampleDefinition['components'] as $linkedComponent)

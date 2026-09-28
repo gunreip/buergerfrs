@@ -14,10 +14,7 @@
             <flux:callout.text>
                 {{ __('Seven examples demonstrate four text widths: half (6rem), default (12rem), half-long (18rem), and long (24rem), with different colors and one to four text lines. All labels share the same X coordinate. These widths describe the text area; the badge adds its own padding. The text primitive draws the label only.') }}
             </flux:callout.text>
-            <flux:separator
-                class="mt-4"
-                :text="__('Code examples')"
-            />
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
             <flux:accordion
                 transition
                 exclusive
@@ -165,10 +162,7 @@
                 </flux:accordion.item>
             </flux:accordion>
 
-            <flux:separator
-                class="mt-4"
-                :text="__('Comparison preview source')"
-            />
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
             <flux:accordion transition>
                 <flux:accordion.item>
                     <flux:callout
@@ -185,10 +179,7 @@
                 </flux:accordion.item>
             </flux:accordion>
 
-            <flux:separator
-                class="mt-4"
-                :text="__('Props used in these examples')"
-            />
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('Text props') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
@@ -754,9 +745,10 @@
                     </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-                .../idea-to-paper/primitives/primitives-text-label.blade.php
-            </flux:field>
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/primitives/primitives-text-label.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

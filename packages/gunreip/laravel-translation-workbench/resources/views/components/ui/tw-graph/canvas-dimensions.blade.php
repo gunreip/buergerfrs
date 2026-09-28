@@ -17,7 +17,7 @@
         <div class="tw-graph-protocol-canvas-padding" data-tw-graph-canvas-padding></div>
     @endif
     <span class="tw-graph-protocol-canvas-dimensions-label">
-        {{ __('Minimum canvas') }}: {{ $minWidth }} × {{ $minHeight }}
+        ...::ui.tw-graph · {{ __('Minimum canvas') }}: {{ $minWidth }} × {{ $minHeight }}
         @if ($horizontalPadding !== null)
             · {{ __('Padding (dashed)') }}: x={{ $horizontalPadding }}, y=2rem
         @endif

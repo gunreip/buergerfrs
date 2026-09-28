@@ -17,6 +17,12 @@
             </flux:table.columns>
             <flux:table.rows>
                 <flux:table.row>
+                        <flux:table.cell class="whitespace-normal align-top"><code>exit-direction</code></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal align-top"><code>bottom-top / top-bottom</code></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal align-top"><code>direction</code></flux:table.cell>
+                        <flux:table.cell class="whitespace-normal align-top">{{ __('Selects the outgoing arc and extension direction independently of the incoming direction. Omitted: follows direction.') }}</flux:table.cell>
+                    </flux:table.row>
+                    <flux:table.row>
                     <flux:table.cell class="whitespace-normal align-top">id</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">string | null</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
@@ -597,5 +603,8 @@
         <flux:callout.heading>Validation and practical limits</flux:callout.heading>
         <flux:text>Use resolvable lengths and unique IDs. This reference describes fields consumed by this component chain; unknown array keys are not generally validated and may have no effect.</flux:text>
     </flux:callout>
-    <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../props-and-connections/parts/sideways.blade.php</flux:field>
+    <x-translation-workbench::ui.common.tw-graph-path-file
+        path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/sideways.blade.php"
+        segments="3"
+    />
 </section>

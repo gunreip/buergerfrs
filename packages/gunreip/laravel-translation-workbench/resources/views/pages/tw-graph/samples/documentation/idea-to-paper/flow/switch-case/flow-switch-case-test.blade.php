@@ -15,10 +15,16 @@
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.switch-case.flow-switch-case-test',
                 );
             @endphp
-            <flux:separator class="mt-4" :text="__('Code examples')" />
-            <flux:accordion transition exclusive>
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
+            <flux:accordion
+                transition
+                exclusive
+            >
                 <flux:accordion.item expanded>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="flow-switch-case-test-example-1"
                             variant="accordion"
@@ -31,7 +37,10 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
                 <flux:accordion.item>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="flow-switch-case-test-example-2"
                             variant="accordion"
@@ -44,12 +53,15 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
-            <flux:separator class="mt-4" :text="__('Props used in these examples')" />
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('Props and connections') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                     <flux:table container:class="max-h-80">
-                        <flux:table.columns class="bg-white dark:bg-zinc-900" sticky>
+                        <flux:table.columns
+                            class="bg-white dark:bg-zinc-900"
+                            sticky
+                        >
                             <flux:table.column>{{ __('Prop / anchor') }}</flux:table.column>
                             <flux:table.column>{{ __('Default') }}</flux:table.column>
                             <flux:table.column>{{ __('Purpose') }}</flux:table.column>
@@ -369,6 +381,7 @@
             </x-translation-workbench::ui.tw-graph.language-examples>
 
         </flux:callout>
+        {{-- Preview --}}
         <flux:callout
             class="min-w-0"
             color="emerald"
@@ -378,7 +391,7 @@
                 :dev="$dev ?? true"
                 :coordinates="$coordinates ?? false"
             >
-                <flux:text class="m-3">
+                <flux:text class="mb-3">
                     {{ __('Prepare editing is the outer CASE action. actionLabel.return=false opens the nested sequence. A separate flow-step attaches to the common inner output; the return starts at finish.anchorNode-end. CASE published explicitly reserves 32rem for the inner SWITCH, final action and return. In the left example, outer bridge-length=3rem and published.entryDetour explicitly route the selection stem to the right. The detour preserves the 32rem entry height and the original endpoint. The right example retains bridge-length=8rem and a straight entry.') }}
                 </flux:text>
                 <x-translation-workbench::ui.common.heading-counter
@@ -422,12 +435,20 @@
                                     'entries' => [
                                         [
                                             'key' => 'draft',
-                                            'label' => ['text' => ['CASE draft'], 'width' => 'default', 'align' => 'left'],
+                                            'label' => [
+                                                'text' => ['CASE draft'],
+                                                'width' => 'default',
+                                                'align' => 'left',
+                                            ],
                                             'color' => 'amber',
                                         ],
                                         [
                                             'key' => 'review',
-                                            'label' => ['text' => ['CASE review'], 'width' => 'default', 'align' => 'left'],
+                                            'label' => [
+                                                'text' => ['CASE review'],
+                                                'width' => 'default',
+                                                'align' => 'left',
+                                            ],
                                             'color' => 'orange',
                                         ],
                                         [
@@ -446,7 +467,11 @@
                                         'color' => 'amber',
                                         'return' => false,
                                     ],
-                                    'exitLabel' => ['text' => ['Nested SWITCH'], 'width' => 'default', 'align' => 'right'],
+                                    'exitLabel' => [
+                                        'text' => ['Nested SWITCH'],
+                                        'width' => 'default',
+                                        'align' => 'right',
+                                    ],
                                 ],
                                 [
                                     'key' => 'published',
@@ -472,7 +497,11 @@
                                 'width' => 'default',
                                 'color' => 'zinc',
                                 'label' => ['text' => ['DEFAULT'], 'width' => 'default', 'align' => 'left'],
-                                'exitLabel' => ['text' => ['END outer SWITCH'], 'width' => 'default', 'align' => 'right'],
+                                'exitLabel' => [
+                                    'text' => ['END outer SWITCH'],
+                                    'width' => 'default',
+                                    'align' => 'right',
+                                ],
                             ]"
                         />
 
@@ -514,7 +543,11 @@
                                 'width' => 'default',
                                 'color' => 'orange',
                                 'label' => ['text' => ['DEFAULT'], 'width' => 'half', 'align' => 'right'],
-                                'exitLabel' => ['text' => ['END inner SWITCH'], 'width' => 'default', 'align' => 'left'],
+                                'exitLabel' => [
+                                    'text' => ['END inner SWITCH'],
+                                    'width' => 'default',
+                                    'align' => 'left',
+                                ],
                             ]"
                         />
 
@@ -542,7 +575,8 @@
                                 $nestedGraphId,
                                 'literature.switch.1.action-sequence.outer.case.editable.anchorNode-return',
                             );
-                            $returnBridge = 'calc(' . $sequenceEnd['x'] . ' - ' . $outerReturn['x'] . ' - (2 * 2.75rem))';
+                            $returnBridge =
+                                'calc(' . $sequenceEnd['x'] . ' - ' . $outerReturn['x'] . ' - (2 * 2.75rem))';
                         @endphp
                         <x-translation-workbench::ui.tw-graph.parts.sideways
                             id="literature.switch.1.action-sequence.inner-return"
@@ -620,12 +654,20 @@
                                     'entries' => [
                                         [
                                             'key' => 'draft',
-                                            'label' => ['text' => ['CASE draft'], 'width' => 'default', 'align' => 'right'],
+                                            'label' => [
+                                                'text' => ['CASE draft'],
+                                                'width' => 'default',
+                                                'align' => 'right',
+                                            ],
                                             'color' => 'amber',
                                         ],
                                         [
                                             'key' => 'review',
-                                            'label' => ['text' => ['CASE review'], 'width' => 'default', 'align' => 'right'],
+                                            'label' => [
+                                                'text' => ['CASE review'],
+                                                'width' => 'default',
+                                                'align' => 'right',
+                                            ],
                                             'color' => 'orange',
                                         ],
                                         [
@@ -644,7 +686,11 @@
                                         'color' => 'amber',
                                         'return' => false,
                                     ],
-                                    'exitLabel' => ['text' => ['Nested SWITCH'], 'width' => 'default', 'align' => 'left'],
+                                    'exitLabel' => [
+                                        'text' => ['Nested SWITCH'],
+                                        'width' => 'default',
+                                        'align' => 'left',
+                                    ],
                                 ],
                                 [
                                     'key' => 'published',
@@ -663,7 +709,11 @@
                                 'width' => 'default',
                                 'color' => 'zinc',
                                 'label' => ['text' => ['DEFAULT'], 'width' => 'default', 'align' => 'right'],
-                                'exitLabel' => ['text' => ['END outer SWITCH'], 'width' => 'default', 'align' => 'left'],
+                                'exitLabel' => [
+                                    'text' => ['END outer SWITCH'],
+                                    'width' => 'default',
+                                    'align' => 'left',
+                                ],
                             ]"
                         />
 
@@ -705,7 +755,11 @@
                                 'width' => 'default',
                                 'color' => 'orange',
                                 'label' => ['text' => ['DEFAULT'], 'width' => 'half', 'align' => 'left'],
-                                'exitLabel' => ['text' => ['END inner SWITCH'], 'width' => 'default', 'align' => 'right'],
+                                'exitLabel' => [
+                                    'text' => ['END inner SWITCH'],
+                                    'width' => 'default',
+                                    'align' => 'right',
+                                ],
                             ]"
                         />
 
@@ -733,7 +787,8 @@
                                 $nestedGraphId,
                                 'literature.switch.1.action-sequence-right.outer.case.editable.anchorNode-return',
                             );
-                            $returnBridge = 'calc(' . $outerReturn['x'] . ' - ' . $sequenceEnd['x'] . ' - (2 * 2.75rem))';
+                            $returnBridge =
+                                'calc(' . $outerReturn['x'] . ' - ' . $sequenceEnd['x'] . ' - (2 * 2.75rem))';
                         @endphp
                         <x-translation-workbench::ui.tw-graph.parts.sideways
                             id="literature.switch.1.action-sequence-right.inner-return"
@@ -771,9 +826,10 @@
                     {{-- flow-switch-case-test-example-2:end --}}
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-                .../flow/switch-case/flow-switch-case-test.blade.php
-            </flux:field>
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/flow/switch-case/flow-switch-case-test.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

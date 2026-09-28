@@ -56,6 +56,7 @@
     'lineJumps' => [],
     'extension' => null,
     'direction' => 'bottom-top',
+    'exitDirection' => null,
     'color' => null,
     'nodeEnd' => true,
     'jointArrowEnd' => false,
@@ -68,10 +69,24 @@
 ])
 
 @php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.parts.sideways',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
+
+@php
     $resolvedGraphId = filled($graphId ?? null) ? (string) $graphId : 'tw-graph';
     $resolvedComponentCounter = max(1, (int) $componentCounter);
     $isLeft = $side !== 'right';
     $isTopBottom = $direction === 'top-bottom';
+    $resolvedExitDirection = $exitDirection ?? $direction;
+    if (! in_array($resolvedExitDirection, ['bottom-top', 'top-bottom'], true)) {
+        throw new \InvalidArgumentException('parts.sideways exitDirection must be bottom-top or top-bottom.');
+    }
+    $exitTopBottom = $resolvedExitDirection === 'top-bottom';
     $id = filled($id)
         ? (string) $id
         : 'part.' . ($isLeft ? 'left' : 'right') . '.' . $resolvedComponentCounter . '.sideways';
@@ -110,18 +125,19 @@
     $arcDelta = $isLeft ? $resolvedArcRadius : $neg($resolvedArcRadius);
     $bridgeDelta = $isLeft ? $resolvedBridgeLength : $neg($resolvedBridgeLength);
     $verticalDelta = $isTopBottom ? $neg($resolvedArcRadius) : $resolvedArcRadius;
-    $extensionDelta = $isTopBottom ? $neg($resolvedExtension) : $resolvedExtension;
+    $exitVerticalDelta = $exitTopBottom ? $neg($resolvedArcRadius) : $resolvedArcRadius;
+    $extensionDelta = $exitTopBottom ? $neg($resolvedExtension) : $resolvedExtension;
     $arcInStartAnchor = $isLeft ? 'w' : 'e';
     $arcInEndAnchor = $isTopBottom ? 's' : 'n';
     $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
-    $arcOutStartAnchor = $isTopBottom ? 'n' : 's';
+    $arcOutStartAnchor = $exitTopBottom ? 'n' : 's';
     $arcOutEndAnchor = $isLeft ? 'e' : 'w';
     $arcInName = $isLeft
         ? ($isTopBottom ? 'west-south' : 'west-north')
         : ($isTopBottom ? 'east-south' : 'east-north');
     $arcOutName = $isLeft
-        ? ($isTopBottom ? 'north-east' : 'south-east')
-        : ($isTopBottom ? 'north-west' : 'south-west');
+        ? ($exitTopBottom ? 'north-east' : 'south-east')
+        : ($exitTopBottom ? 'north-west' : 'south-west');
     $arcInEnd = [
         'x' => $add($anchorStart['x'], $arcDelta),
         'y' => $add($anchorStart['y'], $verticalDelta),
@@ -144,7 +160,7 @@
     ];
     $arcOutEnd = [
         'x' => $add($bridgeEnd['x'], $arcDelta),
-        'y' => $add($bridgeEnd['y'], $verticalDelta),
+        'y' => $add($bridgeEnd['y'], $exitVerticalDelta),
     ];
     $labelAnchor = $arcOutEnd;
     $continuationEnd = $arcOutEnd;
@@ -213,7 +229,7 @@
         'source' => $id,
         'sourceType' => 'parts.sideways',
         'sourceAnchor' => 'anchorNode-end',
-        'direction' => $direction,
+        'direction' => $resolvedExitDirection,
         'color' => $resolvedColor,
         'zIndex' => (string) $zIndex,
     ]);
@@ -269,7 +285,7 @@
                 'nodeEndSize' => null,
                 'nodeEndDot' => ! $hasExtension && $jointArrowEnd && ! $nodeLabelRight && ! $nodeLabelLeft ? false : null,
                 'jointArrowEnd' => ! $hasExtension && $jointArrowEnd,
-                'jointArrowEndDirection' => $direction === 'top-bottom' ? 'bottom' : 'top',
+                'jointArrowEndDirection' => $exitTopBottom ? 'bottom' : 'top',
                 'devCounterEnd' => $hasExtension ? false : $devCounterEnd,
                 'devCounterColor' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
                     $devCounterColor,
@@ -288,7 +304,7 @@
             'component' => 'path',
             'segment' => [
                 'id' => $id . '.extension-stem1',
-                'direction' => $isTopBottom ? 'top-bottom' : 'bottom-top',
+                'direction' => $resolvedExitDirection,
                 'length' => $resolvedExtension,
                 'anchorStart' => $arcOutEnd,
                 'anchorEnd' => $labelAnchor,
@@ -312,7 +328,7 @@
             'component' => 'path',
             'segment' => [
                 'id' => $id . '.extension-stem2',
-                'direction' => $isTopBottom ? 'top-bottom' : 'bottom-top',
+                'direction' => $resolvedExitDirection,
                 'length' => $resolvedExtension,
                 'anchorStart' => $labelAnchor,
                 'anchorEnd' => $continuationEnd,
@@ -418,4 +434,15 @@
         :color="data_get($nodeImage, 'color', $resolvedColor)"
         :z-index="data_get($nodeImage, 'zIndex')"
     />
+@endif
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
 @endif

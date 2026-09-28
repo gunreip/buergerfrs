@@ -6,16 +6,30 @@
             icon="file-text"
         >
             <flux:callout.heading>{{ __('Action → Nested WHILE → Action') }}</flux:callout.heading>
-            <flux:callout.text>{{ __('Prepare each group before entering its item loop. Process its items, then finalize the group after the inner FALSE exit. Finalization also runs for an empty group. Only after finalization does the group index advance and the outer WHILE check its condition again. Preparation and finalization each run once per outer iteration; the inner return repeats neither action.') }}</flux:callout.text>
+            <flux:callout.text>
+                {{ __('Prepare each group before entering its item loop. Process its items, then finalize the group after the inner FALSE exit. Finalization also runs for an empty group. Only after finalization does the group index advance and the outer WHILE check its condition again. Preparation and finalization each run once per outer iteration; the inner return repeats neither action.') }}
+            </flux:callout.text>
+
+            <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.while.flow-while-action-sequence" />
+
             @php
                 $whileSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.flow-while-action-sequence',
                 );
             @endphp
-            <flux:separator class="mt-4" :text="__('Code examples')" />
-            <flux:accordion transition exclusive>
+
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
+            <flux:accordion
+                transition
+                exclusive
+            >
                 <flux:accordion.item expanded>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="while-action-sequence-left-example"
                             variant="accordion"
@@ -28,7 +42,10 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
                 <flux:accordion.item>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="while-action-sequence-right-example"
                             variant="accordion"
@@ -42,13 +59,16 @@
                 </flux:accordion.item>
             </flux:accordion>
 
-            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.while.flow-while-action-sequence" />
-                    <flux:separator class="mt-4" :text="__('Props used in these examples')" />
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
+
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('Props and connections') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                     <flux:table container:class="max-h-80">
-                        <flux:table.columns class="bg-white dark:bg-zinc-900" sticky>
+                        <flux:table.columns
+                            class="bg-white dark:bg-zinc-900"
+                            sticky
+                        >
                             <flux:table.column>{{ __('Prop / anchor') }}</flux:table.column>
                             <flux:table.column>{{ __('Default') }}</flux:table.column>
                             <flux:table.column>{{ __('Purpose') }}</flux:table.column>
@@ -393,503 +413,520 @@
                 example="while-action-sequence"
             />
         </flux:callout>
+        {{-- Preview --}}
         <flux:callout
             class="min-w-0"
             color="emerald"
         >
             <flux:callout.heading icon="eye">{{ __('Action → Nested WHILE → Action') }}</flux:callout.heading>
+            <flux:callout.text class="mb-3">
+                {{ __('In both mirrored previews, preparation precedes the inner item loop and finalization follows its FALSE exit. The inner return repeats only item processing and its index increment. Finalization runs even for an empty group, before the outer index advances.') }}
+            </flux:callout.text>
+
             <x-translation-workbench::ui.tw-graph.preview-tools
                 :dev="$dev ?? true"
                 :coordinates="$coordinates ?? false"
             >
-                <x-translation-workbench::ui.common.heading-counter
-                    example="while-action-sequence-left-example"
-                    size="sm"
-                >{{ __('side="left"') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- while-action-sequence-left-example:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-while-action-sequence-left"
-                        :dev="true"
-                        :coordinates="true"
-                        horizontalPadding="6rem"
-                        min-height="60rem"
-                        min-width="88rem"
+                <div class="mt-4 grid min-w-0 gap-4 xl:grid-cols-1">
+                    <x-translation-workbench::ui.common.heading-counter
+                        example="while-action-sequence-left-example"
+                        size="sm"
                     >
-                        {{-- Initialization runs once. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.action-sequence.left.initialize"
-                            :anchor-start="['x' => '0rem', 'y' => '2rem']"
-                            :step-label="['text' => ['Load groups', 'groupIndex = 0'], 'width' => 'default']"
-                            afterLength="5rem"
-                            color="zinc"
-                            :node-end="false"
-                        />
-                        {{-- Each outer iteration selects a group and resets its inner index. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-while
-                            id="literature.while.action-sequence.left.loop"
-                            :counter-start="1"
-                            attach-to="literature.while.action-sequence.left.initialize.anchorNode-end"
-                            side="left"
-                            color="cyan"
-                            true-bridge-length="4rem"
-                            stem-length="3.5rem"
-                            :condition-label="[
-                                'beforeLength' => '2rem',
-                                'labelGap' => '4rem',
-                                'afterLength' => '6rem',
-                                'text' => ['WHILE groupIndex < groupCount?'],
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :action-label="[
-                                'beforeLength' => '2rem',
-                                'afterLength' => '16rem',
-                                'lineJumps' => [
-                                    ['over' => 'literature.while.action-sequence.left.body-return.stem', 'radius' => '0.65rem', 'side' =>
-                                        'top'
+                        {{ __('side="left"') }}
+                    </x-translation-workbench::ui.common.heading-counter>
+                    <div
+                        class="overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                        {{-- while-action-sequence-left-example:start --}}
+                        <x-translation-workbench::ui.tw-graph
+                            graph-id="idea-to-paper-while-action-sequence-left"
+                            :dev="true"
+                            :coordinates="true"
+                            horizontalPadding="6rem"
+                            min-height="60rem"
+                            min-width="88rem"
+                        >
+                            {{-- Initialization runs once. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.action-sequence.left.initialize"
+                                :anchor-start="['x' => '0rem', 'y' => '2rem']"
+                                :step-label="['text' => ['Load groups', 'groupIndex = 0'], 'width' => 'default']"
+                                afterLength="5rem"
+                                color="zinc"
+                                :node-end="false"
+                            />
+                            {{-- Each outer iteration selects a group and resets its inner index. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-while
+                                id="literature.while.action-sequence.left.loop"
+                                :counter-start="1"
+                                attach-to="literature.while.action-sequence.left.initialize.anchorNode-end"
+                                side="left"
+                                color="cyan"
+                                true-bridge-length="4rem"
+                                stem-length="3.5rem"
+                                :condition-label="[
+                                    'beforeLength' => '2rem',
+                                    'labelGap' => '4rem',
+                                    'afterLength' => '6rem',
+                                    'text' => ['WHILE groupIndex < groupCount?'],
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :action-label="[
+                                    'beforeLength' => '2rem',
+                                    'afterLength' => '16rem',
+                                    'lineJumps' => [
+                                        ['over' => 'literature.while.action-sequence.left.body-return.stem', 'radius' =>
+                                            '0.65rem', 'side' =>
+                                            'top'
+                                        ],
                                     ],
-                                ],
-                                'text' => ['Prepare group', 'itemIndex = 0'],
-                                'color' => 'green',
-                                'return' => false,
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :true-label="[
-                                'text' => ['TRUE'],
-                                'width' => 'half',
-                                'anchor' => 'condition',
-                                'side' => 'left',
-                                'color' => 'green',
-                            ]"
-                            :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'right', 'color' => 'red']"
-                        />
-                        {{-- Turn the downward body exit into the upward inner condition. --}}
-                        @php
-                            $leftOuterBodyEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                'idea-to-paper-while-action-sequence-left',
-                                'literature.while.action-sequence.left.loop.body.anchorNode-end',
-                            );
-                            $leftInnerStart = [
-                                'x' => 'calc(' . $leftOuterBodyEnd['x'] . ' - 12rem)',
-                                'y' => 'calc(' . $leftOuterBodyEnd['y'] . ' - 8rem)',
-                            ];
-                        @endphp
-                        <x-translation-workbench::ui.tw-graph.paths.loop-return
-                            id="literature.while.action-sequence.left.inner-entry"
-                            :counter-start="7"
-                            attach-to="literature.while.action-sequence.left.loop.body.anchorNode-end"
-                            :anchor-return="$leftInnerStart"
-                            side="right"
-                            color="green"
-                        />
-                        {{-- The inner return skips initialization, so itemIndex is not reset on every item. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-while
-                            id="literature.while.action-sequence.left.inner-loop"
-                            :counter-start="11"
-                            :anchor-start="$leftInnerStart"
-                            side="left"
-                            color="sky"
-                            true-bridge-length="4rem"
-                            stem-length="4rem"
-                            :condition-label="[
-                                'beforeLength' => '2rem',
-                                'labelGap' => '4rem',
-                                'afterLength' => '8rem',
-                                'text' => ['WHILE itemIndex < itemCount?'],
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :action-label="[
-                                'beforeLength' => '2rem',
-                                'afterLength' => '2rem',
-                                'text' => ['Process current item'],
-                                'color' => 'green',
-                                'return' => false,
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :true-label="[
-                                'text' => ['TRUE'], 'width' => 'half',
-                                'anchor' => 'condition', 'side' => 'left', 'color' => 'green',
-                            ]"
-                            :false-label="[
-                                'text' => ['FALSE'], 'width' => 'half', 'side' => 'right', 'color' => 'red',
-                            ]"
-                        />
-                        {{-- Advance only the inner index, then recheck the inner condition. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.action-sequence.left.inner-advance"
-                            :counter-end="17"
-                            attach-to="literature.while.action-sequence.left.inner-loop.body.anchorNode-end"
-                            direction="top-bottom"
-                            before-length="2rem"
-                            label-gap="4rem"
-                            after-length="2rem"
-                            :step-label="['text' => ['itemIndex = itemIndex + 1'], 'width' => 'default']"
-                            :node-end-dot="false"
-                            :joint-arrow-end="true"
-                            color="sky"
-                        />
-                        <x-translation-workbench::ui.tw-graph.paths.loop-return
-                            id="literature.while.action-sequence.left.inner-return"
-                            :counter-start="18"
-                            attach-to="literature.while.action-sequence.left.inner-advance.anchorNode-end"
-                            return-to="literature.while.action-sequence.left.inner-loop.anchorNode-return"
-                            side="left"
-                            color="sky"
-                        />
-                        {{-- Inner FALSE always finalizes this group, including when it had no items. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.action-sequence.left.finalize"
-                            attach-to="literature.while.action-sequence.left.inner-loop.anchorNode-end"
-                            before-length="4rem"
-                            label-gap="4rem"
-                            after-length="4rem"
-                            :step-label="['text' => ['Finalize group'], 'width' => 'default']"
-                            :counter-end="22"
-                            :node-end-dot="false"
-                            :joint-arrow-end="true"
-                            color="amber"
-                        />
-                        {{-- Turn the finalized group toward the separate outer return lane. --}}
-                        @php
-                            $leftInnerExit = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                'idea-to-paper-while-action-sequence-left',
-                                'literature.while.action-sequence.left.finalize.anchorNode-end',
-                            );
-                            $leftResumeArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString(
-                                'arc_radius',
-                                '2.75rem',
-                            );
-                            $leftAdvanceStart = [
-                                'x' => 'calc(' . $leftInnerExit['x'] . ' + ' . $leftResumeArcRadius . ')',
-                                'y' => 'calc(' . $leftInnerExit['y'] . ' + ' . $leftResumeArcRadius . ')',
-                            ];
-                        @endphp
-                        <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
-                            'id' => 'literature.while.action-sequence.left.outer-resume.arc-in',
-                            'devCounterEnd' => 23,
-                            'anchorStart' => $leftInnerExit,
-                            'anchorEnd' => $leftAdvanceStart,
-                            'startAnchor' => 'w',
-                            'endAnchor' => 'n',
-                            'arcRadius' => $leftResumeArcRadius,
-                            'color' => 'cyan',
+                                    'text' => ['Prepare group', 'itemIndex = 0'],
+                                    'color' => 'green',
+                                    'return' => false,
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :true-label="[
+                                    'text' => ['TRUE'],
+                                    'width' => 'half',
+                                    'anchor' => 'condition',
+                                    'side' => 'left',
+                                    'color' => 'green',
+                                ]"
+                                :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'right', 'color' => 'red']"
+                            />
+                            {{-- Turn the downward body exit into the upward inner condition. --}}
+                            @php
+                                $leftOuterBodyEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    'idea-to-paper-while-action-sequence-left',
+                                    'literature.while.action-sequence.left.loop.body.anchorNode-end',
+                                );
+                                $leftInnerStart = [
+                                    'x' => 'calc(' . $leftOuterBodyEnd['x'] . ' - 12rem)',
+                                    'y' => 'calc(' . $leftOuterBodyEnd['y'] . ' - 8rem)',
+                                ];
+                            @endphp
+                            <x-translation-workbench::ui.tw-graph.paths.loop-return
+                                id="literature.while.action-sequence.left.inner-entry"
+                                :counter-start="7"
+                                attach-to="literature.while.action-sequence.left.loop.body.anchorNode-end"
+                                :anchor-return="$leftInnerStart"
+                                side="right"
+                                color="green"
+                            />
+                            {{-- The inner return skips initialization, so itemIndex is not reset on every item. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-while
+                                id="literature.while.action-sequence.left.inner-loop"
+                                :counter-start="11"
+                                :anchor-start="$leftInnerStart"
+                                side="left"
+                                color="sky"
+                                true-bridge-length="4rem"
+                                stem-length="4rem"
+                                :condition-label="[
+                                    'beforeLength' => '2rem',
+                                    'labelGap' => '4rem',
+                                    'afterLength' => '8rem',
+                                    'text' => ['WHILE itemIndex < itemCount?'],
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :action-label="[
+                                    'beforeLength' => '2rem',
+                                    'afterLength' => '2rem',
+                                    'text' => ['Process current item'],
+                                    'color' => 'green',
+                                    'return' => false,
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :true-label="[
+                                    'text' => ['TRUE'], 'width' => 'half',
+                                    'anchor' => 'condition', 'side' => 'left', 'color' => 'green',
+                                ]"
+                                :false-label="[
+                                    'text' => ['FALSE'], 'width' => 'half', 'side' => 'right', 'color' => 'red',
+                                ]"
+                            />
+                            {{-- Advance only the inner index, then recheck the inner condition. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.action-sequence.left.inner-advance"
+                                :counter-end="17"
+                                attach-to="literature.while.action-sequence.left.inner-loop.body.anchorNode-end"
+                                direction="top-bottom"
+                                before-length="2rem"
+                                label-gap="4rem"
+                                after-length="2rem"
+                                :step-label="['text' => ['itemIndex = itemIndex + 1'], 'width' => 'default']"
+                                :node-end-dot="false"
+                                :joint-arrow-end="true"
+                                color="sky"
+                            />
+                            <x-translation-workbench::ui.tw-graph.paths.loop-return
+                                id="literature.while.action-sequence.left.inner-return"
+                                :counter-start="18"
+                                attach-to="literature.while.action-sequence.left.inner-advance.anchorNode-end"
+                                return-to="literature.while.action-sequence.left.inner-loop.anchorNode-return"
+                                side="left"
+                                color="sky"
+                            />
+                            {{-- Inner FALSE always finalizes this group, including when it had no items. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.action-sequence.left.finalize"
+                                attach-to="literature.while.action-sequence.left.inner-loop.anchorNode-end"
+                                before-length="4rem"
+                                label-gap="4rem"
+                                after-length="4rem"
+                                :step-label="['text' => ['Finalize group'], 'width' => 'default']"
+                                :counter-end="22"
+                                :node-end-dot="false"
+                                :joint-arrow-end="true"
+                                color="amber"
+                            />
+                            {{-- Turn the finalized group toward the separate outer return lane. --}}
+                            @php
+                                $leftInnerExit = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    'idea-to-paper-while-action-sequence-left',
+                                    'literature.while.action-sequence.left.finalize.anchorNode-end',
+                                );
+                                $leftResumeArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString(
+                                    'arc_radius',
+                                    '2.75rem',
+                                );
+                                $leftAdvanceStart = [
+                                    'x' => 'calc(' . $leftInnerExit['x'] . ' + ' . $leftResumeArcRadius . ')',
+                                    'y' => 'calc(' . $leftInnerExit['y'] . ' + ' . $leftResumeArcRadius . ')',
+                                ];
+                            @endphp
+                            <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                'id' => 'literature.while.action-sequence.left.outer-resume.arc-in',
+                                'devCounterEnd' => 23,
+                                'anchorStart' => $leftInnerExit,
+                                'anchorEnd' => $leftAdvanceStart,
+                                'startAnchor' => 'w',
+                                'endAnchor' => 'n',
+                                'arcRadius' => $leftResumeArcRadius,
+                                'color' => 'cyan',
 
-                            'nodeEnd' => true,
-                            'nodeEndDot' => false,
-                            'jointArrowEnd' => true,
-                            'jointArrowEndDirection' => 'right',
-                        ]" />
-                        {{-- Advance the outer index only after finalization. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.action-sequence.left.advance"
-                            :counter-end="24"
-                            :anchor-start="$leftAdvanceStart"
-                            direction="left-right"
-                            before-length="2rem"
-                            label-gap="16rem"
-                            after-length="2rem"
-                            :step-label="['text' => ['groupIndex = groupIndex + 1'], 'width' => 'default']"
-                            :node-end-dot="false"
-                            :joint-arrow-end="true"
-                            color="cyan"
-                        />
-                        @php
-                            $leftAdvanceEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                'idea-to-paper-while-action-sequence-left',
-                                'literature.while.action-sequence.left.advance.anchorNode-end',
-                            );
-                            $leftOuterReturnStart = [
-                                'x' => 'calc(' . $leftAdvanceEnd['x'] . ' + ' . $leftResumeArcRadius . ')',
-                                'y' => 'calc(' . $leftAdvanceEnd['y'] . ' - ' . $leftResumeArcRadius . ')',
-                            ];
-                        @endphp
-                        <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
-                            'id' => 'literature.while.action-sequence.left.outer-resume.arc-out',
-                            'devCounterEnd' => 25,
-                            'anchorStart' => $leftAdvanceEnd,
-                            'anchorEnd' => $leftOuterReturnStart,
-                            'startAnchor' => 'n',
-                            'endAnchor' => 'e',
-                            'arcRadius' => $leftResumeArcRadius,
-                            'color' => 'cyan',
+                                'nodeEnd' => true,
+                                'nodeEndDot' => false,
+                                'jointArrowEnd' => true,
+                                'jointArrowEndDirection' => 'right',
+                            ]" />
+                            {{-- Advance the outer index only after finalization. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.action-sequence.left.advance"
+                                :counter-end="24"
+                                :anchor-start="$leftAdvanceStart"
+                                direction="left-right"
+                                before-length="2rem"
+                                label-gap="16rem"
+                                after-length="2rem"
+                                :step-label="['text' => ['groupIndex = groupIndex + 1'], 'width' => 'default']"
+                                :node-end-dot="false"
+                                :joint-arrow-end="true"
+                                color="cyan"
+                            />
+                            @php
+                                $leftAdvanceEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    'idea-to-paper-while-action-sequence-left',
+                                    'literature.while.action-sequence.left.advance.anchorNode-end',
+                                );
+                                $leftOuterReturnStart = [
+                                    'x' => 'calc(' . $leftAdvanceEnd['x'] . ' + ' . $leftResumeArcRadius . ')',
+                                    'y' => 'calc(' . $leftAdvanceEnd['y'] . ' - ' . $leftResumeArcRadius . ')',
+                                ];
+                            @endphp
+                            <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                'id' => 'literature.while.action-sequence.left.outer-resume.arc-out',
+                                'devCounterEnd' => 25,
+                                'anchorStart' => $leftAdvanceEnd,
+                                'anchorEnd' => $leftOuterReturnStart,
+                                'startAnchor' => 'n',
+                                'endAnchor' => 'e',
+                                'arcRadius' => $leftResumeArcRadius,
+                                'color' => 'cyan',
 
-                            'nodeEnd' => true,
-                            'nodeEndDot' => false,
-                            'jointArrowEnd' => true,
-                            'jointArrowEndDirection' => 'bottom',
-                        ]" />
-                        {{-- Return only after advancing, to the same condition (not initialization). --}}
-                        <x-translation-workbench::ui.tw-graph.paths.loop-return
-                            id="literature.while.action-sequence.left.body-return"
-                            :counter-start="26"
-                            :anchor-start="$leftOuterReturnStart"
-                            return-to="literature.while.action-sequence.left.loop.anchorNode-return"
-                            side="left"
-                            color="cyan"
-                        />
-                        {{-- FALSE continues here, including when the group list starts empty. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.action-sequence.left.continue"
-                            :counter-end="30"
-                            attach-to="literature.while.action-sequence.left.loop.anchorNode-end"
-                            beforeLength="4rem"
-                            :step-label="['text' => ['Show summary'], 'width' => 'default']"
-                            color="violet"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- while-action-sequence-left-example:end --}}
-                </div>
-                <x-translation-workbench::ui.common.heading-counter
-                    example="while-action-sequence-right-example"
-                    size="sm"
-                >{{ __('side="right"') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- while-action-sequence-right-example:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-while-action-sequence-right"
-                        :dev="true"
-                        :coordinates="true"
-                        horizontalPadding="6rem"
-                        min-height="60rem"
-                        min-width="88rem"
+                                'nodeEnd' => true,
+                                'nodeEndDot' => false,
+                                'jointArrowEnd' => true,
+                                'jointArrowEndDirection' => 'bottom',
+                            ]" />
+                            {{-- Return only after advancing, to the same condition (not initialization). --}}
+                            <x-translation-workbench::ui.tw-graph.paths.loop-return
+                                id="literature.while.action-sequence.left.body-return"
+                                :counter-start="26"
+                                :anchor-start="$leftOuterReturnStart"
+                                return-to="literature.while.action-sequence.left.loop.anchorNode-return"
+                                side="left"
+                                color="cyan"
+                            />
+                            {{-- FALSE continues here, including when the group list starts empty. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.action-sequence.left.continue"
+                                :counter-end="30"
+                                attach-to="literature.while.action-sequence.left.loop.anchorNode-end"
+                                beforeLength="4rem"
+                                :step-label="['text' => ['Show summary'], 'width' => 'default']"
+                                color="violet"
+                            />
+                        </x-translation-workbench::ui.tw-graph>
+                        {{-- while-action-sequence-left-example:end --}}
+                    </div>
+
+                    <x-translation-workbench::ui.common.heading-counter
+                        example="while-action-sequence-right-example"
+                        size="sm"
                     >
-                        {{-- Initialization runs once. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.action-sequence.right.initialize"
-                            :anchor-start="['x' => '0rem', 'y' => '2rem']"
-                            :step-label="['text' => ['Load groups', 'groupIndex = 0'], 'width' => 'default']"
-                            afterLength="5rem"
-                            color="zinc"
-                            :node-end="false"
-                        />
-                        {{-- Each outer iteration selects a group and resets its inner index. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-while
-                            id="literature.while.action-sequence.right.loop"
-                            :counter-start="1"
-                            attach-to="literature.while.action-sequence.right.initialize.anchorNode-end"
-                            side="right"
-                            color="cyan"
-                            true-bridge-length="4rem"
-                            stem-length="3.5rem"
-                            :condition-label="[
-                                'beforeLength' => '2rem',
-                                'labelGap' => '4rem',
-                                'afterLength' => '6rem',
-                                'text' => ['WHILE groupIndex < groupCount?'],
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :action-label="[
-                                'beforeLength' => '2rem',
-                                'afterLength' => '16rem',
-                                'lineJumps' => [
-                                    ['over' => 'literature.while.action-sequence.right.body-return.stem', 'radius' => '0.65rem', 'side' =>
-                                        'top'
+                        {{ __('side="right"') }}
+                    </x-translation-workbench::ui.common.heading-counter>
+                    <div
+                        class="overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                        {{-- while-action-sequence-right-example:start --}}
+                        <x-translation-workbench::ui.tw-graph
+                            graph-id="idea-to-paper-while-action-sequence-right"
+                            :dev="true"
+                            :coordinates="true"
+                            horizontalPadding="6rem"
+                            min-height="60rem"
+                            min-width="88rem"
+                        >
+                            {{-- Initialization runs once. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.action-sequence.right.initialize"
+                                :anchor-start="['x' => '0rem', 'y' => '2rem']"
+                                :step-label="['text' => ['Load groups', 'groupIndex = 0'], 'width' => 'default']"
+                                afterLength="5rem"
+                                color="zinc"
+                                :node-end="false"
+                            />
+                            {{-- Each outer iteration selects a group and resets its inner index. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-while
+                                id="literature.while.action-sequence.right.loop"
+                                :counter-start="1"
+                                attach-to="literature.while.action-sequence.right.initialize.anchorNode-end"
+                                side="right"
+                                color="cyan"
+                                true-bridge-length="4rem"
+                                stem-length="3.5rem"
+                                :condition-label="[
+                                    'beforeLength' => '2rem',
+                                    'labelGap' => '4rem',
+                                    'afterLength' => '6rem',
+                                    'text' => ['WHILE groupIndex < groupCount?'],
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :action-label="[
+                                    'beforeLength' => '2rem',
+                                    'afterLength' => '16rem',
+                                    'lineJumps' => [
+                                        ['over' => 'literature.while.action-sequence.right.body-return.stem',
+                                            'radius' =>
+                                            '0.65rem', 'side' =>
+                                            'top'
+                                        ],
                                     ],
-                                ],
-                                'text' => ['Prepare group', 'itemIndex = 0'],
-                                'color' => 'green',
-                                'return' => false,
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :true-label="[
-                                'text' => ['TRUE'],
-                                'width' => 'half',
-                                'anchor' => 'condition',
-                                'side' => 'left',
-                                'color' => 'green',
-                            ]"
-                            :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'left', 'color' => 'red']"
-                        />
-                        {{-- Turn the downward body exit into the upward inner condition. --}}
-                        @php
-                            $rightOuterBodyEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                'idea-to-paper-while-action-sequence-right',
-                                'literature.while.action-sequence.right.loop.body.anchorNode-end',
-                            );
-                            $rightInnerStart = [
-                                'x' => 'calc(' . $rightOuterBodyEnd['x'] . ' + 12rem)',
-                                'y' => 'calc(' . $rightOuterBodyEnd['y'] . ' - 8rem)',
-                            ];
-                        @endphp
-                        <x-translation-workbench::ui.tw-graph.paths.loop-return
-                            id="literature.while.action-sequence.right.inner-entry"
-                            :counter-start="7"
-                            attach-to="literature.while.action-sequence.right.loop.body.anchorNode-end"
-                            :anchor-return="$rightInnerStart"
-                            side="left"
-                            color="green"
-                        />
-                        {{-- The inner return skips initialization, so itemIndex is not reset on every item. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-while
-                            id="literature.while.action-sequence.right.inner-loop"
-                            :counter-start="11"
-                            :anchor-start="$rightInnerStart"
-                            side="right"
-                            color="sky"
-                            true-bridge-length="4rem"
-                            stem-length="4rem"
-                            :condition-label="[
-                                'beforeLength' => '2rem',
-                                'labelGap' => '4rem',
-                                'afterLength' => '8rem',
-                                'text' => ['WHILE itemIndex < itemCount?'],
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :action-label="[
-                                'beforeLength' => '2rem',
-                                'afterLength' => '2rem',
-                                'text' => ['Process current item'],
-                                'color' => 'green',
-                                'return' => false,
-                                'width' => 'default',
-                                'align' => 'center',
-                            ]"
-                            :true-label="[
-                                'text' => ['TRUE'], 'width' => 'half',
-                                'anchor' => 'condition', 'side' => 'left', 'color' => 'green',
-                            ]"
-                            :false-label="[
-                                'text' => ['FALSE'], 'width' => 'half', 'side' => 'left', 'color' => 'red',
-                            ]"
-                        />
-                        {{-- Advance only the inner index, then recheck the inner condition. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.action-sequence.right.inner-advance"
-                            :counter-end="17"
-                            attach-to="literature.while.action-sequence.right.inner-loop.body.anchorNode-end"
-                            direction="top-bottom"
-                            before-length="2rem"
-                            label-gap="4rem"
-                            after-length="2rem"
-                            :step-label="['text' => ['itemIndex = itemIndex + 1'], 'width' => 'default']"
-                            :node-end-dot="false"
-                            :joint-arrow-end="true"
-                            color="sky"
-                        />
-                        <x-translation-workbench::ui.tw-graph.paths.loop-return
-                            id="literature.while.action-sequence.right.inner-return"
-                            :counter-start="18"
-                            attach-to="literature.while.action-sequence.right.inner-advance.anchorNode-end"
-                            return-to="literature.while.action-sequence.right.inner-loop.anchorNode-return"
-                            side="right"
-                            color="sky"
-                        />
-                        {{-- Inner FALSE always finalizes this group, including when it had no items. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.action-sequence.right.finalize"
-                            attach-to="literature.while.action-sequence.right.inner-loop.anchorNode-end"
-                            before-length="4rem"
-                            label-gap="4rem"
-                            after-length="4rem"
-                            :step-label="['text' => ['Finalize group'], 'width' => 'default']"
-                            :counter-end="22"
-                            :node-end-dot="false"
-                            :joint-arrow-end="true"
-                            color="amber"
-                        />
-                        {{-- Turn the finalized group toward the separate outer return lane. --}}
-                        @php
-                            $rightInnerExit = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                'idea-to-paper-while-action-sequence-right',
-                                'literature.while.action-sequence.right.finalize.anchorNode-end',
-                            );
-                            $rightResumeArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString(
-                                'arc_radius',
-                                '2.75rem',
-                            );
-                            $rightAdvanceStart = [
-                                'x' => 'calc(' . $rightInnerExit['x'] . ' - ' . $rightResumeArcRadius . ')',
-                                'y' => 'calc(' . $rightInnerExit['y'] . ' + ' . $rightResumeArcRadius . ')',
-                            ];
-                        @endphp
-                        <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
-                            'id' => 'literature.while.action-sequence.right.outer-resume.arc-in',
-                            'devCounterEnd' => 23,
-                            'anchorStart' => $rightInnerExit,
-                            'anchorEnd' => $rightAdvanceStart,
-                            'startAnchor' => 'e',
-                            'endAnchor' => 'n',
-                            'arcRadius' => $rightResumeArcRadius,
-                            'color' => 'cyan',
+                                    'text' => ['Prepare group', 'itemIndex = 0'],
+                                    'color' => 'green',
+                                    'return' => false,
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :true-label="[
+                                    'text' => ['TRUE'],
+                                    'width' => 'half',
+                                    'anchor' => 'condition',
+                                    'side' => 'left',
+                                    'color' => 'green',
+                                ]"
+                                :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'left', 'color' => 'red']"
+                            />
+                            {{-- Turn the downward body exit into the upward inner condition. --}}
+                            @php
+                                $rightOuterBodyEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    'idea-to-paper-while-action-sequence-right',
+                                    'literature.while.action-sequence.right.loop.body.anchorNode-end',
+                                );
+                                $rightInnerStart = [
+                                    'x' => 'calc(' . $rightOuterBodyEnd['x'] . ' + 12rem)',
+                                    'y' => 'calc(' . $rightOuterBodyEnd['y'] . ' - 8rem)',
+                                ];
+                            @endphp
+                            <x-translation-workbench::ui.tw-graph.paths.loop-return
+                                id="literature.while.action-sequence.right.inner-entry"
+                                :counter-start="7"
+                                attach-to="literature.while.action-sequence.right.loop.body.anchorNode-end"
+                                :anchor-return="$rightInnerStart"
+                                side="left"
+                                color="green"
+                            />
+                            {{-- The inner return skips initialization, so itemIndex is not reset on every item. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-while
+                                id="literature.while.action-sequence.right.inner-loop"
+                                :counter-start="11"
+                                :anchor-start="$rightInnerStart"
+                                side="right"
+                                color="sky"
+                                true-bridge-length="4rem"
+                                stem-length="4rem"
+                                :condition-label="[
+                                    'beforeLength' => '2rem',
+                                    'labelGap' => '4rem',
+                                    'afterLength' => '8rem',
+                                    'text' => ['WHILE itemIndex < itemCount?'],
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :action-label="[
+                                    'beforeLength' => '2rem',
+                                    'afterLength' => '2rem',
+                                    'text' => ['Process current item'],
+                                    'color' => 'green',
+                                    'return' => false,
+                                    'width' => 'default',
+                                    'align' => 'center',
+                                ]"
+                                :true-label="[
+                                    'text' => ['TRUE'], 'width' => 'half',
+                                    'anchor' => 'condition', 'side' => 'left', 'color' => 'green',
+                                ]"
+                                :false-label="[
+                                    'text' => ['FALSE'], 'width' => 'half', 'side' => 'left', 'color' => 'red',
+                                ]"
+                            />
+                            {{-- Advance only the inner index, then recheck the inner condition. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.action-sequence.right.inner-advance"
+                                :counter-end="17"
+                                attach-to="literature.while.action-sequence.right.inner-loop.body.anchorNode-end"
+                                direction="top-bottom"
+                                before-length="2rem"
+                                label-gap="4rem"
+                                after-length="2rem"
+                                :step-label="['text' => ['itemIndex = itemIndex + 1'], 'width' => 'default']"
+                                :node-end-dot="false"
+                                :joint-arrow-end="true"
+                                color="sky"
+                            />
+                            <x-translation-workbench::ui.tw-graph.paths.loop-return
+                                id="literature.while.action-sequence.right.inner-return"
+                                :counter-start="18"
+                                attach-to="literature.while.action-sequence.right.inner-advance.anchorNode-end"
+                                return-to="literature.while.action-sequence.right.inner-loop.anchorNode-return"
+                                side="right"
+                                color="sky"
+                            />
+                            {{-- Inner FALSE always finalizes this group, including when it had no items. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.action-sequence.right.finalize"
+                                attach-to="literature.while.action-sequence.right.inner-loop.anchorNode-end"
+                                before-length="4rem"
+                                label-gap="4rem"
+                                after-length="4rem"
+                                :step-label="['text' => ['Finalize group'], 'width' => 'default']"
+                                :counter-end="22"
+                                :node-end-dot="false"
+                                :joint-arrow-end="true"
+                                color="amber"
+                            />
+                            {{-- Turn the finalized group toward the separate outer return lane. --}}
+                            @php
+                                $rightInnerExit = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    'idea-to-paper-while-action-sequence-right',
+                                    'literature.while.action-sequence.right.finalize.anchorNode-end',
+                                );
+                                $rightResumeArcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString(
+                                    'arc_radius',
+                                    '2.75rem',
+                                );
+                                $rightAdvanceStart = [
+                                    'x' => 'calc(' . $rightInnerExit['x'] . ' - ' . $rightResumeArcRadius . ')',
+                                    'y' => 'calc(' . $rightInnerExit['y'] . ' + ' . $rightResumeArcRadius . ')',
+                                ];
+                            @endphp
+                            <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                'id' => 'literature.while.action-sequence.right.outer-resume.arc-in',
+                                'devCounterEnd' => 23,
+                                'anchorStart' => $rightInnerExit,
+                                'anchorEnd' => $rightAdvanceStart,
+                                'startAnchor' => 'e',
+                                'endAnchor' => 'n',
+                                'arcRadius' => $rightResumeArcRadius,
+                                'color' => 'cyan',
 
-                            'nodeEnd' => true,
-                            'nodeEndDot' => false,
-                            'jointArrowEnd' => true,
-                            'jointArrowEndDirection' => 'left',
-                        ]" />
-                        {{-- Advance the outer index only after finalization. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.action-sequence.right.advance"
-                            :counter-end="24"
-                            :anchor-start="$rightAdvanceStart"
-                            direction="right-left"
-                            before-length="2rem"
-                            label-gap="16rem"
-                            after-length="2rem"
-                            :step-label="['text' => ['groupIndex = groupIndex + 1'], 'width' => 'default']"
-                            :node-end-dot="false"
-                            :joint-arrow-end="true"
-                            color="cyan"
-                        />
-                        @php
-                            $rightAdvanceEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
-                                'idea-to-paper-while-action-sequence-right',
-                                'literature.while.action-sequence.right.advance.anchorNode-end',
-                            );
-                            $rightOuterReturnStart = [
-                                'x' => 'calc(' . $rightAdvanceEnd['x'] . ' - ' . $rightResumeArcRadius . ')',
-                                'y' => 'calc(' . $rightAdvanceEnd['y'] . ' - ' . $rightResumeArcRadius . ')',
-                            ];
-                        @endphp
-                        <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
-                            'id' => 'literature.while.action-sequence.right.outer-resume.arc-out',
-                            'devCounterEnd' => 25,
-                            'anchorStart' => $rightAdvanceEnd,
-                            'anchorEnd' => $rightOuterReturnStart,
-                            'startAnchor' => 'n',
-                            'endAnchor' => 'w',
-                            'arcRadius' => $rightResumeArcRadius,
-                            'color' => 'cyan',
+                                'nodeEnd' => true,
+                                'nodeEndDot' => false,
+                                'jointArrowEnd' => true,
+                                'jointArrowEndDirection' => 'left',
+                            ]" />
+                            {{-- Advance the outer index only after finalization. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.action-sequence.right.advance"
+                                :counter-end="24"
+                                :anchor-start="$rightAdvanceStart"
+                                direction="right-left"
+                                before-length="2rem"
+                                label-gap="16rem"
+                                after-length="2rem"
+                                :step-label="['text' => ['groupIndex = groupIndex + 1'], 'width' => 'default']"
+                                :node-end-dot="false"
+                                :joint-arrow-end="true"
+                                color="cyan"
+                            />
+                            @php
+                                $rightAdvanceEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    'idea-to-paper-while-action-sequence-right',
+                                    'literature.while.action-sequence.right.advance.anchorNode-end',
+                                );
+                                $rightOuterReturnStart = [
+                                    'x' => 'calc(' . $rightAdvanceEnd['x'] . ' - ' . $rightResumeArcRadius . ')',
+                                    'y' => 'calc(' . $rightAdvanceEnd['y'] . ' - ' . $rightResumeArcRadius . ')',
+                                ];
+                            @endphp
+                            <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                'id' => 'literature.while.action-sequence.right.outer-resume.arc-out',
+                                'devCounterEnd' => 25,
+                                'anchorStart' => $rightAdvanceEnd,
+                                'anchorEnd' => $rightOuterReturnStart,
+                                'startAnchor' => 'n',
+                                'endAnchor' => 'w',
+                                'arcRadius' => $rightResumeArcRadius,
+                                'color' => 'cyan',
 
-                            'nodeEnd' => true,
-                            'nodeEndDot' => false,
-                            'jointArrowEnd' => true,
-                            'jointArrowEndDirection' => 'bottom',
-                        ]" />
-                        {{-- Return only after advancing, to the same condition (not initialization). --}}
-                        <x-translation-workbench::ui.tw-graph.paths.loop-return
-                            id="literature.while.action-sequence.right.body-return"
-                            :counter-start="26"
-                            :anchor-start="$rightOuterReturnStart"
-                            return-to="literature.while.action-sequence.right.loop.anchorNode-return"
-                            side="right"
-                            color="cyan"
-                        />
-                        {{-- FALSE continues here, including when the group list starts empty. --}}
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.while.action-sequence.right.continue"
-                            :counter-end="30"
-                            attach-to="literature.while.action-sequence.right.loop.anchorNode-end"
-                            beforeLength="4rem"
-                            :step-label="['text' => ['Show summary'], 'width' => 'default']"
-                            color="violet"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- while-action-sequence-right-example:end --}}
+                                'nodeEnd' => true,
+                                'nodeEndDot' => false,
+                                'jointArrowEnd' => true,
+                                'jointArrowEndDirection' => 'bottom',
+                            ]" />
+                            {{-- Return only after advancing, to the same condition (not initialization). --}}
+                            <x-translation-workbench::ui.tw-graph.paths.loop-return
+                                id="literature.while.action-sequence.right.body-return"
+                                :counter-start="26"
+                                :anchor-start="$rightOuterReturnStart"
+                                return-to="literature.while.action-sequence.right.loop.anchorNode-return"
+                                side="right"
+                                color="cyan"
+                            />
+                            {{-- FALSE continues here, including when the group list starts empty. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.while.action-sequence.right.continue"
+                                :counter-end="30"
+                                attach-to="literature.while.action-sequence.right.loop.anchorNode-end"
+                                beforeLength="4rem"
+                                :step-label="['text' => ['Show summary'], 'width' => 'default']"
+                                color="violet"
+                            />
+                        </x-translation-workbench::ui.tw-graph>
+                        {{-- while-action-sequence-right-example:end --}}
+                    </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="mt-3 flex justify-end font-mono text-xs text-zinc-400">
-                .../flow/while/flow-while-action-sequence.blade.php
-            </flux:field>
+            {{-- Path/To/File --}}
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/flow/while/flow-while-action-sequence.blade.php"
+                segments="3"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>

@@ -18,18 +18,12 @@
             {{ __('An empty canvas illustrates its minimum dimensions and padding. The yellow frame marks the minimum area; the dashed box marks the area inside the padding. The annotations are ordinary HTML and do not contribute graph bounds.') }}
         </flux:callout.text>
 
-        <flux:separator
-            class="mt-4"
-            :text="__('Code examples')"
-        />
+        <x-translation-workbench::ui.common.separator-code-example-tw-graph />
 
         <x-translation-workbench::ui.tw-graph.code-box
             class="mt-4">{{ $canvasSource->example('canvas-borders-1') }}</x-translation-workbench::ui.tw-graph.code-box>
 
-        <flux:separator
-            class="mt-4"
-            :text="__('Props used in this example')"
-        />
+        <x-translation-workbench::ui.common.separator-props-used-tw-graph />
 
         {{-- Canvas Border Props --}}
         <flux:callout color="indigo">
@@ -145,9 +139,10 @@
         <flux:text class="mt-3 hyphens-auto text-justify">
             {{ __('Only the yellow configuration frame is shown. The dashed box and its labels describe dimensions; they are not graph components.') }}
         </flux:text>
-        <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">
-            .../idea-to-paper/canvas/canvas-borders.blade.php
-        </flux:field>
+        <x-translation-workbench::ui.common.tw-graph-path-file
+            path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/canvas/canvas-borders.blade.php"
+            segments="3"
+        />
     </flux:callout>
 
     {{-- Canvas Borders Example Styles --}}

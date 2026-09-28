@@ -409,7 +409,7 @@ it('hides the retained switch test page and falls back from its old tab selectio
     expect(View::exists('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.switch-case.flow-switch-case-test'))->toBeTrue();
 });
 
-it('loads the while proposal page lazily and normalizes unknown while tabs', function () {
+it('loads saved while examples lazily and falls back from hidden or unknown while tabs', function () {
     $rendered = [];
     View::composer('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.*', function ($view) use (&$rendered) {
         $rendered[] = $view->name();
@@ -419,14 +419,20 @@ it('loads the while proposal page lazily and normalizes unknown while tabs', fun
     expect($rendered)->toBe([]);
     $component->set('tabs.main', 'idea-to-paper-flow')
         ->set('tabs.flow_index', 'flow-while')
-        ->assertSet('tabs.flow_while', 'flow-while-test')
-        ->assertSee('id="flow-while-test-proposals"', false)
+        ->assertSet('tabs.flow_while', 'flow-while-basic')
+        ->assertDontSee('id="flow-while-test-proposals"', false)
+        ->assertSee('id="idea-to-paper-while-basic-left"', false)
         ->assertSee('WHILE basic')
         ->assertSee('Two independent inner loops')
         ->assertDontSee('id="idea-to-paper-flow-switch-case-default"', false)
+        ->set('tabs.flow_while', 'flow-while-test')
+        ->assertSet('tabs.flow_while', 'flow-while-basic')
+        ->assertDontSee('name="flow-while-test"', false)
         ->set('tabs.flow_while', 'unknown-while-tab')
-        ->assertSet('tabs.flow_while', 'flow-while-test')
+        ->assertSet('tabs.flow_while', 'flow-while-basic')
         ->set('tabs.flow_index', 'flow-switch-case')
         ->assertDontSee('id="flow-while-test-proposals"', false);
     expect($rendered)->not->toBe([]);
+    expect($rendered)->not->toContain('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.flow-while-test');
+    expect(View::exists('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.flow-while-test'))->toBeTrue();
 });

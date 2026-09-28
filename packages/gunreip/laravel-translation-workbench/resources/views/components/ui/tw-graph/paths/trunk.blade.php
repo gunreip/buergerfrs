@@ -69,6 +69,15 @@
 ])
 
 @php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.paths.trunk',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
+
+@php
     $resolvedGraphId = filled($graphId ?? null) ? (string) $graphId : 'tw-graph';
     $resolvedComponentCounter = max(1, (int) $componentCounter);
     $id = filled($id)
@@ -343,6 +352,8 @@
     }
 
     $pathEndAnchor = $currentAnchor;
+
+    // The optional layout spacer still uses these dimensions independently of DEV regions.
     $pathBoxPadding = '0.75rem';
     $isHorizontalPath = in_array($direction, ['left-right', 'right-left'], true);
     $pathBoxX = match ($direction) {
@@ -369,17 +380,7 @@
     }
 @endphp
 
-@if ($showDevBox)
-    <x-translation-workbench::ui.tw-graph.dev-box
-        :id="$id . '.dev-box'"
-        :x="'calc(' . $pathBoxX . ' - ' . $pathBoxPadding . ')'"
-        :y="'calc(' . $pathBoxY . ' - ' . $pathBoxPadding . ')'"
-        :width="'calc(' . $pathBoxWidth . ' + (' . $pathBoxPadding . ' * 2))'"
-        :height="'calc(' . $pathBoxHeight . ' + (' . $pathBoxPadding . ' * 2))'"
-        color="amber"
-        :label="$id"
-    />
-@endif
+
 
 @if ($showLayoutSpacer)
     <span
@@ -403,3 +404,15 @@
         <x-translation-workbench::ui.tw-graph.segments.path :segment="$segment['segment']" />
     @endif
 @endforeach
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+            \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($showDevBox, true),
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
+@endif

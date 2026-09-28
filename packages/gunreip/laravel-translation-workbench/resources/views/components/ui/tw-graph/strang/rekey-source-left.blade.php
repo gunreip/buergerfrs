@@ -38,7 +38,6 @@
     $inheritedColor = $color ?? null;
 
 
-
 @endphp
 
 @props([
@@ -61,6 +60,15 @@
     'counterStart' => 1,
     'zIndex' => 8,
 ])
+
+@php
+    $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
+        '...::ui.tw-graph.strang.rekey-source-left',
+        \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+    );
+    try {
+@endphp
+
 
 @php
     // Keep the authoring ID throughout the internal component chain.
@@ -118,7 +126,6 @@
         'x' => $add($anchor['x'], $rekeyWidth),
         'y' => $add($anchor['y'], $rekeyHeight),
     ];
-    $bounds = \Gunreip\TranslationWorkbench\Support\TwGraphProtocol\GeometryBounds::fromPoints([$anchor, $attachAnchor], '1rem');
 
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.rekey-source-left.start', $anchor);
     if ($resolvedStartShiftSegmentLength !== '0rem') {
@@ -146,15 +153,6 @@
     </span>
 @endif
 
-<x-translation-workbench::ui.tw-graph.dev-box
-    :id="$id . '.dev-box'"
-    :x="$bounds['left']"
-    :y="$bounds['bottom']"
-    :width="$bounds['width']"
-    :height="$bounds['height']"
-    :color="$resolvedColor"
-    :label="$id"
-/>
 
 <x-translation-workbench::ui.tw-graph.paths.merge
     :id="$id . '.paths.rekey-source'"
@@ -182,3 +180,14 @@
         \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::restore($previousRootIdentifier);
     }
 @endphp
+
+@php
+    } finally {
+        $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
+            $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',
+        );
+    }
+@endphp
+@if ($twGraphRegionDefinition !== null)
+    <script type="application/json" data-tw-graph-component-region>{!! json_encode($twGraphRegionDefinition, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) !!}</script>
+@endif

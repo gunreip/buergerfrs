@@ -13,6 +13,7 @@
 namespace App\Console\Commands;
 
 use App\Support\AppVersion;
+use App\Support\Console\ProcessProgress;
 use App\Support\WatchVersion;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -223,16 +224,15 @@ class ClearProject extends Command
 
         $results = [];
         $failed = false;
+        $progress = new ProcessProgress($this->output);
 
         foreach ($checks as $check) {
-            $this->line('  • ' . $check['name']);
-
             $startedAt = microtime(true);
             $process = new Process($check['command'], base_path());
             $process->setTimeout(300);
             $processError = '';
             try {
-                $process->run();
+                $progress->run($process, $check['name'], count($results), count($checks));
             } catch (\Symfony\Component\Process\Exception\ExceptionInterface $exception) {
                 $processError = $exception->getMessage();
             }

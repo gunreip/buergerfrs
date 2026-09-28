@@ -81,3 +81,23 @@ it('keeps diagnostic props out of child APIs and authored documentation calls', 
     }
     expect($violations)->toBe([]);
 });
+
+it('shows effective canvas inputs with defaults and separate measured results', function (): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph :dev="true" :coordinates="true" min-width="90rem" horizontal-padding="5rem">
+            <x-translation-workbench::ui.tw-graph.segments.path id="summary.path" />
+        </x-translation-workbench::ui.tw-graph>
+        BLADE);
+    $document = new DOMDocument;
+    @$document->loadHTML($html);
+    $xpath = new DOMXPath($document);
+    foreach (['min-width' => '90rem', 'horizontal-padding' => '5rem'] as $prop => $value) {
+        $input = $xpath->query('//*[@data-tw-graph-canvas-input="'.$prop.'"]')->item(0);
+        expect($input->textContent)->toBe($value);
+        expect($xpath->query('preceding-sibling::dt[1]', $input)->item(0)->textContent)->not->toContain('Default');
+    }
+    $height = $xpath->query('//*[@data-tw-graph-canvas-input="min-height"]')->item(0);
+    expect($xpath->query('preceding-sibling::dt[1]', $height)->item(0)->textContent)->toContain('Default');
+    expect($xpath->query('//*[@data-tw-graph-canvas-result]')->length)->toBe(3);
+    expect($html)->not->toContain('data-tw-graph-side-value', 'data-tw-graph-side-largest');
+});

@@ -20,6 +20,8 @@
 
     Rule:
     This is a pure diagnostic overlay. It must not affect graph geometry.
+    Region boxes show their caption; individual segment boxes disable showLabel
+    because the rendered element already owns its tooltip and copy action.
 --}}
 
 @props([
@@ -30,10 +32,13 @@
     'height' => '0rem',
     'color' => 'sky',
     'label' => null,
+    'component' => null,
+    'showLabel' => true,
+    'region' => null,
 ])
 
 @php
-    $colorRgb = \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '14 165 233');
+    $colorRgb = $region['colorRgb'] ?? \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '14 165 233');
     $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($label ?? $id);
 
 @endphp
@@ -41,24 +46,31 @@
 @if ($dev)
     <span
         data-tw-graph-dev-box="{{ $id }}"
+        @if ($region !== null) data-tw-graph-region="{{ $region['token'] }}" @endif
         class="tw-graph-protocol-dev-only group pointer-events-none absolute rounded border border-dashed"
         style="
             left: calc(var(--tw-graph-protocol-trunk-x) + {{ $x }});
             bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ $y }});
             width: {{ $width }};
             height: {{ $height }};
-            border-color: rgb({{ $colorRgb }} / 0.35);
+            border-color: rgb({{ $colorRgb }} / 1);
+            {{ $region !== null ? 'visibility:hidden;' : '' }}
         "
-        title="{{ $devIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
     >
-        <span
-            class="absolute left-1 top-0 -translate-y-full rounded-sm px-1 py-0.5 font-mono text-[0.6rem] leading-none opacity-0 transition-opacity group-hover:opacity-100"
-            style="
-                background-color: rgb({{ $colorRgb }} / 0.85);
-                color: rgb(24 24 27);
-            "
-        >
-            {{ $devIdentifier }}
-        </span>
+        @if (\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($showLabel, true))
+            <span
+                data-tw-graph-dev-caption
+                class="absolute left-1 top-0 rounded-sm px-1 py-0.5 font-mono text-[0.6rem] leading-none"
+                title="{{ $devIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
+                style="width:max-content; overflow-wrap:anywhere; background-color:rgb({{ $colorRgb }} / 0.85); color:rgb(24 24 27);"
+            >
+                @if (filled($component))
+                    <span class="block">{{ $component }}</span>
+                    <span class="block">id="{{ $label ?? $id }}"</span>
+                @else
+                    {{ $devIdentifier }}
+                @endif
+            </span>
+        @endif
     </span>
 @endif

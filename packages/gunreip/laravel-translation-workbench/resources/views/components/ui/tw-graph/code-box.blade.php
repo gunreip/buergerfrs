@@ -7,7 +7,8 @@
     role="region"
     aria-label="{{ __('Code example') }}"
     tabindex="0"
-    {{ $attributes->class(['w-full min-w-0 max-w-full overflow-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700'])->style(['max-height: ' . $maxHeight, 'contain: inline-size']) }}
+    {{ $attributes->class(['relative w-full min-w-0 max-w-full overflow-auto rounded-lg border border-zinc-200 bg-zinc-950 p-4 text-xs leading-5 text-zinc-100 dark:border-zinc-700'])->style(['max-height: ' . $maxHeight, 'contain: inline-size']) }}
 >
+    <x-translation-workbench::ui.common.component-marker name="translation-workbench::ui.tw-graph.code-box" />
     <pre><code>{!! \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\CodeHighlight::render((string) $slot) !!}</code></pre>
 </div>

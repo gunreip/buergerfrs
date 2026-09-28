@@ -6,19 +6,30 @@
             icon="file-text"
         >
             <flux:callout.heading>{{ __('Flow branch steps') }}</flux:callout.heading>
-            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.flow-branch-steps" />
             <flux:callout.text>
                 {{ __('After the decision, the same flow-step component can continue on each decision output. The branch steps are anchored to the left and right ends of flow-if-else, so the center line stays stopped at the decision point.') }}
             </flux:callout.text>
+
+            <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+            <x-translation-workbench::ui.tw-graph.documentation-links example="flow.flow-branch-steps" />
+
             @php
                 $docExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
                     'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.flow-branch-steps',
                 );
             @endphp
-            <flux:separator class="mt-4" :text="__('Code examples')" />
-            <flux:accordion transition exclusive>
+
+            <x-translation-workbench::ui.common.separator-code-example-tw-graph />
+            <flux:accordion
+                transition
+                exclusive
+            >
                 <flux:accordion.item expanded>
-                    <flux:callout icon="code" color="indigo">
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
                         <x-translation-workbench::ui.common.heading-counter
                             example="flow-branch-steps-example-1"
                             variant="accordion"
@@ -31,12 +42,15 @@
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
-            <flux:separator class="mt-4" :text="__('Props used in these examples')" />
+            <x-translation-workbench::ui.common.separator-props-used-tw-graph />
             <flux:callout color="indigo">
                 <flux:callout.heading icon="variable">{{ __('Flow branch steps props') }}</flux:callout.heading>
                 <div class="mt-3 min-w-0 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                     <flux:table container:class="max-h-80">
-                        <flux:table.columns class="bg-white dark:bg-zinc-900" sticky>
+                        <flux:table.columns
+                            class="bg-white dark:bg-zinc-900"
+                            sticky
+                        >
                             <flux:table.column>{{ __('Prop') }}</flux:table.column>
                             <flux:table.column>{{ __('Default') }}</flux:table.column>
                             <flux:table.column>{{ __('Array keys') }}</flux:table.column>
@@ -96,7 +110,8 @@
                                     <code>:anchor-start</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    <code>[&#x27;x&#x27; =&gt; &#x27;0rem&#x27;, &#x27;y&#x27; =&gt; &#x27;0rem&#x27;]</code>
+                                    <code>[&#x27;x&#x27; =&gt; &#x27;0rem&#x27;, &#x27;y&#x27; =&gt;
+                                        &#x27;0rem&#x27;]</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     x, y
@@ -149,7 +164,8 @@
                                     <code>null</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    text, side, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines
+                                    text, side, width, align, justify, color, badgeColor, connectorLength, connectorGap,
+                                    maxLines
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Flow-start label that names the entry point, for example a process start, first milestone, or initial state.') }}
@@ -163,7 +179,8 @@
                                     <code>[]</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    left, right -&gt; text, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines
+                                    left, right -&gt; text, width, align, justify, color, badgeColor, connectorLength,
+                                    connectorGap, maxLines
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Optional left/right facts at the flow-start end anchor, using the same text-label structure as trunk and branch labels.') }}
@@ -177,7 +194,8 @@
                                     <code>null</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    text, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines
+                                    text, width, align, justify, color, badgeColor, connectorLength, connectorGap,
+                                    maxLines
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Shorthand single-side labels for flow-start when a full start-node-labels array would be too much.') }}
@@ -191,7 +209,8 @@
                                     <code>null</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    text, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines
+                                    text, width, align, justify, color, badgeColor, connectorLength, connectorGap,
+                                    maxLines
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Shorthand single-side labels for flow-start when a full start-node-labels array would be too much.') }}
@@ -303,7 +322,8 @@
                                     <code>null</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    text, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines
+                                    text, width, align, justify, color, badgeColor, connectorLength, connectorGap,
+                                    maxLines
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Centered label that names the process step, status, or decision reason.') }}
@@ -317,7 +337,8 @@
                                     <code>[]</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    end -&gt; left/right -&gt; text, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines
+                                    end -&gt; left/right -&gt; text, width, align, justify, color, badgeColor,
+                                    connectorLength, connectorGap, maxLines
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Optional facts at the flow-step or flow-if-else end anchors. For flow-step the public anchor is usually end.') }}
@@ -451,7 +472,8 @@
                                     <code>null</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    text, side, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines
+                                    text, side, width, align, justify, color, badgeColor, connectorLength, connectorGap,
+                                    maxLines
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Centered label at the decision anchor. The flow continues only through the left/right sideways branches.') }}
@@ -596,10 +618,12 @@
                                     <code>:intro-label</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    <code>[&#x27;text&#x27; =&gt; [&#x27;IF / ELSE flow&#x27;, &#x27;section starts&#x27;]]</code>
+                                    <code>[&#x27;text&#x27; =&gt; [&#x27;IF / ELSE flow&#x27;, &#x27;section
+                                        starts&#x27;]]</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    text, width, side, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines
+                                    text, width, side, align, justify, color, badgeColor, connectorLength, connectorGap,
+                                    maxLines
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Opening label for flow-if-start or the if-else-endif wrapper. Optional side (left/right) overrides the direction of the intro arcs and bridges; omitted side preserves the component direction.') }}
@@ -613,7 +637,8 @@
                                     <code>null</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    text, width, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines
+                                    text, width, align, justify, color, badgeColor, connectorLength, connectorGap,
+                                    maxLines
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Label for the first IF condition row inside flow-if-condition-set or if-else-endif.') }}
@@ -627,7 +652,9 @@
                                     <code>[]</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    key, id, color, label, conditionLabel, conditionRailWidth, arcRadius, bridgeLength, thenArcReach, leftStemLength, thenStemLength, leftStem, thenContinuation, pathTone, zIndex, devCounterColor
+                                    key, id, color, label, conditionLabel, conditionRailWidth, arcRadius, bridgeLength,
+                                    thenArcReach, leftStemLength, thenStemLength, leftStem, thenContinuation, pathTone,
+                                    zIndex, devCounterColor
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Rows after the first IF row. Each entry may be ELSEIF, ELSE, DEFAULT, or any handmade condition label.') }}
@@ -641,7 +668,9 @@
                                     <code>[]</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    key, id, color, label, conditionLabel, conditionRailWidth, arcRadius, bridgeLength, thenArcReach, leftStemLength, thenStemLength, leftStem, thenContinuation, pathTone, zIndex, devCounterColor
+                                    key, id, color, label, conditionLabel, conditionRailWidth, arcRadius, bridgeLength,
+                                    thenArcReach, leftStemLength, thenStemLength, leftStem, thenContinuation, pathTone,
+                                    zIndex, devCounterColor
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Rows after the first IF row. Each entry may be ELSEIF, ELSE, DEFAULT, or any handmade condition label.') }}
@@ -667,7 +696,8 @@
                                     <code>[&#x27;text&#x27; =&gt; [&#x27;ENDIF&#x27;]]</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    text, width, side, align, justify, color, badgeColor, connectorLength, connectorGap, maxLines
+                                    text, width, side, align, justify, color, badgeColor, connectorLength, connectorGap,
+                                    maxLines
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Closing label rendered by flow-if-end or the if-else-endif wrapper. Optional side (left/right) overrides the ENDIF direction, including the final THEN turn in the wrapper. Omitted side preserves existing behavior.') }}
@@ -711,102 +741,109 @@
                 :dev="$dev ?? true"
                 :coordinates="$coordinates ?? false"
             >
-                <x-translation-workbench::ui.common.heading-counter
-                    example="flow-branch-steps-example-1"
-                    size="sm"
-                >{{ __('Flow branch steps') }}</x-translation-workbench::ui.common.heading-counter>
-                <div
-                    class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                    {{-- flow-branch-steps-example-1:start --}}
-                    <x-translation-workbench::ui.tw-graph
-                        graph-id="idea-to-paper-step-08-flow-branch-steps"
-                        :dev="true"
-                        :coordinates="true"
-                        color="zinc"
-                        horizontal-padding="36rem"
-                        min-width="70rem"
-                        min-height="74rem"
-                    >
-                        <div class="pointer-events-none opacity-25">
-                            <x-translation-workbench::ui.tw-graph.strang.flow-start
-                                id="literature.flow.1.paper-process"
-                                start-length="7rem"
-                                :node-end-dot="false"
-                                :start-label="[
-                                    'text' => ['Paper process', 'start'],
-                                    'width' => 'halfLong',
-                                    'align' => 'center',
-                                ]"
-                                :start-node-labels="[
-                                    'left' => [
-                                        'text' => ['Input', 'raw thought'],
-                                        'width' => 'default',
-                                        'align' => 'right',
-                                    ],
-                                ]"
-                            />
+                <div class="mt-4 grid min-w-0 gap-4 xl:grid-cols-1">
+                    <div class="min-w-0">
 
-                            <x-translation-workbench::ui.tw-graph.strang.flow-step
-                                id="literature.flow.1.paper-process.step-1"
-                                attach-to="literature.flow.1.paper-process.anchorNode-end"
-                                before-length="2rem"
-                                after-length="3rem"
-                                :step-label="[
-                                    'text' => ['Draft prepared', 'structure exists'],
-                                    'width' => 'halfLong',
-                                    'align' => 'center',
-                                ]"
-                                :node-labels="[
-                                    'end' => [
-                                        'right' => [
-                                            'text' => ['Next', 'review choice'],
-                                            'width' => 'default',
-                                            'align' => 'left',
-                                        ],
-                                    ],
-                                ]"
-                            />
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="flow-branch-steps-example-1"
+                            size="sm"
+                        >{{ __('Flow branch steps') }}</x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                            {{-- flow-branch-steps-example-1:start --}}
+                            <x-translation-workbench::ui.tw-graph
+                                graph-id="idea-to-paper-step-08-flow-branch-steps"
+                                :dev="true"
+                                :coordinates="true"
+                                color="zinc"
+                                horizontal-padding="3rem"
+                                min-width="70rem"
+                                min-height="52rem"
+                            >
+                                <div class="pointer-events-none opacity-25">
+                                    <x-translation-workbench::ui.tw-graph.strang.flow-start
+                                        id="literature.flow.1.paper-process"
+                                        start-length="7rem"
+                                        :node-end-dot="false"
+                                        :start-label="[
+                                            'text' => ['Paper process', 'start'],
+                                            'width' => 'halfLong',
+                                            'align' => 'center',
+                                        ]"
+                                        :start-node-labels="[
+                                            'left' => [
+                                                'text' => ['Input', 'raw thought'],
+                                                'width' => 'default',
+                                                'align' => 'right',
+                                            ],
+                                        ]"
+                                    />
 
-                            <x-translation-workbench::ui.tw-graph.strang.flow-if-else
-                                id="literature.flow.1.paper-process.decision-1"
-                                attach-to="literature.flow.1.paper-process.step-1.anchorNode-end"
-                                bridge-length="9rem"
-                                :condition-label="[
-                                    'text' => ['IF reviewApproved?'],
-                                    'width' => 'halfLong',
-                                    'align' => 'center',
-                                ]"
-                                :if-start="[
-                                    'text' => ['True', 'Accepted path', 'publication prep'],
-                                    'width' => 'halfLong',
-                                    'align' => 'center',
-                                ]"
-                                :if-end="[
-                                    'text' => ['False', 'Revision loop', 'comments resolved'],
-                                    'width' => 'halfLong',
-                                    'align' => 'center',
-                                ]"
-                            />
+                                    <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                        id="literature.flow.1.paper-process.step-1"
+                                        attach-to="literature.flow.1.paper-process.anchorNode-end"
+                                        before-length="2rem"
+                                        after-length="3rem"
+                                        :step-label="[
+                                            'text' => ['Draft prepared', 'structure exists'],
+                                            'width' => 'halfLong',
+                                            'align' => 'center',
+                                        ]"
+                                        :node-labels="[
+                                            'end' => [
+                                                'right' => [
+                                                    'text' => ['Next', 'review choice'],
+                                                    'width' => 'default',
+                                                    'align' => 'left',
+                                                ],
+                                            ],
+                                        ]"
+                                    />
+
+                                    <x-translation-workbench::ui.tw-graph.strang.flow-if-else
+                                        id="literature.flow.1.paper-process.decision-1"
+                                        attach-to="literature.flow.1.paper-process.step-1.anchorNode-end"
+                                        bridge-length="9rem"
+                                        :condition-label="[
+                                            'text' => ['IF reviewApproved?'],
+                                            'width' => 'halfLong',
+                                            'align' => 'center',
+                                        ]"
+                                        :if-start="[
+                                            'text' => ['True', 'Accepted path', 'publication prep'],
+                                            'width' => 'halfLong',
+                                            'align' => 'center',
+                                        ]"
+                                        :if-end="[
+                                            'text' => ['False', 'Revision loop', 'comments resolved'],
+                                            'width' => 'halfLong',
+                                            'align' => 'center',
+                                        ]"
+                                    />
+                                </div>
+
+                                <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                    id="literature.flow.1.paper-process.continue-step"
+                                    color="cyan"
+                                    attach-to="literature.flow.1.paper-process.decision-1.anchorNode-end"
+                                    before-length="1.5rem"
+                                    after-length="2.5rem"
+                                    :step-label="[
+                                        'text' => ['Continue process'],
+                                        'width' => 'halfLong',
+                                        'align' => 'center',
+                                    ]"
+                                />
+                            </x-translation-workbench::ui.tw-graph>
+                            {{-- flow-branch-steps-example-1:end --}}
                         </div>
-
-                        <x-translation-workbench::ui.tw-graph.strang.flow-step
-                            id="literature.flow.1.paper-process.continue-step"
-                            color="cyan"
-                            attach-to="literature.flow.1.paper-process.decision-1.anchorNode-end"
-                            before-length="1.5rem"
-                            after-length="2.5rem"
-                            :step-label="[
-                                'text' => ['Continue process'],
-                                'width' => 'halfLong',
-                                'align' => 'center',
-                            ]"
-                        />
-                    </x-translation-workbench::ui.tw-graph>
-                    {{-- flow-branch-steps-example-1:end --}}
+                    </div>
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
-            <flux:field class="m-3 flex justify-end font-mono text-xs text-zinc-400">.../flow/flow-branch-steps.blade.php
-            </flux:field>
+            <x-translation-workbench::ui.common.tw-graph-path-file
+                path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/flow/flow-branch-steps.blade.php"
+                segments="2"
+            />
         </flux:callout>
     </section>
 </x-translation-workbench::ui.common.heading-counter-group>
