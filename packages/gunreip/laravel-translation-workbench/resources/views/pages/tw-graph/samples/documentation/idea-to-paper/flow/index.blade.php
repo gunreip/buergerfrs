@@ -14,6 +14,11 @@
         <flux:tab name="flow-do-while">{{ __('Flow DO WHILE') }}</flux:tab>
         <flux:tab name="flow-try-catch">{{ __('Flow TRY/CATCH/FINALLY') }}</flux:tab>
         <flux:tab name="flow-break-continue">{{ __('Flow BREAK / CONTINUE') }}</flux:tab>
+        <flux:tab name="flow-return">{{ __('Flow RETURN') }}</flux:tab>
+        <flux:tab name="flow-throw">{{ __('Flow THROW / RETHROW') }}</flux:tab>
+        <flux:tab name="flow-function">{{ __('Flow FUNCTION') }}</flux:tab>
+        <flux:tab name="flow-callback">{{ __('Flow CALLBACK') }}</flux:tab>
+        <flux:tab name="flow-async-await">{{ __('Flow ASYNC/AWAIT') }}</flux:tab>
     </flux:tabs>
     <flux:tab.panel name="flow-start">
         @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-start')
@@ -89,6 +94,41 @@
         @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-break-continue')
             <div wire:key="documentation-flow-break-continue">
                 @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.break-continue.index')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="flow-return">
+        @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-return')
+            <div wire:key="documentation-flow-return">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.return.index')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="flow-throw">
+        @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-throw')
+            <div wire:key="documentation-flow-throw">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.throw.index')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="flow-function">
+        @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-function')
+            <div wire:key="documentation-flow-function">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.function.index')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="flow-callback">
+        @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-callback')
+            <div wire:key="documentation-flow-callback">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.callback.index')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="flow-async-await">
+        @if (!isset($documentationTabs) || $documentationTabs['flow_index'] === 'flow-async-await')
+            <div wire:key="documentation-flow-async-await">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.async-await.index')
             </div>
         @endif
     </flux:tab.panel>

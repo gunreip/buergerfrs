@@ -118,3 +118,7 @@
     ])->render();
 @endphp
 {!! str_replace('<!--tw-graph-bounds-output-->', $boundsOutput, $graphMarkup) !!}
+
+@if ($twGraphLayoutIssues->all() !== [])
+    <x-translation-workbench::ui.tw-graph.layout-issues :issues="$twGraphLayoutIssues->all()" />
+@endif

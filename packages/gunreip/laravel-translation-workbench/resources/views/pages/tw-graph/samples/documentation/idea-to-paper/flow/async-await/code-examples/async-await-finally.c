@@ -1,0 +1,10 @@
+/* Language note, not an executable equivalent:
+ * This example needs an asynchronous I/O or event-loop library in C.
+ * Register a completion callback, then continue processing when the
+ * operation reports its result. There is no C async/await syntax here.
+ * A blocking wait would not demonstrate the suspension shown in the graph.
+ * See JavaScript or C# for the executable pending-operation example.
+ */
+
+/* Failure path: receive the async error, choose fallback 0, perform
+ * cleanup, then continue. C needs explicit error handling and cleanup. */

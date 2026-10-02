@@ -436,3 +436,133 @@ it('loads saved while examples lazily and falls back from hidden or unknown whil
     expect($rendered)->not->toContain('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.flow-while-test');
     expect(View::exists('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.while.flow-while-test'))->toBeTrue();
 });
+
+it('loads the authored overview maps lazily and releases them on tab change', function () {
+    $rendered = [];
+    View::composer('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.overview.*', function ($view) use (&$rendered) {
+        $rendered[] = $view->name();
+    });
+    $component = Livewire::test(TwGraphDocumentation::class)
+        ->assertSet('tabs.main', 'idea-to-paper-inventory')
+        ->assertDontSee('id="idea-to-paper-overview-structure"', false);
+    expect($rendered)->toBe([]);
+    $component->set('tabs.main', 'idea-to-paper-overview')
+        ->assertSee('id="idea-to-paper-overview-structure"', false)
+        ->assertDontSee('id="idea-to-paper-overview-flow"', false)
+        ->assertSee('Main tabs')
+        ->assertDontSee('id="idea-to-paper-async-await-basic-left"', false)
+        ->set('tabs.main', 'idea-to-paper-canvas')
+        ->assertDontSee('id="idea-to-paper-overview-structure"', false);
+    expect($rendered)->toHaveCount(2);
+});
+
+it('renders the overview main tabs through the public start and merge component chains', function () {
+    $view = 'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.overview.overview-structure';
+    $html = view($view)->render();
+    expect($html)->not->toContain('data-tw-graph-layout-issues', 'nodeLabel-Mismatch');
+    $dom = new DOMDocument;
+    @$dom->loadHTML('<?xml encoding="utf-8" ?>'.$html);
+    $xpath = new DOMXPath($dom);
+    $labels = [];
+    foreach ($xpath->query('//*[contains(concat(" ", normalize-space(@class), " "), " tw-graph-protocol-primitive-text-line ")]') as $label) {
+        $labels[] = trim($label->textContent);
+    }
+    expect($labels)->toHaveCount(41)->toContain(
+        'Idea to Paper', 'Inventory', 'Overview', 'Deep Reference', 'Canvas', 'Primitives',
+        'Segments', 'Parts', 'Paths', 'Strang Trunk', 'Strang Merge', 'Strang Branch', 'Strang Rekey', 'Flow', 'Strang',
+    );
+    $graphId = 'idea-to-paper-overview-structure';
+    $start = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, 'literature.overview.start.anchorNode-end');
+    foreach (['left', 'right'] as $side) {
+        $attach = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, 'strang.merge-'.$side.'.node.5');
+        expect($attach)->not->toBeNull();
+        foreach (['x', 'y'] as $axis) {
+            expect(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($attach[$axis]))
+                ->toEqual(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($start[$axis]));
+        }
+    }
+    $source = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView($view)->example('overview-structure-example');
+    expect($source)->toContain('literature.overview.deep-reference.strang', 'literature.overview.deep-reference.parts', 'strang.flow-step');
+    foreach ($xpath->query('//*[contains(concat(" ", normalize-space(@class), " "), " tw-graph-protocol-primitive-line ")]') as $line) {
+        preg_match('/--tw-graph-protocol-local-length: ([^;]+)/', $line->getAttribute('style'), $length);
+        $resolvedLength = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($length[1]);
+        if ($resolvedLength !== null && $resolvedLength <= 0) {
+            continue;
+        }
+        $bounds = json_decode($line->getAttribute('data-tw-graph-bounds'), true);
+        expect($html)->toContain('data-tw-graph-calculated-marker="'.$bounds['id'].'"');
+    }
+    $reference = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, 'literature.overview.deep-reference.anchorNode-end');
+    foreach (['strang', 'parts'] as $subTab) {
+        $anchor = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, 'literature.overview.deep-reference.'.$subTab.'.anchorNode-end');
+        expect($anchor)->not->toBeNull();
+        $x = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($anchor['x']);
+        $y = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($anchor['y']);
+        expect($x)->toBeLessThan(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($reference['x']));
+        expect($y)->toBeLessThan(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($reference['y']));
+        $branch = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, 'literature.overview.deep-reference.'.$subTab.'-branch.anchorNode-end');
+        expect($x)->toEqual(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($branch['x']));
+        expect($html)->toContain('literature.overview.deep-reference.'.$subTab.'-branch.arc1-east-south', 'literature.overview.deep-reference.'.$subTab.'-branch.arc2-north-west');
+    }
+    $referenceTabs = file_get_contents(base_path('packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/index.blade.php'));
+    preg_match_all('/<flux:tab name="reference-[^"]+">([^<]+)<\/flux:tab>/', $referenceTabs, $matches);
+    expect($matches[1])->toHaveCount(19);
+    $parent = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, 'literature.overview.deep-reference.strang.anchorNode-end');
+    $parentX = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($parent['x']);
+    $previousY = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($parent['y']);
+    $childX = null;
+    foreach ($matches[1] as $index => $tab) {
+        expect($labels)->toContain($tab);
+        $id = 'literature.overview.deep-reference.strang.'.$tab;
+        expect($html)->not->toContain($id.'-branch.arc1-east-south', $id.'-branch.arc2-north-west');
+        expect($html)->toContain($id.'.stem.after.label.left.2', $id.'.stem.after.label.left.2.connector');
+        $anchor = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, $id.'.anchorNode-end');
+        $x = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($anchor['x']);
+        $y = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($anchor['y']);
+        expect($x)->toEqual($parentX);
+        if ($index === 0) {
+            expect($y)->toEqual($previousY);
+        } else {
+            expect($y)->toBeLessThan($previousY);
+        }
+        if ($childX !== null) {
+            expect($x)->toEqual($childX);
+        }
+        $childX = $x;
+        $previousY = $y;
+    }
+    $parts = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, 'literature.overview.deep-reference.parts-branch.anchorNode-end');
+    expect(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($parts['y']))->toBeLessThan($previousY - 4);
+    $partsTabs = file_get_contents(base_path('packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/index.blade.php'));
+    preg_match_all('/<flux:tab name="reference-parts-[^"]+">([^<]+)<\/flux:tab>/', $partsTabs, $partMatches);
+    expect($partMatches[1])->toHaveCount(6);
+    $previousId = 'literature.overview.deep-reference.parts';
+    foreach ($partMatches[1] as $index => $tab) {
+        $id = 'literature.overview.deep-reference.parts.'.$tab;
+        expect($labels)->toContain($tab);
+        expect($source)->toContain('id="'.$id.'"', 'attach-to="'.$previousId.'.anchorNode-end"');
+        expect($html)->toContain($id.'.stem.after.label.right.1.connector');
+        $previous = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, $previousId.'.anchorNode-end');
+        $anchor = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graphId, $id.'.anchorNode-end');
+        expect($anchor['x'])->toEqual($previous['x']);
+        expect(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($anchor['y']))
+            ->toEqual(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($previous['y']) - ($index === 0 ? 0 : 3));
+        $previousId = $id;
+    }
+    expect($source)->toContain('strang.flow-start', 'direction="top-bottom"', 'strang.merge-left', 'strang.merge-right', ':extension-count="6"', ':extension-count="5"')
+        ->not->toContain('ui.tw-graph.segments.', '@foreach', '@for(');
+});
+
+it('hides the retained async test page and falls back from its old selection', function () {
+    Livewire::test(TwGraphDocumentation::class)
+        ->set('tabs.main', 'idea-to-paper-flow')
+        ->set('tabs.flow_index', 'flow-async-await')
+        ->set('tabs.flow_async_await', 'flow-async-await-test')
+        ->assertSet('tabs.flow_async_await', 'flow-async-await-basic')
+        ->assertSee('id="idea-to-paper-async-await-basic-left"', false)
+        ->assertDontSee('ASYNC/AWAIT Test')
+        ->assertDontSee('id="idea-to-paper-async-await-test-left"', false);
+    expect(\Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\DocumentationLinks::EXAMPLES)
+        ->not->toHaveKey('flow.async-await.flow-async-await-test');
+    expect(View::exists('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.async-await.flow-async-await-test'))->toBeTrue();
+});

@@ -9,7 +9,7 @@
         >
             <flux:callout.heading>{{ __('Start part') }}</flux:callout.heading>
             <flux:callout.text>
-                {{ __('Two individually authored starts compare an upward gradient line with a downward plain stem. Both calculate the endpoint from direction and length; the plain stem uses a joint arrow.') }}
+                {{ __('Four individually authored starts compare both vertical directions with and without a text label. Omitting start-label keeps the same line and endpoint geometry; the plain downward stem uses a joint arrow.') }}
             </flux:callout.text>
 
             <x-translation-workbench::ui.common.separator-deep-reference-links />
@@ -37,7 +37,7 @@
                             example="bottom-top"
                             variant="accordion"
                             :prefix-text="__('Complete example')"
-                        >{{ __('bottom-top') }}</x-translation-workbench::ui.common.heading-counter>
+                        >{{ __('bottom-top').' · '.__('With text label') }}</x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
                         <x-translation-workbench::ui.tw-graph.code-box
@@ -53,11 +53,43 @@
                             example="top-bottom"
                             variant="accordion"
                             :prefix-text="__('Complete example')"
-                        >{{ __('top-bottom') }}</x-translation-workbench::ui.common.heading-counter>
+                        >{{ __('top-bottom').' · '.__('With text label') }}</x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
                         <x-translation-workbench::ui.tw-graph.code-box
                             class="mt-3">{{ $exampleSource->example('parts-start-top-bottom') }}</x-translation-workbench::ui.tw-graph.code-box>
+                    </flux:accordion.content>
+                </flux:accordion.item>
+                <flux:accordion.item>
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="bottom-top-without-label"
+                            variant="accordion"
+                            :prefix-text="__('Complete example')"
+                        >{{ __('bottom-top').' · '.__('Without text label') }}</x-translation-workbench::ui.common.heading-counter>
+                    </flux:callout>
+                    <flux:accordion.content>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-3">{{ $exampleSource->example('parts-start-bottom-top-without-label') }}</x-translation-workbench::ui.tw-graph.code-box>
+                    </flux:accordion.content>
+                </flux:accordion.item>
+                <flux:accordion.item>
+                    <flux:callout
+                        icon="code"
+                        color="indigo"
+                    >
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="top-bottom-without-label"
+                            variant="accordion"
+                            :prefix-text="__('Complete example')"
+                        >{{ __('top-bottom').' · '.__('Without text label') }}</x-translation-workbench::ui.common.heading-counter>
+                    </flux:callout>
+                    <flux:accordion.content>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-3">{{ $exampleSource->example('parts-start-top-bottom-without-label') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
@@ -293,7 +325,7 @@
                         <x-translation-workbench::ui.common.heading-counter
                             example="bottom-top"
                             size="sm"
-                        >{{ __('bottom-top') }}</x-translation-workbench::ui.common.heading-counter>
+                        >{{ __('bottom-top').' · '.__('With text label') }}</x-translation-workbench::ui.common.heading-counter>
                         <div
                             class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- parts-start-bottom-top:start --}}
@@ -321,7 +353,7 @@
                         <x-translation-workbench::ui.common.heading-counter
                             example="top-bottom"
                             size="sm"
-                        >{{ __('top-bottom') }}</x-translation-workbench::ui.common.heading-counter>
+                        >{{ __('top-bottom').' · '.__('With text label') }}</x-translation-workbench::ui.common.heading-counter>
                         <div
                             class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                             {{-- parts-start-top-bottom:start --}}
@@ -345,6 +377,62 @@
                                 />
                             </x-translation-workbench::ui.tw-graph>
                             {{-- parts-start-top-bottom:end --}}
+                        </div>
+                    </div>
+                    <div class="min-w-0">
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="bottom-top-without-label"
+                            size="sm"
+                        >{{ __('bottom-top').' · '.__('Without text label') }}</x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                            {{-- parts-start-bottom-top-without-label:start --}}
+                            <x-translation-workbench::ui.tw-graph
+                                graph-id="idea-to-paper-parts-start-bottom-top-without-label"
+                                :dev="true"
+                                :coordinates="true"
+                                min-width="34rem"
+                                min-height="18rem"
+                                horizontal-padding="8rem"
+                            >
+                                <x-translation-workbench::ui.tw-graph.parts.start
+                                    id="literature.parts.start.up.without-label"
+                                    :anchor-start="['x' => '0rem', 'y' => '3rem']"
+                                    direction="bottom-top"
+                                    length="8rem"
+                                    color="cyan"
+                                />
+                            </x-translation-workbench::ui.tw-graph>
+                            {{-- parts-start-bottom-top-without-label:end --}}
+                        </div>
+                    </div>
+                    <div class="min-w-0">
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="top-bottom-without-label"
+                            size="sm"
+                        >{{ __('top-bottom').' · '.__('Without text label') }}</x-translation-workbench::ui.common.heading-counter>
+                        <div
+                            class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                            {{-- parts-start-top-bottom-without-label:start --}}
+                            <x-translation-workbench::ui.tw-graph
+                                graph-id="idea-to-paper-parts-start-top-bottom-without-label"
+                                :dev="true"
+                                :coordinates="true"
+                                min-width="34rem"
+                                min-height="18rem"
+                                horizontal-padding="8rem"
+                            >
+                                <x-translation-workbench::ui.tw-graph.parts.start
+                                    id="literature.parts.start.down.without-label"
+                                    :anchor-start="['x' => '0rem', 'y' => '11rem']"
+                                    direction="top-bottom"
+                                    length="8rem"
+                                    color="violet"
+                                    :gradient="false"
+                                    :joint-arrow-end="true"
+                                />
+                            </x-translation-workbench::ui.tw-graph>
+                            {{-- parts-start-top-bottom-without-label:end --}}
                         </div>
                     </div>
                 </div>

@@ -162,6 +162,58 @@ export function boundsDifference(expected, actual, tolerance = 1.1) {
     return ['minX', 'minY', 'maxX', 'maxY'].filter(key => Math.abs(expected[key] - actual[key]) > tolerance);
 }
 
+// Keep the diagnostic/event payload unchanged; format only its visible presentation.
+export function boundsIssueDetails(issue) {
+    const separator = issue.indexOf(': ');
+    const id = separator < 0 ? '' : issue.slice(0, separator);
+    const message = separator < 0 ? issue : issue.slice(separator + 2);
+    const values = [...message.matchAll(/(minX|minY|maxX|maxY) expected=(-?[\d.]+)px actual=(-?[\d.]+)px/g)]
+        .map(([, axis, expected, actual]) => ({ axis, expected, actual, delta: round(Number(actual) - Number(expected)) }));
+    return { id, message, values };
+}
+
+export function renderBoundsIssues(container, issues) {
+    if (!container) return;
+    const doc = container.ownerDocument;
+    const sections = issues.map(issue => {
+        const { id, message, values } = boundsIssueDetails(issue);
+        const section = doc.createElement('section');
+        section.className = 'border-t border-amber-300 py-2';
+        const heading = doc.createElement('code');
+        heading.className = 'block whitespace-normal break-all font-semibold';
+        heading.textContent = id || message;
+        section.append(heading);
+        if (values.length) {
+            const table = doc.createElement('table');
+            table.className = 'mt-2 w-full text-right font-mono tabular-nums';
+            const header = table.createTHead().insertRow();
+            for (const label of ['axis', 'expected', 'actual', 'delta']) {
+                const cell = doc.createElement('th');
+                cell.className = 'px-2 py-1';
+                cell.scope = 'col';
+                cell.textContent = container.dataset[label] || label;
+                header.append(cell);
+            }
+            const body = table.createTBody();
+            for (const value of values) {
+                const row = body.insertRow();
+                for (const text of [value.axis, `${value.expected}px`, `${value.actual}px`, `${value.delta > 0 ? '+' : ''}${value.delta}px`]) {
+                    const cell = row.insertCell();
+                    cell.className = 'px-2 py-1 whitespace-nowrap';
+                    cell.textContent = text;
+                }
+            }
+            section.append(table);
+        } else if (id) {
+            const detail = doc.createElement('p');
+            detail.textContent = message;
+            section.append(detail);
+        }
+        return section;
+    });
+    container.replaceChildren(...sections);
+}
+
 // Line dots/caps are pseudo-elements and therefore absent from getBoundingClientRect().
 function lineEndpointRects(element, rect, scaleX, scaleY) {
     if (!element.matches('.tw-graph-protocol-primitive-line, .tw-graph-protocol-primitive-path')) return [];
@@ -292,9 +344,9 @@ export function setupTwGraphBounds() {
             elements.forEach(element => next.add(element));
             const warning = graph.querySelector('[data-tw-graph-bounds-warning]');
             if (warning && warning.hidden !== (issues.length === 0)) warning.hidden = issues.length === 0;
-            setText(graph.querySelector('[data-tw-graph-bounds-warning-details]'), issues.join('\n'));
             const report = JSON.stringify(issues);
             if (reports.get(graph) !== report) {
+                renderBoundsIssues(graph.querySelector('[data-tw-graph-bounds-warning-details]'), issues);
                 reports.set(graph, report);
                 graph.dataset.twGraphBoundsIssues = report;
                 if (issues.length) console.warn(`[tw-graph bounds] ${graph.id}`, issues);

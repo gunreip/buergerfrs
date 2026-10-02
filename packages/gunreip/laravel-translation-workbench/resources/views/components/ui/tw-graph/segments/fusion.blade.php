@@ -29,6 +29,12 @@
     $a = $point($endX - $sx * $r, $y + $sy * $r);
     $b = $point($endX - $sx * $r, $endY - $sy * $r);
     $c = $anchorEnd;
+    $provenance = $__env->getConsumableComponentData('twGraphCalculatedLengths');
+    foreach (['bridge-in', 'stem'] as $piece) {
+        $provenance?->record($id . '.' . $piece, 'segments.fusion', $id, $piece . '.length',
+            ['start' => $anchorStart, 'end' => $anchorEnd, 'radius' => $r . 'rem'],
+            'The input/output distance is compensated by the two fusion arcs.');
+    }
     $common = ['color' => $color,  'zIndex' => $zIndex, 'nodeStart' => false, 'nodeEnd' => false];
 @endphp
 @if ($lead > 0)

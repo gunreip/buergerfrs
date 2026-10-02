@@ -25,6 +25,8 @@ return [
     'step_label_content_gap_1_line' => '1.75rem',
     'step_label_content_gap_2_lines' => '2.75rem',
     'step_label_content_gap_3_lines' => '3.75rem',
+    'step_label_content_gap_4_lines' => '4.75rem',
+    'step_label_content_gap_5_lines' => '5.75rem',
     'merge_end_label_connector_length' => '5rem',
     'rekey_source_end_label_connector_length' => '5rem',
     'rekey_target_trunk_label_connector_length' => '5rem',

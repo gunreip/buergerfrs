@@ -23,7 +23,11 @@ it('merges multiple parallel inputs with one output dot and no negative compensa
     @$dom->loadHTML($html);
     $xpath = new DOMXPath($dom);
     foreach ($inputs as $input) {
-        expect(AnchorRegistry::get('fusion-test', 'fusion.inputs.'.$input['key']))->toBe($input['anchor']);
+        $registered = AnchorRegistry::get('fusion-test', 'fusion.inputs.'.$input['key']);
+        foreach (['x', 'y'] as $axis) {
+            expect(BoundsRegistry::evaluateRemExpression($registered[$axis]))
+                ->toEqual(BoundsRegistry::evaluateRemExpression($input['anchor'][$axis]));
+        }
     }
     expect($xpath->query('//*[@data-tw-graph-path="fusion.output.node.end" and contains(@class, "tw-graph-protocol-primitive-node")]')->length)->toBe(1);
     foreach ($inputs as $input) {

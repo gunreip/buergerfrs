@@ -376,7 +376,7 @@ it('calculates automatic step gaps from the visible step label line count', func
         />
         <x-translation-workbench::ui.tw-graph.segments.step
             :segment="[
-                'id' => 'segment.step.three-lines',
+                'id' => 'segment.step.four-lines',
                 'stepLabel' => ['text' => ['One', 'Two', 'Three', 'Four']],
             ]"
         />
@@ -387,8 +387,52 @@ it('calculates automatic step gaps from the visible step label line count', func
         ->toContain('calc(1.75rem + (0.5rem * 2))')
         ->toContain('segment.step.two-lines.label')
         ->toContain('calc(2.75rem + (0.5rem * 2))')
-        ->toContain('segment.step.three-lines.label')
-        ->toContain('calc(3.75rem + (0.5rem * 2))')
+        ->toContain('segment.step.four-lines.label')
+        ->toContain('calc(4.75rem + (0.5rem * 2))')
         ->toContain('Three')
-        ->not->toContain('Four');
+        ->toContain('Four');
 });
+
+it('adds optional Flux help to labels without replacing their connector or diagnostic identity', function (?string $tooltip): void {
+    $html = view('translation-workbench::components.ui.tw-graph.segments.label', [
+        'id' => 'label.tooltip.contract',
+        'label' => ['text' => ['Example'], 'width' => 'halfLong', 'align' => 'left', 'tooltip' => $tooltip],
+    ])->render();
+
+    expect($html)->toContain('label.tooltip.contract.connector', 'title="label.tooltip.contract', 'navigator.clipboard', 'w-72', 'items-start text-left');
+    if ($tooltip === null) {
+        expect($html)->not->toContain('data-flux-tooltip', '<button');
+    } else {
+        expect($html)->toContain('data-flux-tooltip', 'data-flux-tooltip-content', 'Example explanation', 'x-on:click.stop');
+    }
+})->with([null, 'Example explanation']);
+
+it('forwards terminal merge extension labels on either side while preserving other starts', function (string $side): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="terminal-merge-test">
+            <x-dynamic-component
+                :component="'translation-workbench::ui.tw-graph.strang.merge-'.$side"
+                id="terminal-merge"
+                :extension-count="2"
+                extension-start-length="2rem"
+                :extension-end-labels="[1 => ['text' => ['Terminal tab'], 'width' => 'half']]"
+                :extension-node-labels="[2 => ['start' => ['text' => ['Expandable tab']]]]"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, ['side' => $side]);
+    expect($html)->toContain('terminal-merge.extension.1.paths.merge-extension.end.label.bottom.1', 'Terminal tab', 'Expandable tab')
+        ->not->toContain('terminal-merge.extension.1.paths.merge-extension.start.label');
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+    $paths = [];
+    foreach ($xpath->query('//*[@data-tw-graph-bounds]') as $element) {
+        $record = json_decode($element->getAttribute('data-tw-graph-bounds'), true);
+        $paths[$record['id']] = $element;
+    }
+    $end = $paths['terminal-merge.extension.1.paths.merge-extension.end'];
+    expect($end->getAttribute('class'))->toContain('primitive-line-top-bottom', 'primitive-line-end');
+    expect($end->getAttribute('style'))->toContain('--tw-graph-protocol-local-length: 2rem');
+    $start = $paths['terminal-merge.extension.2.paths.merge-extension.start'];
+    expect($start->getAttribute('class'))->toContain('primitive-line-bottom-top', 'primitive-line-start');
+})->with(['left', 'right']);

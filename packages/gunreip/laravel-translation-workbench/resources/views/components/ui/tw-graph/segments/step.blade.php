@@ -84,24 +84,16 @@
     if (! is_array($stepLabelConfig) && filled($stepLabelConfig)) {
         $stepLabelConfig = ['text' => $stepLabelConfig];
     }
-    $stepLabelLines = collect(is_iterable(data_get($stepLabelConfig, 'text')) && ! is_string(data_get($stepLabelConfig, 'text')) ? data_get($stepLabelConfig, 'text') : [data_get($stepLabelConfig, 'text')])
-        ->filter(fn (mixed $line): bool => filled($line))
-        ->take(3)
-        ->count();
-    $stepLabelOffset = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
-        data_get($stepLabelConfig, 'offset'),
-        $labelGap ?? null,
-        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem'),
+    $stepLabelLayout = \Gunreip\TranslationWorkbench\Support\TwGraph\StepLabelLayout::resolve(
+        $stepLabelConfig, data_get($stepSegment, 'labelGap'), $labelGap ?? null,
     );
-    $autoLabelContentGap = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::stepLabelContentGap($stepLabelLines);
-    $autoLabelGap = 'calc(' . $autoLabelContentGap . ' + (' . $stepLabelOffset . ' * 2))';
-
+    $stepLabelOffset = $stepLabelLayout['offset'];
     $anchorStart = [
         'x' => data_get($stepSegment, 'anchorStart.x', '0rem'),
         'y' => data_get($stepSegment, 'anchorStart.y', '0rem'),
     ];
     $beforeLength = (string) data_get($stepSegment, 'beforeLength', '2rem');
-    $labelGap = (string) (data_get($stepSegment, 'labelGap') ?: $autoLabelGap);
+    $labelGap = $stepLabelLayout['gap'];
     $afterLength = (string) data_get($stepSegment, 'afterLength', '2rem');
     $anchorStep = data_get($stepSegment, 'anchorStep');
     $anchorBeforeEnd = $advance($anchorStart, $beforeLength);
@@ -161,7 +153,7 @@
 @if (is_array($stepLabelConfig) && filled(data_get($stepLabelConfig, 'text')))
     <x-translation-workbench::ui.tw-graph.primitives.text
         :id="data_get($stepSegment, 'id', 'segment.step') . '.label'"
-        :text="data_get($stepLabelConfig, 'text')"
+        :text="$stepLabelLayout['lines']"
         :anchor-x="data_get($anchorMiddle, 'x', '0rem')"
         :anchor-y="data_get($anchorMiddle, 'y', '0rem')"
         :side="data_get($stepLabelConfig, 'side', $stepLabelSide)"
@@ -173,10 +165,21 @@
         :half="data_get($stepLabelConfig, 'half', false) || in_array(data_get($stepLabelConfig, 'width'), ['half', 'halfWidth', 'half-width', 'half_width'], true)"
         :align="data_get($stepLabelConfig, 'align', 'center')"
         :justify="data_get($stepLabelConfig, 'justify', false)"
-        :max-lines="data_get($stepLabelConfig, 'maxLines', 3)"
+        :max-lines="max(1, $stepLabelLayout['count'])"
     />
 @endif
 
 <x-translation-workbench::ui.tw-graph.segments.path
     :segment="$afterSegment"
 />
+
+@if (\Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev && $stepLabelLayout['count'] > \Gunreip\TranslationWorkbench\Support\TwGraph\StepLabelLayout::MAX_LINES)
+    <span
+        class="tw-graph-protocol-dev-only absolute z-50"
+        data-tw-graph-step-label-mismatch="{{ data_get($stepSegment, 'id') }}"
+        style="left: calc(var(--tw-graph-protocol-trunk-x) + {{ $anchorMiddle['x'] }} + 1rem); bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ $anchorMiddle['y'] }} + 1rem);"
+        title="{{ __('Step label line mismatch: :id; supplied :actual, maximum :maximum. Text remains visible; automatic spacing is capped at five lines.', ['id' => data_get($stepSegment, 'id'), 'actual' => $stepLabelLayout['count'], 'maximum' => \Gunreip\TranslationWorkbench\Support\TwGraph\StepLabelLayout::MAX_LINES]) }}"
+    >
+        <flux:badge color="red">{{ __('Line mismatch: :actual / :maximum', ['actual' => $stepLabelLayout['count'], 'maximum' => \Gunreip\TranslationWorkbench\Support\TwGraph\StepLabelLayout::MAX_LINES]) }}</flux:badge>
+    </span>
+@endif

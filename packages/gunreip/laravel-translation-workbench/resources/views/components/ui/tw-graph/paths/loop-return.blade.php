@@ -50,25 +50,38 @@
     ];
     $stemLength = 'calc(' . $start['y'] . ' - ' . $target['y'] . ')';
     $bridgeLength = 'calc((' . $target['x'] . ' - ' . $start['x'] . ') * ' . $sign . ' - (' . $arcRadius . ' * 2))';
+    $layoutIssues = $__env->getConsumableComponentData('twGraphLayoutIssues');
+    $validLayout = true;
     foreach (['arcRadius' => $arcRadius, 'remainingStemLength' => $stemLength, 'bridgeLength' => $bridgeLength] as $prop => $length) {
         $value = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($length);
         if ($value === null || $value < 0 || ($prop === 'arcRadius' && $value == 0)) {
-            throw new \InvalidArgumentException("paths.loop-return {$prop} cannot fit the supplied anchors; adjust the authored layout.");
+            if ($layoutIssues === null) {
+                throw new \InvalidArgumentException("paths.loop-return {$prop} cannot fit the supplied anchors; adjust the authored layout.");
+            }
+            $layoutIssues->add('paths.loop-return', $id, $prop, $value, $prop === 'arcRadius' ? '> 0rem' : '>= 0rem');
+            $validLayout = false;
         }
     }
-    $stemEnd = ['x' => $start['x'], 'y' => $target['y']];
-    $bridgeStart = $point($stemEnd, "{$arcRadius} * {$sign}", "{$arcRadius} * -1");
-    $bridgeEnd = $point($target, "{$arcRadius} * " . -$sign, "{$arcRadius} * -1");
-    $common = ['color' => $routeColor,  'zIndex' => $zIndex,
-        'devCounterColor' => $routeColor, 'nodeStart' => false, 'nodeEnd' => true,
-        'nodeEndDot' => false, 'jointArrowEnd' => true];
-    $counterStart = (int) $counterStart;
-    foreach (['anchorNode-start' => $start, 'anchorNode-end' => $target] as $key => $anchor) {
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($graph, $id . '.' . $key, array_replace($anchor, [
-            'source' => $id, 'sourceType' => 'paths.loop-return', 'sourceAnchor' => $key,
-            'direction' => $key === 'anchorNode-start' ? 'top-bottom' : 'bottom-top', 'color' => $routeColor,
-        ]));
-    }
+    if ($validLayout) {
+        $provenance = $__env->getConsumableComponentData('twGraphCalculatedLengths');
+        $provenance?->record($id . '.stem', 'paths.loop-return', $id, 'remainingStemLength',
+            ['start' => $start, 'target' => $target], 'Vertical distance between the supplied anchors.');
+        $provenance?->record($id . '.bridge', 'paths.loop-return', $id, 'bridgeLength',
+            ['start' => $start, 'target' => $target, 'arcRadius' => $arcRadius, 'side' => $side],
+            'Horizontal distance between anchors minus both arc radii.');
+        $stemEnd = ['x' => $start['x'], 'y' => $target['y']];
+        $bridgeStart = $point($stemEnd, "{$arcRadius} * {$sign}", "{$arcRadius} * -1");
+        $bridgeEnd = $point($target, "{$arcRadius} * " . -$sign, "{$arcRadius} * -1");
+        $common = ['color' => $routeColor,  'zIndex' => $zIndex,
+            'devCounterColor' => $routeColor, 'nodeStart' => false, 'nodeEnd' => true,
+            'nodeEndDot' => false, 'jointArrowEnd' => true];
+        $counterStart = (int) $counterStart;
+        foreach (['anchorNode-start' => $start, 'anchorNode-end' => $target] as $key => $anchor) {
+            \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($graph, $id . '.' . $key, array_replace($anchor, [
+                'source' => $id, 'sourceType' => 'paths.loop-return', 'sourceAnchor' => $key,
+                'direction' => $key === 'anchorNode-start' ? 'top-bottom' : 'bottom-top', 'color' => $routeColor,
+            ]));
+        }
 
 @endphp
 @if (\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($stemLength) > 0)
@@ -94,6 +107,7 @@
 ])" />
 
 @php
+    } // Only publish anchors and geometry for a valid return.
     } finally {
         $twGraphRegionDefinition = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::finish(
             $twGraphRegionFrame, $id ?? null, $resolvedColor ?? $color ?? 'sky',

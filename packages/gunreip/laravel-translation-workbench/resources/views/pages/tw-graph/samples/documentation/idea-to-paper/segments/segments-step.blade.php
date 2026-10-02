@@ -3,7 +3,7 @@
         <flux:callout color="indigo" icon="file-text" class="min-w-0">
             <flux:callout.heading>{{ __('Step segment') }}</flux:callout.heading>
             <flux:callout.text>
-                {{ __('Both vertical directions are shown as individually authored examples. A step describes a status or reason inside the path, such as a source being inactive. It composes a line before the label, centered text, and a line after the label. Caps mark the interruption around the text. The label gap is calculated from the text line count and offset; subsequent anchors are calculated from the starting anchor and section lengths.') }}
+                {{ __('Both vertical directions are shown as individually authored examples. A step describes a status or reason inside the path, such as a source being inactive. It composes a line before the label, centered text, and a line after the label. Caps mark the interruption around the text. The label gap is calculated from up to five authored text lines and the offset; subsequent anchors use the same gap. Excess lines remain visible and produce a DEV mismatch, including when labelGap is explicit.') }}
             </flux:callout.text>
             @php
                 $stepExampleSource = \Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\ExampleSource::fromView(
@@ -45,6 +45,45 @@
                     <flux:accordion.content>
                         <x-translation-workbench::ui.tw-graph.code-box
                             class="mt-3">{{ $stepExampleSource->example('segment-step-top-bottom') }}</x-translation-workbench::ui.tw-graph.code-box>
+                    </flux:accordion.content>
+                </flux:accordion.item>
+                <flux:accordion.item>
+                    <flux:callout icon="code" color="indigo">
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="five-lines"
+                            variant="accordion"
+                            :prefix-text="__('Complete example')"
+                        >{{ __('5 lines · automatic gap') }}</x-translation-workbench::ui.common.heading-counter>
+                    </flux:callout>
+                    <flux:accordion.content>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-3">{{ $stepExampleSource->example('segment-step-five-lines') }}</x-translation-workbench::ui.tw-graph.code-box>
+                    </flux:accordion.content>
+                </flux:accordion.item>
+                <flux:accordion.item>
+                    <flux:callout icon="code" color="indigo">
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="six-lines"
+                            variant="accordion"
+                            :prefix-text="__('Complete example')"
+                        >{{ __('6 lines · DEV mismatch') }}</x-translation-workbench::ui.common.heading-counter>
+                    </flux:callout>
+                    <flux:accordion.content>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-3">{{ $stepExampleSource->example('segment-step-six-lines') }}</x-translation-workbench::ui.tw-graph.code-box>
+                    </flux:accordion.content>
+                </flux:accordion.item>
+                <flux:accordion.item>
+                    <flux:callout icon="code" color="indigo">
+                        <x-translation-workbench::ui.common.heading-counter
+                            example="six-lines-manual"
+                            variant="accordion"
+                            :prefix-text="__('Complete example')"
+                        >{{ __('6 lines · manual gap + mismatch') }}</x-translation-workbench::ui.common.heading-counter>
+                    </flux:callout>
+                    <flux:accordion.content>
+                        <x-translation-workbench::ui.tw-graph.code-box
+                            class="mt-3">{{ $stepExampleSource->example('segment-step-six-lines-manual') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
             </flux:accordion>
@@ -123,7 +162,7 @@
                                     <code>auto</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    {{ __('Gap between line sections, based on up to three non-empty text lines plus twice the label offset. Can be set explicitly.') }}
+                                    {{ __('Gap between line sections, based on up to five authored text lines plus twice the label offset. Browser wrapping is not counted. An explicit value takes precedence.') }}
                                 </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
@@ -263,7 +302,7 @@
                                     <code>stepLabel.offset</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    <code>{{ __('inherited labelGap / graph label_offset') }}</code>
+                                    <code>{{ __('canvas label-gap / graph label_offset') }}</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Label offset and padding used in the automatic gap; fallback 0.75rem.') }}
@@ -302,17 +341,7 @@
                                     {{ __('Justify the text.') }}
                                 </flux:table.cell>
                             </flux:table.row>
-                            <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    <code>stepLabel.maxLines</code>
-                                </flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    <code>3</code>
-                                </flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    {{ __('Maximum displayed lines. The automatic gap calculation counts at most three lines.') }}
-                                </flux:table.cell>
-                            </flux:table.row>
+
                             <flux:table.row>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     <code>color</code>
@@ -398,6 +427,7 @@
         </flux:callout>
         <flux:callout color="emerald" class="min-w-0">
             <flux:callout.heading icon="eye">{{ __('Step segment preview') }}</flux:callout.heading>
+            <flux:callout.text class="mb-3">{{ __('Compare five and six authored lines with automatic and explicit spacing. Enable DEV mode to see the mismatch badges; switching DEV off hides diagnostics without removing text.') }}</flux:callout.text>
             <x-translation-workbench::ui.tw-graph.preview-tools :dev="$dev ?? true" :coordinates="$coordinates ?? false">
                 <div class="mt-4 grid min-w-0 gap-4 xl:grid-cols-2">
                     <div class="min-w-0">
@@ -476,6 +506,138 @@
                                 />
                             </x-translation-workbench::ui.tw-graph>
                             {{-- segment-step-top-bottom:end --}}
+                        </div>
+                    </div>
+                    <div class="min-w-0">
+                        <x-translation-workbench::ui.common.heading-counter example="five-lines" size="sm">
+                            {{ __('5 lines · automatic gap') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <flux:text class="mt-2 text-sm">{{ __('Five authored lines reserve 7.25rem with the default label offset. No mismatch is expected.') }}</flux:text>
+                        <div class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                            {{-- segment-step-five-lines:start --}}
+                            <x-translation-workbench::ui.tw-graph
+                                graph-id="idea-to-paper-segments-step-five-lines"
+                                :dev="true"
+                                :coordinates="true"
+                                min-height="24rem"
+                                min-width="24rem"
+                                horizontal-padding="4rem"
+                            >
+                                <x-translation-workbench::ui.tw-graph.segments.step
+                                    :segment="[
+                                        'id' => 'literature.segments.step.five-lines',
+                                        'direction' => 'bottom-top',
+                                        'anchorStart' => ['x' => '0rem', 'y' => '3rem'],
+                                        'beforeLength' => '3rem',
+                                        'afterLength' => '3rem',
+                                        'nodeStart' => true,
+                                        'nodeEnd' => true,
+                                        'stepCaps' => true,
+                                        'stepLabel' => [
+                                            'text' => [
+                                                'Review request',
+                                                'Check source',
+                                                'Validate content',
+                                                'Record decision',
+                                                'Complete review',
+                                            ],
+                                            'width' => 'default',
+                                            'align' => 'center',
+                                        ],
+                                        'color' => 'cyan',
+                                    ]"
+                                />
+                            </x-translation-workbench::ui.tw-graph>
+                            {{-- segment-step-five-lines:end --}}
+                        </div>
+                    </div>
+                    <div class="min-w-0">
+                        <x-translation-workbench::ui.common.heading-counter example="six-lines" size="sm">
+                            {{ __('6 lines · DEV mismatch') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <flux:text class="mt-2 text-sm">{{ __('All six lines remain visible. Automatic spacing stays at 7.25rem; DEV mode shows a 6 / 5 mismatch.') }}</flux:text>
+                        <div class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                            {{-- segment-step-six-lines:start --}}
+                            <x-translation-workbench::ui.tw-graph
+                                graph-id="idea-to-paper-segments-step-six-lines"
+                                :dev="true"
+                                :coordinates="true"
+                                min-height="24rem"
+                                min-width="24rem"
+                                horizontal-padding="4rem"
+                            >
+                                <x-translation-workbench::ui.tw-graph.segments.step
+                                    :segment="[
+                                        'id' => 'literature.segments.step.six-lines',
+                                        'direction' => 'bottom-top',
+                                        'anchorStart' => ['x' => '0rem', 'y' => '3rem'],
+                                        'beforeLength' => '3rem',
+                                        'afterLength' => '3rem',
+                                        'nodeStart' => true,
+                                        'nodeEnd' => true,
+                                        'stepCaps' => true,
+                                        'stepLabel' => [
+                                            'text' => [
+                                                'Review request',
+                                                'Check source',
+                                                'Validate content',
+                                                'Record decision',
+                                                'Complete review',
+                                                'Additional explanation',
+                                            ],
+                                            'width' => 'default',
+                                            'align' => 'center',
+                                        ],
+                                        'color' => 'amber',
+                                    ]"
+                                />
+                            </x-translation-workbench::ui.tw-graph>
+                            {{-- segment-step-six-lines:end --}}
+                        </div>
+                    </div>
+                    <div class="min-w-0">
+                        <x-translation-workbench::ui.common.heading-counter example="six-lines-manual" size="sm">
+                            {{ __('6 lines · manual gap + mismatch') }}
+                        </x-translation-workbench::ui.common.heading-counter>
+                        <flux:text class="mt-2 text-sm">{{ __('The explicit labelGap of 9rem takes precedence. The 6 / 5 mismatch remains because the authored text still exceeds five lines.') }}</flux:text>
+                        <div class="mt-3 overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                            {{-- segment-step-six-lines-manual:start --}}
+                            <x-translation-workbench::ui.tw-graph
+                                graph-id="idea-to-paper-segments-step-six-lines-manual"
+                                :dev="true"
+                                :coordinates="true"
+                                min-height="24rem"
+                                min-width="24rem"
+                                horizontal-padding="4rem"
+                            >
+                                <x-translation-workbench::ui.tw-graph.segments.step
+                                    :segment="[
+                                        'id' => 'literature.segments.step.six-lines-manual',
+                                        'direction' => 'bottom-top',
+                                        'anchorStart' => ['x' => '0rem', 'y' => '3rem'],
+                                        'beforeLength' => '3rem',
+                                        'afterLength' => '3rem',
+                                        'labelGap' => '9rem',
+                                        'nodeStart' => true,
+                                        'nodeEnd' => true,
+                                        'stepCaps' => true,
+                                        'stepLabel' => [
+                                            'text' => [
+                                                'Review request',
+                                                'Check source',
+                                                'Validate content',
+                                                'Record decision',
+                                                'Complete review',
+                                                'Additional explanation',
+                                            ],
+                                            'width' => 'default',
+                                            'align' => 'center',
+                                        ],
+                                        'color' => 'violet',
+                                    ]"
+                                />
+                            </x-translation-workbench::ui.tw-graph>
+                            {{-- segment-step-six-lines-manual:end --}}
                         </div>
                     </div>
                 </div>

@@ -86,8 +86,15 @@
         />
     @endforeach
     <div data-tw-graph-bounds-warning hidden class="tw-graph-protocol-dev-only absolute left-2 top-16 z-50 max-w-xl rounded border border-amber-500 bg-amber-50 p-2 text-xs text-amber-950">
-        <strong>Bounds mismatch — geometry was not overridden</strong>
-        <pre data-tw-graph-bounds-warning-details class="max-h-48 overflow-auto whitespace-pre-wrap"></pre>
+        <strong>{{ __('Bounds mismatch — geometry was not overridden') }}</strong>
+        <div
+            data-tw-graph-bounds-warning-details
+            data-axis="{{ __('Boundary') }}"
+            data-expected="{{ __('Expected') }}"
+            data-actual="{{ __('Measured') }}"
+            data-delta="{{ __('Difference') }}"
+            class="mt-2 max-h-80 overflow-auto"
+        ></div>
     </div>
     <span data-tw-graph-bounds-state class="tw-graph-protocol-dev-only absolute bottom-2 right-2 z-50 rounded bg-zinc-900 px-2 py-1 text-xs text-white">Bounds: geometry calculated; text dimensions provisional</span>
         <span data-tw-graph-content-bounds data-tw-graph-dev-box="{{ $graphId }}.content-bounds" class="tw-graph-protocol-dev-only pointer-events-none absolute z-40" aria-hidden="true"

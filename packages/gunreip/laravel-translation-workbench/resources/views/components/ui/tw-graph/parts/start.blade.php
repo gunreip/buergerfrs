@@ -172,6 +172,10 @@
         };
         $startLabel['side'] = $startLabelSide;
     }
+    $__env->getConsumableComponentData('twGraphCalculatedLengths')?->recordProp(
+        $id, 'parts.start', $id, 'length', $length !== null,
+    );
+
     $nodeEnd = $nodeEnd === true && ($nodeLabelRight || $nodeLabelLeft)
         ? [$nodeLabelRight, $nodeLabelLeft]
         : $nodeEnd;

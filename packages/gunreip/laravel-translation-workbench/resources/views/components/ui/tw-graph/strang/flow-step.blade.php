@@ -100,22 +100,16 @@
             default => ['x' => $x, 'y' => $add($y, $length)],
         };
     };
-    $stepLabelConfig = $stepLabel;
-    if (! is_array($stepLabelConfig) && filled($stepLabelConfig)) {
-        $stepLabelConfig = ['text' => $stepLabelConfig];
-    }
-    $stepLabelLines = collect(is_iterable(data_get($stepLabelConfig, 'text')) && ! is_string(data_get($stepLabelConfig, 'text')) ? data_get($stepLabelConfig, 'text') : [data_get($stepLabelConfig, 'text')])
-        ->filter(fn (mixed $line): bool => filled($line))
-        ->take(3)
-        ->count();
-    $resolvedLabelGap = $labelGap ?: 'calc('
-        . \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::stepLabelContentGap($stepLabelLines)
-        . ' + ('
-        . \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('label_offset', '0.75rem')
-        . ' * 2))';
+    $stepLabelLayout = \Gunreip\TranslationWorkbench\Support\TwGraph\StepLabelLayout::resolve(
+        $stepLabel, $labelGap, $__env->getConsumableComponentData('labelGap'),
+    );
+    $resolvedLabelGap = $stepLabelLayout['gap'];
     $anchorBeforeEnd = $advance($anchorStart, (string) ($beforeLength ?? '2rem'));
     $anchorAfterStart = $advance($anchorBeforeEnd, $resolvedLabelGap);
     $anchorEnd = $advance($anchorAfterStart, (string) ($afterLength ?? '2rem'));
+    $lengthProvenance = $__env->getConsumableComponentData('twGraphCalculatedLengths');
+    $lengthProvenance?->recordProp($id . '.stem.before', 'strang.flow-step', $id, 'before-length', $beforeLength !== null);
+    $lengthProvenance?->recordProp($id . '.stem.after', 'strang.flow-step', $id, 'after-length', $afterLength !== null);
 
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, $id . '.anchorNode-end', [
         'x' => $anchorEnd['x'],
@@ -135,7 +129,7 @@
         'beforeColor' => $beforeColor,
         'labelGap' => $labelGap,
         'afterLength' => $afterLength ?? '2rem',
-        'stepLabel' => $stepLabel,
+        'stepLabel' => array_replace(is_array($stepLabel) ? $stepLabel : ['text' => $stepLabel], ['offset' => $stepLabelLayout['offset']]),
         'nodeStart' => false,
         'nodeEnd' => $nodeEndValue,
         'nodeEndDot' => $nodeEndDot,

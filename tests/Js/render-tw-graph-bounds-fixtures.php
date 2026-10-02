@@ -10,7 +10,7 @@ $base = $root.'/packages/gunreip/laravel-translation-workbench/resources/views/p
 $dir = $argv[1] ?? sys_get_temp_dir().'/tw-graph-bounds-audit';
 @mkdir($dir);
 $out = [];
-foreach (['canvas', 'primitives', 'segments', 'parts', 'paths', 'strang', 'flow'] as $area) {
+foreach (['overview', 'canvas', 'primitives', 'segments', 'parts', 'paths', 'strang', 'flow'] as $area) {
     foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base.'/'.$area, FilesystemIterator::SKIP_DOTS)) as $file) {
         $name = $file->getPathname();
         if (! str_ends_with($name, '.blade.php') || ! preg_match('/<x-translation-workbench::ui\.tw-graph(?:\s|>)/', file_get_contents($name))) {

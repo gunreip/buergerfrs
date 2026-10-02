@@ -220,10 +220,10 @@
                                 <flux:table.cell class="whitespace-normal align-top">Badge-only color override.</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">step-label.maxLines</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">3</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Maximum displayed text lines.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>step-label.text / label-gap</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Authored text lines / length') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>1–5 / auto</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Automatic spacing uses explicit text lines, capped at five, plus the label offset on both sides. Browser wrapping is not counted. More than five lines remain visible and produce a DEV mismatch. An explicit label-gap takes precedence.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
                                 <flux:table.cell class="whitespace-normal align-top">step-label.side</flux:table.cell>

@@ -117,9 +117,10 @@ it('requires preview code boxes across Idea to Paper to use the shared source he
         foreach ($boxes[1] as $body) {
             expect(trim($body))->toStartWith('{{')->toEndWith('}}');
             $directSource = preg_match('/\$\w+->(?:example|changedProps)\(/', $body) === 1;
+            $fluentSource = preg_match('/ExampleSource::fromView\([^)]*\)->(?:example|changedProps)\(/', $body) === 1;
             $derivedSource = preg_match('/^\s*\{\{\s*\$(\w+)\s*\}\}\s*$/', $body, $variable)
                 && in_array($variable[1], $derivedVariables[1], true);
-            expect($directSource || $derivedSource)->toBeTrue($relative.' must derive its code from the authored preview.');
+            expect($directSource || $derivedSource || $fluentSource)->toBeTrue($relative.' must derive its code from the authored preview.');
             $count++;
         }
     }

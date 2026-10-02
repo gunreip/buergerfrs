@@ -164,7 +164,7 @@ it('lets flow steps attach to registered flow start anchors', function (): void 
 
     expect($html)
         ->toContain('sample.flow.1.process.step-1.stem.before')
-        ->toContain('--tw-graph-protocol-start-y: calc(0rem + 7rem)')
+        ->toContain('--tw-graph-protocol-start-y: 7rem;')
         ->toContain('Attached step');
 });
 

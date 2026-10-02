@@ -3,12 +3,44 @@
     class="relative mt-2 border-t border-zinc-200 pt-2 dark:border-zinc-700"
     data-tw-graph-dev-legend
     x-cloak
-    x-show="previewDev && (previewBoxes || previewCoordinates || previewGrid)"
+    x-show="previewDev && (previewBoxes || previewCoordinates || previewGrid || previewCalculated)"
 >
     <x-translation-workbench::ui.common.component-marker name="translation-workbench::ui.tw-graph.preview-legend" />
     <flux:heading class="mb-3">{{ __('DEV legend') }}</flux:heading>
     {{-- <div class="mt-1 flex min-h-24 flex-wrap content-start gap-x-4 gap-y-1 text-xs text-zinc-600 dark:text-zinc-300"> --}}
-    <div class="mt-1 grid min-h-36 grid-cols-3 content-start gap-x-4 gap-y-1 text-sm text-zinc-600 dark:text-zinc-300">
+    <div class="mt-1 grid min-h-12 grid-cols-3 content-start gap-x-4 gap-y-1 text-sm text-zinc-600 dark:text-zinc-300">
+        <div
+            class="contents"
+            data-tw-graph-length-legend
+            x-show="previewDev && previewCalculated"
+        >
+            <span class="inline-flex items-center gap-2">
+                <span
+                    class="inline-flex h-5 w-10 items-center justify-center rounded-sm border border-zinc-700 bg-white text-red-600"
+                >
+                    <flux:icon.drafting-compass class="size-4" />
+                </span>
+                {{ __('Calculated length — click for details and copying') }}
+            </span>
+            <span class="inline-flex items-center gap-2">
+                <span
+                    class="inline-flex h-5 w-10 items-center justify-center rounded-sm border border-zinc-700 bg-white"
+                    style="color:#2563eb"
+                >
+                    <flux:icon.drafting-compass class="size-4" />
+                </span>
+                {{ __('Length set by prop — click for details') }}
+            </span>
+            <span class="inline-flex items-center gap-2">
+                <span
+                    class="inline-flex h-5 w-10 items-center justify-center rounded-sm border border-zinc-700 bg-white"
+                    style="color:#71717a"
+                >
+                    <flux:icon.drafting-compass class="size-4" />
+                </span>
+                {{ __('Default length — click for details') }}
+            </span>
+        </div>
         <span
             class="inline-flex items-center gap-2"
             x-show="previewBoxes"

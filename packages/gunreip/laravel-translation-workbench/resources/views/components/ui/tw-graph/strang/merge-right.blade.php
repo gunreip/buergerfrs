@@ -23,6 +23,9 @@
         :extension-node-labels="[1 => [4 => ['top' => 'Root #1']]]"
     />
 
+    extensionEndLabels[index] optionally closes an outer extension with an end
+    cap and label instead of its start marker. Other extensions keep their start.
+
     Component chain:
     tw-graph -> strang.merge-right -> paths.merge -> segments.* -> primitives.*
 
@@ -74,6 +77,7 @@
     'extensionArcRadius' => null,
     'extensionArcRadiuss' => [],
     'extensionNodeLabels' => [],
+    'extensionEndLabels' => [],
     'counterStart' => 1,
     'zIndex' => 10,
 ])
@@ -96,6 +100,10 @@
     $id = filled($id)
         ? (string) $id
         : $resolvedGraphId . '.strang.merge-right.' . $resolvedComponentCounter;
+    \Gunreip\TranslationWorkbench\Support\TwGraph\MergeLengthProvenance::record(
+        $__env->getConsumableComponentData('twGraphCalculatedLengths'), 'strang.merge-right', $id, $id . '.paths.merge',
+        compact('startLength', 'startShiftLength', 'bridgeLength', 'stemLengths', 'stemContinuation'),
+    );
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($color, $inheritedColor ?? null, 'zinc');
 
     $resolvedLineLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::localOrGraphString($lineLength ?? null, 'line_length', '4rem');
@@ -415,6 +423,31 @@
 
 
 @foreach (array_reverse($extensionAnchors, true) as $extensionIndex => $extensionAnchor)
+    @php
+        $extensionLengthProps = [
+            'startLength' => $extensionStartLength,
+            'startShiftLength' => $extensionStartShiftLength,
+            'stemLength' => data_get($extensionStemLengths, $extensionIndex, $extensionStemLength),
+            'bridgeLength' => data_get($extensionBridgeContinuations, $extensionIndex, $extensionBridgeLength),
+            'stemContinuation' => data_get($extensionStemContinuations, $extensionIndex, []),
+        ];
+        $extensionLengthNames = [
+            'startLength' => 'extension-start-length',
+            'startShiftLength' => 'extension-start-shift-length',
+            'stemLength' => array_key_exists($extensionIndex, (array) $extensionStemLengths)
+                ? 'extension-stem-lengths.' . $extensionIndex : 'extension-stem-length',
+            'bridgeLength' => array_key_exists($extensionIndex, (array) $extensionBridgeContinuations)
+                ? 'extension-bridge-continuations.' . $extensionIndex : 'extension-bridge-length',
+        ];
+        foreach ((array) $extensionLengthProps['stemContinuation'] as $continuationIndex => $entry) {
+            $extensionLengthNames['stemContinuation.' . $continuationIndex] = 'extension-stem-continuations.' . $extensionIndex . '.' . $continuationIndex;
+        }
+        \Gunreip\TranslationWorkbench\Support\TwGraph\MergeLengthProvenance::record(
+            $__env->getConsumableComponentData('twGraphCalculatedLengths'), 'strang.merge-right', $id,
+            $id . '.extension.' . $extensionIndex . '.paths.merge-extension',
+            $extensionLengthProps, true, $extensionLengthNames,
+        );
+    @endphp
     <x-translation-workbench::ui.tw-graph.paths.merge-extension
         :id="$id . '.extension.' . $extensionIndex . '.paths.merge-extension'"
         side="right"
@@ -426,6 +459,7 @@
         :bridge-length="$extensionResolvedBridgeLengths[$extensionIndex]"
         :arc-radius="$extensionResolvedArcRadiuss[$extensionIndex]"
         :node-labels="data_get($extensionNodeLabels, $extensionIndex, [])"
+        :end-label="data_get($extensionEndLabels, $extensionIndex)"
         :color="$resolvedColor"
         :z-index="$zIndex"
         :counter-start="$extensionCounterStarts[$extensionIndex]"

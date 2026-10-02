@@ -5,9 +5,9 @@
             color="indigo"
             icon="file-text"
         >
-            <flux:callout.heading>{{ __('WHILE with BREAK') }}</flux:callout.heading>
+            <flux:callout.heading>{{ __('BREAK / FINALLY — horizontal decision') }}</flux:callout.heading>
             <flux:callout.text>
-                {{ __('WHILE checks for another item before each iteration. IF mayProcess(item) is TRUE, the body processes the item and advances the index. FALSE executes BREAK and skips all remaining iterations. Both BREAK and normal exhaustion reach the same continuation outside the loop. An empty collection skips the body.') }}
+                {{ __('Each item is handled inside TRY. TRUE processes the item and advances the index; FALSE requests BREAK. FINALLY cleans up exactly once on either route before normal iteration resumes or BREAK leaves the loop. An empty collection never enters TRY or FINALLY.') }}
             </flux:callout.text>
 
             <x-translation-workbench::ui.common.separator-deep-reference-links />
@@ -32,13 +32,14 @@
                             example="break-test-left-example"
                             variant="accordion"
                             :prefix-text="__('Complete example')"
-                        >{{ __('side="left"') }}</x-translation-workbench::ui.common.heading-counter>
+                        >{{ __('Body right / decision left') }}</x-translation-workbench::ui.common.heading-counter>
                     </flux:callout>
                     <flux:accordion.content>
                         <x-translation-workbench::ui.tw-graph.code-box
                             class="mt-3">{{ $breakSource->example('break-test-left-example') }}</x-translation-workbench::ui.tw-graph.code-box>
                     </flux:accordion.content>
                 </flux:accordion.item>
+
             </flux:accordion>
 
             <x-translation-workbench::ui.common.separator-props-used-tw-graph />
@@ -56,69 +57,122 @@
                         </flux:table.columns>
                         <flux:table.rows>
                             <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>attach-to<br>anchor-start</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>null / component default</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">{{ __('Connects each explicitly authored component to its source anchor.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    <code>loop.side<br>action-label.return</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>left / true</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    {{ __('Right places the body to the right; false leaves the body open for the U-turn.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>condition-label.afterLength</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>2rem</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">{{ __('Reserves vertical room for the IF and the loop return; explicitly 27rem.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    <code>condition-label.afterLength</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>2rem</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    {{ __('Explicitly 32rem leaves room for the horizontal decision and cleanup.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>action-label.return</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>true</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">{{ __('False leaves the WHILE body open for the independent IF.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>question.geometry</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    {{ __('LabelBridge geometry explicitly uses a 13rem label, 2rem incoming bridge and 16rem outgoing bridge.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>action-label.beforeLength<br>afterLength</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>4rem</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">{{ __('Controls the bridges around Read current item; explicitly 2rem each.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>question.lineJumps</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>[]</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    {{ __('The outgoing question bridge crosses loop.condition.stem.after without joining it.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>true-bridge-length<br>stem-length</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>2rem / 4rem</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">{{ __('Controls WHILE entry and exhausted exit; explicitly 4rem and 5.5rem.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    <code>split.anchor-start<br>direction</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>required / right-left</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    {{ __('The question bridge endpoint supplies the one input of the binary split.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>if-start.return<br>if-end.return</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>true</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">{{ __('Both IF lanes remain open: TRUE returns to WHILE, FALSE exits through BREAK.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    <code>split.outputs[].key<br>offset<br>color<br>label</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>required / required /
+                                        inherited / null</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    {{ __('TRUE is 6rem above and FALSE 6rem below the input. Each output owns a named anchor and an informational label.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>if-end.returnOffset</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>12rem</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">{{ __('Explicitly 4rem to clear the independent green return stem.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    <code>split.arc-radius<br>min-stem-length</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>1.375rem / 1rem</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    {{ __('The splitter reuses fusion segment geometry with one consistent radius and no short compensators.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>if-end.exitDirection</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>direction</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">{{ __('Explicitly bottom-top: BREAK immediately turns upward instead of following the downward IF direction.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    <code>process.geometry<br>break-action.geometry</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    {{ __('The action bridges explicitly use 2rem incoming length and 2rem or 8rem outgoing length.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>if-end.lineJumps</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>[]</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">{{ __('Marks the crossing of the BREAK bridge and the independent body-return stem.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>break-action.lineJumps</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>[]</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    {{ __('The BREAK lane crosses normal-finally.stem.before without joining it.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>return-to</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>null</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">{{ __('The green path returns to loop.anchorNode-return, before the WHILE condition.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    <code>normal-finally.before-length</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>4rem</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    {{ __('Explicitly 10rem places cleanup below the independent BREAK bridge.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>length<br>bridge-length</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>component default</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">{{ __('The upper join uses explicit clearance and lengths derived from the two endpoint anchors.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>return-to</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    {{ __('Only the normal FINALLY returns to the WHILE condition; BREAK joins normal-exit after its cleanup.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>node-end<br>dev-counter-end</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>component default</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">{{ __('Avoids a duplicate marker at the shared exit; the normal exit owns the Dot.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    <code>counter-start<br>counter-end</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>component default</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    {{ __('Numbers the composed components continuously from 1 to 23.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>counter-start<br>counter-end</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top"><code>component default</code></flux:table.cell>
-                                <flux:table.cell class="wrap-break-word whitespace-normal align-top">{{ __('Keeps the DEV counters continuous across the separate components.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>question.stem.length</code>
+                                </flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>inherited
+                                        (parts.start)</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">
+                                    {{ __('Explicitly 6rem downward between the body exit and U-turn; the question and split follow this lower anchor.') }}
+                                </flux:table.cell>
                             </flux:table.row>
                         </flux:table.rows>
                     </flux:table>
@@ -129,7 +183,7 @@
                 example="break-test"
             >
                 <flux:callout.text class="mt-2 text-sm">
-                    {{ __('An unlabelled BREAK exits the innermost loop. Here the IF does not introduce a new BREAK target. Application helpers, enclosing functions and imports are omitted.') }}
+                    {{ __('The two FINALLY boxes represent the same source block on two different control-flow routes, not two cleanup calls per item. Cleanup completes normally here; exceptions and control transfers from FINALLY are outside this example. C uses explicit cleanup; C++ uses a scope guard.') }}
                 </flux:callout.text>
             </x-translation-workbench::ui.tw-graph.language-examples>
         </flux:callout>
@@ -138,9 +192,10 @@
             class="min-w-0"
             color="emerald"
         >
-            <flux:callout.heading icon="eye">{{ __('WHILE with BREAK — Preview') }}</flux:callout.heading>
+            <flux:callout.heading icon="eye">{{ __('BREAK / FINALLY — horizontal decision — Preview') }}
+            </flux:callout.heading>
             <flux:callout.text class="mb-3">
-                {{ __('Both layouts show the same scope and execution order. Follow green success and red handled-break routes to their actual continuation. Protected operations may throw; selection, bookkeeping, handlers and cleanup complete normally in these examples. Unhandled propagation is outside the illustrated paths.') }}
+                {{ __('Read current item runs to the right. A U-turn leads into the horizontal TRY/IF question, then a line-jump crosses the WHILE condition stem. parts.split distributes the flow left into TRUE and FALSE. Each route reaches FINALLY before its own return or exit.') }}
             </flux:callout.text>
             <x-translation-workbench::ui.tw-graph.preview-tools
                 :dev="$dev ?? true"
@@ -150,7 +205,7 @@
                     <x-translation-workbench::ui.common.heading-counter
                         example="break-test-left-example"
                         size="sm"
-                    >{{ __('side="left"') }}</x-translation-workbench::ui.common.heading-counter>
+                    >{{ __('Body right / decision left') }}</x-translation-workbench::ui.common.heading-counter>
                     <div
                         class="overflow-x-auto rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
                         {{-- break-test-left-example:start --}}
@@ -175,14 +230,14 @@
                             <x-translation-workbench::ui.tw-graph.strang.flow-while
                                 id="literature.break.test.loop"
                                 attach-to="literature.break.test.initialize.anchorNode-end"
-                                side="left"
+                                side="right"
                                 true-bridge-length="4rem"
-                                stem-length="5.5rem"
+                                stem-length="3.5rem"
                                 :condition-label="[
                                     'text' => ['WHILE index < count?'],
                                     'beforeLength' => '2rem',
                                     'labelGap' => '4rem',
-                                    'afterLength' => '27rem',
+                                    'afterLength' => '17.5rem',
                                     'width' => 'default',
                                     'align' => 'center',
                                 ]"
@@ -195,74 +250,237 @@
                                     'color' => 'green',
                                 ]"
                                 :true-label="['text' => ['TRUE'], 'width' => 'half', 'color' => 'green']"
-                                :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'right', 'color' => 'red']"
+                                :false-label="['text' => ['FALSE'], 'width' => 'half', 'side' => 'left', 'color' => 'red']"
                                 color="cyan"
                             />
-                            {{-- TRUE processes and advances; FALSE executes BREAK without returning to the WHILE condition. --}}
-                            <x-translation-workbench::ui.tw-graph.strang.flow-if-else
-                                id="literature.break.test.decision"
-                                attach-to="literature.break.test.loop.body.anchorNode-end"
+                            {{-- Lower the U-turn explicitly before routing the question back to the left. --}}
+                            <x-translation-workbench::ui.tw-graph.parts.start
+                                id="literature.break.test.question.stem"
+                                :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    'idea-to-paper-break-test-left',
+                                    'literature.break.test.loop.body.anchorNode-end',
+                                )"
                                 direction="top-bottom"
-                                side="left"
-                                bridge-length="2rem"
-                                stem-length="4rem"
-                                before-length="1rem"
-                                label-gap="4rem"
-                                after-length="1rem"
-                                :condition-label="[
-                                    'text' => ['IF mayProcess(item)?'],
+                                length="4rem"
+                                :gradient="false"
+                                :joint-arrow-end="true"
+                                :dev-counter-end="7"
+                                color="sky"
+                            />
+                            @php
+                                $graph = 'idea-to-paper-break-test-left';
+                                $radius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString(
+                                    'arc_radius',
+                                    '2.75rem',
+                                );
+                                $bodyEnd = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    $graph,
+                                    'literature.break.test.question.stem.anchorNode-end',
+                                );
+                                $questionStart = [
+                                    'x' => 'calc(' . $bodyEnd['x'] . ' - ' . $radius . ')',
+                                    'y' => 'calc(' . $bodyEnd['y'] . ' - ' . $radius . ')',
+                                ];
+                                $questionGeometry = \Gunreip\TranslationWorkbench\Support\TwGraph\LabelBridge::geometry(
+                                    $questionStart,
+                                    'right-left',
+                                    '13rem',
+                                    '2rem',
+                                    '12rem',
+                                );
+                            @endphp
+                            <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                'id' => 'literature.break.test.question.turn',
+                                'anchorStart' => $bodyEnd,
+                                'anchorEnd' => $questionStart,
+                                'startAnchor' => 'e',
+                                'endAnchor' => 's',
+                                'arcRadius' => $radius,
+                                'nodeEnd' => true,
+                                'nodeEndDot' => false,
+                                'jointArrowEnd' => true,
+                                'jointArrowEndDirection' => 'left',
+                                'devCounterEnd' => 8,
+                                'color' => 'sky',
+                            ]" />
+                            <x-translation-workbench::ui.tw-graph.segments.label-bridge
+                                id="literature.break.test.question"
+                                :anchor-start="$questionStart"
+                                :geometry="$questionGeometry"
+                                direction="right-left"
+                                :label="[
+                                    'text' => ['TRY', 'IF mayProcess(item)?'],
                                     'width' => 'default',
                                     'align' => 'center',
                                 ]"
-                                :if-start="[
-                                    'text' => ['TRUE: Process item', 'index = index + 1'],
-                                    'return' => false,
-                                    'width' => 'default',
-                                    'color' => 'green',
-                                ]"
-                                :if-end="[
-                                    'text' => ['FALSE: BREAK'],
-                                    'return' => false,
-                                    'returnOffset' => '4rem',
-                                    'exitDirection' => 'bottom-top',
-                                    'lineJumps' => [
-                                        ['over' => 'literature.break.test.body-return.stem', 'radius' => '0.65rem', 'side' => 'bottom'],
+                                :line-jumps="[
+                                    [
+                                        'over' => 'literature.break.test.loop.condition.stem.after',
+                                        'radius' => '0.65rem',
+                                        'side' => 'bottom',
                                     ],
-                                    'width' => 'default',
-                                    'color' => 'red',
                                 ]"
-                                :counter-start="7"
-                                :left-counter-end="8"
-                                :false-stem-counter="9"
-                                :right-counter-end="10"
+                                :dev-counter-end="false"
                                 color="sky"
+                            />
+                            <x-translation-workbench::ui.tw-graph.parts.split
+                                id="literature.break.test.decision"
+                                :anchor-start="$questionGeometry['anchorEnd']"
+                                direction="right-left"
+                                :outputs="[
+                                    [
+                                        'key' => 'true',
+                                        'offset' => '4rem',
+                                        'color' => 'green',
+                                        'label' => ['text' => ['TRUE'], 'width' => 'half', 'side' => 'top'],
+                                    ],
+                                    [
+                                        'key' => 'false',
+                                        'offset' => '-4rem',
+                                        'color' => 'red',
+                                        'label' => ['text' => ['FALSE'], 'width' => 'half', 'side' => 'bottom'],
+                                    ],
+                                ]"
+                                :counter-start="9"
+                                color="sky"
+                            />
+                            @php
+                                $trueStart = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    $graph,
+                                    'literature.break.test.decision.outputs.true.anchorNode-end',
+                                );
+                                $falseStart = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
+                                    $graph,
+                                    'literature.break.test.decision.outputs.false.anchorNode-end',
+                                );
+                                $trueGeometry = \Gunreip\TranslationWorkbench\Support\TwGraph\LabelBridge::geometry(
+                                    $trueStart,
+                                    'right-left',
+                                    '13rem',
+                                    '2rem',
+                                    '2rem',
+                                );
+                                $falseGeometry = \Gunreip\TranslationWorkbench\Support\TwGraph\LabelBridge::geometry(
+                                    $falseStart,
+                                    'right-left',
+                                    '13rem',
+                                    '2rem',
+                                    '10rem',
+                                );
+                                $trueEnd = [
+                                    'x' => 'calc(' . $trueGeometry['anchorEnd']['x'] . ' - ' . $radius . ')',
+                                    'y' => 'calc(' . $trueGeometry['anchorEnd']['y'] . ' - ' . $radius . ')',
+                                ];
+                                $falseEnd = [
+                                    'x' => 'calc(' . $falseGeometry['anchorEnd']['x'] . ' - ' . $radius . ')',
+                                    'y' => 'calc(' . $falseGeometry['anchorEnd']['y'] . ' + ' . $radius . ')',
+                                ];
+                            @endphp
+                            <x-translation-workbench::ui.tw-graph.segments.label-bridge
+                                id="literature.break.test.process"
+                                :anchor-start="$trueStart"
+                                :geometry="$trueGeometry"
+                                direction="right-left"
+                                :label="['text' => ['Process item', 'index = index + 1'], 'width' => 'default']"
+                                :dev-counter-end="12"
+                                color="green"
+                            />
+                            <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                'id' => 'literature.break.test.process.arc-out',
+                                'anchorStart' => $trueGeometry['anchorEnd'],
+                                'anchorEnd' => $trueEnd,
+                                'startAnchor' => 'n',
+                                'endAnchor' => 'w',
+                                'arcRadius' => $radius,
+                                'nodeEnd' => true,
+                                'nodeEndDot' => false,
+                                'jointArrowEnd' => true,
+                                'jointArrowEndDirection' => 'bottom',
+                                'devCounterEnd' => 13,
+                                'color' => 'green',
+                            ]" />
+                            <x-translation-workbench::ui.tw-graph.segments.label-bridge
+                                id="literature.break.test.break-action"
+                                :anchor-start="$falseStart"
+                                :geometry="$falseGeometry"
+                                direction="right-left"
+                                :label="['text' => ['BREAK pending'], 'width' => 'default']"
+                                :line-jumps="[
+                                    [
+                                        'over' => 'literature.break.test.normal-finally.stem.before',
+                                        'radius' => '0.65rem',
+                                        'side' => 'bottom',
+                                    ],
+                                ]"
+                                :dev-counter-end="14"
+                                color="red"
+                            />
+                            <x-translation-workbench::ui.tw-graph.segments.arc :segment="[
+                                'id' => 'literature.break.test.break-action.arc-out',
+                                'anchorStart' => $falseGeometry['anchorEnd'],
+                                'anchorEnd' => $falseEnd,
+                                'startAnchor' => 's',
+                                'endAnchor' => 'w',
+                                'arcRadius' => $radius,
+                                'nodeEnd' => true,
+                                'nodeEndDot' => false,
+                                'jointArrowEnd' => true,
+                                'jointArrowEndDirection' => 'top',
+                                'devCounterEnd' => 15,
+                                'color' => 'red',
+                            ]" />
+                            {{-- Both boxes denote the SAME FINALLY block, once on whichever route is taken. --}}
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.break.test.normal-finally"
+                                :anchor-start="$trueEnd"
+                                direction="top-bottom"
+                                before-length="12rem"
+                                label-gap="4rem"
+                                after-length="2rem"
+                                :step-label="['text' => ['FINALLY', 'Cleanup current item'], 'width' => 'default']"
+                                :node-end-dot="false"
+                                :joint-arrow-end="true"
+                                :counter-end="16"
+                                color="green"
+                            />
+                            <x-translation-workbench::ui.tw-graph.strang.flow-step
+                                id="literature.break.test.break-finally"
+                                :anchor-start="$falseEnd"
+                                before-length="2rem"
+                                label-gap="4rem"
+                                after-length="2rem"
+                                :step-label="['text' => ['FINALLY', 'Cleanup current item'], 'width' => 'default']"
+                                :node-end-dot="false"
+                                :joint-arrow-end="true"
+                                :counter-end="17"
+                                color="red"
                             />
                             <x-translation-workbench::ui.tw-graph.paths.loop-return
                                 id="literature.break.test.body-return"
-                                attach-to="literature.break.test.decision.true.anchorNode-end"
+                                attach-to="literature.break.test.normal-finally.anchorNode-end"
                                 return-to="literature.break.test.loop.anchorNode-return"
                                 side="left"
-                                :counter-start="11"
+                                :counter-start="18"
                                 color="green"
                             />
-                            {{-- BREAK exits upward via exitDirection; its line-jump crosses the independent body return without connecting. --}}
+                            {{-- The BREAK route exits only after its FINALLY has completed. --}}
                             @php
                                 $leftBreak = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-break-test-left',
-                                    'literature.break.test.decision.false.anchorNode-end',
+                                    'literature.break.test.break-finally.anchorNode-end',
                                 );
                                 $leftExit = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-break-test-left',
                                     'literature.break.test.loop.anchorNode-end',
                                 );
                             @endphp
-                            {{-- Normal exhaustion and BREAK meet above the loop; neither returns to its condition. --}}
+                            {{-- Normal exhaustion and BREAK after FINALLY meet above the loop. --}}
                             <x-translation-workbench::ui.tw-graph.parts.start
                                 id="literature.break.test.normal-exit"
                                 :anchor-start="$leftExit"
                                 length="6rem"
                                 :gradient="false"
-                                :dev-counter-end="15"
+                                :dev-counter-end="22"
                                 color="zinc"
                             />
                             @php
@@ -270,16 +488,34 @@
                                     'idea-to-paper-break-test-left',
                                     'literature.break.test.normal-exit.anchorNode-end',
                                 );
-                                $leftRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('arc_radius', '2.75rem');
-                                $leftRiseLength = 'calc(' . $leftJoin['y'] . ' - (2 * ' . $leftRadius . ') - ' . $leftBreak['y'] . ')';
-                                $leftBridge = 'calc((' . $leftJoin['x'] . ' - ' . $leftBreak['x'] . ') * 1 - (2 * ' . $leftRadius . '))';
+                                $leftRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString(
+                                    'arc_radius',
+                                    '2.75rem',
+                                );
+                                $leftRiseLength =
+                                    'calc(' .
+                                    $leftJoin['y'] .
+                                    ' - (2 * ' .
+                                    $leftRadius .
+                                    ') - ' .
+                                    $leftBreak['y'] .
+                                    ')';
+                                $leftBridge =
+                                    'calc((' .
+                                    $leftJoin['x'] .
+                                    ' - ' .
+                                    $leftBreak['x'] .
+                                    ') * 1 - (2 * ' .
+                                    $leftRadius .
+                                    '))';
                             @endphp
                             <x-translation-workbench::ui.tw-graph.parts.start
                                 id="literature.break.test.break-rise"
                                 :anchor-start="$leftBreak"
                                 :length="$leftRiseLength"
                                 :gradient="false"
-                                :node-end="false"
+                                :node-end="true"
+                                :jointArrowEnd="true"
                                 :dev-counter-end="false"
                                 color="red"
                             />
@@ -303,13 +539,12 @@
                                     'text' => ['Continue after WHILE'],
                                     'width' => 'default',
                                 ]"
-                                :counter-end="16"
+                                :counter-end="23"
                                 color="zinc"
                             />
                         </x-translation-workbench::ui.tw-graph>
                         {{-- break-test-left-example:end --}}
                     </div>
-
                 </div>
             </x-translation-workbench::ui.tw-graph.preview-tools>
             <x-translation-workbench::ui.common.tw-graph-path-file

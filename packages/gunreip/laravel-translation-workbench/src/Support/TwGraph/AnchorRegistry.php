@@ -28,8 +28,8 @@ final class AnchorRegistry
     public static function put(string $graphId, string $key, array $anchor): void
     {
         $storedAnchor = [
-            'x' => (string) ($anchor['x'] ?? '0rem'),
-            'y' => (string) ($anchor['y'] ?? '0rem'),
+            'x' => self::coordinate((string) ($anchor['x'] ?? '0rem')),
+            'y' => self::coordinate((string) ($anchor['y'] ?? '0rem')),
         ];
 
         foreach (['source', 'sourceType', 'sourceAnchor', 'direction', 'devCounterNext', 'color', 'returnColor', 'zIndex'] as $metadataKey) {
@@ -41,6 +41,18 @@ final class AnchorRegistry
         foreach (self::keyAliases($key) as $alias) {
             self::$anchors[$graphId][$alias] = $storedAnchor;
         }
+    }
+
+    /** Prevent attached components from accumulating unbounded CSS math nesting. */
+    private static function coordinate(string $expression): string
+    {
+        if (! str_contains($expression, 'rem') || ! str_contains($expression, '(')) {
+            return $expression;
+        }
+
+        $value = BoundsRegistry::evaluateRemExpression($expression);
+
+        return $value !== null && is_finite($value) ? $value.'rem' : $expression;
     }
 
     /**

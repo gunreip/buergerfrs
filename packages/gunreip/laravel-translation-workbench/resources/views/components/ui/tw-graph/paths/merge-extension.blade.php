@@ -17,6 +17,9 @@
         :node-labels="[4 => ['top' => 'Root #1']]"
     />
 
+    Optional endLabel replaces the outer start with segments.end (top-bottom),
+    preserving its length and attachment point. The default remains segments.start.
+
     Path role:
     Merge-extension continues a merge side chain outward:
     left:  segments.start -> segments.path stem1 bottom-top -> optional stem2/stem3/... -> segments.arc west-north -> segments.path left-right
@@ -46,6 +49,7 @@
     'stemContinuation' => [],
     'bridgeLength' => null,
     'nodeLabels' => [],
+    'endLabel' => null,
     'color' => null,
     'zIndex' => null,
     'counterStart' => 1,
@@ -63,6 +67,10 @@
 
 
 @php
+    \Gunreip\TranslationWorkbench\Support\TwGraph\MergeLengthProvenance::record(
+        $__env->getConsumableComponentData('twGraphCalculatedLengths'), 'paths.merge-extension', $id, $id,
+        compact('startLength', 'startShiftLength', 'bridgeLength', 'stemContinuation', 'stemLength'), true,
+    );
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn (string $value): string => 'calc(' . $value . ' * -1)';
     $toRem = static function (mixed $value): float {
@@ -176,12 +184,14 @@
         data_get($nodeLabels, $nodeNumber),
         $defaultSide,
     );
-    $startLabel = $normalizeLabel(data_get($nodeLabels, 'start'), 'bottom') ?? [
+    $startLabel = data_get($nodeLabels, 'start') === false ? null : ($normalizeLabel(data_get($nodeLabels, 'start'), 'bottom') ?? [
         'text' => ['Merge extension', 'start'],
         'side' => 'bottom',
         'offset' => '0.75rem',
         'badgeColor' => $resolvedColor,
-    ];
+    ]);
+
+    $resolvedEndLabel = $normalizeLabel($endLabel, 'bottom');
 
     $stemContinuationSegments = [];
     $stemContinuationCount = count($stemContinuationEntries);
@@ -190,17 +200,19 @@
 
     $segments = [
         [
-            'component' => 'start',
+            'component' => $resolvedEndLabel !== null ? 'end' : 'start',
             'segment' => [
-                'id' => $id . '.start',
-                'direction' => 'bottom-top',
+                'id' => $id . ($resolvedEndLabel !== null ? '.end' : '.start'),
+                'direction' => $resolvedEndLabel !== null ? 'top-bottom' : 'bottom-top',
                 'length' => $startLength,
-                'anchorStart' => $currentAnchor,
-                'anchorEnd' => $startEnd,
+                'anchorStart' => $resolvedEndLabel !== null ? $startEnd : $currentAnchor,
+                'anchorEnd' => $resolvedEndLabel !== null ? $currentAnchor : $startEnd,
+                'nodeStart' => false,
                 'nodeEnd' => $hasStartShiftJoint ? false : $pathNodeLabels(1, $isLeft ? 'right' : 'left'),
                 'devCounterEnd' => $hasStartShiftJoint ? null : $counter++,
                 'devCounterColor' => $color,
-                'startLabel' => $startLabel,
+                'startLabel' => $resolvedEndLabel !== null ? null : $startLabel,
+                'endLabel' => $resolvedEndLabel,
                 'color' => $color,
                 'zIndex' => $zIndex,
 
@@ -310,6 +322,8 @@
 @foreach ($segments as $segment)
     @if ($segment['component'] === 'start')
         <x-translation-workbench::ui.tw-graph.segments.start :segment="$segment['segment']" />
+    @elseif ($segment['component'] === 'end')
+        <x-translation-workbench::ui.tw-graph.segments.end :segment="$segment['segment']" />
     @elseif ($segment['component'] === 'arc')
         <x-translation-workbench::ui.tw-graph.segments.arc :segment="$segment['segment']" />
     @else

@@ -81,6 +81,9 @@
             <flux:tab name="idea-to-paper-inventory">
                 {{ __('Inventory') }}
             </flux:tab>
+            <flux:tab name="idea-to-paper-overview">
+                {{ __('Overview') }}
+            </flux:tab>
             <flux:tab name="idea-to-paper-props-and-connections">
                 {{ __('Deep Reference') }}
             </flux:tab>
@@ -121,6 +124,15 @@
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-inventory')
                 <div wire:key="documentation-inventory">
                     @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.inventory.index')
+                </div>
+            @endif
+        </flux:tab.panel>
+
+        {{-- Overview --}}
+        <flux:tab.panel name="idea-to-paper-overview">
+            @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-overview')
+                <div wire:key="documentation-overview">
+                    @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.overview.index')
                 </div>
             @endif
         </flux:tab.panel>

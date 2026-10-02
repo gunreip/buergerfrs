@@ -3,12 +3,17 @@
 namespace Gunreip\TranslationWorkbench\View\Components;
 
 use Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics;
+use Gunreip\TranslationWorkbench\Support\TwGraph\LayoutIssues;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
 final class TwGraph extends Component
 {
     public readonly CanvasDiagnostics $twGraphDiagnostics;
+
+    public readonly LayoutIssues $twGraphLayoutIssues;
+
+    public readonly \Gunreip\TranslationWorkbench\Support\TwGraph\CalculatedLengths $twGraphCalculatedLengths;
 
     public function __construct(
         public mixed $protocol = [],
@@ -33,6 +38,8 @@ final class TwGraph extends Component
     ) {
         // Available while Blade renders the slot, before the canvas view itself.
         $this->twGraphDiagnostics = new CanvasDiagnostics($dev, $coordinates);
+        $this->twGraphLayoutIssues = new LayoutIssues;
+        $this->twGraphCalculatedLengths = new \Gunreip\TranslationWorkbench\Support\TwGraph\CalculatedLengths;
     }
 
     public function render(): View

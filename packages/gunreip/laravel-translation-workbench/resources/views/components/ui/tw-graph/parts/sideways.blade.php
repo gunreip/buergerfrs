@@ -143,6 +143,12 @@
         'y' => $add($anchorStart['y'], $verticalDelta),
     ];
     $bridgeLabel = \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($bridgeLabel, 'center', $resolvedColor);
+    if ($bridgeLabel === null) {
+        $__env->getConsumableComponentData('twGraphCalculatedLengths')?->recordProp(
+            $id . '.bridge1', 'parts.sideways', $id, 'bridge-length', $bridgeLength !== null,
+        );
+    }
+
     $labelBridgeGeometry = null;
     if ($bridgeLabel !== null) {
         $resolvedBridgeLength = \Gunreip\TranslationWorkbench\Support\TwGraph\LabelBridge::bridgeLength($bridgeLength);

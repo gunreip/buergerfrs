@@ -95,3 +95,13 @@
     data-tw-graph-path="{{ $devIdentifier }}"
     x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
 ></span>
+
+@php
+    $calculatedLength = $__env->getConsumableComponentData('twGraphCalculatedLengths')?->get($id);
+@endphp
+@if ($calculatedLength !== null && \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env)->dev)
+    <x-translation-workbench::ui.tw-graph.calculated-length
+        :id="$id" :details="$calculatedLength" :length="$length"
+        :direction="$direction" :start-x="$startX" :start-y="$startY"
+    />
+@endif

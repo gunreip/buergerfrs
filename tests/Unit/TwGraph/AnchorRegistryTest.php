@@ -64,3 +64,36 @@ it('stores missing anchor coordinates as zero rem fallbacks', function (): void 
         'y' => '0rem',
     ]);
 });
+
+it('keeps a long attachment chain numerically stable without growing CSS calc nesting', function (): void {
+    $graph = 'long-anchor-chain';
+    AnchorRegistry::forgetGraph($graph);
+    AnchorRegistry::put($graph, 'start', ['x' => '2.75rem', 'y' => '-32.5rem']);
+    $previous = 'start';
+
+    for ($index = 1; $index <= 100; $index++) {
+        $anchor = AnchorRegistry::get($graph, $previous);
+        $key = 'step.'.$index;
+        AnchorRegistry::put($graph, $key, [
+            'x' => $anchor['x'],
+            'y' => 'calc(calc('.$anchor['y'].' + calc(0rem * -1)) + calc(4rem * -1))',
+            'source' => $key,
+            'color' => 'sky',
+        ]);
+        expect(AnchorRegistry::get($graph, $key))->toBe([
+            'x' => '2.75rem', 'y' => (-32.5 - 4 * $index).'rem', 'source' => $key, 'color' => 'sky',
+        ]);
+        $previous = $key;
+    }
+});
+
+it('preserves coordinates requiring browser resolution', function (string $expression): void {
+    AnchorRegistry::put('dynamic-anchor', 'point', ['x' => $expression, 'y' => $expression]);
+    expect(AnchorRegistry::get('dynamic-anchor', 'point'))->toBe(['x' => $expression, 'y' => $expression]);
+})->with([
+    'calc(var(--spacing, 2rem) + 4rem)',
+    'calc(20px + 4rem)',
+    'calc(50% - 4rem)',
+    'calc(1em + 4rem)',
+    'calc(4rem / 0)',
+]);

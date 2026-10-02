@@ -35,6 +35,22 @@ const directory = process.argv[2] || path.join(require('node:os').tmpdir(), 'tw-
                     return { id: graph.id, issues: result?.issues || [], count: result?.records.length || 0,
                         checked: !!graph.dataset.twGraphBoundsIssues };
                 }));
+                if (item.name.startsWith('overview.')) {
+                    // Inspect the authored overflow hierarchy; never force ancestors to overflow:visible.
+                    const visibleMaps = await page.evaluate(() => [...document.querySelectorAll('[data-tw-graph-bounds-model]')].map(graph => {
+                        const viewport = graph.closest('.tw-graph-protocol-viewport');
+                        const frame = viewport.getBoundingClientRect();
+                        const title = graph.querySelector('.tw-graph-protocol-primitive-text');
+                        const rect = title.getBoundingClientRect();
+                        return { id: graph.id, viewportWidth: viewport.clientWidth,
+                            titleInsideViewport: rect.left >= frame.left && rect.right <= frame.right &&
+                                rect.top >= frame.top && rect.bottom <= frame.bottom };
+                    }));
+                    for (const map of visibleMaps) {
+                        assert.ok(map.viewportWidth >= 300, `${map.id}: scroll viewport must not shrink to its borders`);
+                        assert.ok(map.titleInsideViewport, `${map.id}: graph title must be inside the visible viewport`);
+                    }
+                }
                 if (item.name.endsWith('flow-if-nested-1')) {
                     const regions = await page.evaluate(() => [...document.querySelectorAll('[data-tw-graph-bounds-model]')].map(graph => {
                         const canvas = graph.querySelector('.tw-graph-protocol-canvas');

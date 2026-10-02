@@ -69,6 +69,10 @@
 
 
 @php
+    \Gunreip\TranslationWorkbench\Support\TwGraph\MergeLengthProvenance::record(
+        $__env->getConsumableComponentData('twGraphCalculatedLengths'), 'paths.merge', $id, $id,
+        compact('startLength', 'startShiftLength', 'bridgeLength', 'stemContinuation', 'stemLengths'), false,
+    );
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn (string $value): string => 'calc(' . $value . ' * -1)';
     $toRem = static function (mixed $value): float {
@@ -123,14 +127,14 @@
     $startShiftLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($startShiftLength, null, '0rem');
     $hasStartShiftJoint = $toRem($startShiftLength) >= 1.0;
     $startShiftLength = $hasStartShiftJoint ? $startShiftLength : '0rem';
-    $resolvedStartLabel = $normalizeLabel($startLabel, 'bottom')
+    $resolvedStartLabel = ($startLabel === false || data_get($nodeLabels, 'start') === false) ? null : ($normalizeLabel($startLabel, 'bottom')
         ?? $normalizeLabel(data_get($nodeLabels, 'start'), 'bottom')
         ?? [
             'text' => ['Merge', 'start'],
             'side' => 'bottom',
             'offset' => '0.75rem',
             'badgeColor' => $resolvedColor,
-        ];
+        ]);
     $startEnd = [
         'x' => $currentAnchor['x'],
         'y' => $add($currentAnchor['y'], $startLength),

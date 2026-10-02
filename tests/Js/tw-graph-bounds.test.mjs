@@ -1,6 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { canvasLayout, unionBounds, boundsDifference, gridTicks, canvasSummary, captionOffset, componentRegions } from '../../resources/js/helper/tw-graph-bounds.js';
+import { canvasLayout, unionBounds, boundsDifference, boundsIssueDetails, gridTicks, canvasSummary, captionOffset, componentRegions } from '../../resources/js/helper/tw-graph-bounds.js';
+
+test('bounds diagnostics separate element IDs and measurements without losing general warnings', () => {
+    const id = 'literature.overview.deep-reference.strang.flow-while.stem.after';
+    assert.deepEqual(boundsIssueDetails(`${id}: minY expected=-1736px actual=-1029.05px, maxY expected=-1672px actual=-965.05px`), {
+        id,
+        message: 'minY expected=-1736px actual=-1029.05px, maxY expected=-1672px actual=-965.05px',
+        values: [
+            { axis: 'minY', expected: '-1736', actual: '-1029.05', delta: 706.95 },
+            { axis: 'maxY', expected: '-1672', actual: '-965.05', delta: 706.95 },
+        ],
+    });
+    assert.deepEqual(boundsIssueDetails('Bounds coverage: 2 declared / 1 rendered'), {
+        id: 'Bounds coverage', message: '2 declared / 1 rendered', values: [],
+    });
+    assert.deepEqual(boundsIssueDetails('Unresolved geometry'), { id: '', message: 'Unresolved geometry', values: [] });
+});
 
 test('canvas uses the same origin-inclusive policy as the server, without centering', () => {
     const layout = canvasLayout({ minX: -320, maxX: 416, minY: 0, maxY: 384 }, 48, 32);

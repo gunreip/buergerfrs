@@ -1,6 +1,8 @@
 @php
     // Diagnostic settings belong exclusively to the enclosing tw-graph canvas.
     $attributes = ($attributes ?? new \Illuminate\View\ComponentAttributeBag)->except(['dev', 'dev-mode', 'coordinates']);
+    $explicitBeforeLength = $attributes->has('before-length') || $attributes->has('beforeLength');
+    $explicitAfterLength = $attributes->has('after-length') || $attributes->has('afterLength');
 @endphp
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/flow-if-else.blade.php --}}
 {{--
@@ -133,6 +135,24 @@
         return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::stepLabelContentGap($lines);
     };
     $resolvedStemLength = 'max(' . $requestedStemLength . ', calc((' . $labelHeight($ifStart) . ' + ' . ($falseBypass ? '0rem' : $labelHeight($ifEnd)) . ') / 2 + 2rem))';
+    $provenance = $__env->getConsumableComponentData('twGraphCalculatedLengths');
+    $provenance?->recordProp($id . '.question.stem.before', 'strang.flow-if-else', $id, 'before-length', $explicitBeforeLength);
+    $provenance?->recordProp($id . '.question.stem.after', 'strang.flow-if-else', $id, 'after-length', $explicitAfterLength);
+    $provenance?->record($id . '.true.stem', 'strang.flow-if-else', $id, 'stem-length / if-end.returnLength',
+        ['spacing' => $resolvedStemLength, 'returnLength' => $falseOpen ? $falseReturnLength : '0rem'],
+        'The return stem spans the branch spacing and any open false-branch return length.');
+    $provenance?->record($id . '.false.stem', 'strang.flow-if-else', $id, 'stem-length',
+        ['requested' => $requestedStemLength, 'if-start' => $ifStart, 'if-end' => $ifEnd],
+        'The requested stem is compared with the minimum spacing required by the labels.');
+    foreach (['true' => [$trueLength, $trueWidth], 'false' => [$falseLength, $falseWidth]] as $lane => [$inputLength, $width]) {
+        $inputs = ['bridgeLength' => $inputLength, 'labelWidth' => $width, 'sharedSpan' => $sharedSpan];
+        foreach (['.bridge1', '.bridge1.bridge-in', '.bridge1.bridge-out'] as $suffix) {
+            $provenance?->record($id . '.' . $lane . $suffix, 'strang.flow-if-else', $id,
+                $lane === 'true' ? 'if-start / bridge-length' : 'if-end / bridge-length',
+                $inputs + ['returnOffset' => $lane === 'true' ? data_get($ifStart, 'returnOffset', '0rem') : $falseReturnOffset],
+                'The bridge aligns the branch spans and incorporates any open-branch return offset.');
+        }
+    }
     // parts.sideways names its incoming arc side; graph side names the destination.
     $routeSide = $side === 'right' ? 'left' : 'right';
 @endphp

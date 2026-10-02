@@ -5,6 +5,7 @@
         <flux:tab name="reference-parts-sideways">sideways</flux:tab>
         <flux:tab name="reference-parts-chain">chain</flux:tab>
         <flux:tab name="reference-parts-fusion">fusion</flux:tab>
+        <flux:tab name="reference-parts-split">split</flux:tab>
     </flux:tabs>
     <flux:tab.panel name="reference-parts-start">
         @if (!isset($documentationTabs) || $documentationTabs['reference_parts'] === 'reference-parts-start')
@@ -38,6 +39,13 @@
         @if (!isset($documentationTabs) || $documentationTabs['reference_parts'] === 'reference-parts-fusion')
             <div wire:key="reference-parts-fusion">
                 @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.props-and-connections.parts.fusion')
+            </div>
+        @endif
+    </flux:tab.panel>
+    <flux:tab.panel name="reference-parts-split">
+        @if (!isset($documentationTabs) || $documentationTabs['reference_parts'] === 'reference-parts-split')
+            <div wire:key="reference-parts-split">
+                @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.props-and-connections.parts.split')
             </div>
         @endif
     </flux:tab.panel>

@@ -215,14 +215,27 @@ it('returns only after the independent advance action in the multiple-actions ex
     expect(BoundsRegistry::evaluateRemExpression($length[1]))->toBe($advance[1] - $point('loop.anchorNode-start')[1]);
 });
 
-it('rejects a return that would need to stretch the authored loop or cross its axis', function ($start) {
-    expect(fn () => Blade::render(<<<'BLADE'
+it('reports impossible returns without stretching geometry or aborting the canvas', function ($start) {
+    $html = Blade::render(<<<'BLADE'
         <x-translation-workbench::ui.tw-graph graph-id="bad-loop-return">
             <x-translation-workbench::ui.tw-graph.paths.loop-return id="return"
                 :anchor-start="$start" :anchor-return="['x' => '0rem', 'y' => '5rem']"
                 side="left" arc-radius="2rem" />
+            <x-translation-workbench::ui.tw-graph.strang.flow-step id="unaffected"
+                :anchor-start="['x' => '0rem', 'y' => '20rem']"
+                :step-label="['text' => ['Still visible']]" />
         </x-translation-workbench::ui.tw-graph>
-    BLADE, ['start' => $start]))->toThrow(\Illuminate\View\ViewException::class, 'cannot fit the supplied anchors');
+        <x-translation-workbench::ui.tw-graph graph-id="next-valid-canvas">
+            <x-translation-workbench::ui.tw-graph.paths.loop-return id="valid-return"
+                :anchor-start="['x' => '-20rem', 'y' => '10rem']"
+                :anchor-return="['x' => '0rem', 'y' => '5rem']" side="left" arc-radius="2rem" />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, ['start' => $start]);
+    expect($html)->toContain('data-tw-graph-layout-issues', 'paths.loop-return', 'Still visible')
+        ->not->toContain('data-tw-graph-path="return.stem"', 'data-tw-graph-path="return.arc-in"');
+    expect(substr_count($html, 'data-tw-graph-layout-issues'))->toBe(1);
+    expect(AnchorRegistry::get('bad-loop-return', 'return.anchorNode-end'))->toBeNull();
+    expect(AnchorRegistry::get('next-valid-canvas', 'valid-return.anchorNode-end'))->not->toBeNull();
 })->with([
     [['x' => '-20rem', 'y' => '4rem']],
     [['x' => '-3rem', 'y' => '10rem']],

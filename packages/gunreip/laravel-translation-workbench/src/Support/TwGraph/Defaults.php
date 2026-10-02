@@ -53,9 +53,11 @@ final class Defaults
 
     public static function stepLabelContentGap(int $lineCount): string
     {
-        return match (max(1, min(3, $lineCount))) {
+        return match (max(1, min(StepLabelLayout::MAX_LINES, $lineCount))) {
             1 => self::graphString('step_label_content_gap_1_line', '1.75rem'),
             3 => self::graphString('step_label_content_gap_3_lines', '3.75rem'),
+            4 => self::graphString('step_label_content_gap_4_lines', '4.75rem'),
+            5 => self::graphString('step_label_content_gap_5_lines', '5.75rem'),
             default => self::graphString('step_label_content_gap_2_lines', '2.75rem'),
         };
     }

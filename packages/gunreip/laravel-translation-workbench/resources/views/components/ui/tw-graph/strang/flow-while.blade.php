@@ -15,7 +15,7 @@
     'side' => 'left',
     'counterStart' => 1,
     'arcRadius' => null,
-    'trueBridgeLength' => '2rem',
+    'trueBridgeLength' => null,
     'stemLength' => '4rem',
     'conditionLabel' => ['text' => ['WHILE pending items?'], 'width' => 'default'],
     'trueLabel' => ['text' => ['TRUE'], 'width' => 'half', 'side' => 'top'],
@@ -53,6 +53,20 @@
         }
         $condition = array_replace(['beforeLength' => '2rem', 'labelGap' => '4rem', 'afterLength' => '2rem'], $conditionLabel);
         $action = array_replace(['beforeLength' => '4rem', 'afterLength' => '4rem'], $actionLabel);
+        $lengthProvenance = $__env->getConsumableComponentData('twGraphCalculatedLengths');
+        $lengthProvenance?->recordProp($id . '.true.bridge', 'strang.flow-while', $id,
+            'true-bridge-length', $trueBridgeLength !== null);
+        $trueBridgeLength ??= '2rem';
+        foreach (['before' => 'beforeLength', 'after' => 'afterLength'] as $piece => $property) {
+            $lengthProvenance?->recordProp($id . '.condition.stem.' . $piece,
+                'strang.flow-while', $id, 'condition-label.' . $property,
+                array_key_exists($property, $conditionLabel));
+        }
+        foreach (['in' => 'beforeLength', 'out' => 'afterLength'] as $piece => $property) {
+            $lengthProvenance?->recordProp($id . '.body.bridge.bridge-' . $piece,
+                'strang.flow-while', $id, 'action-label.' . $property,
+                array_key_exists($property, $actionLabel));
+        }
         foreach ([
             'condition-label.beforeLength' => $condition['beforeLength'],
             'condition-label.labelGap' => $condition['labelGap'],

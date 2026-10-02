@@ -14,6 +14,9 @@
         side="right"
     />
 
+    Optional label.tooltip supplies explanatory Flux help on the text badge.
+    The connector, dimensions and diagnostic identifier remain unchanged.
+
     Segment role:
     Label composes one connector primitive and one text primitive. It must only
     be used when the owning segment has a visible anchor/node for this label.
@@ -72,6 +75,7 @@
 <x-translation-workbench::ui.tw-graph.primitives.text
     :id="$id"
     :text="data_get($label, 'text')"
+    :tooltip="data_get($label, 'tooltip')"
     :side="$side"
     :anchor-x="$anchorX"
     :anchor-y="$anchorY"
