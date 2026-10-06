@@ -581,7 +581,7 @@
                         <x-translation-workbench::ui.tw-graph.parts.sideways
                             id="literature.switch.1.action-sequence.inner-return"
                             :anchor-start="$sequenceEnd"
-                            side="right"
+                            side="left"
                             arc-radius="2.75rem"
                             :bridge-length="$returnBridge"
                             color="rose"
@@ -793,7 +793,7 @@
                         <x-translation-workbench::ui.tw-graph.parts.sideways
                             id="literature.switch.1.action-sequence-right.inner-return"
                             :anchor-start="$sequenceEnd"
-                            side="left"
+                            side="right"
                             arc-radius="2.75rem"
                             :bridge-length="$returnBridge"
                             color="rose"

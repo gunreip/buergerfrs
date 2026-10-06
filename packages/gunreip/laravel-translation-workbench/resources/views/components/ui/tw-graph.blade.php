@@ -68,6 +68,8 @@
 >
 	    @if ($slot->isNotEmpty())
 	        <div class="tw-graph-protocol-canvas tw-graph-protocol-canvas-slot content-center">
+                {{-- Stable client-owned grid slot: prepending it later shifts Livewire's sibling/block matching. --}}
+                <svg data-tw-graph-grid wire:ignore aria-hidden="true"></svg>
 	            {{ $slot }}
                 {{-- Measurement origin and padding use the same coordinate system as every primitive. --}}
                 <span data-tw-graph-bounds-origin aria-hidden="true" style="position:absolute; pointer-events:none; visibility:hidden; left:var(--tw-graph-protocol-trunk-x); bottom:var(--tw-graph-protocol-origin-bottom); width:{{ $horizontalPadding }}; height:2rem;"></span>
@@ -91,9 +93,6 @@
                     />
                 @endforeach
 
-                <!--tw-graph-bounds-output-->
-
-        </div>
     @else
         <x-translation-workbench::ui.tw-graph.canvas
                 :protocol="$protocol"
@@ -102,22 +101,26 @@
                 :min-width="$context['minWidth']"
                 :min-height="$context['minHeight']"
             />
-            <!--tw-graph-bounds-output-->
         @endif
-    </div>
-</div>
 
 @php
     $graphMarkup = ob_get_clean();
     $boundsRecords = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::capture($context['graphId'], $graphMarkup, $context);
-    $boundsOutput = view('translation-workbench::components.ui.tw-graph.canvas-metrics', [
+    // Release the captured markup before building diagnostics; avoid a full-graph replacement copy.
+    echo $graphMarkup;
+    unset($graphMarkup);
+    echo view('translation-workbench::components.ui.tw-graph.canvas-metrics', [
         'graphId' => $context['graphId'], 'dev' => $dev, 'coordinates' => $showCoordinates,
         'horizontalPadding' => $horizontalPadding, 'records' => $boundsRecords,
         'canvasInputs' => ['min-width' => $context['minWidth'], 'min-height' => $context['minHeight'], 'horizontal-padding' => $horizontalPadding],
         'canvasInputDefaults' => $canvasInputDefaults,
     ])->render();
 @endphp
-{!! str_replace('<!--tw-graph-bounds-output-->', $boundsOutput, $graphMarkup) !!}
+    @if ($slot->isNotEmpty())
+        </div>
+    @endif
+    </div>
+</div>
 
 @if ($twGraphLayoutIssues->all() !== [])
     <x-translation-workbench::ui.tw-graph.layout-issues :issues="$twGraphLayoutIssues->all()" />

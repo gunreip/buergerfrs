@@ -240,7 +240,7 @@
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.try-catch.if-try.left.inner-return"
                                 :anchor-start="$leftInnerEnd"
-                                side="left"
+                                side="right"
                                 :bridge-length="$leftBridge"
                                 :joint-arrow-end="true"
                                 :dev-counter-end="9"
@@ -369,7 +369,7 @@
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.try-catch.if-try.right.inner-return"
                                 :anchor-start="$rightInnerEnd"
-                                side="right"
+                                side="left"
                                 :bridge-length="$rightBridge"
                                 :joint-arrow-end="true"
                                 :dev-counter-end="9"

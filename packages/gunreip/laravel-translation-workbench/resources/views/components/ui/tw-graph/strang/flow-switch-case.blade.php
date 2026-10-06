@@ -290,7 +290,7 @@
     @endphp
     @php $nodeCounter = $counter++; @endphp
     <x-translation-workbench::ui.tw-graph.parts.sideways
-        :id="$routeId" :anchor-start="$actionStart" :side="$side === 'left' ? 'right' : 'left'"
+        :id="$routeId" :anchor-start="$actionStart" :side="$side"
         :direction="$direction" :arc-radius="$arcRadius" :bridge-length="$actionBridgeIn"
         :bridge-in-join-length="$incomingJoinLength" :dev-counter-join="$incomingJoinCounter"
         :bridge-label="$row['action']" :bridge-out-length="$row['bridgeOutLength']" :color="$row['color']"
@@ -347,7 +347,7 @@
         @endphp
         @php $nodeCounter = $counter++; @endphp
         <x-translation-workbench::ui.tw-graph.parts.sideways
-            :id="$fallThroughId" :anchor-start="$row['end']" :side="$side"
+            :id="$fallThroughId" :anchor-start="$row['end']" :side="$side === 'left' ? 'right' : 'left'"
             :direction="$direction" :arc-radius="$turnRadius" :bridge-length="$crossLength"
             :color="$row['color']" :joint-arrow-end="true" :dev-counter-end="$nodeCounter" :z-index="$zIndex"
         />

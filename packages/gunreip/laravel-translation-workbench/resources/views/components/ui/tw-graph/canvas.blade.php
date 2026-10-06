@@ -140,6 +140,8 @@
 @endphp
 
 <div class="tw-graph-protocol-canvas content-center">
+    {{-- Keep browser-generated grid contents out of Livewire's authored graph reconciliation. --}}
+    <svg data-tw-graph-grid wire:ignore aria-hidden="true"></svg>
     <span data-tw-graph-bounds-origin aria-hidden="true" style="position:absolute; pointer-events:none; visibility:hidden; left:var(--tw-graph-protocol-trunk-x); bottom:var(--tw-graph-protocol-origin-bottom); width:{{ $horizontalPadding }}; height:2rem;"></span>
     @if (\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($dev) && \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($coordinates))
         <x-translation-workbench::ui.tw-graph.canvas-dimensions :min-width="$minWidth" :min-height="$minHeight" :horizontal-padding="$horizontalPadding" />

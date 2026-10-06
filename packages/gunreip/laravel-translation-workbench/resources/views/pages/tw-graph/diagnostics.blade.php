@@ -175,6 +175,18 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                <tfoot class="border-t-2 border-zinc-300 bg-zinc-50 font-semibold dark:border-zinc-600 dark:bg-zinc-900">
+                                    <tr>
+                                        <th scope="row" class="px-3 py-3 text-left">{{ __('Total') }}</th>
+                                        <td class="px-3 py-3">
+                                            <flux:badge size="sm" :color="$twGraphStatusColor">{{ $twGraphStatus }}</flux:badge>
+                                        </td>
+                                        <td class="px-3 py-3 font-mono text-xs">{{ $twGraphGroups->sum('checks') }}</td>
+                                        <td class="px-3 py-3 font-mono text-xs">{{ $twGraphGroups->sum('tests') }}</td>
+                                        <td class="px-3 py-3 font-mono text-xs">{{ $twGraphGroups->sum('assertions') }}</td>
+                                        <td class="px-3 py-3 font-mono text-xs">{{ $twGraphGroups->sum('duration_ms') }} ms</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </flux:callout.text>
@@ -191,7 +203,14 @@
                 </flux:callout.heading>
                 <flux:callout.text>
                     <div class="mt-4 overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-700">
-                        <table class="min-w-full divide-y divide-zinc-200 text-sm dark:divide-zinc-700">
+                        <table class="w-full min-w-[48rem] table-fixed divide-y divide-zinc-200 text-sm dark:divide-zinc-700" data-tw-graph-check-results>
+                            <colgroup>
+                                <col class="w-[27%]" />
+                                <col class="w-[8%]" />
+                                <col class="w-[10%]" />
+                                <col class="w-[20%]" />
+                                <col class="w-[35%]" />
+                            </colgroup>
                             <thead
                                 class="bg-zinc-50 text-left text-xs uppercase tracking-wide text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400"
                             >
@@ -215,7 +234,7 @@
                                                     : 'zinc');
                                     @endphp
 
-                                    <tr>
+                                    <tr class="align-top">
                                         <td
                                             class="px-3 py-2 text-zinc-900 dark:text-zinc-100"
                                         >
@@ -236,15 +255,19 @@
                                             {{ data_get($twGraphCheck, 'duration_ms') }} ms
                                         </td>
                                         <td class="px-3 py-2 text-zinc-700 dark:text-zinc-200">
-                                            {{ data_get($twGraphCheck, 'summary') }}
-                                            @if ($checkStatus === 'failed')
-                                                @include('translation-workbench::pages.tw-graph.partials.test-failures', ['check' => $twGraphCheck])
-                                            @endif
+                                            {{ \Gunreip\TranslationWorkbench\Support\TwGraph\TestFailureDetails::plainText((string) data_get($twGraphCheck, 'summary', '')) }}
                                         </td>
-                                        <td class="px-3 py-2 font-mono text-xs text-zinc-600 dark:text-zinc-300">
+                                        <td class="px-3 py-2 font-mono text-xs text-zinc-600 dark:text-zinc-300 whitespace-normal [overflow-wrap:anywhere]">
                                             {{ data_get($twGraphCheck, 'command') }}
                                         </td>
                                     </tr>
+                                    @if ($checkStatus === 'failed')
+                                        <tr>
+                                            <td colspan="5" class="px-3 pb-4 pt-0" data-tw-graph-failure-row>
+                                                @include('translation-workbench::pages.tw-graph.partials.test-failures', ['check' => $twGraphCheck])
+                                            </td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>

@@ -153,7 +153,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.test.call-2"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-test-left',
                                     'literature.function.test.prepare.anchorNode-end',
@@ -181,7 +181,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.test.call-1"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-test-left',
                                     'literature.function.test.frame-2.anchorNode-end',
@@ -209,7 +209,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.test.call-0"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-test-left',
                                     'literature.function.test.frame-1.anchorNode-end',
@@ -237,7 +237,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.test.return-0"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-test-left',
                                     'literature.function.test.base-case.anchorNode-end',
@@ -265,7 +265,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.test.return-1"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-test-left',
                                     'literature.function.test.resume-1.anchorNode-end',
@@ -293,7 +293,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.test.return-2"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-test-left',
                                     'literature.function.test.resume-2.anchorNode-end',

@@ -195,7 +195,7 @@
                                         [
                                             'type' => 'sideways',
                                             'id' => 'literature.parts.chain.sideways',
-                                            'side' => 'left',
+                                            'side' => 'right',
                                             'color' => 'violet',
                                             'jointArrowEnd' => true,
                                         ],

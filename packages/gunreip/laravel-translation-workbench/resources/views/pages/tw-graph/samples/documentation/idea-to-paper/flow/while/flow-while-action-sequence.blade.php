@@ -559,7 +559,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['itemIndex = itemIndex + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="sky"
                             />
                             <x-translation-workbench::ui.tw-graph.paths.loop-return
@@ -580,7 +579,6 @@
                                 :step-label="['text' => ['Finalize group'], 'width' => 'default']"
                                 :counter-end="22"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="amber"
                             />
                             {{-- Turn the finalized group toward the separate outer return lane. --}}
@@ -624,7 +622,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['groupIndex = groupIndex + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="cyan"
                             />
                             @php
@@ -806,7 +803,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['itemIndex = itemIndex + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="sky"
                             />
                             <x-translation-workbench::ui.tw-graph.paths.loop-return
@@ -827,7 +823,6 @@
                                 :step-label="['text' => ['Finalize group'], 'width' => 'default']"
                                 :counter-end="22"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="amber"
                             />
                             {{-- Turn the finalized group toward the separate outer return lane. --}}
@@ -871,7 +866,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['groupIndex = groupIndex + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="cyan"
                             />
                             @php

@@ -439,7 +439,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['FINALLY', 'Cleanup current item'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="16"
                                 color="green"
                             />
@@ -451,7 +450,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['FINALLY', 'Cleanup current item'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="17"
                                 color="red"
                             />
@@ -525,7 +523,7 @@
                                     'idea-to-paper-break-test-left',
                                     'literature.break.test.break-rise.anchorNode-end',
                                 )"
-                                side="left"
+                                side="right"
                                 :bridge-length="$leftBridge"
                                 :node-end="false"
                                 :dev-counter-end="false"

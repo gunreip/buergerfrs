@@ -75,7 +75,7 @@
                             <flux:table.row>
                                 <flux:table.cell class="whitespace-normal align-top"><code>parts.sideways.side</code></flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top"><code>left</code></flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">{{ __('Uses right for a route extending left and left for a route extending right; this prop names the incoming arc side.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Destination side: left extends the route left; right extends it right.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
                                 <flux:table.cell class="whitespace-normal align-top"><code>anchor-start / attach-to</code></flux:table.cell>
@@ -181,7 +181,7 @@
                             {{-- This new exception replaces the original; preserve its cause for diagnostics. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.throw.finally-exception.left.raise"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-throw-finally-exception-left',
                                     'literature.throw.finally-exception.left.finally.anchorNode-end',
@@ -271,7 +271,7 @@
                             {{-- This new exception replaces the original; preserve its cause for diagnostics. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.throw.finally-exception.right.raise"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-throw-finally-exception-right',
                                     'literature.throw.finally-exception.right.finally.anchorNode-end',

@@ -7,7 +7,7 @@
         >
             <flux:callout.heading>{{ __('Sideways part') }}</flux:callout.heading>
             <flux:callout.text>
-                {{ __('Two individually authored arc–bridge–arc connections show both sides and vertical directions. The cyan connection uses side=left and travels right; the violet connection uses side=right and travels left, followed by an extension. Side names refer to the incoming arc side.') }}
+                {{ __('Two individually authored arc–bridge–arc connections show both sides and vertical directions. The cyan connection uses side=left and travels left; the violet connection uses side=right and travels right, followed by an extension. Side names refer to the destination.') }}
             </flux:callout.text>
 
             <x-translation-workbench::ui.common.separator-deep-reference-links />
@@ -151,7 +151,7 @@
                                     <code>left</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    {{ __('Incoming arc side: left travels towards positive x; right travels towards negative x.') }}
+                                    {{ __('Destination side: left travels towards negative x; right travels towards positive x.') }}
                                 </flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>

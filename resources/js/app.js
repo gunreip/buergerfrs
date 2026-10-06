@@ -8,7 +8,10 @@ import { setupGlobalTooltips } from './tooltips/global-tooltip';
 import { setupShowHideLayoutRefresh } from './helper/show-hide';
 import { setupTwGraphLineJumps } from './helper/tw-graph-line-jumps';
 import { setupTwGraphBounds } from './helper/tw-graph-bounds';
+import { setupTwGraphPerformance } from './helper/tw-graph-performance';
 import { setupTwGraphDevTools } from './helper/tw-graph-dev';
+
+setupTwGraphPerformance();
 
 document.addEventListener('DOMContentLoaded', function () {
     setupGlobalTooltips();

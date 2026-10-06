@@ -17,6 +17,14 @@
         :node-label-left="['text' => 'Label', 'width' => 'halfLong']"
     />
 
+    side selects the destination: left = negative x, right = positive x, center = unchanged x.
+    center uses one stem of 2 * arcRadius; bridgeLength is inactive, extension remains supported.
+    center requires matching entry/exit directions and no bridgeLabel.
+
+    extensionLength: one extra stem after the arc; 0rem disables it.
+    nodeEnd/nodeEndDot: arc-exit marker. extensionEnd{nodeEnd,nodeEndDot}: extension-exit marker.
+    extension is the existing two-stem decoration and cannot be combined with extensionLength.
+
     Part role:
     A manual authoring part that routes sideways through arc -> bridge -> arc.
     The first arc and bridge keep their anchors technical only; the final arc
@@ -55,6 +63,9 @@
     'devCounterJoin' => 'J',
     'lineJumps' => [],
     'extension' => null,
+    'extensionLength' => '0rem',
+    'extensionEnd' => ['nodeEnd' => true, 'nodeEndDot' => true],
+    'nodeEndDot' => null,
     'direction' => 'bottom-top',
     'exitDirection' => null,
     'color' => null,
@@ -80,7 +91,8 @@
 @php
     $resolvedGraphId = filled($graphId ?? null) ? (string) $graphId : 'tw-graph';
     $resolvedComponentCounter = max(1, (int) $componentCounter);
-    $isLeft = $side !== 'right';
+    $isCenter = $side === 'center';
+    $travelsRight = $side === 'right';
     $isTopBottom = $direction === 'top-bottom';
     $resolvedExitDirection = $exitDirection ?? $direction;
     if (! in_array($resolvedExitDirection, ['bottom-top', 'top-bottom'], true)) {
@@ -89,7 +101,7 @@
     $exitTopBottom = $resolvedExitDirection === 'top-bottom';
     $id = filled($id)
         ? (string) $id
-        : 'part.' . ($isLeft ? 'left' : 'right') . '.' . $resolvedComponentCounter . '.sideways';
+        : 'part.' . $side . '.' . $resolvedComponentCounter . '.sideways';
     $resolvedColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
         $color,
         $inheritedColor ?? null,
@@ -113,6 +125,11 @@
     $resolvedExtension = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string($extension, null, '0rem');
     $hasExtension = filled($extension) && ! in_array($resolvedExtension, ['0', '0rem'], true);
 
+    $hasStraightExtension = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($extensionLength) > 0;
+    if ($hasExtension && $hasStraightExtension) {
+        throw new \InvalidArgumentException('parts.sideways: use extension or extensionLength, not both.');
+    }
+
     $anchorStart = is_array($anchorStart) ? $anchorStart : ['x' => '0rem', 'y' => '0rem'];
     $anchorStart = [
         'x' => data_get($anchorStart, 'x', '0rem'),
@@ -122,20 +139,20 @@
         ? $value
         : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn(string $value): string => 'calc(' . $value . ' * -1)';
-    $arcDelta = $isLeft ? $resolvedArcRadius : $neg($resolvedArcRadius);
-    $bridgeDelta = $isLeft ? $resolvedBridgeLength : $neg($resolvedBridgeLength);
+    $arcDelta = $travelsRight ? $resolvedArcRadius : $neg($resolvedArcRadius);
+    $bridgeDelta = $travelsRight ? $resolvedBridgeLength : $neg($resolvedBridgeLength);
     $verticalDelta = $isTopBottom ? $neg($resolvedArcRadius) : $resolvedArcRadius;
     $exitVerticalDelta = $exitTopBottom ? $neg($resolvedArcRadius) : $resolvedArcRadius;
     $extensionDelta = $exitTopBottom ? $neg($resolvedExtension) : $resolvedExtension;
-    $arcInStartAnchor = $isLeft ? 'w' : 'e';
+    $arcInStartAnchor = $travelsRight ? 'w' : 'e';
     $arcInEndAnchor = $isTopBottom ? 's' : 'n';
-    $bridgeDirection = $isLeft ? 'left-right' : 'right-left';
+    $bridgeDirection = $travelsRight ? 'left-right' : 'right-left';
     $arcOutStartAnchor = $exitTopBottom ? 'n' : 's';
-    $arcOutEndAnchor = $isLeft ? 'e' : 'w';
-    $arcInName = $isLeft
+    $arcOutEndAnchor = $travelsRight ? 'e' : 'w';
+    $arcInName = $travelsRight
         ? ($isTopBottom ? 'west-south' : 'west-north')
         : ($isTopBottom ? 'east-south' : 'east-north');
-    $arcOutName = $isLeft
+    $arcOutName = $travelsRight
         ? ($exitTopBottom ? 'north-east' : 'south-east')
         : ($exitTopBottom ? 'north-west' : 'south-west');
     $arcInEnd = [
@@ -143,7 +160,10 @@
         'y' => $add($anchorStart['y'], $verticalDelta),
     ];
     $bridgeLabel = \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($bridgeLabel, 'center', $resolvedColor);
-    if ($bridgeLabel === null) {
+    if ($isCenter && ($resolvedExitDirection !== $direction || $bridgeLabel !== null)) {
+        throw new \InvalidArgumentException('parts.sideways side=center requires matching entry/exit directions and no bridgeLabel; there is no horizontal bridge.');
+    }
+    if (! $isCenter && $bridgeLabel === null) {
         $__env->getConsumableComponentData('twGraphCalculatedLengths')?->recordProp(
             $id . '.bridge1', 'parts.sideways', $id, 'bridge-length', $bridgeLength !== null,
         );
@@ -168,6 +188,18 @@
         'x' => $add($bridgeEnd['x'], $arcDelta),
         'y' => $add($bridgeEnd['y'], $exitVerticalDelta),
     ];
+    $centerLength = 'calc(' . $resolvedArcRadius . ' + ' . $resolvedArcRadius . ')';
+    if ($isCenter) {
+        $arcOutEnd = [
+            'x' => $anchorStart['x'],
+            'y' => $add($anchorStart['y'], $isTopBottom ? $neg($centerLength) : $centerLength),
+        ];
+        $__env->getConsumableComponentData('twGraphCalculatedLengths')?->record(
+            $id . '.stem', 'parts.sideways', $id, 'length',
+            ['arcRadius' => $resolvedArcRadius],
+            'The straight connection spans the combined height of both arcs.',
+        );
+    }
     $labelAnchor = $arcOutEnd;
     $continuationEnd = $arcOutEnd;
 
@@ -182,7 +214,18 @@
         ];
     }
 
-    $jointArrowDirection = $isLeft ? 'right' : 'left';
+    if ($hasStraightExtension) {
+        $labelAnchor = [
+            'x' => $arcOutEnd['x'],
+            'y' => $add($arcOutEnd['y'], $exitTopBottom ? $neg($extensionLength) : $extensionLength),
+        ];
+        $continuationEnd = $labelAnchor;
+        $__env->getConsumableComponentData('twGraphCalculatedLengths')?->recordProp(
+            $id . '.extension-stem', 'parts.sideways', $id, 'extension-length', true,
+        );
+    }
+
+    $jointArrowDirection = $travelsRight ? 'right' : 'left';
     $normalizeLabel = fn (mixed $label): ?array => \Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel::normalize($label, null, $resolvedColor);
     $normalizeNodeLabel = function (mixed $label, string $side) use ($normalizeLabel): ?array {
         $normalized = $normalizeLabel($label);
@@ -351,12 +394,64 @@
         ];
     }
 
+    // New single-stem extension: the arc exit and extension exit own separate markers.
+    if ($hasStraightExtension || $nodeEndDot !== null) {
+        $arcMarker = \Gunreip\TranslationWorkbench\Support\TwGraph\NodeMarker::resolve(
+            (bool) $nodeEnd, $nodeEndDot ?? ! $jointArrowEnd,
+            $hasStraightExtension || $hasExtension ? [] : [$nodeLabelRight, $nodeLabelLeft],
+        );
+        $segments[2]['segment']['nodeEnd'] = $arcMarker['visible'];
+        $segments[2]['segment']['nodeEndDot'] = $arcMarker['dot'];
+        $segments[2]['segment']['jointArrowEnd'] = $arcMarker['arrow'];
+        $segments[2]['segment']['devCounterEnd'] = $devCounterEnd;
+    }
+    if ($hasStraightExtension) {
+        $extensionMarker = \Gunreip\TranslationWorkbench\Support\TwGraph\NodeMarker::resolve(
+            (bool) data_get($extensionEnd, 'nodeEnd', true),
+            (bool) data_get($extensionEnd, 'nodeEndDot', true),
+            [$nodeLabelRight, $nodeLabelLeft],
+        );
+        $segments[] = [
+            'component' => 'path',
+            'segment' => [
+                'id' => $id . '.extension-stem',
+                'direction' => $resolvedExitDirection,
+                'length' => $extensionLength,
+                'anchorStart' => $arcOutEnd,
+                'anchorEnd' => $labelAnchor,
+                'nodeStart' => false,
+                'nodeEnd' => $extensionMarker['visible'],
+                'nodeEndDot' => $extensionMarker['dot'],
+                'jointArrowEnd' => $extensionMarker['arrow'],
+                'devCounterStart' => false,
+                'devCounterEnd' => $devCounterEnd,
+                'devCounterColor' => $devCounterColor ?: $resolvedColor,
+                'color' => $resolvedColor,
+                'zIndex' => $zIndex,
+            ],
+        ];
+    }
     if ($nodeImage !== null) {
-        if ($hasExtension) {
+        if ($hasExtension || $hasStraightExtension) {
             $segments[3]['segment']['nodeEndDot'] = false;
         } else {
             $segments[2]['segment']['nodeEndDot'] = false;
         }
+    }
+    if ($isCenter) {
+        $centerSegment = array_replace($segments[2]['segment'], [
+            'id' => $id . '.stem',
+            'direction' => $direction,
+            'length' => $centerLength,
+            'anchorStart' => $anchorStart,
+            'anchorEnd' => $arcOutEnd,
+        ]);
+        $centerSegment['nodeEndDot'] = $centerSegment['nodeEndDot'] ?? (bool) $centerSegment['nodeEnd'];
+        unset($centerSegment['startAnchor'], $centerSegment['endAnchor'], $centerSegment['arcRadius']);
+        $segments = [
+            ['component' => 'path', 'segment' => $centerSegment],
+            ...array_slice($segments, 3),
+        ];
     }
 @endphp
 
@@ -386,6 +481,7 @@
     @endif
 @endforeach
 
+@if (! $isCenter)
 <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
     :id="$id . '.arc-in.bridge.joint-arrow'"
     :direction="$jointArrowDirection"
@@ -407,7 +503,9 @@
 
 @endif
 
-@if ($nodeEnd && $nodeLabelRight)
+@endif
+
+@if (($hasStraightExtension || $nodeEnd) && $nodeLabelRight)
     <x-translation-workbench::ui.tw-graph.segments.label
         :id="$id . '.anchorNode-end.label-1'"
         :label="$nodeLabelRight"
@@ -418,7 +516,7 @@
     />
 @endif
 
-@if ($nodeEnd && $nodeLabelLeft)
+@if (($hasStraightExtension || $nodeEnd) && $nodeLabelLeft)
     <x-translation-workbench::ui.tw-graph.segments.label
         :id="$id . '.anchorNode-end.label-2'"
         :label="$nodeLabelLeft"
@@ -429,7 +527,7 @@
     />
 @endif
 
-@if ($nodeEnd && $nodeImage !== null)
+@if (($hasStraightExtension || $nodeEnd) && $nodeImage !== null)
     <x-translation-workbench::ui.tw-graph.primitives.node-image
         :id="$id . '.anchorNode-end.image'"
         :source="data_get($nodeImage, 'source', data_get($nodeImage, 'src'))"

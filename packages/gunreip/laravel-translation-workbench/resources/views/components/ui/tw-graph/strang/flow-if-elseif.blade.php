@@ -80,7 +80,7 @@
     $span = 'calc(max(' . $ifWidth . ', ' . $elseifWidth . ', ' . $falseWidth . ') + (' . $bridge . ' * 2))';
     $ifBridge = 'calc((' . $span . ' - ' . $ifWidth . ') / 2)';
     $elseifBridge = 'calc((' . $span . ' - ' . $elseifWidth . ') / 2)';
-    $routeSide = $side === 'right' ? 'left' : 'right';
+    $routeSide = $side;
     $falseSide = $side === 'right' ? 'left' : 'right';
     $trueLabel = ['text' => ['True'], 'width' => 'half', 'badgeColor' => 'green'];
     $falseInformation = ['text' => ['False'], 'width' => 'half', 'badgeColor' => 'rose'];

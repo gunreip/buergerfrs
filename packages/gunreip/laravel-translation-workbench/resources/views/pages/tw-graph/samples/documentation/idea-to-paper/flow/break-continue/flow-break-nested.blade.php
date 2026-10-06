@@ -357,7 +357,7 @@
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-break-nested-left', 'literature.break.nested.left.break-rise.anchorNode-end',
                                 )"
-                                side="left"
+                                side="right"
                                 :bridge-length="$breakBridge"
                                 :node-end="false"
                                 :dev-counter-end="false"
@@ -404,7 +404,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['groupIndex = groupIndex + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="cyan"
                             />
                             @php
@@ -642,7 +641,7 @@
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-break-nested-right', 'literature.break.nested.right.break-rise.anchorNode-end',
                                 )"
-                                side="right"
+                                side="left"
                                 :bridge-length="$rightBreakBridge"
                                 :node-end="false"
                                 :dev-counter-end="false"
@@ -689,7 +688,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['groupIndex = groupIndex + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="cyan"
                             />
                             @php

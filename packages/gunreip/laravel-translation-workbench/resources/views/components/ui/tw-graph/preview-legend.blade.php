@@ -3,12 +3,16 @@
     class="relative mt-2 border-t border-zinc-200 pt-2 dark:border-zinc-700"
     data-tw-graph-dev-legend
     x-cloak
-    x-show="previewDev && (previewBoxes || previewCoordinates || previewGrid || previewCalculated)"
+    x-show="previewDev && (previewBoxes || previewCoordinates || previewGrid || previewCalculated || previewFiles)"
 >
     <x-translation-workbench::ui.common.component-marker name="translation-workbench::ui.tw-graph.preview-legend" />
     <flux:heading class="mb-3">{{ __('DEV legend') }}</flux:heading>
     {{-- <div class="mt-1 flex min-h-24 flex-wrap content-start gap-x-4 gap-y-1 text-xs text-zinc-600 dark:text-zinc-300"> --}}
     <div class="mt-1 grid min-h-12 grid-cols-3 content-start gap-x-4 gap-y-1 text-sm text-zinc-600 dark:text-zinc-300">
+        <span class="inline-flex items-center gap-2" x-show="previewFiles">
+            <span class="inline-flex h-5 w-10 items-center justify-center rounded-sm border border-zinc-700 bg-white"><span class="w-6" style="border-top:1px dashed #db2777"></span></span>
+            {{ __('File regions — click the caption for paths') }}
+        </span>
         <div
             class="contents"
             data-tw-graph-length-legend

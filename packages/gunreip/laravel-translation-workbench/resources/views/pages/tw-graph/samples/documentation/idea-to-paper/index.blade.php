@@ -132,7 +132,11 @@
         <flux:tab.panel name="idea-to-paper-overview">
             @if (!isset($documentationTabs) || $documentationTabs['main'] === 'idea-to-paper-overview')
                 <div wire:key="documentation-overview">
-                    @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.overview.index')
+                    <livewire:translation-workbench.tw-graph.overview
+                        :dev="$dev"
+                        :coordinates="$coordinates"
+                        :key="'documentation-overview-graph'"
+                    />
                 </div>
             @endif
         </flux:tab.panel>
@@ -284,6 +288,7 @@
         </flux:tab.panel>
     </flux:tab.group>
 
+    @if (($documentationTabs['main'] ?? null) !== 'idea-to-paper-overview')
     <flux:callout
         id="tw-graph-documentation-results"
         color="sky"
@@ -414,4 +419,5 @@
             </flux:tab.panel>
         </flux:tab.group>
     </flux:callout>
+    @endif
 </section>

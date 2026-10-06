@@ -202,7 +202,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['RETURN (no value)'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="7"
                                 color="green"
                             />

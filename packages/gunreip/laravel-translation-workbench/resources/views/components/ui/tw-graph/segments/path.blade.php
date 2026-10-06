@@ -137,6 +137,20 @@
     $nodeEndDot = (bool) data_get($segment, 'nodeEndDot', $nodeEnd);
     $jointArrowStart = $nodeStart && ! $nodeStartDot && (bool) data_get($segment, 'jointArrowStart', false);
     $jointArrowEnd = $nodeEnd && ! $nodeEndDot && (bool) data_get($segment, 'jointArrowEnd', false);
+    if (array_filter($nodeLabels($nodeStartValue))) {
+        $marker = \Gunreip\TranslationWorkbench\Support\TwGraph\NodeMarker::resolve(
+            $nodeStart, $nodeStartDot, $nodeLabels($nodeStartValue), 'start',
+        );
+        $nodeStartDot = $marker['dot'];
+        $jointArrowStart = $marker['arrow'];
+    }
+    if (array_filter($nodeLabels($nodeEndValue))) {
+        $marker = \Gunreip\TranslationWorkbench\Support\TwGraph\NodeMarker::resolve(
+            $nodeEnd, $nodeEndDot, $nodeLabels($nodeEndValue), 'end',
+        );
+        $nodeEndDot = $marker['dot'];
+        $jointArrowEnd = $marker['arrow'];
+    }
     $jointArrowDirection = match ($direction) {
         'left-right' => 'right',
         'right-left' => 'left',

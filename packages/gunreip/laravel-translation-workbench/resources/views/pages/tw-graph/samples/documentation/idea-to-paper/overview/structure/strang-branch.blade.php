@@ -1,0 +1,9 @@
+<x-translation-workbench::ui.tw-graph.file-region
+    view="translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.overview.structure.strang-branch"
+    layout="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/overview/data/strang-branch.php"
+>
+    <x-translation-workbench::ui.tw-graph.documentation-tree
+        :tree="$structure['strangBranchTabs']"
+        :graph-id="$structure['canvas']['graphId']"
+    />
+</x-translation-workbench::ui.tw-graph.file-region>

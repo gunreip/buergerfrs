@@ -169,7 +169,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.nested.left.outer-call"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-nested-left',
                                     'literature.function.nested.left.prepare.anchorNode-end',
@@ -198,7 +198,7 @@
                             {{-- The inner call starts from the outer function, not from the original caller. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.nested.left.inner-call"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-nested-left',
                                     'literature.function.nested.left.outer-enter.anchorNode-end',
@@ -226,7 +226,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.nested.left.inner-return"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-nested-left',
                                     'literature.function.nested.left.inner-body.anchorNode-end',
@@ -255,7 +255,7 @@
                             {{-- Only this RETURN resumes the original caller. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.nested.left.outer-return"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-nested-left',
                                     'literature.function.nested.left.outer-resume.anchorNode-end',
@@ -322,7 +322,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.nested.right.outer-call"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-nested-right',
                                     'literature.function.nested.right.prepare.anchorNode-end',
@@ -351,7 +351,7 @@
                             {{-- The inner call starts from the outer function, not from the original caller. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.nested.right.inner-call"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-nested-right',
                                     'literature.function.nested.right.outer-enter.anchorNode-end',
@@ -379,7 +379,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.nested.right.inner-return"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-nested-right',
                                     'literature.function.nested.right.inner-body.anchorNode-end',
@@ -408,7 +408,7 @@
                             {{-- Only this RETURN resumes the original caller. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.nested.right.outer-return"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-nested-right',
                                     'literature.function.nested.right.outer-resume.anchorNode-end',

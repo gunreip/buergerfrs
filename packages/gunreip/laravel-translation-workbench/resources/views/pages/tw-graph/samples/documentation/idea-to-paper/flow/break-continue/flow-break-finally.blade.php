@@ -345,7 +345,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['FINALLY', 'Cleanup current item'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="11"
                                 color="violet"
                             />
@@ -357,7 +356,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['FINALLY', 'Cleanup current item'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="12"
                                 color="violet"
                             />
@@ -431,7 +429,7 @@
                                     'idea-to-paper-break-finally-left',
                                     'literature.break.finally.left.break-rise.anchorNode-end',
                                 )"
-                                side="left"
+                                side="right"
                                 :bridge-length="$leftBridge"
                                 :node-end="false"
                                 :dev-counter-end="false"
@@ -555,7 +553,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['FINALLY', 'Cleanup current item'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="11"
                                 color="violet"
                             />
@@ -567,7 +564,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['FINALLY', 'Cleanup current item'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="12"
                                 color="violet"
                             />
@@ -641,7 +637,7 @@
                                     'idea-to-paper-break-finally-right',
                                     'literature.break.finally.right.break-rise.anchorNode-end',
                                 )"
-                                side="right"
+                                side="left"
                                 :bridge-length="$rightBridge"
                                 :node-end="false"
                                 :dev-counter-end="false"

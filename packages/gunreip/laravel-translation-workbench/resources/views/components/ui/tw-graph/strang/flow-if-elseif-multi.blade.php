@@ -106,7 +106,7 @@
     }
     $bridge = \Gunreip\TranslationWorkbench\Support\TwGraph\LabelBridge::bridgeLength($bridgeLength);
     $span = 'calc(max(' . implode(', ', $widths) . ') + (' . $bridge . ' * 2))';
-    $routeSide = $side === 'right' ? 'left' : 'right';
+    $routeSide = $side;
     $falseSide = $side === 'right' ? 'left' : 'right';
     $trueInformation = ['text' => ['True'], 'width' => 'half', 'badgeColor' => 'green'];
     $falseInformation = ['text' => ['False'], 'width' => 'half', 'badgeColor' => 'rose'];

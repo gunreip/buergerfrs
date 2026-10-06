@@ -455,7 +455,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['index = index + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="14"
                                 color="cyan"
                             />
@@ -591,7 +590,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['index = index + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="14"
                                 color="cyan"
                             />

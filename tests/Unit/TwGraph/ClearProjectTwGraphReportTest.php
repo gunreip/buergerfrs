@@ -10,7 +10,7 @@ uses(TestCase::class);
 
 it('parses json pest output from the last json line', function (): void {
     $command = new ClearProject();
-    $method = new ReflectionMethod(ClearProject::class, 'parseJsonProcessOutput');
+    $method = new ReflectionMethod(ClearProject::class, 'parseProcessOutput');
     $method->setAccessible(true);
 
     $parsed = $method->invoke($command, implode(PHP_EOL, [
@@ -242,4 +242,77 @@ it('respects quiet console output', function (): void {
 
     expect($output->fetch())->toBe('');
     expect($process->getOutput())->toBe('result');
+});
+
+it('puts the error first and separates trace and expected actual in both reports', function (): void {
+    $message = "Undefined array key \"global\"\nStack trace:\n#0 <script>unsafe</script>";
+    $check = ['status' => 'failed', 'parsed_output' => ['error_details' => [[
+        'test' => 'optional global overrides', 'file' => 'OverviewFlowTest.php', 'line' => 48,
+        'message' => $message, 'expected' => false, 'actual' => null,
+    ]]]];
+    $detail = \Gunreip\TranslationWorkbench\Support\TwGraph\TestFailureDetails::fromCheck($check)[0];
+    expect($detail['message'])->toBe('Undefined array key "global"')
+        ->and($detail['details'])->toBe($message)
+        ->and($detail['expected'])->toBe('false')
+        ->and($detail['actual'])->toBe('null');
+    $command = new ClearProject;
+    $standalone = (new ReflectionMethod(ClearProject::class, 'twGraphTestsReportHtml'))->invoke($command, ['checks' => [$check]]);
+    $diagnostics = view('translation-workbench::pages.tw-graph.partials.test-failures', compact('check'))->render();
+    foreach ([$standalone, $diagnostics] as $html) {
+        expect($html)->toContain('Undefined array key', 'Expected', 'Actual', 'Technical details / stack trace', '&lt;script&gt;unsafe&lt;/script&gt;')
+            ->not->toContain('<script>unsafe</script>');
+        expect(strpos($html, 'Undefined array key'))->toBeLessThan(strpos($html, 'optional global overrides'));
+        expect(strpos($html, 'optional global overrides'))->toBeLessThan(strpos($html, 'Stack trace:'));
+    }
+    expect($standalone)->toContain('class="failure-message"', '<details><summary>')->not->toContain('<details open');
+    expect($diagnostics)->toContain('data-flux-callout', '--color-red-', 'data-flux-accordion');
+});
+
+it('preserves multiline assertions and raw process diagnostics without inventing expected actual values', function (): void {
+    $message = "Failed asserting that two strings are equal.\n-Expected\n+Actual\n-abc\n+def";
+    $detail = \Gunreip\TranslationWorkbench\Support\TwGraph\TestFailureDetails::fromCheck([
+        'parsed_output' => ['failures' => [['message' => $message]]],
+    ])[0];
+    expect($detail['message'])->toBe($message)->and($detail['details'])->toBe('')
+        ->and($detail['expected'])->toBeNull()->and($detail['actual'])->toBeNull();
+    $output = "Fatal error: memory exhausted\n#0 /path/to/file.php";
+    $fallback = \Gunreip\TranslationWorkbench\Support\TwGraph\TestFailureDetails::fromCheck(['output' => $output])[0];
+    expect($fallback['message'])->toBe('Fatal error: memory exhausted')->and($fallback['details'])->toBe($output);
+});
+
+it('removes terminal color controls from displayed failure details without changing literal brackets', function (): void {
+    $check = ['output' => "\033[31mUndefined array key \"global\"\033[0m\n at example.php:48"];
+    $detail = \Gunreip\TranslationWorkbench\Support\TwGraph\TestFailureDetails::fromCheck($check)[0];
+    expect($detail['message'])->toBe('Undefined array key "global"')
+        ->and($detail['details'])->not->toContain("\033", '[31m');
+    expect(\Gunreip\TranslationWorkbench\Support\TwGraph\TestFailureDetails::plainText('array[0] and literal [39m'))
+        ->toBe('array[0] and literal [39m');
+});
+
+
+it('parses console totals and aggregates multiple checks without counting assertions as tests', function (string $output, int $tests, int $assertions): void {
+    $command = new ClearProject;
+    $parse = new ReflectionMethod(ClearProject::class, 'parseProcessOutput');
+    $parsed = $parse->invoke($command, $output);
+    expect($parsed)->toMatchArray(['tests' => $tests, 'assertions' => $assertions]);
+    $checks = [
+        ['group' => 'Example', 'status' => 'passed', 'parsed_output' => $parsed],
+        ['group' => 'Example', 'status' => 'failed', 'parsed_output' => ['tests' => 2, 'assertions' => 7]],
+    ];
+    $groups = (new ReflectionMethod(ClearProject::class, 'twGraphReportGroups'))->invoke($command, $checks);
+    expect($groups[0])->toMatchArray(['tests' => $tests + 2, 'assertions' => $assertions + 7, 'checks' => 2, 'status' => 'failed']);
+})->with([
+    'colored Pest' => ["\033[90mTests:\033[39m \033[32m4 passed\033[39m (121 assertions)\nDuration: 7.20s", 4, 121],
+    'mixed Pest' => ["  Tests: 1 failed, 2 skipped, 3 passed (27 assertions)\n  Duration: 0.30s", 6, 27],
+    'singular Pest' => ['Tests: 1 passed (1 assertion)', 1, 1],
+    'PHPUnit success' => ['OK (4 tests, 121 assertions)', 4, 121],
+    'PHPUnit failure' => ['Tests: 4, Assertions: 121, Failures: 1.', 4, 121],
+]);
+
+it('does not invent totals for interrupted processes and keeps structured failures authoritative', function (): void {
+    $parse = new ReflectionMethod(ClearProject::class, 'parseProcessOutput');
+    $command = new ClearProject;
+    expect($parse->invoke($command, 'Fatal error: memory exhausted'))->toBeNull();
+    $json = ['tests' => 2, 'assertions' => 3, 'error_details' => [['message' => 'Example error']]];
+    expect($parse->invoke($command, "Tests: 1 passed (1 assertion)\n".json_encode($json)))->toBe($json);
 });

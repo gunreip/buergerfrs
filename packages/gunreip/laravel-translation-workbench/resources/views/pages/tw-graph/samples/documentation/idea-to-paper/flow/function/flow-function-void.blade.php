@@ -167,7 +167,7 @@
                             {{-- The caller waits here until logMessage finishes. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.void.left.call"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-void-left',
                                     'literature.function.void.left.prepare.anchorNode-end',
@@ -193,7 +193,7 @@
                             {{-- Same bridge widths bring the return back onto the caller lane. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.void.left.return"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-void-left',
                                     'literature.function.void.left.body.anchorNode-end',
@@ -255,7 +255,7 @@
                             {{-- The caller waits here until logMessage finishes. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.void.right.call"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-void-right',
                                     'literature.function.void.right.prepare.anchorNode-end',
@@ -281,7 +281,7 @@
                             {{-- Same bridge widths bring the return back onto the caller lane. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.void.right.return"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-void-right',
                                     'literature.function.void.right.body.anchorNode-end',

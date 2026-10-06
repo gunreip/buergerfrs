@@ -349,7 +349,7 @@
                                     'idea-to-paper-try-catch-try-foreach-left',
                                     'literature.try-catch.try-foreach.left.failure-rise.anchorNode-end',
                                 )"
-                                side="left"
+                                side="right"
                                 :bridge-length="$leftBridge"
                                 :node-end="false"
                                 :dev-counter-end="false"
@@ -541,7 +541,7 @@
                                     'idea-to-paper-try-catch-try-foreach-right',
                                     'literature.try-catch.try-foreach.right.failure-rise.anchorNode-end',
                                 )"
-                                side="right"
+                                side="left"
                                 :bridge-length="$rightBridge"
                                 :node-end="false"
                                 :dev-counter-end="false"

@@ -170,7 +170,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.timeout.left.await"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-timeout-left',
                                     'literature.async-await.timeout.left.try.anchorNode-end',
@@ -210,7 +210,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.timeout.left.cancelled"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-timeout-left',
                                     'literature.async-await.timeout.left.acknowledge.anchorNode-end',
@@ -301,7 +301,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.timeout.right.await"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-timeout-right',
                                     'literature.async-await.timeout.right.try.anchorNode-end',
@@ -341,7 +341,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.timeout.right.cancelled"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-timeout-right',
                                     'literature.async-await.timeout.right.acknowledge.anchorNode-end',

@@ -17,6 +17,12 @@
             </flux:table.columns>
             <flux:table.rows>
                 <flux:table.row>
+                    <flux:table.cell><code>direction</code></flux:table.cell>
+                    <flux:table.cell>{{ __('String: bottom-top or top-bottom') }}</flux:table.cell>
+                    <flux:table.cell><code>bottom-top</code></flux:table.cell>
+                    <flux:table.cell>{{ __('Reverses traversal of the merge and its extensions without moving their layout connections. top-bottom swaps segment start/end and moves the stem junction arrow to the outgoing arc. Terminal decorations and numbered layout anchors retain their positions.') }}</flux:table.cell>
+                </flux:table.row>
+                <flux:table.row>
                     <flux:table.cell class="whitespace-normal align-top">id</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">string | null</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
@@ -87,6 +93,12 @@
                     <flux:table.cell class="whitespace-normal align-top">array</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">[]</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">Per-stem length overrides, indexed by one-based number or supplied as a list.</flux:table.cell>
+                </flux:table.row>
+                <flux:table.row>
+                    <flux:table.cell class="whitespace-normal align-top"><code>extension-colors</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Array: extension index → color string') }}</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>[]</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Colors continue from index 1 to N. A supplied color applies to that extension and following extensions until the next override. Earlier extensions retain the merge color. Example: [3 => "fuchsia", 5 => "cyan"]. Anchor metadata carries the resolved color for connected consumers.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal align-top">extension-count</flux:table.cell>

@@ -176,7 +176,6 @@
                                 after-length="4rem"
                                 :step-label="['text' => ['attempt = attempt + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="1"
                                 color="sky"
                             />
@@ -188,7 +187,6 @@
                                 after-length="4rem"
                                 :step-label="['text' => ['success = Try operation'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="2"
                                 color="green"
                             />
@@ -354,7 +352,6 @@
                                 after-length="4rem"
                                 :step-label="['text' => ['attempt = attempt + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="1"
                                 color="sky"
                             />
@@ -366,7 +363,6 @@
                                 after-length="4rem"
                                 :step-label="['text' => ['success = Try operation'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="2"
                                 color="green"
                             />

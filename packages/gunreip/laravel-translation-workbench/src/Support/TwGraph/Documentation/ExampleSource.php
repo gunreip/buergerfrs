@@ -4,9 +4,10 @@ namespace Gunreip\TranslationWorkbench\Support\TwGraph\Documentation;
 
 use Illuminate\Support\Facades\View;
 use LogicException;
+use ReflectionClass;
 use RuntimeException;
 
-/** Raw, unescaped example code from one authored Blade view. */
+/** Raw, unescaped example code from an authored view or a data-definition class. */
 final class ExampleSource
 {
     public function __construct(
@@ -23,6 +24,34 @@ final class ExampleSource
         }
 
         return new self($source, $view);
+    }
+
+    /** Read the actual data definition, rather than displaying a duplicated array. */
+    public static function fromClass(string $class): self
+    {
+        $file = (new ReflectionClass($class))->getFileName();
+        $source = $file === false ? false : file_get_contents($file);
+
+        if ($source === false) {
+            throw new RuntimeException("Unable to read documentation class [{$class}].");
+        }
+
+        return new self($source, $class);
+    }
+
+    public static function fromFile(string $file): self
+    {
+        $source = file_get_contents($file);
+        if ($source === false) {
+            throw new RuntimeException("Unable to read documentation file [{$file}].");
+        }
+
+        return new self($source, $file);
+    }
+
+    public function source(): string
+    {
+        return rtrim(str_replace(["\r\n", "\r"], "\n", $this->source));
     }
 
     public function example(string $marker): string

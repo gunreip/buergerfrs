@@ -32,8 +32,7 @@
     'stepLabel' => null,
     'nodeLabels' => [],
     'nodeEnd' => true,
-    'nodeEndDot' => null,
-    'jointArrowEnd' => false,
+    'nodeEndDot' => true,
     'stepCaps' => true,
     'capLength' => null,
     'color' => null,
@@ -86,7 +85,9 @@
     $nodeEndValue = ($endRightLabel !== null || $endLeftLabel !== null)
         ? [$endRightLabel, $endLeftLabel]
         : $nodeEnd;
-    $nodeEndDot = $nodeEndDot ?? (bool) $nodeEndValue;
+    $endMarker = \Gunreip\TranslationWorkbench\Support\TwGraph\NodeMarker::resolve(
+        (bool) $nodeEnd, (bool) $nodeEndDot, [$endRightLabel, $endLeftLabel],
+    );
     $add = fn (string $value, string $delta): string => $delta === '0rem' ? $value : 'calc(' . $value . ' + ' . $delta . ')';
     $neg = fn (string $value): string => 'calc(' . $value . ' * -1)';
     $advance = function (array $anchor, string $length) use ($add, $neg, $direction): array {
@@ -132,8 +133,8 @@
         'stepLabel' => array_replace(is_array($stepLabel) ? $stepLabel : ['text' => $stepLabel], ['offset' => $stepLabelLayout['offset']]),
         'nodeStart' => false,
         'nodeEnd' => $nodeEndValue,
-        'nodeEndDot' => $nodeEndDot,
-        'jointArrowEnd' => $jointArrowEnd,
+        'nodeEndDot' => $endMarker['dot'],
+        'jointArrowEnd' => $endMarker['arrow'],
         'stepCaps' => $stepCaps,
         'capLength' => $capLength ?? \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('cap_length', '1.75rem'),
         'color' => $resolvedColor,

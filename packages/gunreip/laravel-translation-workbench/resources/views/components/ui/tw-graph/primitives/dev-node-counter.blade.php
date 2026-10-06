@@ -48,6 +48,9 @@
 @endphp
 
 @if ($dev && $visible && $counter !== false && filled($counter))
+    @php
+        $displayCounter = $__env->getConsumableComponentData('twGraphNodeCounters')?->label($counter) ?? $counter;
+    @endphp
     <span
         {{ $attributes->class([
             'tw-graph-protocol-primitive',
@@ -68,7 +71,7 @@
             size="sm"
             color="{{ $color }}"
         >
-            {{ $counter }}
+            {{ $displayCounter }}
         </flux:badge>
     </span>
 @endif

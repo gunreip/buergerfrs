@@ -1,0 +1,9 @@
+<x-translation-workbench::ui.tw-graph.file-region
+    view="translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.overview.structure.primitives"
+    layout="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/overview/data/primitives.php"
+>
+    <x-translation-workbench::ui.tw-graph.documentation-tree
+        :tree="$structure['primitivesTabs']"
+        :graph-id="$structure['canvas']['graphId']"
+    />
+</x-translation-workbench::ui.tw-graph.file-region>

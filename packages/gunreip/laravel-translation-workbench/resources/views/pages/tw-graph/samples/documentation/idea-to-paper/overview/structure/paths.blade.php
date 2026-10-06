@@ -1,0 +1,9 @@
+<x-translation-workbench::ui.tw-graph.file-region
+    view="translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.overview.structure.paths"
+    layout="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/overview/data/paths.php"
+>
+    <x-translation-workbench::ui.tw-graph.documentation-tree
+        :tree="$structure['pathsTabs']"
+        :graph-id="$structure['canvas']['graphId']"
+    />
+</x-translation-workbench::ui.tw-graph.file-region>

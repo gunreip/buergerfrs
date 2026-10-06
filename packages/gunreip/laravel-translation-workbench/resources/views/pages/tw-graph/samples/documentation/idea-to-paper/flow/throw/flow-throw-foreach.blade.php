@@ -395,7 +395,7 @@
                                     'idea-to-paper-throw-foreach-left',
                                     'literature.throw.foreach.left.failure-rise.anchorNode-end',
                                 )"
-                                side="left"
+                                side="right"
                                 :bridge-length="$leftBridge"
                                 :node-end="false"
                                 :dev-counter-end="false"
@@ -636,7 +636,7 @@
                                     'idea-to-paper-throw-foreach-right',
                                     'literature.throw.foreach.right.failure-rise.anchorNode-end',
                                 )"
-                                side="right"
+                                side="left"
                                 :bridge-length="$rightBridge"
                                 :node-end="false"
                                 :dev-counter-end="false"

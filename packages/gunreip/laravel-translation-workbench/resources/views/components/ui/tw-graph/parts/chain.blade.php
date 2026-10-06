@@ -125,7 +125,7 @@
         };
     };
     $advanceSideways = function (array $anchor, array $part) use ($add, $neg, $partValue, $resolvedArcRadius, $resolvedBridgeLength, $resolvedDirection): array {
-        $isLeft = $partValue($part, 'side', 'left') !== 'right';
+        $travelsRight = $partValue($part, 'side', 'left') === 'right';
         $arcRadius = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(
             $partValue($part, ['arcRadius', 'arc-radius', 'arc_radius']),
             null,
@@ -141,7 +141,7 @@
             null,
             '0rem',
         );
-        $xDelta = $isLeft
+        $xDelta = $travelsRight
             ? 'calc(' . $arcRadius . ' + ' . $bridge . ' + ' . $arcRadius . ')'
             : 'calc((' . $arcRadius . ' + ' . $bridge . ' + ' . $arcRadius . ') * -1)';
         $rawYDelta = in_array($extension, ['0', '0rem'], true)

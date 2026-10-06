@@ -305,7 +305,7 @@
                                     'idea-to-paper-break-while-left',
                                     'literature.break.while.left.break-rise.anchorNode-end',
                                 )"
-                                side="left"
+                                side="right"
                                 :bridge-length="$leftBridge"
                                 :node-end="false"
                                 :dev-counter-end="false"
@@ -467,7 +467,7 @@
                                     'idea-to-paper-break-while-right',
                                     'literature.break.while.right.break-rise.anchorNode-end',
                                 )"
-                                side="right"
+                                side="left"
                                 :bridge-length="$rightBridge"
                                 :node-end="false"
                                 :dev-counter-end="false"

@@ -55,7 +55,7 @@
     @endphp
 @endif
 <x-translation-workbench::ui.tw-graph.parts.sideways
-    :id="$id . '.outward'" :anchor-start="$detourCursor" :side="$side === 'right' ? 'left' : 'right'"
+    :id="$id . '.outward'" :anchor-start="$detourCursor" :side="$side"
     :direction="$direction" :arc-radius="$arcRadius" :bridge-length="$bridgeLength"
     :joint-arrow-end="true" :dev-counter-end="$detourCounter"
     :color="$color" :z-index="$zIndex"
@@ -76,7 +76,7 @@
 <x-translation-workbench::ui.tw-graph.parts.sideways
     :id="$id . '.inward'"
     :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($detourGraph, $id . '.stem.anchorNode-end')"
-    :side="$side === 'right' ? 'right' : 'left'" :direction="$direction"
+    :side="$side === 'right' ? 'left' : 'right'" :direction="$direction"
     :arc-radius="$arcRadius" :bridge-length="$bridgeLength"
     :joint-arrow-end="true" :dev-counter-end="$detourCounter"
     :color="$color" :z-index="$zIndex"

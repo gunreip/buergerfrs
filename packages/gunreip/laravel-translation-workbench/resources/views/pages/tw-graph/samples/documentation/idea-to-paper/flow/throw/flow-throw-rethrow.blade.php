@@ -75,7 +75,7 @@
                             <flux:table.row>
                                 <flux:table.cell class="whitespace-normal align-top"><code>parts.sideways.side</code></flux:table.cell>
                                 <flux:table.cell class="whitespace-normal align-top"><code>left</code></flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">{{ __('Uses right for a route extending left and left for a route extending right; this prop names the incoming arc side.') }}</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Destination side: left extends the route left; right extends it right.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
                                 <flux:table.cell class="whitespace-normal align-top"><code>anchor-start / attach-to</code></flux:table.cell>
@@ -175,7 +175,7 @@
                             {{-- THROW changes control flow: no continuation of the TRY body follows this action. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.throw.rethrow.left.raise"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-throw-rethrow-left',
                                     'literature.throw.rethrow.left.inner.anchorNode-end',
@@ -290,7 +290,7 @@
                             {{-- THROW changes control flow: no continuation of the TRY body follows this action. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.throw.rethrow.right.raise"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-throw-rethrow-right',
                                     'literature.throw.rethrow.right.inner.anchorNode-end',

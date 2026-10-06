@@ -307,7 +307,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['FINALLY', 'Cleanup current item'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="11"
                                 color="violet"
                             />

@@ -59,7 +59,7 @@ it('passes half width labels and extension geometry through parts sideways', fun
         <x-translation-workbench::ui.tw-graph graph-id="parts-sideways-test" :dev="true" :coordinates="false">
             <x-translation-workbench::ui.tw-graph.parts.sideways
                 id="sample.left.1.sideways"
-                side="left"
+                side="right"
                 extension="3rem"
                 :anchor-start="['x' => '0rem', 'y' => '0rem']"
                 :node-label-left="[
@@ -87,7 +87,7 @@ it('renders right sideways parts with mirrored arc names labels and joint arrows
         <x-translation-workbench::ui.tw-graph graph-id="parts-sideways-right-test" :dev="true" :coordinates="false">
             <x-translation-workbench::ui.tw-graph.parts.sideways
                 id="sample.right.1.sideways"
-                side="right"
+                side="left"
                 bridge-length="7rem"
                 :anchor-start="['x' => '0rem', 'y' => '0rem']"
                 :node-label-right="[
@@ -258,7 +258,7 @@ it('advances anchors across hand authored part chains', function (): void {
                     [
                         'type' => 'sideways',
                         'id' => 'sample.left.1.sideways',
-                        'side' => 'left',
+                        'side' => 'right',
                         'bridgeLength' => '6rem',
                     ],
                     [
@@ -296,7 +296,7 @@ it('inherits graph level part chain lengths when individual parts stay unset', f
                     [
                         'type' => 'sideways',
                         'id' => 'sample.left.1.inherited-sideways',
-                        'side' => 'left',
+                        'side' => 'right',
                     ],
                     [
                         'type' => 'end',
@@ -333,7 +333,7 @@ it('keeps individual part lengths ahead of part chain defaults', function (): vo
                     [
                         'type' => 'sideways',
                         'id' => 'sample.left.1.local-sideways',
-                        'side' => 'left',
+                        'side' => 'right',
                         'bridgeLength' => '4rem',
                     ],
                     [
@@ -377,7 +377,7 @@ it('accepts public kebab case keys in hand authored part chain arrays', function
                     [
                         'type' => 'sideways',
                         'id' => 'sample.left.1.public-sideways',
-                        'side' => 'left',
+                        'side' => 'right',
                         'arc-radius' => '4rem',
                         'bridge-length' => '5rem',
                         'node-label-left' => [
@@ -438,7 +438,7 @@ it('accepts backend friendly snake case keys in hand authored part chain arrays'
                     [
                         'type' => 'sideways',
                         'id' => 'sample.right.1.snake-sideways',
-                        'side' => 'right',
+                        'side' => 'left',
                         'arc_radius' => '4rem',
                         'bridge_length' => '5rem',
                         'node_label_right' => [
@@ -498,7 +498,7 @@ it('inherits graph level lengths through part chains when chain and parts stay u
                     [
                         'type' => 'sideways',
                         'id' => 'sample.left.1.graph-default-sideways',
-                        'side' => 'left',
+                        'side' => 'right',
                     ],
                     [
                         'type' => 'end',
@@ -534,7 +534,7 @@ it('keeps part chain color inheritance simple with local part color as the only 
                     [
                         'type' => 'sideways',
                         'id' => 'sample.left.1.local-color-sideways',
-                        'side' => 'left',
+                        'side' => 'right',
                         'color' => 'sky',
                         'nodeLabelLeft' => [
                             'text' => 'Local color label',
@@ -578,7 +578,7 @@ it('keeps explicit chained part label colors ahead of inherited chain color', fu
                     [
                         'type' => 'sideways',
                         'id' => 'sample.left.1.label-color-sideways',
-                        'side' => 'left',
+                        'side' => 'right',
                         'nodeLabelLeft' => [
                             'text' => 'Explicit sideways label color',
                             'color' => 'sky',
@@ -620,7 +620,7 @@ it('advances chain anchors in top bottom direction', function (): void {
                     [
                         'type' => 'sideways',
                         'id' => 'sample.right.1.sideways',
-                        'side' => 'right',
+                        'side' => 'left',
                         'bridgeLength' => '5rem',
                     ],
                 ]"
@@ -899,7 +899,7 @@ it('passes node images and extension geometry through chained handmade parts', f
                     [
                         'type' => 'sideways',
                         'id' => 'sample.left.1.school',
-                        'side' => 'left',
+                        'side' => 'right',
                         'bridgeLength' => '5rem',
                         'extension' => '3rem',
                         'nodeLabelRight' => [
@@ -1064,7 +1064,7 @@ it('keeps chain continuation aligned with the rendered sideways radius', functio
     $evaluate = new ReflectionMethod(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::class, 'evaluateRemExpression');
     $number = fn (string $value): float => $evaluate->invoke(null, $value);
     $radius = $override === null ? 2.0 : 3.0;
-    expect($number($sideways['x']))->toBe(($side === 'left' ? 1 : -1) * (6.0 + 2 * $radius))
+    expect($number($sideways['x']))->toBe(($side === 'left' ? -1 : 1) * (6.0 + 2 * $radius))
         ->and($number($entryX[1]))->toBe($number($sideways['x']))
         ->and($number($entryY[1]))->toBe($number($sideways['y']));
 })->with([

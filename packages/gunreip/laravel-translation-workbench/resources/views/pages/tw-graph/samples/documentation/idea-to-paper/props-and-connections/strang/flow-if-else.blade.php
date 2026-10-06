@@ -69,7 +69,7 @@
                     <flux:table.cell class="whitespace-normal align-top">side</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">string enum</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">left</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Route/endpoint side. For parts.sideways this names the incoming arc side: left moves right; right moves left.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">Destination side: left moves left; right moves right, independently of the vertical direction.</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal align-top">stem-length</flux:table.cell>

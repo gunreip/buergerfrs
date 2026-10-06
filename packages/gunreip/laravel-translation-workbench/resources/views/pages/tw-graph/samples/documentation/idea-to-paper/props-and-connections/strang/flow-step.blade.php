@@ -86,13 +86,13 @@
                     <flux:table.cell class="whitespace-normal align-top">node-end</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Render endpoint marker; supplied node labels can require a visible node.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Show the endpoint marker. An attached node label shows a Dot even when this is false; the geometric anchor always remains available.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal align-top">node-end-dot</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">bool | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Explicit endpoint Dot choice. Null derives it from node/label configuration.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('True selects a Dot, false a JointArrow. Attached node labels show a Dot unless their own nodeEnd is false.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal align-top">step-caps</flux:table.cell>
@@ -131,12 +131,7 @@
                     <flux:table.cell class="whitespace-normal align-top">Base drawing layer for this component.</flux:table.cell>
                 </flux:table.row>
 
-                <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">joint-arrow-end</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Render a technical end arrow when node-end is true and node-end-dot is false. Its direction follows the step direction; the anchor and DEV counter remain available.</flux:table.cell>
-                </flux:table.row>
+
             </flux:table.rows>
         </flux:table>
     </flux:callout>
@@ -320,6 +315,12 @@
                                                 </flux:table.columns>
                                                 <flux:table.rows>
                                                     <flux:table.row>
+                                            <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.nodeEnd</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('False hides this label’s Dot while keeping its text, connector and anchor. With two labels, a Dot remains if either label requests one.') }}</flux:table.cell>
+                                        </flux:table.row>
+                                        <flux:table.row>
                                                         <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.text</flux:table.cell>
                                                         <flux:table.cell class="whitespace-normal align-top">string | list&lt;string&gt;</flux:table.cell>
                                                         <flux:table.cell class="whitespace-normal align-top">No text unless supplied</flux:table.cell>
@@ -414,6 +415,12 @@
                                                 </flux:table.columns>
                                                 <flux:table.rows>
                                                     <flux:table.row>
+                                            <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.nodeEnd</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('False hides this label’s Dot while keeping its text, connector and anchor. With two labels, a Dot remains if either label requests one.') }}</flux:table.cell>
+                                        </flux:table.row>
+                                        <flux:table.row>
                                                         <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.text</flux:table.cell>
                                                         <flux:table.cell class="whitespace-normal align-top">string | list&lt;string&gt;</flux:table.cell>
                                                         <flux:table.cell class="whitespace-normal align-top">No text unless supplied</flux:table.cell>

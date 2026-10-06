@@ -37,6 +37,7 @@
 @endphp
 
 @props([
+    'direction' => 'bottom-top',
     'id' => 'path.merge',
     'side' => 'left',
     'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
@@ -411,6 +412,10 @@
 
 
 
+@php
+    $segments = \Gunreip\TranslationWorkbench\Support\TwGraph\MergeTraversal::orient($segments, $direction);
+@endphp
+
 @foreach ($segments as $segment)
     @if ($segment['component'] === 'start')
         <x-translation-workbench::ui.tw-graph.segments.start :segment="$segment['segment']" />
@@ -428,7 +433,7 @@
 @if ($hasStartShiftJoint)
     <x-translation-workbench::ui.tw-graph.primitives.joint-arrow
         :id="$id . '.start.start-shift.joint-arrow'"
-        direction="top"
+        :direction="$direction === 'top-bottom' ? 'bottom' : 'top'"
         :anchor-x="$startEnd['x']"
         :anchor-y="$startEnd['y']"
         :color="$resolvedColor"

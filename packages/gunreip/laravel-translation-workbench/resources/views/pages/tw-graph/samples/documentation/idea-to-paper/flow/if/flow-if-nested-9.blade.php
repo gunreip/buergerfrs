@@ -430,7 +430,7 @@
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.flow.1.if-nested-9.inner-return"
                                 :anchor-start="$sequenceEnd"
-                                side="left"
+                                side="right"
                                 arc-radius="2.75rem"
                                 :bridge-length="$returnBridge"
                                 :color="$sequenceEnd['color']"
@@ -638,7 +638,7 @@
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.flow.1.if-nested-9-right.inner-return"
                                 :anchor-start="$sequenceEnd"
-                                side="right"
+                                side="left"
                                 arc-radius="2.75rem"
                                 :bridge-length="$returnBridge"
                                 :color="$sequenceEnd['color']"

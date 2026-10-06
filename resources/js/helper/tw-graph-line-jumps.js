@@ -222,7 +222,7 @@ export function setupTwGraphLineJumps() {
         return style.cssText;
     };
     new MutationObserver((records) => {
-        if (records.some((record) => record.type === 'attributes'
+        if (records.filter(record => !record.target.closest?.('[data-tw-graph-performance]')).some((record) => record.type === 'attributes'
             ? !generated(record.target) && (record.attributeName !== 'style' || withoutMask(record.oldValue) !== withoutMask(record.target.getAttribute('style')))
             : [...record.addedNodes, ...record.removedNodes].some((node) => !generated(node)))) schedule();
     }).observe(document, {

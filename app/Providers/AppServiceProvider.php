@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Support\Debugbar\OverviewViewsCollectorProvider;
 use Carbon\CarbonImmutable;
+use Fruitcake\LaravelDebugbar\CollectorProviders\ViewsCollectorProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +18,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Debugbar is optional (require-dev); keep other requests on its normal view profile.
+        if (class_exists(ViewsCollectorProvider::class)) {
+            $this->app->bind(ViewsCollectorProvider::class, OverviewViewsCollectorProvider::class);
+        }
     }
 
     /**

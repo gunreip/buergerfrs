@@ -15,6 +15,8 @@ final class TwGraph extends Component
 
     public readonly \Gunreip\TranslationWorkbench\Support\TwGraph\CalculatedLengths $twGraphCalculatedLengths;
 
+    public readonly \Gunreip\TranslationWorkbench\Support\TwGraph\DevNodeCounters $twGraphNodeCounters;
+
     public function __construct(
         public mixed $protocol = [],
         public mixed $graphId = null,
@@ -35,9 +37,11 @@ final class TwGraph extends Component
         public mixed $horizontalPadding = null,
         public mixed $minWidth = null,
         public mixed $minHeight = null,
+        public mixed $devCounterAuto = false,
     ) {
         // Available while Blade renders the slot, before the canvas view itself.
         $this->twGraphDiagnostics = new CanvasDiagnostics($dev, $coordinates);
+        $this->twGraphNodeCounters = new \Gunreip\TranslationWorkbench\Support\TwGraph\DevNodeCounters(\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($devCounterAuto));
         $this->twGraphLayoutIssues = new LayoutIssues;
         $this->twGraphCalculatedLengths = new \Gunreip\TranslationWorkbench\Support\TwGraph\CalculatedLengths;
     }

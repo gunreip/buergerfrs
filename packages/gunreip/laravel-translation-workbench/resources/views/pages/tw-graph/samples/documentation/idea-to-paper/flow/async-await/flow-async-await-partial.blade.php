@@ -195,7 +195,7 @@
                             {{-- Independent operation A: both lanes must complete successfully. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.partial.left.a-pending"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-partial-left',
                                     'literature.async-await.partial.left.await-all.anchorNode-end',
@@ -223,7 +223,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.partial.left.a-ready"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-partial-left',
                                     'literature.async-await.partial.left.a-complete.anchorNode-end',
@@ -240,7 +240,7 @@
                             {{-- Independent operation B may finish before A; positions are not a timeline. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.partial.left.b-pending"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-partial-left',
                                     'literature.async-await.partial.left.await-all.anchorNode-end',
@@ -268,7 +268,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.partial.left.b-ready"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-partial-left',
                                     'literature.async-await.partial.left.b-complete.anchorNode-end',
@@ -361,7 +361,7 @@
                             {{-- Independent operation A: both lanes must complete successfully. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.partial.right.a-pending"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-partial-right',
                                     'literature.async-await.partial.right.await-all.anchorNode-end',
@@ -389,7 +389,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.partial.right.a-ready"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-partial-right',
                                     'literature.async-await.partial.right.a-complete.anchorNode-end',
@@ -406,7 +406,7 @@
                             {{-- Independent operation B may finish before A; positions are not a timeline. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.partial.right.b-pending"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-partial-right',
                                     'literature.async-await.partial.right.await-all.anchorNode-end',
@@ -434,7 +434,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.partial.right.b-ready"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-partial-right',
                                     'literature.async-await.partial.right.b-complete.anchorNode-end',

@@ -38,7 +38,7 @@
                     <flux:table.cell class="whitespace-normal align-top">side</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">string enum</flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">left</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Route/endpoint side. For parts.sideways this names the incoming arc side: left moves right; right moves left.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Destination: left/right routes sideways; center keeps x unchanged and uses a straight stem of twice arc-radius. With center, bridge-length has no effect; bridge-label and a reversed exit-direction are not supported.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
                     <flux:table.cell class="whitespace-normal align-top">anchor-start</flux:table.cell>
@@ -155,6 +155,36 @@
                     <flux:table.cell class="whitespace-normal align-top">Base drawing layer for this component.</flux:table.cell>
                 </flux:table.row>
 
+                <flux:table.row>
+                    <flux:table.cell class="whitespace-normal align-top">extension-length</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">length</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">0rem</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Adds one stem after the exit arc. The continuation anchor moves to its end. Cannot be combined with extension.') }}</flux:table.cell>
+                </flux:table.row>
+                <flux:table.row>
+                    <flux:table.cell class="whitespace-normal align-top">node-end-dot</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">bool | null</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Selects the arc-exit marker: true Dot, false JointArrow. Null retains the existing joint-arrow-end selection.') }}</flux:table.cell>
+                </flux:table.row>
+                <flux:table.row>
+                    <flux:table.cell class="whitespace-normal align-top">extension-end</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">array</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">nodeEnd=true, nodeEndDot=true</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Controls the independent endpoint marker of extension-length. Attached labels retain their automatic Dot rule.') }}</flux:table.cell>
+                </flux:table.row>
+                <flux:table.row>
+                    <flux:table.cell class="whitespace-normal align-top">extension-end.nodeEnd</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Show the extension endpoint marker; the geometric anchor remains available when false.') }}</flux:table.cell>
+                </flux:table.row>
+                <flux:table.row>
+                    <flux:table.cell class="whitespace-normal align-top">extension-end.nodeEndDot</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('True selects a Dot, false a JointArrow at the extension endpoint.') }}</flux:table.cell>
+                </flux:table.row>
             </flux:table.rows>
         </flux:table>
     </flux:callout>
@@ -571,7 +601,7 @@
     <flux:callout class="min-w-0 space-y-3" color="sky" icon="variable">
         <flux:callout.heading>Inheritance and calculated geometry</flux:callout.heading>
         <flux:text>Declared defaults below are the component’s own values. null delegates to inherited canvas settings or the resolution described here; it does not mean zero. Canvas controls shared line thickness, node size, label widths, connector defaults and path tone.</flux:text>
-        <flux:text>side=left moves to increasing x; side=right moves to decreasing x. This is the incoming-arc convention, opposite the destination-side naming of Flow IF.</flux:text>
+        <flux:text>{{ __('side=left moves toward negative x; side=right toward positive x. side=center preserves x. The vertical direction remains controlled by direction.') }}</flux:text>
         <flux:text>Without bridge-label, horizontal displacement is two radii plus bridge-length. With bridge-label, text width and both bridges participate. extension adds equal vertical pieces at the two arcs.</flux:text>
     </flux:callout>
     <flux:callout class="min-w-0 space-y-3" color="amber" icon="cable">

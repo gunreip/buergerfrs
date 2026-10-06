@@ -550,7 +550,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['itemIndex = itemIndex + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="sky"
                             />
                             <x-translation-workbench::ui.tw-graph.paths.loop-return
@@ -602,7 +601,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['groupIndex = groupIndex + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="cyan"
                             />
                             @php
@@ -784,7 +782,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['itemIndex = itemIndex + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="sky"
                             />
                             <x-translation-workbench::ui.tw-graph.paths.loop-return
@@ -836,7 +833,6 @@
                                 after-length="2rem"
                                 :step-label="['text' => ['groupIndex = groupIndex + 1'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="cyan"
                             />
                             @php

@@ -272,7 +272,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.test.invoke"
-                                side="right"
+                                side="left"
                                 direction="top-bottom"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-test-left',
@@ -302,7 +302,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.test.callback-return"
-                                side="left"
+                                side="right"
                                 direction="top-bottom"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-test-left',

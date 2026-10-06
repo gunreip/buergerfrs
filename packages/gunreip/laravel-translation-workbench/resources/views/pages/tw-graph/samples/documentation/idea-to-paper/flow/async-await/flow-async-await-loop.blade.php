@@ -288,7 +288,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.loop.left.await"
-                                side="right"
+                                side="left"
                                 direction="top-bottom"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-loop-left',
@@ -318,7 +318,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.loop.left.resume"
-                                side="left"
+                                side="right"
                                 direction="top-bottom"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-loop-left',
@@ -465,7 +465,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.loop.right.await"
-                                side="left"
+                                side="right"
                                 direction="top-bottom"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-loop-right',
@@ -495,7 +495,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.loop.right.resume"
-                                side="right"
+                                side="left"
                                 direction="top-bottom"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-loop-right',

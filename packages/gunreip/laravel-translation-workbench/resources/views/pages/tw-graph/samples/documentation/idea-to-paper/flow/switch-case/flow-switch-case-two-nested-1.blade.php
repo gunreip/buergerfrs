@@ -548,7 +548,7 @@
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.switch.1.two-nested-1.inner-return"
                                 :anchor-start="$innerEnd"
-                                side="right"
+                                side="left"
                                 arc-radius="2.75rem"
                                 :bridge-length="$returnBridge"
                                 color="amber"
@@ -637,7 +637,7 @@
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.switch.1.two-nested-1.inner-published-return"
                                 :anchor-start="$publishedInnerEnd"
-                                side="right"
+                                side="left"
                                 arc-radius="2.75rem"
                                 :bridge-length="$publishedReturnBridge"
                                 color="green"
@@ -852,7 +852,7 @@
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.switch.1.two-nested-1-mixed.inner-return"
                                 :anchor-start="$innerEnd"
-                                side="right"
+                                side="left"
                                 arc-radius="2.75rem"
                                 :bridge-length="$returnBridge"
                                 color="amber"
@@ -941,7 +941,7 @@
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.switch.1.two-nested-1-mixed.inner-published-return"
                                 :anchor-start="$publishedInnerEnd"
-                                side="left"
+                                side="right"
                                 arc-radius="2.75rem"
                                 :bridge-length="$publishedReturnBridge"
                                 color="green"

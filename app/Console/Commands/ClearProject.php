@@ -238,7 +238,7 @@ class ClearProject extends Command
             }
 
             $output = trim($process->getOutput() . "\n" . $process->getErrorOutput() . "\n" . $processError);
-            $parsedOutput = $this->parseJsonProcessOutput($output);
+            $parsedOutput = $this->parseProcessOutput($output);
             $result = [
                 'name' => $check['name'],
                 'type' => $check['type'],
@@ -421,8 +421,9 @@ class ClearProject extends Command
     /**
      * @return array<string, mixed>|null
      */
-    private function parseJsonProcessOutput(string $output): ?array
+    private function parseProcessOutput(string $output): ?array
     {
+        $output = \Gunreip\TranslationWorkbench\Support\TwGraph\TestFailureDetails::plainText($output);
         foreach (array_reverse(preg_split('/\R/', $output) ?: []) as $line) {
             $line = trim($line);
 
@@ -435,6 +436,24 @@ class ClearProject extends Command
             if (is_array($decoded)) {
                 return $decoded;
             }
+        }
+
+        // Artisan's normal Pest renderer writes totals as text rather than JSON.
+        if (preg_match('/^\h*Tests:\h*([^\r\n]+)/m', $output, $match)) {
+            $totals = preg_split('/\h*\(/', $match[1], 2)[0];
+            preg_match_all('/(\d+)\h+(?:passed|failed|skipped|incomplete|risky|warnings?|pending|todo)\b/i', $totals, $counts);
+            if ($counts[1] !== []) {
+                $parsed = ['tool' => 'pest', 'tests' => array_sum(array_map('intval', $counts[1]))];
+                if (preg_match('/\((\d+)\h+assertions?\)/i', $match[1], $assertions)) {
+                    $parsed['assertions'] = (int) $assertions[1];
+                }
+
+                return $parsed;
+            }
+        }
+        // PHPUnit-style summaries can also be emitted by the test command.
+        if (preg_match('/(?:OK\h*\(|^\h*Tests:\h*)(\d+)(?:\h+tests?,|,)\h*(?:Assertions:\h*)?(\d+)(?:\h+assertions?)?/mi', $output, $match)) {
+            return ['tests' => (int) $match[1], 'assertions' => (int) $match[2]];
         }
 
         return null;
@@ -513,6 +532,11 @@ class ClearProject extends Command
     {
         $status = e((string) ($report['status'] ?? 'unknown'));
         $generatedAt = e((string) ($report['generated_at'] ?? ''));
+        $groups = collect((array) ($report['groups'] ?? []));
+        $totalChecks = $groups->sum('checks');
+        $totalTests = $groups->sum('tests');
+        $totalAssertions = $groups->sum('assertions');
+        $totalDuration = $groups->sum('duration_ms');
         $groupRows = collect((array) ($report['groups'] ?? []))
             ->map(static function (array $group): string {
                 $name = e((string) ($group['name'] ?? ''));
@@ -541,15 +565,32 @@ class ClearProject extends Command
                 $checkStatus = e((string) ($check['status'] ?? 'unknown'));
                 $command = e((string) ($check['command'] ?? ''));
                 $duration = e((string) ($check['duration_ms'] ?? ''));
-                $summary = e((string) ($check['summary'] ?? ''));
+                $summary = e(\Gunreip\TranslationWorkbench\Support\TwGraph\TestFailureDetails::plainText((string) ($check['summary'] ?? '')));
                 $description = e((string) ($check['description'] ?? ''));
                 $failureDetails = '';
                 if (($check['status'] ?? '') === 'failed') {
-                    foreach ($this->processFailureDetails($check) as $detail) {
-                        $failureDetails .= '<pre class="failure-detail">' . e($detail) . '</pre>';
+                    foreach (\Gunreip\TranslationWorkbench\Support\TwGraph\TestFailureDetails::fromCheck($check) as $failure) {
+                        $failureDetails .= '<section class="failure-detail"><pre class="failure-message">'.e($failure['message']).'</pre>';
+                        if ($failure['test']) {
+                            $failureDetails .= '<p><strong>Test:</strong> '.e($failure['test']).'</p>';
+                        }
+                        if ($failure['location'] !== '') {
+                            $failureDetails .= '<p><strong>File / line:</strong> <code>'.e($failure['location']).'</code></p>';
+                        }
+                        foreach (['expected' => 'Expected', 'actual' => 'Actual'] as $key => $label) {
+                            if ($failure[$key] !== null) {
+                                $failureDetails .= '<p><strong>'.$label.':</strong></p><pre>'.e($failure[$key]).'</pre>';
+                            }
+                        }
+                        if ($failure['details'] !== '') {
+                            $failureDetails .= '<details><summary>Technical details / stack trace</summary><pre class="failure-trace">'.e($failure['details']).'</pre></details>';
+                        }
+                        $failureDetails .= '</section>';
                     }
                     $failureDetails = '<strong>Failure details</strong>' . $failureDetails;
                 }
+
+                $failureRow = $failureDetails !== '' ? '<tr><td colspan="5">'.$failureDetails.'</td></tr>' : '';
 
                 return <<<HTML
                     <tr>
@@ -557,8 +598,9 @@ class ClearProject extends Command
                         <td><span class="badge {$checkStatus}">{$checkStatus}</span></td>
                         <td><code>{$command}</code></td>
                         <td>{$duration} ms</td>
-                        <td>{$summary}{$failureDetails}</td>
+                        <td>{$summary}</td>
                     </tr>
+                    {$failureRow}
                 HTML;
             })
             ->join("\n");
@@ -574,9 +616,14 @@ class ClearProject extends Command
                     table { border-collapse: collapse; width: 100%; }
                     th, td { border: 1px solid #d4d4d8; padding: 0.65rem; vertical-align: top; text-align: left; }
                     th { background: #f4f4f5; }
+                    tfoot { border-top: 2px solid #a1a1aa; background: #f4f4f5; font-weight: 700; }
                     pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.8rem; }
-                    .failure-detail { max-height: 24rem; overflow: auto; max-width: 60rem; margin-top: 0.5rem; }
-                    code { font-size: 0.85rem; }
+                    .failure-detail { min-width: 0; margin-top: 0.75rem; padding: 0.75rem; border-left: 3px solid #dc2626; background: #fef2f2; overflow-wrap: anywhere; }
+                    .failure-message { color: #b91c1c; font-weight: 700; }
+                    .failure-trace { max-height: 24rem; overflow: auto; margin-top: 0.5rem; }
+                    summary { cursor: pointer; }
+                    code { font-size: 0.85rem; overflow-wrap: anywhere; }
+                    .check-results { table-layout: fixed; }
                     .muted { color: #71717a; font-size: 0.85rem; }
                     .badge { border-radius: 999px; padding: 0.15rem 0.55rem; font-size: 0.8rem; font-weight: 700; }
                     .passed { background: #dcfce7; color: #166534; }
@@ -602,9 +649,20 @@ class ClearProject extends Command
                     <tbody>
                         {$groupRows}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th scope="row">Total</th>
+                            <td><span class="badge {$status}">{$status}</span></td>
+                            <td>{$totalChecks}</td>
+                            <td>{$totalTests}</td>
+                            <td>{$totalAssertions}</td>
+                            <td>{$totalDuration} ms</td>
+                        </tr>
+                    </tfoot>
                 </table>
                 <h2>Check Results</h2>
-                <table>
+                <table class="check-results">
+                    <colgroup><col style="width:27%"><col style="width:8%"><col style="width:35%"><col style="width:10%"><col style="width:20%"></colgroup>
                     <thead>
                         <tr>
                             <th>Check</th>

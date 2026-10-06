@@ -52,6 +52,7 @@
 @endphp
 
 @props([
+    'direction' => 'bottom-top',
     'id' => null,
     'componentCounter' => 1,
     'attachTo' => null,
@@ -65,6 +66,7 @@
     'arcRadiuss' => [],
     'stemLengths' => [],
     'extensionCount' => 0,
+    'extensionColors' => [],
     'extensionStartLength' => null,
     'extensionStartShiftEnabled' => null,
     'extensionStartShiftLength' => null,
@@ -299,6 +301,8 @@
         );
     };
     $extensionAnchors = [];
+    $extensionResolvedColors = [];
+    $currentExtensionColor = $resolvedColor;
 
     $extensionResolvedStemLengths = [];
     $extensionResolvedStemContinuations = [];
@@ -309,6 +313,8 @@
     $nextExtensionTarget = $node3;
 
     for ($extensionIndex = 1; $extensionIndex <= $resolvedExtensionCount; $extensionIndex++) {
+        $currentExtensionColor = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::string(data_get($extensionColors, $extensionIndex), $currentExtensionColor, $resolvedColor);
+        $extensionResolvedColors[$extensionIndex] = $currentExtensionColor;
         $currentExtensionStemLength = $extensionStemLengthFor($extensionIndex);
         $currentExtensionStemContinuation = $extensionStemContinuationFor($extensionIndex);
         $currentExtensionStemContinuationTotal = $extensionStemContinuationTotal($currentExtensionStemContinuation);
@@ -354,19 +360,19 @@
         ];
 
 
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.start', $extensionAnchor);
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.node.1', $extensionNode1);
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.start', array_replace($extensionAnchor, ['color' => $currentExtensionColor]));
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.node.1', array_replace($extensionNode1, ['color' => $currentExtensionColor]));
         if ($resolvedExtensionStartShiftSegmentLength !== '0rem') {
-            \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.start-shift.start', $extensionNode1);
-            \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.start-shift.end', $extensionStemStart);
+            \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.start-shift.start', array_replace($extensionNode1, ['color' => $currentExtensionColor]));
+            \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.start-shift.end', array_replace($extensionStemStart, ['color' => $currentExtensionColor]));
         }
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.node.2', $extensionNode2);
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.stem1.end', $extensionNode2);
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.stem.end', $extensionStemContinuationEnd);
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.stem' . (count($currentExtensionStemContinuation) + 1) . '.end', $extensionStemContinuationEnd);
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.node.3', $extensionNode3);
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.node.4', $extensionNode4);
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.end', $extensionNode4);
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.node.2', array_replace($extensionNode2, ['color' => $currentExtensionColor]));
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.stem1.end', array_replace($extensionNode2, ['color' => $currentExtensionColor]));
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.stem.end', array_replace($extensionStemContinuationEnd, ['color' => $currentExtensionColor]));
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.stem' . (count($currentExtensionStemContinuation) + 1) . '.end', array_replace($extensionStemContinuationEnd, ['color' => $currentExtensionColor]));
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.node.3', array_replace($extensionNode3, ['color' => $currentExtensionColor]));
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.node.4', array_replace($extensionNode4, ['color' => $currentExtensionColor]));
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.extension.' . $extensionIndex . '.end', array_replace($extensionNode4, ['color' => $currentExtensionColor]));
 
         $nextExtensionTarget = [
             'x' => $subtract($nextExtensionTarget['x'], $currentExtensionBridgeLength),
@@ -376,11 +382,11 @@
     }
 
 
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.start', $anchor);
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.node.1', $node1);
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.start', array_replace($anchor, ['color' => $resolvedColor]));
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.node.1', array_replace($node1, ['color' => $resolvedColor]));
     if ($resolvedStartShiftSegmentLength !== '0rem') {
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.start-shift.start', $node1);
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.start-shift.end', $stemStart);
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.start-shift.start', array_replace($node1, ['color' => $resolvedColor]));
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.start-shift.end', array_replace($stemStart, ['color' => $resolvedColor]));
     }
     $currentStemAnchor = $stemStart;
     foreach ($resolvedStemLengths as $stemNumber => $currentStemLength) {
@@ -388,22 +394,22 @@
             'x' => $currentStemAnchor['x'],
             'y' => $add($currentStemAnchor['y'], $currentStemLength),
         ];
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.node.' . ($stemNumber + 1), $currentStemAnchor);
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.stem' . $stemNumber . '.end', $currentStemAnchor);
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.node.' . ($stemNumber + 1), array_replace($currentStemAnchor, ['color' => $resolvedColor]));
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.stem' . $stemNumber . '.end', array_replace($currentStemAnchor, ['color' => $resolvedColor]));
     }
     foreach ($stemContinuationAnchors as $stemContinuationNumber => $stemContinuationAnchor) {
         $stemNumber = $stemLengthCount + $stemContinuationNumber;
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.node.' . ($stemNumber + 1), $stemContinuationAnchor);
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.stem' . $stemNumber . '.end', $stemContinuationAnchor);
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.node.' . ($stemNumber + 1), array_replace($stemContinuationAnchor, ['color' => $resolvedColor]));
+        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.stem' . $stemNumber . '.end', array_replace($stemContinuationAnchor, ['color' => $resolvedColor]));
     }
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.stem.end', $stemContinuationEnd);
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.node.' . $arcInNodeIndex, $node3);
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.node.' . $bridgeNodeIndex, $node4);
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.node.' . $attachNodeIndex, $node5);
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.stem.start', $node1);
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.bridge.start', $node3);
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.bridge.end', $node4);
-    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.end', $node5);
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.stem.end', array_replace($stemContinuationEnd, ['color' => $resolvedColor]));
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.node.' . $arcInNodeIndex, array_replace($node3, ['color' => $resolvedColor]));
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.node.' . $bridgeNodeIndex, array_replace($node4, ['color' => $resolvedColor]));
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.node.' . $attachNodeIndex, array_replace($node5, ['color' => $resolvedColor]));
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.stem.start', array_replace($node1, ['color' => $resolvedColor]));
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.bridge.start', array_replace($node3, ['color' => $resolvedColor]));
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.bridge.end', array_replace($node4, ['color' => $resolvedColor]));
+    \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, 'strang.merge-left.end', array_replace($node5, ['color' => $resolvedColor]));
 @endphp
 
 @if ($dev && $missingAttachTarget)
@@ -450,7 +456,8 @@
     @endphp
     <x-translation-workbench::ui.tw-graph.paths.merge-extension
         :id="$id . '.extension.' . $extensionIndex . '.paths.merge-extension'"
-        side="left"
+        :direction="$direction"
+    side="left"
         :anchor-start="$extensionAnchor"
         :start-length="$resolvedExtensionStartLength"
         :start-shift-length="$resolvedExtensionStartShiftSegmentLength"
@@ -460,7 +467,7 @@
         :arc-radius="$extensionResolvedArcRadiuss[$extensionIndex]"
         :node-labels="data_get($extensionNodeLabels, $extensionIndex, [])"
         :end-label="data_get($extensionEndLabels, $extensionIndex)"
-        :color="$resolvedColor"
+        :color="$extensionResolvedColors[$extensionIndex]"
         :z-index="$zIndex"
         :counter-start="$extensionCounterStarts[$extensionIndex]"
         :show-dev-box="false"
@@ -469,6 +476,7 @@
 
 <x-translation-workbench::ui.tw-graph.paths.merge
     :id="$id . '.paths.merge'"
+    :direction="$direction"
     side="left"
     :anchor-start="$anchor"
     :start-length="$resolvedStartLength"

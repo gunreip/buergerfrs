@@ -350,7 +350,6 @@
                                     'width' => 'default',
                                 ]"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="sky"
                             />
                             <x-translation-workbench::ui.tw-graph.paths.loop-return
@@ -374,7 +373,6 @@
                                 ]"
                                 :counter-end="22"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="amber"
                             />
                             {{-- Turn the finalized group toward the separate outer return lane. --}}
@@ -421,7 +419,6 @@
                                     'width' => 'default',
                                 ]"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="cyan"
                             />
                             @php
@@ -656,7 +653,6 @@
                                     'width' => 'default',
                                 ]"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="sky"
                             />
                             <x-translation-workbench::ui.tw-graph.paths.loop-return
@@ -680,7 +676,6 @@
                                 ]"
                                 :counter-end="22"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="amber"
                             />
                             {{-- Turn the finalized group toward the separate outer return lane. --}}
@@ -727,7 +722,6 @@
                                     'width' => 'default',
                                 ]"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="cyan"
                             />
                             @php

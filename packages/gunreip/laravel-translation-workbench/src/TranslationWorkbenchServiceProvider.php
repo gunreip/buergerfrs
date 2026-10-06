@@ -32,6 +32,7 @@ use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawDataNew;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchSettings;
 use Gunreip\TranslationWorkbench\Livewire\TwGraphDataDrivenDatasets;
 use Gunreip\TranslationWorkbench\Livewire\TwGraphDocumentation;
+use Gunreip\TranslationWorkbench\Livewire\TwGraphOverview;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -69,6 +70,7 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
         Blade::component(\Gunreip\TranslationWorkbench\View\Components\HeadingCounterGroup::class, 'translation-workbench::ui.common.heading-counter-group');
 
         Livewire::component('translation-workbench.tw-graph.documentation', TwGraphDocumentation::class);
+        Livewire::component('translation-workbench.tw-graph.overview', TwGraphOverview::class);
         Livewire::component('translation-workbench.entries', TranslationWorkbenchEntries::class);
         Livewire::component('translation-workbench.old-entries', TranslationWorkbenchOldEntries::class);
         Livewire::component('translation-workbench.raw-data', TranslationWorkbenchRawData::class);

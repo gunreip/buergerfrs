@@ -170,7 +170,7 @@
                             {{-- Call site 1 invokes the single addOne definition with 10. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.multiple.left.first-call"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-multiple-left',
                                     'literature.function.multiple.left.prepare.anchorNode-end',
@@ -198,7 +198,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.multiple.left.first-return"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-multiple-left',
                                     'literature.function.multiple.left.first-body.anchorNode-end',
@@ -227,7 +227,7 @@
                             {{-- Call site 2 invokes the same definition with a new parameter value. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.multiple.left.second-call"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-multiple-left',
                                     'literature.function.multiple.left.first-resume.anchorNode-end',
@@ -255,7 +255,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.multiple.left.second-return"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-multiple-left',
                                     'literature.function.multiple.left.second-body.anchorNode-end',
@@ -323,7 +323,7 @@
                             {{-- Call site 1 invokes the single addOne definition with 10. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.multiple.right.first-call"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-multiple-right',
                                     'literature.function.multiple.right.prepare.anchorNode-end',
@@ -351,7 +351,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.multiple.right.first-return"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-multiple-right',
                                     'literature.function.multiple.right.first-body.anchorNode-end',
@@ -380,7 +380,7 @@
                             {{-- Call site 2 invokes the same definition with a new parameter value. --}}
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.multiple.right.second-call"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-multiple-right',
                                     'literature.function.multiple.right.first-resume.anchorNode-end',
@@ -408,7 +408,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.function.multiple.right.second-return"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-function-multiple-right',
                                     'literature.function.multiple.right.second-body.anchorNode-end',

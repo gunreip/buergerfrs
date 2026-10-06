@@ -48,7 +48,7 @@
                 [
                     'type' => 'sideways',
                     'id' => 'resume.left.1.sideways',
-                    'side' => 'left',
+                    'side' => 'right',
                     'arcRadius' => '3.5rem',
                     'bridgeLength' => '7.25rem',
                     'nodeLabelLeft' => $resumeTextLabel('1896', 'left'),
@@ -62,7 +62,7 @@
                 [
                     'type' => 'sideways',
                     'id' => 'resume.right.1.sideways',
-                    'side' => 'right',
+                    'side' => 'left',
                     'arcRadius' => '3.5rem',
                     'bridgeLength' => '18.0rem',
                     'nodeLabelLeft' => $resumeDateLabel('1900', 'right'),
@@ -76,7 +76,7 @@
                 [
                     'type' => 'sideways',
                     'id' => 'resume.left.2.sideways',
-                    'side' => 'left',
+                    'side' => 'right',
                     'arcRadius' => '3.5rem',
                     'bridgeLength' => '18.0rem',
                     'nodeLabelLeft' => $resumeTextLabel('1902-1909', 'left'),
@@ -90,7 +90,7 @@
                 [
                     'type' => 'sideways',
                     'id' => 'resume.right.2.sideways',
-                    'side' => 'right',
+                    'side' => 'left',
                     'arcRadius' => '3.5rem',
                     'bridgeLength' => '18.0rem',
                     'extension' => '4rem',
@@ -105,7 +105,7 @@
                 [
                     'type' => 'sideways',
                     'id' => 'resume.left.3.sideways',
-                    'side' => 'left',
+                    'side' => 'right',
                     'arcRadius' => '3.5rem',
                     'bridgeLength' => '18.0rem',
                     'nodeLabelLeft' => $resumeTextLabel('1909', 'left'),
@@ -119,7 +119,7 @@
                 [
                     'type' => 'sideways',
                     'id' => 'resume.right.3.sideways',
-                    'side' => 'right',
+                    'side' => 'left',
                     'arcRadius' => '3.5rem',
                     'bridgeLength' => '18.0rem',
                     'nodeLabelLeft' => $resumeDateLabel('1914', 'right'),
@@ -133,7 +133,7 @@
                 [
                     'type' => 'sideways',
                     'id' => 'resume.left.4.sideways',
-                    'side' => 'left',
+                    'side' => 'right',
                     'arcRadius' => '3.5rem',
                     'bridgeLength' => '18.0rem',
                     'nodeLabelLeft' => $resumeTextLabel('1915', 'left'),
@@ -147,7 +147,7 @@
                 [
                     'type' => 'sideways',
                     'id' => 'resume.right.4.sideways',
-                    'side' => 'right',
+                    'side' => 'left',
                     'arcRadius' => '3.5rem',
                     'bridgeLength' => '18.0rem',
                     'nodeLabelLeft' => $resumeDateLabel('1919', 'right'),
@@ -161,7 +161,7 @@
                 [
                     'type' => 'sideways',
                     'id' => 'resume.left.5.sideways',
-                    'side' => 'left',
+                    'side' => 'right',
                     'arcRadius' => '3.5rem',
                     'bridgeLength' => '18.0rem',
                     'nodeLabelLeft' => $resumeTextLabel('1921', 'left'),
@@ -175,7 +175,7 @@
                 [
                     'type' => 'sideways',
                     'id' => 'resume.right.5.sideways',
-                    'side' => 'right',
+                    'side' => 'left',
                     'arcRadius' => '3.5rem',
                     'bridgeLength' => '18.0rem',
                     'nodeLabelLeft' => $resumeDateLabel('1933_emigration', 'right'),
@@ -189,7 +189,7 @@
                 [
                     'type' => 'sideways',
                     'id' => 'resume.left.6.sideways',
-                    'side' => 'left',
+                    'side' => 'right',
                     'arcRadius' => '3.5rem',
                     'bridgeLength' => '18.0rem',
                     'nodeLabelLeft' => $resumeTextLabel('1933_princeton', 'left'),
@@ -203,7 +203,7 @@
                 [
                     'type' => 'sideways',
                     'id' => 'resume.right.6.sideways',
-                    'side' => 'right',
+                    'side' => 'left',
                     'arcRadius' => '3.5rem',
                     'bridgeLength' => '7.25rem',
                     'nodeLabelLeft' => $resumeDateLabel('1955', 'right'),

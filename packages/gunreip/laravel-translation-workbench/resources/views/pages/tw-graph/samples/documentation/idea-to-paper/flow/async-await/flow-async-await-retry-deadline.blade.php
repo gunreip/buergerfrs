@@ -212,7 +212,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.retry-deadline.left.delay"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-retry-deadline-left',
                                     'literature.async-await.retry-deadline.left.attempt-1.anchorNode-end',
@@ -276,7 +276,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.retry-deadline.left.cleanup"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-retry-deadline-left',
                                     'literature.async-await.retry-deadline.left.acknowledge.anchorNode-end',
@@ -367,7 +367,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.retry-deadline.right.delay"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-retry-deadline-right',
                                     'literature.async-await.retry-deadline.right.attempt-1.anchorNode-end',
@@ -431,7 +431,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.retry-deadline.right.cleanup"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-retry-deadline-right',
                                     'literature.async-await.retry-deadline.right.acknowledge.anchorNode-end',

@@ -170,7 +170,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.cancellation.left.await"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-cancellation-left',
                                     'literature.async-await.cancellation.left.try.anchorNode-end',
@@ -210,7 +210,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.cancellation.left.cancelled"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-cancellation-left',
                                     'literature.async-await.cancellation.left.acknowledge.anchorNode-end',
@@ -301,7 +301,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.cancellation.right.await"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-cancellation-right',
                                     'literature.async-await.cancellation.right.try.anchorNode-end',
@@ -341,7 +341,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.cancellation.right.cancelled"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-cancellation-right',
                                     'literature.async-await.cancellation.right.acknowledge.anchorNode-end',

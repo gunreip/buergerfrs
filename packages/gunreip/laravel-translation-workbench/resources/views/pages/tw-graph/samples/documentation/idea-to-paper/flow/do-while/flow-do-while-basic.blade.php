@@ -176,7 +176,6 @@
                                 after-length="4rem"
                                 :step-label="['text' => ['result = Perform action'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="1"
                                 color="green"
                             />
@@ -342,7 +341,6 @@
                                 after-length="4rem"
                                 :step-label="['text' => ['result = Perform action'], 'width' => 'default']"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 :counter-end="1"
                                 color="green"
                             />

@@ -153,8 +153,8 @@
                 'The bridge aligns the branch spans and incorporates any open-branch return offset.');
         }
     }
-    // parts.sideways names its incoming arc side; graph side names the destination.
-    $routeSide = $side === 'right' ? 'left' : 'right';
+    // parts.sideways and the graph use the same destination side.
+    $routeSide = $side;
 @endphp
 
 <x-translation-workbench::ui.tw-graph.strang.flow-step

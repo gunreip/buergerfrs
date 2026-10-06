@@ -149,6 +149,12 @@
                             </flux:table.cell>
                         </flux:table.row>
                         <flux:table.row>
+                            <flux:table.cell class="whitespace-normal align-top">{{ __('Files') }}</flux:table.cell>
+                            <flux:table.cell class="whitespace-normal align-top">
+                                {{ __('Shows file regions where the graph declares them. Captions identify the rendering View and, if assigned, the Layout override file. Click a caption for full paths and copying. Requires DEV mode and works independently of Bounding boxes; geometry is unchanged.') }}
+                            </flux:table.cell>
+                        </flux:table.row>
+                        <flux:table.row>
                             <flux:table.cell class="whitespace-normal align-top">{{ __('Refresh preview ↻') }}
                             </flux:table.cell>
                             <flux:table.cell class="whitespace-normal align-top">

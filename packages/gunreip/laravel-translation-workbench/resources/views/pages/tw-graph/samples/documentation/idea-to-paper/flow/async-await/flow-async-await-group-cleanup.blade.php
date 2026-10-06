@@ -197,7 +197,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.group-cleanup.left.await"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-group-cleanup-left',
                                     'literature.async-await.group-cleanup.left.start.anchorNode-end',
@@ -276,7 +276,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.group-cleanup.left.join"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-group-cleanup-left',
                                     'literature.async-await.group-cleanup.left.cleanup.anchorNode-end',
@@ -352,7 +352,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.group-cleanup.right.await"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-group-cleanup-right',
                                     'literature.async-await.group-cleanup.right.start.anchorNode-end',
@@ -431,7 +431,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.async-await.group-cleanup.right.join"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-async-await-group-cleanup-right',
                                     'literature.async-await.group-cleanup.right.cleanup.anchorNode-end',

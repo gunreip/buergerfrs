@@ -355,7 +355,6 @@
                                     'width' => 'default',
                                 ]"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="sky"
                             />
                             <x-translation-workbench::ui.tw-graph.paths.loop-return
@@ -410,7 +409,6 @@
                                     'width' => 'default',
                                 ]"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="red"
                             />
                             @php
@@ -650,7 +648,6 @@
                                     'width' => 'default',
                                 ]"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="sky"
                             />
                             <x-translation-workbench::ui.tw-graph.paths.loop-return
@@ -705,7 +702,6 @@
                                     'width' => 'default',
                                 ]"
                                 :node-end-dot="false"
-                                :joint-arrow-end="true"
                                 color="red"
                             />
                             @php

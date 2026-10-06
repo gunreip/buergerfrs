@@ -169,7 +169,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.left.first-call"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-left',
                                     'literature.callback.interchangeable.left.prepare.anchorNode-end',
@@ -197,7 +197,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.left.first-invoke"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-left',
                                     'literature.callback.interchangeable.left.first-enter.anchorNode-end',
@@ -225,7 +225,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.left.first-return"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-left',
                                     'literature.callback.interchangeable.left.first-body.anchorNode-end',
@@ -253,7 +253,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.left.first-exit"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-left',
                                     'literature.callback.interchangeable.left.first-result.anchorNode-end',
@@ -281,7 +281,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.left.second-call"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-left',
                                     'literature.callback.interchangeable.left.between.anchorNode-end',
@@ -309,7 +309,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.left.second-invoke"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-left',
                                     'literature.callback.interchangeable.left.second-enter.anchorNode-end',
@@ -337,7 +337,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.left.second-return"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-left',
                                     'literature.callback.interchangeable.left.second-body.anchorNode-end',
@@ -365,7 +365,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.left.second-exit"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-left',
                                     'literature.callback.interchangeable.left.second-result.anchorNode-end',
@@ -432,7 +432,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.right.first-call"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-right',
                                     'literature.callback.interchangeable.right.prepare.anchorNode-end',
@@ -460,7 +460,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.right.first-invoke"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-right',
                                     'literature.callback.interchangeable.right.first-enter.anchorNode-end',
@@ -488,7 +488,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.right.first-return"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-right',
                                     'literature.callback.interchangeable.right.first-body.anchorNode-end',
@@ -516,7 +516,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.right.first-exit"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-right',
                                     'literature.callback.interchangeable.right.first-result.anchorNode-end',
@@ -544,7 +544,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.right.second-call"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-right',
                                     'literature.callback.interchangeable.right.between.anchorNode-end',
@@ -572,7 +572,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.right.second-invoke"
-                                side="left"
+                                side="right"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-right',
                                     'literature.callback.interchangeable.right.second-enter.anchorNode-end',
@@ -600,7 +600,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.right.second-return"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-right',
                                     'literature.callback.interchangeable.right.second-body.anchorNode-end',
@@ -628,7 +628,7 @@
                             />
                             <x-translation-workbench::ui.tw-graph.parts.sideways
                                 id="literature.callback.interchangeable.right.second-exit"
-                                side="right"
+                                side="left"
                                 :anchor-start="\Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get(
                                     'idea-to-paper-callback-interchangeable-right',
                                     'literature.callback.interchangeable.right.second-result.anchorNode-end',

@@ -100,6 +100,18 @@ export function componentRegions(records) {
 
 function updateComponentRegions(graph, canvas, records, layout) {
     const regions = new Map(componentRegions(records).map(region => [String(region.token), region]));
+    for (const box of canvas.querySelectorAll('[data-tw-graph-file-region]')) {
+        if (box.closest(graphSelector) !== graph) continue;
+        const members = JSON.parse(box.dataset.twGraphFileTokens).map(token => regions.get(String(token))).filter(Boolean);
+        if (!layout || !members.length) { box.style.visibility = 'hidden'; continue; }
+        const minX = Math.min(...members.map(r => r.bounds.minX));
+        const minY = Math.min(...members.map(r => r.bounds.minY));
+        const maxX = Math.max(...members.map(r => r.bounds.maxX));
+        const maxY = Math.max(...members.map(r => r.bounds.maxY));
+        const styles = { left: `${layout.originLeft + minX}px`, bottom: `${layout.originBottom + minY}px`,
+            width: `${maxX - minX}px`, height: `${maxY - minY}px`, visibility: 'visible' };
+        for (const [name, value] of Object.entries(styles)) if (box.style[name] !== value) box.style[name] = value;
+    }
     for (const box of canvas.querySelectorAll('[data-tw-graph-region]')) {
         if (box.closest(graphSelector) !== graph) continue;
         const region = regions.get(box.dataset.twGraphRegion);
@@ -133,15 +145,25 @@ function positionDevCaptions(graph, canvas) {
         occupied.push({ x: (r.left - frame.left) / scale, y: (r.top - frame.top) / scaleY,
             width: r.width / scale, height: r.height / scaleY });
     }
-    for (const caption of canvas.querySelectorAll('[data-tw-graph-dev-caption]')) {
-        if (caption.closest(graphSelector) !== graph || !caption.getClientRects().length) continue;
-        const maxWidth = `${width}px`;
+    const captions = [...canvas.querySelectorAll('[data-tw-graph-dev-caption]')]
+        .filter(caption => caption.closest(graphSelector) === graph);
+    // Batch constraints first, then measure everything before positioning any caption.
+    const maxWidth = `${width}px`;
+    for (const caption of captions) {
         if (caption.style.maxWidth !== maxWidth) caption.style.maxWidth = maxWidth;
+    }
+    const measurements = [];
+    for (const caption of captions) {
+        if (caption.closest(graphSelector) !== graph || !caption.getClientRects().length) continue;
         const box = caption.parentElement;
         const boxLeft = (box.getBoundingClientRect().left - frame.left) / scale + box.clientLeft;
         const captionWidth = caption.getBoundingClientRect().width / scale;
         const boxTop = (box.getBoundingClientRect().top - frame.top) / scaleY + box.clientTop;
         const captionHeight = caption.getBoundingClientRect().height / scaleY;
+        measurements.push({ caption, boxLeft, boxTop, captionWidth, captionHeight });
+    }
+    const placements = [];
+    for (const { caption, boxLeft, boxTop, captionWidth, captionHeight } of measurements) {
         let x = boxLeft + captionOffset(boxLeft, captionWidth, width);
         let y = Math.max(0, Math.min(boxTop - captionHeight, height - captionHeight));
         // Keep region names separate from the summary and previously placed captions.
@@ -154,6 +176,9 @@ function positionDevCaptions(graph, canvas) {
         }
         occupied.push({ x, y, width: captionWidth, height: captionHeight });
         const styles = { left: `${x - boxLeft}px`, top: `${y - boxTop}px`, transform: 'none' };
+        placements.push({ caption, styles });
+    }
+    for (const { caption, styles } of placements) {
         for (const [name, value] of Object.entries(styles)) if (caption.style[name] !== value) caption.style[name] = value;
     }
 }
@@ -245,35 +270,47 @@ export function resolveGraphBounds(graph) {
     const scaleX = frame.width / parseFloat(css.width), scaleY = frame.height / parseFloat(css.height);
     if (!(scaleX > 0 && scaleY > 0)) return null;
     const zero = origin.getBoundingClientRect();
-    let resolver = canvas.querySelector(':scope > [data-tw-graph-bounds-resolver]');
-    if (!resolver) {
-        resolver = document.createElement('span');
-        resolver.dataset.twGraphBoundsResolver = '';
-        resolver.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;width:0;height:0;';
-        canvas.append(resolver);
-    }
-    const lengths = new Map();
-    const length = expression => {
-        if (lengths.has(expression)) return lengths.get(expression);
-        // Invalid var() substitutions otherwise fall back to an 'auto' used value (often 0px).
-        // Resolve through a custom property first, so missing variables cannot masquerade as zero.
-        resolver.style.setProperty('--tw-graph-bounds-length', expression);
-        const resolved = getComputedStyle(resolver).getPropertyValue('--tw-graph-bounds-length').trim();
-        if (!resolved || /^(auto|initial|inherit|unset|revert)$/.test(resolved) || !CSS.supports('left', resolved)) {
-            throw new Error(`Unresolvable length: ${expression}`);
-        }
-        resolver.style.left = resolved;
-        const value = parseFloat(getComputedStyle(resolver).left);
-        if (!Number.isFinite(value)) throw new Error(`Unresolvable length: ${expression}`);
-        lengths.set(expression, value);
-        return value;
-    };
-    const local = rect => ({ x: (rect.left - zero.left) / scaleX, y: (zero.bottom - rect.bottom) / scaleY,
-        width: (rect.right - rect.left) / scaleX, height: (rect.bottom - rect.top) / scaleY });
     const source = JSON.parse(manifest.textContent);
     const elements = [...canvas.querySelectorAll('[data-tw-graph-bounds]')]
         .filter(el => el.closest(graphSelector) === graph && !el.hasAttribute('data-tw-graph-jump-generated'));
     const derived = [...canvas.querySelectorAll('[data-tw-graph-jump-generated][data-tw-graph-bounds]')].filter(el => el.closest(graphSelector) === graph);
+    const derivedEntries = derived.map(element => JSON.parse(element.dataset.twGraphBounds));
+    const expressions = new Set([...source, ...derivedEntries].flatMap(entry => entry.rects.flatMap(rect => Object.values(rect))));
+    // Resolve CSS in batches: no write/read/write loop that lays out the entire graph per length.
+    const probes = new Map();
+    const fragment = document.createDocumentFragment();
+    for (const expression of expressions) {
+        const probe = document.createElement('span');
+        probe.dataset.twGraphBoundsResolver = '';
+        probe.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;width:0;height:0;';
+        probe.style.setProperty('--tw-graph-bounds-length', expression);
+        fragment.append(probe);
+        probes.set(expression, probe);
+    }
+    canvas.append(fragment);
+    const lengths = new Map(), resolvedValues = new Map();
+    try {
+        for (const [expression, probe] of probes) {
+            const resolved = getComputedStyle(probe).getPropertyValue('--tw-graph-bounds-length').trim();
+            if (!resolved || /^(auto|initial|inherit|unset|revert)$/.test(resolved) || !CSS.supports('left', resolved)) {
+                lengths.set(expression, new Error(`Unresolvable length: ${expression}`));
+            } else resolvedValues.set(expression, resolved);
+        }
+        for (const [expression, resolved] of resolvedValues) probes.get(expression).style.left = resolved;
+        for (const [expression] of resolvedValues) {
+            const value = parseFloat(getComputedStyle(probes.get(expression)).left);
+            lengths.set(expression, Number.isFinite(value) ? value : new Error(`Unresolvable length: ${expression}`));
+        }
+    } finally {
+        for (const probe of probes.values()) probe.remove();
+    }
+    const length = expression => {
+        const value = lengths.get(expression);
+        if (value instanceof Error) throw value;
+        return value;
+    };
+    const local = rect => ({ x: (rect.left - zero.left) / scaleX, y: (zero.bottom - rect.bottom) / scaleY,
+        width: (rect.right - rect.left) / scaleX, height: (rect.bottom - rect.top) / scaleY });
     const records = [], issues = [];
     let unresolved = false;
     const consume = (element, entry) => {
@@ -310,7 +347,7 @@ export function resolveGraphBounds(graph) {
     }
     for (const entry of source) consume(byId.get(entry.id)?.shift(), entry);
     for (const [id, extra] of byId) if (extra.length) issues.push(`${id}: primitive missing from declared model`);
-    for (const element of derived) consume(element, JSON.parse(element.dataset.twGraphBounds));
+    derived.forEach((element, index) => consume(element, derivedEntries[index]));
     if (source.length !== elements.length) issues.push(`Bounds coverage: ${source.length} declared / ${elements.length} rendered`);
     for (const element of canvas.querySelectorAll('.tw-graph-protocol-primitive')) {
         if (element.closest(graphSelector) === graph && !element.closest(excluded) && !element.hasAttribute('data-tw-graph-bounds')) issues.push(`${element.dataset.twGraphPath || element.className}: primitive without bounds contract`);
@@ -337,6 +374,7 @@ export function setupTwGraphBounds() {
         const next = new Set();
         for (const graph of document.querySelectorAll(graphSelector)) {
             next.add(graph);
+            const measureStart = performance.now();
             const result = resolveGraphBounds(graph);
             if (!result) continue;
             const { canvas, origin, elements, records, issues, layout } = result;
@@ -370,16 +408,23 @@ export function setupTwGraphBounds() {
             for (const label of graph.querySelectorAll('[data-tw-graph-canvas-result]')) {
                 if (label.closest(graphSelector) === graph) setText(label, summary[label.dataset.twGraphCanvasResult]);
             }
+            graph.dispatchEvent(new CustomEvent('tw-graph-bounds-timed', { bubbles: true, detail: { duration: performance.now() - measureStart } }));
         }
         for (const element of observed) if (!next.has(element)) resize.unobserve(element);
         for (const element of next) if (!observed.has(element)) resize.observe(element);
         observed = next;
     }
-    const internal = '[data-tw-graph-region], [data-tw-graph-dev-caption], [data-tw-graph-bounds-resolver], [data-tw-graph-canvas-summary], [data-tw-graph-bounds-state], [data-tw-graph-bounds-warning]';
+    const internal = '[data-tw-graph-performance], [data-tw-graph-file-region], [data-tw-graph-region], [data-tw-graph-dev-caption], [data-tw-graph-bounds-resolver], [data-tw-graph-canvas-summary], [data-tw-graph-bounds-state], [data-tw-graph-bounds-warning]';
     new MutationObserver(records => {
-        if (records.some(r => !r.target.closest?.(internal))) schedule();
+        if (records.some(r => {
+            if (r.target.closest?.(internal)) return false;
+            if (r.type === 'childList') {
+                return [...r.addedNodes, ...r.removedNodes].some(node => !node.matches?.(internal));
+            }
+            return true;
+        })) schedule();
     }).observe(document, { subtree: true, childList: true, characterData: true, attributes: true,
-        attributeFilter: ['style', 'class', 'hidden', 'data-boxes', 'data-tw-graph-bounds'] });
+        attributeFilter: ['style', 'class', 'hidden', 'data-boxes', 'data-files', 'data-tw-graph-bounds'] });
     window.addEventListener('resize', schedule);
     document.fonts?.ready.then(schedule);
     document.fonts?.addEventListener('loadingdone', schedule);
