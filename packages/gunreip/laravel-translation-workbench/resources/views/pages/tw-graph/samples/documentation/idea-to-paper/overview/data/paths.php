@@ -45,7 +45,9 @@ return [
             ],
             'label' => [
                 'width' => 'half',
-                'align' => 'center',
+                'afterLength' => '0rem',
+                'nodeEnd' => false,
+                // 'nodeEndDot' => true,
             ],
         ],
         'children' => [

@@ -44,7 +44,9 @@ return [
             ],
             'label' => [
                 'width' => 'default',
-                'align' => 'center',
+                'afterLength' => '0rem',
+                'nodeEnd' => false,
+                // 'nodeEndDot' => true,
             ],
         ],
         'label' => [

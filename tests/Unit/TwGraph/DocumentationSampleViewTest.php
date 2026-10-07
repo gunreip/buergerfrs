@@ -1042,7 +1042,7 @@ it('renders the handmade trunk path example through its segment chain', function
     preg_match('/^ */', $example[1], $indent);
     $expectedCode = preg_replace('/^'.preg_quote($indent[0], '/').'/m', '', rtrim($example[1]));
     expect($code)->toBe($expectedCode);
-    expect($xpath->query('//pre/code/*[not(self::span[@class="tw-graph-code-comment" or @class="tw-graph-code-component"])]')->length)->toBe(0);
+    expect($xpath->query('//pre/code/*[not(self::span[@class="tw-graph-code-comment" or @class="tw-graph-code-component" or @class="tw-graph-code-source-comment" or @class="tw-graph-code-php"])]')->length)->toBe(0);
 
     foreach ([1 => '3rem', 2 => '4rem', 3 => '5rem'] as $index => $length) {
         $line = $xpath->query('//*[@data-tw-graph-path="literature.paths.trunk.stem' . $index . '"]')->item(0);

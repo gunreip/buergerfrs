@@ -10,6 +10,14 @@
         -webkit-box-decoration-break: clone;
     }
 
+    .tw-graph-code-source-comment {
+        color: #6a9955;
+    }
+
+    .tw-graph-code-php {
+        color: #f87171;
+    }
+
     .tw-graph-code-component {
         color: #67e8f9;
     }

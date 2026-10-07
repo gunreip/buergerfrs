@@ -1,117 +1,117 @@
 <section class="min-w-0 space-y-4" id="reference-strang-branch-end">
-    <flux:heading size="lg">strang.branch-end — Deep Reference</flux:heading>
+    <flux:heading size="lg">{{ __('strang.branch-end — Deep Reference') }}</flux:heading>
     <x-translation-workbench::ui.tw-graph.documentation-links reference="strang.branch-end" />
-    <flux:text>Capped ending for a branch on either side.</flux:text>
+    <flux:text>{{ __('Capped ending for a branch on either side.') }}</flux:text>
     <flux:callout icon="information-circle" color="indigo">
-        <flux:callout.heading>Reading this reference</flux:callout.heading>
-        <flux:text>Attributes use kebab-case; nested keys use camelCase. Open each array to see its children with complete paths. [n] denotes a numbered map and [] a list item. The declarations here are separate from the example-specific Props and connections tables.</flux:text>
+        <flux:callout.heading>{{ __('Reading this reference') }}</flux:callout.heading>
+        <flux:text>{{ __('Attributes use kebab-case; nested keys use camelCase. Open each array to see its children with complete paths. [n] denotes a numbered map and [] a list item. The declarations here are separate from the example-specific Props and connections tables.') }}</flux:text>
     </flux:callout>
     <flux:callout class="min-w-0 space-y-3" color="red" icon="book-open-check">
-        <flux:callout.heading>Public component props</flux:callout.heading>
+        <flux:callout.heading>{{ __('Public component props') }}</flux:callout.heading>
         <flux:table class="mt-3">
             <flux:table.columns sticky>
-                <flux:table.column>Prop / path</flux:table.column>
-                <flux:table.column>Type</flux:table.column>
-                <flux:table.column>Default / fallback</flux:table.column>
-                <flux:table.column>Meaning and limits</flux:table.column>
+                <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                <flux:table.column>{{ __('Type') }}</flux:table.column>
+                <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
             </flux:table.columns>
             <flux:table.rows>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">id</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Unique authoring ID and prefix for anchors/tooltips. Null uses the component-specific generated ID.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>id</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Unique authoring ID and prefix for anchors/tooltips. Null uses the component-specific generated ID.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">component-counter</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">1</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Number used in generated IDs; normalized to at least 1. Supply explicit IDs for repeated components.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>component-counter</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>integer</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>1</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Number used in generated IDs; normalized to at least 1. Supply explicit IDs for repeated components.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">side</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">string enum</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">left</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Destination side: left moves left; right moves right, independently of the vertical direction.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>side</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>string enum</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>left</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Destination side: left moves left; right moves right, independently of the vertical direction.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">attach-to</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Existing anchor in the same canvas; see Connections for whether this attaches the input or aligns the output.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>attach-to</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Existing anchor in the same canvas; see Connections for whether this attaches the input or aligns the output.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">anchor-start</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">array</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">{&quot;x&quot;: &quot;0rem&quot;, &quot;y&quot;: &quot;0rem&quot;}</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Fallback/input coordinates. Expand below.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>anchor-start</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>array</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>{&quot;x&quot;: &quot;0rem&quot;, &quot;y&quot;: &quot;0rem&quot;}</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Fallback/input coordinates. Expand below.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">length</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">length string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Length of the owned line. See geometry section for its null fallback.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>length</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>length string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Length of the owned line. See geometry section for its null fallback.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">cap-length</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">length string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Cap length; null uses canvas cap-length (1.75rem).</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>cap-length</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>length string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Cap length; null uses canvas cap-length (1.75rem).') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">color</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">color name | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Overrides inherited canvas color; final fallback zinc.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>color</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>color name | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Overrides inherited canvas color; final fallback zinc.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">end-label</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">array | string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Text near the capped end; expand below.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>end-label</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>array | string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Text near the capped end; expand below.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">counter-start</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">integer | string | false | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">First DEV counter caption/number.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>counter-start</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>integer | string | false | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('First DEV counter caption/number.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">z-index</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">10</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Base drawing layer for this component.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>z-index</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>integer</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>10</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Base drawing layer for this component.') }}</flux:table.cell>
                 </flux:table.row>
 
             </flux:table.rows>
         </flux:table>
     </flux:callout>
     <flux:callout class="min-w-0 space-y-3" color="green" icon="brackets">
-        <flux:callout.heading>Array props</flux:callout.heading>
+        <flux:callout.heading>{{ __('Array props') }}</flux:callout.heading>
         <flux:accordion>
             <flux:accordion.item>
                 <flux:accordion.heading>anchor-start</flux:accordion.heading>
                 <flux:accordion.content>
-                    <flux:text>Coordinates in the current canvas; positive y points upwards.</flux:text>
+                    <flux:text>{{ __('Coordinates in the current canvas; positive y points upwards.') }}</flux:text>
                     <flux:table class="mt-3">
                         <flux:table.columns sticky>
-                            <flux:table.column>Prop / path</flux:table.column>
-                            <flux:table.column>Type</flux:table.column>
-                            <flux:table.column>Default / fallback</flux:table.column>
-                            <flux:table.column>Meaning and limits</flux:table.column>
+                            <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                            <flux:table.column>{{ __('Type') }}</flux:table.column>
+                            <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                            <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                         </flux:table.columns>
                         <flux:table.rows>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">anchor-start.x</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">0rem</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Horizontal coordinate.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>anchor-start.x</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>0rem</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Horizontal coordinate.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">anchor-start.y</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">0rem</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Vertical coordinate.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>anchor-start.y</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>0rem</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Vertical coordinate.') }}</flux:table.cell>
                             </flux:table.row>
                         </flux:table.rows>
                     </flux:table>
@@ -120,92 +120,92 @@
             <flux:accordion.item>
                 <flux:accordion.heading>end-label</flux:accordion.heading>
                 <flux:accordion.content>
-                    <flux:text>Options accepted for this end label. Omit the label to use the parent default; partial arrays are not recursively merged.</flux:text>
+                    <flux:text>{{ __('Options accepted for this end label. Omit the label to use the parent default; partial arrays are not recursively merged.') }}</flux:text>
                     <flux:table class="mt-3">
                         <flux:table.columns sticky>
-                            <flux:table.column>Prop / path</flux:table.column>
-                            <flux:table.column>Type</flux:table.column>
-                            <flux:table.column>Default / fallback</flux:table.column>
-                            <flux:table.column>Meaning and limits</flux:table.column>
+                            <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                            <flux:table.column>{{ __('Type') }}</flux:table.column>
+                            <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                            <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                         </flux:table.columns>
                         <flux:table.rows>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">end-label.text</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">string | list&lt;string&gt;</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">No text unless supplied</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Explicit text; | or list entries create separate lines.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>end-label.text</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>string | list&lt;string&gt;</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>No text unless supplied</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Explicit text; | or list entries create separate lines.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">end-label.width</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">half | default | halfLong | long</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">default unless parent default says otherwise</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Canvas width presets: normally 6 / 12 / 18 / 24rem.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>end-label.width</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>half | default | halfLong | long</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>default unless parent default says otherwise</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Canvas width presets: normally 6 / 12 / 18 / 24rem.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">end-label.align</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">left | center | right</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">center</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Alignment inside the box; independent of route direction.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>end-label.align</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>left | center | right</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>center</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Alignment inside the box; independent of route direction.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">end-label.justify</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Justify text.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>end-label.justify</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Justify text.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">end-label.badge</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Draw badge behind text.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>end-label.badge</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>true</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Draw badge behind text.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">end-label.badgeColor</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Component / label color</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Badge-only color override.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>end-label.badgeColor</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>Component / label color</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Badge-only color override.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">end-label.maxLines</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">3</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Maximum displayed text lines.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>end-label.maxLines</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>integer</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>3</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Maximum displayed text lines.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">end-label.color</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Component color</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Node label: connector/badge color. Action: route color only where the owning component reads it.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>end-label.color</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>Component color</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Node label: connector/badge color. Action: route color only where the owning component reads it.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">end-label.side</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">left | right | top | bottom | center</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">step: center; start/end: derived from direction</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Placement relative to the owning anchor; does not mirror the component.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>end-label.side</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>left | right | top | bottom | center</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>step: center; start/end: derived from direction</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Placement relative to the owning anchor; does not mirror the component.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">end-label.offset</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Canvas label-offset → 0.75rem</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Text offset; for step labels also affects calculated text gap.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>end-label.offset</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>Canvas label-offset → 0.75rem</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Text offset; for step labels also affects calculated text gap.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">end-label.long</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>end-label.long</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">end-label.halfLong</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>end-label.halfLong</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">end-label.half</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>end-label.half</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                             </flux:table.row>
                         </flux:table.rows>
                     </flux:table>
@@ -218,39 +218,39 @@
 /&gt;</x-translation-workbench::ui.tw-graph.code-box>
     </flux:callout>
     <flux:callout class="min-w-0 space-y-3" color="sky" icon="variable">
-        <flux:callout.heading>Inheritance and calculated geometry</flux:callout.heading>
-        <flux:text>Declared defaults below are the component’s own values. null delegates to inherited canvas settings or the resolution described here; it does not mean zero. Canvas controls shared line thickness, node size, label widths, connector defaults and path tone.</flux:text>
-        <flux:text>attach-to is the input anchor. The route advances from it using the authored lengths.</flux:text>
-        <flux:text>These traditional components publish family-specific named anchors. Node numbering changes when continuations/extensions are added. Render referenced anchors before dependent components.</flux:text>
+        <flux:callout.heading>{{ __('Inheritance and calculated geometry') }}</flux:callout.heading>
+        <flux:text>{{ __('Declared defaults below are the component’s own values. null delegates to inherited canvas settings or the resolution described here; it does not mean zero. Canvas controls shared line thickness, node size, label widths, connector defaults and path tone.') }}</flux:text>
+        <flux:text>{{ __('attach-to is the input anchor. The route advances from it using the authored lengths.') }}</flux:text>
+        <flux:text>{{ __('These traditional components publish family-specific named anchors. Node numbering changes when continuations/extensions are added. Render referenced anchors before dependent components.') }}</flux:text>
     </flux:callout>
     <flux:callout class="min-w-0 space-y-3" color="amber" icon="cable">
-        <flux:callout.heading>Connections</flux:callout.heading>
+        <flux:callout.heading>{{ __('Connections') }}</flux:callout.heading>
         <flux:table class="mt-3">
             <flux:table.columns sticky>
-                <flux:table.column>Prop / path</flux:table.column>
-                <flux:table.column>Type</flux:table.column>
-                <flux:table.column>Default / fallback</flux:table.column>
-                <flux:table.column>Meaning and limits</flux:table.column>
+                <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                <flux:table.column>{{ __('Type') }}</flux:table.column>
+                <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
             </flux:table.columns>
             <flux:table.rows>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">strang.branch-end.{side}.start</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">anchor</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Input</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Resolved starting coordinate.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>strang.branch-end.{side}.start</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>anchor</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>Input</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Resolved starting coordinate.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">strang.branch-end.{side}.end</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">anchor</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Output</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Named final connection.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>strang.branch-end.{side}.end</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>anchor</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>Output</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Named final connection.') }}</flux:table.cell>
                 </flux:table.row>
             </flux:table.rows>
         </flux:table>
     </flux:callout>
     <flux:callout class="min-w-0 space-y-3" color="fuchsia" icon="infinity">
-        <flux:callout.heading>Validation and practical limits</flux:callout.heading>
-        <flux:text>Missing attachment references can render a DEV mismatch and fall back to anchor-start or a calculated family fallback. Fixed left/right wrappers do not accept an independent side prop.</flux:text>
+        <flux:callout.heading>{{ __('Validation and practical limits') }}</flux:callout.heading>
+        <flux:text>{{ __('Missing attachment references can render a DEV mismatch and fall back to anchor-start or a calculated family fallback. Fixed left/right wrappers do not accept an independent side prop.') }}</flux:text>
     </flux:callout>
     <x-translation-workbench::ui.common.tw-graph-path-file
         path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-end.blade.php"

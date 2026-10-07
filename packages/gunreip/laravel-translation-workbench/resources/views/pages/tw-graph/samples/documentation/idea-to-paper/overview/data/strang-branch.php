@@ -47,9 +47,9 @@ return [
             ],
             'label' => [
                 'width' => 'half',
-                'align' => 'center',
-                'beforeLength' => '1rem',
-                'afterLength' => '1rem',
+                'afterLength' => '0rem',
+                'nodeEnd' => false,
+                // 'nodeEndDot' => true,
             ],
             'endCap' => [
                 'length' => '1rem',

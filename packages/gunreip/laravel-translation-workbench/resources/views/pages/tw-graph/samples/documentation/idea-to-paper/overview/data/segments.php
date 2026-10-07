@@ -73,6 +73,11 @@ return [
                 'stemLength' => '3rem',
                 'bridgeLength' => '14rem',
             ],
+            'label' => [
+                'afterLength' => '0rem',
+                'nodeEnd' => false,
+                // 'nodeEndDot' => true,
+            ],
         ],
         'children' => [
             'global' => [

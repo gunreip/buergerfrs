@@ -47,7 +47,7 @@ it('rejects conflicting leaves regardless of file order and identifies both file
     }
 });
 
-it('loads authored geometry while the overview source accordions remain paused', function () {
+it('loads authored geometry alongside the overview source accordions', function () {
     $result = OverviewLayoutOverrides::load();
     expect($result['issues'])->toBe([]);
     expect(array_map('basename', $result['files']))->toContain('canvas.php', 'deep-reference.php');
@@ -61,7 +61,9 @@ it('loads authored geometry while the overview source accordions remain paused',
     $bridge = $records->firstWhere('id', 'literature.overview.tabs.left.extension.4.paths.merge-extension.bridge');
     expect(BoundsRegistry::evaluateRemExpression($bridge['rects'][0]['width']))->toBe(BoundsRegistry::evaluateRemExpression($authored['deep-reference']['global']['connection']['bridgeLength']));
     expect($html)->toContain('data/canvas.php', 'data/deep-reference.php');
-    expect($html)->not->toContain('Layout overrides', 'aria-label="Code example"');
+    expect($html)->toContain('Layout overrides', 'aria-label="Code example"');
+    $descriptions = require dirname(OverviewLayoutOverrides::directory()).'/section-descriptions.php';
+    expect($html)->toContain(e($descriptions['data']['canvas']), e($descriptions['structure']['canvas']));
     expect($html)->not->toContain('data-overview-layout-issues="true"');
 });
 

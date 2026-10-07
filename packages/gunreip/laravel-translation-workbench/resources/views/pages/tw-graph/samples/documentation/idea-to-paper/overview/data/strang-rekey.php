@@ -44,8 +44,10 @@ return [
                 // 'arcRadius' => '3rem',
             ],
             'label' => [
-                'width' => 'default',
-                'align' => 'center',
+                'width' => 'half',
+                'afterLength' => '0rem',
+                'nodeEnd' => false,
+                // 'nodeEndDot' => true,
             ],
         ],
         'children' => [

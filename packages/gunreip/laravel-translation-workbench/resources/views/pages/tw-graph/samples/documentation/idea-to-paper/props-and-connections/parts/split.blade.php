@@ -1,5 +1,5 @@
 <section class="min-w-0 space-y-4" id="reference-parts-split">
-    <flux:heading size="lg">parts.split — Deep Reference</flux:heading>
+    <flux:heading size="lg">{{ __('parts.split — Deep Reference') }}</flux:heading>
     <x-translation-workbench::ui.tw-graph.documentation-links reference="parts.split" />
     <flux:callout color="indigo" icon="information-circle">
         <flux:callout.heading>{{ __('Binary split') }}</flux:callout.heading>
@@ -74,7 +74,11 @@
     </flux:callout>
     <flux:callout color="indigo" icon="variable" class="min-w-0">
         <flux:callout.heading>{{ __('Array props') }}</flux:callout.heading>
-        <flux:table>
+        <flux:accordion>
+            <flux:accordion.item>
+                <flux:accordion.heading>outputs[]</flux:accordion.heading>
+                <flux:accordion.content>
+                    <flux:table>
             <flux:table.columns>
                 <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
                 <flux:table.column>{{ __('Type') }}</flux:table.column>
@@ -138,6 +142,13 @@
                 </flux:table.row>
             </flux:table.rows>
         </flux:table>
+                    <pre class="overflow-x-auto"><code>:outputs="[
+    ['key' =&gt; 'true', 'offset' =&gt; '4rem', 'color' =&gt; 'green'],
+    ['key' =&gt; 'false', 'offset' =&gt; '-4rem', 'color' =&gt; 'red'],
+]"</code></pre>
+                </flux:accordion.content>
+            </flux:accordion.item>
+        </flux:accordion>
     </flux:callout>
     <flux:callout color="indigo" icon="variable" class="min-w-0">
         <flux:callout.heading>{{ __('Connections') }}</flux:callout.heading>
@@ -163,5 +174,13 @@
                 </flux:table.row>
             </flux:table.rows>
         </flux:table>
+    </flux:callout>
+    <flux:callout color="sky" icon="variable">
+        <flux:callout.heading>{{ __('Inheritance and calculated geometry') }}</flux:callout.heading>
+        <flux:text>{{ __('The canvas supplies diagnostic settings and the fallback color. Each output may set its own color. Both bends use one calculated radius, resolved from the smaller absolute offset, arc-radius and min-stem-length. The horizontal displacement is twice that radius; vertical positions follow the signed output offsets.') }}</flux:text>
+    </flux:callout>
+    <flux:callout color="fuchsia" icon="information-circle">
+        <flux:callout.heading>{{ __('Validation and practical limits') }}</flux:callout.heading>
+        <flux:text>{{ __('Exactly two outputs with unique nonempty keys and nonzero offsets are required, one above and one below the input. Coordinates and lengths must resolve to rem values. The radius must be positive and min-stem-length nonnegative. Unequal offsets that leave a short compensator are rejected; adjust the authored offsets or radius.') }}</flux:text>
     </flux:callout>
 </section>

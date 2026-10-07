@@ -1,177 +1,177 @@
 <section class="min-w-0 space-y-4" id="reference-strang-flow-if-elseif-multi">
-    <flux:heading size="lg">strang.flow-if-elseif-multi — Deep Reference</flux:heading>
+    <flux:heading size="lg">{{ __('strang.flow-if-elseif-multi — Deep Reference') }}</flux:heading>
     <x-translation-workbench::ui.tw-graph.documentation-links reference="strang.flow-if-elseif-multi" />
-    <flux:text>One IF followed by one or more ordered ELSEIF branches and a final fallback/bypass. Each branch may contain an explicitly connected nested block.</flux:text>
+    <flux:text>{{ __('One IF followed by one or more ordered ELSEIF branches and a final fallback/bypass. Each branch may contain an explicitly connected nested block.') }}</flux:text>
     <flux:callout icon="information-circle" color="indigo">
-        <flux:callout.heading>Reading this reference</flux:callout.heading>
-        <flux:text>Attributes use kebab-case; nested keys use camelCase. Open each array to see its children with complete paths. [n] denotes a numbered map and [] a list item. The declarations here are separate from the example-specific Props and connections tables.</flux:text>
+        <flux:callout.heading>{{ __('Reading this reference') }}</flux:callout.heading>
+        <flux:text>{{ __('Attributes use kebab-case; nested keys use camelCase. Open each array to see its children with complete paths. [n] denotes a numbered map and [] a list item. The declarations here are separate from the example-specific Props and connections tables.') }}</flux:text>
     </flux:callout>
     <flux:callout class="min-w-0 space-y-3" color="red" icon="book-open-check">
-        <flux:callout.heading>Public component props</flux:callout.heading>
+        <flux:callout.heading>{{ __('Public component props') }}</flux:callout.heading>
         <flux:table class="mt-3">
             <flux:table.columns sticky>
-                <flux:table.column>Prop / path</flux:table.column>
-                <flux:table.column>Type</flux:table.column>
-                <flux:table.column>Default / fallback</flux:table.column>
-                <flux:table.column>Meaning and limits</flux:table.column>
+                <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                <flux:table.column>{{ __('Type') }}</flux:table.column>
+                <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
             </flux:table.columns>
             <flux:table.rows>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">id</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Unique authoring ID and prefix for anchors/tooltips. Null uses the component-specific generated ID.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>id</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Unique authoring ID and prefix for anchors/tooltips. Null uses the component-specific generated ID.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">component-counter</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">1</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Number used in generated IDs; normalized to at least 1. Supply explicit IDs for repeated components.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>component-counter</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>integer</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>1</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Number used in generated IDs; normalized to at least 1. Supply explicit IDs for repeated components.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">attach-to</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Existing anchor in the same canvas; see Connections for whether this attaches the input or aligns the output.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>attach-to</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Existing anchor in the same canvas; see Connections for whether this attaches the input or aligns the output.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">anchor-start</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">array</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">{&quot;x&quot;: &quot;0rem&quot;, &quot;y&quot;: &quot;0rem&quot;}</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Fallback/input coordinates. Expand below.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>anchor-start</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>array</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>{&quot;x&quot;: &quot;0rem&quot;, &quot;y&quot;: &quot;0rem&quot;}</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Fallback/input coordinates. Expand below.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">side</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">string enum</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">left</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Destination side: left moves left; right moves right, independently of the vertical direction.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>side</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>string enum</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>left</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Destination side: left moves left; right moves right, independently of the vertical direction.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">direction</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">string enum</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">bottom-top</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Flow direction. Vertical: bottom-top/top-bottom. Start, end, step, trunk and chain also support left-right/right-left.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>direction</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>string enum</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>bottom-top</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Flow direction. Vertical: bottom-top/top-bottom. Start, end, step, trunk and chain also support left-right/right-left.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">condition-label</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">array | string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">{&quot;text&quot;: [&quot;IF condition?&quot;], &quot;width&quot;: &quot;halfLong&quot;}</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Condition/question step label; expand below.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>condition-label</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>array | string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>{&quot;text&quot;: [&quot;IF condition?&quot;], &quot;width&quot;: &quot;halfLong&quot;}</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Condition/question step label; expand below.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">if-start</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">array | string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">{&quot;text&quot;: [&quot;IF action&quot;], &quot;width&quot;: &quot;half&quot;}</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">First successful IF action; expand routing and label options below.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>if-start</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>array | string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>{&quot;text&quot;: [&quot;IF action&quot;], &quot;width&quot;: &quot;half&quot;}</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('First successful IF action; expand routing and label options below.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">elseifs</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">array</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">[]</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">ELSEIF definitions; single variant requires exactly one, multi requires one or more.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>elseifs</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>array</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>[]</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('ELSEIF definitions; single variant requires exactly one, multi requires one or more.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">before-length</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">length string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">2rem</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Stem before the step text; flow-step null becomes 2rem.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>before-length</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>length string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>2rem</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Stem before the step text; flow-step null becomes 2rem.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">after-length</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">length string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">2rem</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Stem after the step text; flow-step null becomes 2rem.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>after-length</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>length string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>2rem</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Stem after the step text; flow-step null becomes 2rem.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">elseif-before-length</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">length string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">6rem</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Default stem before an ELSEIF question; branch.beforeLength overrides it.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>elseif-before-length</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>length string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>6rem</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Default stem before an ELSEIF question; branch.beforeLength overrides it.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">elseif-after-length</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">length string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">2rem</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Default stem after an ELSEIF question; branch.afterLength overrides it.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>elseif-after-length</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>length string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>2rem</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Default stem after an ELSEIF question; branch.afterLength overrides it.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">stem-length</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">length string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">8rem</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Default vertical stem length. Null resolves through canvas stem-length / line-length (normally 4rem).</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>stem-length</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>length string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>8rem</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Default vertical stem length. Null resolves through canvas stem-length / line-length (normally 4rem).') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">arc-radius</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">length string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Arc radius; null uses the shared arc radius (2.75rem).</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>arc-radius</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>length string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Arc radius; null uses the shared arc radius (2.75rem).') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">bridge-length</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">length string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">2rem</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Default bridge length. Null normally resolves through canvas bridge-length / line-length; IF uses normalized label-bridge lengths.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>bridge-length</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>length string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>2rem</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Default bridge length. Null normally resolves through canvas bridge-length / line-length; IF uses normalized label-bridge lengths.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">if-end</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">array | string | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">[]</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Final ELSE action or text-free bypass; expand below.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>if-end</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>array | string | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>[]</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Final ELSE action or text-free bypass; expand below.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">node-labels</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">array</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">[]</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Node annotation definitions; expand below for this component’s shape.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>node-labels</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>array</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>[]</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Node annotation definitions; expand below for this component’s shape.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">node-end</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Render endpoint marker; supplied node labels can require a visible node.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>node-end</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>true</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Render endpoint marker; supplied node labels can require a visible node.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">color</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">color name | null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">null</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Overrides inherited canvas color; final fallback zinc.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>color</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>color name | null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>null</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Overrides inherited canvas color; final fallback zinc.') }}</flux:table.cell>
                 </flux:table.row>
 
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">z-index</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">20</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Base drawing layer for this component.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>z-index</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>integer</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>20</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Base drawing layer for this component.') }}</flux:table.cell>
                 </flux:table.row>
             </flux:table.rows>
         </flux:table>
     </flux:callout>
     <flux:callout class="min-w-0 space-y-3" color="green" icon="brackets">
-        <flux:callout.heading>Array props</flux:callout.heading>
+        <flux:callout.heading>{{ __('Array props') }}</flux:callout.heading>
         <flux:accordion>
             <flux:accordion.item>
                 <flux:accordion.heading>anchor-start</flux:accordion.heading>
                 <flux:accordion.content>
-                    <flux:text>Coordinates in the current canvas; positive y points upwards.</flux:text>
+                    <flux:text>{{ __('Coordinates in the current canvas; positive y points upwards.') }}</flux:text>
                     <flux:table class="mt-3">
                         <flux:table.columns sticky>
-                            <flux:table.column>Prop / path</flux:table.column>
-                            <flux:table.column>Type</flux:table.column>
-                            <flux:table.column>Default / fallback</flux:table.column>
-                            <flux:table.column>Meaning and limits</flux:table.column>
+                            <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                            <flux:table.column>{{ __('Type') }}</flux:table.column>
+                            <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                            <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                         </flux:table.columns>
                         <flux:table.rows>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">anchor-start.x</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">0rem</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Horizontal coordinate.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>anchor-start.x</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>0rem</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Horizontal coordinate.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">anchor-start.y</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">0rem</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Vertical coordinate.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>anchor-start.y</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>0rem</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Vertical coordinate.') }}</flux:table.cell>
                             </flux:table.row>
                         </flux:table.rows>
                     </flux:table>
@@ -180,86 +180,86 @@
             <flux:accordion.item>
                 <flux:accordion.heading>condition-label</flux:accordion.heading>
                 <flux:accordion.content>
-                    <flux:text>Options accepted for this step label. Omit the label to use the parent default; partial arrays are not recursively merged.</flux:text>
+                    <flux:text>{{ __('Options accepted for this step label. Omit the label to use the parent default; partial arrays are not recursively merged.') }}</flux:text>
                     <flux:table class="mt-3">
                         <flux:table.columns sticky>
-                            <flux:table.column>Prop / path</flux:table.column>
-                            <flux:table.column>Type</flux:table.column>
-                            <flux:table.column>Default / fallback</flux:table.column>
-                            <flux:table.column>Meaning and limits</flux:table.column>
+                            <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                            <flux:table.column>{{ __('Type') }}</flux:table.column>
+                            <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                            <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                         </flux:table.columns>
                         <flux:table.rows>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">condition-label.text</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">string | list&lt;string&gt;</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">No text unless supplied</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Explicit text; | or list entries create separate lines.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>condition-label.text</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>string | list&lt;string&gt;</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>No text unless supplied</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Explicit text; | or list entries create separate lines.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">condition-label.width</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">half | default | halfLong | long</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">default unless parent default says otherwise</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Canvas width presets: normally 6 / 12 / 18 / 24rem.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>condition-label.width</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>half | default | halfLong | long</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>default unless parent default says otherwise</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Canvas width presets: normally 6 / 12 / 18 / 24rem.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">condition-label.align</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">left | center | right</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">center</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Alignment inside the box; independent of route direction.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>condition-label.align</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>left | center | right</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>center</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Alignment inside the box; independent of route direction.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">condition-label.justify</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Justify text.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>condition-label.justify</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Justify text.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">condition-label.badge</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Draw badge behind text.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>condition-label.badge</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>true</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Draw badge behind text.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">condition-label.badgeColor</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Component / label color</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Badge-only color override.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>condition-label.badgeColor</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>Component / label color</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Badge-only color override.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">condition-label.maxLines</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">3</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Maximum displayed text lines.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>condition-label.maxLines</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>integer</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>3</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Maximum displayed text lines.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">condition-label.side</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">left | right | top | bottom | center</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">step: center; start/end: derived from direction</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Placement relative to the owning anchor; does not mirror the component.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>condition-label.side</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>left | right | top | bottom | center</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>step: center; start/end: derived from direction</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Placement relative to the owning anchor; does not mirror the component.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">condition-label.offset</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Canvas label-offset → 0.75rem</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Text offset; for step labels also affects calculated text gap.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>condition-label.offset</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>Canvas label-offset → 0.75rem</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Text offset; for step labels also affects calculated text gap.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">condition-label.long</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>condition-label.long</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">condition-label.halfLong</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>condition-label.halfLong</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">condition-label.half</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>condition-label.half</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                             </flux:table.row>
                         </flux:table.rows>
                     </flux:table>
@@ -268,74 +268,74 @@
             <flux:accordion.item>
                 <flux:accordion.heading>if-start</flux:accordion.heading>
                 <flux:accordion.content>
-                    <flux:text>Options accepted for this action label. Omit the label to use the parent default; partial arrays are not recursively merged.</flux:text>
+                    <flux:text>{{ __('Options accepted for this action label. Omit the label to use the parent default; partial arrays are not recursively merged.') }}</flux:text>
                     <flux:table class="mt-3">
                         <flux:table.columns sticky>
-                            <flux:table.column>Prop / path</flux:table.column>
-                            <flux:table.column>Type</flux:table.column>
-                            <flux:table.column>Default / fallback</flux:table.column>
-                            <flux:table.column>Meaning and limits</flux:table.column>
+                            <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                            <flux:table.column>{{ __('Type') }}</flux:table.column>
+                            <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                            <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                         </flux:table.columns>
                         <flux:table.rows>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-start.text</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">string | list&lt;string&gt;</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">No text unless supplied</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Explicit text; | or list entries create separate lines.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-start.text</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>string | list&lt;string&gt;</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>No text unless supplied</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Explicit text; | or list entries create separate lines.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-start.width</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">half | default | halfLong | long</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">default unless parent default says otherwise</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Canvas width presets: normally 6 / 12 / 18 / 24rem.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-start.width</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>half | default | halfLong | long</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>default unless parent default says otherwise</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Canvas width presets: normally 6 / 12 / 18 / 24rem.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-start.align</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">left | center | right</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">center</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Alignment inside the box; independent of route direction.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-start.align</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>left | center | right</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>center</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Alignment inside the box; independent of route direction.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-start.justify</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Justify text.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-start.justify</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Justify text.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-start.badge</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Draw badge behind text.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-start.badge</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>true</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Draw badge behind text.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-start.badgeColor</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Component / label color</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Badge-only color override.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-start.badgeColor</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>Component / label color</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Badge-only color override.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-start.maxLines</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">3</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Maximum displayed text lines.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-start.maxLines</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>integer</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>3</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Maximum displayed text lines.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-start.color</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Component color</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Node label: connector/badge color. Action: route color only where the owning component reads it.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-start.color</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>Component color</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Node label: connector/badge color. Action: route color only where the owning component reads it.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-start.return</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">false opens this route for a nested block. Author the return explicitly.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-start.return</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>true</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('false opens this route for a nested block. Author the return explicitly.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-start.returnOffset</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">False/open ELSEIF: 12rem; first true route: no offset</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Horizontal extra space when return=false. Single ELSEIF first action does not read this field.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-start.returnOffset</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>False/open ELSEIF: 12rem; first true route: no offset</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Horizontal extra space when return=false. Single ELSEIF first action does not read this field.') }}</flux:table.cell>
                             </flux:table.row>
                         </flux:table.rows>
                     </flux:table>
@@ -343,32 +343,32 @@
                         <flux:accordion.item>
                             <flux:accordion.heading>if-start.lineJumps[]</flux:accordion.heading>
                             <flux:accordion.content>
-                                <flux:text>Explicit line crossings. Multiple jumps are allowed; DEV reports missing targets, invalid intersections and overlapping jumps.</flux:text>
+                                <flux:text>{{ __('Explicit line crossings. Multiple jumps are allowed; DEV reports missing targets, invalid intersections and overlapping jumps.') }}</flux:text>
                                 <flux:table class="mt-3">
                                     <flux:table.columns sticky>
-                                        <flux:table.column>Prop / path</flux:table.column>
-                                        <flux:table.column>Type</flux:table.column>
-                                        <flux:table.column>Default / fallback</flux:table.column>
-                                        <flux:table.column>Meaning and limits</flux:table.column>
+                                        <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                     </flux:table.columns>
                                     <flux:table.rows>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">if-start.lineJumps[].over</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">string</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">required</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">ID of an existing perpendicular stem/bridge intersecting this line.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>if-start.lineJumps[].over</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>string</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>required</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('ID of an existing perpendicular stem/bridge intersecting this line.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">if-start.lineJumps[].radius</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">0.5rem</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Must fit between endpoints and exceed half the line thickness.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>if-start.lineJumps[].radius</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>0.5rem</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Must fit between endpoints and exceed half the line thickness.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">if-start.lineJumps[].side</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">top | bottom</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">top</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Side of the semicircle relative to its owning line.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>if-start.lineJumps[].side</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>top | bottom</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>top</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Side of the semicircle relative to its owning line.') }}</flux:table.cell>
                                         </flux:table.row>
                                     </flux:table.rows>
                                 </flux:table>
@@ -377,32 +377,32 @@
                         <flux:accordion.item>
                             <flux:accordion.heading>if-start.stemLineJumps[]</flux:accordion.heading>
                             <flux:accordion.content>
-                                <flux:text>Explicit line crossings. Multiple jumps are allowed; DEV reports missing targets, invalid intersections and overlapping jumps.</flux:text>
+                                <flux:text>{{ __('Explicit line crossings. Multiple jumps are allowed; DEV reports missing targets, invalid intersections and overlapping jumps.') }}</flux:text>
                                 <flux:table class="mt-3">
                                     <flux:table.columns sticky>
-                                        <flux:table.column>Prop / path</flux:table.column>
-                                        <flux:table.column>Type</flux:table.column>
-                                        <flux:table.column>Default / fallback</flux:table.column>
-                                        <flux:table.column>Meaning and limits</flux:table.column>
+                                        <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                     </flux:table.columns>
                                     <flux:table.rows>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">if-start.stemLineJumps[].over</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">string</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">required</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">ID of an existing perpendicular stem/bridge intersecting this line.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>if-start.stemLineJumps[].over</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>string</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>required</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('ID of an existing perpendicular stem/bridge intersecting this line.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">if-start.stemLineJumps[].radius</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">0.5rem</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Must fit between endpoints and exceed half the line thickness.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>if-start.stemLineJumps[].radius</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>0.5rem</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Must fit between endpoints and exceed half the line thickness.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">if-start.stemLineJumps[].side</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">left | right</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">right</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Side of the semicircle relative to its owning line.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>if-start.stemLineJumps[].side</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>left | right</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>right</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Side of the semicircle relative to its owning line.') }}</flux:table.cell>
                                         </flux:table.row>
                                     </flux:table.rows>
                                 </flux:table>
@@ -414,50 +414,50 @@
             <flux:accordion.item>
                 <flux:accordion.heading>elseifs[]</flux:accordion.heading>
                 <flux:accordion.content>
-                    <flux:text>At least one entry.</flux:text>
+                    <flux:text>{{ __('At least one entry.') }}</flux:text>
                     <flux:table class="mt-3">
                         <flux:table.columns sticky>
-                            <flux:table.column>Prop / path</flux:table.column>
-                            <flux:table.column>Type</flux:table.column>
-                            <flux:table.column>Default / fallback</flux:table.column>
-                            <flux:table.column>Meaning and limits</flux:table.column>
+                            <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                            <flux:table.column>{{ __('Type') }}</flux:table.column>
+                            <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                            <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                         </flux:table.columns>
                         <flux:table.rows>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">elseifs[].key</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">1-based position</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Unique nonempty key used in this branch ID.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].key</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>1-based position</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Unique nonempty key used in this branch ID.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">array | string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">ELSEIF condition?</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Condition caption; expand below.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>array | string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>ELSEIF condition?</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Condition caption; expand below.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">array | string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">ELSEIF action</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Successful action; expand below.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>array | string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>ELSEIF action</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Successful action; expand below.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">elseifs[].color</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Component color</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Branch color; conditionLabel.color takes precedence.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].color</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>Component color</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Branch color; conditionLabel.color takes precedence.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">elseifs[].beforeLength</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">elseif-before-length</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Stem before this question.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].beforeLength</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>elseif-before-length</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Stem before this question.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">elseifs[].afterLength</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">elseif-after-length</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Stem after this question.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].afterLength</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>elseif-after-length</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Stem after this question.') }}</flux:table.cell>
                             </flux:table.row>
                         </flux:table.rows>
                     </flux:table>
@@ -465,92 +465,92 @@
                         <flux:accordion.item>
                             <flux:accordion.heading>elseifs[].conditionLabel</flux:accordion.heading>
                             <flux:accordion.content>
-                                <flux:text>Options accepted for this step label. Omit the label to use the parent default; partial arrays are not recursively merged.</flux:text>
+                                <flux:text>{{ __('Options accepted for this step label. Omit the label to use the parent default; partial arrays are not recursively merged.') }}</flux:text>
                                 <flux:table class="mt-3">
                                     <flux:table.columns sticky>
-                                        <flux:table.column>Prop / path</flux:table.column>
-                                        <flux:table.column>Type</flux:table.column>
-                                        <flux:table.column>Default / fallback</flux:table.column>
-                                        <flux:table.column>Meaning and limits</flux:table.column>
+                                        <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                     </flux:table.columns>
                                     <flux:table.rows>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel.text</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">string | list&lt;string&gt;</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">No text unless supplied</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Explicit text; | or list entries create separate lines.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel.text</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>string | list&lt;string&gt;</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>No text unless supplied</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Explicit text; | or list entries create separate lines.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel.width</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">half | default | halfLong | long</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">default unless parent default says otherwise</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Canvas width presets: normally 6 / 12 / 18 / 24rem.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel.width</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>half | default | halfLong | long</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>default unless parent default says otherwise</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Canvas width presets: normally 6 / 12 / 18 / 24rem.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel.align</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">left | center | right</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">center</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Alignment inside the box; independent of route direction.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel.align</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>left | center | right</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>center</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Alignment inside the box; independent of route direction.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel.justify</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Justify text.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel.justify</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Justify text.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel.badge</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Draw badge behind text.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel.badge</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>true</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Draw badge behind text.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel.badgeColor</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Component / label color</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Badge-only color override.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel.badgeColor</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>Component / label color</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Badge-only color override.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel.maxLines</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">3</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Maximum displayed text lines.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel.maxLines</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>integer</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>3</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Maximum displayed text lines.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel.side</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">left | right | top | bottom | center</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">step: center; start/end: derived from direction</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Placement relative to the owning anchor; does not mirror the component.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel.side</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>left | right | top | bottom | center</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>step: center; start/end: derived from direction</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Placement relative to the owning anchor; does not mirror the component.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel.offset</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Canvas label-offset → 0.75rem</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Text offset; for step labels also affects calculated text gap.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel.offset</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>Canvas label-offset → 0.75rem</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Text offset; for step labels also affects calculated text gap.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel.long</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel.long</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel.halfLong</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel.halfLong</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel.half</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel.half</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].conditionLabel.color</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Branch color</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Condition and branch color override.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].conditionLabel.color</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>Branch color</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Condition and branch color override.') }}</flux:table.cell>
                                         </flux:table.row>
                                     </flux:table.rows>
                                 </flux:table>
@@ -559,74 +559,74 @@
                         <flux:accordion.item>
                             <flux:accordion.heading>elseifs[].actionLabel</flux:accordion.heading>
                             <flux:accordion.content>
-                                <flux:text>Options accepted for this action label. Omit the label to use the parent default; partial arrays are not recursively merged.</flux:text>
+                                <flux:text>{{ __('Options accepted for this action label. Omit the label to use the parent default; partial arrays are not recursively merged.') }}</flux:text>
                                 <flux:table class="mt-3">
                                     <flux:table.columns sticky>
-                                        <flux:table.column>Prop / path</flux:table.column>
-                                        <flux:table.column>Type</flux:table.column>
-                                        <flux:table.column>Default / fallback</flux:table.column>
-                                        <flux:table.column>Meaning and limits</flux:table.column>
+                                        <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                     </flux:table.columns>
                                     <flux:table.rows>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.text</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">string | list&lt;string&gt;</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">No text unless supplied</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Explicit text; | or list entries create separate lines.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.text</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>string | list&lt;string&gt;</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>No text unless supplied</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Explicit text; | or list entries create separate lines.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.width</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">half | default | halfLong | long</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">default unless parent default says otherwise</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Canvas width presets: normally 6 / 12 / 18 / 24rem.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.width</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>half | default | halfLong | long</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>default unless parent default says otherwise</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Canvas width presets: normally 6 / 12 / 18 / 24rem.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.align</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">left | center | right</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">center</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Alignment inside the box; independent of route direction.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.align</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>left | center | right</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>center</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Alignment inside the box; independent of route direction.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.justify</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Justify text.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.justify</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Justify text.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.badge</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Draw badge behind text.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.badge</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>true</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Draw badge behind text.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.badgeColor</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Component / label color</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Badge-only color override.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.badgeColor</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>Component / label color</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Badge-only color override.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.maxLines</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">3</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Maximum displayed text lines.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.maxLines</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>integer</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>3</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Maximum displayed text lines.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.color</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Component color</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Node label: connector/badge color. Action: route color only where the owning component reads it.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.color</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>Component color</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Node label: connector/badge color. Action: route color only where the owning component reads it.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.return</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">false opens this route for a nested block. Author the return explicitly.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.return</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>true</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('false opens this route for a nested block. Author the return explicitly.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.returnOffset</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">False/open ELSEIF: 12rem; first true route: no offset</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Horizontal extra space when return=false. Single ELSEIF first action does not read this field.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.returnOffset</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>False/open ELSEIF: 12rem; first true route: no offset</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Horizontal extra space when return=false. Single ELSEIF first action does not read this field.') }}</flux:table.cell>
                                         </flux:table.row>
                                     </flux:table.rows>
                                 </flux:table>
@@ -634,32 +634,32 @@
                                     <flux:accordion.item>
                                         <flux:accordion.heading>elseifs[].actionLabel.lineJumps[]</flux:accordion.heading>
                                         <flux:accordion.content>
-                                            <flux:text>Explicit line crossings. Multiple jumps are allowed; DEV reports missing targets, invalid intersections and overlapping jumps.</flux:text>
+                                            <flux:text>{{ __('Explicit line crossings. Multiple jumps are allowed; DEV reports missing targets, invalid intersections and overlapping jumps.') }}</flux:text>
                                             <flux:table class="mt-3">
                                                 <flux:table.columns sticky>
-                                                    <flux:table.column>Prop / path</flux:table.column>
-                                                    <flux:table.column>Type</flux:table.column>
-                                                    <flux:table.column>Default / fallback</flux:table.column>
-                                                    <flux:table.column>Meaning and limits</flux:table.column>
+                                                    <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                                 </flux:table.columns>
                                                 <flux:table.rows>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.lineJumps[].over</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">string</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">required</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">ID of an existing perpendicular stem/bridge intersecting this line.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.lineJumps[].over</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>string</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>required</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('ID of an existing perpendicular stem/bridge intersecting this line.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.lineJumps[].radius</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">0.5rem</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Must fit between endpoints and exceed half the line thickness.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.lineJumps[].radius</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>0.5rem</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Must fit between endpoints and exceed half the line thickness.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.lineJumps[].side</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">top | bottom</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">top</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Side of the semicircle relative to its owning line.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.lineJumps[].side</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>top | bottom</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>top</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Side of the semicircle relative to its owning line.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                 </flux:table.rows>
                                             </flux:table>
@@ -668,32 +668,32 @@
                                     <flux:accordion.item>
                                         <flux:accordion.heading>elseifs[].actionLabel.stemLineJumps[]</flux:accordion.heading>
                                         <flux:accordion.content>
-                                            <flux:text>Explicit line crossings. Multiple jumps are allowed; DEV reports missing targets, invalid intersections and overlapping jumps.</flux:text>
+                                            <flux:text>{{ __('Explicit line crossings. Multiple jumps are allowed; DEV reports missing targets, invalid intersections and overlapping jumps.') }}</flux:text>
                                             <flux:table class="mt-3">
                                                 <flux:table.columns sticky>
-                                                    <flux:table.column>Prop / path</flux:table.column>
-                                                    <flux:table.column>Type</flux:table.column>
-                                                    <flux:table.column>Default / fallback</flux:table.column>
-                                                    <flux:table.column>Meaning and limits</flux:table.column>
+                                                    <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                                 </flux:table.columns>
                                                 <flux:table.rows>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.stemLineJumps[].over</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">string</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">required</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">ID of an existing perpendicular stem/bridge intersecting this line.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.stemLineJumps[].over</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>string</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>required</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('ID of an existing perpendicular stem/bridge intersecting this line.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.stemLineJumps[].radius</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">0.5rem</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Must fit between endpoints and exceed half the line thickness.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.stemLineJumps[].radius</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>0.5rem</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Must fit between endpoints and exceed half the line thickness.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">elseifs[].actionLabel.stemLineJumps[].side</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">left | right</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">right</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Side of the semicircle relative to its owning line.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>elseifs[].actionLabel.stemLineJumps[].side</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>left | right</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>right</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Side of the semicircle relative to its owning line.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                 </flux:table.rows>
                                             </flux:table>
@@ -708,86 +708,86 @@
             <flux:accordion.item>
                 <flux:accordion.heading>if-end</flux:accordion.heading>
                 <flux:accordion.content>
-                    <flux:text>Options accepted for this action label. Omit the label to use the parent default; partial arrays are not recursively merged.</flux:text>
+                    <flux:text>{{ __('Options accepted for this action label. Omit the label to use the parent default; partial arrays are not recursively merged.') }}</flux:text>
                     <flux:table class="mt-3">
                         <flux:table.columns sticky>
-                            <flux:table.column>Prop / path</flux:table.column>
-                            <flux:table.column>Type</flux:table.column>
-                            <flux:table.column>Default / fallback</flux:table.column>
-                            <flux:table.column>Meaning and limits</flux:table.column>
+                            <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                            <flux:table.column>{{ __('Type') }}</flux:table.column>
+                            <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                            <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                         </flux:table.columns>
                         <flux:table.rows>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-end.text</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">string | list&lt;string&gt;</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">No text unless supplied</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Explicit text; | or list entries create separate lines.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-end.text</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>string | list&lt;string&gt;</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>No text unless supplied</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Explicit text; | or list entries create separate lines.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-end.width</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">half | default | halfLong | long</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">default unless parent default says otherwise</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Canvas width presets: normally 6 / 12 / 18 / 24rem.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-end.width</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>half | default | halfLong | long</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>default unless parent default says otherwise</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Canvas width presets: normally 6 / 12 / 18 / 24rem.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-end.align</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">left | center | right</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">center</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Alignment inside the box; independent of route direction.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-end.align</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>left | center | right</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>center</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Alignment inside the box; independent of route direction.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-end.justify</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Justify text.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-end.justify</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Justify text.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-end.badge</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Draw badge behind text.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-end.badge</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>true</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Draw badge behind text.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-end.badgeColor</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Component / label color</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Badge-only color override.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-end.badgeColor</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>Component / label color</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Badge-only color override.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-end.maxLines</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">3</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Maximum displayed text lines.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-end.maxLines</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>integer</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>3</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Maximum displayed text lines.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-end.color</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Component color</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Node label: connector/badge color. Action: route color only where the owning component reads it.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-end.color</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>Component color</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Node label: connector/badge color. Action: route color only where the owning component reads it.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-end.return</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">false opens this route for a nested block. Author the return explicitly.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-end.return</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>true</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('false opens this route for a nested block. Author the return explicitly.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-end.returnOffset</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">False/open ELSEIF: 12rem; first true route: no offset</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Horizontal extra space when return=false. Single ELSEIF first action does not read this field.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-end.returnOffset</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>False/open ELSEIF: 12rem; first true route: no offset</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Horizontal extra space when return=false. Single ELSEIF first action does not read this field.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-end.stemLength</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Component stem-length</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">False entry stem; layout may enforce minimum clearance.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-end.stemLength</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>Component stem-length</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('False entry stem; layout may enforce minimum clearance.') }}</flux:table.cell>
                             </flux:table.row>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">if-end.returnLength</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">8rem when open</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Extra vertical return distance when return=false.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>if-end.returnLength</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>8rem when open</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Extra vertical return distance when return=false.') }}</flux:table.cell>
                             </flux:table.row>
                         </flux:table.rows>
                     </flux:table>
@@ -795,32 +795,32 @@
                         <flux:accordion.item>
                             <flux:accordion.heading>if-end.lineJumps[]</flux:accordion.heading>
                             <flux:accordion.content>
-                                <flux:text>Explicit line crossings. Multiple jumps are allowed; DEV reports missing targets, invalid intersections and overlapping jumps.</flux:text>
+                                <flux:text>{{ __('Explicit line crossings. Multiple jumps are allowed; DEV reports missing targets, invalid intersections and overlapping jumps.') }}</flux:text>
                                 <flux:table class="mt-3">
                                     <flux:table.columns sticky>
-                                        <flux:table.column>Prop / path</flux:table.column>
-                                        <flux:table.column>Type</flux:table.column>
-                                        <flux:table.column>Default / fallback</flux:table.column>
-                                        <flux:table.column>Meaning and limits</flux:table.column>
+                                        <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                     </flux:table.columns>
                                     <flux:table.rows>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">if-end.lineJumps[].over</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">string</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">required</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">ID of an existing perpendicular stem/bridge intersecting this line.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>if-end.lineJumps[].over</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>string</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>required</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('ID of an existing perpendicular stem/bridge intersecting this line.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">if-end.lineJumps[].radius</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">0.5rem</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Must fit between endpoints and exceed half the line thickness.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>if-end.lineJumps[].radius</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>0.5rem</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Must fit between endpoints and exceed half the line thickness.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">if-end.lineJumps[].side</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">top | bottom</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">top</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Side of the semicircle relative to its owning line.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>if-end.lineJumps[].side</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>top | bottom</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>top</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Side of the semicircle relative to its owning line.') }}</flux:table.cell>
                                         </flux:table.row>
                                     </flux:table.rows>
                                 </flux:table>
@@ -832,20 +832,20 @@
             <flux:accordion.item>
                 <flux:accordion.heading>node-labels</flux:accordion.heading>
                 <flux:accordion.content>
-                    <flux:text>Node labels at the decision/step endpoint. The end wrapper is optional where supported.</flux:text>
+                    <flux:text>{{ __('Node labels at the decision/step endpoint. The end wrapper is optional where supported.') }}</flux:text>
                     <flux:table class="mt-3">
                         <flux:table.columns sticky>
-                            <flux:table.column>Prop / path</flux:table.column>
-                            <flux:table.column>Type</flux:table.column>
-                            <flux:table.column>Default / fallback</flux:table.column>
-                            <flux:table.column>Meaning and limits</flux:table.column>
+                            <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                            <flux:table.column>{{ __('Type') }}</flux:table.column>
+                            <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                            <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                         </flux:table.columns>
                         <flux:table.rows>
                             <flux:table.row>
-                                <flux:table.cell class="whitespace-normal align-top">node-labels.end</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">array</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">direct left/right slots</flux:table.cell>
-                                <flux:table.cell class="whitespace-normal align-top">Endpoint labels.</flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>array</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top"><code>direct left/right slots</code></flux:table.cell>
+                                <flux:table.cell class="whitespace-normal align-top">{{ __('Endpoint labels.') }}</flux:table.cell>
                             </flux:table.row>
                         </flux:table.rows>
                     </flux:table>
@@ -853,26 +853,26 @@
                         <flux:accordion.item>
                             <flux:accordion.heading>node-labels.end</flux:accordion.heading>
                             <flux:accordion.content>
-                                <flux:text>Endpoint annotation slots. Each side contains its own text-label array.</flux:text>
+                                <flux:text>{{ __('Endpoint annotation slots. Each side contains its own text-label array.') }}</flux:text>
                                 <flux:table class="mt-3">
                                     <flux:table.columns sticky>
-                                        <flux:table.column>Prop / path</flux:table.column>
-                                        <flux:table.column>Type</flux:table.column>
-                                        <flux:table.column>Default / fallback</flux:table.column>
-                                        <flux:table.column>Meaning and limits</flux:table.column>
+                                        <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                                        <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                     </flux:table.columns>
                                     <flux:table.rows>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">node-labels.end.left</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">string | label array | false</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">none</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Optional left label; expand below.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>string | label array | false</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>none</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Optional left label; expand below.') }}</flux:table.cell>
                                         </flux:table.row>
                                         <flux:table.row>
-                                            <flux:table.cell class="whitespace-normal align-top">node-labels.end.right</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">string | label array | false</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">none</flux:table.cell>
-                                            <flux:table.cell class="whitespace-normal align-top">Optional right label; expand below.</flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>string | label array | false</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top"><code>none</code></flux:table.cell>
+                                            <flux:table.cell class="whitespace-normal align-top">{{ __('Optional right label; expand below.') }}</flux:table.cell>
                                         </flux:table.row>
                                     </flux:table.rows>
                                 </flux:table>
@@ -880,92 +880,92 @@
                                     <flux:accordion.item>
                                         <flux:accordion.heading>node-labels.end.left</flux:accordion.heading>
                                         <flux:accordion.content>
-                                            <flux:text>Options accepted for this node label. Omit the label to use the parent default; partial arrays are not recursively merged.</flux:text>
+                                            <flux:text>{{ __('Options accepted for this node label. Omit the label to use the parent default; partial arrays are not recursively merged.') }}</flux:text>
                                             <flux:table class="mt-3">
                                                 <flux:table.columns sticky>
-                                                    <flux:table.column>Prop / path</flux:table.column>
-                                                    <flux:table.column>Type</flux:table.column>
-                                                    <flux:table.column>Default / fallback</flux:table.column>
-                                                    <flux:table.column>Meaning and limits</flux:table.column>
+                                                    <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                                 </flux:table.columns>
                                                 <flux:table.rows>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.text</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">string | list&lt;string&gt;</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">No text unless supplied</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Explicit text; | or list entries create separate lines.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left.text</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>string | list&lt;string&gt;</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>No text unless supplied</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Explicit text; | or list entries create separate lines.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.width</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">half | default | halfLong | long</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">default unless parent default says otherwise</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Canvas width presets: normally 6 / 12 / 18 / 24rem.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left.width</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>half | default | halfLong | long</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>default unless parent default says otherwise</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Canvas width presets: normally 6 / 12 / 18 / 24rem.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.align</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">left | center | right</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">center</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Alignment inside the box; independent of route direction.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left.align</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>left | center | right</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>center</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Alignment inside the box; independent of route direction.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.justify</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Justify text.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left.justify</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Justify text.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.badge</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Draw badge behind text.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left.badge</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>true</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Draw badge behind text.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.badgeColor</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Component / label color</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Badge-only color override.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left.badgeColor</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>Component / label color</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Badge-only color override.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.maxLines</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">3</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Maximum displayed text lines.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left.maxLines</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>integer</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>3</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Maximum displayed text lines.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.color</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Component color</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Node label: connector/badge color. Action: route color only where the owning component reads it.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left.color</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>Component color</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Node label: connector/badge color. Action: route color only where the owning component reads it.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.connectorLength</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Canvas → 2rem</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Node-to-label connector length.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left.connectorLength</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>Canvas → 2rem</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Node-to-label connector length.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.connectorGap</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Canvas → 0.25rem</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Connector-to-text spacing.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left.connectorGap</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>Canvas → 0.25rem</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Connector-to-text spacing.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.long</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left.long</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.halfLong</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left.halfLong</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.left.half</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.left.half</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                 </flux:table.rows>
                                             </flux:table>
@@ -974,92 +974,92 @@
                                     <flux:accordion.item>
                                         <flux:accordion.heading>node-labels.end.right</flux:accordion.heading>
                                         <flux:accordion.content>
-                                            <flux:text>Options accepted for this node label. Omit the label to use the parent default; partial arrays are not recursively merged.</flux:text>
+                                            <flux:text>{{ __('Options accepted for this node label. Omit the label to use the parent default; partial arrays are not recursively merged.') }}</flux:text>
                                             <flux:table class="mt-3">
                                                 <flux:table.columns sticky>
-                                                    <flux:table.column>Prop / path</flux:table.column>
-                                                    <flux:table.column>Type</flux:table.column>
-                                                    <flux:table.column>Default / fallback</flux:table.column>
-                                                    <flux:table.column>Meaning and limits</flux:table.column>
+                                                    <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                                 </flux:table.columns>
                                                 <flux:table.rows>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.text</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">string | list&lt;string&gt;</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">No text unless supplied</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Explicit text; | or list entries create separate lines.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right.text</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>string | list&lt;string&gt;</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>No text unless supplied</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Explicit text; | or list entries create separate lines.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.width</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">half | default | halfLong | long</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">default unless parent default says otherwise</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Canvas width presets: normally 6 / 12 / 18 / 24rem.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right.width</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>half | default | halfLong | long</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>default unless parent default says otherwise</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Canvas width presets: normally 6 / 12 / 18 / 24rem.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.align</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">left | center | right</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">center</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Alignment inside the box; independent of route direction.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right.align</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>left | center | right</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>center</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Alignment inside the box; independent of route direction.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.justify</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Justify text.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right.justify</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Justify text.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.badge</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">true</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Draw badge behind text.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right.badge</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>true</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Draw badge behind text.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.badgeColor</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Component / label color</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Badge-only color override.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right.badgeColor</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>Component / label color</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Badge-only color override.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.maxLines</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">integer</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">3</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Maximum displayed text lines.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right.maxLines</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>integer</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>3</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Maximum displayed text lines.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.color</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">color name</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Component color</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Node label: connector/badge color. Action: route color only where the owning component reads it.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right.color</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>color name</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>Component color</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Node label: connector/badge color. Action: route color only where the owning component reads it.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.connectorLength</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Canvas → 2rem</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Node-to-label connector length.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right.connectorLength</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>Canvas → 2rem</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Node-to-label connector length.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.connectorGap</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">length string</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Canvas → 0.25rem</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Connector-to-text spacing.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right.connectorGap</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>length string</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>Canvas → 0.25rem</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Connector-to-text spacing.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.long</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right.long</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.halfLong</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right.halfLong</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                     <flux:table.row>
-                                                        <flux:table.cell class="whitespace-normal align-top">node-labels.end.right.half</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">bool</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">false</flux:table.cell>
-                                                        <flux:table.cell class="whitespace-normal align-top">Width flag accepted by this renderer; prefer width.</flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>node-labels.end.right.half</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>bool</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top"><code>false</code></flux:table.cell>
+                                                        <flux:table.cell class="whitespace-normal align-top">{{ __('Width flag accepted by this renderer; prefer width.') }}</flux:table.cell>
                                                     </flux:table.row>
                                                 </flux:table.rows>
                                             </flux:table>
@@ -1081,71 +1081,71 @@
 /&gt;</x-translation-workbench::ui.tw-graph.code-box>
     </flux:callout>
     <flux:callout class="min-w-0 space-y-3" color="sky" icon="variable">
-        <flux:callout.heading>Inheritance and calculated geometry</flux:callout.heading>
-        <flux:text>Declared defaults below are the component’s own values. null delegates to inherited canvas settings or the resolution described here; it does not mean zero. Canvas controls shared line thickness, node size, label widths, connector defaults and path tone.</flux:text>
-        <flux:text>Label widths are aligned into a common route span. False stem clearance is at least the requested stemLength and may grow to fit action text. LabelBridge normalizes explicit plain-rem bridge lengths (minimum 0.25rem; small intermediate values become 1.15rem).</flux:text>
-        <flux:text>The successful action and fallback can leave open outputs via return=false. ReturnColorRegistry propagates explicitly connected return colors through the outer rail. The internal return-color composition prop is not a public authoring option.</flux:text>
-        <flux:text>Open ELSEIF actionLabel.return=false supplies returnOffset=12rem when omitted. Set returnOffset explicitly when you need different geometry. This fallback does not apply to the first IF action.</flux:text>
+        <flux:callout.heading>{{ __('Inheritance and calculated geometry') }}</flux:callout.heading>
+        <flux:text>{{ __('Declared defaults below are the component’s own values. null delegates to inherited canvas settings or the resolution described here; it does not mean zero. Canvas controls shared line thickness, node size, label widths, connector defaults and path tone.') }}</flux:text>
+        <flux:text>{{ __('Label widths are aligned into a common route span. False stem clearance is at least the requested stemLength and may grow to fit action text. LabelBridge normalizes explicit plain-rem bridge lengths (minimum 0.25rem; small intermediate values become 1.15rem).') }}</flux:text>
+        <flux:text>{{ __('The successful action and fallback can leave open outputs via return=false. ReturnColorRegistry propagates explicitly connected return colors through the outer rail. The internal return-color composition prop is not a public authoring option.') }}</flux:text>
+        <flux:text>{{ __('Open ELSEIF actionLabel.return=false supplies returnOffset=12rem when omitted. Set returnOffset explicitly when you need different geometry. This fallback does not apply to the first IF action.') }}</flux:text>
     </flux:callout>
     <flux:callout class="min-w-0 space-y-3" color="amber" icon="cable">
-        <flux:callout.heading>Connections</flux:callout.heading>
+        <flux:callout.heading>{{ __('Connections') }}</flux:callout.heading>
         <flux:table class="mt-3">
             <flux:table.columns sticky>
-                <flux:table.column>Prop / path</flux:table.column>
-                <flux:table.column>Type</flux:table.column>
-                <flux:table.column>Default / fallback</flux:table.column>
-                <flux:table.column>Meaning and limits</flux:table.column>
+                <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
+                <flux:table.column>{{ __('Type') }}</flux:table.column>
+                <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
+                <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
             </flux:table.columns>
             <flux:table.rows>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">{id}.anchorNode-end</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">anchor</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Common output</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Connect the next independent component here.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>{id}.anchorNode-end</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>anchor</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>Common output</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Connect the next independent component here.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">{id}.false.anchorNode-end</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">anchor</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Fallback action output</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">When open, attach nested work here.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>{id}.false.anchorNode-end</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>anchor</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>Fallback action output</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('When open, attach nested work here.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">{id}.false.anchorNode-return</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">anchor</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Fallback return target</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Join the explicit fallback return here.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>{id}.false.anchorNode-return</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>anchor</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>Fallback return target</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Join the explicit fallback return here.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">{id}.if.true.anchorNode-end</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">anchor</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Successful action output</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Attach nested work when return=false.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>{id}.if.true.anchorNode-end</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>anchor</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>Successful action output</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Attach nested work when return=false.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">{id}.if.true.anchorNode-return</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">anchor</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Return target</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Explicit nested return rejoins here.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>{id}.if.true.anchorNode-return</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>anchor</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>Return target</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Explicit nested return rejoins here.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">{id}.elseif.{key}.true.anchorNode-end</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">anchor</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">ELSEIF output</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Successful branch output.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>{id}.elseif.{key}.true.anchorNode-end</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>anchor</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>ELSEIF output</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Successful branch output.') }}</flux:table.cell>
                 </flux:table.row>
                 <flux:table.row>
-                    <flux:table.cell class="whitespace-normal align-top">{id}.elseif.{key}.true.anchorNode-return</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">anchor</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">ELSEIF return target</flux:table.cell>
-                    <flux:table.cell class="whitespace-normal align-top">Return a nested block to the correct outer level.</flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>{id}.elseif.{key}.true.anchorNode-return</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>anchor</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top"><code>ELSEIF return target</code></flux:table.cell>
+                    <flux:table.cell class="whitespace-normal align-top">{{ __('Return a nested block to the correct outer level.') }}</flux:table.cell>
                 </flux:table.row>
             </flux:table.rows>
         </flux:table>
     </flux:callout>
     <flux:callout class="min-w-0 space-y-3" color="fuchsia" icon="infinity">
-        <flux:callout.heading>Validation and practical limits</flux:callout.heading>
-        <flux:text>IF diagrams do not evaluate expressions or execute actions. Changing label text does not change routing. Use return, if-end text and elseifs to describe topology.</flux:text>
-        <flux:text>elseifs must contain at least one array; keys must be unique and nonempty.</flux:text>
+        <flux:callout.heading>{{ __('Validation and practical limits') }}</flux:callout.heading>
+        <flux:text>{{ __('IF diagrams do not evaluate expressions or execute actions. Changing label text does not change routing. Use return, if-end text and elseifs to describe topology.') }}</flux:text>
+        <flux:text>{{ __('elseifs must contain at least one array; keys must be unique and nonempty.') }}</flux:text>
     </flux:callout>
     <x-translation-workbench::ui.common.tw-graph-path-file
         path="packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
