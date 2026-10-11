@@ -6,6 +6,18 @@ use Tests\TestCase;
 
 uses(TestCase::class);
 
+it('classifies root events by their role independently of translated display labels', function () {
+    $rows = collect([
+        ['role' => 'root', 'branch' => 'Wurzel'],
+        ['role' => 'root_key', 'branch' => 'Stammschlüssel'],
+        ['role' => 'review', 'branch' => 'Root'],
+    ]);
+
+    expect(GraphFacts::branch($rows)['count'])->toBe(1)
+        ->and(GraphFacts::branch($rows)['strangs'][0]['role'])->toBe('review')
+        ->and(GraphFacts::componentIntent([], $rows, collect())[2]['count'])->toBe(1);
+});
+
 it('summarizes trunk facts from the main row and root events', function (): void {
     config()->set('tw-graph-data-driven-defaults.colors.fallback', 'zinc');
 
@@ -16,13 +28,13 @@ it('summarizes trunk facts from the main row and root events', function (): void
     ], new Collection([
         [
             'timestamp' => '2026-08-04 09:22:11',
-            'branch' => 'Root',
+            'role' => 'root', 'branch' => 'Root',
             'event' => 'key_created',
             'state' => 'active',
         ],
         [
             'timestamp' => '2026-08-04 09:25:00',
-            'branch' => 'Root key',
+            'role' => 'root_key', 'branch' => 'Root key',
             'event' => 'lang_value_linked',
             'state' => 'active',
             'color' => 'emerald',
@@ -39,14 +51,14 @@ it('summarizes trunk facts from the main row and root events', function (): void
         'events' => [
             [
                 'timestamp' => '2026-08-04 09:22:11',
-                'branch' => 'Root',
+                'role' => 'root', 'branch' => 'Root',
                 'event' => 'key_created',
                 'state' => 'active',
                 'color' => 'zinc',
             ],
             [
                 'timestamp' => '2026-08-04 09:25:00',
-                'branch' => 'Root key',
+                'role' => 'root_key', 'branch' => 'Root key',
                 'event' => 'lang_value_linked',
                 'state' => 'active',
                 'color' => 'emerald',
@@ -62,23 +74,23 @@ it('alternates merge and branch fact sides without including trunk rows as branc
         ['first_root' => 'finding #3', 'first_origin_key' => 'ui.c'],
     ]));
     $branchFacts = GraphFacts::branch(new Collection([
-        ['branch' => 'Root', 'event' => 'key_created'],
+        ['role' => 'root', 'branch' => 'Root', 'event' => 'key_created'],
         ['branch' => 'classification', 'event' => 'source_inactive'],
         ['branch' => 'review', 'event' => 'commented_out'],
     ]));
 
     expect($mergeFacts['strangs'])->sequence(
-        fn($row) => $row->toMatchArray(['component' => 'tw-graph.strang.merge-left', 'side' => 'left']),
-        fn($row) => $row->toMatchArray(['component' => 'tw-graph.strang.merge-right', 'side' => 'right']),
-        fn($row) => $row->toMatchArray(['component' => 'tw-graph.strang.merge-left', 'side' => 'left']),
+        fn ($row) => $row->toMatchArray(['component' => 'tw-graph.strang.merge-left', 'side' => 'left']),
+        fn ($row) => $row->toMatchArray(['component' => 'tw-graph.strang.merge-right', 'side' => 'right']),
+        fn ($row) => $row->toMatchArray(['component' => 'tw-graph.strang.merge-left', 'side' => 'left']),
     )->and($branchFacts['count'])->toBe(2)
         ->and($branchFacts['strangs'])->sequence(
-            fn($row) => $row->toMatchArray([
+            fn ($row) => $row->toMatchArray([
                 'component' => 'tw-graph.strang.branch-left',
                 'side' => 'left',
                 'branch' => 'classification',
             ]),
-            fn($row) => $row->toMatchArray([
+            fn ($row) => $row->toMatchArray([
                 'component' => 'tw-graph.strang.branch-right',
                 'side' => 'right',
                 'branch' => 'review',
@@ -104,7 +116,7 @@ it('describes component intent for moved chains and optional side strangs', func
     ]));
 
     expect($intent)->sequence(
-        fn($row) => $row->toMatchArray([
+        fn ($row) => $row->toMatchArray([
             'component' => 'tw-graph.strang.trunk',
             'required' => true,
             'suggested_props' => [
@@ -114,17 +126,17 @@ it('describes component intent for moved chains and optional side strangs', func
                 'end-label' => 'ui.button.save.save',
             ],
         ]),
-        fn($row) => $row->toMatchArray([
+        fn ($row) => $row->toMatchArray([
             'component' => 'tw-graph.strang.merge-left/right',
             'required' => true,
             'count' => 1,
         ]),
-        fn($row) => $row->toMatchArray([
+        fn ($row) => $row->toMatchArray([
             'component' => 'tw-graph.strang.branch-left/right',
             'required' => true,
             'count' => 1,
         ]),
-        fn($row) => $row->toMatchArray([
+        fn ($row) => $row->toMatchArray([
             'component' => 'tw-graph.strang.rekey-source-left/right + tw-graph.strang.rekey-target-left/right',
             'required' => true,
             'count' => 1,
@@ -147,7 +159,7 @@ it('uses data driven fallback colors before central graph fallback colors', func
 
 it('excludes root key rows from branch facts and uses branch color ahead of event color', function (): void {
     $facts = GraphFacts::branch(new Collection([
-        ['branch' => 'Root key', 'event' => 'key_created'],
+        ['role' => 'root_key', 'branch' => 'Root key', 'event' => 'key_created'],
         [
             'branch' => 'ended after merge',
             'translation_key' => 'ui.old',
@@ -169,15 +181,15 @@ it('excludes root key rows from branch facts and uses branch color ahead of even
 });
 
 it('returns empty optional component facts without inventing side strangs', function (): void {
-    expect(GraphFacts::merge(new Collection()))->toMatchArray([
+    expect(GraphFacts::merge(new Collection))->toMatchArray([
         'component_family' => 'tw-graph.strang.merge-*',
         'count' => 0,
         'strangs' => [],
     ]);
 
     expect(GraphFacts::branch(new Collection([
-        ['branch' => 'Root', 'event' => 'key_created'],
-        ['branch' => 'Root key', 'event' => 'key_reviewed'],
+        ['role' => 'root', 'branch' => 'Root', 'event' => 'key_created'],
+        ['role' => 'root_key', 'branch' => 'Root key', 'event' => 'key_reviewed'],
     ])))->toMatchArray([
         'component_family' => 'tw-graph.strang.branch-*',
         'count' => 0,
@@ -191,7 +203,7 @@ it('marks optional component intent as not required when source rows are unavail
         'chain_type' => 'single',
         'root_key_id' => 5,
         'translation_key' => 'ui.only.trunk',
-    ], new Collection(), new Collection());
+    ], new Collection, new Collection);
 
     expect($intent[0]['required'])->toBeTrue()
         ->and($intent[0]['suggested_props']['path-count'])->toBe(3)
@@ -219,9 +231,9 @@ it('does not mark branch components as required for trunk-only root events', fun
         'root_key_id' => 3165,
         'translation_key' => 'ui.only.trunk',
     ], new Collection([
-        ['branch' => 'Root', 'event' => 'key_created'],
-        ['branch' => 'Root key', 'event' => 'key_reviewed'],
-    ]), new Collection());
+        ['role' => 'root', 'branch' => 'Root', 'event' => 'key_created'],
+        ['role' => 'root_key', 'branch' => 'Root key', 'event' => 'key_reviewed'],
+    ]), new Collection);
 
     expect($intent[2])->toMatchArray([
         'component' => 'tw-graph.strang.branch-left/right',

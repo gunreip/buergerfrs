@@ -8,6 +8,17 @@
         $rootRows ?? collect(),
         $originRows ?? collect(),
     );
+    $horizontalLayoutEnabled = (bool) ($showDatasetSelector ?? false);
+    $horizontalLayoutState = ($horizontalLabelLayout['scope'] ?? null) === (($mainRow['id'] ?? '').':'.($reloadTick ?? 0))
+        ? $horizontalLabelLayout : ['passes' => 0, 'increments' => []];
+    if ($horizontalLayoutEnabled) {
+        $twGraphDataDriven['render_preview'] = \Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData\VerticalLabelLayout::apply(
+            $twGraphDataDriven['render_preview'], $horizontalLayoutState['increments'],
+        );
+        $twGraphDataDriven['render_preview'] = \Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData\HorizontalLabelLayout::apply(
+            $twGraphDataDriven['render_preview'], $horizontalLayoutState['increments'],
+        );
+    }
     $twGraphDataDrivenMeta = collect($twGraphDataDriven['meta'] ?? []);
     $twGraphDataDrivenTrunk = collect(data_get($twGraphDataDriven, 'strangs.trunk', []));
     $twGraphDataDrivenMerge = collect(data_get($twGraphDataDriven, 'strangs.merge.strangs', []));
@@ -25,11 +36,13 @@
     $twGraphDataDrivenClassificationNoiseReport = collect(
         $twGraphDataDrivenPreviewLimits->get('classification_noise_report', []),
     );
-    $twGraphDataDrivenFindingInspect = \Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData::inspectFinding(
-        5486,
+    $twGraphDataDrivenInspectFindingId = collect(data_get($twGraphDataDriven, 'facts.finding_ids', []))->first();
+    $twGraphDataDrivenFindingInspect = $twGraphDataDrivenDevEnabled && $twGraphDataDrivenInspectFindingId
+        ? \Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData::inspectFinding(
+        (int) $twGraphDataDrivenInspectFindingId,
         $mainRow ?? null,
         $originRows ?? collect(),
-    );
+    ) : [];
     $twGraphDataDrivenInspectFinding = collect($twGraphDataDrivenFindingInspect['finding'] ?? []);
     $twGraphDataDrivenInspectOrigin = collect($twGraphDataDrivenFindingInspect['origin_row'] ?? []);
     $twGraphDataDrivenInspectRendered = collect($twGraphDataDrivenFindingInspect['rendered_as'] ?? []);
@@ -77,13 +90,13 @@
                 size="sm"
                 color="zinc"
             >
-                {{ __('Intent only') }}
+                {{ __('Timeline data') }}
             </flux:badge>
         </span>
     </flux:callout.heading>
 
     <flux:callout.text>
-        {{ __('First neutral graph data model derived from the selected timeline-chain row. This does not render geometry yet; it only describes the trunk, merge and branch intent that the authoring components can consume later.') }}
+        {{ __('The selected timeline chain supplies the history, relationships and labels. TW-Graph renders these as trunk, merge, branch and rekey components.') }}
     </flux:callout.text>
 
     <div class="mt-3 grid gap-3 xl:grid-cols-4">
@@ -276,23 +289,24 @@
         </flux:callout>
     </div>
 
+    @if ($showDatasetSelector ?? false)
+        @include('translation-workbench::livewire.tw-graph.data-driven.dataset-selector')
+    @endif
+
     @if (in_array(
             $twGraphDataDrivenPreview->get('mode'),
             ['trunk_only', 'trunk_with_single_merge', 'trunk_with_limited_merge'],
             true))
         <div
             x-data="{
-                twGraphDataDrivenDev: @js($twGraphDataDrivenDevEnabled),
-                twGraphDataDrivenCoordinates: @js($twGraphDataDrivenCoordinatesEnabled),
                 twGraphDebugBoundsCollisionOnly: false,
             }"
         >
         <flux:callout
             class="mt-3"
             color="green"
-            icon="git-branch"
         >
-            <flux:callout.heading>
+            <flux:callout.heading icon="git-branch">
                 <span class="flex w-full flex-wrap items-center justify-between gap-3">
                     <span class="inline-flex flex-wrap items-center gap-2">
                         <span>{{ __('Data-driven graph preview') }}</span>
@@ -367,59 +381,18 @@
                         </flux:badge>
                     </span>
 
-                    @if ($twGraphDataDrivenDevEnabled)
-                    <span class="flex flex-wrap items-center justify-end gap-3">
-                        <button
-                            type="button"
-                            class="inline-flex items-center gap-2 text-xs opacity-70 hover:cursor-pointer"
-                            x-on:click.stop="twGraphDataDrivenDev = !twGraphDataDrivenDev"
-                        >
-                            <span
-                                class="relative inline-flex h-5 w-9 items-center rounded-full border transition"
-                                x-bind:class="twGraphDataDrivenDev ? 'border-green-500 bg-green-500' : 'border-zinc-300 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800'"
-                            >
-                                <span
-                                    class="inline-block h-4 w-4 rounded-full bg-white shadow transition"
-                                    x-bind:class="twGraphDataDrivenDev ? 'translate-x-4' : 'translate-x-0.5'"
-                                ></span>
-                            </span>
-                            <span>{{ __('DEV') }}</span>
-                        </button>
-
-                        @if ($twGraphDataDrivenCoordinatesEnabled)
-                            <button
-                                type="button"
-                                class="inline-flex items-center gap-2 text-xs opacity-70 hover:cursor-pointer"
-                                x-on:click.stop="twGraphDataDrivenCoordinates = !twGraphDataDrivenCoordinates"
-                            >
-                                <span
-                                    class="relative inline-flex h-5 w-9 items-center rounded-full border transition"
-                                    x-bind:class="twGraphDataDrivenCoordinates ? 'border-sky-500 bg-sky-500' : 'border-zinc-300 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800'"
-                                >
-                                    <span
-                                        class="inline-block h-4 w-4 rounded-full bg-white shadow transition"
-                                        x-bind:class="twGraphDataDrivenCoordinates ? 'translate-x-4' : 'translate-x-0.5'"
-                                    ></span>
-                                </span>
-                                <span>{{ __('X/Y') }}</span>
-                            </button>
-                        @endif
-                    </span>
-                    @endif
                 </span>
             </flux:callout.heading>
 
             <flux:callout.text>
-                {{ __('Reduced visual pass: the canonical trunk is rendered with up to five origin merge candidates. Additional merge and branch candidates stay in the data model until each mapping is easy to verify.') }}
+                {{ __('The preview renders the selected history using the current layout limits. The counters above show how many events and relationships are included; additional records remain available in the data model.') }}
             </flux:callout.text>
 
-            <div
-                class="mt-3"
-                x-bind:class="{
-                    'tw-graph-protocol-dev-disabled': !twGraphDataDrivenDev,
-                    'tw-graph-protocol-coordinates-disabled': !twGraphDataDrivenCoordinates,
-                }"
+            <x-translation-workbench::ui.tw-graph.preview-tools
+                :dev="$twGraphDataDrivenDevEnabled"
+                :coordinates="$twGraphDataDrivenCoordinatesEnabled"
             >
+            <div class="mt-3">
                 @if (filled(data_get($twGraphDataDrivenPreviewGraph->get('header'), 'text')))
                     <flux:callout.heading class="mb-2">
                         @foreach ((array) data_get($twGraphDataDrivenPreviewGraph->get('header'), 'text', []) as $graphHeaderLine)
@@ -466,10 +439,9 @@
                 @endphp
 
                 <x-translation-workbench::ui.tw-graph
-                    class="px-24 py-12"
                     :graph-id="$twGraphDataDrivenPreviewGraph->get('graph_id')"
-                    :dev="$twGraphDataDrivenDevEnabled"
-                    :coordinates="$twGraphDataDrivenCoordinatesEnabled"
+                    :dev="true"
+                    :coordinates="true"
                     :color="$twGraphDataDrivenPreviewGraph->get('color', 'cyan')"
                     :line-length="$twGraphDataDrivenPreviewGraph->get('line_length', '4rem')"
                     :line-width="$twGraphDataDrivenPreviewGraph->get('line_width', '0.25rem')"
@@ -483,6 +455,46 @@
                     :min-height="$twGraphDataDrivenPreviewGraph->get('min_height', '34rem')"
                     :horizontal-padding="$twGraphDataDrivenPreviewGraph->get('horizontal_padding', '12rem')"
                 >
+                    @if ($horizontalLayoutEnabled)
+                        @php
+                            \Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData\VerticalLabelLayout::recordLengths(
+                                $twGraphDataDriven['render_preview'], $horizontalLayoutState['increments'],
+                                $__env->getConsumableComponentData('twGraphCalculatedLengths'),
+                            );
+                            foreach (\Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData\HorizontalLabelLayout::targets($twGraphDataDriven['render_preview']) as $horizontalTarget) {
+                                $horizontalExtra = $horizontalLayoutState['increments'][$horizontalTarget['key']] ?? 0;
+                                if ($horizontalExtra > 0) {
+                                    $__env->getConsumableComponentData('twGraphCalculatedLengths')?->record(
+                                        $horizontalTarget['element'], $horizontalTarget['component'], $horizontalTarget['owner'],
+                                        'bridgeLength', ['additional' => $horizontalExtra.'rem'],
+                                        'Horizontal clearance between measured TextLabelGroups.',
+                                        $twGraphDataDrivenPreviewGraph->get('bridge_length'),
+                                    );
+                                }
+                            }
+                        @endphp
+                        <script type="application/json" data-tw-graph-horizontal-layout>{!! json_encode([
+                            'datasetId' => $mainRow['id'], 'tick' => $reloadTick ?? 0,
+                            'passes' => $horizontalLayoutState['passes'],
+                            'passLimit' => \Gunreip\TranslationWorkbench\Livewire\TwGraphDataDrivenDatasets::measuredLayoutPassLimit($horizontalLayoutState),
+                            'compactionRevision' => $horizontalLayoutState['compactionRevision'] ?? 0,
+                            'extensionCompactionDone' => $horizontalLayoutState['extensionCompactionDone'] ?? false,
+                            'coupledMerges' => $horizontalLayoutState['coupledMerges'] ?? [],
+                            'mergeStemBudgetRem' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::dataDrivenRem('merge_compaction_stem_budget', '3rem'),
+                            'mergeBridgeBudgetRem' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::dataDrivenRem('merge_compaction_bridge_budget', '8rem'),
+                            'mergeBridgeExtras' => array_diff_key($horizontalLayoutState['increments'], $horizontalLayoutState['compactedBridges'] ?? []),
+                            'recheckTrunk' => !empty($horizontalLayoutState['lineIncrements'])
+                                && ($horizontalLayoutState['horizontalRevision'] ?? 0) > ($horizontalLayoutState['recheckedRevision'] ?? 0),
+                            'verticalTargets' => \Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData\VerticalLabelLayout::targets($twGraphDataDriven['render_preview']),
+                            'lineAttachments' => \Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData\VerticalLabelLayout::lineAttachments($twGraphDataDriven['render_preview']),
+                            'horizontalLineGapRem' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::dataDrivenRem('horizontal_line_label_gap', '3rem'),
+                            'lineGapRem' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::dataDrivenRem('line_label_gap', '1rem'),
+                            'interStrangVerticalGapRem' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::dataDrivenRem('inter_strang_vertical_label_gap', '3rem'),
+                            'verticalGapRem' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::dataDrivenRem('vertical_label_gap', '1rem'),
+                            'gapRem' => \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::dataDrivenRem('horizontal_label_gap', '3rem'),
+                            'targets' => \Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData\HorizontalLabelLayout::targets($twGraphDataDriven['render_preview']),
+                        ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+                    @endif
                     <x-translation-workbench::ui.tw-graph.strang.trunk
                         :color="$twGraphDataDrivenPreviewTrunk->get('color', 'green')"
                         :stem-length="$twGraphDataDrivenPreviewGraph->get('stem_length')"
@@ -498,48 +510,9 @@
                         :node-labels="$twGraphDataDrivenPreviewTrunk->get('node_labels', [])"
                     />
 
-                    @if ($twGraphDataDrivenDevEnabled)
-                        @foreach (collect(data_get($twGraphDataDrivenPreviewTrunk->get('layout', []), 'trunkBoundsDebug', [])) as $trunkBoundsDebug)
-                            @php
-                                $trunkBoundsDebugNumber = $twGraphDebugBoundNumber(data_get($trunkBoundsDebug, 'id'));
-                                $trunkBoundsDebugTooltip =
-                                    'Trunk bounds' .
-                                    ' | ' .
-                                    data_get($trunkBoundsDebug, 'type') .
-                                    ': ' .
-                                    \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label(
-                                        data_get($trunkBoundsDebug, 'id'),
-                                    ) .
-                                    ' | x=' .
-                                    data_get($trunkBoundsDebug, 'x', '0rem') .
-                                    ' y=' .
-                                    data_get($trunkBoundsDebug, 'y', '0rem') .
-                                    ' width=' .
-                                    data_get($trunkBoundsDebug, 'width', '0rem') .
-                                    ' height=' .
-                                    data_get($trunkBoundsDebug, 'height', '0rem');
-                            @endphp
 
-                            <span
-                                class="tw-graph-protocol-dev-only absolute z-[1] cursor-copy rounded-sm border border-dashed border-green-400/80 bg-green-300/5"
-                                data-tw-graph-path="{{ $trunkBoundsDebugTooltip }}"
-                                title="{{ $trunkBoundsDebugTooltip }}"
-                                style="
-                                    left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($trunkBoundsDebug, 'x', '0rem') }});
-                                    bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($trunkBoundsDebug, 'y', '0rem') }});
-                                    width: {{ data_get($trunkBoundsDebug, 'width', '0rem') }};
-                                    height: {{ data_get($trunkBoundsDebug, 'height', '0rem') }};
-                                "
-                                x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
-                            >
-                                <span
-                                    class="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-sm border border-green-500/70 bg-white px-1 font-mono text-[0.6rem] leading-4 text-green-700 shadow-sm dark:bg-zinc-950 dark:text-green-300"
-                                >
-                                    {{ $trunkBoundsDebugNumber }}
-                                </span>
-                            </span>
-                        @endforeach
-                    @endif
+                        {{-- Bounds are rendered by the graph components, not by preview estimates. --}}
+
 
                     @foreach ($twGraphDataDrivenPreviewRekeys as $rekeyIndex => $rekeyPreview)
                         @php
@@ -559,6 +532,7 @@
                                     $twGraphDataDrivenPreviewGraph->get('stem_length')"
                                 :arc-radius="$twGraphDataDrivenPreviewGraph->get('arc_radius')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
+                                :start-length="$rekeyPreview->get('start_length')"
                                 :start-label="$rekeyPreview->get('start_label')"
                                 :node-labels="$rekeyPreview->get('node_labels', [])"
                                 :z-index="8"
@@ -574,6 +548,7 @@
                                     $twGraphDataDrivenPreviewGraph->get('stem_length')"
                                 :arc-radius="$twGraphDataDrivenPreviewGraph->get('arc_radius')"
                                 :stem-continuation="$rekeyPreview->get('stem_continuation', [])"
+                                :start-length="$rekeyPreview->get('start_length')"
                                 :start-label="$rekeyPreview->get('start_label')"
                                 :node-labels="$rekeyPreview->get('node_labels', [])"
                                 :z-index="8"
@@ -614,75 +589,45 @@
                             />
                         @endif
 
-                        @if ($twGraphDataDrivenDevEnabled)
-                            @foreach (collect(data_get($rekeyPreview, 'layout.rekeyBoundsDebug', [])) as $rekeyBoundsDebug)
-                            @php
-                                $rekeyBoundsDebugNumber = $twGraphDebugBoundNumber(data_get($rekeyBoundsDebug, 'id'));
-                                $rekeyBoundsDebugType = (string) data_get($rekeyBoundsDebug, 'type', '');
-                                $rekeyBoundsDebugIsSubBox =
-                                    str_ends_with($rekeyBoundsDebugType, '-start') ||
-                                    str_ends_with($rekeyBoundsDebugType, '-labels') ||
-                                    str_ends_with($rekeyBoundsDebugType, '-tail') ||
-                                    $rekeyBoundsDebugType === 'rekey-target-body' ||
-                                    $rekeyBoundsDebugType === 'rekey-target-end';
-                                $rekeyBoundsDebugTooltip =
-                                    'Rekey bounds' .
-                                    ' | ' .
-                                    data_get($rekeyBoundsDebug, 'side', 'n/a') .
-                                    ' | ' .
-                                    $rekeyBoundsDebugType .
-                                    ': ' .
-                                    \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label(
-                                        data_get($rekeyBoundsDebug, 'id'),
-                                    ) .
-                                    ' | x=' .
-                                    data_get($rekeyBoundsDebug, 'x', '0rem') .
-                                    ' y=' .
-                                    data_get($rekeyBoundsDebug, 'y', '0rem') .
-                                    ' width=' .
-                                    data_get($rekeyBoundsDebug, 'width', '0rem') .
-                                    ' height=' .
-                                    data_get($rekeyBoundsDebug, 'height', '0rem');
-                            @endphp
 
-                            <span
-                                data-tw-graph-path="{{ $rekeyBoundsDebugTooltip }}"
-                                title="{{ $rekeyBoundsDebugTooltip }}"
-                                style="
-                                    left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($rekeyBoundsDebug, 'x', '0rem') }});
-                                    bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($rekeyBoundsDebug, 'y', '0rem') }});
-                                    width: {{ data_get($rekeyBoundsDebug, 'width', '0rem') }};
-                                    height: {{ data_get($rekeyBoundsDebug, 'height', '0rem') }};
-                                "
-                                @class([
-                                    'tw-graph-protocol-dev-only absolute cursor-copy rounded-sm border border-dashed',
-                                    'z-[2] border-lime-400/80 bg-lime-300/5' => $rekeyBoundsDebugIsSubBox,
-                                    'z-[1] border-sky-400/75 bg-sky-300/5' => !$rekeyBoundsDebugIsSubBox,
-                                ])
-                                x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
-                            >
-                                <span @class([
-                                    'absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-sm border bg-white px-1 font-mono text-[0.6rem] leading-4 shadow-sm dark:bg-zinc-950',
-                                    'border-lime-500/70 text-lime-700 dark:text-lime-300' => $rekeyBoundsDebugIsSubBox,
-                                    'border-sky-500/70 text-sky-700 dark:text-sky-300' => !$rekeyBoundsDebugIsSubBox,
-                                ])>
-                                    {{ $rekeyBoundsDebugNumber }}
-                                </span>
-                            </span>
-                            @endforeach
-                        @endif
+                        {{-- Bounds are rendered by the graph components, not by preview estimates. --}}
+
                     @endforeach
 
                     @if ($twGraphDataDrivenPreviewMerge->isNotEmpty())
                         @foreach ($twGraphDataDrivenPreviewMerges as $mergeIndex => $mergePreview)
                             @php
                                 $mergePreview = collect($mergePreview);
+                                $mergeOwnerId = $twGraphDataDrivenPreviewGraph->get('graph_id') . '.strang.merge-' . $mergePreview->get('side', 'left') . '.' . ($mergeIndex + 1);
+                                foreach ((array) data_get($mergePreview, 'layout.appliedCompensations', []) as $compensation) {
+                                    if (($compensation['source'] ?? '') === 'label-line-clearance') {
+                                        $__env->getConsumableComponentData('twGraphCalculatedLengths')?->record(
+                                            $twGraphDataDrivenPreviewGraph->get('graph_id') . '.' . $compensation['target'],
+                                            'strang.merge-' . $mergePreview->get('side', 'left'), $mergeOwnerId, $compensation['prop'],
+                                            ['base' => $compensation['baseValue'], 'additional' => $compensation['delta']], $compensation['reason'],
+                                            \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::dataDrivenString(
+                                                str_contains($compensation['prop'], 'bridge') ? 'bridge_length' : 'stem_length', '4rem'),
+                                        );
+                                    }
+                                    if (data_get($compensation, 'sources.0.source') === 'merge-trunk-label-clearance') {
+                                        $__env->getConsumableComponentData('twGraphCalculatedLengths')?->record(
+                                            $mergeOwnerId . '.paths.merge.bridge',
+                                            'strang.merge-' . $mergePreview->get('side', 'left'),
+                                            $mergeOwnerId,
+                                            'bridgeLength',
+                                            ['base' => $compensation['baseValue'], 'additional' => $compensation['delta'], 'gap' => $compensation['gap']],
+                                            $compensation['reason'],
+                                            \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::dataDrivenString('bridge_length', '4rem'),
+                                        );
+                                    }
+                                }
                             @endphp
 
                             @if ($mergePreview->get('side') === 'right')
                                 <x-translation-workbench::ui.tw-graph.strang.merge-right
                                     :component-counter="$mergeIndex + 1"
                                     :color="$mergePreview->get('color', 'amber')"
+                                    :start-length="$mergePreview->get('start_length')"
                                     :attach-to="$mergePreview->get('attach_to', 'strang.trunk.path.1.end')"
                                     :bridge-length="$mergePreview->get('bridge_length') ??
                                         $twGraphDataDrivenPreviewGraph->get('bridge_length')"
@@ -694,6 +639,8 @@
                                     :start-label="$mergePreview->get('start_label')"
                                     :node-labels="$mergePreview->get('node_labels', [])"
                                     :extension-count="$mergePreview->get('extension_count', 0)"
+                                    :extension-bridge-length="$mergePreview->get('extension_bridge_length')"
+                                    :extension-stem-length="$mergePreview->get('extension_stem_length')"
                                     :extension-stem-lengths="$mergePreview->get('extension_stem_lengths', [])"
                                     :extension-stem-continuations="$mergePreview->get('extension_stem_continuations', [])"
                                     :extension-bridge-continuations="$mergePreview->get('extension_bridge_continuations', [])"
@@ -704,6 +651,7 @@
                                 <x-translation-workbench::ui.tw-graph.strang.merge-left
                                     :component-counter="$mergeIndex + 1"
                                     :color="$mergePreview->get('color', 'amber')"
+                                    :start-length="$mergePreview->get('start_length')"
                                     :attach-to="$mergePreview->get('attach_to', 'strang.trunk.path.1.end')"
                                     :bridge-length="$mergePreview->get('bridge_length') ??
                                         $twGraphDataDrivenPreviewGraph->get('bridge_length')"
@@ -715,6 +663,8 @@
                                     :start-label="$mergePreview->get('start_label')"
                                     :node-labels="$mergePreview->get('node_labels', [])"
                                     :extension-count="$mergePreview->get('extension_count', 0)"
+                                    :extension-bridge-length="$mergePreview->get('extension_bridge_length')"
+                                    :extension-stem-length="$mergePreview->get('extension_stem_length')"
                                     :extension-stem-lengths="$mergePreview->get('extension_stem_lengths', [])"
                                     :extension-stem-continuations="$mergePreview->get('extension_stem_continuations', [])"
                                     :extension-bridge-continuations="$mergePreview->get('extension_bridge_continuations', [])"
@@ -723,69 +673,26 @@
                                 />
                             @endif
 
-                            @if ($twGraphDataDrivenDevEnabled)
-                                @foreach (collect(data_get($mergePreview, 'layout.mergeBoundsDebug', [])) as $mergeBoundsDebug)
-                                @php
-                                    $mergeBoundsDebugNumber = $twGraphDebugBoundNumber(
-                                        data_get($mergeBoundsDebug, 'id'),
-                                    );
-                                    $mergeBoundsDebugType = (string) data_get($mergeBoundsDebug, 'type', '');
-                                    $mergeBoundsDebugIsSubBox =
-                                        str_ends_with($mergeBoundsDebugType, '-start') ||
-                                        str_ends_with($mergeBoundsDebugType, '-labels') ||
-                                        str_ends_with($mergeBoundsDebugType, '-tail');
-                                    $mergeBoundsDebugTooltip =
-                                        'Merge bounds' .
-                                        ' | ' .
-                                        data_get($mergeBoundsDebug, 'side', 'n/a') .
-                                        ' | ' .
-                                        $mergeBoundsDebugType .
-                                        ': ' .
-                                        \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label(
-                                            data_get($mergeBoundsDebug, 'id'),
-                                        ) .
-                                        ' | x=' .
-                                        data_get($mergeBoundsDebug, 'x', '0rem') .
-                                        ' y=' .
-                                        data_get($mergeBoundsDebug, 'y', '0rem') .
-                                        ' width=' .
-                                        data_get($mergeBoundsDebug, 'width', '0rem') .
-                                        ' height=' .
-                                        data_get($mergeBoundsDebug, 'height', '0rem');
-                                @endphp
 
-                                <span
-                                    data-tw-graph-path="{{ $mergeBoundsDebugTooltip }}"
-                                    title="{{ $mergeBoundsDebugTooltip }}"
-                                    style="
-                                        left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($mergeBoundsDebug, 'x', '0rem') }});
-                                        bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($mergeBoundsDebug, 'y', '0rem') }});
-                                        width: {{ data_get($mergeBoundsDebug, 'width', '0rem') }};
-                                        height: {{ data_get($mergeBoundsDebug, 'height', '0rem') }};
-                                    "
-                                    @class([
-                                        'tw-graph-protocol-dev-only absolute cursor-copy rounded-sm border border-dashed',
-                                        'z-[2] border-lime-400/80 bg-lime-300/5' => $mergeBoundsDebugIsSubBox,
-                                        'z-[1] border-amber-400/75 bg-amber-300/5' => !$mergeBoundsDebugIsSubBox,
-                                    ])
-                                    x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
-                                >
-                                    <span @class([
-                                        'absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-sm border bg-white px-1 font-mono text-[0.6rem] leading-4 shadow-sm dark:bg-zinc-950',
-                                        'border-lime-500/70 text-lime-700 dark:text-lime-300' => $mergeBoundsDebugIsSubBox,
-                                        'border-amber-500/70 text-amber-700 dark:text-amber-300' => !$mergeBoundsDebugIsSubBox,
-                                    ])>
-                                        {{ $mergeBoundsDebugNumber }}
-                                    </span>
-                                </span>
-                                @endforeach
-                            @endif
+                        {{-- Bounds are rendered by the graph components, not by preview estimates. --}}
+
                         @endforeach
                     @endif
 
                     @foreach ($twGraphDataDrivenPreviewBranches as $branchIndex => $branchPreview)
                         @php
                             $branchPreview = collect($branchPreview);
+                            foreach ((array) data_get($branchPreview, 'layout.appliedCompensations', []) as $compensation) {
+                                if (($compensation['source'] ?? '') === 'label-line-clearance') {
+                                    $suffix = str_contains($compensation['prop'], 'afterLength') ? '.paths.branch.step.stem.after' : '.paths.branch.bridge.1';
+                                    $__env->getConsumableComponentData('twGraphCalculatedLengths')?->record(
+                                        $branchPreview->get('id') . $suffix, 'strang.branch-' . $branchPreview->get('side'),
+                                        $branchPreview->get('id'), $compensation['prop'],
+                                        ['base' => $compensation['baseValue'], 'additional' => $compensation['delta']], $compensation['reason'],
+                                    );
+                                }
+                            }
+
                         @endphp
 
                         @if ($branchPreview->get('side') === 'right')
@@ -848,48 +755,9 @@
                             />
                         @endif
 
-                        @if ($twGraphDataDrivenDevEnabled)
-                            @foreach (collect(data_get($branchPreview, 'layout.branchBoundsDebug', [])) as $branchBoundsDebug)
-                            @php
-                                $branchBoundsDebugNumber = $twGraphDebugBoundNumber(data_get($branchBoundsDebug, 'id'));
-                                $branchBoundsDebugTooltip =
-                                    'Branch bounds' .
-                                    ' | ' .
-                                    data_get($branchBoundsDebug, 'type') .
-                                    ': ' .
-                                    \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label(
-                                        data_get($branchBoundsDebug, 'id'),
-                                    ) .
-                                    ' | x=' .
-                                    data_get($branchBoundsDebug, 'x', '0rem') .
-                                    ' y=' .
-                                    data_get($branchBoundsDebug, 'y', '0rem') .
-                                    ' width=' .
-                                    data_get($branchBoundsDebug, 'width', '0rem') .
-                                    ' height=' .
-                                    data_get($branchBoundsDebug, 'height', '0rem');
-                            @endphp
 
-                            <span
-                                class="tw-graph-protocol-dev-only absolute z-[1] cursor-copy rounded-sm border border-dashed border-sky-400/70 bg-sky-300/5"
-                                data-tw-graph-path="{{ $branchBoundsDebugTooltip }}"
-                                title="{{ $branchBoundsDebugTooltip }}"
-                                style="
-                                    left: calc(var(--tw-graph-protocol-trunk-x) + {{ data_get($branchBoundsDebug, 'x', '0rem') }});
-                                    bottom: calc(var(--tw-graph-protocol-origin-bottom) + {{ data_get($branchBoundsDebug, 'y', '0rem') }});
-                                    width: {{ data_get($branchBoundsDebug, 'width', '0rem') }};
-                                    height: {{ data_get($branchBoundsDebug, 'height', '0rem') }};
-                                "
-                                x-on:click.stop="navigator.clipboard?.writeText($el.dataset.twGraphPath)"
-                            >
-                                <span
-                                    class="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-sm border border-sky-500/70 bg-white px-1 font-mono text-[0.6rem] leading-4 text-sky-700 shadow-sm dark:bg-zinc-950 dark:text-sky-300"
-                                >
-                                    {{ $branchBoundsDebugNumber }}
-                                </span>
-                            </span>
-                            @endforeach
-                        @endif
+                        {{-- Bounds are rendered by the graph components, not by preview estimates. --}}
+
                     @endforeach
                 </x-translation-workbench::ui.tw-graph>
 
@@ -1396,31 +1264,21 @@
                     $twGraphDebugCollisionBoundRows = $twGraphDebugBoundRows->where('collision', true)->values();
                 @endphp
 
-                @if ($twGraphDataDrivenDevEnabled)
+
                 <div
                     class="mt-4 overflow-hidden rounded-lg border border-zinc-200 bg-white/75 dark:border-zinc-700 dark:bg-zinc-900/45"
-                    x-show="twGraphDataDrivenDev"
+                    x-show="previewDev"
                 >
                     <div
                         class="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-200 px-3 py-2 dark:border-zinc-700">
-                        <flux:heading size="sm">{{ __('Debug bounds') }}</flux:heading>
+                        <flux:heading size="sm">{{ __('Legacy collision estimates (not rendered element bounds)') }}</flux:heading>
                         <div class="flex flex-wrap items-center justify-end gap-3">
-                            <button
-                                type="button"
-                                class="inline-flex items-center gap-2 text-xs opacity-70 hover:cursor-pointer"
-                                x-on:click.stop="twGraphDebugBoundsCollisionOnly = !twGraphDebugBoundsCollisionOnly"
-                            >
-                                <span
-                                    class="relative inline-flex h-5 w-9 items-center rounded-full border transition"
-                                    x-bind:class="twGraphDebugBoundsCollisionOnly ? 'border-red-500 bg-red-500' : 'border-zinc-300 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800'"
-                                >
-                                    <span
-                                        class="inline-block h-4 w-4 rounded-full bg-white shadow transition"
-                                        x-bind:class="twGraphDebugBoundsCollisionOnly ? 'translate-x-4' : 'translate-x-0.5'"
-                                    ></span>
-                                </span>
-                                <span>{{ __('Collisions only') }}</span>
-                            </button>
+                            <flux:toggle
+                                size="sm"
+                                color="red"
+                                x-model="twGraphDebugBoundsCollisionOnly"
+                                :label="__('Collisions only')"
+                            />
 
                             <flux:badge
                                 size="sm"
@@ -1537,7 +1395,7 @@
                         </table>
                     </div>
                 </div>
-                @endif
+
 
                 @if (filled(data_get($twGraphDataDrivenPreviewGraph->get('header'), 'text')))
                     <flux:callout.heading class="mt-2 flex items-center justify-center gap-2">
@@ -1548,6 +1406,7 @@
                 @endif
 
             </div>
+            </x-translation-workbench::ui.tw-graph.preview-tools>
         </flux:callout>
         </div>
     @endif
@@ -1691,6 +1550,7 @@
         </div>
         </flux:callout>
 
+        @if ($twGraphDataDrivenFindingInspect !== [])
         <flux:callout
             class="mt-3"
             color="zinc"
@@ -1990,6 +1850,7 @@
             </flux:callout>
         </div>
         </flux:callout>
+        @endif
     @endif
 
     <flux:accordion class="mt-3">

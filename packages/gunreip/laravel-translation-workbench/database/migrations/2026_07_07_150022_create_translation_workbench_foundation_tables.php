@@ -11,16 +11,7 @@ return new class extends Migration
         Schema::create('translation_workbench_source_files', function (Blueprint $table): void {
             $table->id();
             $table->string('path')->unique();
-            $table->string('source_root')->nullable()->index();
-            $table->string('source_area')->nullable()->index();
-            $table->string('package_vendor')->nullable()->index();
-            $table->string('package_name')->nullable()->index();
-            $table->string('path_domain')->nullable()->index();
-            $table->string('path_section')->nullable()->index();
-            $table->string('path_context')->nullable()->index();
-            $table->string('path_scope')->nullable()->index();
-            $table->string('path_extra')->nullable()->index();
-            $table->string('filename')->nullable()->index();
+            // Path segments are added by migration 150027.
             $table->string('source_type', 40)->index();
             $table->string('extension', 20)->nullable()->index();
             $table->string('status', 40)->default('active')->index();
@@ -29,14 +20,6 @@ return new class extends Migration
             $table->unsignedInteger('scan_count')->default(0);
             $table->json('meta')->nullable();
             $table->timestamps();
-
-            $table->index([
-                'source_root',
-                'source_area',
-                'path_domain',
-                'path_section',
-                'path_context',
-            ], 'tw_source_files_path_segment_index');
         });
 
         Schema::create('translation_workbench_findings', function (Blueprint $table): void {
@@ -44,7 +27,8 @@ return new class extends Migration
             $table->foreignId('source_file_id')
                 ->constrained('translation_workbench_source_files')
                 ->cascadeOnDelete();
-            $table->string('fingerprint', 64)->index();
+            // The 2026_07_24 migration replaces this with a non-unique index.
+            $table->string('fingerprint', 64)->unique();
             $table->string('source_signature', 64)->unique();
             $table->string('source_fingerprint', 64)->nullable()->index();
             $table->string('expression_fingerprint', 64)->nullable()->index();
@@ -62,6 +46,7 @@ return new class extends Migration
             $table->string('group')->nullable();
             $table->string('path_key')->nullable();
             $table->string('scope')->nullable();
+            // Key segments are added by migration 150026.
             $table->string('dynamic_scope')->nullable();
             $table->string('entry_type', 40)->nullable()->index();
             $table->string('candidate_type', 40)->nullable()->index();
@@ -86,11 +71,6 @@ return new class extends Migration
             $table->string('group')->nullable();
             $table->string('path_key')->nullable();
             $table->string('scope')->nullable();
-            $table->string('key_segment_domain')->nullable()->index();
-            $table->string('key_segment_section')->nullable()->index();
-            $table->string('key_segment_context')->nullable()->index();
-            $table->string('key_segment_extra')->nullable()->index();
-            $table->string('key_segment_name')->nullable()->index();
             $table->string('key_type', 40)->default('static')->index();
             $table->boolean('is_ui_key')->default(false)->index();
             $table->boolean('is_dynamic_key')->default(false)->index();
@@ -106,13 +86,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['namespace', 'group'], 'tw_keys_namespace_group_index');
-            $table->index([
-                'namespace',
-                'group',
-                'key_segment_domain',
-                'key_segment_section',
-                'key_segment_context',
-            ], 'tw_keys_segment_filter_index');
         });
 
         Schema::create('translation_workbench_key_findings', function (Blueprint $table): void {

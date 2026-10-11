@@ -77,13 +77,31 @@
 @endif
 
 @if ($dev)
-    @foreach (collect($records)->pluck('region')->filter(fn ($region) => is_array($region) && ($region['showBox'] ?? true))->unique('token') as $region)
+    @foreach (collect($records)->pluck('region')->filter()->flatMap(fn ($region) => [$region, ...($region['ancestors'] ?? [])])->filter(fn ($region) => is_array($region) && ($region['showBox'] ?? true))->unique('token') as $region)
         <x-translation-workbench::ui.tw-graph.dev-box
             :id="$region['id'] . '.dev-box'"
             :component="$region['component']"
             :label="$region['id']"
             :region="$region"
         />
+    @endforeach
+    {{-- One potential slot per label. The measured grouping only reveals the first slot of each run. --}}
+    @foreach (collect($records)->where('kind', 'text')->unique('id') as $textRecord)
+        @php
+            $textRegion = $textRecord['region'] ?? null;
+            $textOwner = $textRegion ? collect([$textRegion, ...($textRegion['ancestors'] ?? [])])
+                ->first(fn ($owner) => str_contains($owner['component'], '.strang.')) : null;
+        @endphp
+        @if ($textOwner !== null)
+            <x-translation-workbench::ui.tw-graph.dev-box
+                :id="$textRecord['id'] . '.text-label-group.dev-box'"
+                component="TextLabelGroup"
+                :label="$textRecord['id']"
+                :region="array_replace($textOwner, ['colorRgb' => '168 85 247'])"
+                region-kind="strang-text-labels"
+                :text-group-slot="$textRecord['id']"
+            />
+        @endif
     @endforeach
     <div data-tw-graph-bounds-warning hidden class="tw-graph-protocol-dev-only absolute left-2 top-16 z-50 max-w-xl rounded border border-amber-500 bg-amber-50 p-2 text-xs text-amber-950">
         <strong>{{ __('Bounds mismatch — geometry was not overridden') }}</strong>

@@ -56,7 +56,7 @@ final class RekeyPreviewBuilder
             $previews[] = self::preview($targetRelations, 'target', 'right', 1, $mainRow);
         }
 
-        return $previews;
+        return array_map(LabelWidth::preview(...), $previews);
     }
 
     /**

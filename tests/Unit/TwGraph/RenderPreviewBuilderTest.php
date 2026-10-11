@@ -151,7 +151,7 @@ it('adds chunk event labels for high volume timeline event types', function (): 
             'side' => 'left',
             'text' => ['dynamic_source_classification_changed', '13 events'],
             'badgeColor' => 'amber',
-            'halfLong' => false,
+            'width' => 'halfLong',
         ])
         ->and($chunkLabels[1])->toMatchArray([
             'side' => 'right',
@@ -170,7 +170,7 @@ it('adds chunk event labels for high volume timeline event types', function (): 
         ->and($chunkLabels[2])->toMatchArray([
             'side' => 'left',
             'text' => ['key_finding_relation_obsoleted', '2 events'],
-            'halfLong' => true,
+            'width' => 'halfLong',
         ]);
 });
 
@@ -269,7 +269,10 @@ it('keeps compacted chunk event labels chronologically merged with normal trunk 
             'key_reviewed',
             '2026-03-01 09:00 · accepted',
         ])
-        ->and($preview['trunk']['path_lengths'][2]['component'])->toBe('stem-compressed');
+        ->and($preview['trunk']['path_lengths'][1]['component'])->toBe('stem-compressed')
+        ->and($preview['trunk']['path_lengths'][2]['component'])->toBe('stem-compressed')
+        ->and($preview['trunk']['path_lengths'][1]['toColor'])->toBe(\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::dataDrivenString('colors.chunk_event', 'amber'))
+        ->and($preview['trunk']['path_lengths'][2]['toColor'])->toBe(\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::dataDrivenString('colors.trunk', 'green'));
 });
 
 it('keeps trunk only start promotion at the start node instead of leaving an empty first stem', function (): void {
@@ -404,6 +407,7 @@ it('uses data driven graph defaults ahead of central graph defaults in render pr
 });
 
 it('scales distributed trunk spacing compensation with the configured factor', function (): void {
+    config()->set('tw-graph-data-driven-defaults.collision_compensation_enabled', true);
     $method = new ReflectionMethod(RenderPreviewBuilder::class, 'applyTrunkPathSpacingCompensation');
     $method->setAccessible(true);
 
@@ -597,6 +601,7 @@ it('treats non array timeline event summaries as empty instead of creating chunk
 });
 
 it('compensates rekey target bridges against trunk label collisions in the full render preview', function (): void {
+    config()->set('tw-graph-data-driven-defaults.collision_compensation_enabled', true);
     config()->set('tw-graph-defaults.bridge_length', '20rem');
     config()->set('tw-graph-defaults.debug_bound_box_gap', '3rem');
     config()->set('tw-graph-data-driven-defaults.debug_bound_box_gap', '3rem');
@@ -647,7 +652,7 @@ it('compensates rekey target bridges against trunk label collisions in the full 
             'component' => 'tw-graph.strang.rekey-target-right',
             'kind' => 'target',
             'side' => 'right',
-            'attach_to' => 'strang.trunk.path.3.end',
+            'attach_to' => 'strang.trunk.path.2.end',
             'bridge_length' => '25.73rem',
         ])
         ->and(data_get($preview, 'rekeys.0.layout.appliedCompensations.0'))->toMatchArray([
@@ -728,6 +733,7 @@ it('keeps configured rekey target bridge corrections visible when they prevent a
 });
 
 it('side switches rekey source end labels when concrete trunk labels collide', function (): void {
+    config()->set('tw-graph-data-driven-defaults.collision_compensation_enabled', true);
     config()->set('tw-graph-defaults.bridge_length', '20rem');
     config()->set('tw-graph-defaults.debug_bound_box_gap', '3rem');
     config()->set('tw-graph-data-driven-defaults.debug_bound_box_gap', '3rem');
@@ -788,7 +794,7 @@ it('side switches rekey source end labels when concrete trunk labels collide', f
         ])
         ->and($preview['rekeys'][0]['node_labels'][6])->toHaveKey('right')
         ->and($preview['rekeys'][0]['node_labels'][6])->not->toHaveKey('left')
-        ->and($preview['rekeys'][0]['node_labels'][6]['right'])->toBe([
+        ->and($preview['rekeys'][0]['node_labels'][6]['right']['text'])->toBe([
             'rekeyed into this key ID #4507',
             'ui.save -> ui.button.save.save',
         ])
@@ -803,4 +809,115 @@ it('side switches rekey source end labels when concrete trunk labels collide', f
             'source' => 'trunk-rekey-source-label-collision',
             'against' => 'strang.left.1.rekey.source.arc-south-east-2.end-label.bounds',
         ]);
+});
+
+it('shares merge attachments with the first event labels without reserving an empty trunk stem', function (int $origins) {
+    $preview = RenderPreviewBuilder::build([
+        'id' => 42,
+        'root_key_id' => 7,
+        'chain_type' => 'single',
+        'created_at' => '2026-01-01 10:00:00',
+    ], collect([
+        ['timestamp' => '2026-01-01 10:00:00', 'event' => 'Key created', 'state' => 'active'],
+        ['timestamp' => '2026-01-02 10:00:00', 'event' => 'Key reviewed', 'state' => 'active'],
+    ]), collect(range(1, $origins))->map(fn ($id) => [
+        'finding_id' => $id,
+        'translation_key' => 'example.key',
+        'first_seen_at' => '2026-01-01 10:00:00',
+    ]));
+
+    expect($preview['merges'])->not->toBeEmpty()
+        ->and($preview['trunk']['node_labels'])->toHaveKeys([1, 2])
+        ->and($preview['trunk']['node_labels'][1][0]['text'][0])->toBe('Key created')
+        ->and($preview['trunk']['node_labels'][2][0]['text'][0])->toBe('Key reviewed')
+        ->and($preview['trunk']['path_lengths'][1]['nodeEndDot'])->toBeTrue();
+    foreach ($preview['merges'] as $merge) {
+        expect($merge['attach_to'])->toBe('strang.trunk.path.1.end');
+    }
+})->with([1, 2, 6]);
+
+it('keeps branches on their chronological event and final height with multiple merges', function (string $side) {
+    $preview = RenderPreviewBuilder::build([
+        'id' => 73, 'root_key_id' => 7, 'chain_type' => 'single',
+        'created_at' => '2026-01-01 10:00:00',
+    ], collect([
+        ['timestamp' => '2026-01-01 10:00:00', 'event' => 'key_created', 'state' => 'active'],
+        ['timestamp' => '2026-01-02 10:00:00', 'event' => 'translation_key_updated', 'state' => 'active'],
+        ['timestamp' => '2026-01-04 10:00:00', 'event' => 'key_reviewed', 'state' => 'active'],
+    ]), collect(range(1, 6))->map(fn ($id) => [
+        'finding_id' => $id, 'translation_key' => 'example.key',
+        'first_seen_at' => '2026-01-01 10:00:00',
+    ]), ['rows' => [[
+        'finding_id' => 1, 'side' => $side, 'outcome_group' => 'ended after merge',
+        'origin_key' => 'example.key', 'last_seen_at_raw' => '2026-01-03 10:00:00',
+        'last_seen_at' => '2026-01-03 10:00:00',
+    ]]]);
+
+    expect($preview['merges'])->toHaveCount(2)
+        ->and(array_column($preview['merges'], 'extension_count'))->toBe([2, 2])
+        ->and($preview['branches'])->toHaveCount(1);
+    $branch = $preview['branches'][0];
+    expect($branch['attach_to'])->toBe('strang.trunk.path.2.end')
+        ->and($preview['trunk']['node_labels'][2][0]['text'][0])->toBe('translation_key_updated');
+
+    $height = (float) $preview['trunk']['start_length'];
+    foreach ([1, 2] as $path) {
+        $entry = $preview['trunk']['path_lengths'][$path];
+        $length = is_array($entry) ? ($entry['length'] ?? $preview['graph']['stem_length']) : ($entry ?? $preview['graph']['stem_length']);
+        $height += \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($length);
+    }
+    expect($branch['anchor_y_rem'])->toEqualWithDelta($height, 0.0001);
+})->with(['left', 'right']);
+
+it('positions all merge extension bounds identically for calculated and literal lengths', function (string $side) {
+    $bounds = new ReflectionMethod(RenderPreviewBuilder::class, 'mergeBridgeBoundsDebug');
+    $preview = [
+        'side' => $side, 'bridge_length' => '27rem', 'stem_length' => '5.75rem',
+        'attach_to' => 'strang.trunk.path.1.end', 'extension_count' => 3,
+        'extension_bridge_length' => 'calc(20rem + 40rem)',
+        'extension_stem_length' => 'calc(2rem + 3.75rem)',
+        'stem_continuation' => [1 => ['length' => 'calc(10rem + 5rem)']],
+    ];
+    $calculated = $bounds->invoke(null, $preview, 0, [2 => 0.0]);
+    $literal = $bounds->invoke(null, array_replace($preview, [
+        'extension_bridge_length' => '60rem',
+        'extension_stem_length' => '5.75rem',
+        'stem_continuation' => [1 => ['length' => '15rem']],
+    ]), 0, [2 => 0.0]);
+
+    expect($calculated)->not->toBeEmpty()->toBe($literal);
+})->with(['left', 'right']);
+
+
+it('keeps authored values intact while automatic compensation is disabled', function () {
+    expect(config('tw-graph-data-driven-defaults.collision_compensation_enabled'))->toBeFalse();
+    $lengths = [1 => '4rem', 2 => '7rem'];
+    $method = new ReflectionMethod(RenderPreviewBuilder::class, 'applyTrunkPathSpacingCompensation');
+    $result = $method->invoke(null, $lengths, [1 => ['delta' => 12, 'collisionKey' => 'overlap']], [], '4rem', 1);
+    expect($result['path_lengths'])->toBe($lengths)->and($result['applied'])->toBe([]);
+    foreach (['applyMergeCollisionCompensation' => 'merges', 'applyRekeyTargetCompensationFromTrunkCollisions' => 'rekeys'] as $name => $key) {
+        $authored = [['bridge_length' => '17rem', 'stem_length' => '9rem']];
+        $method = new ReflectionMethod(RenderPreviewBuilder::class, $name);
+        $result = $method->invokeArgs(null, $key === 'merges' ? [$authored] : [$authored, [['collision' => true]]]);
+        expect($result[$key])->toBe($authored)->and($result['applied'])->toBe([]);
+    }
+});
+
+
+it('never shortens compressed stems during compensation but still permits extensions', function () {
+    $method = new ReflectionMethod(RenderPreviewBuilder::class, 'pathEntryWithLength');
+    config()->set('tw-graph-defaults.compressed_stem_length', '4rem');
+    $entry = ['component' => 'stem-compressed', 'length' => '6rem', 'labels' => ['left' => 'Bulk']];
+    expect($method->invoke(null, $entry, '2rem'))->toBe($entry)
+        ->and($method->invoke(null, $entry, '8rem'))->toBe(array_replace($entry, ['length' => '8rem']))
+        ->and($method->invoke(null, ['component' => 'stem-compressed', 'length' => '1rem'], '2rem')['length'])->toBe('4rem')
+        ->and($method->invoke(null, ['component' => 'path', 'length' => '6rem'], '2rem')['length'])->toBe('2rem');
+});
+
+it('uses the dedicated compressed default instead of the ordinary stem default', function () {
+    config()->set('tw-graph-defaults.compressed_stem_length', '8rem');
+    $method = new ReflectionMethod(RenderPreviewBuilder::class, 'pathEntryWithLength');
+    $entry = ['component' => 'stem-compressed'];
+    expect($method->invoke(null, $entry, '4rem')['length'])->toBe('8rem')
+        ->and($method->invoke(null, $entry, '10rem')['length'])->toBe('10rem');
 });

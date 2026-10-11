@@ -25,6 +25,13 @@ class TranslationWorkbenchCodeUpdateApplier
         $safeUpdates = collect($plan['updates'])
             ->where('state', 'safe_update')
             ->values();
+        if ($write) {
+            $failures = $this->unwritableSourcePathsForUpdates($safeUpdates);
+            if ($failures !== []) {
+                throw new \RuntimeException('Source files are not writable by the pipeline process: '.implode(', ', $failures).'. No code updates were applied. Run the pipeline as a user with write access to these files.');
+            }
+        }
+
         $duplicateGroups = $safeUpdates
             ->groupBy(static fn(array $row): string => ($row['source_path'] ?? '') . "\n" . ($row['raw_expression'] ?? ''))
             ->map(static fn(Collection $rows): array => [
@@ -36,13 +43,20 @@ class TranslationWorkbenchCodeUpdateApplier
                     ->values()
                     ->all(),
             ]);
+        // Capture the actual pre-write contents; after applyRow() the old expression is gone.
+        $originalSources = $write
+            ? $safeUpdates->pluck('source_path')->filter()->unique()
+                ->filter(static fn (string $path): bool => File::exists(base_path($path)))
+                ->mapWithKeys(static fn (string $path): array => [$path => (string) File::get(base_path($path))])
+                ->all()
+            : null;
         $results = $safeUpdates
             ->map(fn(array $row): array => $this->applyRow($row, $write, $duplicateGroups[
                 ($row['source_path'] ?? '') . "\n" . ($row['raw_expression'] ?? '')
             ] ?? null))
             ->values();
         $timelineEventsCreated = $write ? $this->recordAppliedTimelineEvents($results) : 0;
-        $diff = $this->buildDiff($results->whereIn('state', ['would_apply', 'applied'])->values()->all());
+        $diff = $this->buildDiff($results->whereIn('state', ['would_apply', 'applied'])->values()->all(), $originalSources);
 
         return [
             'generated_at' => now()->toISOString(),
@@ -63,6 +77,32 @@ class TranslationWorkbenchCodeUpdateApplier
             'diff' => $diff,
             'results' => $results->all(),
         ];
+    }
+
+    /**
+     * Check only files targeted by reviewed, safe updates; never alter their permissions.
+     * The UI checks its current plan; apply() repeats this after the pipeline rebuilds it.
+     *
+     * @return list<string>
+     */
+    public function unwritableSourcePaths(array $paths = [], ?int $limit = null): array
+    {
+        return $this->unwritableSourcePathsForUpdates(
+            collect($this->planner->plan($paths, $limit)['updates'])->where('state', 'safe_update'),
+        );
+    }
+
+    /** @return list<string> */
+    private function unwritableSourcePathsForUpdates(Collection $updates): array
+    {
+        return $updates->pluck('source_path')->filter()->unique()
+            ->filter(static function (string $path): bool {
+                $absolutePath = base_path($path);
+                clearstatcache(true, $absolutePath);
+
+                return File::exists($absolutePath) && ! File::isWritable($absolutePath);
+            })
+            ->values()->all();
     }
 
     /**
@@ -277,21 +317,22 @@ class TranslationWorkbenchCodeUpdateApplier
      * @param  array<int, array<string, mixed>>  $rows
      * @return array{files: array<int, string>, content: string}
      */
-    private function buildDiff(array $rows): array
+    private function buildDiff(array $rows, ?array $originalSources = null): array
     {
         $files = collect($rows)
             ->groupBy('source_path')
-            ->map(function ($fileRows, string $sourcePath): ?array {
+            ->map(function ($fileRows, string $sourcePath) use ($originalSources): ?array {
                 $absolutePath = base_path($sourcePath);
 
                 if (! File::exists($absolutePath)) {
                     return null;
                 }
 
-                $oldContent = (string) File::get($absolutePath);
-                $newContent = $oldContent;
+                $currentContent = (string) File::get($absolutePath);
+                $oldContent = $originalSources === null ? $currentContent : $originalSources[$sourcePath];
+                $newContent = $currentContent;
 
-                foreach ($fileRows as $row) {
+                foreach ($originalSources === null ? $fileRows : [] as $row) {
                     $rawExpression = (string) ($row['raw_expression'] ?? '');
                     $newExpression = (string) ($row['new_expression'] ?? '');
 

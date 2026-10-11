@@ -949,7 +949,7 @@ it('bounds label bridges using the rendered text box instead of a fixed line hei
     if ($dev) {
         $box = $boxes->item(0);
         expect($box->parentNode->getAttribute('data-tw-graph-path'))->toBe('label-bounds.label.center.1');
-        expect($box->getAttribute('style'))->toContain('inset: -0.35rem')->not->toContain('height:');
+        expect($box->getAttribute('style'))->toContain('inset: 0')->not->toContain('height:');
         expect($xpath->query('.//*[contains(@class, "tw-graph-protocol-primitive-text-line")]', $box->parentNode)->length)
             ->toBe(min(count($text), $maxLines));
     }

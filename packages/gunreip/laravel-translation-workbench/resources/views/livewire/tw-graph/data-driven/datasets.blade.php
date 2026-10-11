@@ -1,42 +1,22 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/tw-graph/data-driven/datasets.blade.php --}}
 
 <flux:card class="translation-workbench">
+    <div
+        data-tw-graph-loading
+        wire:ignore
+        class="fixed inset-0 z-100 flex items-center justify-center bg-white/60 backdrop-blur-sm dark:bg-zinc-950/60"
+        role="status"
+        aria-live="polite"
+    >
+        <div class="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white px-5 py-4 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+            <flux:icon.loading class="size-6 text-sky-600 dark:text-sky-400" />
+            <flux:text>{{ __('Loading graph and calculating layout…') }}</flux:text>
+        </div>
+    </div>
     <x-ui.headers.page
         :title="__('TW-Graph Data Driven Datasets')"
-        :description="__('Random timeline-chain datasets rendered as data-driven tw-graph previews.')"
+        :description="__('Select timeline-chain datasets by ID, history or random selection.')"
     >
-        @if ($mainRow)
-            <flux:button
-                icon="refresh-ccw"
-                wire:click="reloadDataset"
-                wire:loading.attr="disabled"
-            >
-                {{ __('Reload ID #:id', ['id' => $mainRow['id']]) }}
-            </flux:button>
-        @endif
-
-        <flux:button
-            icon="refresh-cw"
-            variant="primary"
-            wire:click="randomDataset"
-            wire:loading.attr="disabled"
-        >
-            {{ __('Random dataset') }}
-        </flux:button>
-
-        @if (!empty($datasetHistory))
-            <flux:select
-                class="w-128 max-w-full"
-                wire:model.live="selectedHistoryId"
-            >
-                @foreach ($datasetHistory as $historyEntry)
-                    <flux:select.option value="{{ $historyEntry['id'] }}">
-                        {{ $historyEntry['label'] }}
-                    </flux:select.option>
-                @endforeach
-            </flux:select>
-        @endif
-
         <x-slot:meta>
             @if ($mainRow)
                 <flux:badge
@@ -83,6 +63,7 @@
         @include(
             'translation-workbench::livewire.raw-data.timeline-chains.graph-preview.tw-graph-data-driven',
             [
+                'showDatasetSelector' => true,
                 'mainRow' => $mainRow,
                 'rootRows' => collect($rootRows ?? []),
                 'originRows' => collect($originRows ?? []),
@@ -91,6 +72,7 @@
             ]
         )
     @else
+        @include('translation-workbench::livewire.tw-graph.data-driven.dataset-selector')
         <flux:callout
             class="mt-6"
             color="amber"

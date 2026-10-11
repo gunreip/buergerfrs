@@ -190,8 +190,12 @@
 
         return [
             'component' => data_get($pathLength, 'component', 'path'),
+            'color' => data_get($pathLength, 'color', $resolvedColor),
+            'toColor' => data_get($pathLength, 'toColor'),
+            'colorGradient' => (bool) data_get($pathLength, 'colorGradient', false),
             'length' => $length,
             'labels' => $labels,
+            'nodeEndDot' => data_get($pathLength, 'nodeEndDot'),
             'beforeLength' => data_get($pathLength, 'beforeLength'),
             'gapLength' => data_get($pathLength, 'gapLength'),
             'afterLength' => data_get($pathLength, 'afterLength'),
@@ -298,8 +302,10 @@
     foreach (collect($pathLengths)->values() as $pathIndex => $pathLengthEntry) {
         $normalizedPathLength = $normalizePathLength($pathLengthEntry);
         $pathComponent = data_get($normalizedPathLength, 'component', 'path');
+        $pathColor = data_get($normalizedPathLength, 'color') ?? $resolvedColor;
         $pathLength = data_get($normalizedPathLength, 'length', '0rem');
         $nodeEnd = data_get($normalizedPathLength, 'labels', true);
+        $nodeEndDot = $hasLabels($nodeEnd) || (bool) data_get($normalizedPathLength, 'nodeEndDot', false);
         $devCounterEnd = $nodeIsVisible($nodeEnd) ? $counter++ : null;
         $nextAnchor = $addAnchor($currentAnchor, $axisDelta($pathLength));
         $segments[] = [
@@ -316,11 +322,13 @@
                 'anchorEnd' => $nextAnchor,
                 'nodeStart' => false,
                 'nodeEnd' => $nodeEnd,
-                'nodeEndDot' => $hasLabels($nodeEnd),
-                'jointArrowEnd' => ! $hasLabels($nodeEnd),
+                'nodeEndDot' => $nodeEndDot,
+                'jointArrowEnd' => ! $nodeEndDot,
                 'devCounterEnd' => $devCounterEnd,
-                'devCounterColor' => $resolvedColor,
-                'color' => $resolvedColor,
+                'devCounterColor' => $pathColor,
+                'color' => $pathColor,
+                'toColor' => data_get($normalizedPathLength, 'toColor'),
+                'colorGradient' => data_get($normalizedPathLength, 'colorGradient', false),
                 'zIndex' => $zIndex,
 
             ],

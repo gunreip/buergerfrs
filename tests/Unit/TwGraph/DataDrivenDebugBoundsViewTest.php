@@ -11,7 +11,7 @@ it('keeps the data driven debug bounds table columns and controls visible in the
     ));
 
     expect($source)
-        ->toContain("{{ __('Debug bounds') }}")
+        ->toContain("{{ __('Legacy collision estimates (not rendered element bounds)') }}")
         ->toContain('twGraphDebugBoundsCollisionOnly')
         ->toContain("{{ __('Collisions only') }}")
         ->toContain("{{ __('#') }}")
@@ -81,7 +81,7 @@ it('keeps collision details in the debug bounds table instead of graph badges', 
     ));
 
     expect($source)
-        ->toContain("{{ __('Debug bounds') }}")
+        ->toContain("{{ __('Legacy collision estimates (not rendered element bounds)') }}")
         ->toContain("{{ __('Collision Delta') }}")
         ->not->toContain('branch collision L:')
         ->not->toContain('branch collision R:')
@@ -119,4 +119,12 @@ it('keeps data driven dev switches and debug sections gated by the dev prop cont
         ->toContain(':dev="$twGraphDataDrivenDevEnabled"')
         ->toContain(':coordinates="$twGraphDataDrivenCoordinatesEnabled"')
         ->toContain('x-show="twGraphDataDrivenDev"');
+});
+
+
+it('does not draw estimated collision rectangles over component geometry', function () {
+    $source = file_get_contents(View::getFinder()->find(
+        'translation-workbench::livewire.raw-data.timeline-chains.graph-preview.tw-graph-data-driven',
+    ));
+    expect($source)->not->toContain('data-tw-graph-dev-box');
 });

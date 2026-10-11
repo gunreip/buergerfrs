@@ -64,6 +64,7 @@
     $twGraphRegionFrame = \Gunreip\TranslationWorkbench\Support\TwGraph\ComponentRegion::begin(
         '...::ui.tw-graph.paths.merge',
         \Gunreip\TranslationWorkbench\Support\TwGraph\CanvasDiagnostics::current($__env),
+        group: true,
     );
     try {
 @endphp

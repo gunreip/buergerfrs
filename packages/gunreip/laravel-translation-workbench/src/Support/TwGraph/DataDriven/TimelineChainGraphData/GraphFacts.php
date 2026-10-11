@@ -26,6 +26,7 @@ final class GraphFacts
             'events' => $rootRows
                 ->map(static fn(array $row): array => [
                     'timestamp' => $row['timestamp'] ?? null,
+                    'role' => (string) ($row['role'] ?? 'branch'),
                     'branch' => (string) ($row['branch'] ?? ''),
                     'event' => (string) ($row['event'] ?? ''),
                     'state' => (string) ($row['state'] ?? ''),
@@ -81,7 +82,7 @@ final class GraphFacts
     public static function branch(Collection $rootRows): array
     {
         $nonTrunkRows = $rootRows
-            ->filter(static fn(array $row): bool => ! in_array((string) ($row['branch'] ?? ''), ['Root', 'Root key'], true))
+            ->filter(static fn(array $row): bool => ! in_array((string) ($row['role'] ?? ''), ['root', 'root_key'], true))
             ->values();
 
         return [
@@ -95,6 +96,7 @@ final class GraphFacts
                     return [
                         'component' => 'tw-graph.strang.branch-' . $side,
                         'side' => $side,
+                        'role' => (string) ($row['role'] ?? 'branch'),
                         'branch' => (string) ($row['branch'] ?? ''),
                         'translation_key' => (string) ($row['translation_key'] ?? ''),
                         'timestamp' => $row['timestamp'] ?? null,
@@ -117,7 +119,7 @@ final class GraphFacts
     public static function componentIntent(array $mainRow, Collection $rootRows, Collection $originRows): array
     {
         $branchRowCount = $rootRows
-            ->filter(static fn(array $row): bool => ! in_array((string) ($row['branch'] ?? ''), ['Root', 'Root key'], true))
+            ->filter(static fn(array $row): bool => ! in_array((string) ($row['role'] ?? ''), ['root', 'root_key'], true))
             ->count();
 
         return [

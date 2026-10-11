@@ -174,6 +174,7 @@
     }
     $__env->getConsumableComponentData('twGraphCalculatedLengths')?->recordProp(
         $id, 'parts.start', $id, 'length', $length !== null,
+        $stemLength ?? \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('stem_length', '4rem'),
     );
 
     $nodeEnd = $nodeEnd === true && ($nodeLabelRight || $nodeLabelLeft)

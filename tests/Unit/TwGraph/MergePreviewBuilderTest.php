@@ -80,11 +80,11 @@ it('aggregates eleven merge candidates only on the side that has more rows than 
 
     expect($leftPreview['extension_count'])->toBe(4)
         ->and($leftPreview['extension_node_labels'][3]['start']['text'])->toBe(['Aggregated origins (2)'])
-        ->and($leftPreview['extension_node_labels'][3][1]['left'])->toBe([
+        ->and($leftPreview['extension_node_labels'][3][1]['left']['text'])->toBe([
             'findingID #5407',
             '2026-08-07 09:22',
         ])
-        ->and($leftPreview['extension_node_labels'][3][1]['right'])->toBe([
+        ->and($leftPreview['extension_node_labels'][3][1]['right']['text'])->toBe([
             'findingID #5409',
             '2026-08-09 09:22',
         ])
@@ -102,19 +102,19 @@ it('aggregates twelve merge candidates symmetrically once both sides exceed the 
         ->and($rightPreview['extension_count'])->toBe(4)
         ->and($leftPreview['extension_node_labels'][3]['start']['text'])->toBe(['Aggregated origins (2)'])
         ->and($rightPreview['extension_node_labels'][3]['start']['text'])->toBe(['Aggregated origins (2)'])
-        ->and($leftPreview['extension_node_labels'][3][1]['left'])->toBe([
+        ->and($leftPreview['extension_node_labels'][3][1]['left']['text'])->toBe([
             'findingID #5407',
             '2026-08-07 09:22',
         ])
-        ->and($leftPreview['extension_node_labels'][3][1]['right'])->toBe([
+        ->and($leftPreview['extension_node_labels'][3][1]['right']['text'])->toBe([
             'findingID #5409',
             '2026-08-09 09:22',
         ])
-        ->and($rightPreview['extension_node_labels'][3][1]['right'])->toBe([
+        ->and($rightPreview['extension_node_labels'][3][1]['right']['text'])->toBe([
             'findingID #5408',
             '2026-08-08 09:22',
         ])
-        ->and($rightPreview['extension_node_labels'][3][1]['left'])->toBe([
+        ->and($rightPreview['extension_node_labels'][3][1]['left']['text'])->toBe([
             'findingID #5410',
             '2026-08-10 09:22',
         ])
@@ -175,10 +175,10 @@ it('mirrors real extension label sides for left and right merge previews', funct
     $rightExtensionLabels = $previews[1]['extension_node_labels'][1];
 
     expect($leftExtensionLabels[1])->toHaveKeys(['left', 'right'])
-        ->and($leftExtensionLabels[1]['left'][0])->toBe('First seen')
-        ->and($leftExtensionLabels[1]['right'][0])->toBe('Literal')
-        ->and($rightExtensionLabels[1]['left'][0])->toBe('Literal')
-        ->and($rightExtensionLabels[1]['right'][0])->toBe('First seen');
+        ->and($leftExtensionLabels[1]['left']['text'][0])->toBe('First seen')
+        ->and($leftExtensionLabels[1]['right']['text'][0])->toBe('Literal')
+        ->and($rightExtensionLabels[1]['left']['text'][0])->toBe('Literal')
+        ->and($rightExtensionLabels[1]['right']['text'][0])->toBe('First seen');
 });
 
 it('applies configured vertical stagger only to the configured sequence', function (): void {
@@ -237,3 +237,39 @@ function mergeRows(int $count): Collection
         range(1, $count),
     ));
 }
+
+it('isolates extensions while leaving main merges on shared defaults and automatic compensation', function (): void {
+    config()->set('tw-graph-data-driven-defaults.merge_layout.extension_bridge_extra_length', '40rem');
+    config()->set('tw-graph-data-driven-defaults.merge_layout.extension_compensation_enabled', false);
+    config()->set('tw-graph-data-driven-defaults.merge_layout.extension_overrides', []);
+    config()->set('tw-graph-data-driven-defaults.merge_layout.main_stem_continuation', [1 => []]);
+    config()->set('tw-graph-data-driven-defaults.stem_length', '5.75rem');
+    config()->set('tw-graph-data-driven-defaults.bridge_length', '20rem');
+
+    foreach (MergePreviewBuilder::previews(mergeRows(4), 4) as $preview) {
+        expect($preview)->not->toHaveKey('bridge_length')
+            ->and($preview)->not->toHaveKey('stem_length')
+            ->and($preview)->not->toHaveKey('bridge_length_compensation')
+            ->and($preview)->not->toHaveKey('stem_length_compensation')
+            ->and($preview['stem_continuation'][1])->toBe([])
+            ->and($preview['extension_bridge_length'])->toBe('calc(20rem + 40rem)')
+            ->and($preview['extension_stem_length'])->toBe('5.75rem')
+            ->and($preview['extension_compensation_enabled'])->toBeFalse();
+    }
+});
+
+it('activates only the reviewed extension on both sides without moving later extensions inward', function () {
+    config()->set('tw-graph-data-driven-defaults.bridge_length', '20rem');
+    config()->set('tw-graph-data-driven-defaults.merge_layout.extension_bridge_extra_length', '40rem');
+    config()->set('tw-graph-data-driven-defaults.merge_layout.extension_compensation_enabled', false);
+    config()->set('tw-graph-data-driven-defaults.merge_layout.extension_overrides', [
+        1 => ['bridge_extra_length' => '0rem', 'compensation_enabled' => true],
+    ]);
+
+    foreach (MergePreviewBuilder::previews(mergeRows(8), 8) as $preview) {
+        expect($preview['extension_bridge_continuations'])->toBe([1 => '20rem'])
+            ->and($preview['extension_compensation_overrides'])->toBe([1 => true])
+            ->and($preview['extension_bridge_length'])->toBe('calc(20rem + 40rem)')
+            ->and($preview['extension_compensation_enabled'])->toBeFalse();
+    }
+});

@@ -44,3 +44,27 @@ it('records resolved fallback IDs and restores ownership after rendering errors'
     }
     expect(ComponentRegion::current())->toBeNull();
 });
+
+it('derives merge groups and their public strang from shared primitive records', function (string $side): void {
+    $html = Blade::render('<x-translation-workbench::ui.tw-graph graph-id="merge-groups" :dev="true">'
+        .'<x-translation-workbench::ui.tw-graph.strang.merge-'.$side.' id="merge" :extension-count="2" />'
+        .'</x-translation-workbench::ui.tw-graph>');
+    preg_match('/data-tw-graph-bounds-records>(.*?)<\/script>/s', $html, $match);
+    $records = collect(json_decode($match[1], true));
+    $groups = $records->pluck('region')->filter()->unique('token')->values();
+    expect($groups)->toHaveCount(3);
+    expect($groups->pluck('id')->sort()->values()->all())->toBe([
+        'merge.extension.1.paths.merge-extension',
+        'merge.extension.2.paths.merge-extension',
+        'merge.paths.merge',
+    ]);
+    foreach ($groups as $group) {
+        expect($group['ancestors'])->toHaveCount(1)
+            ->and($group['ancestors'][0]['id'])->toBe('merge')
+            ->and($group['ancestors'][0]['component'])->toBe('...::ui.tw-graph.strang.merge-'.$side);
+    }
+    expect(substr_count($html, 'data-tw-graph-region-kind="component"'))->toBe(4);
+    expect(substr_count($html, 'data-tw-graph-text-group-slot='))->toBe($records->where('kind', 'text')->unique('id')->count());
+    expect($html)->toContain('TextLabelGroup', 'textPlacement');
+    expect(ComponentRegion::current())->toBeNull();
+})->with(['left', 'right']);

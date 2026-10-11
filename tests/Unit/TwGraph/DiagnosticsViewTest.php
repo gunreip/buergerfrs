@@ -112,9 +112,9 @@ it('keeps diagnostic dev boxes behind graph elements and keeps captions visible 
 
     expect($html)
         ->toContain('tw-graph-protocol-dev-only group pointer-events-none absolute rounded border border-dashed')
-        ->toContain('title="strang.branch.left.1.bridge-1"')
+        ->toContain('strang.branch.left.1.bridge-1')
         ->toContain('data-tw-graph-dev-caption')
-        ->not->toContain('data-flux-tooltip', 'opacity-0')
+        ->toContain('data-flux-tooltip', 'data-flux-button')
         ->not->toContain('group-hover:opacity-100')
         ->toContain('border-color: rgb(14 165 233 / 1)')
         ->not->toContain('absolute z-50 rounded border border-dashed')
@@ -159,17 +159,20 @@ it('uses the resolved protocol minimum dimensions and hides configuration lines 
     expect($hidden)->not->toContain('data-tw-graph-canvas-minimum');
 });
 
-it('labels enclosing IF regions permanently while individual elements retain copyable tooltips', function (): void {
+it('shows enclosing IF region information in tooltips while individual elements retain copyable tooltips', function (): void {
     $html = view('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.flow.if.flow-if-nested-1')->render();
     $document = new DOMDocument;
     @$document->loadHTML($html);
     $xpath = new DOMXPath($document);
     $captions = $xpath->query('//*[@data-tw-graph-dev-caption]');
-    expect($captions->length)->toBe(12);
+    expect($captions->length)->toBeGreaterThan(12);
     foreach ($captions as $caption) {
-        $sourceId = substr($caption->parentNode->getAttribute('data-tw-graph-dev-box'), 0, -strlen('.dev-box'));
+        $textGroup = $caption->parentNode->getAttribute('data-tw-graph-region-kind') === 'strang-text-labels';
+        $suffix = $textGroup ? '.text-label-group.dev-box' : '.dev-box';
+        $sourceId = substr($caption->parentNode->getAttribute('data-tw-graph-dev-box'), 0, -strlen($suffix));
+        expect($xpath->query('.//*[@data-flux-tooltip]', $caption)->length)->toBe(1);
         expect($caption->textContent)
-            ->toContain('...::ui.tw-graph.', 'id="'.$sourceId.'"')
+            ->toContain($textGroup ? 'TextLabelGroup' : '...::ui.tw-graph.', 'id="'.$sourceId.'"')
             ->not->toContain('Inner IF / ELSEIF / ELSE', 'Outer IF including nested section');
     }
     foreach (['primitive-line', 'primitive-arc', 'primitive-text', 'primitive-node', 'primitive-joint-arrow', 'primitive-dev-node-counter'] as $kind) {

@@ -1,6 +1,12 @@
 @props(['id', 'details', 'length', 'direction', 'startX', 'startY'])
 @php
     $value = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression((string) $length);
+    $defaultValue = isset($details['default'])
+        ? \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression((string) $details['default'])
+        : null;
+    $defaultText = $defaultValue !== null ? round($defaultValue, 4) . 'rem'
+        : (($details['kind'] ?? '') === 'default' && $value !== null
+            ? round($value, 4) . 'rem' : __('Not recorded'));
     $horizontal = in_array($direction, ['left-right', 'right-left'], true);
     $sign = in_array($direction, ['right-left', 'top-bottom'], true) ? '-1' : '1';
     $x = $horizontal ? "calc({$startX} + ({$length}) * {$sign} / 2)" : $startX;
@@ -33,12 +39,15 @@
         $details['property'] .
         ($source ? "\n" . __('Source') . ': ' . $source : '') .
         "\n" .
+        __('Default') . ': ' . $defaultText . "\n" .
         __('Result') .
         ': ' .
         ($value === null ? __('unresolved') : round($value, 4) . 'rem');
 @endphp
 @if ($value === null || $value > 0)
     <flux:tooltip
+        x-data="{}"
+        x-on:click.outside.capture="if ($el.value) $el.value = false"
         class="tw-graph-protocol-dev-only"
         data-tw-graph-calculated-marker="{{ $id }}"
         data-tw-graph-length-kind="{{ $details['kind'] ?? 'calculated' }}"
@@ -88,6 +97,8 @@
                         style="overflow-wrap:anywhere"
                     >{{ $source }}</dd>
                 @endif
+                <dt class="text-zinc-300">{{ __('Default') }}</dt>
+                <dd class="font-mono">{{ $defaultText }}</dd>
                 <dt class="text-zinc-300">{{ __('Result') }}</dt>
                 <dd class="font-mono font-semibold">{{ $value === null ? __('unresolved') : round($value, 4) . 'rem' }}
                 </dd>

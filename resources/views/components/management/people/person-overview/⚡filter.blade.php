@@ -155,7 +155,7 @@
                             stroke-width="1"
                         />
                         {{ __('ui.states.all') }}
-                        {{ __('All') }}
+                        {{ __('ui.states.all') }}
                         {{--
                         TODO:Testweise implementiert,unbedingt wieder löschen --}}
                     </flux:select.option>

@@ -1,3 +1,4 @@
+import { setupTwGraphLoading } from './helper/tw-graph-loading';
 // resources/js/app.js
 
 import './forms/focus-field';
@@ -12,6 +13,7 @@ import { setupTwGraphPerformance } from './helper/tw-graph-performance';
 import { setupTwGraphDevTools } from './helper/tw-graph-dev';
 
 setupTwGraphPerformance();
+setupTwGraphLoading();
 
 document.addEventListener('DOMContentLoaded', function () {
     setupGlobalTooltips();

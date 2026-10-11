@@ -80,6 +80,7 @@
     );
     $__env->getConsumableComponentData('twGraphCalculatedLengths')?->recordProp(
         $id, 'parts.end', $id, 'length', $length !== null,
+        \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('part_end_length', '2rem'),
     );
     $resolvedCapLength = \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphStringFor(
         $capLength,

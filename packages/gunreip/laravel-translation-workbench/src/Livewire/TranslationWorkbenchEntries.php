@@ -899,6 +899,20 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
+        $sourceWriteFailures = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchCodeUpdateApplier::class)->unwritableSourcePaths();
+        if ($sourceWriteFailures !== []) {
+            Flux::toast(
+                heading: __('Source files are not writable'),
+                text: __('The UI runner cannot write :path (:count affected files). No pipeline was started. Run the complete pipeline from the console as a user with write access.', [
+                    'path' => $sourceWriteFailures[0],
+                    'count' => count($sourceWriteFailures),
+                ]),
+                variant: 'danger',
+            );
+
+            return;
+        }
+
         $run = $tracker->create('translation:workbench', [
             '--complete' => true,
             'started_from' => 'ui',
@@ -7111,26 +7125,29 @@ class TranslationWorkbenchEntries extends Component
                 )
                 ->selectRaw(
                     '(
-                        SELECT STRING_AGG(DISTINCT option_discoveries.source_type, \', \')
-                        FROM translation_workbench_option_discoveries as option_discoveries
-                        WHERE option_discoveries.status <> ?
-                            AND option_discoveries.source_type IS NOT NULL
-                            AND option_discoveries.source_type <> ?
-                            AND (
-                                option_discoveries.suggested_key = keys.translation_key
-                                OR option_discoveries.suggested_key = keys.suggested_key
-                                OR option_discoveries.suggested_key = findings.suggested_key
-                                OR option_discoveries.workbench_suggested_key = keys.translation_key
-                                OR option_discoveries.workbench_suggested_key = keys.suggested_key
-                                OR option_discoveries.workbench_suggested_key = findings.suggested_key
-                                OR option_discoveries.suggested_dynamic_key = keys.translation_key
-                                OR option_discoveries.suggested_dynamic_key = keys.suggested_key
-                                OR option_discoveries.suggested_dynamic_key = findings.suggested_key
-                                OR (
-                                    option_discoveries.source_path = source_files.path
-                                    AND option_discoveries.source_line = findings.source_line
+                        SELECT STRING_AGG(distinct_sources.source_type, \', \')
+                        FROM (
+                            SELECT DISTINCT option_discoveries.source_type
+                            FROM translation_workbench_option_discoveries as option_discoveries
+                            WHERE option_discoveries.status <> ?
+                                AND option_discoveries.source_type IS NOT NULL
+                                AND option_discoveries.source_type <> ?
+                                AND (
+                                    option_discoveries.suggested_key = keys.translation_key
+                                    OR option_discoveries.suggested_key = keys.suggested_key
+                                    OR option_discoveries.suggested_key = findings.suggested_key
+                                    OR option_discoveries.workbench_suggested_key = keys.translation_key
+                                    OR option_discoveries.workbench_suggested_key = keys.suggested_key
+                                    OR option_discoveries.workbench_suggested_key = findings.suggested_key
+                                    OR option_discoveries.suggested_dynamic_key = keys.translation_key
+                                    OR option_discoveries.suggested_dynamic_key = keys.suggested_key
+                                    OR option_discoveries.suggested_dynamic_key = findings.suggested_key
+                                    OR (
+                                        option_discoveries.source_path = source_files.path
+                                        AND option_discoveries.source_line = findings.source_line
+                                    )
                                 )
-                            )
+                        ) as distinct_sources
                     ) as dynamic_source_types',
                     ['obsolete', ''],
                 );

@@ -41,11 +41,13 @@ final class BranchPreviewBuilder
                 $branch['component_counter'] = $index + 1;
                 $branch['id'] = 'strang.branch-' . (string) ($branch['side'] ?? 'left') . '.' . $branch['component_counter'];
 
-                return $branch;
+                return LabelWidth::preview($branch);
             })
             ->all();
 
-        return BranchLabelCollisionResolver::resolve($branches);
+        return Defaults::dataDrivenBool('collision_compensation_enabled', false)
+            ? BranchLabelCollisionResolver::resolve($branches)
+            : BranchLabelCollisionResolver::refreshDebugBounds($branches);
     }
 
     /**

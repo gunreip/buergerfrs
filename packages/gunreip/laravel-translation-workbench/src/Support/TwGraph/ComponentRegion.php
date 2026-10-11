@@ -13,12 +13,15 @@ final class ComponentRegion
 
     private static int $sequence = 0;
 
-    public static function begin(string $component, CanvasDiagnostics $canvas): array
+    public static function begin(string $component, CanvasDiagnostics $canvas, bool $group = false): array
     {
         $previous = self::$current;
-        $owns = $previous === null || $previous['canvas'] !== $canvas;
+        $owns = $previous === null || $previous['canvas'] !== $canvas || $group;
         if ($owns) {
-            self::$current = ['token' => ++self::$sequence, 'component' => $component, 'canvas' => $canvas];
+            self::$current = ['token' => ++self::$sequence, 'component' => $component, 'canvas' => $canvas,
+                'ancestors' => $previous !== null && $previous['canvas'] === $canvas
+                    ? [$previous['token'], ...($previous['ancestors'] ?? [])] : [],
+            ];
         }
 
         return ['previous' => $previous, 'owns' => $owns, 'region' => self::$current];
@@ -42,6 +45,7 @@ final class ComponentRegion
 
         return [
             'token' => $frame['region']['token'],
+            'ancestors' => $frame['region']['ancestors'] ?? [],
             'component' => $frame['region']['component'],
             'id' => $resolvedId,
             'showBox' => $showBox,

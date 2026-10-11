@@ -347,7 +347,7 @@
             :current="request()->routeIs('admin.country-references')"
             wire:navigate
         >
-            {{ __('Countries') }}
+            {{ __('layouts.sidebar.administration.countries') }}
         </flux:sidebar.item>
 
         {{-- Admin -> reference -> flags --}}
@@ -357,7 +357,7 @@
             :current="request()->routeIs('admin.flag-references')"
             wire:navigate
         >
-            {{ __('Flags') }}
+            {{ __('admin.permissions.table.columns.flags') }}
         </flux:sidebar.item>
 
         {{-- Admin -> reference -> HTML tags check --}}
@@ -385,7 +385,7 @@
         :current="request()->routeIs('admin.fallback-reports')"
         wire:navigate
     >
-        {{ __('Fallback Reports') }}
+        {{ __('layouts.sidebar.administration.fallback_reports') }}
     </flux:sidebar.item>
 
     @role('Super-Admin')

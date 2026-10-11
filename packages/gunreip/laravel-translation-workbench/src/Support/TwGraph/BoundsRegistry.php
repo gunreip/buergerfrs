@@ -42,6 +42,16 @@ final class BoundsRegistry
             $region = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
             $regions[$region['token']] = $region;
         }
+        // Ancestor bounds are unions of the same emitted primitives, never independent estimates.
+        $definitions = $regions;
+        foreach ($regions as &$region) {
+            $region['ancestors'] = array_values(array_filter(array_map(
+                static fn ($token) => isset($definitions[$token])
+                    ? array_diff_key($definitions[$token], ['ancestors' => true]) : null,
+                $region['ancestors'] ?? [],
+            )));
+        }
+        unset($region);
         $variables = [
             'var(--tw-graph-protocol-path-width)' => $context['pathWidth'],
             'var(--tw-graph-protocol-node-size)' => $context['nodeSize'],

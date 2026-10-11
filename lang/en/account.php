@@ -11,12 +11,15 @@ return [
             'stored_preference' => 'Stored preference',
             'the_locale_preference_is_stored_now_and_can_be_connected_to_application_locale_h' => 'The locale preference is stored now and can be connected to application locale handling later.',
         ],
+
         'current_user' => [
             'edit_profile' => 'Edit profile',
+            'nickname' => 'Nickname',
         ],
         'manage_your_personal_application_preferences' => 'Manage your personal application preferences.',
         'preferences_saved' => 'Preferences saved',
         'save_preferences' => 'Save Preferences',
+
         'stored_settings' => [
             'stored_settings' => 'Stored Settings',
             'these_values_are_stored_in_your_personal_users_settings_jsonb_column' => 'These values are stored in your personal users.settings JSONB column.',

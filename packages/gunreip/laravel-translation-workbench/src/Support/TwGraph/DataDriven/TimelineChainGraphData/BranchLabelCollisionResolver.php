@@ -586,6 +586,47 @@ final class BranchLabelCollisionResolver
      * @param  array<string, mixed>  $branch
      * @return array<int, array{id: string, type: string, branchIndex: int, xStart: float, xEnd: float, yStart: float, yEnd: float}>
      */
+    public static function clearanceBoxes(array $branch): array
+    {
+        $radius = self::toRem($branch['arc_radius'] ?? self::defaultArcRadius());
+        $x = (($branch['side'] ?? 'left') === 'left' ? -1 : 1)
+            * (self::branchBridgeLength($branch) + 2 * $radius);
+        $y = self::anchorY($branch) + self::toRem($branch['entry_stem_length'] ?? '0rem') + 2 * $radius;
+        $step = (array) ($branch['step'] ?? []);
+        $boxes = self::bridgeBoxes($branch, 0);
+        $add = static function (array $label, float $at, ?string $side = null, ?float $offset = null) use (&$boxes, $x): void {
+            if (blank($label['text'] ?? null)) {
+                return;
+            }
+            $boxes[] = self::expandBoxForLabelAt([
+                'type' => 'label', 'xStart' => INF, 'xEnd' => -INF,
+                'yStart' => INF, 'yEnd' => -INF,
+            ], $label, $x, $at, $side, $offset);
+        };
+        $height = self::stepHeight($step);
+        if ($height > 0) {
+            $before = self::toRem($step['beforeLength'] ?? '1.5rem');
+            $after = self::toRem($step['afterLength'] ?? '2.5rem');
+            $add((array) ($step['stepLabel'] ?? []), $y + $before + ($height - $before - $after) / 2, 'center', 0);
+        }
+        $start = $y;
+        $y += $height;
+        foreach (self::promotedStepEndLabels($branch) as $label) {
+            $add($label, $y);
+        }
+        foreach (self::effectiveStemEntries($branch) as $entry) {
+            $y += self::toRem(is_array($entry) ? ($entry['length'] ?? $entry[0] ?? $branch['stem_length'] ?? Defaults::dataDrivenString('stem_length', '4rem')) : $entry);
+            foreach (self::labelsFromStemEntry($entry) as $label) {
+                $add($label, $y);
+            }
+        }
+        $y += self::toRem($branch['end_length'] ?? Defaults::dataDrivenString('line_length', '4rem'));
+        $add((array) ($branch['end_label'] ?? []), $y, (string) data_get($branch, 'end_label.side', 'top'), self::toRem(data_get($branch, 'end_label.offset', '0.75rem')));
+        $boxes[] = ['type' => 'line', 'xStart' => $x - .125, 'xEnd' => $x + .125, 'yStart' => $start, 'yEnd' => $y];
+
+        return $boxes;
+    }
+
     private static function branchDebugBoxes(array $branch, int $branchIndex, bool $includePromotedStepEndLabels = true): array
     {
         $boxes = self::bridgeBoxes($branch, $branchIndex);

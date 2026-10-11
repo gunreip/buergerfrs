@@ -436,3 +436,53 @@ it('forwards terminal merge extension labels on either side while preserving oth
     $start = $paths['terminal-merge.extension.2.paths.merge-extension.start'];
     expect($start->getAttribute('class'))->toContain('primitive-line-bottom-top', 'primitive-line-start');
 })->with(['left', 'right']);
+
+
+it('does not inherit outer dots at compressed inner transitions', function () {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="compressed-test">
+            <x-translation-workbench::ui.tw-graph.segments.stem-compressed :segment="[
+                'id' => 'compressed', 'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
+                'anchorEnd' => ['x' => '0rem', 'y' => '8rem'],
+                'nodeEnd' => true, 'nodeEndDot' => true,
+            ]" />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE);
+    expect($html)->not->toContain('compressed.stem.before.node.end')
+        ->not->toContain('compressed.stem.dotted.node.end')
+        ->not->toContain('compressed.stem.dotted.node.start')
+        ->not->toContain('compressed.stem.after.node.start')
+        ->toContain('compressed.stem.after.node.end');
+});
+
+it('renders identical default compressed geometry directly and through a calculated endpoint', function (string $direction) {
+    config()->set('tw-graph-defaults.compressed_stem_length', '12rem');
+    // A dataset-specific value must not redefine the component contract.
+    config()->set('tw-graph-data-driven-defaults.compressed_stem_length', '99rem');
+    $length = \Gunreip\TranslationWorkbench\Support\TwGraph\CompressedStemLayout::defaultLength();
+    expect($length)->toBe('12rem');
+    $base = ['id' => 'shared', 'direction' => $direction];
+    $endpoint = ['x' => '0rem', 'y' => $direction === 'top-bottom' ? '-'.$length : $length];
+    $render = function (array $segment): array {
+        $html = Blade::render(<<<'BLADE'
+            <x-translation-workbench::ui.tw-graph>
+                <x-translation-workbench::ui.tw-graph.segments.stem-compressed :segment="$segment" />
+            </x-translation-workbench::ui.tw-graph>
+        BLADE, ['segment' => $segment]);
+        $dom = new DOMDocument;
+        @$dom->loadHTML($html);
+        $records = [];
+        foreach ((new DOMXPath($dom))->query('//*[@data-tw-graph-bounds]') as $node) {
+            $record = json_decode($node->getAttribute('data-tw-graph-bounds'), true);
+            if (! preg_match('/^shared\.stem\.(before|dotted|after)$/', $record['id'])) continue;
+            $records[$record['id']] = array_map(fn ($rect) => array_map(
+                fn ($value) => \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression((string) $value), $rect), $record['rects']);
+        }
+        return $records;
+    };
+    $direct = $render($base);
+    expect($direct)->toHaveCount(3)->toBe($render($base + ['anchorEnd' => $endpoint]))
+        ->and(\Gunreip\TranslationWorkbench\Support\TwGraph\CompressedStemLayout::sections())->toBe([
+            'beforeLength' => '3rem', 'gapLength' => '6rem', 'afterLength' => '3rem',
+        ]);
+})->with(['bottom-top', 'top-bottom']);

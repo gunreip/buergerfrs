@@ -119,7 +119,7 @@ class TextLabel
 
         if (is_array($labelSource) && array_is_list($labelSource)) {
             $labels = collect($labelSource)
-                ->map(static fn (mixed $label): ?array => self::normalize($label, $defaultSide, $badgeColor))
+                ->map(static fn (mixed $label): ?array => self::normalize($label, data_get($label, 'side') ?? $defaultSide, $badgeColor))
                 ->filter()
                 ->values()
                 ->all();
@@ -147,12 +147,13 @@ class TextLabel
                 return array_pad(array_slice($directedLabels, 0, 2), 2, null);
             }
 
-            $label = self::normalize(array_replace($sharedOptions, $labelSource), $defaultSide, $badgeColor);
+            $options = array_replace($sharedOptions, $labelSource);
+            $label = self::normalize($options, data_get($options, 'side') ?? $defaultSide, $badgeColor);
 
             return $label ? [$label, null] : true;
         }
 
-        $label = self::normalize(array_replace($sharedOptions, ['text' => $labelSource]), $defaultSide, $badgeColor);
+        $label = self::normalize(array_replace($sharedOptions, ['text' => $labelSource]), data_get($sharedOptions, 'side') ?? $defaultSide, $badgeColor);
 
         return $label ? [$label, null] : true;
     }

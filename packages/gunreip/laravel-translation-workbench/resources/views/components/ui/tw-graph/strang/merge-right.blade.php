@@ -470,7 +470,7 @@
         :color="$extensionResolvedColors[$extensionIndex]"
         :z-index="$zIndex"
         :counter-start="$extensionCounterStarts[$extensionIndex]"
-        :show-dev-box="false"
+        :show-dev-box="true"
     />
 @endforeach
 
@@ -492,7 +492,7 @@
     :z-index="$zIndex"
     :node-labels="$nodeLabels"
     :counter-start="$counterStart"
-    :show-dev-box="false"
+    :show-dev-box="true"
 />
 
 @php

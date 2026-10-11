@@ -11,7 +11,13 @@ final class MergeLengthProvenance
             return;
         }
         $record = static function (string $element, string $property, mixed $value) use ($registry, $component, $owner, $path, $names): void {
-            $registry->recordProp($path.'.'.$element, $component, $owner, $names[$property] ?? $property, $value !== null);
+            $default = match (true) {
+                $property === 'bridgeLength' => Defaults::graphString('bridge_length', '4rem'),
+                $property === 'startLength' => Defaults::graphString('arc_radius', '2.75rem'),
+                $property === 'startShiftLength' => Defaults::graphString('merge_start_shift_length', '0rem'),
+                default => Defaults::graphString('stem_length', '4rem'),
+            };
+            $registry->recordProp($path.'.'.$element, $component, $owner, $names[$property] ?? $property, $value !== null, $default);
         };
         foreach (['start' => 'startLength', 'end' => 'startLength', 'start-shift' => 'startShiftLength', 'bridge' => 'bridgeLength'] as $element => $property) {
             $record($element, $property, $props[$property] ?? null);

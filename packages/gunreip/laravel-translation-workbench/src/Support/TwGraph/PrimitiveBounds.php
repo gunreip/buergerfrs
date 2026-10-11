@@ -119,7 +119,9 @@ final class PrimitiveBounds
             default => self::calc("$y - ($height / 2)"),
         };
 
-        return self::record($id, 'text', [self::rect($left, $bottom, $width, $height)]);
+        return [...self::record($id, 'text', [self::rect($left, $bottom, $width, $height)]),
+            'textPlacement' => ['side' => $side, 'x' => $x, 'y' => $y],
+        ];
     }
 
     public static function jump(string $id, string $x, string $y, string $radius, ?string $width): array

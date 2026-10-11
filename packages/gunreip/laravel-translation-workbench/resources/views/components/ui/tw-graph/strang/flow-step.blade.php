@@ -109,8 +109,8 @@
     $anchorAfterStart = $advance($anchorBeforeEnd, $resolvedLabelGap);
     $anchorEnd = $advance($anchorAfterStart, (string) ($afterLength ?? '2rem'));
     $lengthProvenance = $__env->getConsumableComponentData('twGraphCalculatedLengths');
-    $lengthProvenance?->recordProp($id . '.stem.before', 'strang.flow-step', $id, 'before-length', $beforeLength !== null);
-    $lengthProvenance?->recordProp($id . '.stem.after', 'strang.flow-step', $id, 'after-length', $afterLength !== null);
+    $lengthProvenance?->recordProp($id . '.stem.before', 'strang.flow-step', $id, 'before-length', $beforeLength !== null, '2rem');
+    $lengthProvenance?->recordProp($id . '.stem.after', 'strang.flow-step', $id, 'after-length', $afterLength !== null, '2rem');
 
     \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::put($resolvedGraphId, $id . '.anchorNode-end', [
         'x' => $anchorEnd['x'],

@@ -2,6 +2,17 @@
 
 use Gunreip\TranslationWorkbench\Support\TwGraph\TextLabel;
 
+it('keeps explicit node label sides through repeated normalization', function (string $first, string $second) {
+    $labels = [
+        ['text' => ['Event', 'Timestamp'], 'side' => $first],
+        ['text' => ['Sample', 'Finding'], 'side' => $second],
+    ];
+    $normalized = TextLabel::nodeLabels($labels, $second);
+    expect(array_column($normalized, 'side'))->toBe([$first, $second]);
+    expect(TextLabel::nodeLabels($normalized, $second))->toBe($normalized);
+    expect(TextLabel::nodeLabels($labels[0], $second)[0]['side'])->toBe($first);
+})->with([['left', 'right'], ['right', 'left'], ['top', 'bottom'], ['bottom', 'top']]);
+
 it('normalizes pipe separated strings into trimmed label lines', function (): void {
     expect(TextLabel::normalize('finding ID #5486 | ui.states.all | 2026-08-04 09:22', 'left', 'amber'))
         ->toMatchArray([

@@ -136,8 +136,8 @@
     };
     $resolvedStemLength = 'max(' . $requestedStemLength . ', calc((' . $labelHeight($ifStart) . ' + ' . ($falseBypass ? '0rem' : $labelHeight($ifEnd)) . ') / 2 + 2rem))';
     $provenance = $__env->getConsumableComponentData('twGraphCalculatedLengths');
-    $provenance?->recordProp($id . '.question.stem.before', 'strang.flow-if-else', $id, 'before-length', $explicitBeforeLength);
-    $provenance?->recordProp($id . '.question.stem.after', 'strang.flow-if-else', $id, 'after-length', $explicitAfterLength);
+    $provenance?->recordProp($id . '.question.stem.before', 'strang.flow-if-else', $id, 'before-length', $explicitBeforeLength, '2rem');
+    $provenance?->recordProp($id . '.question.stem.after', 'strang.flow-if-else', $id, 'after-length', $explicitAfterLength, '2rem');
     $provenance?->record($id . '.true.stem', 'strang.flow-if-else', $id, 'stem-length / if-end.returnLength',
         ['spacing' => $resolvedStemLength, 'returnLength' => $falseOpen ? $falseReturnLength : '0rem'],
         'The return stem spans the branch spacing and any open false-branch return length.');

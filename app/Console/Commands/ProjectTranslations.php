@@ -31,6 +31,7 @@
 namespace App\Console\Commands;
 
 use App\Support\ActivityLog\ConsoleActivityContext;
+use App\Support\Console\ProcessProgress;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use RuntimeException;
@@ -42,6 +43,10 @@ use Throwable;
  */
 class ProjectTranslations extends Command
 {
+    private int $completedSteps = 0;
+
+    private int $totalSteps = 0;
+
     /**
      * The name and signature of the console command.
      */
@@ -69,6 +74,11 @@ class ProjectTranslations extends Command
         $skipAudits = (bool) $this->option('skip-audits');
         $pathsOption = trim((string) $this->option('paths'));
         $localesOption = trim((string) $this->option('locales'));
+
+        $this->completedSteps = 0;
+        $this->totalSteps = 4 + ($skipExport ? 0 : 2)
+            + ($skipAudits ? 0 : 7 + ($applyUsageDecisions ? 6 : 0))
+            + ($applyDiffs ? 4 : 0);
 
         try {
             $this->runArtisanStep('Lang-Locale-Verzeichnisse sicherstellen', 'translations:ensure-lang-directories');
@@ -200,17 +210,21 @@ class ProjectTranslations extends Command
     }
 
     /**
-     * @param  array<string, string>  $arguments
+     * @param  array<string, string|bool>  $arguments
      */
     private function runArtisanStep(string $description, string $command, array $arguments = []): void
     {
-        $this->info('➤ '.$description);
-
-        $exitCode = $this->call($command, $arguments);
-
-        if ($exitCode !== self::SUCCESS) {
-            throw new RuntimeException('Step failed: '.$command.' (exit code '.$exitCode.')');
+        $tokens = [PHP_BINARY, base_path('artisan'), $command, '--no-interaction'];
+        $tokens[] = $this->output->isDecorated() ? '--ansi' : '--no-ansi';
+        foreach ($arguments as $name => $value) {
+            if ($value === true) {
+                $tokens[] = $name;
+            } elseif ($value !== false) {
+                $tokens[] = $name.'='.$value;
+            }
         }
+
+        $this->runProcess($tokens, $description.' ('.$command.')');
     }
 
     private function applyLatestDiffPatch(): bool
@@ -218,16 +232,15 @@ class ProjectTranslations extends Command
         $patchPath = base_path('storage/audits/translations/diffs/latest.patch');
 
         if (! File::exists($patchPath) || trim((string) File::get($patchPath)) === '') {
+            $this->totalSteps -= 4;
             $this->warn('ℹ️ Kein latest.patch gefunden oder Patch ist leer. DIFF-Apply übersprungen.');
 
             return false;
         }
 
-        $this->info('➤ DIFF patch prüfen (git apply --check)');
-        $this->runProcess(['git', 'apply', '--check', $patchPath]);
+        $this->runProcess(['git', 'apply', '--check', $patchPath], 'DIFF patch prüfen (git apply --check)');
 
-        $this->info('➤ DIFF patch anwenden (git apply)');
-        $this->runProcess(['git', 'apply', $patchPath]);
+        $this->runProcess(['git', 'apply', $patchPath], 'DIFF patch anwenden (git apply)');
 
         return true;
     }
@@ -235,21 +248,35 @@ class ProjectTranslations extends Command
     /**
      * @param  array<int, string>  $command
      */
-    private function runProcess(array $command): void
+    private function runProcess(array $command, string $description): void
     {
-        $process = new Process($command, base_path());
+        $process = $this->createProcess($command);
         $process->setTimeout(null);
 
-        $process->run(function (string $type, string $buffer): void {
-            $this->output->write($buffer);
-        });
+        try {
+            (new ProcessProgress($this->output, unit: 'steps'))->run(
+                $process, $description, $this->completedSteps, $this->totalSteps,
+            );
+        } finally {
+            // Keep command diagnostics, including failure output, below the spinner.
+            $this->output->write($process->getOutput());
+            $this->output->write($process->getErrorOutput());
+        }
 
         if (! $process->isSuccessful()) {
-            throw new RuntimeException($process->getErrorOutput() ?: $process->getOutput());
+            throw new RuntimeException('Step failed: '.$description.' (exit code '.$process->getExitCode().')');
         }
+
+        $this->completedSteps++;
     }
 
-    private function logRunActivity(string $event, string $description, array $properties = []): void
+    /** @param list<string> $command */
+    protected function createProcess(array $command): Process
+    {
+        return new Process($command, base_path());
+    }
+
+    protected function logRunActivity(string $event, string $description, array $properties = []): void
     {
         try {
             activity('project')

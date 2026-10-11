@@ -109,7 +109,7 @@
                                     <code>beforeLength</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    <code>2.5rem</code>
+                                    <code>{{ \Gunreip\TranslationWorkbench\Support\TwGraph\CompressedStemLayout::sections()['beforeLength'] }}</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Length of the solid section before the first cap, when anchorEnd is omitted.') }}
@@ -120,7 +120,7 @@
                                     <code>gapLength</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    <code>0.5rem</code>
+                                    <code>{{ \Gunreip\TranslationWorkbench\Support\TwGraph\CompressedStemLayout::sections()['gapLength'] }}</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Length of the dashed section, when anchorEnd is omitted. This is a drawn section, not an empty gap.') }}
@@ -131,7 +131,7 @@
                                     <code>afterLength</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
-                                    <code>1.5rem</code>
+                                    <code>{{ \Gunreip\TranslationWorkbench\Support\TwGraph\CompressedStemLayout::sections()['afterLength'] }}</code>
                                 </flux:table.cell>
                                 <flux:table.cell class="wrap-break-word whitespace-normal align-top">
                                     {{ __('Length of the solid section after the second cap, when anchorEnd is omitted.') }}

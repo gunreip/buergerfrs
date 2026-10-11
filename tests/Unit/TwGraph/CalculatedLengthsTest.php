@@ -26,6 +26,7 @@ it('uses explicit provenance instead of treating every CSS calculation as calcul
         'Element: route.stem',
         'Property: remainingStemLength',
         'Source: previous.branch',
+        'Default: Not recorded',
         'Result: 8rem',
     ]));
 });
@@ -162,3 +163,24 @@ it('tracks merge and extension lengths through public forwarding without convert
     }
     expect($html)->toContain('Property: extension-stem-lengths.1', 'Property: extension-stem-continuations.1.1');
 })->with(['left', 'right']);
+
+it('adds a producer default without replacing calculated provenance or using a compensated base', function () {
+    $registry = new CalculatedLengths;
+    $registry->record('merge.stem2', 'strang.merge-left', 'merge', 'stem_continuation.1.length',
+        ['base' => '15rem'], 'Collision clearance.');
+    $registry->recordProp('merge.stem2', 'paths.merge', 'merge', 'stemLength', true, '5.75rem');
+
+    $details = $registry->get('merge.stem2');
+    expect($details['kind'])->toBe('calculated')
+        ->and($details['default'])->toBe('5.75rem')
+        ->and($details['component'])->toBe('strang.merge-left');
+
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph.calculated-length
+            id="merge.stem2" :details="$details" length="24rem"
+            direction="top-bottom" start-x="0rem" start-y="0rem" />
+    BLADE, ['details' => $details]);
+    preg_match('/data-copy-text="([^"]*)"/s', $html, $copy);
+    expect(html_entity_decode($copy[1], ENT_QUOTES))->toContain("Default: 5.75rem", "Result: 24rem")
+        ->not->toContain('Default: 15rem');
+});

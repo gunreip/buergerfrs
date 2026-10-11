@@ -13,6 +13,8 @@ return [
     'cap_length' => '1.75rem',
     'bridge_length' => '20rem',
     'stem_length' => '4rem',
+    // Compressed stems use 25% solid / 50% dashed / 25% solid.
+    'compressed_stem_length' => '8rem',
     'part_end_length' => '2rem',
     'connector_length' => '2rem',
     'connector_gap' => '0.25rem',

@@ -5636,6 +5636,7 @@ class TranslationWorkbenchRawData extends Component
             $rows->push([
                 'timestamp' => $mainRow['updated_at'],
                 'trunk' => $trunk,
+                'role' => 'root',
                 'branch' => __('Root'),
                 'translation_key' => $translationKey,
                 'event' => __('Current canonical root'),
@@ -5652,6 +5653,7 @@ class TranslationWorkbenchRawData extends Component
                 $rows->push([
                     'timestamp' => $key->created_at,
                     'trunk' => $trunk,
+                    'role' => 'root_key',
                     'branch' => __('Root key'),
                     'translation_key' => $translationKey,
                     'event' => __('Key created'),
@@ -5664,6 +5666,7 @@ class TranslationWorkbenchRawData extends Component
                     $rows->push([
                         'timestamp' => $key->reviewed_at,
                         'trunk' => $trunk,
+                        'role' => 'root_key',
                         'branch' => __('Root key'),
                         'translation_key' => $translationKey,
                         'event' => __('Key reviewed'),
@@ -5677,6 +5680,7 @@ class TranslationWorkbenchRawData extends Component
                     $rows->push([
                         'timestamp' => $key->updated_at,
                         'trunk' => $trunk,
+                        'role' => 'root_key',
                         'branch' => __('Root key'),
                         'translation_key' => $translationKey,
                         'event' => __('Key updated'),

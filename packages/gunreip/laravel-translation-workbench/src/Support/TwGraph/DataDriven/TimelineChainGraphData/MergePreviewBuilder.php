@@ -32,9 +32,30 @@ final class MergePreviewBuilder
                     1,
                 );
 
+                $baseBridgeLength = Defaults::dataDrivenString('bridge_length', '20rem');
+                $extensionExtra = Defaults::dataDrivenString('merge_layout.extension_bridge_extra_length', '0rem');
+                $mainPreview['extension_bridge_length'] = $extensionExtra === '0rem'
+                    ? $baseBridgeLength : 'calc(' . $baseBridgeLength . ' + ' . $extensionExtra . ')';
+                $mainPreview['extension_stem_length'] = Defaults::dataDrivenString('stem_length', '4rem');
+                $mainPreview['extension_compensation_enabled'] = Defaults::dataDrivenBool('merge_layout.extension_compensation_enabled', true);
                 $mainPreview['extension_count'] = $extensions->count();
                 $mainPreview['extension_stem_lengths'] = [];
                 $mainPreview['extension_bridge_continuations'] = [];
+                $mainPreview['extension_compensation_overrides'] = [];
+                foreach ((array) Defaults::dataDriven('merge_layout.extension_overrides', []) as $number => $override) {
+                    $number = (int) $number;
+                    if ($number < 1 || $number > $extensions->count()) {
+                        continue;
+                    }
+                    if (array_key_exists('bridge_extra_length', $override)) {
+                        $extra = (string) $override['bridge_extra_length'];
+                        $mainPreview['extension_bridge_continuations'][$number] = $extra === '0rem'
+                            ? $baseBridgeLength : 'calc(' . $baseBridgeLength . ' + ' . $extra . ')';
+                    }
+                    if (array_key_exists('compensation_enabled', $override)) {
+                        $mainPreview['extension_compensation_overrides'][$number] = (bool) $override['compensation_enabled'];
+                    }
+                }
                 $mainPreview['extension_stem_continuations'] = $extensions->isNotEmpty()
                     ? $extensions
                     ->mapWithKeys(static fn(array $extension, int $extensionOffset): array => [
@@ -55,7 +76,7 @@ final class MergePreviewBuilder
                     })
                     ->all();
 
-                return $mainPreview;
+                return LabelWidth::preview($mainPreview);
             })
             ->values()
             ->all();
@@ -358,7 +379,7 @@ final class MergePreviewBuilder
      */
     private static function withConfiguredVerticalStagger(array $continuation, int $sequenceNumber): array
     {
-        if (! self::mergeLayoutBool('vertical_stagger_enabled', true)) {
+        if (! self::mergeLayoutBool('vertical_stagger_enabled', false)) {
             return $continuation;
         }
 

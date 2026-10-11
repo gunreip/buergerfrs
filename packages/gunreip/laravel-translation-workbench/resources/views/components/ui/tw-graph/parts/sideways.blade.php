@@ -166,6 +166,7 @@
     if (! $isCenter && $bridgeLabel === null) {
         $__env->getConsumableComponentData('twGraphCalculatedLengths')?->recordProp(
             $id . '.bridge1', 'parts.sideways', $id, 'bridge-length', $bridgeLength !== null,
+            \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('bridge_length', '4rem'),
         );
     }
 
@@ -221,7 +222,7 @@
         ];
         $continuationEnd = $labelAnchor;
         $__env->getConsumableComponentData('twGraphCalculatedLengths')?->recordProp(
-            $id . '.extension-stem', 'parts.sideways', $id, 'extension-length', true,
+            $id . '.extension-stem', 'parts.sideways', $id, 'extension-length', true, '0rem',
         );
     }
 

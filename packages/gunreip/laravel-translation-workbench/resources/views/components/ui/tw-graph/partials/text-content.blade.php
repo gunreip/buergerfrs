@@ -1,5 +1,9 @@
         @if ($badge)
-            <flux:badge color="{{ $badgeColor }}">
+            <flux:badge
+                color="{{ $badgeColor }}"
+                class="tw-graph-protocol-text-surface"
+                style="--tw-graph-text-surface-light: {{ \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::surfaceRgb($badgeColor, \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::surfaceRgb('zinc')) }}; --tw-graph-text-surface-dark: {{ \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::darkSurfaceRgb($badgeColor, \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::darkSurfaceRgb('zinc')) }};"
+            >
                 <span
                     @class([
                         'tw-graph-protocol-primitive-text-badge wrap-anywhere inline-flex flex-col gap-0.5 whitespace-normal leading-tight hyphens-auto',

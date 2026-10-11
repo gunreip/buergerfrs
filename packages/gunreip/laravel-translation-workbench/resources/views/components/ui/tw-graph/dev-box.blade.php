@@ -20,7 +20,7 @@
 
     Rule:
     This is a pure diagnostic overlay. It must not affect graph geometry.
-    Region boxes show their caption; individual segment boxes disable showLabel
+    Region boxes show an information button with a toggleable tooltip; individual segment boxes disable showLabel
     because the rendered element already owns its tooltip and copy action.
 --}}
 
@@ -35,10 +35,13 @@
     'component' => null,
     'showLabel' => true,
     'region' => null,
+    'regionKind' => 'component',
+    'textGroupSlot' => null,
 ])
 
 @php
     $colorRgb = $region['colorRgb'] ?? \Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette::rgb($color, '14 165 233');
+    $devComponentName = $component;
     $devIdentifier = \Gunreip\TranslationWorkbench\Support\TwGraph\DevIdentifier::label($label ?? $id);
 
 @endphp
@@ -46,7 +49,9 @@
 @if ($dev)
     <span
         data-tw-graph-dev-box="{{ $id }}"
+        @if ($textGroupSlot !== null) data-tw-graph-text-group-slot="{{ $textGroupSlot }}" @endif
         @if ($region !== null) data-tw-graph-region="{{ $region['token'] }}" @endif
+        @if ($region !== null) data-tw-graph-region-kind="{{ $regionKind }}" @endif
         class="tw-graph-protocol-dev-only group pointer-events-none absolute rounded border border-dashed"
         style="
             left: calc(var(--tw-graph-protocol-trunk-x) + {{ $x }});
@@ -54,22 +59,40 @@
             width: {{ $width }};
             height: {{ $height }};
             border-color: rgb({{ $colorRgb }} / 1);
+            {{ $regionKind === 'strang-text-labels' ? 'border-style:solid;' : '' }}
+            @if ($regionKind === 'strang-text-labels')
+                background-color: rgb({{ $colorRgb }} / 0.06);
+            @endif
             {{ $region !== null ? 'visibility:hidden;' : '' }}
         "
     >
         @if (\Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::bool($showLabel, true))
             <span
                 data-tw-graph-dev-caption
-                class="absolute left-1 top-0 rounded-sm px-1 py-0.5 font-mono text-[0.6rem] leading-none"
-                title="{{ $devIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
-                style="width:max-content; overflow-wrap:anywhere; background-color:rgb({{ $colorRgb }} / 0.85); color:rgb(24 24 27);"
+                class="pointer-events-auto absolute left-1 top-0 z-[90]"
+                style="width:max-content;"
             >
-                @if (filled($component))
-                    <span class="block">{{ $component }}</span>
-                    <span class="block">id="{{ $label ?? $id }}"</span>
-                @else
-                    {{ $devIdentifier }}
-                @endif
+                <flux:tooltip
+                    toggleable
+                    x-data="{}"
+                    x-on:click.outside.capture="if ($el.value) $el.value = false"
+                >
+                    <flux:button
+                        size="xs"
+                        icon="information-circle"
+                        icon:variant="outline"
+                        aria-label="{{ __('Bounding box information') }}"
+                        style="color:rgb({{ $colorRgb }});"
+                    />
+                    <flux:tooltip.content style="max-width:min(34rem, calc(100vw - 2rem)); white-space:normal; overflow-wrap:anywhere;">
+                        @if (filled($devComponentName))
+                            <span class="block font-mono">{{ $devComponentName }}</span>
+                            <span class="block font-mono">id="{{ $label ?? $id }}"</span>
+                        @else
+                            <span class="block font-mono">{{ $devIdentifier }}</span>
+                        @endif
+                    </flux:tooltip.content>
+                </flux:tooltip>
             </span>
         @endif
     </span>

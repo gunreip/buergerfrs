@@ -55,17 +55,17 @@
         $action = array_replace(['beforeLength' => '4rem', 'afterLength' => '4rem'], $actionLabel);
         $lengthProvenance = $__env->getConsumableComponentData('twGraphCalculatedLengths');
         $lengthProvenance?->recordProp($id . '.true.bridge', 'strang.flow-while', $id,
-            'true-bridge-length', $trueBridgeLength !== null);
+            'true-bridge-length', $trueBridgeLength !== null, '2rem');
         $trueBridgeLength ??= '2rem';
         foreach (['before' => 'beforeLength', 'after' => 'afterLength'] as $piece => $property) {
             $lengthProvenance?->recordProp($id . '.condition.stem.' . $piece,
                 'strang.flow-while', $id, 'condition-label.' . $property,
-                array_key_exists($property, $conditionLabel));
+                array_key_exists($property, $conditionLabel), '2rem');
         }
         foreach (['in' => 'beforeLength', 'out' => 'afterLength'] as $piece => $property) {
             $lengthProvenance?->recordProp($id . '.body.bridge.bridge-' . $piece,
                 'strang.flow-while', $id, 'action-label.' . $property,
-                array_key_exists($property, $actionLabel));
+                array_key_exists($property, $actionLabel), '4rem');
         }
         foreach ([
             'condition-label.beforeLength' => $condition['beforeLength'],

@@ -24,9 +24,9 @@
 
     Defaults:
     direction=bottom-top
-    beforeLength=1rem
-    gapLength=1rem (dotted stem length without anchorEnd)
-    afterLength=1rem
+    beforeLength=2rem
+    gapLength=4rem (dotted stem length without anchorEnd)
+    afterLength=2rem
     With anchorEnd, the segment uses a proportional 1/4 -> 2/4 -> 1/4
     split so the dotted stem stays visibly recognizable.
     nodeStart=false
@@ -38,13 +38,12 @@
 ])
 
 @php
+    $defaultSections = \Gunreip\TranslationWorkbench\Support\TwGraph\CompressedStemLayout::sections();
     $compressedSegment = array_replace(
         [
             'id' => 'segment.stem-compressed',
             'direction' => 'bottom-top',
-            'beforeLength' => '2.5rem',
-            'gapLength' => '0.5rem',
-            'afterLength' => '1.5rem',
+            ...$defaultSections,
             'capLength' => null,
             'anchorStart' => ['x' => '0rem', 'y' => '0rem'],
             'nodeStart' => false,
@@ -78,9 +77,9 @@
         'x' => data_get($compressedSegment, 'anchorStart.x', '0rem'),
         'y' => data_get($compressedSegment, 'anchorStart.y', '0rem'),
     ];
-    $beforeLength = (string) (data_get($compressedSegment, 'beforeLength') ?: '1rem');
-    $gapLength = (string) (data_get($compressedSegment, 'gapLength') ?: '1rem');
-    $afterLength = (string) (data_get($compressedSegment, 'afterLength') ?: '1rem');
+    $beforeLength = (string) (data_get($compressedSegment, 'beforeLength') ?: $defaultSections['beforeLength']);
+    $gapLength = (string) (data_get($compressedSegment, 'gapLength') ?: $defaultSections['gapLength']);
+    $afterLength = (string) (data_get($compressedSegment, 'afterLength') ?: $defaultSections['afterLength']);
     $configuredAnchorEnd = data_get($compressedSegment, 'anchorEnd');
     $anchorEnd = is_array($configuredAnchorEnd)
         ? ['x' => data_get($configuredAnchorEnd, 'x', '0rem'), 'y' => data_get($configuredAnchorEnd, 'y', '0rem')]
@@ -105,9 +104,10 @@
                 ')',
             default => 'calc(' . data_get($anchorEnd, 'y', '0rem') . ' - ' . data_get($anchorStart, 'y', '0rem') . ')',
         };
-        $beforeLength = 'calc(' . $totalLength . ' / 4)';
-        $gapLength = 'calc(' . $totalLength . ' / 2)';
-        $afterLength = $beforeLength;
+        $sections = \Gunreip\TranslationWorkbench\Support\TwGraph\CompressedStemLayout::sections($totalLength);
+        $beforeLength = $sections['beforeLength'];
+        $gapLength = $sections['gapLength'];
+        $afterLength = $sections['afterLength'];
     }
 
     $anchorBeforeEnd = $advance($anchorStart, $beforeLength);
@@ -115,13 +115,22 @@
     $anchorEnd ??= $advance($anchorGapEnd, $afterLength);
 
 
+    $fromColor = data_get($compressedSegment, 'color', 'zinc');
+    $toColor = data_get($compressedSegment, 'toColor') ?: $fromColor;
+    $hasColorTransition = (bool) data_get($compressedSegment, 'colorGradient', false);
+    $afterColor = $hasColorTransition ? $toColor : $fromColor;
+
     $beforeSegment = array_replace($compressedSegment, [
         'id' => data_get($compressedSegment, 'id', 'segment.stem-compressed') . '.stem.before',
         'length' => $beforeLength,
+        'color' => $fromColor,
+        'colorGradient' => false,
         'anchorStart' => $anchorStart,
         'anchorEnd' => $anchorBeforeEnd,
         'nodeStart' => data_get($compressedSegment, 'nodeStart', false),
         'nodeEnd' => false,
+        'nodeEndDot' => false,
+        'jointArrowEnd' => false,
         'capEnd' => true,
         'capLength' => data_get($compressedSegment, 'capLength', '1.25rem'),
         'devCounterStart' => data_get($compressedSegment, 'devCounterStart', 'S'),
@@ -130,10 +139,17 @@
     $dottedSegment = array_replace($compressedSegment, [
         'id' => data_get($compressedSegment, 'id', 'segment.stem-compressed') . '.stem.dotted',
         'length' => $gapLength,
+        'color' => $fromColor,
+        'toColor' => $toColor,
+        'colorGradient' => $hasColorTransition,
         'anchorStart' => $anchorBeforeEnd,
         'anchorEnd' => $anchorGapEnd,
         'nodeStart' => false,
+        'nodeStartDot' => false,
+        'jointArrowStart' => false,
         'nodeEnd' => false,
+        'nodeEndDot' => false,
+        'jointArrowEnd' => false,
         'dashed' => true,
         'devCounterStart' => null,
         'devCounterEnd' => null,
@@ -141,9 +157,14 @@
     $afterSegment = array_replace($compressedSegment, [
         'id' => data_get($compressedSegment, 'id', 'segment.stem-compressed') . '.stem.after',
         'length' => $afterLength,
+        'color' => $afterColor,
+        'devCounterColor' => $afterColor,
+        'colorGradient' => false,
         'anchorStart' => $anchorGapEnd,
         'anchorEnd' => $anchorEnd,
         'nodeStart' => false,
+        'nodeStartDot' => false,
+        'jointArrowStart' => false,
         'capStart' => true,
         'capLength' => data_get($compressedSegment, 'capLength', '1.25rem'),
         'nodeEnd' => data_get($compressedSegment, 'nodeEnd', true),

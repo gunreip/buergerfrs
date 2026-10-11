@@ -75,7 +75,7 @@
             <span
                 data-tw-graph-dev-box="{{ $id . '.dev-box' }}"
                 class="tw-graph-protocol-dev-only pointer-events-none absolute rounded border border-dashed"
-                style="inset: -0.35rem; border-color: rgb(14 165 233 / 1);"
+                style="inset: 0; border-color: rgb(14 165 233 / 1);"
                 title="{{ $devIdentifier }}{{ \Gunreip\TranslationWorkbench\Support\TwGraph\RootIdentifier::tooltipSuffix() }}"
                 aria-hidden="true"
             ></span>

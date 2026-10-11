@@ -36,6 +36,7 @@ it('groups ended after merge rows into aggregate branch stems without phantom ro
                 'stepLabel' => [
                     'text' => ['Source inactive', 'shared obsolete', '2 rows'],
                     'badgeColor' => 'red',
+                    'width' => 'default',
                 ],
             ],
             'end_label' => [
@@ -43,6 +44,7 @@ it('groups ended after merge rows into aggregate branch stems without phantom ro
                 'side' => 'top',
                 'offset' => '0.75rem',
                 'badgeColor' => 'red',
+                    'width' => 'default',
             ],
         ])
         ->and($previews[0]['source']['finding_ids'])->toBe([5481, 5483])

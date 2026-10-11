@@ -60,6 +60,12 @@
             </span>
             {{ __('Component call regions (component color)') }}
         </span>
+        <span class="inline-flex items-center gap-2" x-show="previewBoxes">
+            <span class="inline-flex h-3 w-10 shrink-0 items-center justify-center rounded-sm border border-zinc-700 bg-white" aria-hidden="true">
+                <span class="inline-block w-6" style="border-top: 1px solid rgb(168 85 247);"></span>
+            </span>
+            {{ __('TextLabelGroup — consecutive labels with the same side occupancy') }}
+        </span>
         <span
             class="inline-flex items-center gap-2"
             x-show="previewBoxes"

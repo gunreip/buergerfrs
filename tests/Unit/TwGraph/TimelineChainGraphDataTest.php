@@ -41,11 +41,11 @@ it('builds a ready graph payload with normalized facts and render preview', func
     ], new Collection([
         [
             'timestamp' => '2026-08-04 09:22:11',
-            'branch' => 'Root',
+            'role' => 'root', 'branch' => 'Root',
             'event' => 'key_created',
             'state' => 'active',
         ],
-    ]), new Collection());
+    ]), new Collection);
 
     expect($payload)->toMatchArray([
         'state' => 'ready',
@@ -88,17 +88,17 @@ it('keeps trunk-only root rows from creating public branch component intent', fu
     ], new Collection([
         [
             'timestamp' => '2026-07-22 20:26:00',
-            'branch' => 'Root',
+            'role' => 'root', 'branch' => 'Root',
             'event' => 'key_created',
             'state' => 'active',
         ],
         [
             'timestamp' => '2026-07-22 20:27:00',
-            'branch' => 'Root key',
+            'role' => 'root_key', 'branch' => 'Root key',
             'event' => 'key_reviewed',
             'state' => 'accepted',
         ],
-    ]), new Collection());
+    ]), new Collection);
 
     expect(data_get($payload, 'strangs.branch.count'))->toBe(0)
         ->and(data_get($payload, 'component_intent.2'))->toMatchArray([

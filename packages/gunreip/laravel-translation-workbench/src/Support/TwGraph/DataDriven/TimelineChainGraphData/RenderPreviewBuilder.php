@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainGraphData;
 
+use Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry;
 use Gunreip\TranslationWorkbench\Support\TwGraph\Defaults;
 use Gunreip\TranslationWorkbench\Support\TwGraph\ElementIdentifier;
 use Illuminate\Support\Collection;
@@ -83,11 +84,12 @@ final class RenderPreviewBuilder
             string $pathLength,
             string $startLength,
             string $firstPathLength,
+            ?string $startEventType = null,
         ): array {
             $nodeLabels = [];
             $eventPathEntries = [];
             $pathNumber = $firstPathNumber;
-            $previousTimelineItemType = null;
+            $previousTimelineItemType = $startEventType;
             $trunkTimelineAnchors = [];
             $trunkAnchorYRem = self::toRem($startLength)
                 + ($firstPathNumber > 1 ? self::toRem($firstPathLength) : 0.0);
@@ -108,10 +110,22 @@ final class RenderPreviewBuilder
                         $itemType = (string) data_get($item, 'type', 'normal');
                         $isTimelineTypeTransition = $previousTimelineItemType !== null
                             && $previousTimelineItemType !== $itemType;
+                        $eventColor = $itemType === 'chunk'
+                            ? self::color('chunk_event', 'amber')
+                            : self::color('trunk', 'green');
                         $pathEntry = [
                             'component' => $isTimelineTypeTransition ? 'stem-compressed' : 'path',
+                            'color' => $isTimelineTypeTransition
+                                ? ($previousTimelineItemType === 'chunk'
+                                    ? self::color('chunk_event', 'amber')
+                                    : self::color('trunk', 'green'))
+                                : $eventColor,
                             'labels' => $labels,
                         ];
+                        if ($isTimelineTypeTransition) {
+                            $pathEntry['toColor'] = $eventColor;
+                            $pathEntry['colorGradient'] = true;
+                        }
 
                         $eventPathEntries[$pathNumber] = $pathEntry;
                         $previousTimelineItemType = $itemType;
@@ -134,9 +148,15 @@ final class RenderPreviewBuilder
                 'trunk_timeline_anchors' => $trunkTimelineAnchors,
             ];
         };
+        // Merge attachments share the first event node; do not reserve an empty stem.
+        $timelineLabelItems = $timelineLabelItems->map(static function (array $item): array {
+            $item['labels'] = array_map(LabelWidth::resolve(...), $item['labels'] ?? []);
+
+            return $item;
+        });
         $trunkTimelineState = $buildTrunkTimeline(
             $timelineLabelItems,
-            2,
+            1,
             $rootLineLength,
             $trunkStartLength,
             $rootLineLength,
@@ -144,7 +164,10 @@ final class RenderPreviewBuilder
         $nodeLabels = $trunkTimelineState['node_labels'];
         $eventPathEntries = $trunkTimelineState['event_path_entries'];
         $trunkTimelineAnchors = $trunkTimelineState['trunk_timeline_anchors'];
-        $langValueLabels = LangValueLabels::active($mainRow);
+        $langValueLabels = array_map(
+            static fn (array $lines): array => LabelWidth::resolve(['text' => $lines]),
+            LangValueLabels::active($mainRow),
+        );
         $graphId = 'timeline-chain-' . (int) ($mainRow['id'] ?? 0) . '-data-preview';
         $layoutCorrections = LayoutCorrectionConfig::forDataDriven();
         $mergePreviewHeadCandidates = max(0, (int) Defaults::dataDriven(
@@ -182,6 +205,7 @@ final class RenderPreviewBuilder
                 $rootLineLength,
                 $trunkStartLength,
                 $rootLineLength,
+                $trunkOnlyStartPromotion['start_event_type'],
             );
             $nodeLabels = $trunkTimelineState['node_labels'];
             $eventPathEntries = $trunkTimelineState['event_path_entries'];
@@ -320,12 +344,6 @@ final class RenderPreviewBuilder
             );
             $trunkCollisionDebug = self::trunkPotentialCollisions($trunkBoundsDebug, $branchPreviews, $mergePreviews, $rekeyPreviews);
         }
-        $branchCompensation = self::applyBranchCompensationFromTrunkCollisions($branchPreviews, $trunkCollisionDebug);
-        if ($branchCompensation['applied'] !== []) {
-            $branchPreviews = BranchLabelCollisionResolver::refreshDebugBounds($branchCompensation['branches']);
-            $mergePreviews = self::withMergeCollisionDebug($mergePreviews);
-            $trunkCollisionDebug = self::trunkPotentialCollisions($trunkBoundsDebug, $branchPreviews, $mergePreviews, $rekeyPreviews);
-        }
         $rekeySourceCompensation = self::applyRekeySourceEndLabelSideSwitchFromTrunkCollisions($rekeyPreviews, $trunkBoundsDebug, $trunkCollisionDebug);
         if ($rekeySourceCompensation['applied'] !== []) {
             $rekeyPreviews = self::withRekeyBoundsDebug($rekeySourceCompensation['rekeys'], $trunkPathLengths, $trunkStartLength);
@@ -389,7 +407,29 @@ final class RenderPreviewBuilder
             $trunkEndLabel,
             self::trunkAttachedPathNumbers($mergePreviews, $rekeyPreviews, $branchPreviews),
         );
-        $trunkCollisionDebug = self::trunkPotentialCollisions($trunkBoundsDebug, $branchPreviews, $mergePreviews, $rekeyPreviews);
+        if (Defaults::dataDrivenBool('collision_compensation_enabled', false)) {
+            // Reserve the trunk axis before deciding which vertical offsets are necessary.
+            $mergePreviews = MergeTrunkLabelClearance::apply(
+                $mergePreviews, [], Defaults::dataDrivenString('bridge_length', '4rem'),
+                self::debugBoundBoxGap(), axisOnly: true,
+            );
+            $mergePreviews = self::withMergeCollisionDebug(self::withMergeBridgeBoundsDebug($mergePreviews, $trunkPathLengths, $trunkStartLength));
+            $clearance = self::resolveLabelLineClearance($mergePreviews, $branchPreviews, $trunkBoundsDebug, $trunkPathLengths, $trunkStartLength);
+            $mergePreviews = self::withMergeCollisionDebug(self::withMergeBridgeBoundsDebug($clearance['merges'], $trunkPathLengths, $trunkStartLength));
+            $branchPreviews = BranchLabelCollisionResolver::refreshDebugBounds($clearance['branches']);
+            $mergePreviews = MergeTrunkLabelClearance::apply(
+                $mergePreviews,
+                $trunkBoundsDebug,
+                Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')),
+                self::debugBoundBoxGap(),
+            );
+            $mergePreviews = self::withMergeCollisionDebug(self::withMergeBridgeBoundsDebug($mergePreviews, $trunkPathLengths, $trunkStartLength));
+            $trunkCollisionDebug = self::trunkPotentialCollisions($trunkBoundsDebug, $branchPreviews, $mergePreviews, $rekeyPreviews);
+            $clearance = self::resolveLabelLineClearance($mergePreviews, $branchPreviews, $trunkBoundsDebug, $trunkPathLengths, $trunkStartLength);
+            $mergePreviews = self::withMergeCollisionDebug(self::withMergeBridgeBoundsDebug($clearance['merges'], $trunkPathLengths, $trunkStartLength));
+            $branchPreviews = BranchLabelCollisionResolver::refreshDebugBounds($clearance['branches']);
+            $trunkCollisionDebug = self::trunkPotentialCollisions($trunkBoundsDebug, $branchPreviews, $mergePreviews, $rekeyPreviews);
+        }
         $trunkPreview = [
             'component' => 'tw-graph.strang.trunk',
             'color' => self::color('trunk', 'green'),
@@ -522,6 +562,7 @@ final class RenderPreviewBuilder
             return [
                 'items' => $items,
                 'start_node_labels' => $startNodeLabels,
+                'start_event_type' => null,
             ];
         }
 
@@ -562,6 +603,7 @@ final class RenderPreviewBuilder
         return [
             'items' => $items,
             'start_node_labels' => $startNodeLabels,
+            'start_event_type' => $promoted ? 'normal' : null,
         ];
     }
 
@@ -596,7 +638,6 @@ final class RenderPreviewBuilder
                             $labels[] = [
                                 'text' => $labelText,
                                 'side' => $side,
-                                'long' => self::usesLongEventLabel($event),
                             ];
                         }
 
@@ -615,13 +656,7 @@ final class RenderPreviewBuilder
         return $items->values();
     }
 
-    private static function usesLongEventLabel(string $event): bool
-    {
-        return in_array($event, [
-            'key_finding_relation_commented_out',
-            'key_finding_relation_obsoleted',
-        ], true);
-    }
+
 
     private static function headlineLabel(mixed $value): string
     {
@@ -741,6 +776,11 @@ final class RenderPreviewBuilder
                 : ($labels !== null && $labels !== false && filled($labels));
             $hasNodeLabels = collect(self::labelsFromMixed($nodeLabels[$pathNumber] ?? []))->isNotEmpty();
 
+            if ($component === 'stem-compressed') {
+                $entry = self::pathEntryWithLength($entry, \Gunreip\TranslationWorkbench\Support\TwGraph\CompressedStemLayout::defaultLength());
+                $pathLengths[$pathNumber] = $entry;
+            }
+
             if ($hasEntryLabels || $hasNodeLabels) {
                 $reasons[] = 'label';
             }
@@ -751,6 +791,9 @@ final class RenderPreviewBuilder
 
             if (in_array($pathNumber, $attachedPathNumbers, true)) {
                 $reasons[] = 'anchor';
+                // A shared attachment is a junction, even without a text label.
+                $pathLengths[$pathNumber] = is_array($entry) ? $entry : ['length' => $entry];
+                $pathLengths[$pathNumber]['nodeEndDot'] = true;
             }
 
             if (in_array($pathNumber, $correctedPathNumbers, true)) {
@@ -818,6 +861,10 @@ final class RenderPreviewBuilder
         array $collisions,
         string $defaultLength,
     ): array {
+        if (! Defaults::dataDrivenBool('collision_compensation_enabled', false)) {
+            return ['path_lengths' => $pathLengths, 'applied' => []];
+        }
+
         if (! self::trunkStartShiftEnabled()) {
             return [
                 'path_lengths' => $pathLengths,
@@ -907,71 +954,89 @@ final class RenderPreviewBuilder
      * @param  array<int, array<string, mixed>>  $collisions
      * @return array{branches: array<int, array<string, mixed>>, applied: array<int, array<string, mixed>>}
      */
-    private static function applyBranchCompensationFromTrunkCollisions(array $branches, array $collisions): array
+    private static function resolveLabelLineClearance(array $merges, array $branches, array $trunkBounds, array $lengths, string $start): array
     {
-        $increments = [];
-
-        foreach ($collisions as $collision) {
-            $against = ElementIdentifier::normalize(data_get($collision, 'against', ''));
-
-            if (preg_match('/^strang\.(left|right)\.(\d+)\.branch\./', $against, $matches) !== 1) {
-                continue;
+        $geometry = static function (array $state) use ($trunkBounds, $lengths, $start): array {
+            $boxes = [];
+            foreach ($trunkBounds as $box) {
+                if (in_array($box['type'] ?? '', ['trunk-left-label', 'trunk-right-label', 'trunk-terminal-label'], true)) {
+                    $boxes[] = [...self::debugBoxToFloat($box), 'owner' => 'trunk', 'type' => 'label'];
+                }
+            }
+            foreach (self::withMergeBridgeBoundsDebug($state['merges'], $lengths, $start) as $index => $merge) {
+                foreach ($merge['layout']['mergeBoundsDebug'] as $box) {
+                    if (! in_array($box['type'], ['clearance-label', 'clearance-line', 'merge-bridge', 'merge-extension-bridge'], true)) {
+                        continue;
+                    }
+                    preg_match('/extension(\d+)/', $box['renderId'] ?? $box['id'], $match);
+                    if ($match === []) {
+                        preg_match('/extension\.(\d+)/', $box['id'], $match);
+                    }
+                    $boxes[] = [...self::debugBoxToFloat($box), 'owner' => 'merge.' . $index . '.' . ($match[1] ?? 0),
+                        'type' => $box['type'] === 'clearance-label' ? 'label' : 'line'];
+                }
+            }
+            foreach ($state['branches'] as $index => $branch) {
+                foreach (BranchLabelCollisionResolver::clearanceBoxes($branch) as $n => $box) {
+                    $boxes[] = [...$box, 'id' => 'branch.' . $index . '.' . $n, 'owner' => 'branch.' . $index];
+                }
             }
 
-            $branchIndex = self::branchPreviewIndexByCanonicalCounter($branches, $matches[1], (int) $matches[2]);
+            return $boxes;
+        };
+        $options = [];
+        $mutate = static function (string $family, int $index, string $prop, string $base, string $target, string $axis): \Closure {
+            return static function (array $state, float $delta) use ($family, $index, $prop, $base, $target, $axis): array {
+                $value = (string) data_get($state[$family][$index], $prop, $base);
+                $effective = self::rem(self::toRem($value) + $delta);
+                data_set($state[$family][$index], $prop, $effective);
+                $state[$family][$index]['layout']['appliedCompensations'][] = [
+                    'source' => 'label-line-clearance', 'target' => $target, 'prop' => $prop, 'baseValue' => $value, 'delta' => self::rem($delta),
+                    'effectiveValue' => $effective, 'gap' => self::rem(self::debugBoundBoxGap()),
+                    'reason' => $axis === 'stem' ? 'Label/line clearance: verified stem extension.' : 'Label/line clearance: bridge extension for remaining collisions after stem checks.',
+                ];
 
-            if ($branchIndex === null) {
-                continue;
+                return $state;
+            };
+        };
+        foreach ($branches as $i => $branch) {
+            $id = self::branchPreviewId($branch);
+            $options[] = ['owner' => 'branch.' . $i, 'side' => $branch['side'], 'vertical' => 1,
+                'stem' => $mutate('branches', $i, 'step.afterLength', '2.5rem', $id . '.paths.branch.step.stem.after', 'stem'),
+                'bridge' => $mutate('branches', $i, 'bridge_length', Defaults::dataDrivenString('bridge_length', '4rem'), $id . '.paths.branch.bridge.1', 'bridge')];
+        }
+        foreach ($merges as $i => $merge) {
+            // Place the main merge, then each extension against its settled predecessors.
+            for ($e = 0; $e <= (int) ($merge['extension_count'] ?? 0); $e++) {
+                if ($e > 0 && ! data_get($merge, 'extension_compensation_overrides.' . $e, $merge['extension_compensation_enabled'] ?? true)) {
+                    continue;
+                }
+                $prefix = $e > 0 ? 'extension_stem_continuations.' . $e : 'stem_continuation';
+                $entries = (array) data_get($merge, $prefix, []);
+                $key = self::mergeCompensationStemNumber($entries) - 1;
+                $base = self::mergeContinuationEntryLength($entries[$key] ?? [], Defaults::dataDrivenString('stem_length', '4rem'));
+                $stemProp = $prefix . '.' . $key . '.length';
+
+                $bridgeProp = $e > 0 ? 'extension_bridge_continuations.' . $e : 'bridge_length';
+                $bridgeBase = $e > 0 ? ($merge['extension_bridge_length'] ?? $merge['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', '4rem')) : ($merge['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', '4rem'));
+                $id = 'strang.merge-' . $merge['side'] . '.' . ($i + 1) . ($e > 0 ? '.extension.' . $e . '.paths.merge-extension' : '.paths.merge');
+                $options[] = ['owner' => 'merge.' . $i . '.' . $e, 'side' => $merge['side'], 'vertical' => -1,
+                    'stemLength' => static fn (array $state): float => self::toRem(data_get($state['merges'][$i], $stemProp, $base)),
+                    'bridgeLength' => static fn (array $state): float => self::toRem(data_get($state['merges'][$i], $bridgeProp, $bridgeBase)),
+                    'stem' => $mutate('merges', $i, $stemProp, $base, $id . '.stem' . ($key + 1), 'stem'),
+                    'bridge' => $mutate('merges', $i, $bridgeProp, $bridgeBase, $id . '.bridge', 'bridge')];
             }
-
-            $overlapWidth = self::toRem(data_get($collision, 'overlapWidth', '0rem'));
-            $gap = Defaults::dataDrivenRem('debug_bound_box_gap', Defaults::graphString('debug_bound_box_gap', '2rem'));
-            $delta = $overlapWidth + $gap;
-
-            if ($delta <= 0.0) {
-                continue;
-            }
-
-            $increments[$branchIndex] = max((float) ($increments[$branchIndex] ?? 0.0), $delta);
         }
 
-        $applied = [];
+        $state = ['merges' => $merges, 'branches' => $branches];
+        $deferredOwners = array_values(array_unique(array_column(
+            array_filter($geometry($state), static fn (array $box): bool => $box['owner'] !== 'trunk'),
+            'owner',
+        )));
 
-        foreach ($increments as $branchIndex => $delta) {
-            if (! isset($branches[$branchIndex])) {
-                continue;
-            }
-
-            $target = ElementIdentifier::normalize(self::branchPreviewId($branches[$branchIndex]) . '.main.path.branch.bridge1');
-            $baseValue = (string) ($branches[$branchIndex]['bridge_length'] ?? Defaults::dataDrivenString('bridge_length', Defaults::dataDrivenString('line_length', '4rem')));
-            $effectiveValue = self::rem(self::toRem($baseValue) + (float) $delta);
-
-            $branches[$branchIndex]['bridge_length'] = $effectiveValue;
-            $appliedEntry = [
-                'target' => $target,
-                'prop' => 'bridge_length',
-                'delta' => self::rem((float) $delta),
-                'baseValue' => $baseValue,
-                'effectiveValue' => $effectiveValue,
-                'overlapWidth' => self::rem($overlapWidth),
-                'gap' => self::rem($gap),
-                'reason' => 'Automatic trunk-label vs branch-footprint collision compensation.',
-            ];
-            $branches[$branchIndex]['layout'] = [
-                ...((array) ($branches[$branchIndex]['layout'] ?? [])),
-                'appliedCompensations' => [
-                    ...((array) data_get($branches[$branchIndex], 'layout.appliedCompensations', [])),
-                    $appliedEntry,
-                ],
-            ];
-            $applied[] = $appliedEntry;
-        }
-
-        return [
-            'branches' => $branches,
-            'applied' => $applied,
-        ];
+        return LabelLineClearance::resolveOrdered($state, $geometry, $options, self::debugBoundBoxGap(), $deferredOwners);
     }
+
 
     /**
      * Rekey-source end labels sit at the trunk-facing arc. Extending the
@@ -985,6 +1050,10 @@ final class RenderPreviewBuilder
      */
     private static function applyRekeySourceEndLabelSideSwitchFromTrunkCollisions(array $rekeys, array $trunkBounds, array $collisions): array
     {
+        if (! Defaults::dataDrivenBool('collision_compensation_enabled', false)) {
+            return ['rekeys' => $rekeys, 'applied' => []];
+        }
+
         $candidates = [];
 
         foreach ($collisions as $collision) {
@@ -1120,6 +1189,10 @@ final class RenderPreviewBuilder
      */
     private static function applyRekeyTargetCompensationFromTrunkCollisions(array $rekeys, array $collisions): array
     {
+        if (! Defaults::dataDrivenBool('collision_compensation_enabled', false)) {
+            return ['rekeys' => $rekeys, 'applied' => []];
+        }
+
         $increments = [];
 
         foreach ($collisions as $collision) {
@@ -1196,6 +1269,10 @@ final class RenderPreviewBuilder
      */
     private static function applyMergeCollisionCompensation(array $merges): array
     {
+        if (! Defaults::dataDrivenBool('collision_compensation_enabled', false)) {
+            return ['merges' => $merges, 'applied' => []];
+        }
+
         if (self::mergePreferredCompensationDirection() !== 'vertical') {
             return [
                 'merges' => $merges,
@@ -1214,7 +1291,9 @@ final class RenderPreviewBuilder
 
                 $target = self::mergeCompensationTargetForCollision($collision);
 
-                if ($target === null) {
+                // Main merges are handled by precise label/line clearance below.
+                // Their group bounds remain diagnostic, not occupied geometry.
+                if ($target === null || $target['scope'] !== 'extension') {
                     continue;
                 }
 
@@ -1252,6 +1331,9 @@ final class RenderPreviewBuilder
             $delta = (float) $increment['delta'];
 
             if ((string) $increment['scope'] === 'extension') {
+                if (($merges[$previewIndex]['extension_compensation_enabled'] ?? true) === false) {
+                    continue;
+                }
                 $extensionIndex = max(1, (int) ($increment['extensionIndex'] ?? 1));
                 $continuations = (array) data_get($merges[$previewIndex], 'extension_stem_continuations.' . $extensionIndex, []);
                 $stemNumber = self::mergeCompensationStemNumber($continuations);
@@ -1416,6 +1498,10 @@ final class RenderPreviewBuilder
         string $defaultLength,
         int $pass,
     ): array {
+        if (! Defaults::dataDrivenBool('collision_compensation_enabled', false)) {
+            return ['path_lengths' => $pathLengths, 'applied' => [], 'handled_collision_keys' => []];
+        }
+
         $applied = [];
         $handledCollisionKeys = [];
 
@@ -2259,11 +2345,13 @@ final class RenderPreviewBuilder
             ->map(static fn(array $box): array => self::debugBoxToFloat($box))
             ->values();
         $branchBoxes = collect($branchPreviews)
-            ->flatMap(static fn(array $branch): array => (array) data_get($branch, 'layout.branchBoundsDebug', []))
-            ->map(static fn(array $box): array => self::debugBoxToFloat($box))
+            ->flatMap(static fn(array $branch): array => collect(BranchLabelCollisionResolver::clearanceBoxes($branch))->map(static fn(array $box, int $index): array => [...$box, 'id' => self::branchPreviewId($branch) . '.clearance.' . $index, 'side' => $branch['side']])->all())
             ->values();
         $mergeBoxes = collect($mergePreviews)
             ->flatMap(static fn(array $merge): array => (array) data_get($merge, 'layout.mergeBoundsDebug', []))
+            ->filter(static fn(array $box): bool => in_array($box['type'] ?? '', [
+                'clearance-label', 'clearance-line', 'merge-bridge', 'merge-extension-bridge',
+            ], true))
             ->map(static fn(array $box): array => self::debugBoxToFloat($box))
             ->values();
         $rekeyBoxes = collect($rekeyPreviews)
@@ -3212,6 +3300,18 @@ final class RenderPreviewBuilder
         float $stemLength,
         array $stemContinuation,
     ): array {
+        $precise = [];
+        $addLabel = static function (array $label, float $at, ?string $labelSide = null, ?float $offset = null) use (&$precise, $stemX, $idPrefix, $side): void {
+            $bounds = self::expandBoundsForLabelAt(['xStart' => INF, 'xEnd' => -INF, 'yStart' => INF, 'yEnd' => -INF], $label, $stemX, $at, $labelSide, $offset);
+            $precise[] = [
+                'id' => $idPrefix . '.label.' . count($precise), 'type' => 'clearance-label', 'side' => $side,
+                'x' => self::rem($bounds['xStart']), 'y' => self::rem($bounds['yStart']),
+                'width' => self::rem($bounds['xEnd'] - $bounds['xStart']), 'height' => self::rem($bounds['yEnd'] - $bounds['yStart']),
+            ];
+        };
+        $precise[] = ['id' => $idPrefix . '.line', 'type' => 'clearance-line', 'side' => $side,
+            'x' => self::rem($stemX - .125), 'y' => self::rem(min($yStart, $yEnd)),
+            'width' => '0.25rem', 'height' => self::rem(abs($yEnd - $yStart))];
         $padding = 0.75;
         $startBounds = [
             'xStart' => $stemX - $padding,
@@ -3228,6 +3328,7 @@ final class RenderPreviewBuilder
         ];
 
         if (filled(data_get($startLabel, 'text'))) {
+            $addLabel($startLabel, $yStart, (string) data_get($startLabel, 'side', 'bottom'), self::toRem(data_get($startLabel, 'offset', '0.75rem')));
             $startBounds = self::expandBoundsForLabelAt(
                 $startBounds,
                 $startLabel,
@@ -3249,12 +3350,14 @@ final class RenderPreviewBuilder
         $nodeY = $yStart + $startLength;
         foreach (self::labelsFromMixed($nodeLabels[1] ?? []) as $label) {
             $lastLabeledAnchorY = $nodeY;
+            $addLabel($label, $nodeY);
             $labelBounds = self::expandBoundsForLabelAt($labelBounds, $label, $stemX, $nodeY);
         }
 
         $nodeY += $stemLength;
         foreach (self::labelsFromMixed($nodeLabels[2] ?? []) as $label) {
             $lastLabeledAnchorY = $nodeY;
+            $addLabel($label, $nodeY);
             $labelBounds = self::expandBoundsForLabelAt($labelBounds, $label, $stemX, $nodeY);
         }
 
@@ -3266,6 +3369,7 @@ final class RenderPreviewBuilder
 
             foreach (self::labelsFromMixed($nodeLabels[$nodeNumber] ?? []) as $label) {
                 $lastLabeledAnchorY = $nodeY;
+            $addLabel($label, $nodeY);
                 $labelBounds = self::expandBoundsForLabelAt($labelBounds, $label, $stemX, $nodeY);
             }
 
@@ -3281,6 +3385,7 @@ final class RenderPreviewBuilder
         ];
 
         return [
+            ...$precise,
             [
                 'type' => $typePrefix . '-start',
                 'id' => ElementIdentifier::normalize($idPrefix . '.start.bounds'),
@@ -3460,13 +3565,7 @@ final class RenderPreviewBuilder
      */
     private static function labelsFromSideMap(array $labels): array
     {
-        return collect(['left', 'right', 'top', 'bottom'])
-            ->map(static fn(string $side): ?array => filled(data_get($labels, $side))
-                ? ['text' => data_get($labels, $side), 'side' => $side]
-                : null)
-            ->filter()
-            ->values()
-            ->all();
+        return self::labelsFromMixed(collect($labels)->only(['left', 'right', 'top', 'bottom'])->all());
     }
 
     /**
@@ -3610,6 +3709,16 @@ final class RenderPreviewBuilder
             return $length;
         }
 
+        // Compressed separators are semantic boundaries: compensation may extend,
+        // but must not shorten their existing or default total length.
+        if (($entry['component'] ?? '') === 'stem-compressed' || ($entry['compressed'] ?? false)) {
+            $length = self::rem(max(
+                self::toRem($length),
+                self::pathEntryLength($entry),
+                self::toRem(\Gunreip\TranslationWorkbench\Support\TwGraph\CompressedStemLayout::defaultLength()),
+            ));
+        }
+
         if (array_key_exists('length', $entry) || ! array_key_exists(0, $entry)) {
             $entry['length'] = $length;
 
@@ -3728,11 +3837,7 @@ final class RenderPreviewBuilder
             return (float) $value;
         }
 
-        if (preg_match('/-?\d+(?:\.\d+)?/', (string) $value, $matches) !== 1) {
-            return 0.0;
-        }
-
-        return (float) $matches[0];
+        return BoundsRegistry::evaluateRemExpression((string) $value) ?? 0.0;
     }
 
     private static function rem(float $value): string
@@ -3818,15 +3923,7 @@ final class RenderPreviewBuilder
             : $current;
     }
 
-    private static function usesHalfLongChunkEventLabel(string $event): bool
-    {
-        return in_array($event, [
-            'key_finding_relation_commented_out',
-            'key_finding_relation_obsoleted',
-            'scalar_key_transformed_to_array',
-            'translation_key_bulk_equalized',
-        ], true);
-    }
+
 
     /**
      * @param  array<string, mixed>  $mainRow
@@ -3938,7 +4035,6 @@ final class RenderPreviewBuilder
                     ])),
                     'color' => self::color('chunk_event', 'amber'),
                     'badgeColor' => self::color('chunk_event', 'amber'),
-                    'halfLong' => self::usesHalfLongChunkEventLabel((string) $eventType),
                 ],
                 [
                     'side' => 'right',

@@ -984,3 +984,31 @@
 [data-tw-graph-grid] text { fill: currentColor; font: 10px ui-monospace, monospace; }
 
 [data-tw-graph-preview-tools].tw-graph-protocol-dev-disabled [data-tw-graph-grid] { display: none; }
+
+/* Text badges and surface paths share an opaque palette, including on tinted DEV backgrounds. */
+.tw-graph-protocol .tw-graph-protocol-text-surface[data-flux-badge] {
+    background-color: rgb(var(--tw-graph-text-surface-light) / 1);
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+.dark .tw-graph-protocol .tw-graph-protocol-text-surface[data-flux-badge] {
+    background-color: rgb(var(--tw-graph-text-surface-dark) / 1);
+}
+
+/* Keep the gaps when a dotted transition also carries a directional color gradient. */
+.tw-graph-protocol-primitive-line-dashed.tw-graph-protocol-primitive-line-color-gradient {
+    --tw-graph-dash-direction: to top;
+    /* Hold each endpoint color for one quarter; blend only across the middle half. */
+    background-image: linear-gradient(var(--tw-graph-dash-direction),
+            rgb(var(--tw-graph-protocol-active-color-rgb) / var(--tw-graph-protocol-active-color-alpha)) 25%,
+            rgb(var(--tw-graph-protocol-active-to-color-rgb) / var(--tw-graph-protocol-active-color-alpha)) 75%);
+    mask-image: repeating-linear-gradient(var(--tw-graph-dash-direction), #000 0 0.45rem, transparent 0.45rem 0.75rem);
+}
+.tw-graph-protocol-primitive-line-dashed.tw-graph-protocol-primitive-line-color-gradient.tw-graph-protocol-primitive-line-top-bottom {
+    --tw-graph-dash-direction: to bottom;
+}
+.tw-graph-protocol-primitive-line-dashed.tw-graph-protocol-primitive-line-color-gradient.tw-graph-protocol-primitive-line-left-right {
+    --tw-graph-dash-direction: to right;
+}
+.tw-graph-protocol-primitive-line-dashed.tw-graph-protocol-primitive-line-color-gradient.tw-graph-protocol-primitive-line-right-left {
+    --tw-graph-dash-direction: to left;
+}
