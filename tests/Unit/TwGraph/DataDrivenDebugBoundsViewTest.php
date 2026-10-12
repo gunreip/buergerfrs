@@ -13,7 +13,7 @@ it('keeps the data driven debug bounds table columns and controls visible in the
     expect($source)
         ->toContain("{{ __('Legacy collision estimates (not rendered element bounds)') }}")
         ->toContain('twGraphDebugBoundsCollisionOnly')
-        ->toContain("{{ __('Collisions only') }}")
+        ->toContain(':label="__(\'Collisions only\')"')
         ->toContain("{{ __('#') }}")
         ->toContain("{{ __('Scope') }}")
         ->toContain("{{ __('Side') }}")
@@ -111,14 +111,10 @@ it('keeps data driven dev switches and debug sections gated by the dev prop cont
         ->toContain('$twGraphDataDrivenDevEnabled = filter_var($dev ?? true')
         ->toContain('$twGraphDataDrivenCoordinatesEnabled = filter_var($coordinates ?? true')
         ->toContain('@if ($twGraphDataDrivenDevEnabled)')
-        ->toContain('x-on:click.stop="twGraphDataDrivenDev = !twGraphDataDrivenDev"')
-        ->toContain('@if ($twGraphDataDrivenCoordinatesEnabled)')
-        ->toContain('x-on:click.stop="twGraphDataDrivenCoordinates = !twGraphDataDrivenCoordinates"')
-        ->toContain("'tw-graph-protocol-dev-disabled': !twGraphDataDrivenDev")
-        ->toContain("'tw-graph-protocol-coordinates-disabled': !twGraphDataDrivenCoordinates")
         ->toContain(':dev="$twGraphDataDrivenDevEnabled"')
         ->toContain(':coordinates="$twGraphDataDrivenCoordinatesEnabled"')
-        ->toContain('x-show="twGraphDataDrivenDev"');
+        ->toContain('<x-translation-workbench::ui.tw-graph.preview-tools')
+        ->toContain('</x-translation-workbench::ui.tw-graph.preview-tools>');
 });
 
 

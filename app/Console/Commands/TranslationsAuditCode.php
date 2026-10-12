@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use SplFileObject;
-use Symfony\Component\Finder\Finder;
+use Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanner;
 use Throwable;
 
 /**
@@ -132,35 +132,9 @@ class TranslationsAuditCode extends Command
      */
     private function scannableFiles(): Collection
     {
-        $finder = Finder::create()
-            ->files()
-            ->in([
-                app_path(),
-                base_path('routes'),
-                resource_path('views'),
-            ])
-            ->name('*.php')
-            ->name('*.blade.php')
-            ->ignoreDotFiles(true)
-            ->ignoreVCS(true);
-
-        return collect(iterator_to_array($finder, false))
-            ->map(fn ($file): ?string => $file->getRealPath() ?: null)
-            ->filter(fn (?string $path): bool => $path !== null && File::isFile($path))
-            ->reject(fn (string $path): bool => $this->isParkedFile($path))
+        return collect(app(TranslationWorkbenchScanner::class)->scannableFiles())
+            ->map(static fn ($file): string => $file->getRealPath() ?: $file->getPathname())
             ->values();
-    }
-
-    /**
-     * Determine whether the file is intentionally parked and should not be audited.
-     */
-    private function isParkedFile(string $path): bool
-    {
-        $filename = strtolower(pathinfo($path, PATHINFO_FILENAME));
-
-        return str_contains($filename, 'xxx')
-            || str_contains($filename, 'yyy')
-            || str_contains($filename, 'zzz');
     }
 
     /**

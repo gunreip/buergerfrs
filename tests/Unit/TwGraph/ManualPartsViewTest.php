@@ -722,9 +722,20 @@ it('renders stem-compressed with proportional split when anchor end is configure
         ->toContain('segment.compressed.test.stem.before')
         ->toContain('segment.compressed.test.stem.dotted')
         ->toContain('segment.compressed.test.stem.after')
-        ->toContain('calc(calc(12rem - 0rem) / 4)')
-        ->toContain('calc(calc(12rem - 0rem) / 2)')
         ->toContain('tw-graph-protocol-primitive-line-dashed');
+
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $rects = [];
+    foreach ((new DOMXPath($dom))->query('//*[@data-tw-graph-bounds]') as $element) {
+        $bounds = json_decode($element->getAttribute('data-tw-graph-bounds'), true);
+        $rects[$bounds['id']] = $bounds['rects'][0];
+    }
+    foreach (['before' => ['0rem', '3rem'], 'dotted' => ['3rem', '6rem'], 'after' => ['9rem', '3rem']] as $part => [$y, $height]) {
+        $rect = $rects['segment.compressed.test.stem.'.$part];
+        expect(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($rect['y']))->toBe((float) $y)
+            ->and(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($rect['height']))->toBe((float) $height);
+    }
 });
 
 it('renders node images only when a source is present', function (): void {

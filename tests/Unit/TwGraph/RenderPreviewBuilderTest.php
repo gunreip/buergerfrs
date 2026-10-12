@@ -921,3 +921,26 @@ it('uses the dedicated compressed default instead of the ordinary stem default',
     expect($method->invoke(null, $entry, '4rem')['length'])->toBe('8rem')
         ->and($method->invoke(null, $entry, '10rem')['length'])->toBe('10rem');
 });
+
+it('attaches dataset references to trunk terminals and the trunk rekey target without changing geometry', function (): void {
+    $main = ['id' => 980, 'chain_type' => 'moved', 'chain_status' => 'active', 'translation_key' => 'ui.save',
+        'root_key_id' => 3576, 'created_at' => '2026-07-17 16:39:00',
+        'meta' => ['moved_relations' => [[
+            'translation_key' => 'ui.save', 'rekeyed_to_translation_key' => 'ui.saved', 'locale' => 'en',
+        ]]],
+    ];
+    $plain = RenderPreviewBuilder::build($main, collect(), collect());
+    $linked = RenderPreviewBuilder::build([...$main, 'dataset_context' => true], collect(), collect());
+    expect(data_get($linked, 'trunk.start_label.contextMenu.0.detail.source'))->toBe(['type' => 'key', 'id' => 3576])
+        ->and(data_get($linked, 'trunk.end_label.contextMenu.0.detail.source'))->toBe(['type' => 'dataset', 'id' => 980]);
+    $target = collect($linked['trunk']['path_lengths'])->first(fn ($node) => data_get($node, 'labels.0.contextMenu.0.detail.source.type') === 'rekey-group');
+    expect(data_get($target, 'labels.0.contextMenu.0.detail.source.direction'))->toBe('target');
+    $stripMenus = function (array $value) use (&$stripMenus): array {
+        unset($value['contextMenu']);
+        foreach ($value as $key => $item) {
+            if (is_array($item)) $value[$key] = $stripMenus($item);
+        }
+        return $value;
+    };
+    expect($stripMenus($linked))->toBe($plain);
+});

@@ -61,6 +61,7 @@
     <x-translation-workbench::ui.tw-graph.primitives.text
         :id="data_get($startSegment, 'id', 'segment.start') . '.label.' . $startLabelSide . '.1'"
         :text="data_get($startSegment, 'startLabel.text')"
+        :context-menu="data_get($startSegment, 'startLabel.contextMenu', [])"
         :anchor-x="data_get($startSegment, 'anchorStart.x', '0rem')"
         :anchor-y="data_get($startSegment, 'anchorStart.y', '0rem')"
         :side="$startLabelSide"

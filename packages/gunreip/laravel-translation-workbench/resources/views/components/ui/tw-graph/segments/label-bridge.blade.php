@@ -101,6 +101,7 @@
 
 <x-translation-workbench::ui.tw-graph.primitives.text
     :id="$labelId"
+    :context-menu="data_get($label, 'contextMenu', [])"
     :text="data_get($label, 'text')"
     side="center"
     :anchor-x="data_get($labelAnchor, 'x', '0rem')"

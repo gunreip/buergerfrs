@@ -24,6 +24,8 @@ it('keeps the data driven datasets component stable when timeline tables are una
     $component->updatedSelectedHistoryId('not-a-valid-id');
 
     $view = $component->render();
+    // Direct view rendering bypasses the middleware that normally supplies validation errors.
+    View::share('errors', new \Illuminate\Support\ViewErrorBag);
     $html = $view->render();
 
     expect($component->timelineChainId)->toBeNull()
@@ -32,7 +34,8 @@ it('keeps the data driven datasets component stable when timeline tables are una
         ->and($component->reloadTick)->toBe(2)
         ->and($html)->toContain('No timeline-chain datasets found')
         ->and($html)->toContain('Run the timeline-chain collector first')
-        ->and($html)->toContain('Random dataset')
+        ->and($html)->toContain('Load dataset')
+        ->and($html)->not->toContain('wire:model.live="selectedHistoryId"')
         ->and($html)->not->toContain('Reload ID #');
 });
 
@@ -47,8 +50,18 @@ it('renders the data driven datasets page as a livewire component host', functio
 
 it('keeps reload random and history controls wired in the datasets component view', function (): void {
     $source = file_get_contents(View::getFinder()->find(
+        'translation-workbench::livewire.tw-graph.data-driven.dataset-selector',
+    ));
+
+    $host = file_get_contents(View::getFinder()->find(
         'translation-workbench::livewire.tw-graph.data-driven.datasets',
     ));
+    $preview = file_get_contents(View::getFinder()->find(
+        'translation-workbench::livewire.raw-data.timeline-chains.graph-preview.tw-graph-data-driven',
+    ));
+    foreach ([$host, $preview] as $viewSource) {
+        expect($viewSource)->toContain("@include('translation-workbench::livewire.tw-graph.data-driven.dataset-selector')");
+    }
 
     expect($source)
         ->toContain('wire:click="reloadDataset"')

@@ -30,7 +30,9 @@
 
     <flux:card>
         <x-ui.headers.card
-            :title="__('packages.gunreip.laravel_translation_workbench.resources.views.livewire.settings.settings_overview')"
+            :title="__(
+                'packages.gunreip.laravel_translation_workbench.resources.views.livewire.settings.settings_overview',
+            )"
             :description="__(
                 'User settings are stored on the user record. Export files are diagnostic snapshots that can be reviewed or reused as package defaults later.',
             )"
@@ -76,6 +78,7 @@
                     Raw data description literal: Settings for the Translation Workbench raw-data page: selected table, table filters, sorting and pagination.
                 --}}
                 <x-ui.headers.card
+                    class="min-h-24"
                     :title="__($group['title'])"
                     :description="__($group['description'])"
                 >

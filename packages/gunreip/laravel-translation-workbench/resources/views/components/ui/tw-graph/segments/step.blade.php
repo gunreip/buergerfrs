@@ -154,6 +154,7 @@
     <x-translation-workbench::ui.tw-graph.primitives.text
         :id="data_get($stepSegment, 'id', 'segment.step') . '.label'"
         :text="$stepLabelLayout['lines']"
+        :context-menu="data_get($stepLabelConfig, 'contextMenu', [])"
         :anchor-x="data_get($anchorMiddle, 'x', '0rem')"
         :anchor-y="data_get($anchorMiddle, 'y', '0rem')"
         :side="data_get($stepLabelConfig, 'side', $stepLabelSide)"

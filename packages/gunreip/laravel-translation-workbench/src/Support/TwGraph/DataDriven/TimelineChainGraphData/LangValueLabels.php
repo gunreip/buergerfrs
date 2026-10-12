@@ -12,12 +12,12 @@ final class LangValueLabels
 {
     /**
      * Return only the graph-relevant lang values: source locale plus current UI
-     * target main locale. Other locales stay out of the graph until tooltip work.
+     * target main locale. Context references retain the actual language-value ID.
      *
      * @param  array<string, mixed>  $mainRow
-     * @return array{left?: array<int, string>, right?: array<int, string>}
+     * @return array<string, array<mixed>>
      */
-    public static function active(array $mainRow): array
+    public static function active(array $mainRow, bool $withContext = false): array
     {
         $langValueIds = ValueNormalizer::integerList($mainRow['lang_value_ids'] ?? []);
 
@@ -57,6 +57,16 @@ final class LangValueLabels
             ];
         }
 
+        if ($withContext) {
+            foreach (['left' => $source, 'right' => $target] as $side => $row) {
+                if ($row !== null && isset($labels[$side])) {
+                    $labels[$side] = [
+                        'text' => $labels[$side],
+                        'contextMenu' => \Gunreip\TranslationWorkbench\Support\DatasetLabelContext::menu(['type' => 'lang-value', 'id' => $row->id]),
+                    ];
+                }
+            }
+        }
         return $labels;
     }
 }

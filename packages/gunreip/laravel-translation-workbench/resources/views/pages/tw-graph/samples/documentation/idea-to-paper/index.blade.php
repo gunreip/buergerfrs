@@ -289,135 +289,170 @@
     </flux:tab.group>
 
     @if (($documentationTabs['main'] ?? null) !== 'idea-to-paper-overview')
-    <flux:callout
-        id="tw-graph-documentation-results"
-        color="sky"
-        icon="waypoints"
-    >
-        <flux:callout.heading>
-            {{ __('Draft and current result') }}
-        </flux:callout.heading>
-        <flux:callout.text>
-            {{ __('The draft tab preserves the original thought sketch. The result tab uses a separate copy that can be adjusted into the final graph without changing the draft. The flow diagram tab assembles the flow components as they are introduced above.') }}
-        </flux:callout.text>
+        <flux:callout
+            id="tw-graph-documentation-results"
+            color="sky"
+            icon="waypoints"
+        >
+            <flux:callout.heading>
+                {{ __('Draft and current result') }}
+            </flux:callout.heading>
+            <flux:callout.text>
+                {{ __('The draft tab preserves the original thought sketch. The result tab uses a separate copy that can be adjusted into the final graph without changing the draft. The flow diagram tab assembles the flow components as they are introduced above.') }}
+            </flux:callout.text>
 
-        {{-- Tab Group --}}
-        <flux:tab.group class="mt-4 min-w-0 max-w-full">
-            <flux:tabs
-                wire:model.live="tabs.results"
-                scrollable
-                scrollable:fade
-                scrollable:scrollbar="hide"
-            >
+            {{-- Tab Group --}}
+            <flux:tab.group class="mt-4 min-w-0 max-w-full">
+                <flux:tabs
+                    wire:model.live="tabs.results"
+                    scrollable
+                    scrollable:fade
+                    scrollable:scrollbar="hide"
+                >
+                    {{-- Thought Draft --}}
+                    <flux:tab name="idea-to-paper-draft">
+                        {{ __('Thought draft') }}
+                    </flux:tab>
+
+                    {{-- Current Result --}}
+                    <flux:tab name="idea-to-paper-result">
+                        {{ __('Current result') }}
+                    </flux:tab>
+
+                    {{-- Flow Diagram --}}
+                    <flux:tab name="idea-to-paper-flow-result">
+                        {{ __('Flow diagram') }}
+                    </flux:tab>
+                </flux:tabs>
+
                 {{-- Thought Draft --}}
-                <flux:tab name="idea-to-paper-draft">
-                    {{ __('Thought draft') }}
-                </flux:tab>
+                <flux:tab.panel name="idea-to-paper-draft">
+                    @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-draft')
+                        <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+                        <x-translation-workbench::ui.tw-graph.documentation-links
+                            example="00-graph-final"
+                            gridCols="6"
+                        />
+
+                        <div wire:key="documentation-idea-to-paper-draft">
+                            <x-translation-workbench::ui.tw-graph.preview-tools
+                                :dev="$dev"
+                                :coordinates="$coordinates"
+                            >
+                                <div
+                                    class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                                    @include(
+                                        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.00-graph-final',
+                                        [
+                                            'ideaToPaperGraphId' => 'tw-graph-sample-idea-to-paper-thought-draft',
+                                            'ideaToPaperDev' => true,
+                                            'ideaToPaperCoordinates' => true,
+                                        ]
+                                    )
+                                </div>
+                            </x-translation-workbench::ui.tw-graph.preview-tools>
+                        </div>
+                    @endif
+                </flux:tab.panel>
 
                 {{-- Current Result --}}
-                <flux:tab name="idea-to-paper-result">
-                    {{ __('Current result') }}
-                </flux:tab>
+                <flux:tab.panel name="idea-to-paper-result">
+                    @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-result')
+                        <x-translation-workbench::ui.common.separator-deep-reference-links />
+
+                        <x-translation-workbench::ui.tw-graph.documentation-links
+                            example="_graph-current-result"
+                            gridCols="6"
+                        />
+
+                        <div wire:key="documentation-idea-to-paper-result">
+                            <x-translation-workbench::ui.tw-graph.preview-tools
+                                :dev="$dev"
+                                :coordinates="$coordinates"
+                            >
+                                <div
+                                    class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                                    @include(
+                                        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper._graph-current-result',
+                                        [
+                                            'ideaToPaperGraphId' =>
+                                                'tw-graph-sample-idea-to-paper-current-result',
+                                            'ideaToPaperDev' => true,
+                                            'ideaToPaperCoordinates' => true,
+                                        ]
+                                    )
+                                </div>
+                            </x-translation-workbench::ui.tw-graph.preview-tools>
+                        </div>
+                    @endif
+                </flux:tab.panel>
 
                 {{-- Flow Diagram --}}
-                <flux:tab name="idea-to-paper-flow-result">
-                    {{ __('Flow diagram') }}
-                </flux:tab>
-            </flux:tabs>
+                <flux:tab.panel name="idea-to-paper-flow-result">
+                    @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-flow-result')
+                        <x-translation-workbench::ui.common.separator-deep-reference-links />
 
-            {{-- Thought Draft --}}
-            <flux:tab.panel name="idea-to-paper-draft">
-                @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-draft')
-                    <x-translation-workbench::ui.common.separator-deep-reference-links />
+                        <x-translation-workbench::ui.tw-graph.documentation-links
+                            example="_graph-flow-diagram"
+                            gridCols="6"
+                        />
 
-                    <x-translation-workbench::ui.tw-graph.documentation-links
-                        example="00-graph-final"
-                        gridCols="6"
-                    />
-
-                    <div wire:key="documentation-idea-to-paper-draft">
-                        <x-translation-workbench::ui.tw-graph.preview-tools
-                            :dev="$dev"
-                            :coordinates="$coordinates"
-                        >
-                            <div
-                                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                                @include(
-                                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.00-graph-final',
-                                    [
-                                        'ideaToPaperGraphId' => 'tw-graph-sample-idea-to-paper-thought-draft',
-                                        'ideaToPaperDev' => true,
-                                        'ideaToPaperCoordinates' => true,
-                                    ]
-                                )
-                            </div>
-                        </x-translation-workbench::ui.tw-graph.preview-tools>
-                    </div>
-                @endif
-            </flux:tab.panel>
-
-            {{-- Current Result --}}
-            <flux:tab.panel name="idea-to-paper-result">
-                @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-result')
-                    <x-translation-workbench::ui.common.separator-deep-reference-links />
-
-                    <x-translation-workbench::ui.tw-graph.documentation-links
-                        example="_graph-current-result"
-                        gridCols="6"
-                    />
-
-                    <div wire:key="documentation-idea-to-paper-result">
-                        <x-translation-workbench::ui.tw-graph.preview-tools
-                            :dev="$dev"
-                            :coordinates="$coordinates"
-                        >
-                            <div
-                                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                                @include(
-                                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper._graph-current-result',
-                                    [
-                                        'ideaToPaperGraphId' => 'tw-graph-sample-idea-to-paper-current-result',
-                                        'ideaToPaperDev' => true,
-                                        'ideaToPaperCoordinates' => true,
-                                    ]
-                                )
-                            </div>
-                        </x-translation-workbench::ui.tw-graph.preview-tools>
-                    </div>
-                @endif
-            </flux:tab.panel>
-
-            {{-- Flow Diagram --}}
-            <flux:tab.panel name="idea-to-paper-flow-result">
-                @if (!isset($documentationTabs) || $documentationTabs['results'] === 'idea-to-paper-flow-result')
-                    <x-translation-workbench::ui.common.separator-deep-reference-links />
-
-                    <x-translation-workbench::ui.tw-graph.documentation-links
-                        example="_graph-flow-diagram"
-                        gridCols="6"
-                    />
-
-                    <div wire:key="documentation-idea-to-paper-flow-result">
-                        <x-translation-workbench::ui.tw-graph.preview-tools
-                            :dev="$dev"
-                            :coordinates="$coordinates"
-                        >
-                            <div
-                                class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
-                                @include(
-                                    'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper._graph-flow-diagram',
-                                    [
-                                        'ideaToPaperGraphId' => 'tw-graph-sample-idea-to-paper-flow-diagram',
-                                        'ideaToPaperDev' => true,
-                                        'ideaToPaperCoordinates' => true,
-                                    ]
-                                )
-                            </div>
-                        </x-translation-workbench::ui.tw-graph.preview-tools>
-                    </div>
-                @endif
-            </flux:tab.panel>
-        </flux:tab.group>
-    </flux:callout>
+                        <div wire:key="documentation-idea-to-paper-flow-result">
+                            <x-translation-workbench::ui.tw-graph.preview-tools
+                                :dev="$dev"
+                                :coordinates="$coordinates"
+                            >
+                                <div
+                                    class="mt-4 overflow-x-auto overflow-y-clip rounded-lg border border-zinc-200 bg-white/70 dark:border-zinc-700 dark:bg-zinc-900/40">
+                                    @include(
+                                        'translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper._graph-flow-diagram',
+                                        [
+                                            'ideaToPaperGraphId' => 'tw-graph-sample-idea-to-paper-flow-diagram',
+                                            'ideaToPaperDev' => true,
+                                            'ideaToPaperCoordinates' => true,
+                                        ]
+                                    )
+                                </div>
+                            </x-translation-workbench::ui.tw-graph.preview-tools>
+                        </div>
+                    @endif
+                </flux:tab.panel>
+            </flux:tab.group>
+        </flux:callout>
     @endif
+
+    <flux:context>
+        <flux:card class="border-2 border-dashed px-16">
+            <flux:text>Right click</flux:text>
+        </flux:card>
+
+        <flux:menu>
+            <flux:menu.item icon="plus">New post</flux:menu.item>
+
+            <flux:menu.separator />
+
+            <flux:menu.submenu heading="Sort by">
+                <flux:menu.radio.group>
+                    <flux:menu.radio checked>Name</flux:menu.radio>
+                    <flux:menu.radio>Date</flux:menu.radio>
+                    <flux:menu.radio>Popularity</flux:menu.radio>
+                </flux:menu.radio.group>
+            </flux:menu.submenu>
+
+            <flux:menu.submenu heading="Filter">
+                <flux:menu.checkbox checked>Draft</flux:menu.checkbox>
+                <flux:menu.checkbox checked>Published</flux:menu.checkbox>
+                <flux:menu.checkbox>Archived</flux:menu.checkbox>
+            </flux:menu.submenu>
+
+            <flux:menu.separator />
+
+            <flux:menu.item
+                variant="danger"
+                icon="trash"
+            >Delete</flux:menu.item>
+        </flux:menu>
+    </flux:context>
+
 </section>

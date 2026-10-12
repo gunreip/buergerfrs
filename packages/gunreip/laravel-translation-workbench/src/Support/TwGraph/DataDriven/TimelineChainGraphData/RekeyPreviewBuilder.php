@@ -56,6 +56,17 @@ final class RekeyPreviewBuilder
             $previews[] = self::preview($targetRelations, 'target', 'right', 1, $mainRow);
         }
 
+        if (!empty($mainRow['dataset_context'])) {
+            foreach ($previews as &$preview) {
+                $source = ['type' => 'rekey-group', 'id' => $mainRow['id'], 'direction' => $preview['kind']];
+                foreach (['start_label', 'end_label', 'node_labels'] as $key) {
+                    if (isset($preview[$key])) {
+                        $preview[$key] = \Gunreip\TranslationWorkbench\Support\DatasetLabelContext::labels($preview[$key], $source);
+                    }
+                }
+            }
+            unset($preview);
+        }
         return array_map(LabelWidth::preview(...), $previews);
     }
 

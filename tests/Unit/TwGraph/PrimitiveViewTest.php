@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette as Palette;
 use Illuminate\Support\Facades\Blade;
 use Tests\TestCase;
 
@@ -15,8 +16,8 @@ it('keeps primitive endpoint palettes consistent unless a transition color is ex
 
     expect($html)
         ->toContain('--tw-graph-protocol-local-to-color-rgb: '.($toColor === null ? '6 182 212' : '245 158 11'))
-        ->toContain('--tw-graph-protocol-local-to-surface-color-rgb: '.($toColor === null ? '222 248 252' : '254 245 222'))
-        ->toContain('--tw-graph-protocol-local-to-dark-surface-color-rgb: '.($toColor === null ? '14 98 113' : '115 91 31'));
+        ->toContain('--tw-graph-protocol-local-to-surface-color-rgb: '.Palette::surfaceRgb($toColor ?? 'cyan'))
+        ->toContain('--tw-graph-protocol-local-to-dark-surface-color-rgb: '.Palette::darkSurfaceRgb($toColor ?? 'cyan'));
 })->with(['arc', 'line'])->with([null, 'amber']);
 
 it('renders primitive lines with direction caps nodes dashed style and custom sizes', function (): void {
@@ -75,8 +76,8 @@ it('renders primitive line surface tone without changing the semantic color', fu
         ->toContain('primitive.line.surface')
         ->toContain('tw-graph-protocol-tone-surface')
         ->toContain('--tw-graph-protocol-local-color-rgb: 6 182 212')
-        ->toContain('--tw-graph-protocol-local-surface-color-rgb: 222 248 252')
-        ->toContain('--tw-graph-protocol-local-dark-surface-color-rgb: 14 98 113');
+        ->toContain('--tw-graph-protocol-local-surface-color-rgb: '.Palette::surfaceRgb('cyan'))
+        ->toContain('--tw-graph-protocol-local-dark-surface-color-rgb: '.Palette::darkSurfaceRgb('cyan'));
 });
 
 it('renders primitive arc transition color variables for surface tone', function (): void {
@@ -92,10 +93,10 @@ it('renders primitive arc transition color variables for surface tone', function
     expect($html)
         ->toContain('primitive.arc.transition')
         ->toContain('tw-graph-protocol-tone-surface')
-        ->toContain('--tw-graph-protocol-local-surface-color-rgb: 222 248 252')
-        ->toContain('--tw-graph-protocol-local-to-surface-color-rgb: 254 245 222')
-        ->toContain('--tw-graph-protocol-local-dark-surface-color-rgb: 14 98 113')
-        ->toContain('--tw-graph-protocol-local-to-dark-surface-color-rgb: 115 91 31');
+        ->toContain('--tw-graph-protocol-local-surface-color-rgb: '.Palette::surfaceRgb('cyan'))
+        ->toContain('--tw-graph-protocol-local-to-surface-color-rgb: '.Palette::surfaceRgb('amber'))
+        ->toContain('--tw-graph-protocol-local-dark-surface-color-rgb: '.Palette::darkSurfaceRgb('cyan'))
+        ->toContain('--tw-graph-protocol-local-to-dark-surface-color-rgb: '.Palette::darkSurfaceRgb('amber'));
 });
 
 it('renders primitive arcs with semantic corner classes and explicit node anchors', function (): void {

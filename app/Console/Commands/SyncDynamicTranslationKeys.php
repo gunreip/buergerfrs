@@ -19,11 +19,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use SplFileInfo;
 use SplFileObject;
-use Symfony\Component\Finder\Finder;
+use Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanner;
 use Throwable;
 
 #[Signature('translations:sync-dynamic-keys
-    {--paths= : Comma-separated relative paths to scan (default: app,routes,resources/views)}
+    {--paths= : Comma-separated relative paths to scan (default: translation-workbench.paths)}
     {--output-dir= : Relative output directory for generated audit files}
     {--dry-run : Write audit files only; do not sync database rows}')]
 #[Description('Scan dynamic translation candidates and dynamic_label usages, then sync them into translation review tables.')]
@@ -105,7 +105,7 @@ class SyncDynamicTranslationKeys extends Command
         $pathsOption = trim((string) $this->option('paths'));
 
         if ($pathsOption === '') {
-            return ['app', 'routes', 'resources/views'];
+            return (array) config('translation-workbench.paths', []);
         }
 
         return collect(explode(',', $pathsOption))
@@ -135,23 +135,7 @@ class SyncDynamicTranslationKeys extends Command
      */
     private function scannableFiles(array $paths): iterable
     {
-        $directories = collect($paths)
-            ->map(static fn(string $path): string => base_path($path))
-            ->filter(static fn(string $path): bool => File::isDirectory($path))
-            ->values()
-            ->all();
-
-        if ($directories === []) {
-            return [];
-        }
-
-        return Finder::create()
-            ->files()
-            ->in($directories)
-            ->name('*.php')
-            ->name('*.blade.php')
-            ->ignoreDotFiles(true)
-            ->ignoreVCS(true);
+        return app(TranslationWorkbenchScanner::class)->scannableFiles($paths);
     }
 
     /**
@@ -159,25 +143,12 @@ class SyncDynamicTranslationKeys extends Command
      */
     private function scanFile(string $path): Collection
     {
-        if ($this->isParkedFile($path)) {
-            return collect();
-        }
-
         $contents = File::get($path);
         $relativePath = $this->relativePath($path);
 
         return collect()
             ->merge($this->extractDynamicLabelUsages($contents, $path, $relativePath))
             ->merge($this->extractDynamicCandidates($contents, $path, $relativePath));
-    }
-
-    private function isParkedFile(string $path): bool
-    {
-        $filename = strtolower(pathinfo($path, PATHINFO_FILENAME));
-
-        return str_contains($filename, 'xxx')
-            || str_contains($filename, 'yyy')
-            || str_contains($filename, 'zzz');
     }
 
     /**

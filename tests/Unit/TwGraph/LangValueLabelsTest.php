@@ -33,7 +33,7 @@ it('returns no labels for invalid lang value ids without touching the database',
     ]))->toBe([]);
 });
 
-it('builds source and active target lang value labels from available rows', function (): void {
+it('builds source and active target lang value labels from available rows', function (bool $withContext): void {
     $settings = (new ReflectionClass(AppGeneralSettings::class))->newInstanceWithoutConstructor();
     $settings->locale = 'de-DE';
 
@@ -99,9 +99,15 @@ it('builds source and active target lang value labels from available rows', func
         ->once()
         ->andReturn($query);
 
-    expect(LangValueLabels::active([
+    $labels = LangValueLabels::active([
         'lang_value_ids' => [801, '802', 803, 'foo'],
-    ]))->toBe([
+    ], $withContext);
+    if ($withContext) {
+        expect($labels['left']['contextMenu'][0]['detail']['source'])->toBe(['type' => 'lang-value', 'id' => 801])
+            ->and($labels['right']['contextMenu'][0]['detail']['source'])->toBe(['type' => 'lang-value', 'id' => 802]);
+        $labels = array_map(fn ($label) => $label['text'], $labels);
+    }
+    expect($labels)->toBe([
         'left' => [
             'source lang value ID #801',
             '2026-08-04 09:22 · en · Save',
@@ -111,4 +117,4 @@ it('builds source and active target lang value labels from available rows', func
             '2026-08-05 10:11 · de · Speichern',
         ],
     ]);
-});
+})->with([false, true]);

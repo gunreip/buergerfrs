@@ -296,8 +296,19 @@ it('renders compressed rekey source stem continuations', function (): void {
         ->toContain('strang.rekey.right.source.1.stem-2')
         ->toContain('strang.rekey.right.source.1.stem-2.stem')
         ->toContain('strang.rekey.right.source.1.stem-2.stem.dotted')
-        ->toContain('--tw-graph-protocol-local-length: calc(')
         ->toContain('tw-graph-protocol-primitive-line-dashed');
+
+    $dom = new DOMDocument;
+    @$dom->loadHTML($html);
+    $pieces = [];
+    foreach ((new DOMXPath($dom))->query('//*[@data-tw-graph-bounds]') as $element) {
+        $bounds = json_decode($element->getAttribute('data-tw-graph-bounds'), true);
+        $pieces[$bounds['id']] = $bounds['rects'][0];
+    }
+    foreach (['before' => 2.5, 'dotted' => 5.0, 'after' => 2.5] as $part => $length) {
+        $rect = $pieces['sample.right.1.rekey-source.paths.rekey-source.stem2.stem.'.$part];
+        expect(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($rect['height']))->toBe($length);
+    }
 });
 
 it('uses graph defaults for rekey source arc bridge and stem geometry', function (): void {

@@ -60,23 +60,24 @@ class TranslationWorkbenchScanner
             ->values()
             ->all();
 
-        if ($directories === []) {
-            return $files;
-        }
-
-        $finder = Finder::create()
-            ->files()
-            ->in($directories)
-            ->ignoreDotFiles(true)
-            ->ignoreVCS(true);
-
-        foreach ((array) config('translation-workbench.file_patterns', ['*.php', '*.blade.php']) as $pattern) {
-            $finder->name($pattern);
+        $patterns = (array) config('translation-workbench.file_patterns', ['*.php', '*.blade.php']);
+        $found = [];
+        if ($directories !== []) {
+            $finder = Finder::create()->files()->in($directories)->ignoreDotFiles(true)->ignoreVCS(true);
+            foreach ($patterns as $pattern) {
+                $finder->name($pattern);
+            }
+            $found = iterator_to_array($finder, false);
         }
 
         return collect($files)
-            ->merge(iterator_to_array($finder, false))
-            ->reject(fn (SplFileInfo $file): bool => $this->isExcludedPath($file->getPathname()))
+            ->merge($found)
+            ->filter(static fn (SplFileInfo $file): bool => collect($patterns)->contains(
+                static fn (string $pattern): bool => fnmatch($pattern, $file->getFilename()),
+            ))
+            ->reject(fn (SplFileInfo $file): bool => $this->isExcludedPath($file->getPathname()) || $this->isParkedFile($file->getPathname()))
+            ->unique(static fn (SplFileInfo $file): string => $file->getRealPath() ?: $file->getPathname())
+            ->values()
             ->all();
     }
 
@@ -85,7 +86,7 @@ class TranslationWorkbenchScanner
      */
     public function scanFile(string $path): Collection
     {
-        if ($this->isParkedFile($path)) {
+        if ($this->isExcludedPath($path) || $this->isParkedFile($path)) {
             return collect();
         }
 

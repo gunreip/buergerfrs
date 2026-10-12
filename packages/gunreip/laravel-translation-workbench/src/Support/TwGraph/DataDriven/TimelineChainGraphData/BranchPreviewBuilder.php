@@ -6,6 +6,7 @@ namespace Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainG
 
 use Gunreip\TranslationWorkbench\Support\TwGraph\Defaults;
 use Illuminate\Support\Collection;
+use Gunreip\TranslationWorkbench\Support\DatasetLabelContext;
 
 final class BranchPreviewBuilder
 {
@@ -21,6 +22,11 @@ final class BranchPreviewBuilder
     public static function previews(array $mergeOutcomes, array $trunkTimelineAnchors = []): array
     {
         $rows = collect($mergeOutcomes['rows'] ?? []);
+        if (!empty($mergeOutcomes['dataset_context_id'])) {
+            $rows = $rows->map(static fn (array $row): array => [...$row,
+                'dataset_source' => ['type' => 'finding', 'id' => $row['finding_id'] ?? null],
+            ]);
+        }
         $branches = collect();
 
         foreach (self::outcomeSpecs() as $spec) {
@@ -37,10 +43,16 @@ final class BranchPreviewBuilder
 
         $branches = $branches
             ->values()
-            ->map(static function (array $branch, int $index): array {
+            ->map(static function (array $branch, int $index) use ($mergeOutcomes): array {
                 $branch['component_counter'] = $index + 1;
                 $branch['id'] = 'strang.branch-' . (string) ($branch['side'] ?? 'left') . '.' . $branch['component_counter'];
 
+                if (!empty($mergeOutcomes['dataset_context_id'])) {
+                    $source = ['type' => 'finding-group', 'id' => $mergeOutcomes['dataset_context_id'], 'ids' => $branch['source']['finding_ids'] ?? []];
+                    foreach (['step', 'end_label'] as $key) {
+                        $branch[$key] = DatasetLabelContext::labels($branch[$key] ?? [], $source);
+                    }
+                }
                 return LabelWidth::preview($branch);
             })
             ->all();
@@ -128,6 +140,7 @@ final class BranchPreviewBuilder
                         if ($stemRows->has(0)) {
                             $entry[$labelSide] = [
                                 'text' => self::rowLabel((array) $stemRows->get(0)),
+                                'contextMenu' => DatasetLabelContext::menu($stemRows->get(0)['dataset_source'] ?? []),
                                 'badgeColor' => $badgeColor,
                             ];
                         }
@@ -135,6 +148,7 @@ final class BranchPreviewBuilder
                         if ($stemRows->has(1)) {
                             $entry[$insideLabelSide] = [
                                 'text' => self::rowLabel((array) $stemRows->get(1)),
+                                'contextMenu' => DatasetLabelContext::menu($stemRows->get(1)['dataset_source'] ?? []),
                                 'badgeColor' => $badgeColor,
                             ];
                         }
@@ -249,6 +263,7 @@ final class BranchPreviewBuilder
                                         '1 row',
                                     ],
                                     'badgeColor' => $color,
+                                    'contextMenu' => DatasetLabelContext::menu($row['dataset_source'] ?? []),
                                 ],
                             ],
                             ...($endLength !== null ? ['endLength' => (string) $endLength] : []),
@@ -259,6 +274,7 @@ final class BranchPreviewBuilder
                                     '1 row',
                                 ],
                                 'badgeColor' => $color,
+                                'contextMenu' => DatasetLabelContext::menu($row['dataset_source'] ?? []),
                             ],
                             'nodeLabels' => [
                                 3 => [
@@ -266,6 +282,7 @@ final class BranchPreviewBuilder
                                         'text' => self::rowLabel($row),
                                         'side' => $labelSide,
                                         'badgeColor' => $color,
+                                        'contextMenu' => DatasetLabelContext::menu($row['dataset_source'] ?? []),
                                     ],
                                 ],
                             ],

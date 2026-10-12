@@ -77,6 +77,7 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
         Livewire::component('translation-workbench.raw-data-new', TranslationWorkbenchRawDataNew::class);
         Livewire::component('translation-workbench.settings', TranslationWorkbenchSettings::class);
         Livewire::component('translation-workbench.tw-graph.data-driven.datasets', TwGraphDataDrivenDatasets::class);
+        Livewire::component('translation-workbench.tw-graph.data-driven.dataset-details', \Gunreip\TranslationWorkbench\Livewire\TwGraphDatasetDetails::class);
 
         $this->commands([
             ApplySuspiciousKeyRestores::class,

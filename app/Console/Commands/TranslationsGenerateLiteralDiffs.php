@@ -11,7 +11,7 @@ use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use SplFileInfo;
-use Symfony\Component\Finder\Finder;
+use Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanner;
 use Symfony\Component\Process\Process;
 use Throwable;
 
@@ -24,7 +24,7 @@ class TranslationsGenerateLiteralDiffs extends Command
      * The name and signature of the console command.
      */
     protected $signature = 'translations:generate-literal-diffs
-        {--paths= : Comma-separated relative paths to scan (default: app,routes,resources/views)}
+        {--paths= : Comma-separated relative paths to scan (default: translation-workbench.paths)}
         {--output-dir= : Relative output directory for generated patch files}
         {--allow-suggested : Also use suggested_key when key is empty}
         {--require-complete-values : Require non-empty translation values for all enabled locales (default: true)}
@@ -207,7 +207,7 @@ class TranslationsGenerateLiteralDiffs extends Command
         $pathsOption = trim((string) $this->option('paths'));
 
         if ($pathsOption === '') {
-            return ['app', 'routes', 'resources/views'];
+            return (array) config('translation-workbench.paths', []);
         }
 
         return collect(explode(',', $pathsOption))
@@ -314,23 +314,7 @@ class TranslationsGenerateLiteralDiffs extends Command
      */
     private function scannableFiles(array $paths): iterable
     {
-        $directories = collect($paths)
-            ->map(fn (string $path): string => base_path($path))
-            ->filter(fn (string $path): bool => File::isDirectory($path))
-            ->values()
-            ->all();
-
-        if ($directories === []) {
-            return [];
-        }
-
-        return Finder::create()
-            ->files()
-            ->in($directories)
-            ->name('*.php')
-            ->name('*.blade.php')
-            ->ignoreDotFiles(true)
-            ->ignoreVCS(true);
+        return app(TranslationWorkbenchScanner::class)->scannableFiles($paths);
     }
 
     /**

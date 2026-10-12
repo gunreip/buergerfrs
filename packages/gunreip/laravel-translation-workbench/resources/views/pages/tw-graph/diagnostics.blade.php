@@ -109,6 +109,8 @@
         </div>
 
         @if ($twGraphReport !== null)
+            @include('translation-workbench::pages.tw-graph.partials.fail-summary', ['checks' => $twGraphChecks])
+
             @if ($twGraphGroups->isNotEmpty())
                 <flux:callout
                     class="mt-6"

@@ -76,6 +76,7 @@
     :id="$id"
     :text="data_get($label, 'text')"
     :tooltip="data_get($label, 'tooltip')"
+    :context-menu="data_get($label, 'contextMenu', [])"
     :side="$side"
     :anchor-x="$anchorX"
     :anchor-y="$anchorY"

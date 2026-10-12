@@ -307,6 +307,9 @@ class TwGraphDataDrivenDatasets extends Component
     public function render()
     {
         $mainRow = $this->timelineChainMainRow();
+        if ($mainRow !== null) {
+            $mainRow['dataset_context'] = true;
+        }
 
         return view('translation-workbench::livewire.tw-graph.data-driven.datasets', [
             'mainRow' => $mainRow,
@@ -463,6 +466,7 @@ class TwGraphDataDrivenDatasets extends Component
                 'branch' => __('Root'),
                 'translation_key' => $translationKey,
                 'event' => __('Current canonical root'),
+                        'dataset_source' => ['type' => 'dataset', 'id' => $mainRow['id']],
                 'state' => str((string) $mainRow['chain_type'])->headline() . ' / ' . str((string) $mainRow['chain_status'])->headline(),
                 'color' => $this->timelineGraphColor('root_event', 'green'),
                 'branch_color' => $this->timelineGraphColor('root_event', 'green'),
@@ -480,6 +484,7 @@ class TwGraphDataDrivenDatasets extends Component
                     'branch' => __('Root key'),
                     'translation_key' => $translationKey,
                     'event' => __('Key created'),
+                        'dataset_source' => ['type' => 'key', 'id' => $key->id],
                     'state' => (string) $key->status,
                     'color' => $this->timelineGraphColor('key_event', 'violet'),
                     'branch_color' => $this->timelineGraphColor('key_event', 'violet'),
@@ -507,6 +512,7 @@ class TwGraphDataDrivenDatasets extends Component
                         'branch' => __('Root key'),
                         'translation_key' => $translationKey,
                         'event' => __('Key updated'),
+                        'dataset_source' => ['type' => 'key', 'id' => $key->id],
                         'state' => (string) $key->review_status,
                         'color' => $this->timelineGraphColor('key_updated_event', 'cyan'),
                         'branch_color' => $this->timelineGraphColor('key_event', 'violet'),
@@ -525,6 +531,7 @@ class TwGraphDataDrivenDatasets extends Component
                     'branch' => 'finding #' . $finding->id,
                     'translation_key' => $translationKey,
                     'event' => __('Finding created'),
+                        'dataset_source' => ['type' => 'finding', 'id' => $finding->id],
                     'state' => (string) $finding->status,
                     'color' => $this->timelineGraphColor('finding_event', 'sky'),
                     'branch_color' => $this->timelineGraphColor('finding_event', 'sky'),
@@ -544,6 +551,7 @@ class TwGraphDataDrivenDatasets extends Component
                         'branch' => 'lang value #' . $langValue->id,
                         'translation_key' => $translationKey,
                         'event' => __('Lang value'),
+                        'dataset_source' => ['type' => 'lang-value', 'id' => $langValue->id],
                         'state' => trim((string) $langValue->locale . ' / ' . (string) $langValue->status),
                         'color' => $langValue->status === 'active'
                             ? $this->timelineGraphColor('lang_value_active_event', 'emerald')
@@ -577,6 +585,7 @@ class TwGraphDataDrivenDatasets extends Component
                         'branch' => 'review #' . $review->id,
                         'translation_key' => $translationKey,
                         'event' => str((string) $review->decision)->replace('_', ' ')->headline()->toString(),
+                        'dataset_source' => ['type' => 'review', 'id' => $review->id],
                         'state' => (string) $review->review_type,
                         'color' => $this->timelineGraphColor('review_event', 'amber'),
                         'branch_color' => $this->timelineGraphColor('review_event', 'amber'),
@@ -670,7 +679,7 @@ class TwGraphDataDrivenDatasets extends Component
         });
 
         $bulkOriginRows = $edgeFindings
-            ->map(function (object $finding) use ($bulkReviewByFindingId, $translationKey, $trunk): array {
+            ->map(function (object $finding) use ($bulkReviewByFindingId, $translationKey, $trunk, $mainRow): array {
                 $root = 'finding #' . $finding->id;
                 $literal = trim((string) ($finding->literal_text ?? $finding->literal_text_suggested ?? ''));
                 $source = trim((string) ($finding->source_path ?? ''));
@@ -684,6 +693,7 @@ class TwGraphDataDrivenDatasets extends Component
                     'translation_key' => $translationKey,
                     'first_timestamp' => $finding->first_seen_at ?: $finding->created_at,
                     'first_root' => $root,
+                    'dataset_source' => ['type' => 'finding', 'id' => (int) $finding->id, 'dataset_id' => (int) $mainRow['id']],
                     'first_origin_key' => (string) ($finding->suggested_key ?? ''),
                     'first_event' => __('First seen as single finding'),
                     'first_state' => (string) $finding->status,
@@ -731,7 +741,7 @@ class TwGraphDataDrivenDatasets extends Component
         )->keyBy('id');
 
         return $sharedCandidates
-            ->map(function (array $candidate) use ($findingsById, $translationKey, $trunk): ?array {
+            ->map(function (array $candidate) use ($findingsById, $translationKey, $trunk, $mainRow): ?array {
                 $findingId = (int) ($candidate['finding_id'] ?? 0);
                 $finding = $findingId > 0 ? $findingsById->get($findingId) : null;
                 $originKey = collect([
@@ -756,6 +766,9 @@ class TwGraphDataDrivenDatasets extends Component
                     'source_path' => $source,
                     'translation_key' => $translationKey,
                     'first_timestamp' => $finding?->first_seen_at ?: $finding?->created_at ?: ($mainRow['first_seen_at'] ?? null),
+                    'dataset_source' => $findingId > 0
+                        ? ['type' => 'finding', 'id' => $findingId, 'dataset_id' => (int) $mainRow['id']]
+                        : (!empty($candidate['id']) ? ['type' => 'merge-group', 'id' => (int) $mainRow['id'], 'candidate_ids' => [(int) $candidate['id']]] : []),
                     'first_root' => $findingId > 0 ? ('finding #' . $findingId) : ('candidate #' . (string) ($candidate['id'] ?? '?')),
                     'first_origin_key' => $originKey,
                     'first_event' => __('First seen as shared candidate origin'),

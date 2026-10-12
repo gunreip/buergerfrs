@@ -9,6 +9,7 @@ return [
 
     'all' => [
         'all-entries' => 'All',
+        'all-types' => 'All',
     ],
 
     'button' => [
@@ -96,8 +97,13 @@ return [
         'no_description_available' => 'No description available.',
     ],
 
+    'state' => [
+        'status' => 'Status',
+    ],
+
     'states' => [
         'all' => 'All',
+        'all-statuses' => 'All Statuses',
         'assigned' => 'Assigned',
         'custom' => 'Custom',
         'no' => 'No',
@@ -111,6 +117,10 @@ return [
     ],
 
     'table' => [
+        'headers' => [
+            'actions' => 'Actions',
+        ],
+
         'pagination' => [
             'results' => 'results',
             'to' => 'to',
@@ -125,6 +135,15 @@ return [
         'copyable_field' => [
             'copy_to_clipboard' => 'Copy to clipboard',
         ],
+    ],
+
+    'time' => [
+        'timeline' => 'Timeline',
+    ],
+
+    'title' => [
+        'filter' => 'Filter',
+        'overview' => 'Overview',
     ],
 
     'tooltip' => [

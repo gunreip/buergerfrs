@@ -273,3 +273,15 @@ it('activates only the reviewed extension on both sides without moving later ext
             ->and($preview['extension_compensation_enabled'])->toBeFalse();
     }
 });
+
+it('keeps information references tied to each origin and aggregate group', function (): void {
+    $rows = mergeRows(14)->map(static fn (array $row, int $index): array => [...$row,
+        'dataset_source' => ['type' => 'finding', 'id' => $index + 1, 'dataset_id' => 42],
+    ]);
+    $previews = MergePreviewBuilder::previews($rows, 6);
+    $left = collect($previews)->firstWhere('side', 'left');
+    expect(data_get($left, 'start_label.contextMenu.0.detail.source.id'))->toBe(1)
+        ->and(data_get($left, 'extension_node_labels.1.start.contextMenu.0.detail.source.id'))->toBe(3)
+        ->and(data_get($left, 'extension_node_labels.3.start.contextMenu.0.detail.source.type'))->toBe('finding-group')
+        ->and(data_get($left, 'extension_node_labels.3.start.contextMenu.0.detail.source.ids'))->toBe([7, 9, 11]);
+});

@@ -23,6 +23,7 @@
     'id' => 'text',
     'text' => null,
     'tooltip' => null,
+    'contextMenu' => [],
     'anchorX' => '0rem',
     'anchorY' => '0rem',
     'side' => 'right',
@@ -80,7 +81,19 @@
                 aria-hidden="true"
             ></span>
         @endif
-        @if (filled($tooltip))
+        @if ($contextMenu !== [] && ! filter_var($attributes->get('aria-hidden', false), FILTER_VALIDATE_BOOLEAN))
+            <flux:context class="contents">
+                <span class="relative inline-block" tabindex="0" aria-label="{{ __('More information: right-click') }}">
+                    @include('translation-workbench::components.ui.tw-graph.partials.text-content')
+                    <flux:icon.information-circle class="pointer-events-none absolute -right-1 -top-1 size-3.5" aria-hidden="true" />
+                </span>
+                <flux:menu>
+                    @foreach ($contextMenu as $contextItem)
+                        <flux:menu.item x-on:click.stop="$dispatch({{ \Illuminate\Support\Js::from($contextItem['event']) }}, {{ \Illuminate\Support\Js::from($contextItem['detail'] ?? []) }})">{{ $contextItem['label'] }}</flux:menu.item>
+                    @endforeach
+                </flux:menu>
+            </flux:context>
+        @elseif (filled($tooltip))
             <flux:tooltip toggleable position="right" align="start">
                 <button type="button" class="cursor-help rounded focus-visible:outline-2 focus-visible:outline-offset-4" x-on:click.stop>
                     @include('translation-workbench::components.ui.tw-graph.partials.text-content')

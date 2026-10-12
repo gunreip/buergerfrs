@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Gunreip\TranslationWorkbench\Support\TranslationWorkbenchColorPalette as Palette;
 use Illuminate\Support\Facades\Blade;
 use Tests\TestCase;
 
@@ -112,10 +113,10 @@ it('lets flow elseif rows transition from parent color to condition color', func
 
     expect($html)
         ->toContain('sample.flow.1.elseif.amber.arc-west-north')
-        ->toContain('--tw-graph-protocol-local-surface-color-rgb: 222 248 252')
-        ->toContain('--tw-graph-protocol-local-to-surface-color-rgb: 254 245 222')
-        ->toContain('--tw-graph-protocol-local-dark-surface-color-rgb: 14 98 113')
-        ->toContain('--tw-graph-protocol-local-to-dark-surface-color-rgb: 115 91 31')
+        ->toContain('--tw-graph-protocol-local-surface-color-rgb: '.Palette::surfaceRgb('cyan'))
+        ->toContain('--tw-graph-protocol-local-to-surface-color-rgb: '.Palette::surfaceRgb('amber'))
+        ->toContain('--tw-graph-protocol-local-dark-surface-color-rgb: '.Palette::darkSurfaceRgb('cyan'))
+        ->toContain('--tw-graph-protocol-local-to-dark-surface-color-rgb: '.Palette::darkSurfaceRgb('amber'))
         ->toMatch('/--tw-graph-protocol-local-color-rgb: 6 182 212;[^>]*--tw-graph-protocol-local-to-color-rgb: 245 158 11;[^>]*data-tw-graph-path="sample\.flow\.1\.elseif\.amber\.bridge-in"/s')
         ->toMatch('/--tw-graph-protocol-local-color-rgb: 245 158 11;[^>]*--tw-graph-protocol-local-to-color-rgb: 6 182 212;[^>]*data-tw-graph-path="sample\.flow\.1\.elseif\.amber\.bridge-out"/s')
         ->toMatch('/--tw-graph-protocol-local-color-rgb: 6 182 212;[^>]*data-tw-graph-path="sample\.flow\.1\.elseif\.amber\.bridge-out\.end\.joint-arrow"/s')

@@ -165,8 +165,8 @@ final class RenderPreviewBuilder
         $eventPathEntries = $trunkTimelineState['event_path_entries'];
         $trunkTimelineAnchors = $trunkTimelineState['trunk_timeline_anchors'];
         $langValueLabels = array_map(
-            static fn (array $lines): array => LabelWidth::resolve(['text' => $lines]),
-            LangValueLabels::active($mainRow),
+            static fn (array $lines): array => LabelWidth::resolve(array_key_exists('text', $lines) ? $lines : ['text' => $lines]),
+            LangValueLabels::active($mainRow, !empty($mainRow['dataset_context'])),
         );
         $graphId = 'timeline-chain-' . (int) ($mainRow['id'] ?? 0) . '-data-preview';
         $layoutCorrections = LayoutCorrectionConfig::forDataDriven();
@@ -174,6 +174,9 @@ final class RenderPreviewBuilder
             'merge_layout.preview_head_candidates',
             Defaults::graph('merge_layout.preview_head_candidates', 6),
         ));
+        if (!empty($mainRow['dataset_context'])) {
+            $mergeOutcomes['dataset_context_id'] = (int) $mainRow['id'];
+        }
         $mergePreviews = MergePreviewBuilder::previews($originRows, $mergePreviewHeadCandidates);
         $branchPreviews = BranchPreviewBuilder::previews($mergeOutcomes, $trunkTimelineAnchors);
         $rekeyPreviews = RekeyPreviewBuilder::previews($mainRow);
@@ -227,6 +230,10 @@ final class RenderPreviewBuilder
                 'long' => true,
             ]
             : null;
+        if ($rekeyTargetTrunkLabel !== null && !empty($mainRow['dataset_context'])) {
+            $rekeyTargetTrunkLabel = \Gunreip\TranslationWorkbench\Support\DatasetLabelContext::labels($rekeyTargetTrunkLabel,
+                ['type' => 'rekey-group', 'id' => $mainRow['id'], 'direction' => 'target']);
+        }
         $pathCount = self::plannedTrunkPathCount(
             $eventPathEntries,
             self::trunkAttachedPathNumbers($mergePreviews, $rekeyPreviews, $branchPreviews),
@@ -288,6 +295,12 @@ final class RenderPreviewBuilder
             'text' => $trunkEndLabelLines,
             'long' => true,
         ];
+        if (!empty($mainRow['dataset_context'])) {
+            $trunkStartLabel = \Gunreip\TranslationWorkbench\Support\DatasetLabelContext::labels($trunkStartLabel,
+                !empty($mainRow['root_key_id']) ? ['type' => 'key', 'id' => $mainRow['root_key_id']] : ['type' => 'dataset', 'id' => $mainRow['id']]);
+            $trunkEndLabel = \Gunreip\TranslationWorkbench\Support\DatasetLabelContext::labels($trunkEndLabel,
+                ['type' => 'dataset', 'id' => $mainRow['id']]);
+        }
         $trunkStemClassification = self::classifyAndEliminateEmptyTrunkStems(
             $trunkPathLengths,
             $nodeLabels,
@@ -496,6 +509,7 @@ final class RenderPreviewBuilder
             'graph' => [
                 'graph_id' => $graphId,
                 'header' => [
+                    ...(!empty($mainRow['dataset_context']) ? ['contextMenu' => \Gunreip\TranslationWorkbench\Support\DatasetLabelContext::menu(['type' => 'dataset', 'id' => $mainRow['id']])] : []),
                     'text' => [
                         'Timeline chain ID #' . (string) ($mainRow['id'] ?? '?'),
                         self::headlineLabel($mainRow['chain_type'] ?? '')
@@ -638,6 +652,7 @@ final class RenderPreviewBuilder
                             $labels[] = [
                                 'text' => $labelText,
                                 'side' => $side,
+                                'contextMenu' => \Gunreip\TranslationWorkbench\Support\DatasetLabelContext::menu((array) ($row['dataset_source'] ?? [])),
                             ];
                         }
 
@@ -4035,6 +4050,7 @@ final class RenderPreviewBuilder
                     ])),
                     'color' => self::color('chunk_event', 'amber'),
                     'badgeColor' => self::color('chunk_event', 'amber'),
+                    'contextMenu' => !empty($mainRow['dataset_context']) ? \Gunreip\TranslationWorkbench\Support\DatasetLabelContext::menu(['type' => 'event-group', 'id' => $mainRow['id'], 'event_type' => (string) $eventType]) : [],
                 ],
                 [
                     'side' => 'right',
@@ -4045,6 +4061,7 @@ final class RenderPreviewBuilder
                     'color' => self::color('chunk_event', 'amber'),
                     'badgeColor' => self::color('chunk_event', 'amber'),
                     'maxLines' => 4,
+                    'contextMenu' => !empty($mainRow['dataset_context']) ? \Gunreip\TranslationWorkbench\Support\DatasetLabelContext::menu(['type' => 'event', 'id' => $sampleRow['id'] ?? null]) : [],
                 ],
             ];
             $items[] = [

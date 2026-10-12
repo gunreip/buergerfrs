@@ -1,3 +1,9 @@
+@php
+    // Supplied by the including dataset view; null when no dataset is selected.
+    /** @var array<string, mixed>|null $mainRow */
+    $mainRow = $mainRow ?? null;
+@endphp
+
 <form
     class="mt-4 items-start gap-3"
     wire:submit="loadDataset"

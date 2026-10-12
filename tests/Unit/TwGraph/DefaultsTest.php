@@ -223,13 +223,15 @@ it('keeps central tw graph layout defaults available for every graph family', fu
 it('keeps graph specific defaults partial instead of duplicating all central defaults', function (): void {
     expect(config('tw-graph-data-driven-defaults'))->toHaveKeys([
         'arc_radius',
-        'stem_length',
         'merge_layout',
         'colors',
     ])
-        ->and(config('tw-graph-data-driven-defaults'))->not->toHaveKey('label_width')
+        ->and(config('tw-graph-data-driven-defaults'))->not->toHaveKeys(['label_width', 'stem_length'])
         ->and(Defaults::dataDrivenString('label_width.long', '20rem'))->toBe(
             Defaults::graphString('label_width.long', '20rem'),
+        )
+        ->and(Defaults::dataDrivenString('stem_length', '4rem'))->toBe(
+            Defaults::graphString('stem_length', '4rem'),
         )
         ->and(Defaults::dataDrivenString('bridge_length', '4rem'))->toBe(
             Defaults::graphString('bridge_length', '4rem'),

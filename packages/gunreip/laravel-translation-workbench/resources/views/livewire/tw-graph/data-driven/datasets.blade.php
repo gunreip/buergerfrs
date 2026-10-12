@@ -84,4 +84,7 @@
             </flux:callout.text>
         </flux:callout>
     @endif
+    @if ($mainRow)
+        <livewire:translation-workbench.tw-graph.data-driven.dataset-details :dataset-id="(int) $mainRow['id']" :key="'dataset-details-'.$mainRow['id']" />
+    @endif
 </flux:card>

@@ -15,6 +15,7 @@ return [
         'routes',
         'resources/views',
         'packages/gunreip/laravel-translation-workbench/resources/views',
+        'packages/gunreip/laravel-translation-workbench/src',
     ],
 
     'exclude_paths' => [

@@ -229,21 +229,36 @@
         >
             <flux:callout.heading>{{ __('Merge candidates') }}</flux:callout.heading>
             <flux:callout.text>
-                <div class="space-y-1">
-                    @forelse ($twGraphDataDrivenMerge as $mergeStrang)
-                        <div class="flex flex-wrap items-center gap-1 text-xs">
+                @php
+                    // Summarize the displayed candidates only; retain every origin in the graph data.
+                    $mergeCandidateGroups = $twGraphDataDrivenMerge->groupBy(
+                        static fn (array $candidate): string => json_encode([
+                            $candidate['side'],
+                            $candidate['origin_key'] ?: $candidate['source_root'],
+                        ]),
+                    );
+                @endphp
+                <div class="grid max-h-64 grid-cols-[auto_minmax(0,1fr)] items-start gap-x-2 gap-y-1 overflow-y-auto pr-2 text-xs">
+                    @forelse ($mergeCandidateGroups as $mergeCandidates)
+                        @php
+                            $mergeStrang = $mergeCandidates->first();
+                        @endphp
+                        <div class="contents">
                             <flux:badge
                                 size="sm"
                                 color="{{ $mergeStrang['side'] === 'left' ? 'amber' : 'green' }}"
                             >
                                 {{ $mergeStrang['side'] }}
                             </flux:badge>
-                            <span class="wrap-anywhere font-mono text-zinc-700 dark:text-zinc-200">
+                            <span class="min-w-0 wrap-anywhere font-mono text-zinc-700 dark:text-zinc-200">
                                 {{ $mergeStrang['origin_key'] ?: $mergeStrang['source_root'] }}
+                                <span class="whitespace-nowrap tabular-nums text-zinc-500 dark:text-zinc-400">
+                                    · {{ number_format($mergeCandidates->count()) }}
+                                </span>
                             </span>
                         </div>
                     @empty
-                        <flux:text class="text-xs text-zinc-500">
+                        <flux:text class="col-span-2 text-xs text-zinc-500">
                             {{ __('No origin merge candidates in the current sample.') }}
                         </flux:text>
                     @endforelse
@@ -257,27 +272,28 @@
         >
             <flux:callout.heading>{{ __('Branch candidates') }}</flux:callout.heading>
             <flux:callout.text>
-                <div class="space-y-1">
+                <div class="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-2 gap-y-1 text-xs">
                     @forelse ($twGraphDataDrivenBranch->take(5) as $branchStrang)
-                        <div class="flex flex-wrap items-center gap-1 text-xs">
+                        <div class="contents">
                             <flux:badge
                                 size="sm"
                                 color="{{ $branchStrang['side'] === 'left' ? 'fuchsia' : 'violet' }}"
                             >
                                 {{ $branchStrang['side'] }}
                             </flux:badge>
-                            <span class="wrap-anywhere text-zinc-700 dark:text-zinc-200">
+                            <span class="min-w-0 wrap-anywhere text-zinc-700 dark:text-zinc-200">
                                 {{ $branchStrang['branch'] }} · {{ $branchStrang['event'] }}
                             </span>
                         </div>
                     @empty
-                        <flux:text class="text-xs text-zinc-500">
+                        <flux:text class="col-span-2 text-xs text-zinc-500">
                             {{ __('No branch candidates in the current sample.') }}
                         </flux:text>
                     @endforelse
 
                     @if ($twGraphDataDrivenBranch->count() > 5)
                         <flux:badge
+                            class="col-span-2 justify-self-start"
                             size="sm"
                             color="fuchsia"
                         >
@@ -394,11 +410,29 @@
             >
             <div class="mt-3">
                 @if (filled(data_get($twGraphDataDrivenPreviewGraph->get('header'), 'text')))
+                    @if (filled(data_get($twGraphDataDrivenPreviewGraph->get('header'), 'contextMenu')))
+                        <flux:context>
+                            <flux:callout.heading class="mb-2" tabindex="0" :aria-label="__('More information: right-click')">
+                                @foreach ((array) data_get($twGraphDataDrivenPreviewGraph->get('header'), 'text', []) as $graphHeaderLine)
+                                    <span>{{ $graphHeaderLine }}</span>
+                                @endforeach
+                                <flux:icon.information-circle class="inline size-3.5" aria-hidden="true" />
+                            </flux:callout.heading>
+                            <flux:menu>
+                                @foreach (data_get($twGraphDataDrivenPreviewGraph->get('header'), 'contextMenu', []) as $contextItem)
+                                    <flux:menu.item x-on:click.stop="$dispatch({{ \Illuminate\Support\Js::from($contextItem['event']) }}, {{ \Illuminate\Support\Js::from($contextItem['detail']) }})">
+                                        {{ $contextItem['label'] }}
+                                    </flux:menu.item>
+                                @endforeach
+                            </flux:menu>
+                        </flux:context>
+                    @else
                     <flux:callout.heading class="mb-2">
                         @foreach ((array) data_get($twGraphDataDrivenPreviewGraph->get('header'), 'text', []) as $graphHeaderLine)
                             <span>{{ $graphHeaderLine }}</span>
                         @endforeach
                     </flux:callout.heading>
+                    @endif
                 @endif
 
                 @php

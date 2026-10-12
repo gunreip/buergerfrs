@@ -6,6 +6,7 @@ namespace Gunreip\TranslationWorkbench\Support\TwGraph\DataDriven\TimelineChainG
 
 use Gunreip\TranslationWorkbench\Support\TwGraph\Defaults;
 use Illuminate\Support\Collection;
+use Gunreip\TranslationWorkbench\Support\DatasetLabelContext;
 
 final class MergePreviewBuilder
 {
@@ -26,6 +27,9 @@ final class MergePreviewBuilder
             ->map(static function (Collection $sideRows, string $side) use ($maxMergeCandidates): array {
                 $main = $sideRows->first();
                 $mainPreview = self::preview($main['row'], (int) $main['index'], $side);
+                foreach (['start_label', 'node_labels'] as $labelKey) {
+                    $mainPreview[$labelKey] = DatasetLabelContext::labels($mainPreview[$labelKey], $main['row']['dataset_source'] ?? []);
+                }
                 $extensions = self::extensionRows($sideRows, max(0, intdiv($maxMergeCandidates, 2) - 1));
                 $mainPreview['stem_continuation'] = self::withConfiguredVerticalStagger(
                     (array) ($mainPreview['stem_continuation'] ?? []),
@@ -158,7 +162,10 @@ final class MergePreviewBuilder
             return self::aggregateExtensionNodeLabels(collect($extension['rows'] ?? []), $side);
         }
 
-        return self::realExtensionNodeLabels((array) ($extension['row'] ?? []), $side);
+        return DatasetLabelContext::labels(
+            self::realExtensionNodeLabels((array) ($extension['row'] ?? []), $side),
+            $extension['row']['dataset_source'] ?? [],
+        );
     }
 
     /**
@@ -212,6 +219,19 @@ final class MergePreviewBuilder
             ],
         ];
 
+        $sources = $rows->pluck('dataset_source')->filter();
+        if ($sources->isNotEmpty()) {
+            $findingIds = $sources->where('type', 'finding')->pluck('id')->values()->all();
+            $candidateIds = $sources->where('type', 'merge-group')->flatMap(fn ($source) => $source['candidate_ids'] ?? [])->values()->all();
+            $firstSource = $sources->first();
+            $labels['start'] = DatasetLabelContext::labels($labels['start'], [
+                'type' => $candidateIds === [] ? 'finding-group' : 'merge-group',
+                'relation' => 'merge',
+                'id' => $firstSource['dataset_id'] ?? $firstSource['id'],
+                'ids' => $findingIds,
+                'candidate_ids' => $candidateIds,
+            ]);
+        }
         $rows
             ->values()
             ->chunk(2)
@@ -220,8 +240,8 @@ final class MergePreviewBuilder
                 $nodeIndex = $chunkIndex + 1;
                 $leftRow = $chunk->get(0);
                 $rightRow = $chunk->get(1);
-                $leftLabel = is_array($leftRow) ? LabelFormatter::findingIdLabelWithTimestamp($leftRow) : null;
-                $rightLabel = is_array($rightRow) ? LabelFormatter::findingIdLabelWithTimestamp($rightRow) : null;
+                $leftLabel = is_array($leftRow) ? DatasetLabelContext::labels(['text' => LabelFormatter::findingIdLabelWithTimestamp($leftRow)], $leftRow['dataset_source'] ?? []) : null;
+                $rightLabel = is_array($rightRow) ? DatasetLabelContext::labels(['text' => LabelFormatter::findingIdLabelWithTimestamp($rightRow)], $rightRow['dataset_source'] ?? []) : null;
 
                 $labels[$nodeIndex] = $side === 'left'
                     ? array_filter([

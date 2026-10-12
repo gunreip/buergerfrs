@@ -92,7 +92,7 @@ it('builds a rekey source preview when the current key is the relation target', 
 
     expect($preview['start_label']['text'])->toBe(['rekey source from ID #?', '2026-08-04 09:22'])
         ->and($preview['start_label']['badgeColor'])->toBe('sky')
-        ->and($preview['node_labels'][6]['left'])->toBe([
+        ->and($preview['node_labels'][6]['left']['text'])->toBe([
         'rekeyed into this key ID #4507',
         'ui.save -> ui.button.save.save',
     ])
@@ -133,12 +133,12 @@ it('builds a rekey target preview when the current key is the relation source', 
         ->and($preview['end_label']['badgeColor'])->toBe('sky')
         ->and($preview['end_label']['long'])->toBeTrue()
         ->and($preview['stem_continuation'][1]['compressed'])->toBeTrue()
-        ->and($preview['stem_continuation'][2]['right'])->toBe([
+        ->and($preview['stem_continuation'][2]['right']['text'])->toBe([
             'Source',
             'source lang value ID #801',
             'target lang value ID #802',
         ])
-        ->and($preview['stem_continuation'][2]['left'])->toBe([
+        ->and($preview['stem_continuation'][2]['left']['text'])->toBe([
             'Target key',
             'ui.button.save.save',
         ]);
@@ -180,7 +180,7 @@ it('prefers the active target locale relation when several rekey relations descr
     ])[0];
 
     expect($preview['start_label']['text'])->toBe(['rekey source from ID #?', '2026-08-05 10:30'])
-        ->and($preview['node_labels'][2]['right'])->toBe([
+        ->and($preview['node_labels'][2]['right']['text'])->toBe([
             'Source',
             'source lang value ID #901',
         ])
