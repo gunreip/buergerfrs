@@ -42,7 +42,7 @@ class TranslationWorkbenchTimelineRecorder
             'event_type' => $eventType,
             'old_values' => $oldValues,
             'new_values' => $newValues,
-            'context' => $context,
+            'context' => app(TranslationWorkbenchPipelineContext::class)->enrich($context),
             'created_by_user_id' => $createdByUserId ?? Auth::id(),
         ]);
     }

@@ -8,7 +8,7 @@
         <div class="flex items-start justify-between gap-4">
             <flux:field>
                 <x-ui.headers.card
-                    :title="__('ui.title.filter')"
+                    :title="__('admin.permissions.modals.edit.title')"
                     :description="__('admin.permissions.modals.edit.description')"
                 />
 

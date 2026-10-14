@@ -419,7 +419,7 @@
             <div class="flex shrink-0 justify-end gap-3 border-t border-zinc-200 pt-4 dark:border-zinc-700">
                 {{-- Button Close Modal --}}
                 <x-ui.button.cancel
-                    label="{{ __('ui.close') }}"
+                    label="{{ __('ui.button.close.close') }}"
                     icon="circle-x"
                     :loading="true"
                     wire:click="closeActivityLogModal"

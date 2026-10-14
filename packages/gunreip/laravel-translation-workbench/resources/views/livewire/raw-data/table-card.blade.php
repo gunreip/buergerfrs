@@ -93,10 +93,6 @@
         @include('translation-workbench::livewire.raw-data.results-timeline-events')
     @endif
 
-    @if ($table === 'translation_workbench_timeline_chains')
-        @include('translation-workbench::livewire.raw-data.results-timeline-chains')
-    @endif
-
     @php
         $rawDataSearch = trim(
             (string) match ($table) {
@@ -126,9 +122,15 @@
     />
 
     {{-- Table --}}
-    <flux:table container:class="max-h-[100vh] overflow-x-auto">
+    @if ($table === 'translation_workbench_timeline_chains')
+        <flux:error name="datasetIdInput" />
+    @endif
+    <flux:table container:class="max-h-[100vh] overflow-x-auto rounded-t-lg">
         {{-- Table Header --}}
-        <flux:table.columns sticky>
+        <flux:table.columns
+            class="bg-white dark:bg-zinc-800"
+            sticky
+        >
             @foreach ($columns as $column)
                 @php
                     $presentation = $columnPresentation[$column] ?? [];
@@ -171,7 +173,7 @@
                     :sticky="$loop->first"
                     @class([
                         'font-mono',
-                        'ml-2 bg-white dark:bg-zinc-600' => $loop->first,
+                        'ml-2 bg-white dark:bg-zinc-900' => $loop->first,
                         'text-red-700 dark:text-red-300' => $isForeignKey,
                         $presentation['header_class'] ?? '' => filled(
                             $presentation['header_class'] ?? ''),
@@ -192,7 +194,7 @@
 
                             @if ($isForeignKey)
                                 <flux:badge
-                                    class="tabular-nums"
+                                    class="ml-1 tabular-nums"
                                     size="sm"
                                     color="red"
                                 >
@@ -344,13 +346,26 @@
                         <flux:table.cell
                             :sticky="$loop->first"
                             @class([
-                                'align-top',
+                                'align-top text-right',
                                 'bg-zinc-700' => $loop->first,
                                 $presentation['cell_class'] ?? '' => filled(
                                     $presentation['cell_class'] ?? ''),
                             ])
                         >
-                            @if ($isJsonValue)
+                            @if ($table === 'translation_workbench_timeline_chains' && $column === 'id')
+                                <flux:button
+                                    size="sm"
+                                    variant="ghost"
+                                    icon="git-branch"
+                                    :tooltip="__('Show dataset #:id in TW-Graph', ['id' => $row->id])"
+                                    :aria-label="__('Show dataset #:id in TW-Graph', ['id' => $row->id])"
+                                    wire:click="showTimelineChainGraph({{ (int) $row->id }})"
+                                    wire:loading.attr="disabled"
+                                    wire:target="showTimelineChainGraph"
+                                >
+                                    {{ $row->id }}
+                                </flux:button>
+                            @elseif ($isJsonValue)
                                 <div
                                     class="max-w-md"
                                     x-data="{ expanded: false }"

@@ -148,7 +148,7 @@
                             $documentLabel = filled($document->title)
                                 ? $document->title
                                 : ($document->original_filename ?:
-                                __($documentTypeOptions[$document->type] ?? $document->type));
+                                \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.form_person.document_type_options', $document->type, $documentTypeOptions[$document->type] ?? $document->type));
                             $documentDate =
                                 $document->document_date?->toDateString() ??
                                 ($document->issued_at?->toDateString() ?? $document->created_at?->toDateString());
@@ -167,7 +167,7 @@
                             </flux:table.cell>
 
                             <flux:table.cell>
-                                {{ __(str($document->category)->headline()->toString()) }}
+                                {{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.edit_person.sections.documents.document_category_options', (string) $document->category, str($document->category)->headline()->toString()) }}
                             </flux:table.cell>
 
                             <flux:table.cell>
@@ -177,7 +177,7 @@
                             </flux:table.cell>
 
                             <flux:table.cell>
-                                {{ __($documentTypeOptions[$document->type] ?? str($document->type)->headline()->toString()) }}
+                                {{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.form_person.document_type_options', $document->type, $documentTypeOptions[$document->type] ?? str($document->type)->headline()->toString()) }}
                             </flux:table.cell>
 
                             <flux:table.cell class="tabular-nums">

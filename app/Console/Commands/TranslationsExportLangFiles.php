@@ -7,9 +7,11 @@ namespace App\Console\Commands;
 use App\Models\TranslationLanguage;
 use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 use Throwable;
 
 /**
@@ -44,8 +46,16 @@ class TranslationsExportLangFiles extends Command
             return self::SUCCESS;
         }
 
-        if (! $dryRun) {
-            File::ensureDirectoryExists(lang_path());
+        // Plan every locale before writing: a conflict in the last file must not
+        // leave earlier files exported from a different translation inventory.
+        $plans = $this->exportPlans($locales);
+        $conflicts = $this->workbenchConflicts($plans);
+        if ($conflicts !== []) {
+            $this->error('Export blocked: active Workbench translations would be removed or overwritten. No language files were written.');
+            $this->table(['Locale', 'File', 'Translation key', 'Conflict'], $conflicts);
+            $this->warn('Reconcile the TranslationList and Workbench inventories before exporting.');
+
+            return self::FAILURE;
         }
 
         $rows = [];
@@ -56,70 +66,21 @@ class TranslationsExportLangFiles extends Command
         $writtenFiles = 0;
 
         foreach ($locales as $locale) {
-            $localeDirectory = lang_path($locale);
-            $localeDirectoryExisted = File::isDirectory($localeDirectory);
-
-            if (! $localeDirectoryExisted) {
-                if (! $dryRun) {
-                    File::ensureDirectoryExists($localeDirectory);
-                }
-
+            if (! File::isDirectory(lang_path($locale))) {
                 $createdDirectories++;
-            }
-
-            $values = $this->translationValuesForLocale($locale);
-
-            $grouped = $values
-                ->filter(fn (array $entry): bool => $entry['group'] !== null)
-                ->groupBy('group');
-
-            foreach ($grouped as $group => $entries) {
-                if (! is_string($group) || trim($group) === '') {
-                    continue;
+                if (! $dryRun) {
+                    File::ensureDirectoryExists(lang_path($locale));
                 }
-
-                $payload = $this->buildPhpGroupPayload($group, $entries);
-                $content = $this->renderPhpTranslationArray($payload);
-                $path = $localeDirectory.DIRECTORY_SEPARATOR.$group.'.php';
-
-                $result = $this->writeTranslationFile(
-                    path: $path,
-                    content: $content,
-                    dryRun: $dryRun,
-                );
-
-                $writtenFiles += $result['written'];
-                $createdFiles += $result['created'];
-                $updatedFiles += $result['updated'];
-                $unchangedFiles += $result['unchanged'];
-
-                $rows[] = [$locale, $this->relativePath($path), $result['status']];
             }
+        }
 
-            $jsonEntries = $values
-                ->filter(fn (array $entry): bool => $entry['group'] === null && trim($entry['key']) !== '')
-                ->mapWithKeys(fn (array $entry): array => [$entry['key'] => $entry['value']])
-                ->all();
-
-            if ($jsonEntries !== []) {
-                ksort($jsonEntries);
-
-                $jsonContent = json_encode($jsonEntries, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL;
-                $jsonPath = lang_path($locale.'.json');
-
-                $result = $this->writeTranslationFile(
-                    path: $jsonPath,
-                    content: $jsonContent,
-                    dryRun: $dryRun,
-                );
-
-                $writtenFiles += $result['written'];
-                $createdFiles += $result['created'];
-                $updatedFiles += $result['updated'];
-                $unchangedFiles += $result['unchanged'];
-
-                $rows[] = [$locale, $this->relativePath($jsonPath), $result['status']];
-            }
+        foreach ($plans as $plan) {
+            $result = $this->writeTranslationFile($plan['path'], $plan['content'], $dryRun);
+            $writtenFiles += $result['written'];
+            $createdFiles += $result['created'];
+            $updatedFiles += $result['updated'];
+            $unchangedFiles += $result['unchanged'];
+            $rows[] = [$plan['locale'], $this->relativePath($plan['path']), $result['status']];
         }
 
         $this->components->info('Translation export finished.');
@@ -152,6 +113,89 @@ class TranslationsExportLangFiles extends Command
         );
 
         return self::SUCCESS;
+    }
+
+    /**
+     * @param  array<int, string>  $locales
+     * @return array<int, array{locale: string, namespace: ?string, path: string, payload: array, content: string}>
+     */
+    private function exportPlans(array $locales): array
+    {
+        $plans = [];
+        foreach ($locales as $locale) {
+            $values = $this->translationValuesForLocale($locale);
+            foreach ($values->filter(fn (array $entry): bool => $entry['group'] !== null)->groupBy('group') as $group => $entries) {
+                if (! is_string($group) || trim($group) === '') {
+                    continue;
+                }
+                $payload = $this->buildPhpGroupPayload($group, $entries);
+                $plans[] = [
+                    'locale' => $locale, 'namespace' => $group,
+                    'path' => lang_path($locale.'/'.$group.'.php'),
+                    'payload' => $payload, 'content' => $this->renderPhpTranslationArray($payload),
+                ];
+            }
+            $payload = $values->filter(fn (array $entry): bool => $entry['group'] === null && trim($entry['key']) !== '')
+                ->mapWithKeys(fn (array $entry): array => [$entry['key'] => $entry['value']])->all();
+            if ($payload !== []) {
+                ksort($payload);
+                $plans[] = [
+                    'locale' => $locale, 'namespace' => null, 'path' => lang_path($locale.'.json'),
+                    'payload' => $payload,
+                    'content' => json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL,
+                ];
+            }
+        }
+
+        return $plans;
+    }
+
+    /**
+     * Protect existing values owned by the other active translation inventory.
+     * This preflight deliberately does not pick a winner or change either DB.
+     *
+     * @param  array<int, array{locale: string, namespace: ?string, path: string, payload: array, content: string}>  $plans
+     * @return array<int, array<int, string>>
+     */
+    private function workbenchConflicts(array $plans): array
+    {
+        if (! Schema::hasTable('translation_workbench_lang_values')) {
+            return [];
+        }
+        $owned = DB::table('translation_workbench_lang_values')->where('status', 'active')
+            ->whereIn(DB::raw("LOWER(REPLACE(locale, '_', '-'))"), array_unique(array_column($plans, 'locale')))
+            ->get(['locale', 'namespace', 'lang_key'])
+            ->groupBy(fn (object $row): string => self::normalizeLocale($row->locale).'/'.$row->namespace);
+        $conflicts = [];
+        foreach ($plans as $plan) {
+            // Workbench lang values are PHP namespace entries, not JSON literals.
+            if ($plan['namespace'] === null || ! File::exists($plan['path'])) {
+                continue;
+            }
+            $current = File::getRequire($plan['path']);
+            if (! is_array($current)) {
+                continue;
+            }
+            foreach ($owned->get($plan['locale'].'/'.$plan['namespace'], collect()) as $row) {
+                $key = $row->lang_key;
+                if (! Arr::has($current, $key)) {
+                    continue;
+                }
+                $value = Arr::get($current, $key);
+                $leaves = is_array($value) && $value !== [] ? Arr::dot($value, $key.'.') : [$key => $value];
+                foreach ($leaves as $leaf => $oldValue) {
+                    $exists = Arr::has($plan['payload'], $leaf);
+                    if (! $exists || Arr::get($plan['payload'], $leaf) !== $oldValue) {
+                        $conflicts[$plan['locale'].'/'.$plan['namespace'].'.'.$leaf] = [
+                            $plan['locale'], $this->relativePath($plan['path']),
+                            $plan['namespace'].'.'.$leaf, $exists ? 'would overwrite' : 'would remove',
+                        ];
+                    }
+                }
+            }
+        }
+
+        return array_values($conflicts);
     }
 
     /**

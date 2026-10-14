@@ -10,7 +10,7 @@
         <flux:table>
             <flux:table.columns>
                 <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                <flux:table.column>{{ __('Type') }}</flux:table.column>
+                <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                 <flux:table.column>{{ __('Default') }}</flux:table.column>
                 <flux:table.column>{{ __('Purpose') }}</flux:table.column>
             </flux:table.columns>
@@ -81,7 +81,7 @@
                     <flux:table>
             <flux:table.columns>
                 <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                <flux:table.column>{{ __('Type') }}</flux:table.column>
+                <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                 <flux:table.column>{{ __('Default') }}</flux:table.column>
                 <flux:table.column>{{ __('Purpose') }}</flux:table.column>
             </flux:table.columns>
@@ -155,7 +155,7 @@
         <flux:table>
             <flux:table.columns>
                 <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                <flux:table.column>{{ __('Type') }}</flux:table.column>
+                <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                 <flux:table.column>{{ __('Default') }}</flux:table.column>
                 <flux:table.column>{{ __('Purpose') }}</flux:table.column>
             </flux:table.columns>

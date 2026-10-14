@@ -9,10 +9,24 @@ use App\Models\Locale;
 use App\Settings\AppGeneralSettings;
 use App\Support\Locale\LocaleCode;
 use Flux\Flux;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchCleanupReviewWriter;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchConflictReviewWriter;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchDynamicSourceLinkWriter;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchLangFileExporter;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchLangNodeClassifier;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPipelineRunTracker;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchProvenanceReviewWriter;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchScalarTransformWriter;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchScalarEditor;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorAccess;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchDynamicOptions;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchDynamicEditor;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorLocales;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchTimelineRecorder;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchTranslationWriter;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchBulkKeyWriter;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchKeyAttributes;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchKeyReviewEditor;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchFinding;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchKey;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchKeyFinding;
@@ -656,6 +670,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function confirmScalarTransformToArray(): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $context = $this->scalarTransformContext();
         $rows = collect($context['rows'] ?? [])
             ->where('is_included', true)
@@ -681,81 +697,7 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $changed = 0;
-        $timelineRecorder = app(TranslationWorkbenchTimelineRecorder::class);
-
-        DB::transaction(function () use ($rows, $timelineRecorder, &$changed): void {
-            foreach ($rows as $row) {
-                $oldTranslationKey = $this->nullableString($row['translation_key'] ?? null);
-                $newTranslationKey = $this->nullableString($row['target_translation_key'] ?? null);
-
-                if ($oldTranslationKey === null || $newTranslationKey === null || $oldTranslationKey === $newTranslationKey) {
-                    continue;
-                }
-
-                $keys = TranslationWorkbenchKey::query()
-                    ->where('translation_key', $oldTranslationKey)
-                    ->get();
-
-                foreach ($keys as $key) {
-                    $oldValues = $key->only(['translation_key', 'namespace', 'group', 'path_key', 'scope', 'key_segment_domain', 'key_segment_section', 'key_segment_context', 'key_segment_extra', 'key_segment_name', 'is_ui_key', 'key_type', 'review_status']);
-                    $attributes = [
-                        ...$this->keyStructureFromTranslationKey($newTranslationKey, $key),
-                        'review_status' => 'reviewed',
-                        'reviewed_at' => now(),
-                        'reviewed_by_user_id' => Auth::id(),
-                    ];
-
-                    $key->forceFill($attributes)->save();
-
-                    $newValues = $key->only(array_keys($oldValues));
-                    $review = TranslationWorkbenchReview::query()->create([
-                        'key_id' => $key->id,
-                        'finding_id' => null,
-                        'review_type' => 'scalar_key_transform',
-                        'decision' => 'scalar_key_transformed_to_array',
-                        'old_values' => $oldValues,
-                        'new_values' => $newValues,
-                        'meta' => [
-                            'source' => 'translation-workbench:scalar-review',
-                            'lang_value_id' => $row['id'],
-                        ],
-                        'reviewed_by_user_id' => Auth::id(),
-                        'reviewed_at' => now(),
-                    ]);
-
-                    $timelineRecorder->recordReviewEvent(
-                        review: $review,
-                        eventType: 'scalar_key_transformed_to_array',
-                        oldValues: $oldValues,
-                        newValues: $newValues,
-                        context: [
-                            'source' => 'translation-workbench:scalar-review',
-                            'lang_value_id' => $row['id'],
-                        ],
-                    );
-                }
-
-                $langValueChanges = $this->rekeyScalarLangValues($oldTranslationKey, $newTranslationKey);
-
-                $timelineRecorder->record(
-                    eventType: 'scalar_lang_values_rekeyed',
-                    oldValues: [
-                        'translation_key' => $oldTranslationKey,
-                    ],
-                    newValues: [
-                        'translation_key' => $newTranslationKey,
-                        ...$langValueChanges,
-                    ],
-                    context: [
-                        'source' => 'translation-workbench:scalar-review',
-                        'lang_value_id' => $row['id'],
-                    ],
-                );
-
-                $changed++;
-            }
-        });
+        $changed = app(TranslationWorkbenchScalarTransformWriter::class)->transform($rows->all());
 
         if ($changed === 0) {
             Flux::toast(
@@ -852,6 +794,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function refreshFindingsCurrentTab(): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $this->refreshFindingsTab($this->findingsActiveTab);
     }
 
@@ -860,8 +804,16 @@ class TranslationWorkbenchEntries extends Component
         // Intentionally empty: wire:poll only needs to trigger a Livewire refresh.
     }
 
+    public function markPipelineInterrupted(int $runId): void
+    {
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPipelineProcess::class)->markInterrupted($runId);
+        Flux::toast(heading: __('Pipeline marked as interrupted'), text: __('No steps were repeated. Review the last completed step before starting a new run.'), variant: 'warning');
+    }
+
     public function startCompletePipelineRun(): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $tracker = app(TranslationWorkbenchPipelineRunTracker::class);
         $latest = $tracker->latest();
 
@@ -914,6 +866,7 @@ class TranslationWorkbenchEntries extends Component
         }
 
         $run = $tracker->create('translation:workbench', [
+            ...\Gunreip\TranslationWorkbench\Console\RunTranslationWorkbench::executionDefaults(),
             '--complete' => true,
             'started_from' => 'ui',
             'user_id' => Auth::id(),
@@ -963,13 +916,10 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $run->forceFill([
-            'meta' => [
-                ...((array) ($run->meta ?? [])),
-                'pid' => isset($output[0]) ? (int) $output[0] : null,
-                'log_path' => $logPath,
-            ],
-        ])->save();
+        $run->newQuery()->whereKey($run->id)->update([
+            'meta->pid' => isset($output[0]) ? (int) $output[0] : null,
+            'meta->log_path' => $logPath,
+        ]);
 
         $this->findingsActiveTab = 'last-run';
         $this->markFindingsTabLoaded('last-run');
@@ -1021,6 +971,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function refreshFindingsAllTabs(): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $results = [
             'export' => $this->refreshLangFileExportReport(),
             'code_plan' => $this->refreshCodeUpdatePlanReport(),
@@ -1073,6 +1025,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function refreshCodeUpdateApplyReport(): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         if (! $this->refreshCodeUpdateApplyReportFile()) {
             Flux::toast(
                 heading: __('Patch dry-run failed'),
@@ -1167,6 +1121,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function confirmBulkEqualizeTranslationKey(): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $context = $this->bulkEqualizeContext();
 
         if (! $context['can_confirm']) {
@@ -1182,112 +1138,14 @@ class TranslationWorkbenchEntries extends Component
         $this->bulkEqualizeTranslationKey = $this->nullableString($this->bulkEqualizeTranslationKey);
 
         $this->validate([
-            'bulkEqualizeTranslationKey' => [
-                'required',
-                'string',
-                'regex:/^[a-z0-9][a-z0-9_-]*(\.[a-z0-9][a-z0-9_-]*)+$/',
-            ],
+            'bulkEqualizeTranslationKey' => TranslationWorkbenchBulkKeyWriter::TARGET_KEY_RULES,
         ]);
 
         $translationKey = (string) $this->bulkEqualizeTranslationKey;
-        $keyIds = collect($context['rows'])
-            ->pluck('key_id')
-            ->map(static fn(mixed $id): int => (int) $id)
-            ->filter(static fn(int $id): bool => $id > 0)
-            ->unique()
-            ->values();
-
-        if ($keyIds->isEmpty() && ! ($context['equalize_to_existing_shared_key'] ?? false)) {
-            return;
-        }
-
-        $operationId = (string) Str::uuid();
-        $updated = 0;
-
-        DB::transaction(function () use ($keyIds, $translationKey, $context, $operationId, &$updated): void {
-            $keys = TranslationWorkbenchKey::query()
-                ->whereIn('id', $keyIds->all())
-                ->get()
-                ->keyBy('id');
-            $findings = TranslationWorkbenchFinding::query()
-                ->whereIn('id', collect($context['rows'])->pluck('id')->all())
-                ->get()
-                ->keyBy('id');
-
-            foreach ($context['rows'] as $row) {
-                $finding = $findings->get((int) $row['id']);
-                $key = $keys->get((int) $row['key_id'])
-                    ?? $this->keyForBulkEqualizeRow($row, $finding, $translationKey, $operationId);
-
-                if (! $key || ! $finding) {
-                    continue;
-                }
-
-                $attributes = [
-                    ...$this->keyStructureFromTranslationKey($translationKey, $key),
-                    'review_status' => 'reviewed',
-                    'reviewed_at' => now(),
-                    'reviewed_by_user_id' => Auth::id(),
-                ];
-                $trackedAttributes = array_values(array_unique(array_keys($attributes)));
-                $oldValues = $key->only([
-                    ...$trackedAttributes,
-                    'review_status',
-                    'reviewed_at',
-                    'reviewed_by_user_id',
-                ]);
-                $changedValues = collect($attributes)
-                    ->filter(static fn(mixed $value, string $attribute): bool => ($oldValues[$attribute] ?? null) != $value)
-                    ->all();
-
-                if ($changedValues === []) {
-                    continue;
-                }
-
-                $key->forceFill($changedValues)->save();
-                $newValues = $key->only([
-                    ...$trackedAttributes,
-                    'review_status',
-                    'reviewed_at',
-                    'reviewed_by_user_id',
-                ]);
-                $review = TranslationWorkbenchReview::query()->create([
-                    'key_id' => $key->id,
-                    'finding_id' => $finding->id,
-                    'review_type' => 'translation_key',
-                    'decision' => 'translation_key_bulk_equalized',
-                    'old_values' => $oldValues,
-                    'new_values' => $newValues,
-                    'meta' => [
-                        'source' => 'translation-workbench:bulk-equalize-translation-key',
-                        'operation_id' => $operationId,
-                        'literal' => $context['literal'],
-                        'normalized_literal' => $context['normalized_literal'],
-                        'selected_finding_ids' => $context['selected_ids'],
-                        'target_translation_key' => $translationKey,
-                    ],
-                    'reviewed_by_user_id' => Auth::id(),
-                    'reviewed_at' => now(),
-                ]);
-
-                app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
-                    review: $review,
-                    eventType: 'translation_key_bulk_equalized',
-                    oldValues: $oldValues,
-                    newValues: $newValues,
-                    context: [
-                        'source' => 'translation-workbench:bulk-equalize-translation-key',
-                        'operation_id' => $operationId,
-                        'literal' => $context['literal'],
-                        'normalized_literal' => $context['normalized_literal'],
-                        'selected_count' => $context['selected_count'],
-                        'target_translation_key' => $translationKey,
-                    ],
-                );
-
-                $updated++;
-            }
-        });
+        $updated = app(TranslationWorkbenchBulkKeyWriter::class)->equalize(
+            $this->bulkEqualizeSelectedFindingIds,
+            $translationKey,
+        );
 
         $this->bulkEqualizeSelectedFindingIds = [];
         $this->closeBulkEqualizeTranslationKeyModal();
@@ -1301,146 +1159,6 @@ class TranslationWorkbenchEntries extends Component
                 : __('The selected findings already used the selected translation key.'),
             variant: $updated > 0 ? 'success' : 'info',
         );
-    }
-
-    /**
-     * @param  array<string, mixed>  $row
-     */
-    private function keyForBulkEqualizeRow(
-        array $row,
-        ?TranslationWorkbenchFinding $finding,
-        string $translationKey,
-        string $operationId,
-    ): ?TranslationWorkbenchKey {
-        if (! $finding) {
-            return null;
-        }
-
-        $suggestedKey = $this->nullableString($row['key_suggested_key'] ?? null)
-            ?? $this->nullableString($row['finding_suggested_key'] ?? null)
-            ?? $this->nullableString($finding->suggested_key ?? null)
-            ?? $translationKey;
-        $fingerprint = app(TranslationFingerprintFactory::class)->signature([
-            'foundation-key',
-            '',
-            $suggestedKey,
-        ]);
-        $key = TranslationWorkbenchKey::query()
-            ->where('fingerprint', $fingerprint)
-            ->first()
-            ?? TranslationWorkbenchKey::query()
-                ->where('suggested_key', $suggestedKey)
-                ->where(function ($query): void {
-                    $query
-                        ->whereNull('translation_key')
-                        ->orWhereRaw("NULLIF(BTRIM(translation_key), '') IS NULL");
-                })
-                ->first();
-        $timelineRecorder = app(TranslationWorkbenchTimelineRecorder::class);
-
-        if (! $key) {
-            $keyParts = app(TranslationKeyPartsFactory::class)->fromKey($suggestedKey);
-            $keySegments = app(TranslationKeySegmentFactory::class)->fromKey($suggestedKey);
-            $key = TranslationWorkbenchKey::query()->create([
-                'fingerprint' => $fingerprint,
-                'translation_key' => null,
-                'suggested_key' => $suggestedKey,
-                'namespace' => $keyParts['namespace'],
-                'group' => $keyParts['group'],
-                'path_key' => $keyParts['path_key'],
-                'scope' => $keyParts['scope'],
-                ...$keySegments,
-                'key_type' => str_starts_with((string) $finding->kind, 'dynamic') ? 'dynamic_candidate' : 'static_candidate',
-                'status' => 'open',
-                'review_status' => 'pending',
-                'meta' => [
-                    'source' => 'translation-workbench:bulk-equalize-missing-key',
-                    'operation_id' => $operationId,
-                    'finding_id' => $finding->id,
-                ],
-            ]);
-
-            $timelineRecorder->recordKeyEvent(
-                key: $key,
-                eventType: 'key_candidate_discovered',
-                newValues: $key->only([
-                    'id',
-                    'fingerprint',
-                    'translation_key',
-                    'suggested_key',
-                    'namespace',
-                    'group',
-                    'path_key',
-                    'scope',
-                    'key_type',
-                    'status',
-                    'review_status',
-                ]),
-                context: [
-                    'source' => 'translation-workbench:bulk-equalize-missing-key',
-                    'operation_id' => $operationId,
-                    'finding_id' => $finding->id,
-                ],
-            );
-        }
-
-        $relation = TranslationWorkbenchKeyFinding::query()
-            ->where('key_id', $key->id)
-            ->where('finding_id', $finding->id)
-            ->where('relation_type', 'candidate')
-            ->first();
-
-        if (! $relation) {
-            $relation = TranslationWorkbenchKeyFinding::query()->create([
-                'key_id' => $key->id,
-                'finding_id' => $finding->id,
-                'relation_type' => 'candidate',
-                'status' => 'active',
-                'meta' => [
-                    'source' => 'translation-workbench:bulk-equalize-missing-key',
-                    'operation_id' => $operationId,
-                ],
-            ]);
-
-            $timelineRecorder->recordKeyFindingEvent(
-                key: $key,
-                finding: $finding,
-                eventType: 'key_finding_relation_created',
-                newValues: $relation->only(['id', 'key_id', 'finding_id', 'relation_type', 'status']),
-                context: [
-                    'source' => 'translation-workbench:bulk-equalize-missing-key',
-                    'operation_id' => $operationId,
-                ],
-            );
-
-            return $key;
-        }
-
-        if ($relation->status !== 'active') {
-            $oldValues = $relation->only(['status', 'meta']);
-            $relation->forceFill([
-                'status' => 'active',
-                'meta' => [
-                    ...($relation->meta ?? []),
-                    'source' => 'translation-workbench:bulk-equalize-missing-key',
-                    'operation_id' => $operationId,
-                ],
-            ])->save();
-
-            $timelineRecorder->recordKeyFindingEvent(
-                key: $key,
-                finding: $finding,
-                eventType: 'key_finding_relation_updated',
-                oldValues: $oldValues,
-                newValues: $relation->only(['status', 'meta']),
-                context: [
-                    'source' => 'translation-workbench:bulk-equalize-missing-key',
-                    'operation_id' => $operationId,
-                ],
-            );
-        }
-
-        return $key;
     }
 
     public function openCodeUpdateConflictReview(int $findingId, int $keyId): void
@@ -1515,6 +1233,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function saveCodeUpdateConflictReview(): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         if (! $this->hasTables(['translation_workbench_reviews', 'translation_workbench_timeline_events'])) {
             Flux::toast(
                 heading: __('Migration missing'),
@@ -1545,17 +1265,9 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $oldReview = $this->latestCodeUpdateConflictReview($finding->id, $key->id);
-        $oldValues = [
-            'decision' => $oldReview?->decision,
-            'note' => $oldReview?->meta['note'] ?? null,
-        ];
-        $newValues = [
-            'decision' => $decision,
-            'note' => trim($this->codeUpdateConflictNote),
-        ];
+        $changed = app(TranslationWorkbenchConflictReviewWriter::class)->save($finding, $key, $decision, $this->codeUpdateConflictNote);
 
-        if ($oldValues == $newValues) {
+        if (! $changed) {
             Flux::toast(
                 heading: __('No change'),
                 text: __('The code update conflict review is already set.'),
@@ -1564,36 +1276,6 @@ class TranslationWorkbenchEntries extends Component
 
             return;
         }
-
-        DB::transaction(function () use ($finding, $key, $decision, $oldValues, $newValues): void {
-            $review = TranslationWorkbenchReview::query()->create([
-                'key_id' => $key->id,
-                'finding_id' => $finding->id,
-                'review_type' => 'code_update_conflict',
-                'decision' => $decision,
-                'old_values' => $oldValues,
-                'new_values' => $newValues,
-                'meta' => [
-                    'source' => 'translation-workbench:code-update-plan',
-                    'note' => trim($this->codeUpdateConflictNote),
-                    'finding_id' => $finding->id,
-                    'key_id' => $key->id,
-                ],
-                'reviewed_by_user_id' => Auth::id(),
-                'reviewed_at' => now(),
-            ]);
-
-            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
-                review: $review,
-                eventType: 'code_update_conflict_reviewed',
-                oldValues: $oldValues,
-                newValues: $newValues,
-                context: [
-                    'source' => 'translation-workbench:code-update-plan',
-                    'decision' => $decision,
-                ],
-            );
-        });
 
         $this->closeCodeUpdateConflictReview();
 
@@ -1762,12 +1444,9 @@ class TranslationWorkbenchEntries extends Component
 
     public function reviewSuspiciousKeyProvenance(string $decision): void
     {
-        $allowedDecisions = [
-            'mark_as_valid_existing_key',
-            'needs_literal_restore',
-            'needs_key_review',
-            'ignore_for_now',
-        ];
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
+        $allowedDecisions = TranslationWorkbenchProvenanceReviewWriter::DECISIONS;
 
         if (! in_array($decision, $allowedDecisions, true)) {
             return;
@@ -1785,58 +1464,9 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $row = $context['row'];
-        $finding = $context['finding'];
-        $key = $context['key'];
-        $oldValues = [
-            'state' => $row['state'] ?? null,
-            'translation_key' => $row['translation_key'] ?? null,
-            'source_lang_value_exists' => $row['source_lang_value_exists'] ?? false,
-            'active_usage_count' => $row['active_usage_count'] ?? 0,
-            'reviewed_usage_count' => $row['reviewed_usage_count'] ?? 0,
-        ];
-        $newValues = [
-            'decision' => $decision,
-            'reviewed_at' => now()->toISOString(),
-            'reviewed_by_user_id' => Auth::id(),
-        ];
-
-        DB::transaction(function () use ($finding, $key, $row, $decision, $oldValues, $newValues): void {
-            $review = TranslationWorkbenchReview::query()->create([
-                'key_id' => $key?->id,
-                'finding_id' => $finding?->id,
-                'review_type' => 'suspicious_key_provenance',
-                'decision' => $decision,
-                'old_values' => $oldValues,
-                'new_values' => $newValues,
-                'meta' => [
-                    'source' => 'translation-workbench:suspicious-keys',
-                    'source_signature' => $row['source_signature'] ?? null,
-                    'source_path' => $row['source_path'] ?? null,
-                    'source_line' => $row['source_line'] ?? null,
-                    'translation_key' => $row['translation_key'] ?? null,
-                    'suggested_key' => $row['suggested_key'] ?? null,
-                    'raw_expression' => $row['raw_expression'] ?? null,
-                    'literal_text_suggested' => $row['literal_text_suggested'] ?? null,
-                    'source_lang_value' => $row['source_lang_value'] ?? null,
-                ],
-                'reviewed_by_user_id' => Auth::id(),
-                'reviewed_at' => now(),
-            ]);
-
-            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
-                review: $review,
-                eventType: 'suspicious_key_reviewed',
-                oldValues: $oldValues,
-                newValues: $newValues,
-                context: [
-                    'source' => 'translation-workbench:suspicious-keys',
-                    'decision' => $decision,
-                    'source_signature' => $row['source_signature'] ?? null,
-                    'translation_key' => $row['translation_key'] ?? null,
-                ],
-            );
-        });
+        app(TranslationWorkbenchProvenanceReviewWriter::class)->save(
+            $context['row'], $context['finding'], $context['key'], $decision,
+        );
 
         $this->refreshSuspiciousKeyedAdditions();
         $this->closeSuspiciousKeyReviewModal();
@@ -1932,6 +1562,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function confirmObsoleteSourceValue(): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $translationKey = trim((string) $this->obsoleteSourceValueTranslationKey);
 
         if ($translationKey === '') {
@@ -1940,13 +1572,11 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $sourceLocale = $this->sourceMainLocale();
-        $langValue = TranslationWorkbenchLangValue::query()
-            ->where('locale', $sourceLocale)
-            ->where('translation_key', $translationKey)
-            ->first();
+        $changed = app(TranslationWorkbenchCleanupReviewWriter::class)->markSourceObsolete(
+            $translationKey, $this->sourceMainLocale(),
+        );
 
-        if (! $langValue) {
+        if ($changed === null) {
             Flux::toast(
                 heading: __('Source value not found'),
                 text: __('No source-language value exists for this translation key anymore.'),
@@ -1958,7 +1588,7 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        if ($langValue->status === 'obsolete') {
+        if (! $changed) {
             Flux::toast(
                 heading: __('Already obsolete'),
                 text: __('This source-language value is already marked obsolete.'),
@@ -1969,68 +1599,6 @@ class TranslationWorkbenchEntries extends Component
 
             return;
         }
-
-        $key = TranslationWorkbenchKey::query()
-            ->where('translation_key', $translationKey)
-            ->orWhere('suggested_key', $translationKey)
-            ->first();
-
-        DB::transaction(function () use ($langValue, $key, $translationKey, $sourceLocale): void {
-            $oldValues = $langValue->only([
-                'id',
-                'locale',
-                'namespace',
-                'lang_key',
-                'translation_key',
-                'value',
-                'status',
-            ]);
-
-            $langValue->forceFill([
-                'status' => 'obsolete',
-                'last_seen_at' => now(),
-            ])->save();
-
-            $newValues = $langValue->only([
-                'id',
-                'locale',
-                'namespace',
-                'lang_key',
-                'translation_key',
-                'value',
-                'status',
-            ]);
-
-            $review = TranslationWorkbenchReview::query()->create([
-                'key_id' => $key?->id,
-                'finding_id' => null,
-                'review_type' => 'lang_value_obsolete',
-                'decision' => 'source_value_marked_obsolete',
-                'old_values' => $oldValues,
-                'new_values' => $newValues,
-                'meta' => [
-                    'source' => 'translation-workbench:export-report',
-                    'locale' => $sourceLocale,
-                    'translation_key' => $translationKey,
-                    'lang_value_id' => $langValue->id,
-                ],
-                'reviewed_by_user_id' => Auth::id(),
-                'reviewed_at' => now(),
-            ]);
-
-            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
-                review: $review,
-                eventType: 'source_lang_value_marked_obsolete',
-                oldValues: $oldValues,
-                newValues: $newValues,
-                context: [
-                    'source' => 'translation-workbench:export-report',
-                    'locale' => $sourceLocale,
-                    'translation_key' => $translationKey,
-                    'lang_value_id' => $langValue->id,
-                ],
-            );
-        });
 
         $reportRefreshed = $this->refreshLangFileExportReport();
 
@@ -2063,8 +1631,10 @@ class TranslationWorkbenchEntries extends Component
 
     public function saveLangCleanupReview(string $decision): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $decision = trim($decision);
-        $allowedDecisions = ['keep', 'needs_review', 'obsolete'];
+        $allowedDecisions = TranslationWorkbenchCleanupReviewWriter::DECISIONS;
 
         if (! in_array($decision, $allowedDecisions, true)) {
             Flux::toast(
@@ -2091,115 +1661,7 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $translationKey = trim((string) $inventory->translation_key);
-        $sourceLocale = $this->sourceMainLocale();
-        $key = TranslationWorkbenchKey::query()
-            ->where('translation_key', $translationKey)
-            ->orWhere('suggested_key', $translationKey)
-            ->first();
-
-        $langValuesBefore = TranslationWorkbenchLangValue::query()
-            ->where('translation_key', $translationKey)
-            ->orderBy('locale')
-            ->orderBy('id')
-            ->get()
-            ->map(fn(TranslationWorkbenchLangValue $langValue): array => $langValue->only([
-                'id',
-                'locale',
-                'namespace',
-                'lang_key',
-                'translation_key',
-                'value',
-                'status',
-            ]))
-            ->all();
-
-        $obsoleteCount = 0;
-
-        DB::transaction(function () use ($decision, $inventory, $key, $translationKey, $sourceLocale, $langValuesBefore, &$obsoleteCount): void {
-            if ($decision === 'obsolete') {
-                $obsoleteCount = TranslationWorkbenchLangValue::query()
-                    ->where('translation_key', $translationKey)
-                    ->where('status', 'active')
-                    ->update([
-                        'status' => 'obsolete',
-                        'last_seen_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-
-                $this->refreshLangCleanupInventoryCounts($inventory, $sourceLocale);
-            }
-
-            $langValuesAfter = TranslationWorkbenchLangValue::query()
-                ->where('translation_key', $translationKey)
-                ->orderBy('locale')
-                ->orderBy('id')
-                ->get()
-                ->map(fn(TranslationWorkbenchLangValue $langValue): array => $langValue->only([
-                    'id',
-                    'locale',
-                    'namespace',
-                    'lang_key',
-                    'translation_key',
-                    'value',
-                    'status',
-                ]))
-                ->all();
-
-            $review = TranslationWorkbenchReview::query()->create([
-                'key_id' => $key?->id,
-                'finding_id' => null,
-                'review_type' => 'lang_cleanup',
-                'decision' => $decision,
-                'old_values' => [
-                    'inventory' => $inventory->only([
-                        'id',
-                        'translation_key',
-                        'namespace',
-                        'group',
-                        'candidate_for_lang_delete',
-                        'finding_active_count',
-                        'finding_commented_out_count',
-                        'finding_obsolete_count',
-                        'relation_active_count',
-                    ]),
-                    'lang_values' => $langValuesBefore,
-                ],
-                'new_values' => [
-                    'decision' => $decision,
-                    'obsolete_lang_values_count' => $obsoleteCount,
-                    'inventory' => $inventory->fresh()?->only([
-                        'id',
-                        'translation_key',
-                        'source_value_active_count',
-                        'source_value_obsolete_count',
-                        'target_value_active_count',
-                        'target_value_obsolete_count',
-                        'candidate_for_lang_delete',
-                    ]),
-                    'lang_values' => $langValuesAfter,
-                ],
-                'meta' => [
-                    'source' => 'translation-workbench:lang-cleanup',
-                    'inventory_id' => $inventory->id,
-                    'translation_key' => $translationKey,
-                ],
-                'reviewed_by_user_id' => Auth::id(),
-                'reviewed_at' => now(),
-            ]);
-
-            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
-                review: $review,
-                eventType: match ($decision) {
-                    'keep' => 'lang_value_kept',
-                    'obsolete' => 'lang_value_marked_obsolete',
-                    default => 'lang_cleanup_needs_review',
-                },
-                oldValues: $review->old_values,
-                newValues: $review->new_values,
-                context: $review->meta,
-            );
-        });
+        $obsoleteCount = app(TranslationWorkbenchCleanupReviewWriter::class)->save($inventory, $this->sourceMainLocale(), $decision);
 
         $reportRefreshed = $this->refreshLangFileExportReport();
 
@@ -2242,7 +1704,7 @@ class TranslationWorkbenchEntries extends Component
 
         if (! $selectedFinding || ! $selectedFinding->key_id) {
             Flux::toast(
-                heading: __('Translation key missing'),
+                heading: __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing'),
                 text: __('Review this finding and link a translation key before editing translation values.'),
                 variant: 'warning',
             );
@@ -2331,6 +1793,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function setDynamicReviewMode(int $findingId, string $mode): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         if (! in_array($mode, ['single', 'multi'], true)) {
             return;
         }
@@ -2406,6 +1870,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function confirmDynamicSourceLink(): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         if (! $this->hasTables([
             'translation_workbench_dynamic_source_candidates',
             'translation_workbench_dynamic_sources',
@@ -2447,119 +1913,9 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $key = $selectedFinding->key_id
-            ? TranslationWorkbenchKey::query()->find($selectedFinding->key_id)
-            : null;
-        $finding = TranslationWorkbenchFinding::query()->find($selectedFinding->id);
-
-        $createdOrUpdated = [];
-        $oldValues = [];
-
-        DB::transaction(function () use ($runtimeSources, $relatedSource, $selectedFinding, $key, $finding, &$createdOrUpdated, &$oldValues): void {
-            foreach ($runtimeSources as $runtimeSource) {
-                $candidateReference = 'dynamic_source:' . $relatedSource['id'];
-                $candidateValues = collect($relatedSource['values'] ?? [])
-                    ->mapWithKeys(static fn(array $value): array => [
-                        $value['value_key'] => $value['native_label'],
-                    ])
-                    ->all();
-                $attributes = [
-                    'key_id' => $runtimeSource['key_id'] ?? $selectedFinding->key_id,
-                    'finding_id' => $relatedSource['finding_id'] ?? $selectedFinding->id,
-                    'suggested_key' => $relatedSource['suggested_key'] ?? $selectedFinding->suggested_key,
-                    'dynamic_scope' => $relatedSource['dynamic_scope'] ?? $selectedFinding->dynamic_scope,
-                    'source_expression' => $relatedSource['source_expression'] ?? null,
-                    'candidate_source_type' => 'related_dynamic_source',
-                    'candidate_reference' => $candidateReference,
-                    'candidate_values_count' => (int) ($relatedSource['values_count'] ?? 0),
-                    'candidate_values' => json_encode($candidateValues, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-                    'confidence' => 'manual',
-                    'review_status' => 'confirmed',
-                    'status' => 'active',
-                    'meta' => json_encode([
-                        'source' => 'translation-workbench:dynamic-review-modal',
-                        'runtime_source_id' => $runtimeSource['id'],
-                        'runtime_suggested_key' => $runtimeSource['suggested_key'] ?? null,
-                        'related_source_id' => $relatedSource['id'],
-                        'related_suggested_key' => $relatedSource['suggested_key'] ?? null,
-                        'review_finding_id' => $selectedFinding->id,
-                    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-                ];
-
-                $existing = DB::table('translation_workbench_dynamic_source_candidates')
-                    ->where('dynamic_source_id', $runtimeSource['id'])
-                    ->where('candidate_source_type', 'related_dynamic_source')
-                    ->where('candidate_reference', $candidateReference)
-                    ->first();
-
-                if (! $existing) {
-                    $candidateId = DB::table('translation_workbench_dynamic_source_candidates')->insertGetId([
-                        'dynamic_source_id' => $runtimeSource['id'],
-                        ...$attributes,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-
-                    $createdOrUpdated[] = [
-                        'id' => $candidateId,
-                        'runtime_source_id' => $runtimeSource['id'],
-                        'related_source_id' => $relatedSource['id'],
-                        'review_status' => 'confirmed',
-                    ];
-
-                    continue;
-                }
-
-                $oldValues[] = [
-                    'id' => $existing->id,
-                    'review_status' => $existing->review_status,
-                    'status' => $existing->status,
-                    'candidate_reference' => $existing->candidate_reference,
-                ];
-
-                DB::table('translation_workbench_dynamic_source_candidates')
-                    ->where('id', $existing->id)
-                    ->update([
-                        ...$attributes,
-                        'updated_at' => now(),
-                    ]);
-
-                $createdOrUpdated[] = [
-                    'id' => (int) $existing->id,
-                    'runtime_source_id' => $runtimeSource['id'],
-                    'related_source_id' => $relatedSource['id'],
-                    'review_status' => 'confirmed',
-                ];
-            }
-
-            $review = TranslationWorkbenchReview::query()->create([
-                'key_id' => $key?->id,
-                'finding_id' => $finding?->id,
-                'review_type' => 'dynamic_source_link',
-                'decision' => 'runtime_options_link_confirmed',
-                'old_values' => $oldValues,
-                'new_values' => $createdOrUpdated,
-                'meta' => [
-                    'source' => 'translation-workbench:dynamic-review-modal',
-                    'runtime_source_count' => $runtimeSources->count(),
-                    'related_source_id' => $relatedSource['id'],
-                ],
-                'reviewed_by_user_id' => Auth::id(),
-                'reviewed_at' => now(),
-            ]);
-
-            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
-                review: $review,
-                eventType: 'dynamic_source_link_confirmed',
-                oldValues: $oldValues,
-                newValues: $createdOrUpdated,
-                context: [
-                    'source' => 'translation-workbench:dynamic-review-modal',
-                    'runtime_source_count' => $runtimeSources->count(),
-                    'related_source_id' => $relatedSource['id'],
-                ],
-            );
-        });
+        app(TranslationWorkbenchDynamicSourceLinkWriter::class)->confirm(
+            $selectedFinding, $runtimeSources->all(), $relatedSource,
+        );
 
         $this->closeDynamicSourceLinkConfirm();
 
@@ -2572,6 +1928,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function unlinkDynamicSourceLink(): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         if (! $this->hasTables([
             'translation_workbench_dynamic_source_candidates',
             'translation_workbench_dynamic_sources',
@@ -2613,88 +1971,11 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $key = $selectedFinding->key_id
-            ? TranslationWorkbenchKey::query()->find($selectedFinding->key_id)
-            : null;
-        $finding = TranslationWorkbenchFinding::query()->find($selectedFinding->id);
-        $candidateReference = 'dynamic_source:' . $relatedSource['id'];
-        $runtimeSourceIds = $runtimeSources
-            ->pluck('id')
-            ->map(static fn(mixed $id): int => (int) $id)
-            ->all();
-        $oldValues = [];
-        $newValues = [];
+        $changed = app(TranslationWorkbenchDynamicSourceLinkWriter::class)->unlink(
+            $selectedFinding, $runtimeSources->all(), $relatedSource,
+        );
 
-        DB::transaction(function () use ($runtimeSourceIds, $candidateReference, $relatedSource, $runtimeSources, $key, $finding, &$oldValues, &$newValues): void {
-            $candidates = DB::table('translation_workbench_dynamic_source_candidates')
-                ->whereIn('dynamic_source_id', $runtimeSourceIds)
-                ->where('candidate_source_type', 'related_dynamic_source')
-                ->where('candidate_reference', $candidateReference)
-                ->where('status', 'active')
-                ->get();
-
-            if ($candidates->isEmpty()) {
-                return;
-            }
-
-            $oldValues = $candidates
-                ->map(static fn(object $candidate): array => [
-                    'id' => (int) $candidate->id,
-                    'runtime_source_id' => (int) $candidate->dynamic_source_id,
-                    'related_source_id' => (int) $relatedSource['id'],
-                    'review_status' => (string) $candidate->review_status,
-                    'status' => (string) $candidate->status,
-                ])
-                ->all();
-
-            DB::table('translation_workbench_dynamic_source_candidates')
-                ->whereIn('id', $candidates->pluck('id')->all())
-                ->update([
-                    'review_status' => 'unlinked',
-                    'status' => 'inactive',
-                    'updated_at' => now(),
-                ]);
-
-            $newValues = $candidates
-                ->map(static fn(object $candidate): array => [
-                    'id' => (int) $candidate->id,
-                    'runtime_source_id' => (int) $candidate->dynamic_source_id,
-                    'related_source_id' => (int) $relatedSource['id'],
-                    'review_status' => 'unlinked',
-                    'status' => 'inactive',
-                ])
-                ->all();
-
-            $review = TranslationWorkbenchReview::query()->create([
-                'key_id' => $key?->id,
-                'finding_id' => $finding?->id,
-                'review_type' => 'dynamic_source_link',
-                'decision' => 'runtime_options_link_unlinked',
-                'old_values' => $oldValues,
-                'new_values' => $newValues,
-                'meta' => [
-                    'source' => 'translation-workbench:dynamic-review-modal',
-                    'runtime_source_count' => $runtimeSources->count(),
-                    'related_source_id' => $relatedSource['id'],
-                ],
-                'reviewed_by_user_id' => Auth::id(),
-                'reviewed_at' => now(),
-            ]);
-
-            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
-                review: $review,
-                eventType: 'dynamic_source_link_unlinked',
-                oldValues: $oldValues,
-                newValues: $newValues,
-                context: [
-                    'source' => 'translation-workbench:dynamic-review-modal',
-                    'runtime_source_count' => $runtimeSources->count(),
-                    'related_source_id' => $relatedSource['id'],
-                ],
-            );
-        });
-
-        if ($newValues === []) {
+        if (! $changed) {
             Flux::toast(
                 heading: __('No active link'),
                 text: __('There is no active link to remove.'),
@@ -2720,6 +2001,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function saveDynamicMultiTranslationValues(): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         if (! Schema::hasTable('translation_workbench_dynamic_key_values')) {
             Flux::toast(
                 heading: __('Migration missing'),
@@ -2744,48 +2027,9 @@ class TranslationWorkbenchEntries extends Component
         }
 
         $editLocales = $this->editLocales();
-        $sourceLocale = LocaleCode::normalize((string) ($editLocales['source'] ?? $this->sourceMainLocale()));
-        $targetLocale = LocaleCode::normalize((string) ($editLocales['active'] ?? app()->getLocale()));
-        $rows = collect($this->dynamicMultiRows((int) $selectedFinding->id, $editLocales));
-        $changes = [];
-
-        DB::transaction(function () use ($selectedFinding, $rows, $sourceLocale, $targetLocale, &$changes): void {
-            foreach ($rows as $row) {
-                $valueKey = (string) $row['value_key'];
-                $fieldKey = (string) $row['field_key'];
-                $sourceValue = $this->nullableString(
-                    $this->dynamicMultiSourceValues[$fieldKey] ?? $row['source'] ?? $row['native_label'] ?? null,
-                );
-
-                if ($sourceValue !== null) {
-                    $sourceChange = $this->saveDynamicKeyValueForLocale(
-                        selectedFinding: $selectedFinding,
-                        valueKey: $valueKey,
-                        locale: $sourceLocale,
-                        value: $sourceValue,
-                        nativeLabel: $this->nullableString($row['native_label'] ?? $sourceValue),
-                        source: 'runtime_source',
-                    );
-
-                    if ($sourceChange !== null) {
-                        $changes[] = $sourceChange;
-                    }
-                }
-
-                $targetChange = $this->saveDynamicKeyValueForLocale(
-                    selectedFinding: $selectedFinding,
-                    valueKey: $valueKey,
-                    locale: $targetLocale,
-                    value: $this->dynamicMultiTargetValues[$fieldKey] ?? null,
-                    nativeLabel: $this->nullableString($row['native_label'] ?? $sourceValue),
-                    source: 'translation_workbench_modal',
-                );
-
-                if ($targetChange !== null) {
-                    $changes[] = $targetChange;
-                }
-            }
-        });
+        $changes = app(TranslationWorkbenchDynamicEditor::class)->save(
+            $key->id, $finding->id, $this->dynamicMultiSourceValues, $this->dynamicMultiTargetValues,
+        );
 
         if ($changes === []) {
             Flux::toast(
@@ -2799,23 +2043,6 @@ class TranslationWorkbenchEntries extends Component
 
         $this->bootstrapDynamicMultiEditState($selectedFinding, $editLocales);
 
-        app(TranslationWorkbenchTimelineRecorder::class)->recordKeyFindingEvent(
-            key: $key,
-            finding: $finding,
-            eventType: 'dynamic_multi_values_saved',
-            oldValues: ['values' => collect($changes)->mapWithKeys(static fn(array $change): array => [
-                $change['value_key'] . ':' . $change['locale'] => $change['old'],
-            ])->all()],
-            newValues: ['values' => collect($changes)->mapWithKeys(static fn(array $change): array => [
-                $change['value_key'] . ':' . $change['locale'] => $change['new'],
-            ])->all()],
-            context: [
-                'source' => 'translation-workbench:modal-edit-dynamic-multi',
-                'locales' => collect($changes)->pluck('locale')->unique()->values()->all(),
-                'value_keys' => collect($changes)->pluck('value_key')->unique()->values()->all(),
-            ],
-        );
-
         Flux::toast(
             heading: __('Dynamic options saved'),
             text: __('The dynamic option translations have been saved.'),
@@ -2825,6 +2052,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function saveTranslationValue(): void
     {
+        app(TranslationWorkbenchScalarEditor::class)->authorize();
+
         $selectedFinding = $this->selectedFinding($this->editFindingId);
 
         if (! $selectedFinding || ! $selectedFinding->key_id) {
@@ -2835,7 +2064,7 @@ class TranslationWorkbenchEntries extends Component
 
         if ($translationKey === null) {
             Flux::toast(
-                heading: __('Translation key missing'),
+                heading: __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing'),
                 text: __('Review this finding and set a translation key before editing translation values.'),
                 variant: 'warning',
             );
@@ -2853,56 +2082,18 @@ class TranslationWorkbenchEntries extends Component
         $editLocales = $this->editLocales();
         $sourceLocale = (string) ($editLocales['source'] ?? $this->sourceMainLocale());
         $targetLocale = (string) ($editLocales['active'] ?? app()->getLocale());
-        $editValues = $this->editValues($selectedFinding, $editLocales);
-        $changes = [];
+        $values = [
+            ['locale' => $sourceLocale, 'value' => $this->sourceTranslationValue],
+            ['locale' => $targetLocale, 'value' => $this->targetTranslationValue],
+        ];
+        foreach ($this->selectedTargetSubLocales as $subLocale) {
+            $subLocale = LocaleCode::normalize((string) $subLocale);
+            $values[] = ['locale' => $subLocale, 'value' => $this->targetSubTranslationValues[$subLocale] ?? null];
+        }
 
-        DB::transaction(function () use ($selectedFinding, $translationKey, $sourceLocale, $targetLocale, $editValues, &$changes): void {
-            $sourceChange = $this->saveTranslationValueForLocale(
-                selectedFinding: $selectedFinding,
-                translationKey: $translationKey,
-                locale: $sourceLocale,
-                value: $this->sourceTranslationValue,
-            );
-
-            if ($sourceChange !== null) {
-                $changes[] = $sourceChange;
-            }
-
-            $targetChange = $this->saveTranslationValueForLocale(
-                selectedFinding: $selectedFinding,
-                translationKey: $translationKey,
-                locale: $targetLocale,
-                value: $this->targetTranslationValue,
-            );
-
-            if ($targetChange !== null) {
-                $changes[] = $targetChange;
-            }
-
-            $availableSubLocales = collect((array) ($this->editLocales()['sub'] ?? []))
-                ->filter(static fn(mixed $locale): bool => is_string($locale) && trim($locale) !== '')
-                ->map(static fn(string $locale): string => LocaleCode::normalize($locale))
-                ->values();
-
-            foreach ($this->selectedTargetSubLocales as $subLocale) {
-                $subLocale = LocaleCode::normalize((string) $subLocale);
-
-                if (! $availableSubLocales->contains($subLocale)) {
-                    continue;
-                }
-
-                $subChange = $this->saveTranslationValueForLocale(
-                    selectedFinding: $selectedFinding,
-                    translationKey: $translationKey,
-                    locale: $subLocale,
-                    value: $this->targetSubTranslationValues[$subLocale] ?? null,
-                );
-
-                if ($subChange !== null) {
-                    $changes[] = $subChange;
-                }
-            }
-        });
+        $changes = app(TranslationWorkbenchScalarEditor::class)->save(
+            $key->id, $finding->id, $values,
+        );
 
         if ($changes === []) {
             Flux::toast(
@@ -2913,18 +2104,6 @@ class TranslationWorkbenchEntries extends Component
 
             return;
         }
-
-        app(TranslationWorkbenchTimelineRecorder::class)->recordKeyFindingEvent(
-            key: $key,
-            finding: $finding,
-            eventType: 'translation_values_saved',
-            oldValues: ['values' => collect($changes)->pluck('old', 'locale')->all()],
-            newValues: ['values' => collect($changes)->pluck('new', 'locale')->all()],
-            context: [
-                'source' => 'translation-workbench:modal-edit',
-                'locales' => collect($changes)->pluck('locale')->values()->all(),
-            ],
-        );
 
         Flux::toast(
             heading: __('Translations saved'),
@@ -3150,6 +2329,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function saveDynamicMultiSourceValue(string $fieldKey): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         if (! Schema::hasTable('translation_workbench_dynamic_key_values')) {
             Flux::toast(
                 heading: __('Migration missing'),
@@ -3166,13 +2347,6 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $row = collect($this->dynamicMultiRows($this->editFindingId, $this->editLocales()))
-            ->firstWhere('field_key', $fieldKey);
-
-        if (! is_array($row)) {
-            return;
-        }
-
         $key = TranslationWorkbenchKey::query()->find($selectedFinding->key_id);
         $finding = TranslationWorkbenchFinding::query()->find($selectedFinding->id);
 
@@ -3181,16 +2355,8 @@ class TranslationWorkbenchEntries extends Component
         }
 
         $editLocales = $this->editLocales();
-        $sourceLocale = LocaleCode::normalize((string) ($editLocales['source'] ?? $this->sourceMainLocale()));
-        $valueKey = (string) ($row['value_key'] ?? $this->dynamicMultiValueKeyMap[$fieldKey] ?? '');
-        $sourceValue = $this->nullableString($this->dynamicMultiSourceValues[$fieldKey] ?? null);
-        $change = $this->saveDynamicKeyValueForLocale(
-            selectedFinding: $selectedFinding,
-            valueKey: $valueKey,
-            locale: $sourceLocale,
-            value: $sourceValue,
-            nativeLabel: $sourceValue ?? $this->nullableString($row['native_label'] ?? null),
-            source: 'translation_workbench_source_correction',
+        $change = app(TranslationWorkbenchDynamicEditor::class)->saveSource(
+            $key->id, $finding->id, $fieldKey, $this->dynamicMultiSourceValues[$fieldKey],
         );
 
         if ($change === null) {
@@ -3203,19 +2369,6 @@ class TranslationWorkbenchEntries extends Component
 
             return;
         }
-
-        app(TranslationWorkbenchTimelineRecorder::class)->recordKeyFindingEvent(
-            key: $key,
-            finding: $finding,
-            eventType: 'dynamic_multi_source_value_saved',
-            oldValues: ['values' => [$change['value_key'] . ':' . $change['locale'] => $change['old']]],
-            newValues: ['values' => [$change['value_key'] . ':' . $change['locale'] => $change['new']]],
-            context: [
-                'source' => 'translation-workbench:modal-edit-dynamic-multi',
-                'locale' => $sourceLocale,
-                'value_key' => $valueKey,
-            ],
-        );
 
         $this->bootstrapDynamicMultiEditState($selectedFinding, $editLocales);
 
@@ -3895,6 +3048,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function saveTranslationKeyModal(): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $selectedFinding = $this->selectedFinding($this->translationKeyFindingId);
 
         if (! $selectedFinding || ! $selectedFinding->key_id) {
@@ -3965,6 +3120,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function acceptSuggestedTranslationKey(int $findingId): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $selectedFinding = $this->selectedFinding($findingId);
 
         if (! $selectedFinding || ! $selectedFinding->key_id) {
@@ -4012,58 +3169,7 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $attributes = [
-            ...$this->keyStructureFromTranslationKey($suggestedKey, $key),
-            'review_status' => 'reviewed',
-            'reviewed_at' => now(),
-            'reviewed_by_user_id' => Auth::id(),
-        ];
-        $trackedAttributes = array_values(array_unique([
-            ...array_keys($attributes),
-        ]));
-
-        DB::transaction(function () use ($key, $finding, $suggestedKey, $attributes, $trackedAttributes): void {
-            $oldValues = $key->only([
-                ...$trackedAttributes,
-                'review_status',
-                'reviewed_at',
-                'reviewed_by_user_id',
-            ]);
-
-            $key->forceFill($attributes)->save();
-
-            $newValues = $key->only([
-                ...$trackedAttributes,
-                'review_status',
-                'reviewed_at',
-                'reviewed_by_user_id',
-            ]);
-
-            $review = TranslationWorkbenchReview::query()->create([
-                'key_id' => $key->id,
-                'finding_id' => $finding->id,
-                'review_type' => 'translation_key',
-                'decision' => 'suggested_key_accepted',
-                'old_values' => $oldValues,
-                'new_values' => $newValues,
-                'meta' => [
-                    'source' => 'translation-workbench:review-modal',
-                    'suggested_key' => $suggestedKey,
-                ],
-                'reviewed_by_user_id' => Auth::id(),
-                'reviewed_at' => now(),
-            ]);
-
-            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
-                review: $review,
-                eventType: 'suggested_key_accepted',
-                oldValues: $oldValues,
-                newValues: $newValues,
-                context: [
-                    'source' => 'translation-workbench:review-modal',
-                ],
-            );
-        });
+        app(TranslationWorkbenchKeyReviewEditor::class)->acceptSuggestedKey($key->id, $finding->id);
 
         Flux::toast(
             heading: __('Suggested key accepted'),
@@ -4074,6 +3180,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function setUiKeyReview(int $findingId, bool $checked): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $context = $this->reviewContext($findingId);
 
         if (! $context) {
@@ -4084,7 +3192,7 @@ class TranslationWorkbenchEntries extends Component
 
         if ($checked && blank($key->translation_key)) {
             Flux::toast(
-                heading: __('Translation key missing'),
+                heading: __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing'),
                 text: __('Set or accept a translation key before confirming this entry as UI.'),
                 variant: 'warning',
             );
@@ -4123,6 +3231,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function setUiKeyRejected(int $findingId, bool $checked): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $context = $this->reviewContext($findingId);
 
         if (! $context) {
@@ -4160,6 +3270,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function setUiCandidateClassification(int $findingId, bool $isCandidate): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $context = $this->reviewContext($findingId);
 
         if (! $context) {
@@ -4170,7 +3282,7 @@ class TranslationWorkbenchEntries extends Component
 
         if ($isCandidate && blank($key->translation_key)) {
             Flux::toast(
-                heading: __('Translation key missing'),
+                heading: __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing'),
                 text: __('Set a translation key before confirming this entry as UI.'),
                 variant: 'warning',
             );
@@ -4206,6 +3318,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function setDynamicKeyReview(int $findingId, bool $checked): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $context = $this->reviewContext($findingId);
 
         if (! $context) {
@@ -4216,7 +3330,7 @@ class TranslationWorkbenchEntries extends Component
 
         if ($checked && blank($key->translation_key)) {
             Flux::toast(
-                heading: __('Translation key missing'),
+                heading: __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing'),
                 text: __('Set or accept a translation key before confirming this entry as dynamic.'),
                 variant: 'warning',
             );
@@ -4255,6 +3369,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function setDynamicKeyRejected(int $findingId, bool $checked): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $context = $this->reviewContext($findingId);
 
         if (! $context) {
@@ -4292,6 +3408,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function setDynamicCandidateClassification(int $findingId, bool $isCandidate): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $context = $this->reviewContext($findingId);
 
         if (! $context) {
@@ -4302,7 +3420,7 @@ class TranslationWorkbenchEntries extends Component
 
         if ($isCandidate && blank($key->translation_key)) {
             Flux::toast(
-                heading: __('Translation key missing'),
+                heading: __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing'),
                 text: __('Set a translation key before confirming this entry as dynamic.'),
                 variant: 'warning',
             );
@@ -4338,6 +3456,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function setDynamicMultiKeyReview(int $findingId, bool $checked): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+
         $context = $this->reviewContext($findingId);
 
         if (! $context) {
@@ -5487,106 +4607,11 @@ class TranslationWorkbenchEntries extends Component
      */
     private function scalarTransformContext(): array
     {
-        $targetPath = $this->normalizedScalarTransformTargetPath();
-        $includedIds = collect($this->scalarTransformIncludedLangValueIds)
-            ->map(static fn(mixed $id): int => (int) $id)
-            ->filter(static fn(int $id): bool => $id > 0)
-            ->unique()
-            ->values();
-
-        $rows = $this->scalarTransformRows()
-            ->map(function (array $row) use ($targetPath, $includedIds): array {
-                $targetKey = $this->scalarTransformTargetKeyForRow($row, $targetPath);
-                $row['is_included'] = $includedIds->contains((int) ($row['id'] ?? 0));
-                $row['target_translation_key'] = $targetKey;
-                $row['target_is_valid'] = $this->isValidTranslationKey($targetKey);
-                $row['target_conflicts'] = $this->scalarTransformTargetConflicts((string) $row['translation_key'], $targetKey);
-
-                return $row;
-            });
-
-        $includedRows = $rows->where('is_included', true)->values();
-
-        $targetCounts = $includedRows
-            ->pluck('target_translation_key')
-            ->filter()
-            ->countBy();
-
-        $rows = $rows
-            ->map(function (array $row) use ($targetCounts): array {
-                $row['target_is_duplicate'] = (bool) ($row['is_included'] ?? false)
-                    && (int) ($targetCounts[$row['target_translation_key']] ?? 0) > 1;
-
-                return $row;
-            })
-            ->values();
-
-        $includedRows = $rows->where('is_included', true)->values();
-
-        return [
-            'rows' => $rows->all(),
-            'target_path' => $targetPath,
-            'selected_count' => $rows->count(),
-            'included_count' => $includedRows->count(),
-            'invalid_count' => $includedRows->where('target_is_valid', false)->count(),
-            'duplicate_target_count' => $includedRows->where('target_is_duplicate', true)->count(),
-            'conflict_count' => $includedRows->filter(static fn(array $row): bool => count($row['target_conflicts'] ?? []) > 0)->count(),
-        ];
-    }
-
-    private function normalizedScalarTransformTargetPath(): ?string
-    {
-        $targetPath = $this->nullableString($this->scalarTransformTargetPath);
-
-        if ($targetPath === null) {
-            return null;
-        }
-
-        return collect(explode('.', $targetPath))
-            ->map(static fn(string $segment): string => Str::of($segment)->trim()->lower()->replace(' ', '_')->toString())
-            ->filter(static fn(string $segment): bool => $segment !== '')
-            ->implode('.');
-    }
-
-    private function scalarTransformTargetKeyForRow(array $row, ?string $targetPath): string
-    {
-        $leaf = $this->nullableString($row['leaf'] ?? null)
-            ?? str((string) ($row['source_value'] ?? ''))->slug('_')->toString();
-
-        return collect([$targetPath, $leaf])
-            ->filter(static fn(?string $segment): bool => filled($segment))
-            ->implode('.');
-    }
-
-    private function isValidTranslationKey(?string $translationKey): bool
-    {
-        return $translationKey !== null
-            && preg_match('/^[a-z0-9][a-z0-9_-]*(\.[a-z0-9][a-z0-9_-]*)+$/', $translationKey) === 1
-            && substr_count($translationKey, '.') >= 2;
-    }
-
-    /**
-     * @return array<int, array{id: int, locale: string, status: string, value: string|null}>
-     */
-    private function scalarTransformTargetConflicts(string $oldTranslationKey, ?string $newTranslationKey): array
-    {
-        if ($newTranslationKey === null || ! Schema::hasTable('translation_workbench_lang_values')) {
-            return [];
-        }
-
-        return TranslationWorkbenchLangValue::query()
-            ->where('translation_key', $newTranslationKey)
-            ->where('translation_key', '<>', $oldTranslationKey)
-            ->orderBy('locale')
-            ->limit(10)
-            ->get(['id', 'locale', 'status', 'value'])
-            ->map(static fn(TranslationWorkbenchLangValue $value): array => [
-                'id' => (int) $value->id,
-                'locale' => (string) $value->locale,
-                'status' => (string) $value->status,
-                'value' => $value->value,
-            ])
-            ->all();
+        return app(TranslationWorkbenchScalarTransformWriter::class)->context(
+            $this->scalarTransformRows()->all(),
+            $this->scalarTransformIncludedLangValueIds,
+            $this->scalarTransformTargetPath,
+        );
     }
 
     /**
@@ -6451,29 +5476,7 @@ class TranslationWorkbenchEntries extends Component
      */
     private function editLocales(): array
     {
-        $configuredLocale = LocaleCode::normalize((string) (app(AppGeneralSettings::class)->locale ?? app()->getLocale()));
-        $configuredLocale = $configuredLocale !== '' ? $configuredLocale : 'de';
-        $activeLanguage = (string) (LocaleCode::parts($configuredLocale)['language'] ?? $configuredLocale);
-        $activeLocale = $activeLanguage !== '' ? $activeLanguage : $configuredLocale;
-        $activeSubLocales = Locale::query()
-            ->where('is_active', true)
-            ->ordered()
-            ->get(['code', 'normalized_code'])
-            ->map(static fn(Locale $locale): string => LocaleCode::normalize((string) ($locale->normalized_code ?: $locale->code)))
-            ->filter(static fn(string $locale): bool => $locale !== '')
-            ->filter(static function (string $locale) use ($activeLanguage): bool {
-                return (string) (LocaleCode::parts($locale)['language'] ?? '') === $activeLanguage
-                    && $locale !== $activeLanguage;
-            })
-            ->unique()
-            ->values()
-            ->all();
-
-        return [
-            'source' => $this->sourceMainLocale(),
-            'active' => $activeLocale,
-            'sub' => $activeSubLocales,
-        ];
+        return app(TranslationWorkbenchEditorLocales::class)->resolve();
     }
 
     /**
@@ -6628,94 +5631,12 @@ class TranslationWorkbenchEntries extends Component
     private function dynamicMultiRows(?int $findingId, array $editLocales): array
     {
         $selectedFinding = $this->selectedFinding($findingId);
-
         if (! $selectedFinding || ! $selectedFinding->key_id) {
             return [];
         }
-
-        $sourceLocale = LocaleCode::normalize((string) ($editLocales['source'] ?? $this->sourceMainLocale()));
-        $targetLocale = LocaleCode::normalize((string) ($editLocales['active'] ?? app()->getLocale()));
-        $keyExists = TranslationWorkbenchKey::query()
-            ->whereKey($selectedFinding->key_id)
-            ->exists();
-
-        if (! $keyExists) {
-            return [];
-        }
-
-        $storedValues = collect();
-
-        if ($this->schemaHasTable('translation_workbench_dynamic_key_values')) {
-            $storedValues = DB::table('translation_workbench_dynamic_key_values')
-                ->where('key_id', $selectedFinding->key_id)
-                ->whereIn('locale', [$sourceLocale, $targetLocale])
-                ->orderBy('value_key')
-                ->get(['value_key', 'locale', 'value', 'native_label', 'status'])
-                ->groupBy('value_key');
-        }
-
-        $sourceRows = collect();
-
-        if (! $this->hasTables([
-            'translation_workbench_dynamic_sources',
-            'translation_workbench_dynamic_source_values',
-        ])) {
-            $sourceRows = collect();
-        } else {
-            $linkedRuntimeSourceIds = $this->linkedRuntimeSourceIdsForFinding($selectedFinding);
-
-            $sourceRows = DB::table('translation_workbench_dynamic_source_values as source_values')
-                ->join('translation_workbench_dynamic_sources as sources', 'sources.id', '=', 'source_values.dynamic_source_id')
-                ->where('sources.status', '<>', 'obsolete')
-                ->where('source_values.status', 'active')
-                ->where(function ($query) use ($selectedFinding, $linkedRuntimeSourceIds): void {
-                    $query->where('sources.finding_id', $selectedFinding->id)
-                        ->orWhere('sources.key_id', $selectedFinding->key_id);
-
-                    if ($linkedRuntimeSourceIds !== []) {
-                        $query->orWhereIn('sources.id', $linkedRuntimeSourceIds);
-                    }
-                })
-                ->orderBy('source_values.value_key')
-                ->get(['source_values.value_key', 'source_values.native_label', 'source_values.status'])
-                ->groupBy('value_key')
-                ->map(static fn($values) => $values->first());
-        }
-
-        $valueKeys = $sourceRows
-            ->keys()
-            ->merge($storedValues->keys())
-            ->map(static fn(mixed $valueKey): string => (string) $valueKey)
-            ->filter(static fn(string $valueKey): bool => $valueKey !== '')
-            ->unique()
-            ->sort()
-            ->values()
-            ->all();
-
-        return collect($valueKeys)
-            ->map(function (string $valueKey) use ($sourceRows, $storedValues, $sourceLocale, $targetLocale): array {
-                $sourceValueRow = $sourceRows->get($valueKey);
-                $localeRows = $storedValues->get($valueKey, collect());
-                $sourceRow = $localeRows->firstWhere('locale', $sourceLocale);
-                $targetRow = $localeRows->firstWhere('locale', $targetLocale);
-
-                return [
-                    'field_key' => $this->dynamicMultiFieldKey($valueKey),
-                    'value_key' => $valueKey,
-                    'source' => $this->nullableString($sourceRow?->value ?? $sourceValueRow?->native_label),
-                    'target' => $this->nullableString($targetRow?->value),
-                    'native_label' => $this->nullableString($sourceValueRow?->native_label ?? $sourceRow?->native_label ?? $targetRow?->native_label),
-                    'status' => $this->nullableString($targetRow?->status ?? $sourceRow?->status ?? $sourceValueRow?->status),
-                ];
-            })
-            ->values()
-            ->all();
+        return app(TranslationWorkbenchDynamicOptions::class)->rows((int) $selectedFinding->key_id, (int) $selectedFinding->id, $editLocales);
     }
 
-    private function dynamicMultiFieldKey(string $valueKey): string
-    {
-        return 'v_' . sha1($valueKey);
-    }
 
     private function translationValueForKeyAndLocale(string $translationKey, string $locale): ?string
     {
@@ -6730,213 +5651,6 @@ class TranslationWorkbenchEntries extends Component
                 ->where('status', 'active')
                 ->value('value'),
         );
-    }
-
-    /**
-     * @return array{value_key: string, locale: string, old: ?string, new: ?string}|null
-     */
-    private function saveDynamicKeyValueForLocale(
-        object $selectedFinding,
-        string $valueKey,
-        string $locale,
-        mixed $value,
-        ?string $nativeLabel,
-        string $source,
-    ): ?array {
-        if (! Schema::hasTable('translation_workbench_dynamic_key_values') || ! $selectedFinding->key_id) {
-            return null;
-        }
-
-        $locale = LocaleCode::normalize($locale);
-        $valueKey = trim($valueKey);
-
-        if ($locale === '' || $valueKey === '') {
-            return null;
-        }
-
-        $newValue = $this->nullableString($value);
-        $dynamicValue = DB::table('translation_workbench_dynamic_key_values')
-            ->where('key_id', $selectedFinding->key_id)
-            ->where('value_key', $valueKey)
-            ->where('locale', $locale)
-            ->first();
-        $oldValue = $this->nullableString($dynamicValue?->value);
-
-        if (! $dynamicValue && $newValue === null && $source !== 'runtime_source') {
-            return null;
-        }
-
-        if ($oldValue === $newValue && $this->nullableString($dynamicValue?->native_label) === $nativeLabel) {
-            return null;
-        }
-
-        $attributes = [
-            'value' => $newValue,
-            'native_label' => $nativeLabel,
-            'status' => $newValue !== null ? 'active' : 'missing',
-            'source' => $source,
-            'reviewed_at' => now(),
-            'reviewed_by_user_id' => Auth::id(),
-            'meta' => json_encode([
-                'source' => 'translation-workbench:modal-edit-dynamic-multi',
-                'finding_id' => $selectedFinding->id,
-                'key_id' => $selectedFinding->key_id,
-            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-            'updated_at' => now(),
-        ];
-
-        if ($dynamicValue) {
-            DB::table('translation_workbench_dynamic_key_values')
-                ->where('id', $dynamicValue->id)
-                ->update($attributes);
-        } else {
-            DB::table('translation_workbench_dynamic_key_values')
-                ->insert([
-                    'key_id' => $selectedFinding->key_id,
-                    'value_key' => $valueKey,
-                    'locale' => $locale,
-                    ...$attributes,
-                    'created_at' => now(),
-                ]);
-        }
-
-        return [
-            'value_key' => $valueKey,
-            'locale' => $locale,
-            'old' => $oldValue,
-            'new' => $newValue,
-        ];
-    }
-
-    /**
-     * @return array{locale: string, old: ?string, new: ?string}|null
-     */
-    private function saveTranslationValueForLocale(
-        object $selectedFinding,
-        string $translationKey,
-        string $locale,
-        mixed $value,
-    ): ?array {
-        if (! Schema::hasTable('translation_workbench_lang_values')) {
-            return null;
-        }
-
-        $locale = LocaleCode::normalize($locale);
-
-        if ($locale === '') {
-            return null;
-        }
-
-        $newValue = $this->nullableString($value);
-        $keyParts = $this->translationKeyLangParts($translationKey);
-        $langValue = TranslationWorkbenchLangValue::query()
-            ->where('locale', $locale)
-            ->where('namespace', $keyParts['namespace'])
-            ->where('lang_key', $keyParts['lang_key'])
-            ->first();
-        $oldValue = $this->nullableString($langValue?->value);
-        $newStatus = $newValue !== null ? 'active' : 'missing';
-
-        if (! $langValue && $newValue === null) {
-            return null;
-        }
-
-        $now = now();
-        $localeAttributes = $this->langValueLocaleAttributes($locale);
-        $attributes = [
-            ...$localeAttributes,
-            'translation_key' => $translationKey,
-            'value' => $newValue,
-            'value_type' => 'string',
-            'source_path' => 'lang/' . $locale . '/' . $keyParts['namespace'] . '.php',
-            'source_hash' => $newValue !== null ? sha1($newValue) : null,
-            'status' => $newStatus,
-            'last_seen_at' => $now,
-            'meta' => [
-                'source' => 'translation-workbench:modal-edit',
-                'finding_id' => $selectedFinding->id,
-                'key_id' => $selectedFinding->key_id,
-            ],
-        ];
-
-        if ($langValue) {
-            $trackedAttributeKeys = [
-                'locale_main',
-                'locale_region',
-                'is_source_locale',
-                'is_target_main_locale',
-                'is_target_sub_locale',
-                'translation_key',
-                'value',
-                'value_type',
-                'source_path',
-                'source_hash',
-                'status',
-            ];
-            $oldAttributes = $langValue->only($trackedAttributeKeys);
-            $changedAttributes = collect($attributes)
-                ->only($trackedAttributeKeys)
-                ->filter(static fn(mixed $value, string $key): bool => $oldAttributes[$key] !== $value)
-                ->all();
-
-            if ($oldValue === $newValue && $changedAttributes === []) {
-                return null;
-            }
-
-            $langValue->forceFill($attributes)->save();
-        } else {
-            TranslationWorkbenchLangValue::query()->create([
-                'locale' => $locale,
-                'namespace' => $keyParts['namespace'],
-                'lang_key' => $keyParts['lang_key'],
-                ...$attributes,
-                'first_seen_at' => $now,
-                'scan_count' => 0,
-            ]);
-        }
-
-        return [
-            'locale' => $locale,
-            'old' => $oldValue,
-            'new' => $newValue,
-        ];
-    }
-
-    /**
-     * @return array{namespace: string, lang_key: string}
-     */
-    private function translationKeyLangParts(string $translationKey): array
-    {
-        $segments = collect(explode('.', $translationKey))
-            ->map(static fn(string $segment): string => trim($segment))
-            ->filter(static fn(string $segment): bool => $segment !== '')
-            ->values();
-        $namespace = (string) ($segments->first() ?: 'messages');
-        $langKey = $segments->count() > 1
-            ? $segments->slice(1)->implode('.')
-            : $namespace;
-
-        return [
-            'namespace' => $namespace,
-            'lang_key' => $langKey,
-        ];
-    }
-
-    /**
-     * @return array{is_source_locale: bool, locale_role: string, main_locale: string, parent_locale: ?string}
-     */
-    private function langValueLocaleAttributes(string $locale): array
-    {
-        $mainLocale = (string) (LocaleCode::parts($locale)['language'] ?? $locale);
-        $isSourceLocale = $locale === $this->sourceMainLocale();
-        $isSubLocale = str_contains($locale, '-');
-
-        return [
-            'is_source_locale' => $isSourceLocale,
-            'locale_role' => $isSourceLocale ? 'source_main' : ($isSubLocale ? 'target_sub' : 'target_main'),
-            'main_locale' => $isSourceLocale ? $this->sourceMainLocale() : $mainLocale,
-            'parent_locale' => $isSubLocale ? $mainLocale : null,
-        ];
     }
 
     /**
@@ -7547,32 +6261,7 @@ class TranslationWorkbenchEntries extends Component
      */
     private function linkedRuntimeSourceIdsForFinding(object $selectedFinding): array
     {
-        if (! $this->hasTables([
-            'translation_workbench_dynamic_sources',
-            'translation_workbench_dynamic_source_candidates',
-        ])) {
-            return [];
-        }
-
-        return DB::table('translation_workbench_dynamic_source_candidates as candidates')
-            ->join('translation_workbench_dynamic_sources as runtime_sources', 'runtime_sources.id', '=', 'candidates.dynamic_source_id')
-            ->where('candidates.candidate_source_type', 'related_dynamic_source')
-            ->where('candidates.review_status', 'confirmed')
-            ->where('candidates.status', 'active')
-            ->where('runtime_sources.status', '<>', 'obsolete')
-            ->whereIn('runtime_sources.source_type', $this->dynamicRuntimeSourceTypes())
-            ->where(function ($query) use ($selectedFinding): void {
-                $query->where('candidates.finding_id', $selectedFinding->id);
-
-                if ($selectedFinding->key_id) {
-                    $query->orWhere('candidates.key_id', $selectedFinding->key_id);
-                }
-            })
-            ->pluck('runtime_sources.id')
-            ->map(static fn(mixed $sourceId): int => (int) $sourceId)
-            ->unique()
-            ->values()
-            ->all();
+        return app(TranslationWorkbenchDynamicOptions::class)->linkedRuntimeSourceIdsForFinding($selectedFinding);
     }
 
     /**
@@ -7690,13 +6379,7 @@ class TranslationWorkbenchEntries extends Component
      */
     private function dynamicDataStateAttributes(bool $isDynamic): array
     {
-        if (! $this->schemaHasColumn('translation_workbench_keys', 'dynamic_data_state')) {
-            return [];
-        }
-
-        return [
-            'dynamic_data_state' => $isDynamic ? 'unstructured' : null,
-        ];
+        return app(TranslationWorkbenchKeyAttributes::class)->dynamicDataStateAttributes($isDynamic);
     }
 
     /**
@@ -7712,27 +6395,15 @@ class TranslationWorkbenchEntries extends Component
         string $toastHeading,
         string $toastText,
     ): bool {
-        $trackedAttributes = array_values(array_unique([
-            ...array_keys($attributes),
-            'review_status',
-            'reviewed_at',
-            'reviewed_by_user_id',
-        ]));
+        $saved = app(TranslationWorkbenchKeyReviewEditor::class)->saveDecision(
+            keyId: $key->id,
+            findingId: $finding->id,
+            attributes: $attributes,
+            reviewType: $reviewType,
+            decision: $decision,
+        );
 
-        $oldValues = $key->only($trackedAttributes);
-
-        $attributes = [
-            ...$attributes,
-            'review_status' => 'reviewed',
-            'reviewed_at' => now(),
-            'reviewed_by_user_id' => Auth::id(),
-        ];
-
-        $changedValues = collect($attributes)
-            ->filter(static fn(mixed $value, string $attribute): bool => ($oldValues[$attribute] ?? null) != $value)
-            ->all();
-
-        if ($changedValues === []) {
+        if (! $saved) {
             Flux::toast(
                 heading: __('No change'),
                 text: __('The review decision was already set.'),
@@ -7741,49 +6412,6 @@ class TranslationWorkbenchEntries extends Component
 
             return false;
         }
-
-        DB::transaction(function () use ($key, $finding, $selectedFinding, $oldValues, $changedValues, $reviewType, $decision): void {
-            $key->forceFill($changedValues)->save();
-
-            $review = TranslationWorkbenchReview::query()->create([
-                'key_id' => $key->id,
-                'finding_id' => $finding->id,
-                'review_type' => $reviewType,
-                'decision' => $decision,
-                'old_values' => collect($oldValues)->only(array_keys($changedValues))->all(),
-                'new_values' => $changedValues,
-                'meta' => [
-                    'source' => 'translation-workbench:review-modal',
-                    'candidate_type' => $selectedFinding->candidate_type,
-                    'candidate_reason' => $selectedFinding->candidate_reason,
-                    'finding_kind' => $selectedFinding->kind,
-                    'finding_entry_type' => $selectedFinding->entry_type,
-                ],
-                'reviewed_by_user_id' => Auth::id(),
-                'reviewed_at' => now(),
-            ]);
-
-            app(TranslationWorkbenchTimelineRecorder::class)->recordReviewEvent(
-                review: $review,
-                eventType: $decision,
-                oldValues: collect($oldValues)->only(array_keys($changedValues))->all(),
-                newValues: $changedValues,
-                context: [
-                    'source' => 'translation-workbench:review-modal',
-                    'candidate_type' => $selectedFinding->candidate_type,
-                    'candidate_reason' => $selectedFinding->candidate_reason,
-                ],
-            );
-
-            if (array_key_exists('translation_key', $changedValues)) {
-                $this->rekeyLangValuesForTranslationKey(
-                    key: $key,
-                    finding: $finding,
-                    oldTranslationKey: $this->nullableString($oldValues['translation_key'] ?? null),
-                    newTranslationKey: $this->nullableString($changedValues['translation_key'] ?? null),
-                );
-            }
-        });
 
         Flux::toast(
             heading: $toastHeading,
@@ -7795,267 +6423,16 @@ class TranslationWorkbenchEntries extends Component
     }
 
     /**
-     * Keep already reviewed language values attached to a manually renamed
-     * translation key. Without this, old scalar lang keys can keep blocking
-     * newly nested keys until they are cleaned up by hand.
-     */
-    private function rekeyLangValuesForTranslationKey(
-        TranslationWorkbenchKey $key,
-        TranslationWorkbenchFinding $finding,
-        ?string $oldTranslationKey,
-        ?string $newTranslationKey,
-    ): void {
-        if (
-            ! Schema::hasTable('translation_workbench_lang_values') ||
-            $oldTranslationKey === null ||
-            $newTranslationKey === null ||
-            $oldTranslationKey === $newTranslationKey
-        ) {
-            return;
-        }
-
-        $newParts = $this->translationKeyLangParts($newTranslationKey);
-        $rows = TranslationWorkbenchLangValue::query()
-            ->where('translation_key', $oldTranslationKey)
-            ->where('status', '<>', 'obsolete')
-            ->orderBy('id')
-            ->get();
-
-        if ($rows->isEmpty()) {
-            return;
-        }
-
-        $now = now();
-        $migrated = [];
-        $obsoleted = [];
-
-        foreach ($rows as $row) {
-            $target = TranslationWorkbenchLangValue::query()
-                ->where('locale', $row->locale)
-                ->where('namespace', $newParts['namespace'])
-                ->where('lang_key', $newParts['lang_key'])
-                ->first();
-
-            $oldRowValues = $row->only(['id', 'locale', 'namespace', 'lang_key', 'translation_key', 'status']);
-
-            if ($target && $target->id !== $row->id) {
-                $row->forceFill([
-                    'status' => 'obsolete',
-                    'last_seen_at' => $now,
-                    'meta' => [
-                        ...(is_array($row->meta) ? $row->meta : []),
-                        'obsolete_reason' => 'translation_key_rekey_target_exists',
-                        'rekeyed_to_translation_key' => $newTranslationKey,
-                        'rekeyed_to_lang_value_id' => $target->id,
-                    ],
-                ])->save();
-
-                $obsoleted[] = [
-                    'id' => $row->id,
-                    'locale' => $row->locale,
-                    'target_id' => $target->id,
-                ];
-
-                continue;
-            }
-
-            $row->forceFill([
-                'namespace' => $newParts['namespace'],
-                'lang_key' => $newParts['lang_key'],
-                'translation_key' => $newTranslationKey,
-                'source_path' => 'lang/' . $row->locale . '/' . $newParts['namespace'] . '.php',
-                'last_seen_at' => $now,
-                'meta' => [
-                    ...(is_array($row->meta) ? $row->meta : []),
-                    'source' => 'translation-workbench:translation-key-review',
-                    'previous_translation_key' => $oldTranslationKey,
-                    'previous_namespace' => $oldRowValues['namespace'] ?? null,
-                    'previous_lang_key' => $oldRowValues['lang_key'] ?? null,
-                ],
-            ])->save();
-
-            $migrated[] = [
-                'id' => $row->id,
-                'locale' => $row->locale,
-                'old_namespace' => $oldRowValues['namespace'] ?? null,
-                'old_lang_key' => $oldRowValues['lang_key'] ?? null,
-                'new_namespace' => $newParts['namespace'],
-                'new_lang_key' => $newParts['lang_key'],
-            ];
-        }
-
-        app(TranslationWorkbenchTimelineRecorder::class)->recordKeyFindingEvent(
-            key: $key,
-            finding: $finding,
-            eventType: 'translation_lang_values_rekeyed',
-            oldValues: [
-                'translation_key' => $oldTranslationKey,
-            ],
-            newValues: [
-                'translation_key' => $newTranslationKey,
-                'migrated' => $migrated,
-                'obsoleted' => $obsoleted,
-            ],
-            context: [
-                'source' => 'translation-workbench:translation-key-review',
-                'migrated_count' => count($migrated),
-                'obsoleted_count' => count($obsoleted),
-            ],
-        );
-    }
-
-    /**
-     * @return array{migrated: array<int, array<string, mixed>>, obsoleted: array<int, array<string, mixed>>, migrated_count: int, obsoleted_count: int}
-     */
-    private function rekeyScalarLangValues(string $oldTranslationKey, string $newTranslationKey): array
-    {
-        if (! Schema::hasTable('translation_workbench_lang_values') || $oldTranslationKey === $newTranslationKey) {
-            return [
-                'migrated' => [],
-                'obsoleted' => [],
-                'migrated_count' => 0,
-                'obsoleted_count' => 0,
-            ];
-        }
-
-        $newParts = $this->translationKeyLangParts($newTranslationKey);
-        $rows = TranslationWorkbenchLangValue::query()
-            ->where('translation_key', $oldTranslationKey)
-            ->where('status', '<>', 'obsolete')
-            ->orderBy('id')
-            ->get();
-
-        $migrated = [];
-        $obsoleted = [];
-        $now = now();
-
-        foreach ($rows as $row) {
-            $target = TranslationWorkbenchLangValue::query()
-                ->where('locale', $row->locale)
-                ->where('namespace', $newParts['namespace'])
-                ->where('lang_key', $newParts['lang_key'])
-                ->first();
-
-            $oldValues = $row->only(['id', 'locale', 'namespace', 'lang_key', 'translation_key', 'source_path', 'status']);
-
-            if ($target && $target->id !== $row->id) {
-                $row->forceFill([
-                    'status' => 'obsolete',
-                    'last_seen_at' => $now,
-                    'meta' => [
-                        ...(is_array($row->meta) ? $row->meta : []),
-                        'obsolete_reason' => 'scalar_transform_target_exists',
-                        'rekeyed_to_translation_key' => $newTranslationKey,
-                        'rekeyed_to_lang_value_id' => $target->id,
-                        'previous_translation_key' => $oldTranslationKey,
-                        'previous_namespace' => $oldValues['namespace'] ?? null,
-                        'previous_lang_key' => $oldValues['lang_key'] ?? null,
-                    ],
-                ])->save();
-
-                $obsoleted[] = [
-                    'id' => (int) $row->id,
-                    'locale' => (string) $row->locale,
-                    'target_id' => (int) $target->id,
-                    'target_status' => (string) $target->status,
-                ];
-
-                continue;
-            }
-
-            $row->forceFill([
-                'namespace' => $newParts['namespace'],
-                'lang_key' => $newParts['lang_key'],
-                'translation_key' => $newTranslationKey,
-                'source_path' => 'lang/' . $row->locale . '/' . $newParts['namespace'] . '.php',
-                'last_seen_at' => $now,
-                'meta' => [
-                    ...(is_array($row->meta) ? $row->meta : []),
-                    'source' => 'translation-workbench:scalar-review',
-                    'previous_translation_key' => $oldTranslationKey,
-                    'previous_namespace' => $oldValues['namespace'] ?? null,
-                    'previous_lang_key' => $oldValues['lang_key'] ?? null,
-                ],
-            ])->save();
-
-            $migrated[] = [
-                'id' => (int) $row->id,
-                'locale' => (string) $row->locale,
-                'old_namespace' => $oldValues['namespace'] ?? null,
-                'old_lang_key' => $oldValues['lang_key'] ?? null,
-                'new_namespace' => $newParts['namespace'],
-                'new_lang_key' => $newParts['lang_key'],
-            ];
-        }
-
-        return [
-            'migrated' => $migrated,
-            'obsoleted' => $obsoleted,
-            'migrated_count' => count($migrated),
-            'obsoleted_count' => count($obsoleted),
-        ];
-    }
-
-    /**
      * @return array<string, mixed>
      */
     private function keyStructureFromTranslationKey(?string $translationKey, ?TranslationWorkbenchKey $currentKey = null): array
     {
-        $translationKey = $this->nullableString($translationKey);
-
-        if ($translationKey === null) {
-            return [
-                'translation_key' => null,
-                'namespace' => null,
-                'group' => null,
-                'path_key' => null,
-                'scope' => null,
-                'key_segment_domain' => null,
-                'key_segment_section' => null,
-                'key_segment_context' => null,
-                'key_segment_extra' => null,
-                'key_segment_name' => null,
-                'is_ui_key' => false,
-            ];
-        }
-
-        $isUiKey = $this->isUiTranslationKey($translationKey);
-
-        return [
-            'translation_key' => $translationKey,
-            ...app(TranslationKeyPartsFactory::class)->fromKey($translationKey),
-            ...app(TranslationKeySegmentFactory::class)->fromKey($translationKey),
-            'is_ui_key' => $isUiKey,
-            ...($isUiKey ? [
-                'is_dynamic_key' => false,
-                'is_dynamic_multi' => false,
-                ...$this->dynamicDataStateAttributes(false),
-                'key_type' => 'ui',
-            ] : $this->nonUiClassificationAttributes($currentKey)),
-        ];
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function nonUiClassificationAttributes(?TranslationWorkbenchKey $currentKey): array
-    {
-        if (! $currentKey || $currentKey->key_type !== 'ui') {
-            return [];
-        }
-
-        $isDynamic = (bool) $currentKey->is_dynamic_key || (bool) $currentKey->is_dynamic_multi;
-
-        return [
-            'key_type' => $isDynamic ? 'dynamic' : 'static',
-        ];
+        return app(TranslationWorkbenchKeyAttributes::class)->forKey($translationKey, $currentKey);
     }
 
     private function isUiTranslationKey(?string $translationKey): bool
     {
-        $translationKey = $this->nullableString($translationKey);
-
-        return $translationKey !== null && str_starts_with($translationKey, 'ui.');
+        return app(TranslationWorkbenchKeyAttributes::class)->isUiTranslationKey($translationKey);
     }
 
     private function withTranslationKeyNamespace(?string $translationKey, string $namespace, array $removeNamespaces = []): ?string
@@ -8614,7 +6991,7 @@ class TranslationWorkbenchEntries extends Component
 
     private function bulkLiteralSqlExpression(string $tableAlias): string
     {
-        return "LOWER(REGEXP_REPLACE(BTRIM(COALESCE({$tableAlias}.literal_text, {$tableAlias}.literal_text_suggested, '')), '\\s+', ' ', 'g'))";
+        return app(TranslationWorkbenchBulkKeyWriter::class)->bulkLiteralSqlExpression($tableAlias);
     }
 
     /**
@@ -8634,120 +7011,7 @@ class TranslationWorkbenchEntries extends Component
      */
     private function bulkEqualizeContext(): array
     {
-        $selectedIds = collect($this->bulkEqualizeSelectedFindingIds)
-            ->map(static fn(mixed $id): int => (int) $id)
-            ->filter(static fn(int $id): bool => $id > 0)
-            ->unique()
-            ->values();
-
-        if ($selectedIds->isEmpty() || ! $this->hasTables([
-            'translation_workbench_findings',
-            'translation_workbench_keys',
-            'translation_workbench_key_findings',
-        ])) {
-            return $this->emptyBulkEqualizeContext($selectedIds->all());
-        }
-
-        $keyLinks = DB::table('translation_workbench_key_findings')
-            ->selectRaw('finding_id, MIN(key_id) as key_id')
-            ->where('status', 'active')
-            ->groupBy('finding_id');
-
-        $rows = DB::table('translation_workbench_findings as findings')
-            ->leftJoinSub($keyLinks, 'key_links', function ($join): void {
-                $join->on('key_links.finding_id', '=', 'findings.id');
-            })
-            ->leftJoin('translation_workbench_keys as keys', 'keys.id', '=', 'key_links.key_id')
-            ->whereIn('findings.id', $selectedIds->all())
-            ->select([
-                'findings.id',
-                'findings.literal_text',
-                'findings.literal_text_suggested',
-                'findings.suggested_key as finding_suggested_key',
-                'findings.existing_key',
-                'findings.found_translation_key',
-                'keys.id as key_id',
-                'keys.translation_key',
-                'keys.suggested_key as key_suggested_key',
-                'keys.review_status',
-            ])
-            ->orderBy('findings.id')
-            ->get()
-            ->map(function (object $row): array {
-                $literal = $this->nullableString($row->literal_text ?? null)
-                    ?? $this->nullableString($row->literal_text_suggested ?? null);
-
-                return [
-                    'id' => (int) $row->id,
-                    'key_id' => $row->key_id !== null ? (int) $row->key_id : null,
-                    'literal' => $literal,
-                    'normalized_literal' => $this->normalizedBulkLiteral($literal),
-                    'translation_key' => $this->nullableString($row->translation_key ?? null),
-                    'key_suggested_key' => $this->nullableString($row->key_suggested_key ?? null),
-                    'finding_suggested_key' => $this->nullableString($row->finding_suggested_key ?? null),
-                    'existing_key' => $this->nullableString($row->existing_key ?? null),
-                    'found_translation_key' => $this->nullableString($row->found_translation_key ?? null),
-                    'review_status' => $this->nullableString($row->review_status ?? null),
-                ];
-            })
-            ->all();
-
-        $literalGroups = collect($rows)
-            ->pluck('normalized_literal')
-            ->filter()
-            ->unique()
-            ->values();
-        $translationKeys = collect($rows)
-            ->pluck('translation_key')
-            ->filter()
-            ->unique()
-            ->values()
-            ->all();
-        $suggestedKeys = collect($rows)
-            ->flatMap(static fn(array $row): array => [
-                $row['key_suggested_key'],
-                $row['finding_suggested_key'],
-            ])
-            ->filter()
-            ->unique()
-            ->values()
-            ->all();
-        $literal = collect($rows)
-            ->pluck('literal')
-            ->filter()
-            ->first();
-        $missingKeyCount = collect($rows)
-            ->filter(static fn(array $row): bool => empty($row['key_id']))
-            ->count();
-        $existingSharedKey = $literalGroups->count() === 1
-            ? $this->existingBulkSharedKeyForLiteral((string) $literalGroups->first(), $selectedIds->all())
-            : null;
-        $suggestedTargetKey = collect($translationKeys)->first()
-            ?? ($existingSharedKey['translation_key'] ?? null)
-            ?? collect($suggestedKeys)->first()
-            ?? $this->bulkTranslationKeySuggestionFromLiteral($literal);
-        $canConfirm = count($rows) >= 1
-            && $literalGroups->count() === 1
-            && ($missingKeyCount === 0 || $existingSharedKey !== null)
-            && filled($suggestedTargetKey)
-            && (count($rows) >= 2 || $existingSharedKey !== null);
-
-        return [
-            'selected_ids' => $selectedIds->all(),
-            'selected_count' => count($rows),
-            'rows' => $rows,
-            'literal' => $literal,
-            'normalized_literal' => $literalGroups->first(),
-            'literal_count' => $literalGroups->count(),
-            'missing_key_count' => $missingKeyCount,
-            'can_confirm' => $canConfirm,
-            'equalize_to_existing_shared_key' => $existingSharedKey !== null && collect($translationKeys)->isEmpty(),
-            'existing_shared_key' => $existingSharedKey['translation_key'] ?? null,
-            'existing_shared_key_count' => $existingSharedKey['finding_count'] ?? 0,
-            'suggested_target_key' => $suggestedTargetKey,
-            'translation_keys' => $translationKeys,
-            'suggested_keys' => $suggestedKeys,
-        ];
+        return app(TranslationWorkbenchBulkKeyWriter::class)->context($this->bulkEqualizeSelectedFindingIds);
     }
 
     private function shouldRemindBulkEqualizeAfterTranslationSave(int $findingId): bool
@@ -8765,78 +7029,6 @@ class TranslationWorkbenchEntries extends Component
         $context = $this->bulkEqualizeContext();
 
         return (bool) ($context['can_confirm'] ?? false);
-    }
-
-    /**
-     * @param  array<int, int>  $selectedIds
-     * @return array{translation_key: string, finding_count: int}|null
-     */
-    private function existingBulkSharedKeyForLiteral(string $normalizedLiteral, array $selectedIds): ?array
-    {
-        if ($normalizedLiteral === '' || ! $this->hasTables([
-            'translation_workbench_findings',
-            'translation_workbench_key_findings',
-            'translation_workbench_keys',
-            'translation_workbench_reviews',
-        ])) {
-            return null;
-        }
-
-        $literalExpression = $this->bulkLiteralSqlExpression('findings');
-        $selectedIds = collect($selectedIds)
-            ->map(static fn(mixed $id): int => (int) $id)
-            ->filter(static fn(int $id): bool => $id > 0)
-            ->unique()
-            ->values()
-            ->all();
-
-        $query = DB::table('translation_workbench_findings as findings')
-            ->join('translation_workbench_key_findings as key_findings', function ($join): void {
-                $join
-                    ->on('key_findings.finding_id', '=', 'findings.id')
-                    ->where('key_findings.status', '=', 'active');
-            })
-            ->join('translation_workbench_keys as keys', 'keys.id', '=', 'key_findings.key_id')
-            ->where('findings.status', 'active')
-            ->whereRaw($literalExpression . ' = ?', [$normalizedLiteral])
-            ->whereRaw("NULLIF(BTRIM(keys.translation_key), '') IS NOT NULL")
-            ->where(function ($query): void {
-                $query
-                    ->whereExists(function ($query): void {
-                        $query
-                            ->selectRaw('1')
-                            ->from('translation_workbench_reviews as bulk_reviews')
-                            ->where('bulk_reviews.decision', 'translation_key_bulk_equalized')
-                            ->whereColumn('bulk_reviews.finding_id', 'findings.id');
-                    })
-                    ->orWhereExists(function ($query): void {
-                        $query
-                            ->selectRaw('1')
-                            ->from('translation_workbench_reviews as bulk_reviews')
-                            ->where('bulk_reviews.decision', 'translation_key_bulk_equalized')
-                            ->whereColumn('bulk_reviews.key_id', 'keys.id');
-                    });
-            });
-
-        if ($selectedIds !== []) {
-            $query->whereNotIn('findings.id', $selectedIds);
-        }
-
-        $row = $query
-            ->selectRaw('keys.translation_key, COUNT(DISTINCT findings.id) as finding_count')
-            ->groupBy('keys.translation_key')
-            ->orderByDesc('finding_count')
-            ->orderBy('keys.translation_key')
-            ->first();
-
-        if (! $row || ! filled($row->translation_key ?? null)) {
-            return null;
-        }
-
-        return [
-            'translation_key' => (string) $row->translation_key,
-            'finding_count' => (int) $row->finding_count,
-        ];
     }
 
     /**
@@ -8888,34 +7080,9 @@ class TranslationWorkbenchEntries extends Component
             ->all();
     }
 
-    /**
-     * @param  array<int, int>  $selectedIds
-     * @return array<string, mixed>
-     */
-    private function emptyBulkEqualizeContext(array $selectedIds = []): array
-    {
-        return [
-            'selected_ids' => $selectedIds,
-            'selected_count' => 0,
-            'rows' => [],
-            'literal' => null,
-            'normalized_literal' => null,
-            'literal_count' => 0,
-            'missing_key_count' => 0,
-            'can_confirm' => false,
-            'suggested_target_key' => null,
-            'translation_keys' => [],
-            'suggested_keys' => [],
-        ];
-    }
-
     private function normalizedBulkLiteral(?string $literal): ?string
     {
-        $literal = $this->nullableString($literal);
-
-        return $literal === null
-            ? null
-            : Str::lower(preg_replace('/\s+/u', ' ', $literal) ?: $literal);
+        return app(TranslationWorkbenchBulkKeyWriter::class)->normalizedBulkLiteral($literal);
     }
 
     private function selectedBulkEqualizeLiteral(): ?string
@@ -8929,15 +7096,7 @@ class TranslationWorkbenchEntries extends Component
 
     private function bulkTranslationKeySuggestionFromLiteral(?string $literal): ?string
     {
-        $literal = $this->nullableString($literal);
-
-        if ($literal === null) {
-            return null;
-        }
-
-        $lastSegment = Str::slug($literal, '_');
-
-        return $lastSegment !== '' ? 'ui.' . $lastSegment : null;
+        return app(TranslationWorkbenchBulkKeyWriter::class)->bulkTranslationKeySuggestionFromLiteral($literal);
     }
 
     /**
@@ -9369,7 +7528,7 @@ class TranslationWorkbenchEntries extends Component
                 'value' => $option,
                 'label' => match ($option) {
                     'NULL' => __('No scanner candidate'),
-                    'ui' => __('UI candidate'),
+                    'ui' => __('ui.ui.ui-candidate'),
                     'dynamic' => __('Dynamic values candidate'),
                     default => __('Scanner candidate: :type', ['type' => $option]),
                 },
@@ -9379,7 +7538,7 @@ class TranslationWorkbenchEntries extends Component
             ->merge([
                 [
                     'value' => 'is_ui',
-                    'label' => __('UI translation'),
+                    'label' => __('ui.ui.ui-translation'),
                 ],
                 [
                     'value' => 'is_dynamic',
@@ -10710,6 +8869,7 @@ class TranslationWorkbenchEntries extends Component
             'dry_run' => (bool) ($summary['dry_run'] ?? true),
             'files' => (int) ($summary['files'] ?? 0),
             'values_exportable' => (int) ($summary['values_exportable'] ?? 0),
+            'keys' => array_values((array) ($summary['keys'] ?? [])),
             'values_new' => (int) ($summary['values_new'] ?? 0),
             'values_changed' => (int) ($summary['values_changed'] ?? 0),
             'values_unchanged' => (int) ($summary['values_unchanged'] ?? 0),
@@ -10773,6 +8933,7 @@ class TranslationWorkbenchEntries extends Component
             },
             'color' => $color,
             'is_active' => in_array($status, ['pending', 'running'], true),
+            'process_state' => app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPipelineProcess::class)->state($run),
             'current_step' => $currentStep,
             'total_steps' => $totalSteps,
             'progress' => $progress,
@@ -11120,28 +9281,12 @@ class TranslationWorkbenchEntries extends Component
 
     private function latestCodeUpdateConflictReview(int $findingId, int $keyId): ?TranslationWorkbenchReview
     {
-        if (! Schema::hasTable('translation_workbench_reviews')) {
-            return null;
-        }
-
-        return TranslationWorkbenchReview::query()
-            ->where('review_type', 'code_update_conflict')
-            ->where('finding_id', $findingId)
-            ->where('key_id', $keyId)
-            ->latest('id')
-            ->first();
+        return app(TranslationWorkbenchConflictReviewWriter::class)->latestCodeUpdateConflictReview($findingId, $keyId);
     }
 
     private function normalizedCodeUpdateConflictDecision(string $decision): string
     {
-        return in_array($decision, [
-            'duplicate_confirmed_same_key',
-            'existing_key_should_be_replaced',
-            'duplicate_dynamic_manual_workflow',
-            'ignore_for_now',
-        ], true)
-            ? $decision
-            : 'ignore_for_now';
+        return app(TranslationWorkbenchConflictReviewWriter::class)->normalizedCodeUpdateConflictDecision($decision);
     }
 
     /**
@@ -11429,39 +9574,6 @@ class TranslationWorkbenchEntries extends Component
         ];
     }
 
-    private function refreshLangCleanupInventoryCounts(TranslationWorkbenchKeyInventory $inventory, string $sourceLocale): void
-    {
-        $row = DB::table('translation_workbench_lang_values')
-            ->where('translation_key', (string) $inventory->translation_key)
-            ->selectRaw("SUM(CASE WHEN locale = ? AND status = 'active' THEN 1 ELSE 0 END) as source_active", [$sourceLocale])
-            ->selectRaw("SUM(CASE WHEN locale = ? AND status = 'obsolete' THEN 1 ELSE 0 END) as source_obsolete", [$sourceLocale])
-            ->selectRaw("SUM(CASE WHEN locale = ? AND status = 'deleted' THEN 1 ELSE 0 END) as source_deleted", [$sourceLocale])
-            ->selectRaw("SUM(CASE WHEN locale <> ? AND status = 'active' THEN 1 ELSE 0 END) as target_active", [$sourceLocale])
-            ->selectRaw("SUM(CASE WHEN locale <> ? AND status = 'obsolete' THEN 1 ELSE 0 END) as target_obsolete", [$sourceLocale])
-            ->selectRaw("SUM(CASE WHEN locale <> ? AND status = 'deleted' THEN 1 ELSE 0 END) as target_deleted", [$sourceLocale])
-            ->selectRaw('COUNT(DISTINCT locale) as locale_count')
-            ->first();
-
-        $sourceActive = (int) ($row->source_active ?? 0);
-        $sourceObsolete = (int) ($row->source_obsolete ?? 0);
-        $sourceDeleted = (int) ($row->source_deleted ?? 0);
-        $targetActive = (int) ($row->target_active ?? 0);
-        $targetObsolete = (int) ($row->target_obsolete ?? 0);
-        $targetDeleted = (int) ($row->target_deleted ?? 0);
-        $langValueCount = $sourceActive + $sourceObsolete + $sourceDeleted + $targetActive + $targetObsolete + $targetDeleted;
-
-        $inventory->forceFill([
-            'source_value_active_count' => $sourceActive,
-            'source_value_obsolete_count' => $sourceObsolete,
-            'source_value_deleted_count' => $sourceDeleted,
-            'target_value_active_count' => $targetActive,
-            'target_value_obsolete_count' => $targetObsolete,
-            'target_value_deleted_count' => $targetDeleted,
-            'lang_file_locale_count' => (int) ($row->locale_count ?? 0),
-            'has_lang_values' => $langValueCount > 0,
-            'candidate_for_lang_delete' => (bool) $inventory->is_orphaned_lang_value && ($sourceActive > 0 || $targetActive > 0),
-        ])->save();
-    }
 
     /**
      * @return array<string, mixed>|null

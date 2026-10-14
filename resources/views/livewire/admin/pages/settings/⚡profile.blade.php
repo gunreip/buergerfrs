@@ -241,7 +241,6 @@ new #[Title('Profile settings')] class extends Component {
                         <x-ui.button.save
                             data-test="update-profile-button"
                             type="submit"
-                            label="{{ __('ui.save') }}"
                             {{-- icon="save" --}}
                             {{-- color="green" --}}
                         />
@@ -252,7 +251,7 @@ new #[Title('Profile settings')] class extends Component {
                             color="green"
                             icon="save"
                         >
-                            {{ __('ui.save') }}
+                            {{ __('ui.button.save.save') }}
                         </flux:button> --}}
                     </div>
                 </div>

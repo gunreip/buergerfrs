@@ -7,6 +7,7 @@ namespace Gunreip\TranslationWorkbench\Livewire;
 use App\Livewire\Concerns\InteractsWithUserSettings;
 use Gunreip\TranslationWorkbench\Support\RawDataColumnPresentation;
 use Gunreip\TranslationWorkbench\Support\TranslationWorkbenchVersion;
+use Gunreip\TranslationWorkbench\Support\TwGraph\Defaults;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
@@ -19,8 +20,11 @@ use Throwable;
 
 class TranslationWorkbenchRawData extends Component
 {
+    use Concerns\SelectsTimelineChainDataset;
     use InteractsWithUserSettings;
     use WithPagination;
+
+    public const CRITICAL_DATASETS = TwGraphDataDrivenDatasets::CRITICAL_DATASETS;
 
     /**
      * User-facing Raw-Data table state that is safe to persist.
@@ -544,6 +548,36 @@ class TranslationWorkbenchRawData extends Component
     public ?string $timelineEventsTimeSpan = '02:00';
 
     public string $timelineChainPreviewId = 'auto';
+
+    public string $timelineChainTab = 'raw-data';
+
+    protected function datasetSelectionChanged(): void
+    {
+        $this->timelineChainPreviewId = (string) $this->timelineChainId;
+    }
+
+    public function showTimelineChainGraph(int $id): void
+    {
+        abort_unless($this->activeTable === 'translation_workbench_timeline_chains', 422);
+
+        $this->datasetIdInput = (string) $id;
+        $this->loadDataset();
+
+        if (! $this->getErrorBag()->has('datasetIdInput')) {
+            $this->timelineChainTab = 'tw-graph';
+        }
+    }
+
+    public function updatedTimelineChainTab(): void
+    {
+        if (! in_array($this->timelineChainTab, ['raw-data', 'tw-graph'], true)) {
+            $this->timelineChainTab = 'raw-data';
+        }
+
+        if ($this->timelineChainTab === 'tw-graph' && $this->timelineChainId === null) {
+            $this->initializeDatasetSelection();
+        }
+    }
 
     public function mount(): void
     {
@@ -1833,17 +1867,26 @@ class TranslationWorkbenchRawData extends Component
     public function render(): View
     {
         $table = $this->normalizedActiveTable();
+        $shared = [
+            'workbenchVersion' => app(TranslationWorkbenchVersion::class)->toArray(),
+            'table' => $table,
+            'tables' => $this->tables,
+            'activeTableIndex' => $this->activeTableIndex(),
+            'lastTableIndex' => count($this->tables) - 1,
+            'tableCounts' => $this->tableCounts(),
+            'tableDescriptions' => $this->tableDescriptions(),
+        ];
+        if ($table === 'translation_workbench_timeline_chains' && $this->timelineChainTab === 'tw-graph') {
+            return view('translation-workbench::livewire.raw-data', $shared);
+        }
+
         $columns = $this->displayColumns(
             $table,
             Schema::hasTable($table) ? Schema::getColumnListing($table) : [],
         );
 
         return view('translation-workbench::livewire.raw-data', [
-            'workbenchVersion' => app(TranslationWorkbenchVersion::class)->toArray(),
-            'table' => $table,
-            'tables' => $this->tables,
-            'activeTableIndex' => $this->activeTableIndex(),
-            'lastTableIndex' => count($this->tables) - 1,
+            ...$shared,
             'columns' => $columns,
             'columnMetadata' => $this->columnMetadata($table, $columns),
             'columnPresentation' => RawDataColumnPresentation::forTable($table, $columns),
@@ -1851,8 +1894,6 @@ class TranslationWorkbenchRawData extends Component
             'sortableColumns' => $this->sortableColumns($columns),
             'rows' => $this->rows($table, $columns),
             'summary' => $this->summary($table, $columns),
-            'tableCounts' => $this->tableCounts(),
-            'tableDescriptions' => $this->tableDescriptions(),
             'tableStorageSize' => $this->tableStorageSize($table),
             'sourceFileOptions' => $this->sourceFileOptions($table),
             'sourceFilePathOptions' => $this->sourceFilePathOptions($table),
@@ -1895,11 +1936,6 @@ class TranslationWorkbenchRawData extends Component
             'rawDataSourceFileLookup' => $this->rawDataSourceFileLookup($table),
             'rawDataKeyLookup' => $this->rawDataKeyLookup($table),
             'rawDataFindingLookup' => $this->rawDataFindingLookup($table),
-            'timelineChainMainRow' => $this->timelineChainMainRow($table),
-            'timelineChainRootRows' => $this->timelineChainRootRows($table),
-            'timelineChainOriginRows' => $this->timelineChainOriginRows($table),
-            'timelineChainSampleRows' => $this->timelineChainSampleRows($table),
-            'timelineChainPreviewOptions' => $this->timelineChainPreviewOptions($table),
         ]);
     }
 
@@ -1973,7 +2009,7 @@ class TranslationWorkbenchRawData extends Component
     private function builtKeySegments(): array
     {
         return collect([
-            __('Namespace') => $this->keysNamespace,
+            __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.cleanup_history.namespace') => $this->keysNamespace,
             __('Group') => $this->keysGroup,
             __('Domain') => $this->keysSegmentDomain,
             __('Section') => $this->keysSegmentSection,
@@ -3152,8 +3188,7 @@ class TranslationWorkbenchRawData extends Component
      */
     private function sourceFileScopedDistinctOptions(
         string $column
-    ): array
-    {
+    ): array {
         if (! Schema::hasTable('translation_workbench_source_files') || ! Schema::hasColumn('translation_workbench_source_files', $column)) {
             return [];
         }
@@ -3455,8 +3490,7 @@ class TranslationWorkbenchRawData extends Component
         bool $requireDomain = false,
         bool $requireSection = false,
         bool $requireContext = false,
-    ): array
-    {
+    ): array {
         if (! Schema::hasTable('translation_workbench_keys') || ! Schema::hasColumn('translation_workbench_keys', $column)) {
             return [];
         }
@@ -5077,7 +5111,7 @@ class TranslationWorkbenchRawData extends Component
                 'SELECT pg_total_relation_size(to_regclass(?))::bigint as bytes, pg_size_pretty(pg_total_relation_size(to_regclass(?))) as pretty',
                 [$table, $table],
             );
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return [
                 'bytes' => null,
                 'pretty' => '—',
@@ -5106,7 +5140,7 @@ class TranslationWorkbenchRawData extends Component
     /**
      * @return array<int, array<string, mixed>>
      */
-    private function timelineChainSampleRows(string $table): array
+    protected function timelineChainSampleRows(string $table): array
     {
         if ($table !== 'translation_workbench_timeline_chains' || ! Schema::hasTable($table)) {
             return [];
@@ -5310,7 +5344,7 @@ class TranslationWorkbenchRawData extends Component
     /**
      * @return array<string, mixed>|null
      */
-    private function timelineChainMainRow(string $table): ?array
+    protected function timelineChainMainRow(string $table): ?array
     {
         if ($table !== 'translation_workbench_timeline_chains' || ! Schema::hasTable($table)) {
             return null;
@@ -5408,7 +5442,7 @@ class TranslationWorkbenchRawData extends Component
     /**
      * @return array<int, array<string, mixed>>
      */
-    private function timelineChainOriginRows(string $table): array
+    protected function timelineChainOriginRows(string $table): array
     {
         $mainRow = $this->timelineChainMainRow($table);
 
@@ -5482,7 +5516,7 @@ class TranslationWorkbenchRawData extends Component
         });
 
         $bulkOriginRows = $edgeFindings
-            ->map(function (object $finding) use ($bulkReviewByFindingId, $translationKey, $trunk): array {
+            ->map(function (object $finding) use ($bulkReviewByFindingId, $translationKey, $trunk, $mainRow): array {
                 $root = 'finding #' . $finding->id;
                 $literal = trim((string) ($finding->literal_text ?? $finding->literal_text_suggested ?? ''));
                 $source = trim((string) ($finding->source_path ?? ''));
@@ -5496,6 +5530,7 @@ class TranslationWorkbenchRawData extends Component
                     'translation_key' => $translationKey,
                     'first_timestamp' => $finding->first_seen_at ?: $finding->created_at,
                     'first_root' => $root,
+                    'dataset_source' => ['type' => 'finding', 'id' => (int) $finding->id, 'dataset_id' => (int) $mainRow['id']],
                     'first_origin_key' => (string) ($finding->suggested_key ?? ''),
                     'first_event' => __('First seen as single finding'),
                     'first_state' => (string) $finding->status,
@@ -5573,7 +5608,7 @@ class TranslationWorkbenchRawData extends Component
         )->keyBy('id');
 
         return $sharedCandidates
-            ->map(function (array $candidate) use ($findingsById, $translationKey, $trunk): ?array {
+            ->map(function (array $candidate) use ($findingsById, $translationKey, $trunk, $mainRow): ?array {
                 $findingId = (int) ($candidate['finding_id'] ?? 0);
                 $finding = $findingId > 0 ? $findingsById->get($findingId) : null;
                 $originKey = collect([
@@ -5598,6 +5633,9 @@ class TranslationWorkbenchRawData extends Component
                     'source_path' => $source,
                     'translation_key' => $translationKey,
                     'first_timestamp' => $finding?->first_seen_at ?: $finding?->created_at ?: ($mainRow['first_seen_at'] ?? null),
+                    'dataset_source' => $findingId > 0
+                        ? ['type' => 'finding', 'id' => $findingId, 'dataset_id' => (int) $mainRow['id']]
+                        : (!empty($candidate['id']) ? ['type' => 'merge-group', 'id' => (int) $mainRow['id'], 'candidate_ids' => [(int) $candidate['id']]] : []),
                     'first_root' => $findingId > 0 ? ('finding #' . $findingId) : ('candidate #' . (string) ($candidate['id'] ?? '?')),
                     'first_origin_key' => $originKey,
                     'first_event' => __('First seen as shared candidate origin'),
@@ -5618,7 +5656,7 @@ class TranslationWorkbenchRawData extends Component
     /**
      * @return array<int, array<string, mixed>>
      */
-    private function timelineChainRootRows(string $table): array
+    protected function timelineChainRootRows(string $table): array
     {
         $mainRow = $this->timelineChainMainRow($table);
 
@@ -5640,6 +5678,7 @@ class TranslationWorkbenchRawData extends Component
                 'branch' => __('Root'),
                 'translation_key' => $translationKey,
                 'event' => __('Current canonical root'),
+                'dataset_source' => ['type' => 'dataset', 'id' => $mainRow['id']],
                 'state' => str((string) $mainRow['chain_type'])->headline() . ' / ' . str((string) $mainRow['chain_status'])->headline(),
                 'color' => $this->timelineGraphColor('root_event', 'green'),
                 'branch_color' => $this->timelineGraphColor('root_event', 'green'),
@@ -5657,6 +5696,7 @@ class TranslationWorkbenchRawData extends Component
                     'branch' => __('Root key'),
                     'translation_key' => $translationKey,
                     'event' => __('Key created'),
+                    'dataset_source' => ['type' => 'key', 'id' => $key->id],
                     'state' => (string) $key->status,
                     'color' => $this->timelineGraphColor('key_event', 'violet'),
                     'branch_color' => $this->timelineGraphColor('key_event', 'violet'),
@@ -5670,6 +5710,7 @@ class TranslationWorkbenchRawData extends Component
                         'branch' => __('Root key'),
                         'translation_key' => $translationKey,
                         'event' => __('Key reviewed'),
+                        'dataset_source' => ['type' => 'key', 'id' => $key->id],
                         'state' => (string) $key->review_status,
                         'color' => $this->timelineGraphColor('key_reviewed_event', 'green'),
                         'branch_color' => $this->timelineGraphColor('key_event', 'violet'),
@@ -5684,6 +5725,7 @@ class TranslationWorkbenchRawData extends Component
                         'branch' => __('Root key'),
                         'translation_key' => $translationKey,
                         'event' => __('Key updated'),
+                        'dataset_source' => ['type' => 'key', 'id' => $key->id],
                         'state' => (string) $key->review_status,
                         'color' => $this->timelineGraphColor('key_updated_event', 'cyan'),
                         'branch_color' => $this->timelineGraphColor('key_event', 'violet'),
@@ -5702,6 +5744,7 @@ class TranslationWorkbenchRawData extends Component
                     'branch' => 'finding #' . $finding->id,
                     'translation_key' => $translationKey,
                     'event' => __('Finding created'),
+                    'dataset_source' => ['type' => 'finding', 'id' => $finding->id],
                     'state' => (string) $finding->status,
                     'color' => $this->timelineGraphColor('finding_event', 'sky'),
                     'branch_color' => $this->timelineGraphColor('finding_event', 'sky'),
@@ -5721,6 +5764,7 @@ class TranslationWorkbenchRawData extends Component
                         'branch' => 'lang value #' . $langValue->id,
                         'translation_key' => $translationKey,
                         'event' => __('Lang value'),
+                        'dataset_source' => ['type' => 'lang-value', 'id' => $langValue->id],
                         'state' => trim((string) $langValue->locale . ' / ' . (string) $langValue->status),
                         'color' => $langValue->status === 'active'
                             ? $this->timelineGraphColor('lang_value_active_event', 'emerald')
@@ -5754,6 +5798,7 @@ class TranslationWorkbenchRawData extends Component
                         'branch' => 'review #' . $review->id,
                         'translation_key' => $translationKey,
                         'event' => str((string) $review->decision)->replace('_', ' ')->headline()->toString(),
+                        'dataset_source' => ['type' => 'review', 'id' => $review->id],
                         'state' => (string) $review->review_type,
                         'color' => $this->timelineGraphColor('review_event', 'amber'),
                         'branch_color' => $this->timelineGraphColor('review_event', 'amber'),
@@ -5795,9 +5840,9 @@ class TranslationWorkbenchRawData extends Component
 
     private function timelineGraphColor(string $key, string $fallback): string
     {
-        return \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::dataDrivenString(
+        return Defaults::dataDrivenString(
             'colors.' . $key,
-            \Gunreip\TranslationWorkbench\Support\TwGraph\Defaults::graphString('colors.' . $key, $fallback),
+            Defaults::graphString('colors.'.$key, $fallback),
         );
     }
 

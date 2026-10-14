@@ -2,8 +2,11 @@
 export function setupTwGraphLoading() {
     const states = new Map();
     const rootFor = element => element?.closest('[wire\\:id]');
+    // A parent component must not hide the overlay owned by its lazy child.
+    const overlayFor = root => [...(root?.querySelectorAll('[data-tw-graph-loading]') ?? [])]
+        .find(overlay => rootFor(overlay) === root);
     const stateFor = root => {
-        if (!root?.querySelector('[data-tw-graph-loading]')) return null;
+        if (!overlayFor(root)) return null;
         const id = root.getAttribute('wire:id');
         if (!states.has(id)) states.set(id, { root, pending: 0, timer: null });
         const state = states.get(id);
@@ -11,7 +14,7 @@ export function setupTwGraphLoading() {
         return state;
     };
     const show = (state, visible) => {
-        const overlay = state.root.querySelector('[data-tw-graph-loading]');
+        const overlay = overlayFor(state.root);
         if (overlay) overlay.style.display = visible ? 'flex' : 'none';
         state.root.setAttribute('aria-busy', String(visible));
     };

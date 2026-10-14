@@ -145,7 +145,7 @@
 
             <div class="flex shrink-0 justify-end">
                 <x-ui.button.cancel
-                    label="{{ __('ui.close') }}"
+                    label="{{ __('ui.button.close.close') }}"
                     icon="circle-x"
                     wire:click="closeTranslationHistory"
                 />

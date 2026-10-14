@@ -58,7 +58,7 @@
                             >
                                 @foreach ($documentTypeOptions as $value => $label)
                                     <flux:select.option value="{{ $value }}">
-                                        {{ __($label) }}
+                                        {{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.sections.documents.document_type_options', (string) $value, $label) }}
                                     </flux:select.option>
                                 @endforeach
                                 <flux:select.option.create
@@ -262,7 +262,7 @@
                             >
                                 @foreach ($documentCategoryOptions as $value => $label)
                                     <flux:select.option value="{{ $value }}">
-                                        {{ __($label) }}
+                                        {{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.edit_person.sections.documents.document_category_options', (string) $value, $label) }}
                                     </flux:select.option>
                                 @endforeach
                                 <flux:select.option.create

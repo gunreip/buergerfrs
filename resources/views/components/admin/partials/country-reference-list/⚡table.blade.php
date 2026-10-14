@@ -265,7 +265,7 @@
 
                             <flux:table.cell align="center">
                                 @if ($country->is_active)
-                                    <flux:tooltip content="{{ __('ui.active') }}">
+                                    <flux:tooltip content="{{ __('ui.state.active') }}">
                                         <flux:badge
                                             color="green"
                                             variant="subtle"

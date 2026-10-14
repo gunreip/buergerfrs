@@ -115,3 +115,22 @@ it('applies measured entry clearance through the existing branch prop', function
     expect($result['branches'][0]['entry_stem_length'])->toBe('0.2969rem')
         ->and($result['trunk'])->toBe($preview['trunk']);
 });
+
+it('resolves branch attachments through the rendered merge end on either side', function () {
+    $preview = ['graph' => ['graph_id' => 'graph'], 'merges' => [
+        ['id' => 'merge.left', 'side' => 'left', 'attach_to' => 'strang.trunk.path.1.end'],
+        ['id' => 'merge.right', 'side' => 'right', 'attach_to' => 'strang.trunk.path.3.end'],
+    ], 'branches' => [
+        ['id' => 'branch.left', 'side' => 'left', 'attach_to' => 'strang.merge-left.end'],
+        ['id' => 'branch.right', 'side' => 'right', 'attach_to' => 'strang.merge-right.end'],
+    ]];
+    $attachments = collect(VerticalLabelLayout::lineAttachments($preview))->keyBy('prefix');
+    expect($attachments['branch.left']['row'])->toBe(2)
+        ->and($attachments['branch.right']['row'])->toBe(4)
+        ->and($attachments['graph.strang.branch-end.left.1']['row'])->toBe(2)
+        ->and($attachments['graph.strang.branch-end.right.2']['row'])->toBe(4);
+
+    $preview['merges'][] = ['id' => 'merge.left.last', 'side' => 'left', 'attach_to' => 'strang.trunk.path.5.end'];
+    $attachments = collect(VerticalLabelLayout::lineAttachments($preview))->keyBy('prefix');
+    expect($attachments['branch.left']['row'])->toBe(6);
+});

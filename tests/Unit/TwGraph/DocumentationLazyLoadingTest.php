@@ -481,7 +481,7 @@ it('renders the overview main tabs through the public start and merge component 
         $labels[] = trim($label->textContent);
     }
     expect($labels)->toHaveCount(239)->toContain(
-        'Idea to Paper', 'Inventory', 'Overview', 'Deep Reference', 'Canvas', 'Primitives',
+        'Idea to Paper', 'Inventory', __('ui.title.overview'), 'Deep Reference', 'Canvas', 'Primitives',
         'Segments', 'Parts', 'Paths', 'Strang Trunk', 'Strang Merge', 'Strang Branch', 'Strang Rekey', 'Flow', 'Strang',
     );
     $graphId = 'idea-to-paper-overview-structure';

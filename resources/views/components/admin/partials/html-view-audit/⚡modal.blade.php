@@ -21,7 +21,7 @@
                 $typeMeta = $tableLegend['type'][$selectedFinding->type] ?? [];
             @endphp
 
-            <flux:separator text="{{ __('ui.title.filter') }}" />
+            <flux:separator text="{{ __('ui.title.overview') }}" />
 
             <div class="grid grid-cols-2 gap-4">
                 <div>

@@ -82,7 +82,7 @@
                 {{ __('Inventory') }}
             </flux:tab>
             <flux:tab name="idea-to-paper-overview">
-                {{ __('Overview') }}
+                {{ __('ui.title.overview') }}
             </flux:tab>
             <flux:tab name="idea-to-paper-props-and-connections">
                 {{ __('Deep Reference') }}

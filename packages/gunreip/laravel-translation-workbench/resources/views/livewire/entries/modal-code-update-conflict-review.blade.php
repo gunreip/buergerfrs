@@ -15,7 +15,7 @@
         <x-ui.headers.card
             :title="__('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.review_duplicate_expression')"
             :description="__(
-                'Store the explicit decision for a duplicate expression before source code updates are applied.',
+                'packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.modal_code_update_conflict_review.store_the_explicit_decision_for_a_duplicate_expression_before_source_code_updates_are_applied',
             )"
         >
             <div class="flex flex-wrap items-center gap-2">
@@ -159,7 +159,7 @@
                 variant="subtle"
                 wire:click="closeCodeUpdateConflictReview"
             >
-                {{ __('ui.button.cancel') }}
+                {{ __('ui.button.cancel.cancel') }}
             </flux:button>
 
             <flux:button

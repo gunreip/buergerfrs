@@ -4,10 +4,30 @@ namespace Gunreip\TranslationWorkbench\Foundation;
 
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchPipelineRun;
 use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchPipelineRunStep;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Schema;
 
 class TranslationWorkbenchPipelineRunTracker
 {
+    /** Atomically claim a pending run; a rejected second process must not change its status. */
+    public function claim(string $runId): TranslationWorkbenchPipelineRun
+    {
+        if (! ctype_digit($runId) || (int) $runId < 1 || ! $this->tablesExist()) {
+            throw new AuthorizationException('Invalid or unavailable pipeline run.');
+        }
+
+        $claimed = TranslationWorkbenchPipelineRun::query()
+            ->whereKey((int) $runId)
+            ->where('command', 'translation:workbench')
+            ->where('status', 'pending')
+            ->update(['status' => 'running', 'started_at' => now(), 'updated_at' => now(), 'meta->process_host' => gethostname()]);
+        if ($claimed !== 1) {
+            throw new AuthorizationException('Pipeline run is already claimed, completed or unavailable.');
+        }
+
+        return TranslationWorkbenchPipelineRun::query()->findOrFail((int) $runId);
+    }
+
     /**
      * @param  array<string, mixed>  $options
      */
@@ -22,7 +42,7 @@ class TranslationWorkbenchPipelineRunTracker
             'options' => $options,
             'status' => 'pending',
             'summary' => [],
-            'meta' => [],
+            'meta' => ['process_host' => null],
         ]);
     }
 

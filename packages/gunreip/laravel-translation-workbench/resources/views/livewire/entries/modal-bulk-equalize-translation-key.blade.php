@@ -216,7 +216,7 @@
                 color="zinc"
                 wire:click="closeBulkEqualizeTranslationKeyModal"
             >
-                {{ __('ui.button.cancel') }}
+                {{ __('ui.button.cancel.cancel') }}
             </flux:button>
 
             <flux:button

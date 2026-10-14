@@ -8,7 +8,7 @@
     <flux:callout class="min-w-0" color="red" icon="book-open-check">
         <flux:callout.heading>{{ __('Public component props') }}</flux:callout.heading>
         <flux:table class="mt-3">
-            <flux:table.columns><flux:table.column>{{ __('Prop / path') }}</flux:table.column><flux:table.column>{{ __('Type') }}</flux:table.column><flux:table.column>{{ __('Default') }}</flux:table.column><flux:table.column>{{ __('Purpose') }}</flux:table.column></flux:table.columns>
+            <flux:table.columns><flux:table.column>{{ __('Prop / path') }}</flux:table.column><flux:table.column>{{ __('ui.type') }}</flux:table.column><flux:table.column>{{ __('Default') }}</flux:table.column><flux:table.column>{{ __('Purpose') }}</flux:table.column></flux:table.columns>
             <flux:table.rows>
                 <flux:table.row><flux:table.cell class="whitespace-normal"><code>side</code></flux:table.cell>
                     <flux:table.cell class="whitespace-normal"><code>string enum</code></flux:table.cell><flux:table.cell class="whitespace-normal"><code>left</code></flux:table.cell><flux:table.cell class="whitespace-normal">{{ __('Physical side of the body and return: left or right. The FALSE exit stays on the main axis.') }}</flux:table.cell></flux:table.row>
@@ -67,7 +67,7 @@
                 <flux:accordion.heading>anchor-start</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:table>
-                        <flux:table.columns><flux:table.column>{{ __('Prop / path') }}</flux:table.column><flux:table.column>{{ __('Type') }}</flux:table.column><flux:table.column>{{ __('Default / fallback') }}</flux:table.column><flux:table.column>{{ __('Meaning and limits') }}</flux:table.column></flux:table.columns>
+                        <flux:table.columns><flux:table.column>{{ __('Prop / path') }}</flux:table.column><flux:table.column>{{ __('ui.type') }}</flux:table.column><flux:table.column>{{ __('Default / fallback') }}</flux:table.column><flux:table.column>{{ __('Meaning and limits') }}</flux:table.column></flux:table.columns>
                         <flux:table.rows>
 
                 <flux:table.row>
@@ -91,7 +91,7 @@
                 <flux:accordion.heading>condition-label</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:table>
-                        <flux:table.columns><flux:table.column>{{ __('Prop / path') }}</flux:table.column><flux:table.column>{{ __('Type') }}</flux:table.column><flux:table.column>{{ __('Default / fallback') }}</flux:table.column><flux:table.column>{{ __('Meaning and limits') }}</flux:table.column></flux:table.columns>
+                        <flux:table.columns><flux:table.column>{{ __('Prop / path') }}</flux:table.column><flux:table.column>{{ __('ui.type') }}</flux:table.column><flux:table.column>{{ __('Default / fallback') }}</flux:table.column><flux:table.column>{{ __('Meaning and limits') }}</flux:table.column></flux:table.columns>
                         <flux:table.rows>
 
                 <flux:table.row>
@@ -178,7 +178,7 @@
                 <flux:accordion.heading>action-label</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:table>
-                        <flux:table.columns><flux:table.column>{{ __('Prop / path') }}</flux:table.column><flux:table.column>{{ __('Type') }}</flux:table.column><flux:table.column>{{ __('Default / fallback') }}</flux:table.column><flux:table.column>{{ __('Meaning and limits') }}</flux:table.column></flux:table.columns>
+                        <flux:table.columns><flux:table.column>{{ __('Prop / path') }}</flux:table.column><flux:table.column>{{ __('ui.type') }}</flux:table.column><flux:table.column>{{ __('Default / fallback') }}</flux:table.column><flux:table.column>{{ __('Meaning and limits') }}</flux:table.column></flux:table.columns>
                         <flux:table.rows>
 
                 <flux:table.row>
@@ -283,7 +283,7 @@
                 <flux:accordion.heading>true-label</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:table>
-                        <flux:table.columns><flux:table.column>{{ __('Prop / path') }}</flux:table.column><flux:table.column>{{ __('Type') }}</flux:table.column><flux:table.column>{{ __('Default / fallback') }}</flux:table.column><flux:table.column>{{ __('Meaning and limits') }}</flux:table.column></flux:table.columns>
+                        <flux:table.columns><flux:table.column>{{ __('Prop / path') }}</flux:table.column><flux:table.column>{{ __('ui.type') }}</flux:table.column><flux:table.column>{{ __('Default / fallback') }}</flux:table.column><flux:table.column>{{ __('Meaning and limits') }}</flux:table.column></flux:table.columns>
                         <flux:table.rows>
 
                 <flux:table.row>
@@ -370,7 +370,7 @@
                 <flux:accordion.heading>false-label</flux:accordion.heading>
                 <flux:accordion.content>
                     <flux:table>
-                        <flux:table.columns><flux:table.column>{{ __('Prop / path') }}</flux:table.column><flux:table.column>{{ __('Type') }}</flux:table.column><flux:table.column>{{ __('Default / fallback') }}</flux:table.column><flux:table.column>{{ __('Meaning and limits') }}</flux:table.column></flux:table.columns>
+                        <flux:table.columns><flux:table.column>{{ __('Prop / path') }}</flux:table.column><flux:table.column>{{ __('ui.type') }}</flux:table.column><flux:table.column>{{ __('Default / fallback') }}</flux:table.column><flux:table.column>{{ __('Meaning and limits') }}</flux:table.column></flux:table.columns>
                         <flux:table.rows>
 
                 <flux:table.row>

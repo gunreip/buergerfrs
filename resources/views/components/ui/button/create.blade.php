@@ -10,7 +10,7 @@
 {{-- create  → green/primary, plus, Create --}}
 
 @props([
-    'label' => __('admin.roles.actions.create'),
+    'label' => __('ui.button.create.create'),
     'icon' => true,
     'type' => 'button',
     'size' => null,

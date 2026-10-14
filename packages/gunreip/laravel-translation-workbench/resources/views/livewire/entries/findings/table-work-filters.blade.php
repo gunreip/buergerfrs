@@ -38,7 +38,7 @@
                         <x-ui.tooltip.simple
                             :title="__('ui.remove.remove.remove-first-key-segment')"
                             :text="__(
-                                'Removes the first dot-separated segment from the current search text. Useful when export-report keys differ from work-finding keys in their leading namespace/path segments.',
+                                'ui.remove.removes.removes-the-first-dot-separated-segment-from-the-current-search-text-useful-when-expo',
                             )"
                         >
                             <flux:button
@@ -580,7 +580,7 @@
                     <x-ui.tooltip.simple
                         :title="__('ui.remove.remove.remove-first-value-segment')"
                         :text="__(
-                            'Removes the first dot-separated segment from the current value search text. Useful when a copied value still contains key-like prefix segments.',
+                            'ui.remove.removes.removes-the-first-dot-separated-segment-from-the-current-value-search-text-useful-when',
                         )"
                     >
                         <flux:button
@@ -638,25 +638,23 @@
 
     <flux:field class="col-span-2">
         <flux:label>{{ __('Commented out') }}</flux:label>
-        <div class="flex gap-2 *:items-center">
-            <flux:radio.group
-                class="w-0 shrink-0"
-                variant="segmented"
-                wire:model.live="findingCommentedOutScope"
-            >
-                <flux:radio
-                    value="commentedOutPresentNo"
-                    icon="ban"
-                >
-                    {{ __('NO') }}
-                </flux:radio>
-                <flux:radio
-                    value="commentedOutPresentYes"
-                    icon="plus"
-                >
-                    {{ __('YES') }}
-                </flux:radio>
-            </flux:radio.group>
+        <div x-data="{
+            get includeCommentedOut() {
+                return $wire.findingCommentedOutScope === 'commentedOutPresentYes';
+            },
+            set includeCommentedOut(value) {
+                $wire.$set('findingCommentedOutScope', value ? 'commentedOutPresentYes' : 'commentedOutPresentNo');
+            },
+        }">
+            <flux:toggle
+                x-model="includeCommentedOut"
+                on:icon="plus"
+                off:icon="ban"
+                :on:label="__('YES')"
+                :off:label="__('NO')"
+                variant="filled"
+                :aria-label="__('Include commented-out findings')"
+            />
         </div>
     </flux:field>
 

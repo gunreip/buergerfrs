@@ -37,7 +37,7 @@
         __('Property') .
         ': ' .
         $details['property'] .
-        ($source ? "\n" . __('Source') . ': ' . $source : '') .
+        ($source ? "\n" . __('ui.source.source') . ': ' . $source : '') .
         "\n" .
         __('Default') . ': ' . $defaultText . "\n" .
         __('Result') .
@@ -91,7 +91,7 @@
                     style="overflow-wrap:anywhere"
                 >{{ $details['property'] }}</dd>
                 @if ($source)
-                    <dt class="text-zinc-300">{{ __('Source') }}</dt>
+                    <dt class="text-zinc-300">{{ __('ui.source.source') }}</dt>
                     <dd
                         class="font-mono"
                         style="overflow-wrap:anywhere"
@@ -110,7 +110,7 @@
                     icon="clipboard"
                     x-on:click.stop="navigator.clipboard?.writeText($el.dataset.copyText)"
                 >
-                    {{ __('Copy') }}
+                    {{ __('ui.button.copy.copy') }}
                 </flux:button>
             </div>
         </flux:tooltip.content>

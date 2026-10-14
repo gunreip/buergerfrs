@@ -22,12 +22,12 @@
                         </flux:input.group.prefix>
                         <flux:input.group.prefix class="w-64 rounded-l-none">
                             <x-ui.tooltip.trigger
-                                :title="__('Phone')"
+                                :title="__('management.people.create_person.phone')"
                                 :text="__(
                                     'Enter the phone number for the person. This will be used for direct contact purposes.',
                                 )"
                             >
-                                {{ __('Phone') }}
+                                {{ __('management.people.create_person.phone') }}
                             </x-ui.tooltip.trigger>
                         </flux:input.group.prefix>
                         @if ($editingField === 'phone')

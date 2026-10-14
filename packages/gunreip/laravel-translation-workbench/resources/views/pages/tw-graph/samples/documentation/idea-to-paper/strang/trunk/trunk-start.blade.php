@@ -2,7 +2,7 @@
 
 <flux:tab.group class="mt-4 min-w-0 max-w-full">
     <flux:tabs wire:model.live="tabs.strang_trunk_trunk_start" scrollable scrollable:fade scrollable:scrollbar="hide">
-        <flux:tab name="trunk-start-overview">{{ __('Overview') }}</flux:tab>
+        <flux:tab name="trunk-start-overview">{{ __('ui.title.overview') }}</flux:tab>
         <flux:tab name="trunk-start-compare">{{ __('Start compare') }}</flux:tab>
         <flux:tab name="trunk-start-default">{{ __('Start default') }}</flux:tab>
         <flux:tab name="trunk-start-long-start">{{ __('Start long start') }}</flux:tab>

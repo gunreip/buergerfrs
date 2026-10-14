@@ -11,7 +11,7 @@
 {{-- close   → zinc/primary, x-mark, Close --}}
 
 @props([
-    'label' => __('ui.actions.close'),
+    'label' => __('ui.button.close.close'),
     'icon' => true,
     'type' => 'button',
     'size' => null,

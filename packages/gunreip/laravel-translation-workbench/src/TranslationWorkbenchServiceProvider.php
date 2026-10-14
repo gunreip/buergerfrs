@@ -26,8 +26,9 @@ use Gunreip\TranslationWorkbench\Console\ScanTranslationWorkbench;
 use Gunreip\TranslationWorkbench\Console\SyncTranslationWorkbenchFoundation;
 use Gunreip\TranslationWorkbench\Foundation\RuntimeDynamicTranslationCollector;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchEntries;
-use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchOldEntries;
-use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawData;
+// use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchOldEntries;
+// use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawData;
+use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawDataChainPreview;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawDataNew;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchSettings;
 use Gunreip\TranslationWorkbench\Livewire\TwGraphDataDrivenDatasets;
@@ -59,6 +60,7 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
         );
 
         $this->app->singleton(RuntimeDynamicTranslationCollector::class);
+        $this->app->scoped(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPipelineContext::class);
     }
 
     public function boot(): void
@@ -72,9 +74,12 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
         Livewire::component('translation-workbench.tw-graph.documentation', TwGraphDocumentation::class);
         Livewire::component('translation-workbench.tw-graph.overview', TwGraphOverview::class);
         Livewire::component('translation-workbench.entries', TranslationWorkbenchEntries::class);
-        Livewire::component('translation-workbench.old-entries', TranslationWorkbenchOldEntries::class);
-        Livewire::component('translation-workbench.raw-data', TranslationWorkbenchRawData::class);
+        Livewire::component('translation-workbench.workflow', \Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchWorkflow::class);
+        // Retired page aliases; classes remain available for reference and shared inheritance.
+        // Livewire::component('translation-workbench.old-entries', TranslationWorkbenchOldEntries::class);
+        // Livewire::component('translation-workbench.raw-data', TranslationWorkbenchRawData::class);
         Livewire::component('translation-workbench.raw-data-new', TranslationWorkbenchRawDataNew::class);
+        Livewire::component('translation-workbench.raw-data-chain-preview', TranslationWorkbenchRawDataChainPreview::class);
         Livewire::component('translation-workbench.settings', TranslationWorkbenchSettings::class);
         Livewire::component('translation-workbench.tw-graph.data-driven.datasets', TwGraphDataDrivenDatasets::class);
         Livewire::component('translation-workbench.tw-graph.data-driven.dataset-details', \Gunreip\TranslationWorkbench\Livewire\TwGraphDatasetDetails::class);
@@ -96,6 +101,7 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
             ImportTranslationWorkbenchLangValues::class,
             InventoryTranslationWorkbenchKeys::class,
             ExportTranslationWorkbenchLangFiles::class,
+            \Gunreip\TranslationWorkbench\Console\CompareTranslationWorkbenchValues::class,
             PlanTranslationWorkbenchCodeUpdates::class,
             ProfileTranslationWorkbenchFindings::class,
             ResolveUnknownDynamicSources::class,

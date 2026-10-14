@@ -4,7 +4,7 @@
 <flux:tab.group class="mt-4 min-w-0 max-w-full">
     <flux:tabs wire:model.live="tabs.strang_rekey_index" scrollable scrollable:fade scrollable:scrollbar="hide">
         <flux:tab name="rekey-default">{{ __('Default') }}</flux:tab>
-        <flux:tab name="rekey-source">{{ __('Source') }}</flux:tab>
+        <flux:tab name="rekey-source">{{ __('ui.source.source') }}</flux:tab>
         <flux:tab name="rekey-target">{{ __('Target') }}</flux:tab>
         <flux:tab name="rekey-compressed">{{ __('Compressed') }}</flux:tab>
     </flux:tabs>

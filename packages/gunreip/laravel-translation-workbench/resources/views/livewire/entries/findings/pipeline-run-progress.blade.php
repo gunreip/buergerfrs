@@ -39,6 +39,18 @@ Unfortunately, this keeps causing a "Failed to open stream: Permission denied" e
         </flux:callout.heading>
 
         <flux:callout.text>
+            @if ($status['status'] === 'running' && ($status['process_state'] ?? 'unknown') === 'interrupted')
+                <flux:callout color="amber" class="mb-3">
+                    <flux:callout.heading>{{ __('Background process no longer active') }}</flux:callout.heading>
+                    <flux:callout.text>{{ __('The process lock is free, but the run is still marked as running. Completed steps may already have changed data or files. Marking the run as interrupted does not repeat or undo any steps.') }}</flux:callout.text>
+                    <flux:button class="mt-3" variant="outline" wire:click="markPipelineInterrupted({{ $status['id'] }})" wire:confirm="{{ __('Mark this run as interrupted? Completed work remains unchanged; no steps will be repeated.') }}">
+                        {{ __('Mark as interrupted') }}
+                    </flux:button>
+                </flux:callout>
+            @elseif ($status['status'] === 'running' && ($status['process_state'] ?? 'unknown') === 'unknown')
+                <flux:text class="mb-3">{{ __('Process state cannot be established on this host. No automatic status correction is performed.') }}</flux:text>
+            @endif
+            <flux:error name="pipelineRun" />
             <div class="space-y-3">
                 <div class="grid grid-cols-1 gap-2 lg:grid-cols-10 lg:items-center">
                     <div class="space-y-1">

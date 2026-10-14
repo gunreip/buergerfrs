@@ -10,7 +10,7 @@
 {{-- edit  → sky/primary, square-pen, Edit --}}
 
 @props([
-    'label' => __('admin.translation_list.modal.edit'),
+    'label' => __('ui.button.edit.edit'),
     'icon' => true,
     'type' => 'button',
     'size' => null,

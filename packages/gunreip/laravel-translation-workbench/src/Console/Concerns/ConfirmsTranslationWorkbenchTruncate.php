@@ -62,7 +62,7 @@ trait ConfirmsTranslationWorkbenchTruncate
         try {
             activity('translation-workbench')
                 ->event($event)
-                ->withProperties(array_replace_recursive([
+                ->withProperties(app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPipelineContext::class)->enrich(array_replace_recursive([
                     'command' => $this->getName(),
                     'actor' => [
                         'type' => app()->runningInConsole() ? 'terminal' : 'web',
@@ -71,7 +71,7 @@ trait ConfirmsTranslationWorkbenchTruncate
                         'php_sapi' => PHP_SAPI,
                         'cwd' => getcwd() ?: null,
                     ],
-                ], $properties))
+                ], $properties)))
                 ->log($description);
         } catch (Throwable) {
             //

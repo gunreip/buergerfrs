@@ -32,9 +32,18 @@ final class VerticalLabelLayout
     public static function lineAttachments(array $preview): array
     {
         $attachments = [];
+        // A merge's public end anchor is its trunk attachment. The last rendered
+        // merge of each side owns that alias, just as in AnchorRegistry.
+        $mergeEnds = [];
+        foreach ($preview['merges'] ?? [] as $merge) {
+            if (in_array($merge['side'] ?? null, ['left', 'right'], true)) {
+                $mergeEnds['strang.merge-'.$merge['side'].'.end'] = $merge['attach_to'] ?? '';
+            }
+        }
         foreach (['merges', 'branches', 'rekeys'] as $family) {
             foreach ($preview[$family] ?? [] as $index => $part) {
                 $anchor = $part['attach_to'] ?? '';
+                $anchor = $mergeEnds[$anchor] ?? $anchor;
                 if (! preg_match('/^strang\.trunk\.path\.(\d+)\.end$/D', $anchor, $match)) {
                     continue;
                 }

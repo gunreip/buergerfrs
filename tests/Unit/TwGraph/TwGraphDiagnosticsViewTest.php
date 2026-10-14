@@ -57,9 +57,9 @@ it('keeps diagnostics table columns aligned to the generated report fields', fun
         'translation-workbench::pages.tw-graph.partials.test-failures',
         "{{ __('Check') }}",
         "{{ __('Group') }}",
-        "{{ __('Status') }}",
+        "{{ __('ui.state.status') }}",
         "{{ __('Duration') }}",
-        "{{ __('Summary') }}",
+        "{{ __('ui.nouns.summary') }}",
         "{{ __('Command') }}",
     ] as $required) {
         // Report the missing field, not the entire Blade document.

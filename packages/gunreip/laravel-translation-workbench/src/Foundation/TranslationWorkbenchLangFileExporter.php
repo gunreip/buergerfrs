@@ -21,20 +21,37 @@ class TranslationWorkbenchLangFileExporter
     /**
      * @param  array<int, string>  $locales
      * @param  array<int, string>  $namespaces
+     * @param  array<int, string>  $keys Exact translation keys; empty means unrestricted.
      * @return array<string, mixed>
      */
-    public function export(array $locales = [], array $namespaces = [], bool $write = false): array
+    public function export(array $locales = [], array $namespaces = [], bool $write = false, array $keys = [], bool $dynamicOptions = false): array
     {
-        $rows = $this->exportableRows($locales, $namespaces);
+        // Explicit keys are exact matches, never wildcards or an implicit "all".
+        foreach ($keys as $key) {
+            if (! is_string($key) || trim($key) === '') {
+                throw new \InvalidArgumentException('Export keys must be non-empty translation keys.');
+            }
+        }
+        $keys = array_values(array_unique(array_map(trim(...), $keys)));
+        if ($dynamicOptions && $keys === []) {
+            throw new \InvalidArgumentException('Dynamic option export requires explicit owner keys.');
+        }
+        $rows = $dynamicOptions
+            ? $this->exportableOptionRows($locales, $namespaces, $keys)
+            : $this->exportableRows($locales, $namespaces, $keys);
         $activeScope = $this->activeScopeSummary($rows);
         $rowGroups = $rows->groupBy(fn(TranslationWorkbenchLangValue $row): string => $row->locale . "\n" . $row->namespace);
-        $fileScopes = $this->exportFileScopes($rows, $locales, $namespaces);
+        $fileScopes = $dynamicOptions
+            ? $rows->map(fn ($row) => ['key' => $row->locale."\n".$row->namespace, 'locale' => $row->locale, 'namespace' => $row->namespace])->unique('key')->values()
+            : $this->exportFileScopes($rows, $locales, $namespaces, $keys);
         $plans = $fileScopes
             ->map(fn(array $scope): array => $this->planFile(
                 rows: $rowGroups->get($scope['key'], collect()),
                 write: $write,
                 locale: $scope['locale'],
                 namespace: $scope['namespace'],
+                keys: $keys,
+                prune: ! $dynamicOptions,
             ))
             ->values()
             ->all();
@@ -42,6 +59,8 @@ class TranslationWorkbenchLangFileExporter
 
         return [
             'dry_run' => ! $write,
+            'dynamic_options' => $dynamicOptions,
+            'keys' => $keys,
             'locales' => collect($plans)->pluck('locale')->unique()->sort()->values()->all(),
             'namespaces' => collect($plans)->pluck('namespace')->unique()->sort()->values()->all(),
             'files' => count($plans),
@@ -64,7 +83,7 @@ class TranslationWorkbenchLangFileExporter
      * @param  array<int, string>  $namespaces
      * @return Collection<int, TranslationWorkbenchLangValue>
      */
-    private function exportableRows(array $locales, array $namespaces): Collection
+    private function exportableRows(array $locales, array $namespaces, array $keys): Collection
     {
         $locales = $this->normalizedFilters($locales);
         $namespaces = $this->normalizedFilters($namespaces);
@@ -73,6 +92,7 @@ class TranslationWorkbenchLangFileExporter
             ->where('status', 'active')
             ->whereNotNull('translation_key')
             ->whereNotNull('value')
+            ->when($keys !== [], fn($query) => $query->whereIn('translation_key', $keys))
             ->whereExists(function ($query): void {
                 $query
                     ->selectRaw('1')
@@ -88,13 +108,46 @@ class TranslationWorkbenchLangFileExporter
             ->get();
     }
 
+    /** Only explicitly selected, reviewed owners and reviewed option values are published. */
+    private function exportableOptionRows(array $locales, array $namespaces, array $keys): Collection
+    {
+        $owners = TranslationWorkbenchKey::query()->whereIn('translation_key', $keys)
+            ->where('status', '<>', 'obsolete')->where('review_status', 'reviewed')->get();
+        foreach ($keys as $key) {
+            $matches = $owners->where('translation_key', $key);
+            $owner = $matches->first();
+            if ($matches->count() !== 1 || $owner->is_dynamic_candidate_rejected
+                || ! ($owner->is_dynamic_key || $owner->is_dynamic_multi || str_starts_with((string) $owner->key_type, 'dynamic'))) {
+                throw new \InvalidArgumentException('Dynamic option export requires one reviewed dynamic owner: '.$key);
+            }
+        }
+        $owners = $owners->keyBy('id');
+        $locales = $this->normalizedFilters($locales);
+        $namespaces = $this->normalizedFilters($namespaces);
+
+        return DB::table('translation_workbench_dynamic_key_values')->whereIn('key_id', $owners->keys())
+            ->where('status', 'active')->whereNotNull('value')->whereNotNull('reviewed_at')
+            ->when($locales !== [], fn ($query) => $query->whereIn('locale', $locales))
+            ->orderBy('locale')->orderBy('value_key')->get()->map(function ($value) use ($owners): TranslationWorkbenchLangValue {
+                $owner = $owners->get($value->key_id);
+                $key = TranslationWorkbenchOption::key($owner->translation_key, $value->value_key);
+                [$namespace, $langKey] = explode('.', $key, 2);
+
+                return new TranslationWorkbenchLangValue([
+                    'translation_key' => $key, 'namespace' => $namespace, 'lang_key' => $langKey,
+                    'locale' => $value->locale, 'value' => $value->value, 'value_type' => 'string',
+                    'meta' => ['option_owner_key' => $owner->translation_key, 'option_value_key' => $value->value_key],
+                ]);
+            })->filter(fn ($row) => $namespaces === [] || in_array($row->namespace, $namespaces, true))->values();
+    }
+
     /**
      * @param  Collection<int, TranslationWorkbenchLangValue>  $rows
      * @param  array<int, string>  $locales
      * @param  array<int, string>  $namespaces
      * @return Collection<int, array{key: string, locale: string, namespace: string}>
      */
-    private function exportFileScopes(Collection $rows, array $locales, array $namespaces): Collection
+    private function exportFileScopes(Collection $rows, array $locales, array $namespaces, array $keys): Collection
     {
         $locales = $this->normalizedFilters($locales);
         $namespaces = $this->normalizedFilters($namespaces);
@@ -105,6 +158,7 @@ class TranslationWorkbenchLangFileExporter
             ]);
 
         $prunableScopes = DB::table('translation_workbench_lang_values')
+            ->when($keys !== [], fn($query) => $query->whereIn('translation_workbench_lang_values.translation_key', $keys))
             ->select([
                 'translation_workbench_lang_values.locale',
                 'translation_workbench_lang_values.namespace',
@@ -145,7 +199,7 @@ class TranslationWorkbenchLangFileExporter
      * @param  Collection<int, TranslationWorkbenchLangValue>  $rows
      * @return array<string, mixed>
      */
-    private function planFile(Collection $rows, bool $write, ?string $locale = null, ?string $namespace = null): array
+    private function planFile(Collection $rows, bool $write, ?string $locale = null, ?string $namespace = null, array $keys = [], bool $prune = true): array
     {
         /** @var TranslationWorkbenchLangValue $first */
         $first = $rows->first();
@@ -158,7 +212,7 @@ class TranslationWorkbenchLangFileExporter
         $pruned = [];
         $conflicts = [];
 
-        foreach ($this->prunableRows($locale, $namespace) as $row) {
+        foreach ($prune ? $this->prunableRows($locale, $namespace, $keys) : [] as $row) {
             $langKey = (string) $row->lang_key;
 
             if (! Arr::has($merged, $langKey)) {
@@ -189,6 +243,26 @@ class TranslationWorkbenchLangFileExporter
             $existingValue = Arr::get($existing, $langKey);
             $exists = Arr::has($existing, $langKey);
 
+            // Check the original file as well: pruning may already have removed
+            // every child of a container that must not silently become a scalar.
+            $container = is_array($existingValue) ? $existingValue : Arr::get($merged, $langKey);
+            if (is_array($container) && ! is_array($value)) {
+                $conflicts[] = [
+                    'lang_key' => $langKey,
+                    'translation_key' => (string) $row->translation_key,
+                    'reason' => 'array_to_scalar_conflict',
+                    'blocked_value' => $this->reportableValue($value),
+                    'blocking_lang_key' => $langKey,
+                    'blocking_translation_key' => (string) $row->translation_key,
+                    'blocking_value' => $this->reportableValue($container),
+                    'blocking_value_type' => 'array',
+                    'blocking_path' => $this->relativePath($path),
+                    'blocking_child_keys' => array_keys(Arr::dot($container, $langKey . '.')),
+                ];
+
+                continue;
+            }
+
             if (! $this->canSetNested($merged, $langKey)) {
                 $conflicts[] = [
                     'lang_key' => $langKey,
@@ -203,6 +277,8 @@ class TranslationWorkbenchLangFileExporter
             $changes[] = [
                 'lang_key' => $langKey,
                 'translation_key' => (string) $row->translation_key,
+                'owner_translation_key' => $row->meta['option_owner_key'] ?? $row->translation_key,
+                'option_value_key' => $row->meta['option_value_key'] ?? null,
                 'state' => ! $exists ? 'new' : ($existingValue === $value ? 'unchanged' : 'changed'),
                 'old_value' => $exists ? $existingValue : null,
                 'new_value' => $value,
@@ -249,9 +325,10 @@ class TranslationWorkbenchLangFileExporter
     /**
      * @return Collection<int, object>
      */
-    private function prunableRows(string $locale, string $namespace): Collection
+    private function prunableRows(string $locale, string $namespace, array $keys): Collection
     {
         return DB::table('translation_workbench_lang_values')
+            ->when($keys !== [], fn($query) => $query->whereIn('translation_workbench_lang_values.translation_key', $keys))
             ->select([
                 'translation_workbench_lang_values.lang_key',
                 'translation_workbench_lang_values.translation_key',
@@ -331,7 +408,7 @@ class TranslationWorkbenchLangFileExporter
         }
 
         $keys = TranslationWorkbenchKey::query()
-            ->whereIn('translation_key', $eventRows->pluck('translation_key')->filter()->unique()->values())
+            ->whereIn('translation_key', $eventRows->map(fn ($row) => $row['owner_translation_key'] ?? $row['translation_key'])->filter()->unique()->values())
             ->orderByRaw("CASE WHEN status = 'obsolete' THEN 1 ELSE 0 END")
             ->orderBy('id')
             ->get()
@@ -341,7 +418,7 @@ class TranslationWorkbenchLangFileExporter
 
         foreach ($eventRows as $row) {
             $translationKey = (string) ($row['translation_key'] ?? '');
-            $key = $translationKey !== '' ? $keys->get($translationKey) : null;
+            $key = $translationKey !== '' ? $keys->get($row['owner_translation_key'] ?? $translationKey) : null;
 
             $oldValues = [
                 'value' => $row['old_value'] ?? null,
@@ -366,6 +443,7 @@ class TranslationWorkbenchLangFileExporter
             $context = [
                 ...((array) ($row['context'] ?? [])),
                 'translation_key' => $translationKey,
+                'option_value_key' => $row['option_value_key'] ?? null,
             ];
 
             if (! $key instanceof TranslationWorkbenchKey) {

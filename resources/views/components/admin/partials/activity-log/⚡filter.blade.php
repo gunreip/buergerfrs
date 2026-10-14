@@ -30,13 +30,13 @@
 
                 {{-- Buttons Timespan --}}
                 <x-ui.tooltip.trigger
-                    :title="__('Timespan')"
+                    :title="__('ui.badge.timespan')"
                     :text="__('Filter activity log entries by predefined timespans.')"
                 >
                     <span
                         class="mr-2 w-28 shrink-0 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
                     >
-                        {{ __('Timespan') }}
+                        {{ __('ui.badge.timespan') }}
                     </span>
                 </x-ui.tooltip.trigger>
 

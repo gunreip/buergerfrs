@@ -7,7 +7,7 @@
 @if ($personNumber !== '' || $personId !== null || $userId !== null)
     <x-ui.tooltip.trigger
         title="{{ __('ui.badge.create_person.person_created') }}"
-        text="{{ __('Person number: :personNumber | Created person ID: :personId | Created user ID: :userId', [
+        text="{{ __('ui.badge.created_person.tooltip.person_number_person_number_created_person_id_person_id_created_user_id_user_id', [
             'personNumber' => $personNumber !== '' ? $personNumber : '—',
             'personId' => $personId ?? '—',
             'userId' => $userId ?? '—',

@@ -184,7 +184,7 @@
                     variant="ghost"
                     wire:click="closeDynamicSourceLinkConfirm"
                 >
-                    {{ $linkPreviewIsLinked ? __('Keep link') : __('ui.button.cancel') }}
+                    {{ $linkPreviewIsLinked ? __('Keep link') : __('ui.button.cancel.cancel') }}
                 </flux:button>
 
                 @if ($linkPreviewIsLinked)

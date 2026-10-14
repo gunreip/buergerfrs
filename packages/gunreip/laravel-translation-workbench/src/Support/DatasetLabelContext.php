@@ -10,7 +10,7 @@ final class DatasetLabelContext
             return [];
         }
 
-        $sections = ['overview' => __('Overview')];
+        $sections = ['overview' => __('ui.title.overview')];
         if (in_array($source['type'], ['event', 'review', 'lang-value', 'finding'], true)) {
             $sections['values'] = __('Values and changes');
         }

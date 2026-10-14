@@ -8,7 +8,7 @@
     <div class="flex w-full items-center justify-between gap-3">
         <div class="min-w-0">
             <x-ui.headers.card
-                :title="__('ui.title.filter')"
+                :title="__('ui.title.overview')"
                 :description="__('Summary of people in the system, their linked user accounts and client assignments.')"
             />
         </div>

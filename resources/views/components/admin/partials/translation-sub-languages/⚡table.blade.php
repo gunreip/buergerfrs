@@ -65,12 +65,12 @@
                         >
                             <x-ui.tooltip.trigger
                                 class="ml-3"
-                                :title="__('Sub-languages')"
+                                :title="__('ui.languages.sub-languages')"
                                 :text="__(
                                     'Locale variants such as de_AT that extend a main language with specific overrides.',
                                 )"
                             >
-                                {{ __('Sub-languages') }}
+                                {{ __('ui.languages.sub-languages') }}
                             </x-ui.tooltip.trigger>
                         </flux:table.column>
 

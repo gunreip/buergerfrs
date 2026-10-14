@@ -19,8 +19,8 @@ use App\Livewire\Admin\TranslationSubLanguages;
 use App\Livewire\Admin\TranslationUsageAudit;
 use App\Livewire\Admin\UserList;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchEntries;
-use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchOldEntries;
-use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawData;
+// use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchOldEntries;
+// use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawData;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawDataNew;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchSettings;
 use Illuminate\Support\Facades\Route;
@@ -47,9 +47,13 @@ Route::middleware(['auth', 'verified', 'role:Admin|Super-Admin'])
 
         Route::get('translation-workbench', TranslationWorkbenchEntries::class)->name('translation-workbench');
 
-        Route::get('translation-workbench/old', TranslationWorkbenchOldEntries::class)->name('translation-workbench.old');
+        Route::view('translation-workbench/workflow', 'translation-workbench::pages.workflow')
+            ->name('translation-workbench.workflow');
 
-        Route::get('translation-workbench/raw-data', TranslationWorkbenchRawData::class)->name('translation-workbench.raw-data');
+        // Retired legacy pages: keep their implementation for reference; current entries and Raw-Data New remain active.
+        // Route::get('translation-workbench/old', TranslationWorkbenchOldEntries::class)->name('translation-workbench.old');
+
+        // Route::get('translation-workbench/raw-data', TranslationWorkbenchRawData::class)->name('translation-workbench.raw-data');
 
         Route::get('translation-workbench/raw-data-new', TranslationWorkbenchRawDataNew::class)->name('translation-workbench.raw-data-new');
 

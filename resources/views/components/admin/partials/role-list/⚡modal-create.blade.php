@@ -52,7 +52,7 @@
                 min="0"
                 max="65535"
                 {{-- i18n-native: __('ui.sort-order') --}}
-                label="{{ __('ui.sort-order') }}"
+                label="{{ __('ui.sort.sort.sort-order') }}"
                 wire:model.live="creatingSortOrder"
             />
 
@@ -68,7 +68,7 @@
             <div class="col-span-2">
                 <flux:checkbox
                     {{-- i18n-native: __('ui.assignable-through-ui') --}}
-                    label="{{ __('ui.assignable-through-ui') }}"
+                    label="{{ __('ui.assignable.assignable-through-ui') }}"
                     wire:model.live="creatingIsAssignable"
                 />
             </div>
@@ -84,8 +84,8 @@
             >
                 @foreach ($roleBadgeColorOptions as $color => $label)
                     <flux:select.option value="{{ $color }}">
-                        {{-- i18n-native: __('admin.roles.badge.color') --}}
-                        label="{{ __('admin.roles.badge.color') }}"
+                        {{-- Each option displays its own color name. --}}
+                        {{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('admin.partials.role_list.modal_edit.role_badge_color_options', (string) $color, $label) }}
                     </flux:select.option>
                 @endforeach
             </flux:select>
@@ -97,7 +97,7 @@
             >
                 @foreach ($roleBadgeVariantOptions as $variant => $label)
                     <flux:select.option value="{{ $variant }}">
-                        {{ __($label) }}
+                        {{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('admin.partials.role_list.modal_create.role_badge_variant_options', (string) $variant, $label) }}
                     </flux:select.option>
                 @endforeach
             </flux:select>

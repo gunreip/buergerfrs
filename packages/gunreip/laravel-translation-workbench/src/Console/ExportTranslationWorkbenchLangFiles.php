@@ -4,6 +4,7 @@
 
 // php artisan translation-workbench:export-lang-files
 // php artisan translation-workbench:export-lang-files --locale=de --namespace=ui
+// php artisan translation-workbench:export-lang-files --locale=de --key=ui.title.overview
 // php artisan translation-workbench:export-lang-files --write
 // php artisan translation-workbench:export-lang-files --locale=de --namespace=ui --write
 // php artisan translation-workbench:export-lang-files --suppress-dry-run-warning
@@ -20,6 +21,8 @@ use Illuminate\Support\Str;
 #[Signature('translation-workbench:export-lang-files
     {--locale=* : Locale(s) to export. Defaults to all locales with active Workbench lang values.}
     {--namespace=* : Namespace file(s) to export, for example ui or admin. Defaults to all namespaces.}
+    {--key=* : Exact translation key(s) to export or prune. Repeat for multiple keys; omitted means all keys.}
+    {--dynamic-options : Export reviewed option values for explicit --key owners; does not prune.}
     {--write : Write lang files. Without this option the command only reports the export plan.}
     {--suppress-dry-run-warning : Suppress the dry-run warning when the command is used as an orchestrated report refresh step.}')]
 #[Description('Export reviewed Translation Workbench lang values into Laravel lang files.')]
@@ -32,6 +35,8 @@ class ExportTranslationWorkbenchLangFiles extends Command
             locales: (array) $this->option('locale'),
             namespaces: (array) $this->option('namespace'),
             write: $write,
+            keys: (array) $this->option('key'),
+            dynamicOptions: (bool) $this->option('dynamic-options'),
         );
         $reportPath = $this->writeReport($summary);
 
@@ -40,6 +45,8 @@ class ExportTranslationWorkbenchLangFiles extends Command
             : 'Translation Workbench lang file export dry-run finished.');
         $this->line('Locales: ' . implode(', ', $summary['locales'] ?: ['-']));
         $this->line('Namespaces: ' . implode(', ', $summary['namespaces'] ?: ['-']));
+        $this->line('Mode: ' . ($summary['dynamic_options'] ? 'dynamic options' : 'scalar values'));
+        $this->line('Keys: ' . implode(', ', $summary['keys'] ?: ['all']));
         $this->line('Files: ' . number_format((int) $summary['files']));
         $this->line('Exportable values: ' . number_format((int) $summary['values_exportable']));
         $this->line('New values: ' . number_format((int) $summary['values_new']));
@@ -64,7 +71,7 @@ class ExportTranslationWorkbenchLangFiles extends Command
         }
 
         if ((int) $summary['values_conflicted'] > 0) {
-            $this->warn('Some values were not exportable because nested lang-key paths conflict with scalar values. See the JSON report.');
+            $this->warn('Some values were not exportable because lang-key structures conflict. See the JSON report.');
         }
 
         return self::SUCCESS;

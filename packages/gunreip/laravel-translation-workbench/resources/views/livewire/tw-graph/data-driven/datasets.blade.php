@@ -1,18 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/tw-graph/data-driven/datasets.blade.php --}}
 
 <flux:card class="translation-workbench">
-    <div
-        data-tw-graph-loading
-        wire:ignore
-        class="fixed inset-0 z-100 flex items-center justify-center bg-white/60 backdrop-blur-sm dark:bg-zinc-950/60"
-        role="status"
-        aria-live="polite"
-    >
-        <div class="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white px-5 py-4 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
-            <flux:icon.loading class="size-6 text-sky-600 dark:text-sky-400" />
-            <flux:text>{{ __('Loading graph and calculating layout…') }}</flux:text>
-        </div>
-    </div>
+    @include('translation-workbench::livewire.tw-graph.data-driven.loading-overlay')
     <x-ui.headers.page
         :title="__('TW-Graph Data Driven Datasets')"
         :description="__('Select timeline-chain datasets by ID, history or random selection.')"

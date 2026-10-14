@@ -11,7 +11,7 @@
         <flux:table class="mt-3">
             <flux:table.columns sticky>
                 <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                <flux:table.column>{{ __('Type') }}</flux:table.column>
+                <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                 <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
                 <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
             </flux:table.columns>
@@ -192,7 +192,7 @@
                     <flux:table class="mt-3">
                         <flux:table.columns sticky>
                             <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                            <flux:table.column>{{ __('Type') }}</flux:table.column>
+                            <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                             <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
                             <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                         </flux:table.columns>
@@ -220,7 +220,7 @@
                     <flux:table class="mt-3">
                         <flux:table.columns sticky>
                             <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                            <flux:table.column>{{ __('Type') }}</flux:table.column>
+                            <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                             <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
                             <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                         </flux:table.columns>
@@ -241,7 +241,7 @@
                                 <flux:table class="mt-3">
                                     <flux:table.columns sticky>
                                         <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                                        <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                        <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                                         <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
                                         <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                     </flux:table.columns>
@@ -268,7 +268,7 @@
                                             <flux:table class="mt-3">
                                                 <flux:table.columns sticky>
                                                     <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                                                    <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                                                     <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
                                                     <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                                 </flux:table.columns>
@@ -362,7 +362,7 @@
                                             <flux:table class="mt-3">
                                                 <flux:table.columns sticky>
                                                     <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                                                    <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                                    <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                                                     <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
                                                     <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                                 </flux:table.columns>
@@ -462,7 +462,7 @@
                     <flux:table class="mt-3">
                         <flux:table.columns sticky>
                             <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                            <flux:table.column>{{ __('Type') }}</flux:table.column>
+                            <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                             <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
                             <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                         </flux:table.columns>
@@ -550,7 +550,7 @@
                     <flux:table class="mt-3">
                         <flux:table.columns sticky>
                             <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                            <flux:table.column>{{ __('Type') }}</flux:table.column>
+                            <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                             <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
                             <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                         </flux:table.columns>
@@ -625,7 +625,7 @@
                                 <flux:table class="mt-3">
                                     <flux:table.columns sticky>
                                         <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                                        <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                        <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                                         <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
                                         <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                     </flux:table.columns>
@@ -659,7 +659,7 @@
                                 <flux:table class="mt-3">
                                     <flux:table.columns sticky>
                                         <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                                        <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                        <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                                         <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
                                         <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                     </flux:table.columns>
@@ -696,7 +696,7 @@
                     <flux:table class="mt-3">
                         <flux:table.columns sticky>
                             <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                            <flux:table.column>{{ __('Type') }}</flux:table.column>
+                            <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                             <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
                             <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                         </flux:table.columns>
@@ -783,7 +783,7 @@
                                 <flux:table class="mt-3">
                                     <flux:table.columns sticky>
                                         <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                                        <flux:table.column>{{ __('Type') }}</flux:table.column>
+                                        <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                                         <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
                                         <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
                                     </flux:table.columns>
@@ -831,7 +831,7 @@
         <flux:table class="mt-3">
             <flux:table.columns sticky>
                 <flux:table.column>{{ __('Prop / path') }}</flux:table.column>
-                <flux:table.column>{{ __('Type') }}</flux:table.column>
+                <flux:table.column>{{ __('ui.type') }}</flux:table.column>
                 <flux:table.column>{{ __('Default / fallback') }}</flux:table.column>
                 <flux:table.column>{{ __('Meaning and limits') }}</flux:table.column>
             </flux:table.columns>

@@ -53,7 +53,7 @@
                         @foreach ($roleGroups as $category => $groupedRoles)
                             <div>
                                 <flux:text class="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">
-                                    {{ __(Str::headline($category)) }}
+                                    {{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('admin.partials.user_list.modal.str_headline_category', (string) $category, Str::headline($category)) }}
                                 </flux:text>
 
                                 <div class="grid grid-cols-2 gap-x-6 gap-y-3">

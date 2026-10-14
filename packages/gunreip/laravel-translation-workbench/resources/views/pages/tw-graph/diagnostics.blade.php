@@ -128,7 +128,7 @@
                                 >
                                     <tr>
                                         <th class="px-3 py-2">{{ __('Group') }}</th>
-                                        <th class="px-3 py-2">{{ __('Status') }}</th>
+                                        <th class="px-3 py-2">{{ __('ui.state.status') }}</th>
                                         <th class="px-3 py-2">{{ __('Checks') }}</th>
                                         <th class="px-3 py-2">{{ __('Tests') }}</th>
                                         <th class="px-3 py-2">{{ __('Assertions') }}</th>
@@ -179,7 +179,7 @@
                                 </tbody>
                                 <tfoot class="border-t-2 border-zinc-300 bg-zinc-50 font-semibold dark:border-zinc-600 dark:bg-zinc-900">
                                     <tr>
-                                        <th scope="row" class="px-3 py-3 text-left">{{ __('Total') }}</th>
+                                        <th scope="row" class="px-3 py-3 text-left">{{ __('ui.badge.total') }}</th>
                                         <td class="px-3 py-3">
                                             <flux:badge size="sm" :color="$twGraphStatusColor">{{ $twGraphStatus }}</flux:badge>
                                         </td>
@@ -218,9 +218,9 @@
                             >
                                 <tr>
                                     <th class="px-3 py-2">{{ __('Check') }}</th>
-                                    <th class="px-3 py-2">{{ __('Status') }}</th>
+                                    <th class="px-3 py-2">{{ __('ui.state.status') }}</th>
                                     <th class="px-3 py-2">{{ __('Duration') }}</th>
-                                    <th class="px-3 py-2">{{ __('Summary') }}</th>
+                                    <th class="px-3 py-2">{{ __('ui.nouns.summary') }}</th>
                                     <th class="px-3 py-2">{{ __('Command') }}</th>
                                 </tr>
                             </thead>

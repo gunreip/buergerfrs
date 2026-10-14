@@ -8,7 +8,7 @@
         $rootRows ?? collect(),
         $originRows ?? collect(),
     );
-    $horizontalLayoutEnabled = (bool) ($showDatasetSelector ?? false);
+    $horizontalLayoutEnabled = (bool) ($enableMeasuredLabelLayout ?? $showDatasetSelector ?? false);
     $horizontalLayoutState = ($horizontalLabelLayout['scope'] ?? null) === (($mainRow['id'] ?? '').':'.($reloadTick ?? 0))
         ? $horizontalLabelLayout : ['passes' => 0, 'increments' => []];
     if ($horizontalLayoutEnabled) {
@@ -1331,7 +1331,7 @@
                                     <th class="px-3 py-2 font-medium">{{ __('#') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Scope') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Side') }}</th>
-                                    <th class="px-3 py-2 font-medium">{{ __('Type') }}</th>
+                                    <th class="px-3 py-2 font-medium">{{ __('ui.type') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Element ID') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Coordinates') }}</th>
                                     <th class="px-3 py-2 font-medium">{{ __('Dimension') }}</th>
@@ -1445,7 +1445,7 @@
         </div>
     @endif
 
-    @if ($twGraphDataDrivenDevEnabled)
+    @if ($twGraphDataDrivenDevEnabled && ($showSupplementaryCallouts ?? true))
         <flux:callout
             class="mt-3"
             color="amber"
@@ -1458,7 +1458,7 @@
                     <flux:badge
                         size="sm"
                         color="zinc"
-                    >{{ __('Total') }}:
+                    >{{ __('ui.badge.total') }}:
                         {{ number_format((int) $twGraphDataDrivenMergeOutcomeSummary->get('total', 0)) }}</flux:badge>
                     <flux:badge
                         size="sm"
@@ -1494,10 +1494,10 @@
                     <tr>
                         <th class="px-3 py-2 font-medium">{{ __('Finding') }}</th>
                         <th class="px-3 py-2 font-medium">{{ __('Origin key') }}</th>
-                        <th class="px-3 py-2 font-medium">{{ __('Outcome') }}</th>
+                        <th class="px-3 py-2 font-medium">{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.cleanup_history.outcome') }}</th>
                         <th class="px-3 py-2 font-medium">{{ __('Shared') }}</th>
                         <th class="px-3 py-2 font-medium">{{ __('Seen') }}</th>
-                        <th class="px-3 py-2 font-medium">{{ __('Source') }}</th>
+                        <th class="px-3 py-2 font-medium">{{ __('ui.source.source') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-zinc-200/70 dark:divide-zinc-700/70">
@@ -1655,7 +1655,7 @@
                                 {{ $twGraphDataDrivenInspectFinding->get('raw_expression') ?: __('n/a') }}</dd>
                         </div>
                         <div>
-                            <dt class="font-medium text-zinc-500 dark:text-zinc-400">{{ __('Source') }}</dt>
+                            <dt class="font-medium text-zinc-500 dark:text-zinc-400">{{ __('ui.source.source') }}</dt>
                             <dd class="wrap-anywhere font-mono text-zinc-900 dark:text-zinc-100">
                                 {{ $twGraphDataDrivenInspectFinding->get('source_path') ?: __('n/a') }}
                                 @if ($twGraphDataDrivenInspectFinding->get('source_line'))
@@ -1667,7 +1667,7 @@
                             <flux:badge
                                 size="sm"
                                 color="sky"
-                            >{{ __('Status') }}: {{ $twGraphDataDrivenInspectFinding->get('status') ?: __('n/a') }}
+                            >{{ __('ui.state.status') }}: {{ $twGraphDataDrivenInspectFinding->get('status') ?: __('n/a') }}
                             </flux:badge>
                             <flux:badge
                                 size="sm"
@@ -1711,7 +1711,7 @@
                             <flux:badge
                                 size="sm"
                                 color="amber"
-                            >{{ __('Candidate') }}: #{{ $twGraphDataDrivenInspectShared->get('id') ?: '?' }}
+                            >{{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings_table.candidate') }}: #{{ $twGraphDataDrivenInspectShared->get('id') ?: '?' }}
                             </flux:badge>
                             <flux:badge
                                 size="sm"
@@ -1721,7 +1721,7 @@
                             <flux:badge
                                 size="sm"
                                 color="zinc"
-                            >{{ __('Status') }}: {{ $twGraphDataDrivenInspectShared->get('status') ?: __('n/a') }}
+                            >{{ __('ui.state.status') }}: {{ $twGraphDataDrivenInspectShared->get('status') ?: __('n/a') }}
                             </flux:badge>
                             <flux:badge
                                 size="sm"
@@ -1767,7 +1767,7 @@
                             <flux:badge
                                 size="sm"
                                 color="green"
-                            >{{ __('Timeline') }}: {{ $twGraphDataDrivenInspectTimeline->count() }}</flux:badge>
+                            >{{ __('ui.time.timeline') }}: {{ $twGraphDataDrivenInspectTimeline->count() }}</flux:badge>
                             <flux:badge
                                 size="sm"
                                 color="purple"

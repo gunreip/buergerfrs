@@ -55,7 +55,7 @@
                             <flux:radio
                                 class="font-semibold"
                                 :value="$value"
-                                :label="__($label)"
+                                :label="\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.sections.person_core.gender_options', (string) $value, $label)"
                                 :icon="$genderIcons[$value] ?? 'circle-user-round'"
                             />
                         @endforeach
@@ -98,7 +98,7 @@
                             <flux:radio
                                 class="font-semibold"
                                 :value="$value"
-                                :label="__($label)"
+                                :label="\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.sections.person_core.salutation_options', (string) $value, $label)"
                                 :icon="$salutationIcons[$value] ?? 'circle-user-round'"
                             />
                         @endforeach
@@ -377,14 +377,14 @@
                                 wire:model.live="maritalStatus"
                             >
                                 @foreach ($maritalStatusOptions as $value => $label)
-                                    <flux:select.option value="{{ $value }}">{{ $label }}
+                                    <flux:select.option value="{{ $value }}">{{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.edit_person.sections.person_core.marital_status_options', (string) $value, $label) }}
                                     </flux:select.option>
                                 @endforeach
                             </flux:select>
                         @else
                             <div
                                 class="flex h-10 w-full min-w-0 items-center rounded-l-none border border-zinc-200 px-3 text-sm text-zinc-900 dark:border-zinc-700 dark:text-zinc-100">
-                                {{ __($maritalStatusOptions[$maritalStatus] ?? $emptyValue) }}
+                                {{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.edit_person.sections.person_core.marital_status_options', (string) $maritalStatus, $maritalStatusOptions[$maritalStatus] ?? $emptyValue) }}
                             </div>
                         @endif
                         <x-ui.input.group.suffix-field-edit

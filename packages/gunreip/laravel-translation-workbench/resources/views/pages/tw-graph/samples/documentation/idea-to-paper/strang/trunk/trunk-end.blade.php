@@ -2,7 +2,7 @@
 
 <flux:tab.group class="mt-4 min-w-0 max-w-full">
     <flux:tabs wire:model.live="tabs.strang_trunk_trunk_end" scrollable scrollable:fade scrollable:scrollbar="hide">
-        <flux:tab name="trunk-end-overview">{{ __('Overview') }}</flux:tab>
+        <flux:tab name="trunk-end-overview">{{ __('ui.title.overview') }}</flux:tab>
         <flux:tab name="trunk-end-default">{{ __('End default') }}</flux:tab>
         <flux:tab name="trunk-end-long-end">{{ __('End long end') }}</flux:tab>
         <flux:tab name="trunk-end-wide-label">{{ __('End wide label') }}</flux:tab>

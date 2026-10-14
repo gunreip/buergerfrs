@@ -42,7 +42,7 @@
             :aria-label="$isDynamicFinding ? __(
                 'packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings_table.edit_dynamic_translation_values'
             ) : __(
-                'Edit translation values')"
+                'packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.table_work_findings.cell_actions.edit_translation_values')"
             :disabled="!$canOpenEditAction"
             wire:click="openEditModal({{ $finding->id }})"
         />

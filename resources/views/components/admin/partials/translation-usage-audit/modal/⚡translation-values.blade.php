@@ -228,7 +228,7 @@
                                                                         __('No value available.'),
                                                                         $subLanguageStatus !== ''
                                                                             ? __(
-                                                                                    'admin.app_settings.table_icon_registry.status',
+                                                                                    'ui.state.status',
                                                                                 ) .
                                                                                 ': ' .
                                                                                 $subLanguageStatus

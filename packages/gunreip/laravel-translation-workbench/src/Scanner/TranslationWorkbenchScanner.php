@@ -98,8 +98,41 @@ class TranslationWorkbenchScanner
             ->merge($this->extractLiteralTranslationCalls($contents, $relativePath, $commentRanges))
             ->merge($this->extractDynamicTranslationCalls($contents, $relativePath, $commentRanges))
             ->merge($this->extractDynamicLabelCalls($contents, $relativePath, $commentRanges))
+            ->merge($this->extractWorkbenchOptionCalls($contents, $relativePath, $commentRanges))
             ->unique(static fn (DiscoveredTranslation $item): string => $item->sourceSignature)
             ->values();
+    }
+
+    /** Explicit option owner stays discoverable without guessing a key from its fallback. */
+    private function extractWorkbenchOptionCalls(string $contents, string $relativePath, array $commentRanges): array
+    {
+        $function = '\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label';
+        $pattern = '/'.preg_quote($function, '/').'\\s*\\(\\s*([\'"])([^\'"]+)\\1/s';
+        preg_match_all($pattern, $contents, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+        $items = [];
+        foreach ($matches as $match) {
+            $key = $match[2][0];
+            if (! $this->findingNormalizer->looksLikeTranslationKey($key)) {
+                continue;
+            }
+            $offset = $match[0][1];
+            $items[] = $this->makeDiscoveredTranslation(
+                kind: 'dynamic_multi', sourcePath: $relativePath,
+                sourceLine: $this->lineNumberForOffset($contents, $offset),
+                functionName: $function, rawExpression: $this->rawCallAt($contents, $offset),
+                literalText: null, literalTextSuggested: null, existingKey: $key,
+                translationKey: $key, translationKeySource: 'code', suggestedKey: $key,
+                keyResult: $this->suggestedKeyFactory->forExistingKey($key),
+                meta: [
+                    'scanner' => 'workbench_option_call',
+                    'dynamic_scope' => substr($key, strrpos($key, '.') + 1),
+                    'option_owner_key' => $key,
+                    ...$this->commentContextForOffset($commentRanges, $offset),
+                ],
+            );
+        }
+
+        return $items;
     }
 
     /**
@@ -602,7 +635,40 @@ class TranslationWorkbenchScanner
         return $this->findingNormalizer->normalizedExpression($value);
     }
 
-    private function rawCallAt(string $contents, int $offset): string
+    /**
+     * Locate executable calls by PHP tokens, preserving literal contents and source formatting.
+     * Whitespace outside strings may change; comments never become replacement targets.
+     *
+     * @return list<array{offset: int, expression: string}>
+     */
+    public function activeSourceCalls(string $contents, string $expression): array
+    {
+        $tokens = static fn (string $value): array => array_values(array_filter(
+            token_get_all('<?php '.$value),
+            static fn ($token): bool => ! is_array($token) || ! in_array($token[0], [T_OPEN_TAG, T_WHITESPACE], true),
+        ));
+        $identity = static fn (array $items): array => array_map(
+            static fn ($token) => is_array($token) ? [$token[0], $token[1]] : $token,
+            $items,
+        );
+        $expected = $identity($tokens($expression));
+        $ranges = $this->commentRanges($contents);
+        preg_match_all('/(?<![\w])(?:@js\s*\(\s*)?(?:__|trans)\s*\(/u', $contents, $matches, PREG_OFFSET_CAPTURE);
+        $calls = [];
+        foreach ($matches[0] as [$match, $offset]) {
+            if ($this->commentContextForOffset($ranges, $offset) !== []) {
+                continue;
+            }
+            $raw = $this->rawCallAt($contents, $offset, false);
+            if ($identity($tokens($raw)) === $expected) {
+                $calls[] = ['offset' => $offset, 'expression' => $raw];
+            }
+        }
+
+        return $calls;
+    }
+
+    private function rawCallAt(string $contents, int $offset, bool $normalize = true): string
     {
         $length = strlen($contents);
         $depth = 0;
@@ -638,7 +704,8 @@ class TranslationWorkbenchScanner
                 $depth--;
 
                 if ($depth <= 0) {
-                    return $this->normalizedExpression(substr($contents, $offset, $i - $offset + 1));
+                    $raw = substr($contents, $offset, $i - $offset + 1);
+                    return $normalize ? $this->normalizedExpression($raw) : $raw;
                 }
             }
         }

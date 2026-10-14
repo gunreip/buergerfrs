@@ -193,7 +193,7 @@ TODO: weitere Usage-Audit-Follow-up-States wie skipped sichtbar machen.
                 'reactivated_stale' => [
                     'title' => __('ui.stale.reactivated-stale'),
                     'text' => __(
-                        'Show legacy dynamic entries that were reactivated from stale audit state.',
+                        'ui.filter.show-legacy-dynamic-entries-that-were-reactivated-from-stale-audit-state',
                     ),
                     'color' => 'violet',
                 ],

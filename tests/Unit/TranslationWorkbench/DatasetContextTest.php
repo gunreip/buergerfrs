@@ -140,3 +140,33 @@ it('resolves only matching merge relationships and allows opening their review',
     $menu = DatasetLabelContext::menu(['type' => 'finding', 'id' => 5, 'dataset_id' => 1]);
     expect(collect($menu)->last()['detail']['source'])->toBe(['type' => 'merge-group', 'id' => 1, 'ids' => [5]]);
 });
+
+it('provides information references for canonical root and key history in raw-data graphs', function () {
+    Schema::shouldReceive('hasTable')->with('translation_workbench_keys')->andReturnTrue();
+    Schema::shouldReceive('hasTable')->with('translation_workbench_lang_values')->andReturnFalse();
+    Schema::shouldReceive('hasTable')->with('translation_workbench_reviews')->andReturnFalse();
+    $query = Mockery::mock(\Illuminate\Database\Query\Builder::class);
+    DB::shouldReceive('table')->with('translation_workbench_keys')->andReturn($query);
+    $query->shouldReceive('find')->with(9)->andReturn((object) [
+        'id' => 9, 'created_at' => '2026-01-01', 'updated_at' => '2026-01-03',
+        'reviewed_at' => '2026-01-02', 'status' => 'active', 'review_status' => 'approved',
+    ]);
+    $host = new class extends \Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawData {
+        protected function timelineChainMainRow(string $table): ?array
+        {
+            return ['id' => 1, 'root_key_id' => 9, 'translation_key' => 'ui.example',
+                'updated_at' => '2026-01-04', 'chain_type' => 'single', 'chain_status' => 'active'];
+        }
+
+        public function rootRowsForTest(): array
+        {
+            return $this->timelineChainRootRows('translation_workbench_timeline_chains');
+        }
+    };
+    $rows = $host->rootRowsForTest();
+    expect($rows)->toHaveCount(4);
+    foreach ($rows as $row) {
+        expect($row['dataset_source'])->toBe($row['role'] === 'root'
+            ? ['type' => 'dataset', 'id' => 1] : ['type' => 'key', 'id' => 9]);
+    }
+});

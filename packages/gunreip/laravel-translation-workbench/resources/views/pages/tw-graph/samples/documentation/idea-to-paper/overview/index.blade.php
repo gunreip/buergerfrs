@@ -1,4 +1,4 @@
-<flux:heading size="lg">{{ __('Overview') }}</flux:heading>
+<flux:heading size="lg">{{ __('ui.title.overview') }}</flux:heading>
 <div class="mt-4 min-w-0">
     @include('translation-workbench::pages.tw-graph.samples.documentation.idea-to-paper.overview.overview-structure')
     {{-- Flow details retained for later.

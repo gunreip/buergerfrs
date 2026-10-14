@@ -36,7 +36,7 @@
                         <x-ui.badge.test-data :show="$isTestData" />
 
                         <x-ui.tooltip.trigger
-                            title="{{ __('Test data') }}"
+                            title="{{ __('ui.badge.test-data') }}"
                             field="isTestData"
                             text="{{ __('Marks this manually created person as test data so it can be filtered, seeded, or deleted separately from real records.') }}"
                             context="warning"
@@ -45,7 +45,7 @@
                                 id="create-person-is-test-data"
                                 name="isTestData"
                                 wire:model.live="isTestData"
-                                label="{{ __('Test data') }}"
+                                label="{{ __('ui.badge.test-data') }}"
                             />
                         </x-ui.tooltip.trigger>
                     </div>
@@ -83,7 +83,7 @@
                             <flux:radio
                                 class="font-semibold"
                                 :value="$value"
-                                :label="__($label)"
+                                :label="\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.sections.person_core.salutation_options', (string) $value, $label)"
                                 :icon="$salutationIcons[$value] ?? 'circle-user-round'"
                             />
                         @endforeach
@@ -124,7 +124,7 @@
                             <flux:radio
                                 class="font-semibold"
                                 :value="$value"
-                                :label="__($label)"
+                                :label="\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.sections.person_core.gender_options', (string) $value, $label)"
                                 :icon="$genderIcons[$value] ?? 'circle-user-round'"
                             />
                         @endforeach
@@ -380,7 +380,7 @@
                     >
                         @foreach ($maritalStatusOptions as $value => $label)
                             <flux:select.option :value="$value">
-                                {{ __($label) }}
+                                {{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.sections.person_core.marital_status_options', (string) $value, $label) }}
                             </flux:select.option>
                         @endforeach
                     </flux:select>

@@ -269,6 +269,10 @@ class TranslationWorkbenchFoundationSyncer
             ->where('source_signature', $item->sourceSignature)
             ->first();
 
+        if (! $finding && ! $isCommentedOutFinding && ! $isEmptyLiteralFinding) {
+            $finding = $this->uniquelyRelocatedFinding($item, $sourceFile);
+        }
+
         if (! $finding) {
             $finding = TranslationWorkbenchFinding::query()->create([
                 ...$attributes,
@@ -352,6 +356,43 @@ class TranslationWorkbenchFoundationSyncer
             'finding' => $finding,
             'timeline_events_created' => $changed !== [] ? 1 : 0,
         ];
+    }
+
+    /** Preserve identity only when both the current file and active history are unambiguous. */
+    private function uniquelyRelocatedFinding(
+        DiscoveredTranslation $item,
+        TranslationWorkbenchSourceFile $sourceFile,
+    ): ?TranslationWorkbenchFinding {
+        $candidates = TranslationWorkbenchFinding::query()
+            ->where('source_file_id', $sourceFile->id)
+            ->where('expression_fingerprint', $item->expressionFingerprint)
+            ->where('status', 'active')
+            ->get();
+
+        if ($candidates->count() !== 1) {
+            return null;
+        }
+
+        $candidate = $candidates->first();
+        if ($candidate->kind !== $item->kind || $candidate->suggested_key !== $item->suggestedKey) {
+            return null;
+        }
+
+        // Inspect the entire file, even when sync() receives only a selected subset.
+        $current = app(\Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanner::class)
+            ->scanFile(base_path($item->sourcePath))
+            ->filter(fn (DiscoveredTranslation $current): bool => ($current->meta['source_context'] ?? '') !== 'commented_out');
+        $matching = $current->filter(fn (DiscoveredTranslation $current): bool => $current->expressionFingerprint === $item->expressionFingerprint);
+
+        if ($matching->count() !== 1 || $matching->first()->sourceSignature !== $item->sourceSignature) {
+            return null;
+        }
+
+        if ($current->contains(fn (DiscoveredTranslation $current): bool => $current->sourceSignature === $candidate->source_signature)) {
+            return null;
+        }
+
+        return $candidate;
     }
 
     /**

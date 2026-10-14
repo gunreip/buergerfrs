@@ -5,7 +5,7 @@
 @if ($password !== '')
     <x-ui.tooltip.trigger
         title="{{ __('ui.badge.created_password.generated_temporary_password') }}"
-        text="{{ __('Temporary password: :password | This password is shown once here and is also written to the local development JSONL password log.', [
+        text="{{ __('ui.badge.created_password.tooltip.temporary_password_password_this_password_is_shown_once_here_and_is_also_written_to', [
             'password' => $password,
         ]) }}"
         context="warning"

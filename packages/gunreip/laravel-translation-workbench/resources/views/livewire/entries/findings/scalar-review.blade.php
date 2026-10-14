@@ -326,7 +326,7 @@
                                 class="inline-flex"
                                 :title="__('Clear scalar selection')"
                                 :text="__(
-                                    'Removes the selected scalar candidates from the current review selection.',
+                                    'ui.remove.removes.removes-the-selected-scalar-candidates-from-the-current-review-selection',
                                 )"
                             >
                                 <flux:button

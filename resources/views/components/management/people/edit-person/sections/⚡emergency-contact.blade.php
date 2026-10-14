@@ -4,7 +4,7 @@
     $emptyValue = __('Not set');
     $relationshipLabel =
         $emergencyContactRelationship !== ''
-            ? __($emergencyContactRelationshipOptions[$emergencyContactRelationship] ?? $emergencyContactRelationship)
+            ? \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.edit_person.sections.emergency_contact.emergency_contact_relationship_options', $emergencyContactRelationship, $emergencyContactRelationshipOptions[$emergencyContactRelationship] ?? $emergencyContactRelationship)
             : $emptyValue;
     $emergencyContactPerson = $personNumberOptions->firstWhere('id', $emergencyContactPersonId);
     $emergencyContactPersonLabel =
@@ -209,7 +209,7 @@
                             >
                                 @foreach ($emergencyContactRelationshipOptions as $value => $label)
                                     <flux:select.option value="{{ $value }}">
-                                        {{ __($label) }}
+                                        {{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.edit_person.sections.emergency_contact.emergency_contact_relationship_options', (string) $value, $label) }}
                                     </flux:select.option>
                                 @endforeach
                             </flux:select>

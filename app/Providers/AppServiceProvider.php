@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Livewire\Livewire;
+use Spatie\Permission\Middleware\RoleMiddleware;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Recheck the original route's role requirement on Livewire updates, too.
+        Livewire::addPersistentMiddleware([RoleMiddleware::class]);
+
         $this->configureDefaults();
         $this->configureComponents();
     }

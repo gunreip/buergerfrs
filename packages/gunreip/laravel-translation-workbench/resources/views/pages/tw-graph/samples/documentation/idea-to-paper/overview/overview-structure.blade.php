@@ -232,7 +232,7 @@
         <!-- Overview Overview -->
         <x-translation-workbench::ui.common.overview-structure-layout
             section="overview"
-            :heading="__('Overview')"
+            :heading="__('ui.title.overview')"
             :override-file="$overviewOverrideFiles['overview'] ?? null"
             :structure-text="$sectionDescriptions['structure']['overview'] ?? null"
             :data-text="$sectionDescriptions['data']['overview'] ?? null"

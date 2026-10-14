@@ -26,7 +26,7 @@
                         size="sm"
                         variant="ghost"
                         {{-- :title="__('admin.translation_list.modal_edit.open_next_editable_entry')" --}}
-                        :aria-label="__('admin.translation_list.modal_edit.open_next_editable_entry')"
+                        :aria-label="__('ui.button.open.open_next_editable_entry')"
                         wire:click="openNextTranslationEntryEditFromList"
                     >
                         <flux:icon.arrow-big-right

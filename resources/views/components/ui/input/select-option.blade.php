@@ -19,17 +19,19 @@
     'textClass' => null,
 ])
 
-<flux:select.option value="{{ $value }}">
-    <div {{ $attributes->class('flex min-w-0 items-center gap-2') }}>
-        @if (filled($icon))
+<flux:select.option value="{{ $value }}" :icon="null">
+    @if (filled($icon))
+        <x-slot:icon>
             <x-ui.flux-icon
-                class="{{ $iconClass }} shrink-0"
+                class="{{ $iconClass }} me-2 shrink-0"
                 :name="$icon"
                 :variant="$iconVariant"
                 :fallback="$iconFallback"
             />
-        @endif
+        </x-slot:icon>
+    @endif
 
+    <div {{ $attributes->class('flex min-w-0 items-center gap-2') }}>
         <span @class(['truncate', $textClass => filled($textClass)])>
             {{ $slot }}
         </span>

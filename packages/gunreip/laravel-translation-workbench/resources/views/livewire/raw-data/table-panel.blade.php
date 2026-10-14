@@ -3,8 +3,12 @@
 @foreach ($tables as $panelTable)
     <flux:tab.panel name="{{ $panelTable }}">
         @if ($panelTable === $table)
-            @include('translation-workbench::livewire.raw-data.table-card')
-            @include('translation-workbench::livewire.raw-data.table-summary')
+            @if ($table === 'translation_workbench_timeline_chains')
+                @include('translation-workbench::livewire.raw-data.timeline-chains.tabs')
+            @else
+                @include('translation-workbench::livewire.raw-data.table-card')
+                @include('translation-workbench::livewire.raw-data.table-summary')
+            @endif
         @else
             @include('translation-workbench::livewire.raw-data.lazy-placeholder', ['tableName' => $panelTable])
         @endif

@@ -21,7 +21,7 @@
             'The translation usage was not found during the latest audit scan and was marked as stale.',
         ),
         'key_not_seen_in_latest_audit_sync' => __(
-            'The translation key was not found during the latest audit scan and was marked as obsolete.',
+            'ui.obsolete.the-translation-key-was-not-found-during-the-latest-audit-scan-and-was-marked-as-obsolete',
         ),
         null, '' => null,
         default => \Illuminate\Support\Str::of($historyEvent->reason)

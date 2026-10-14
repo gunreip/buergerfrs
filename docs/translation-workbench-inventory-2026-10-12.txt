@@ -1,0 +1,291 @@
+TRANSLATION WORKBENCH — BESTANDSAUFNAHME 2026-10-12
+Stand: HEAD 8038ca71; einschließlich der noch uncommitteten Translation-Key-Korrektur.
+
+ERGEBNIS
+
+Es liegt eine belegte Inkonsistenz zwischen zwei aktiven Translation-Systemen vor.
+Beide schreiben nach lang/, verwenden aber unterschiedliche Datenbanken-Tabellen
+und unterschiedliche Export-/Obsolete-Regeln. Fehlende Oberflächentexte sind im
+Browser reproduzierbar. Ein großer Teil der Werte existiert weiterhin in der
+Workbench-Datenbank. Eine pauschale Aussage „Monate Arbeit gelöscht“ ist nicht
+belegt. Die Vollständigkeit historischer Daten ist damit aber nicht bewiesen.
+
+Die gemeldeten Sprachvarianten und Bulk-Auswahlen existieren weiterhin und
+erscheinen nach den entsprechenden Filtern. Das erklärt ihre aktuelle
+Unsichtbarkeit; ob diese Filterbindung dem gewünschten früheren Workflow
+entspricht, ist davon getrennt zu beurteilen.
+
+Während dieser Bestandsaufnahme wurden keine fachlichen Funktionen,
+Übersetzungswerte, Sprachdateien, Reviews oder Statuswerte verändert. Browser-
+Prüfungen verwendeten das Testkonto; dessen Prüf-Filter wurden zurückgesetzt.
+Die acht zuvor korrigierten Views und der neue Regressionstest bleiben bestehen.
+
+1. SICHERUNG UND BELEGE
+
+Lokales, nicht öffentliches Verzeichnis (nicht ins Repository aufnehmen):
+storage/app/private/translation-audit-2026-10-12/
+
+- database.dump: vollständiger PostgreSQL-Custom-Dump, 319.058.705 Bytes.
+  pg_restore --list erfolgreich; dies ersetzt keinen vollständigen Restore-Test.
+- source-and-lang.tar.gz: lang/, Workbench-Package, TranslationList-Klasse,
+  TranslationList-Views und routes/admin.php.
+- uncommitted.patch: bestehende nicht committete Änderungen.
+- inventory.json: Tabellenbestand, Statusverteilung, Exportpläne und Laufstatus.
+- references.json: statische Key-Verwendungen mit Fundstellen und DB-Abgleich.
+- export-conflicts.json: 449 Sprach-/Key-Kombinationen mit Exportkonflikt.
+- browser-pages.json / browser-controls.json: Browserbefunde.
+- tests.log: Ergebnis der ausgewählten Translation-Tests.
+- audit-*.php: zur Reproduktion verwendete, lokal geschützte Erhebungsskripte.
+
+Datenbankinventur in einer READ ONLY-Transaktion. Workbench-Exporter ausdrücklich
+mit write=false; älterer Export nur über seine lesende Auswahl/Payload-Erzeugung.
+Keine vollständige Schreib-Pipeline auf den echten Daten gestartet.
+
+2. SYSTEMLANDKARTE
+
+A) /admin/translations
+   routes/admin.php:46 -> App\Livewire\Admin\TranslationList.
+   Daten: translation_keys, translation_values, translation_usages,
+   translation_audit_events und zugehörige Entscheidungs-/Sprachtabellen.
+   Speichern: TranslationList::saveTranslationEdit(), ab Zeile 1377.
+   Werte werden in der DB gespeichert; kein unmittelbarer Sprachdateiexport.
+   Pipeline: project:translations (Artisan akzeptiert teilweise Abkürzungen).
+   Audit -> Sync -> Diff -> optional Code-Apply -> Export -> weitere Audits.
+   Export: translations:export-lang-files.
+
+B) /admin/translation-workbench
+   routes/admin.php:48 -> TranslationWorkbenchEntries.
+   Foundation: findings, keys, key_findings, lang_values, reviews,
+   source_files, dynamic_sources/-values, timeline_events/-chains.
+   Ältere Package-Tabellen entries/values/events bleiben daneben vorhanden.
+   Speichern: TranslationWorkbenchEntries::saveTranslationValue(), Zeile 2826;
+   saveTranslationValueForLocale(), Zeile 6814.
+   Pipeline: translation:workbench; --complete schaltet Schreiboperationen ein.
+   Export: translation-workbench:export-lang-files; Schreiben per --write.
+   Standardexport ist ein Bericht ohne Schreiben.
+
+C) /admin/translation-workbench/old
+   TranslationWorkbenchOldEntries; ältere Package-Oberfläche weiter erreichbar.
+   /raw-data und /raw-data-new stellen unterschiedliche Datenstände/-modelle dar.
+   /settings verwaltet unter anderem benutzerbezogene Workbench-UI-Einstellungen.
+
+D) Anwendungsausgabe
+   Die Übersetzungsaufrufe lösen ihre Texte über Laravels Sprachdateien auf.
+   Ein in der Workbench gespeicherter Wert ist deshalb nicht automatisch auf
+   einer Anwendungsseite verfügbar. Export und erneuter Import sind relevante
+   Übergänge, keine bloßen Anzeige-Aktualisierungen.
+
+Zugang zu diesen Admin-Routen: auth + verified + Rolle Admin oder Super-Admin.
+Kein Beleg gefunden, dass diese Zugangsschranke die gemeldeten Icons ausblendet.
+
+3. BELEGTE ABWEICHUNGEN / RISIKEN
+
+P1 — Zwei Exporter mit widersprüchlicher Datenhoheit
+  app/Console/Commands/TranslationsExportLangFiles.php:
+  handle() erzeugt jede betroffene Datei vollständig neu aus dem Legacy-Bestand.
+  translationValuesForLocale() berücksichtigt u.a. status=ok, nichtleere Werte
+  und is_base_duplicate; obsolete Keys können bei nicht abgeschlossenem Review
+  weiterhin berücksichtigt werden. buildPhpGroupPayload() übernimmt nicht den
+  vorhandenen Inhalt der Sprachdatei.
+
+  packages/gunreip/laravel-translation-workbench/src/Foundation/
+  TranslationWorkbenchLangFileExporter.php:
+  exportableRows(): aktive Werte und existierender nicht-obsolete Key.
+  planFile(): liest vorhandene Datei, entfernt prunableRows und ergänzt Werte.
+
+  Gemessener Workbench-Dry-Run für de/en:
+    40 Dateien; 1.572 exportierbare Werte;
+    449 neu, 14 geändert, 1.109 unverändert, 202 zu entfernen;
+    0 Konflikte nach den internen Exporterregeln, 0 Dateien geschrieben.
+  „0 Konflikte“ bedeutet hier NICHT, dass die beiden Exporter konsistent sind.
+
+  Alle 449 neuen Sprach-/Key-Kombinationen liegen in vom älteren Exporter
+  ebenfalls geschriebenen Gruppen und fehlen in dessen Payload. Nach einem
+  Workbench-Export würde dieser sie bei unverändertem DB-Stand wieder entfernen.
+  Der ältere de/en-Payload entspricht derzeit in den geprüften PHP-Gruppen den
+  vorhandenen Datei-Werten (keine zu entfernenden/geänderten bestehenden Werte).
+  Das passt zur beobachteten Situation, beweist aber nicht den historischen
+  Auslöser. JSON-Dateien und weitere Locales sind nicht in diesen Zahlen enthalten.
+
+P1 — Referenzierte Übersetzungen fehlen in den Sprachdateien
+  782 unterschiedliche statische, punktgetrennte Keys geprüft.
+  427 nicht aufgelöste Locale-/Key-Paare: de=214, en=213.
+  Für 409 davon gibt es einen aktiven, nicht-null Workbench-Sprachwert.
+  Beispiele: ui.state.missing, ui.source.source, ui.values.values,
+  ui.literal.literal. Roh-Keys auch im Browser sichtbar.
+  Die verbleibenden 18 Paare brauchen Einzelfallprüfung, darunter ui.actions.cancel,
+  ui.Show/Hide, ui.Show-usage-details/Hide-usage-details, ui.sort-order, ui.save.
+  Dokumentationsbeispiele wie segments.fusion können absichtlich unübersetzt sein.
+  Die Erhebung ist statisch: Kommentare/inaktive Views können mitgezählt sein;
+  dynamisch zusammengesetzte Keys und native Volltext-Keys sind nicht vollständig
+  erfasst. Zahlen daher nicht als 427 bestätigte sichtbare UI-Fehler interpretieren.
+
+P1 — Sprachdatei-Import kann eine vorherige Verkürzung in die DB übernehmen
+  TranslationWorkbenchLangValueImporter::markMissingValuesObsolete(), ab Zeile 375:
+  Bereits importierte aktive Werte (meta.source=import-lang-values), die in den
+  eingelesenen Sprachdateien fehlen, werden obsolete markiert.
+  Damit kann ein vorheriger Exportverlust bei einem folgenden Import zusätzliche
+  DB-Statusänderungen auslösen. Das ist belegtes Codeverhalten; eine konkrete
+  historische Kette wurde nicht rekonstruiert und nicht als passiert behauptet.
+  Die --complete-Pipeline verschiebt den Import grundsätzlich hinter den Export;
+  andere Aufrufvarianten müssen vor einer Wiederherstellung gesondert beachtet werden.
+
+P2 — Array statt Text durch geänderte Key-Struktur (bereits korrigiert)
+  ui.button.cancel und ui.button.delete sind jetzt Container-Arrays.
+  Korrekte Textpfade: ui.button.cancel.cancel / ui.button.delete.delete.
+  Acht Views wurden im vorigen Arbeitsschritt angepasst. Der jetzige statische
+  Audit findet nach dieser Korrektur keine Array-Rückgaben für die erfassten Keys.
+
+P2 — Bedienelemente ohne passenden Filter unsichtbar
+  TranslationList::resolveActiveSubLanguagesForCurrentTargetFilter(), Zeile 2311:
+  Leerer languageFilter -> leere Sub-Sprachen; nur aktive Varianten der gewählten
+  Basissprache werden unter TargetLanguageValues angezeigt.
+  Browser: ohne Filter leere Subheader-Zeile, languageFilter=de -> sieben Varianten
+  DE-AT, DE-BE, DE-CH, DE-DE, DE-IT, DE-LI, DE-LU sichtbar.
+
+  Workbench: needsBulkLiteralCounts(), Zeile 8469, berechnet Mehrfach-Literale nur
+  für shared_candidates / shared_candidates_open / shared_candidates_done oder
+  bei bestehender Auswahl. Sonst bulk_literal_count=0. Die Actions-View zeigt die
+  Checkbox nur bei passendem Mehrfach-Literal oder bestehender Auswahl.
+  Browser: Standardansicht 0 Bulk-Checkboxen, shared_candidates 25 Checkboxen.
+  Zusätzliche Bedingungen: Literal vorhanden, count>1, Auswahl-Literal passend;
+  ohne Key bleibt eine sichtbare Checkbox deaktiviert.
+  Das ist keine entfernte Funktion, aber eine relevante Workflow-/Bedienhürde.
+  Die beiden unterschiedlichen Seiten dürfen hier nicht gleichgesetzt werden.
+
+P2 — Alte Laufberichte sind keine Aussage über den heutigen Zustand
+  Vier gespeicherte Workbench-Pipeline-Läufe: zwei erfolgreich, zwei fehlgeschlagen,
+  alle vom 04.08.2026. Letzter Lauf: Schritt 17/37, Code-Apply, Schreibrechtefehler
+  in raw-data/filters/lang-values/source-path.blade.php. Nicht neu ausgeführt.
+  Die inzwischen ergänzte Schreibrechte-Vorprüfung ist vorhanden.
+  Der Browser zeigt Berichte bis August, keine aktuelle vollständige Pipelineprüfung.
+
+4. GIT-HISTORIE
+
+Vergleich mit ac684dac (18.08.2026; Referenzstand, NICHT als vollständig fehlerfrei
+bestätigter Stand):
+- TranslationList-Klasse und ihre Tabellen-Views: keine späteren Änderungen.
+- Sprachvarianten-Subheader in der Historie seit e695cad4 (15.06.2026).
+- needsBulkLiteralCounts() seit db88c1db (27.07.2026).
+- Workbench Findings-Views: im Vergleich ac684dac..HEAD unverändert.
+- WorkbenchEntries: Schreibrechte-Vorprüfung und Anpassung der dynamischen
+  SQL-Aggregation; keine Entfernung der genannten Actions.
+- Die beiden Exporter sowie WorkbenchLangValueImporter und Workbench-Pipeline
+  sind in diesem Zeitraum unverändert. Der Konflikt ist daher nicht als kürzlich
+  neu eingebaute Exportfunktion zu beschreiben.
+- lang/en/ui.php: 226 Blattwerte in ac684dac, 53 in bac97754 (11.10.), 60 in HEAD.
+  ac684dac -> bac97754: 181 frühere Blatt-Keys fehlen, acht andere hinzugekommen.
+  Array-Umbauten sind enthalten. Die Commit-Zuordnung beweist keine Person oder
+  einen bestimmten Befehl als Ursache. Deutsche und weitere Sprachdateien weisen
+  ebenfalls Änderungen auf; gespeicherte DB-Werte und Historie ermöglichen eine
+  gezielte Rekonstruktion statt eines pauschalen Git-Rollbacks.
+
+5. DATENBESTAND (Momentaufnahme; keine Verlustfreiheit-Garantie)
+
+Legacy:
+  translation_keys                    14.205
+  translation_values                   8.284 (1.489 ok, 6.535 missing, 260 obsolete)
+  translation_usages                  14.075
+  translation_audit_events            856.864
+
+Workbench Foundation:
+  keys                                 5.678
+  findings                             9.201
+  lang_values                          2.216 (1.635 active, 581 obsolete)
+  reviews                              1.309
+  timeline_events                    133.127
+  timeline_chains                      1.098
+  Ältere Workbench entries             3.730
+  Ältere Workbench events          1.340.120
+
+Unterschiedliche Tabellenzahlen ergeben sich auch aus unterschiedlichen Modellen,
+Historisierung und Gültigkeitsregeln. Sie beweisen keine fehlgeschlagene Migration.
+Details aller Translation-Tabellen stehen in inventory.json.
+
+6. PRÜFUNG DER OBERFLÄCHEN UND TESTABDECKUNG
+
+Browser, vorhandenes Testkonto, HTTP 200 und keine registrierten JS-Ausnahmen:
+  /admin/translations
+  /admin/translation-workbench
+  /admin/translation-workbench/settings
+  /admin/translation-workbench/old
+  /admin/translation-workbench/raw-data
+  /admin/translation-workbench/raw-data-new
+  /admin/translations/usage
+  /admin/translations/lang-ballast
+  /admin/translation-statistics
+  /admin/translation-sub-languages
+  Erfolgreicher Seitenaufruf bedeutet nicht vollständig korrekte Fachfunktion.
+  Sprachvarianten- und Bulk-Filter zusätzlich interaktiv geprüft, siehe oben.
+
+Pest: 39 Tests, 233 Assertions erfolgreich, isolierte SQLite-Datenbank.
+Ausgeführt:
+  tests/Unit/TranslationWorkbench/*
+  tests/Unit/Console/ProjectTranslationsProgressTest.php
+  tests/Feature/Admin/TranslationListPaginationTest.php
+  tests/Feature/Console/SyncTranslationAuditsTest.php
+
+Belegt sind u.a. einfacher Review -> Speichern -> Export -> Code-Apply -> Rescan,
+fehlende Target-Werte blockieren Code-Apply, nachträglich editierte Quelltexte
+werden geschützt, Package-Scan-Pfade, Schreibrechte-Vorprüfung, Pagination,
+einige Audit-/Historienregeln sowie Dataset-Kontext-Weitergabe.
+
+Wesentliche Abdeckungslücken:
+- Koexistenz / Reihenfolge BEIDER Exporter, insbesondere Workbench -> Legacy.
+- Sprachdatei-Reduktion -> erneuter Import -> obsolete-Status.
+- Vollständige Key-Auflösung realer Oberflächen nach Export.
+- Sichtbarkeit von Sprachen/Bulk-Controls bei verschiedenen Filtern.
+- Durchgängige Bulk-Equalize-, Rekey-, Dynamic-Multi-, Konflikt- und Cleanup-
+  Abläufe einschließlich Daten-/Dateikonsistenz unter PostgreSQL.
+- Wiederherstellung aus einer früheren Datenbanksicherung.
+
+Diese Abläufe wurden nicht durch Schreibaktionen an echten Daten getestet.
+Die Bestandsaufnahme ist kein vollständiger Funktionstest aller Mutationen.
+
+7. EMPFOHLENE REPARATURREIHENFOLGE
+
+1) Zuerst den gemeinsamen Exportvertrag festlegen und durch einen isolierten
+   Test der beiden Exporter absichern. Keine Wiederherstellung durch blindes
+   --complete: Der aktuelle Plan enthält auch 202 Entfernungen und 14 Änderungen.
+2) Die 409 vorhandenen aktiven Werte gegen Quellverwendung/Keys/Status prüfen;
+   einen getrennten, reviewbaren Wiederherstellungsplan ohne pauschales Pruning
+   erstellen. Fehlende 18 statische Kandidaten separat bewerten.
+3) Sichtbarkeitsregeln für Sprachvarianten und Bulk-Auswahl mit dem gewünschten
+   Workflow abgleichen; keine zusätzlichen Schalter in eine falsche Oberfläche
+   kopieren. Filterbindung sichtbar erklären oder bewusst korrigieren.
+4) Mutierende Fachabläufe mit isolierten Daten nachtesten, danach bekannte
+   konkrete Datensätze in der Oberfläche kontrollieren.
+5) Erst dann Export/Import/Scanner in der echten Umgebung wieder gemeinsam
+   laufen lassen und dabei Änderungen an Keys, Werten, Status und Dateien prüfen.
+
+Noch offen: Welcher konkrete Lauf die Sprachdateien historisch verkürzt hat;
+welche weiteren individuell erwarteten Abläufe vom früheren Soll abweichen;
+ob historische DB-Sicherungen zusätzliche bereits obsolete Werte enthalten.
+Diese offenen Punkte dürfen nicht als behoben oder ausgeschlossen gelten.
+
+8. NACHTRAG — ERSTER EXPORT-SCHUTZ, 12.10.2026
+
+Die Sprachvarianten wurden vom Nutzer wiedergefunden; kein Wiederherstellungsbedarf.
+Shared candidates steht in /admin/translation-workbench im Filter Translation Key
+(Schlüssel-Icon): Shared candidates all / open / done. Die Überschrift kann wegen
+der fehlenden Übersetzung noch ui.translation.translation-key anzeigen.
+
+TranslationsExportLangFiles plant jetzt zuerst alle PHP-/JSON-Ausgaben und prüft
+vor dem ersten Schreiben die vorhandenen PHP-Werte aktiver Workbench-Lang-Keys.
+Würde ein solcher Wert verschwinden oder verändert, wird der gesamte Export mit
+Fehlercode abgebrochen. Eine Tabelle nennt Locale, Datei, Key und Konfliktart.
+Auch --dry-run meldet den Konflikt. project:translations stoppt bereits bei einem
+fehlgeschlagenen Unterbefehl; nachfolgende Pipeline-Schritte laufen dann nicht.
+Gleiche Werte und neue Legacy-Keys sind erlaubt; zusätzliche Container-Kinder
+ebenfalls. Ein obsolete Workbench-Datensatz beansprucht keinen aktiven Schutz.
+
+Ein isolierter Test reproduzierte vorher den Verlust nach echtem Workbench-Export.
+Jetzt geprüft: Entfernen, Überschreiben, Konflikt in späterer Locale vor jeglichem
+Schreiben, Dry-Run, identische Werte, obsolete Datensätze und Array-Container.
+Ergebnis der erweiterten bisherigen Tests: 46 Tests / 261 Assertions erfolgreich.
+
+Dieser Schutz ist keine Zusammenführung der Datenbestände. Er stellt keine bereits
+fehlenden Texte wieder her und ändert nicht die Pruning-Regeln des Workbench-Exports,
+die Importregeln oder andere Cleanup-Kommandos. Reale Sprachdateien und DB-Werte
+wurden in diesem Schritt nicht exportiert oder verändert. Die im ursprünglichen
+Audit dokumentierten Zahlen gelten für den dortigen Erhebungszeitpunkt.

@@ -10,7 +10,7 @@
 {{-- confirm  → green/primary, shield-check, Confirm --}}
 
 @props([
-    'label' => __('pages.settings.two_factor_setup_modal.confirm'),
+    'label' => __('ui.button.confirm.confirm'),
     'icon' => true,
     'type' => 'button',
     'size' => null,

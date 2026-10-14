@@ -69,29 +69,52 @@
         {{ __('Permissions') }}
     </flux:sidebar.item>
 
-    {{-- Admin -> translations (group) --}}
+    {{-- Admin -> translation workbench (group) --}}
     <flux:sidebar.group
         class="grid"
-        :heading="__('Translations')"
-        icon="languages"
+        :heading="__('Translation Workbench')"
+        icon="flask-conical"
         expandable
-        :expanded="request()->routeIs('admin.translations')
-                                                        || request()->routeIs('admin.translation-statistics')
-                                                        || request()->routeIs('admin.translation-sub-languages')
-                                                        || request()->routeIs('admin.translation-usage')
-                                                        || request()->routeIs('admin.translation-lang-ballast')"
+        :expanded="request()->routeIs(
+            'admin.translation-workbench*',
+            'admin.translations',
+            'admin.translation-statistics',
+            'admin.translation-sub-languages',
+            'admin.translation-usage',
+            'admin.translation-lang-ballast',
+        )"
     >
-        {{-- Admin -> translations -> management --}}
+        {{-- Admin -> translation workbench -> entries --}}
+        <flux:sidebar.item
+            icon="table-cells"
+            :href="route('admin.translation-workbench')"
+            :current="request()->routeIs('admin.translation-workbench')"
+            wire:navigate
+        >
+            {{ __('Workbench') }}
+        </flux:sidebar.item>
+
+        {{-- Admin -> translation workbench -> workflow --}}
+        <flux:sidebar.item
+            icon="route"
+            :href="route('admin.translation-workbench.workflow')"
+            :current="request()->routeIs('admin.translation-workbench.workflow')"
+            wire:navigate
+        >
+            {{ __('ui.nouns.workflow') }}
+        </flux:sidebar.item>
+
+        {{-- Admin -> translation workbench -> management --}}
         <flux:sidebar.item
             icon="table-cells"
             :href="route('admin.translations')"
             :current="request()->routeIs('admin.translations')"
             wire:navigate
         >
-            {{ __('Management') }}
+            {{ __('Management (Legacy)') }}
         </flux:sidebar.item>
 
-        {{-- Admin -> translations -> sub-languages --}}
+        {{-- Admin -> translation workbench -> sub-languages --}}
         <flux:sidebar.item
             icon="languages"
             :href="route('admin.translation-sub-languages')"
@@ -101,7 +124,7 @@
             {{ __('Sub-Languages') }}
         </flux:sidebar.item>
 
-        {{-- Admin -> translations -> usage --}}
+        {{-- Admin -> translation workbench -> usage --}}
         <flux:sidebar.item
             icon="scan-search"
             :href="route('admin.translation-usage')"
@@ -111,7 +134,7 @@
             {{ __('admin.translation_list.modal.usage') }}
         </flux:sidebar.item>
 
-        {{-- Admin -> translations -> lang ballast --}}
+        {{-- Admin -> translation workbench -> lang ballast --}}
         <flux:sidebar.item
             icon="archive-x"
             :href="route('admin.translation-lang-ballast')"
@@ -121,7 +144,7 @@
             {{ __('Lang Ballast') }}
         </flux:sidebar.item>
 
-        {{-- Admin -> translations -> statistics --}}
+        {{-- Admin -> translation workbench -> statistics --}}
         <flux:sidebar.item
             icon="chart-bar"
             :href="route('admin.translation-statistics')"
@@ -130,27 +153,8 @@
         >
             {{ __('Statistics') }}
         </flux:sidebar.item>
-    </flux:sidebar.group>
 
-    {{-- Admin -> translation workbench (group) --}}
-    <flux:sidebar.group
-        class="grid"
-        :heading="__('Translation Workbench')"
-        icon="flask-conical"
-        expandable
-        :expanded="request()->routeIs('admin.translation-workbench*')"
-    >
-        {{-- Admin -> translation workbench -> entries --}}
-        <flux:sidebar.item
-            icon="table-cells"
-            :href="route('admin.translation-workbench')"
-            :current="request()->routeIs('admin.translation-workbench')"
-            wire:navigate
-        >
-            {{ __('Translation Workbench') }}
-        </flux:sidebar.item>
-
-        {{-- Admin -> translation workbench -> old --}}
+        {{-- Retired: translation workbench -> old. Kept for reference.
         <flux:sidebar.item
             icon="archive"
             :href="route('admin.translation-workbench.old')"
@@ -159,8 +163,9 @@
         >
             {{ __('Old Workbench') }}
         </flux:sidebar.item>
+        --}}
 
-        {{-- Admin -> translation workbench -> raw data --}}
+        {{-- Retired: translation workbench -> raw data. Kept for reference.
         <flux:sidebar.item
             icon="database"
             :href="route('admin.translation-workbench.raw-data')"
@@ -169,6 +174,7 @@
         >
             {{ __('Raw-Data') }}
         </flux:sidebar.item>
+        --}}
 
         {{-- Admin -> translation workbench -> raw data new --}}
         <flux:sidebar.item
@@ -177,7 +183,7 @@
             :current="request()->routeIs('admin.translation-workbench.raw-data-new')"
             wire:navigate
         >
-            {{ __('Raw-Data New') }}
+            {{ __('Raw Data') }}
         </flux:sidebar.item>
 
         {{-- Admin -> translation workbench -> settings --}}

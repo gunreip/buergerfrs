@@ -1,0 +1,503 @@
+TRANSLATION WORKFLOW — STATUS QUO UND ÜBERSCHNEIDUNGEN
+Stand: 12.10.2026, aktueller Arbeitsbaum (einschließlich uncommitteter Änderungen).
+
+Umfang / Aussagegrenze
+Statische Prüfung der Routen, UI-Aktionen, Command-Registrierung, Pipeline-Aufrufe,
+Modelle und zentralen Services. Artisan list wurde lesend ausgeführt. Keine
+Scan-, Import-, Export-, Cleanup- oder Schreibpipeline auf echten Daten gestartet.
+Keine neue Datenbankzählung; frühere Bestandszahlen stehen im separaten Bericht
+translation-workbench-inventory-2026-10-12.txt und sind Momentaufnahmen.
+Externe Cronjobs, Shell-Historie und tatsächlich laufende Hintergrundprozesse sind
+hier nicht inventarisiert. Kein vollständiger Mutationstest sämtlicher Optionen.
+Die folgenden Quellenpfade sind relativ zur Projektwurzel.
+
+1. ERGEBNIS
+Es bestehen drei Datenmodelle, nicht lediglich zwei Menüs:
+A) Legacy: translation_keys / translation_values / translation_usages,
+   translation_audit_events und eigene Entscheidungsdaten.
+B) Älteres Package-Modell: translation_workbench_entries / values / occurrences /
+   events sowie dynamische Werte und Discovery-Daten.
+C) Aktuelle Foundation: translation_workbench_findings / keys / key_findings /
+   lang_values / reviews / source_files / dynamic_sources samt Timeline-Daten.
+
+Old Workbench und altes Raw Data sind inzwischen über Route und Menü stillgelegt.
+Das Modell B bleibt aber durch scan und import-existing aktiv beschrieben.
+WICHTIG: sync-foundation liest nicht einfach B als Migration ein. Es ruft selbst
+TranslationWorkbenchScanner::scan() auf und synchronisiert dessen Ergebnisse über
+TranslationWorkbenchFoundationSyncer::sync(). Beide Scan-Ziele laufen parallel.
+
+Die neue gemeinsame Menügruppe ändert keine Datenhoheit und synchronisiert keine
+Werte. Insbesondere bleiben Management, Sub-Languages, Usage und Lang Ballast
+an das Legacy-System angebunden. Statistics zählt weiterhin Legacy-Daten.
+
+2. OBERFLÄCHEN: WER MACHT WAS UND WANN?
+
+Workbench — /admin/translation-workbench
+  Klasse: packages/gunreip/laravel-translation-workbench/src/Livewire/TranslationWorkbenchEntries.php
+  Aktive Bearbeitung von Findings, Keys, Sprachwerten, Reviews, dynamischen
+  Zuordnungen, Bulk-Equalize, Konflikten und Cleanup-Entscheidungen.
+  saveTranslationValue / saveTranslationValueForLocale schreiben Foundation-Werte.
+  Zahlreiche fachliche Entscheidungen liegen direkt in dieser großen Livewire-
+  Klasse; eine universelle gemeinsame Schreib-Service-Schicht mit Legacy besteht
+  nicht. Speichern eines Werts ist nicht gleich Veröffentlichung in lang/.
+  UI-Pipeline: erstellt PipelineRun mit Benutzer-ID, startet per nohup/exec
+  translation:workbench --complete --pipeline-run-id=N als Hintergrundprozess.
+  Log: storage/logs/translation-workbench-pipeline-N.log. Kein Queue-Job an dieser
+  Stelle. Weitere UI-Helfer rufen plan-code-updates, apply-code-updates (ohne
+  --write), detect-shared-key-candidates und detect-suspicious-keyed-additions auf.
+
+Management (Legacy) — /admin/translations
+  Klasse: app/Livewire/Admin/TranslationList.php
+  saveTranslationEdit(): eigenständiger Schreibweg für Legacy-Key-/Value-Daten
+  und Review-/Audit-Zustände; keine direkte Veröffentlichung der Sprachdateien.
+  Datenhoheit kollidiert fachlich mit Workbench, nicht durch dieselbe DB-Zeile,
+  sondern durch identische logische Übersetzungskeys in getrennten Modellen.
+
+Sub-Languages — /admin/translation-sub-languages
+  Klasse: app/Livewire/Admin/TranslationSubLanguages.php
+  NICHT nur Spracheinstellungen: saveTranslationEntryEdit() schreibt
+  TranslationValue::updateOrCreate(), source=manual, status=missing/ok,
+  reviewed_at und reviewed_by_user_id. Zusätzlicher aktiver Legacy-Editor!
+  Varianten-/Fallback-/Base-Duplicate-Funktionen vor Ablösung ausdrücklich sichern.
+
+Usage — /admin/translations/usage
+  Klasse: app/Livewire/Admin/TranslationUsageAudit.php
+  Liest Audit-Auswertungen und Legacy-Keys. createTranslationKeyFromUsageAudit()
+  legt Legacy-Keys an; saveUsageAuditDecision() speichert eigene Entscheidungen
+  und zugehörige Verwendungen. Quellcode-Apply erfolgt über separaten Command.
+  Überschneidung mit Workbench Shared candidates / Bulk-Equalize / Key-Review /
+  Code-Update. Fachliche Gleichwertigkeit ist noch nicht vollständig belegt.
+
+Lang Ballast — /admin/translations/lang-ballast
+  Klasse: app/Livewire/Admin/TranslationLangBallast.php
+  Liest Audit-Dateien; setDecisionStatus() speichert TranslationLangBallastDecision.
+  translations:lang-ballast:apply --write setzt Entscheidungen an lang/ um.
+  Überschneidung mit Foundation-Cleanup/Export-Pruning; anderer Entscheidungsbestand.
+
+Statistics — /admin/translation-statistics
+  Klasse: app/Livewire/Admin/TranslationStatistics.php
+  render() liest translation_keys / translation_values. Statistik ist somit keine
+  Foundation-Gesamtauswertung, auch wenn sie jetzt unter Workbench steht.
+
+Raw Data — /admin/translation-workbench/raw-data-new
+  Klassen: TranslationWorkbenchRawDataNew, Basis TranslationWorkbenchRawData,
+  TranslationWorkbenchRawDataChainPreview, TwGraphDatasetDetails.
+  Diagnose / Auswahl / Timeline / Details; UI-Zustand wird gespeichert.
+  Keine fachliche Übersetzungsbearbeitung im hier geprüften Seitenfluss.
+  Die RawData-Basisklasse ist weiterhin Voraussetzung für New und Lazy-Preview.
+  TW-Graph/DataDriven bereitet Darstellung/Geometrie auf; keine Exportinstanz.
+
+Settings — /admin/translation-workbench/settings
+  Klasse: TranslationWorkbenchSettings.
+  Verwaltet Workbench-UI-/Raw-Data-Zustand; ist nicht automatisch eine vollständige
+  zentrale Übersetzungs-/Sprachkonfiguration. AppGeneralSettings, Locale und
+  Sprachdaten sowie Package-Konfiguration werden daneben verwendet.
+
+3. PIPELINES UND SCHREIBGRENZEN
+
+A) app/Console/Commands/ProjectTranslations.php — project:translations
+  Standardfolge:
+  ensure-lang-directories -> audit-code -> sync-audits -> generate-literal-diffs
+  -> audit-sub-language-redundancy -> export-lang-files -> abschließende Audits
+  und Decision-/Ballast-Previews.
+  --apply-diffs: führt erzeugten Patch aus, danach erneutes Audit/Sync.
+  --apply-usage-decisions: schreibt geprüfte Source-Ersetzungen, danach neue Audits.
+  --skip-export / --skip-audits: überspringen Teilgruppen, kein globaler Dry-Run.
+  STANDARD IST NICHT READ-ONLY: DB-Sync, Verzeichnisse, Reports und Sprachdateien.
+  Fehler im Unterprozess bricht Pipeline ab. Voriger Export-Schutz ist vorhanden.
+
+B) Package Console/RunTranslationWorkbench.php — translation:workbench
+  Standard: scan + sync-foundation, Sprach-/Source-Import, Discovery,
+  Klassifikation, Kandidaten, Inventar und Export-/Code-Update-Berichte.
+  Standardlauf schreibt DB-Daten. --dry-run verhindert fachliche DB-Schreibwege;
+  Berichte sind trotzdem Ausgabe-Artefakte, kein Versprechen völliger Dateifreiheit.
+  --write-lang-files aktiviert Sprachdatei-Schreiben.
+  --complete aktiviert zusätzlich mark-obsolete und tatsächliche Code-Updates,
+  mit nachfolgenden Wiederholungen zum Aktualisieren der Berichte.
+  Im Complete-Fluss wird der Lang-Import hinter den Export gelegt. Die genaue
+  Schrittfolge hängt von skip-Optionen ab; Refresh-Schritte in derselben Klasse
+  sind beabsichtigte Wiederholungen, nicht automatisch redundante Fehler.
+  --truncate / --truncate-foundation sind explizite separate Lösch-/Neuaufbauwege.
+
+C) Dateien als gemeinsamer Übergabepunkt
+  Legacy Exporter: app/Console/Commands/TranslationsExportLangFiles.php.
+  Baut Ziel-Payloads aus Legacy-DB. Aktueller Schutz verweigert Entfernen/Ändern
+  vorhandener aktiver Workbench-PHP-Werte; schützt nicht pauschal alle Writer.
+  Foundation Exporter: Foundation/TranslationWorkbenchLangFileExporter.php.
+  Plant Änderungen auf Basis bestehender Datei plus exportierbarer / zu entfernender
+  Foundation-Werte. Command schreibt erst mit --write.
+  Beide schreiben lang/{locale}/...; gleiche Datei bedeutet keine gemeinsame DB.
+  Foundation/LangValueImporter kann fehlende zuvor importierte Werte obsolete
+  markieren. Export -> Import beeinflusst somit auch DB-Status.
+  Laravel übersetzt im normalen UI aus lang/, nicht direkt aus diesen Editortabellen.
+
+D) Zusätzliche Auslöser
+  Repository-Scheduler: routes/console.php und app/Console/Kernel.php enthalten
+  DB-Health/Backup, keine Translation-Pipeline. Aktiv verdrahtet ist console.php
+  über bootstrap/app.php. Externe Automatisierung wurde nicht geprüft.
+  RuntimeDynamicTranslationCollector::options() wird unter anderem von UserList,
+  RoleList, CreatePerson und EditPerson aufgerufen. Er schreibt dynamische
+  Quellen/Werte/Kandidaten und Timeline-Information bei normalen UI-Abläufen,
+  wenn runtime_collector.enabled aktiv ist (Konfigurationsdefault=true).
+  Das ist Datenerfassung, keine automatische Übersetzungsfreigabe.
+
+4. KONKRETE DOPPELGLEISIGKEITEN UND ENTSCHEIDUNGSBEDARF
+
+Priorität 1 — Werte und Veröffentlichung
+  Management + Sub-Languages + Workbench können gleiche logische Werte editieren.
+  Zwei Exporter veröffentlichen verschiedene Bestände in dieselben Dateien.
+  Ziel: Foundation als verbindlicher Bestand; zuerst Abgleich nach Key/Locale,
+  Wert, Status, Herkunft und Review. Konflikte sichtbar entscheiden. Keine
+  Übernahme allein nach Tabellen-ID oder pauschal letztem Zeitstempel.
+
+Priorität 1 — Quellcode schreiben
+  Legacy: generate-literal-diffs + ProjectTranslations::applyLatestDiffPatch,
+  translations:rewrite-literals (ohne --dry-run direkt schreibend),
+  translations:usage-decisions:apply --write.
+  Workbench: TranslationWorkbenchCodeUpdatePlanner / CodeUpdateApplier und
+  apply-suspicious-key-restores --write.
+  Ziel: gemeinsamer freigegebener Änderungsplan mit einheitlicher Vorprüfung;
+  zunächst Schreibpfade inventarisiert belassen, nicht unbesehen deaktivieren.
+
+Priorität 1 — Cleanup
+  Legacy Lang-Ballast, Stale-Dynamic-Cleanup und Statusnormalisierung versus
+  Workbench Obsolete-Erkennung, Cleanup-Reviews, excluded-paths und Export-Pruning.
+  Verschiedene Gültigkeitsregeln können dasselbe logische Ergebnis widersprüchlich
+  behandeln. Export-Schutz allein deckt Cleanup-Writer nicht vollständig ab.
+
+Priorität 2 — Scans/Importe/Discovery
+  Legacy audit-code + sync-audits und sync-dynamic-keys versus Workbench scan +
+  sync-foundation + Discovery/Runtime-Collector. Teilweise gemeinsame Scanner-
+  Infrastruktur, aber verschiedene Persistenz und Klassifikation.
+  Workbench scan und sync-foundation scannen sogar separat für Modell B und C.
+  Das ist ein möglicher Konsolidierungs-/Performancepunkt, kein Beleg, dass einer
+  der Aufrufe heute gefahrlos entfallen kann.
+
+Priorität 2 — Berichte/Reviews/History
+  Statistics und Legacy-Audits bilden nicht den neuen Gesamtbestand ab.
+  Legacy TranslationActivity / translation_audit_events, alte Package events und
+  Foundation TranslationWorkbenchTimelineRecorder / timeline_events bestehen
+  nebeneinander. Historie bewahren; Überführung braucht Herkunftskennzeichnung.
+  collect-timeline-chains und TimelineChainCollector liefern Diagnosekontext;
+  TW-Graph ist die Darstellungsschicht, kein fachlicher Writer.
+
+5. EMPFOHLENE NÄCHSTE ARBEITSSCHRITTE (NOCH NICHT UMGESETZT)
+1) Read-only Abgleich Legacy/Workbench nach Key + Locale, inklusive Sub-Languages:
+   nur Legacy / nur Foundation / identisch / abweichend / Statuskonflikt.
+2) Funktionen aus Management, Sub-Languages, Usage, Ballast einzeln zuordnen:
+   in Workbench vorhanden / dort erweitern / als gemeinsame Verwaltung behalten.
+3) Einen Schreibvertrag für Werte, Review, Historie, Export, Code-Apply bestimmen.
+   Erst dann Legacy-Editoren schreibgeschützt setzen oder delegieren.
+4) Einheitlichen Orchestrator festlegen; bisherige Commands nicht allein wegen
+   ähnlicher Namen entfernen. Dry-Run/Write-Optionen müssen konsistent werden.
+5) Isolierte Workflowtests für UI und CLI gegen denselben Vertrag; anschließend
+   Legacy-Zugriffe auf Sprachdateien und redundante Persistenz schrittweise abbauen.
+
+6. COMMAND-KATALOG (REGISTRIERTE BEFEHLE, QUELLEN UND OPTIONEN)
+Die Beschreibungen sind die aktuellen Artisan-Beschreibungen; Optionen sind
+wortgetreu aus der laufenden Registrierung übernommen. Sie sind kein Ersatz für
+obige Einordnung der Schreibwirkung. Unterbefehle sind auch einzeln aufrufbar.
+
+project:translations
+  Quelle: app/Console/Commands/ProjectTranslations.php
+  Aufgabe: Run translation workflow commands in sequence (audit, sync, diff, optional apply, export, final language and usage audits).
+  --paths: Comma-separated scan paths for translations:generate-literal-diffs
+  --locales: Comma-separated locale list for translations:export-lang-files
+  --apply-diffs: Apply generated latest.patch automatically
+  --apply-usage-decisions: Apply ready translation usage audit decisions to source files
+  --skip-export: Skip translations:export-lang-files
+  --skip-audits: Skip final translations:audit-lang and translations:audit-compare
+
+translation:workbench
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/RunTranslationWorkbench.php
+  Aufgabe: Run the full Translation Workbench scan/import/discovery/diagnostics pipeline.
+  --paths: Comma-separated relative paths passed to scan and dynamic option discovery.
+  --source-locale: Source locale used for importing existing translations and dynamic option values.
+  --dry-run: Report only; do not write database rows.
+  --truncate: Truncate all Translation Workbench tables before rebuilding.
+  --force-truncate: Skip the interactive safety confirmation for --truncate.
+  --truncate-foundation: Truncate only the new foundation tables before syncing foundation rows.
+  --mark-obsolete: Mark previously seen but now missing entries and occurrences as obsolete/stale.
+  --skip-foundation: Skip syncing scanner findings into the new foundation tables.
+  --skip-lang-values: Skip importing existing lang file values into the separate lang values table.
+  --skip-import: Skip importing existing source language values.
+  --skip-dynamic-options: Skip discovering dynamic option values.
+  --skip-duplicates: Skip duplicate candidate detection.
+  --skip-shared-key-candidates: Skip detecting new findings that may reuse reviewed shared translation keys.
+  --skip-suspicious-keyed-additions: Skip detecting code-level translation keys without Workbench/code-update provenance.
+  --skip-suspicious-key-restores: Skip applying reviewed suspicious key restore decisions.
+  --skip-dynamic-classification: Skip classifying dynamic value sources.
+  --skip-dynamic-resolution: Skip resolving unknown dynamic sources from option discoveries.
+  --skip-dynamic-source-candidates: Skip discovering reviewable dynamic source candidates.
+  --skip-lang-file-export: Skip the final lang file export dry-run/report step.
+  --skip-lang-node-classification: Skip classifying keys as lang-file leaf/container/conflict nodes.
+  --skip-key-inventory: Skip established translation-key inventory aggregation.
+  --skip-code-update-plan: Skip the final code update planning report step.
+  --skip-code-update-apply: Skip the final code update apply dry-run and patch report step.
+  --write-lang-files: Write exported lang files as the final pipeline step. Without this option the export step is a dry-run report only.
+  --pipeline-run-id: Existing Translation Workbench pipeline run ID used for UI progress tracking.
+  --complete: Run the full safe write workflow: mark obsolete, write lang files, apply safe code updates, then refresh reports.
+
+translation-workbench:apply-code-updates
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/ApplyTranslationWorkbenchCodeUpdates.php
+  Aufgabe: Apply safe reviewed Translation Workbench code replacements, dry-run by default.
+  --paths: Comma-separated relative paths to limit the code update apply plan.
+  --limit: Maximum number of reviewed findings to inspect before applying safe updates.
+  --write: Actually update source files. Without this option the command only reports what would be changed.
+  --suppress-dry-run-warning: Suppress the dry-run warning when the command is used as an orchestrated report refresh step.
+
+translation-workbench:apply-suspicious-key-restores
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/ApplySuspiciousKeyRestores.php
+  Aufgabe: Restore reviewed suspicious direct translation-key calls back to source literals, dry-run by default.
+  --paths: Comma-separated relative paths to limit suspicious key restores.
+  --source-locale: Source locale used to restore literal text from lang/* values.
+  --limit: Maximum number of reviewed restore decisions to inspect.
+  --write: Actually update source files. Without this option the command only reports what would be changed.
+  --only-apply: Mark this run as an early pipeline apply step for already reviewed restore decisions.
+  --suppress-dry-run-warning: Suppress the dry-run warning when the command is used as an orchestrated report refresh step.
+
+translation-workbench:classify-dynamic-values
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/ClassifyDynamicValues.php
+  Aufgabe: Classify dynamic translation findings into hardcoded/db and single/multi value sources.
+  --dry-run: Report classifications without writing database rows.
+
+translation-workbench:classify-lang-node-types
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/ClassifyLangNodeTypes.php
+  Aufgabe: Classify Translation Workbench keys as lang-file leaf, container, conflict or unknown nodes.
+  --dry-run: Report lang-node type changes without writing database rows.
+
+translation-workbench:classify-timeline-event-noise
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/ClassifyTimelineEventNoise.php
+  Aufgabe: Detect and optionally classify historical high-volume timeline event noise without changing event_type.
+  --write: Mark candidate events as dead_dev_event. Without this option the command only reports candidates.
+  --threshold: Minimum dynamic_source_classification_changed count before a chain is considered noisy.
+  --chain-id: Limit the analysis to one or more timeline-chain IDs.
+
+translation-workbench:cleanup-excluded-paths
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/CleanupExcludedTranslationWorkbenchPaths.php
+  Aufgabe: Report and optionally obsolete Translation Workbench rows that match configured exclude_paths.
+  --apply: Mark currently active rows below configured exclude_paths as obsolete/stale.
+  --force: Skip the interactive confirmation when --apply is used.
+  --samples: Number of sample paths to print per affected table.
+
+translation-workbench:collect-timeline-chains
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/CollectTimelineChains.php
+  Aufgabe: Collect translation-chain context for a future extended timeline without changing existing timeline events.
+  --sync: Write the current timeline-chain snapshot into the database.
+  --dry-run: Report only; do not write timeline-chain database rows.
+
+translation-workbench:detect-duplicates
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/DetectDuplicateCandidates.php
+  Aufgabe: Detect possible duplicate translation workbench entries from narrow diagnostic fingerprints.
+  --dry-run: Report duplicate groups without writing candidate rows.
+
+translation-workbench:detect-shared-key-candidates
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/DetectSharedKeyCandidates.php
+  Aufgabe: Detect new findings whose literal matches an already bulk-reviewed shared translation key.
+  --dry-run: Report possible shared-key candidates without writing database rows.
+
+translation-workbench:detect-suspicious-keyed-additions
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/DetectSuspiciousKeyedAdditions.php
+  Aufgabe: Detect code-level translation keys that appear without a reviewed Workbench or code-update provenance.
+  --paths: Comma-separated relative paths to scan. Defaults to translation-workbench.paths.
+  --source-locale: Source locale used to check whether the keyed call already exists in lang/* files.
+  --since-hours: Only report newly seen keyed additions from the last N hours unless --all is used.
+  --all: Report all suspicious keyed additions, including historical rows.
+  --skip-raw-data: Write only suspicious-key results and summary, without the centralized raw scanner data.
+  --fail-on-suspicious: Return a failing exit code when suspicious keyed additions are found.
+
+translation-workbench:discover-dynamic-options
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/DiscoverDynamicOptions.php
+  Aufgabe: Discover possible dynamic multi option values from Blade foreach option lists and simple hard-coded component arrays.
+  --paths: Comma-separated relative view paths to scan. Defaults to translation-workbench paths.
+  --source-locale: Source locale used when writing discovered option labels as dynamic source values.
+  --sync: Write discovered options into translation_workbench_values and translation_workbench_dynamic_values.
+  --dry-run: Report only; do not write database rows.
+
+translation-workbench:discover-dynamic-source-candidates
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/DiscoverDynamicSourceCandidates.php
+  Aufgabe: Discover reviewable source candidates for unresolved dynamic translation sources.
+  --dry-run: Report dynamic source candidates without writing database rows.
+
+translation-workbench:export-lang-files
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/ExportTranslationWorkbenchLangFiles.php
+  Aufgabe: Export reviewed Translation Workbench lang values into Laravel lang files.
+  --locale: Locale(s) to export. Defaults to all locales with active Workbench lang values.
+  --namespace: Namespace file(s) to export, for example ui or admin. Defaults to all namespaces.
+  --write: Write lang files. Without this option the command only reports the export plan.
+  --suppress-dry-run-warning: Suppress the dry-run warning when the command is used as an orchestrated report refresh step.
+
+translation-workbench:import-existing
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/ImportExistingTranslations.php
+  Aufgabe: Import already existing source lang file values for keyed translation workbench entries.
+  --source-locale: Source language locale directory to import as the translation basis.
+  --dry-run: Report only; do not write database rows.
+
+translation-workbench:import-lang-values
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/ImportTranslationWorkbenchLangValues.php
+  Aufgabe: Import existing lang file values into the separate Translation Workbench lang values table.
+  --source-locale: Source locale directory below lang/ to import.
+  --all-locales: Import all locale directories below lang/, excluding lang/vendor.
+  --dry-run: Read and report only; do not write lang value rows.
+  --truncate-lang-values: Truncate imported lang value rows before importing.
+  --force-truncate: Skip the interactive safety confirmation for --truncate-lang-values.
+
+translation-workbench:inventory-keys
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/InventoryTranslationWorkbenchKeys.php
+  Aufgabe: Build an inventory of established Translation Workbench keys and their code/value usage counts.
+  --sync: Write the current established-key inventory into the database.
+  --dry-run: Report only; do not write inventory database rows.
+  --source-locale: Source locale used to split source and target lang values.
+
+translation-workbench:plan-code-updates
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/PlanTranslationWorkbenchCodeUpdates.php
+  Aufgabe: Plan safe code replacements for reviewed Translation Workbench keys without changing source files.
+  --paths: Comma-separated relative paths to limit the code update plan.
+  --limit: Maximum number of reviewed findings to inspect.
+
+translation-workbench:profile-findings
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/ProfileTranslationWorkbenchFindings.php
+  Aufgabe: Profile common Translation Workbench findings table filter states.
+  --per-page: Number of rows requested by each profiled paginator call.
+
+translation-workbench:resolve-unknown-dynamic-sources
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/ResolveUnknownDynamicSources.php
+  Aufgabe: Resolve unknown dynamic sources by matching option discoveries and writing concrete dynamic source values.
+  --dry-run: Report resolvable unknown dynamic sources without writing database rows.
+
+translation-workbench:scan
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/ScanTranslationWorkbench.php
+  Aufgabe: Scan code for translation-capable literals and collect them in the translation workbench tables.
+  --paths: Comma-separated relative paths to scan. Defaults to config translation-workbench.paths.
+  --dry-run: Scan and report only; do not write database rows.
+  --truncate: Truncate translation workbench tables before writing scanned entries.
+  --force-truncate: Skip the interactive safety confirmation for --truncate.
+  --mark-obsolete: Mark previously seen but now missing entries as obsolete.
+
+translation-workbench:sync-foundation
+  Quelle: packages/gunreip/laravel-translation-workbench/src/Console/SyncTranslationWorkbenchFoundation.php
+  Aufgabe: Sync scanner findings into the new Translation Workbench foundation tables.
+  --paths: Comma-separated relative paths to scan. Defaults to config translation-workbench.paths.
+  --dry-run: Scan and report only; do not write foundation database rows.
+  --truncate-foundation: Truncate only the new foundation tables before writing.
+  --force-truncate: Skip the interactive safety confirmation for --truncate-foundation.
+  --mark-obsolete: Mark active foundation rows as obsolete when they are no longer seen in the latest scan.
+
+translations:audit-code
+  Quelle: app/Console/Commands/TranslationsAuditCode.php
+  Aufgabe: Audit translation calls in application code and write machine-readable reports.
+
+translations:audit-compare
+  Quelle: app/Console/Commands/TranslationsAuditCompare.php
+  Aufgabe: Compare translation code audit and language-file audit results.
+
+translations:audit-duplicate-usage-literals
+  Quelle: app/Console/Commands/TranslationsAuditDuplicateUsageLiterals.php
+  Aufgabe: Audit duplicate source-language translation values used by multiple translation keys and list candidates for central ui.* translations.
+  --source-locale: Source locale used for duplicate literal detection
+  --locales: Comma-separated target locale list to include in the report, e.g. de,en
+  --min-keys: Minimum number of different translation keys for the same source literal
+  --min-length: Minimum trimmed source literal length
+  --exclude-ui: Exclude values that already contain ui.* keys
+
+translations:audit-frequent-usage-literals
+  Quelle: app/Console/Commands/TranslationsAuditFrequentUsageLiterals.php
+  Aufgabe: Audit frequently used source-language translation values and show whether they are already centralized.
+  --source-locale: Source locale used for usage literal reporting
+  --locales: Comma-separated target locale list to include in the report, e.g. de,en
+  --min-usages: Minimum usage count for a source literal
+  --min-length: Minimum trimmed source literal length
+  --include-zero-usage: Include source values without usage records
+
+translations:audit-lang
+  Quelle: app/Console/Commands/TranslationsAuditLang.php
+  Aufgabe: Audit application language files and write machine-readable reports.
+
+translations:audit-lang-ballast
+  Quelle: app/Console/Commands/TranslationsAuditLangBallast.php
+  Aufgabe: Audit lang/* translation entries that no longer match the current translation database state.
+
+translations:audit-sub-language-redundancy
+  Quelle: app/Console/Commands/TranslationsAuditSubLanguageRedundancy.php
+  Aufgabe: Mark sub-language values as base-duplicates when identical to their base locale values.
+  --locales: Comma-separated sub-language locales override (e.g. de-at,de-ch)
+  --dry-run: Show what would be changed without persisting
+
+translations:backfill-audit-discovered-events
+  Quelle: app/Console/Commands/BackfillTranslationAuditDiscoveredEvents.php
+  Aufgabe: Create missing discovered baseline events for existing translation keys.
+  --dry-run: Report missing baselines without writing them
+
+translations:backfill-native-text-from-values
+  Quelle: app/Console/Commands/TranslationsBackfillNativeTextFromValues.php
+  Aufgabe: Fill missing translation_keys.native_text from available translation_values entries.
+  --prefer-locales: Comma-separated locale priority list for selecting source values
+  --limit: Maximum number of keys to backfill (0 = no limit)
+  --dry-run: Preview updates without writing to the database
+
+translations:cleanup-stale-dynamic-keys
+  Quelle: app/Console/Commands/CleanupStaleDynamicTranslationKeys.php
+  Aufgabe: Review legacy stale dynamic translation keys and either reactivate or archive them with audit events.
+  --apply: Persist the cleanup decisions. Without this option the command only reports what would happen.
+
+translations:ensure-lang-directories
+  Quelle: app/Console/Commands/TranslationsEnsureLangDirectories.php
+  Aufgabe: Ensure lang/{locale} directories exist for translation-enabled languages.
+  --locales: Comma-separated locale list override (e.g. de,en,fr)
+  --dry-run: Show what would be created without writing to disk
+
+translations:export-lang-files
+  Quelle: app/Console/Commands/TranslationsExportLangFiles.php
+  Aufgabe: Export translation values from database to lang/{locale}/*.php and lang/{locale}.json files.
+  --locales: Comma-separated locale list override (e.g. de,en,fr)
+  --dry-run: Show what would be written without writing files
+
+translations:generate-literal-diffs
+  Quelle: app/Console/Commands/TranslationsGenerateLiteralDiffs.php
+  Aufgabe: Generate runnable patch diffs for replacing literal translation calls with translation keys.
+  --paths: Comma-separated relative paths to scan (default: translation-workbench.paths)
+  --output-dir: Relative output directory for generated patch files
+  --allow-suggested: Also use suggested_key when key is empty
+  --require-complete-values: Require non-empty translation values for all enabled locales (default: true)
+  --no-require-complete-values: Allow mappings even if some locale values are missing
+  --write-per-file-patches: Also write individual per-file patch files
+
+translations:lang-ballast:apply
+  Quelle: app/Console/Commands/TranslationsApplyLangBallastDecisions.php
+  Aufgabe: Preview or apply approved lang ballast decisions to lang/* files.
+  --write: Actually modify lang files. Without --write only preview files are generated.
+
+translations:normalize-keyed-native-statuses
+  Quelle: app/Console/Commands/TranslationsNormalizeKeyedNativeStatuses.php
+  Aufgabe: Normalize legacy translation_keys rows with status native and a concrete key to status missing + classification key.
+  --limit: Maximum number of rows to normalize (0 = no limit)
+  --dry-run: Preview affected rows without writing changes
+
+translations:rewrite-literals
+  Quelle: app/Console/Commands/TranslationsRewriteLiterals.php
+  Aufgabe: Rewrite translation literal calls to translation keys using translation_keys.native_text mappings.
+  --dry-run: Show replacements without writing files
+  --paths: Comma-separated relative paths to scan (default: app,routes,resources/views)
+
+translations:sync-audits
+  Quelle: app/Console/Commands/SyncTranslationAudits.php
+  Aufgabe: Sync translation audit JSON files into translation management tables.
+
+translations:sync-dynamic-keys
+  Quelle: app/Console/Commands/SyncDynamicTranslationKeys.php
+  Aufgabe: Scan dynamic translation candidates and dynamic_label usages, then sync them into translation review tables.
+  --paths: Comma-separated relative paths to scan (default: translation-workbench.paths)
+  --output-dir: Relative output directory for generated audit files
+  --dry-run: Write audit files only; do not sync database rows
+
+translations:usage-decisions:apply
+  Quelle: app/Console/Commands/ApplyTranslationUsageAuditDecisions.php
+  Aufgabe: Apply ready translation usage audit decisions to source files.
+  --write: Write changes to files. Defaults to dry-run.
+  --sample: Maximum number of items written to sample report files.
+
+translations:usage-decisions:preview
+  Quelle: app/Console/Commands/PreviewTranslationUsageAuditDecisions.php
+  Aufgabe: Create preview files for ready translation usage audit decisions.
+
+Erfasst: 43 registrierte Translation-Commands.

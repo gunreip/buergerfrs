@@ -15,7 +15,7 @@
             <span>{{ __('Refresh end') }}: <span data-tw-graph-time="end">—</span></span>
         </flux:tooltip>
         <flux:tooltip :content="__('Elapsed time from refresh begin to the observed end, including the 200 ms settling interval. Partial measurements must not be added to this total.')">
-            <span>{{ __('Total') }}: <span data-tw-graph-time="total">—</span></span>
+            <span>{{ __('ui.badge.total') }}: <span data-tw-graph-time="total">—</span></span>
         </flux:tooltip>
         <flux:tooltip :content="__('Time from Livewire request start until response headers arrive. Includes server and connection time, not the complete download.')">
             <span>{{ __('Response headers') }}: <span data-tw-graph-time="headers">—</span></span>

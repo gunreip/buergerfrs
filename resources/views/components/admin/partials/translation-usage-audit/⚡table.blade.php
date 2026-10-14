@@ -169,12 +169,12 @@
                     >
                         <x-ui.tooltip.trigger
                             class="ml-3"
-                            :title="__('UI candidate')"
+                            :title="__('ui.ui.ui-candidate')"
                             :text="__(
                                 'Indicates whether there is an existing UI translation key for the source value',
                             )"
                         >
-                            {{ __('UI candidate') }}
+                            {{ __('ui.ui.ui-candidate') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 

@@ -14,7 +14,7 @@
                         size="xl"
                         level="3"
                     >
-                        {{ __('Edit translation values') }}
+                        {{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.table_work_findings.cell_actions.edit_translation_values') }}
                     </flux:heading>
 
                     @if ($editFinding)

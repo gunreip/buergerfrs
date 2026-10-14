@@ -10,7 +10,7 @@
         <div class="flex shrink-0 items-start justify-between gap-4">
             {{-- Card Header Finding --}}
             <x-ui.headers.card
-                :title="__('Review finding')"
+                :title="__('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.table_work_findings.cell_actions.review_finding')"
                 :description="__('Review key decisions and classification for the selected finding.')"
             />
 

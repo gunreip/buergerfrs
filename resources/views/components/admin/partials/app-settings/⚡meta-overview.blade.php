@@ -6,7 +6,7 @@
         class="mb-4"
         size="lg"
     >
-        {{ __('ui.title.filter') }}
+        {{ __('ui.title.overview') }}
     </flux:heading>
 
     <div class="grid grid-cols-5 gap-3">

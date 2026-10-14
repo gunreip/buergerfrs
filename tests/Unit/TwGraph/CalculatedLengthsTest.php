@@ -25,7 +25,7 @@ it('uses explicit provenance instead of treating every CSS calculation as calcul
         'ID: route',
         'Element: route.stem',
         'Property: remainingStemLength',
-        'Source: previous.branch',
+        __('ui.source.source').': previous.branch',
         'Default: Not recorded',
         'Result: 8rem',
     ]));

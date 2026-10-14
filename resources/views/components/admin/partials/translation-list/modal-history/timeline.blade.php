@@ -88,7 +88,7 @@
                             ),
                         },
                         'reactivated' => __(
-                            'A previously stale or obsolete translation entry was found again and reactivated.',
+                            'ui.stale.a-previously-stale-or-obsolete-translation-entry-was-found-again-and-reactivated',
                         ),
                         'fingerprint_changed' => __(
                             'The same translation usage was detected with a different fingerprint.',

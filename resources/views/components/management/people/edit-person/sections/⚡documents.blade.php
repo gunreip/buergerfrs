@@ -2,15 +2,15 @@
 
 @php
     $emptyValue = __('Not set');
-    $documentTypeLabel = $documentType !== '' ? __($documentTypeOptions[$documentType] ?? $documentType) : $emptyValue;
+    $documentTypeLabel = $documentType !== '' ? \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.form_person.document_type_options', $documentType, $documentTypeOptions[$documentType] ?? $documentType) : $emptyValue;
     $documentCategoryLabel =
-        $documentCategory !== '' ? __($documentCategoryOptions[$documentCategory] ?? str($documentCategory)->headline()->toString()) : $emptyValue;
+        $documentCategory !== '' ? \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.edit_person.sections.documents.document_category_options', $documentCategory, $documentCategoryOptions[$documentCategory] ?? str($documentCategory)->headline()->toString()) : $emptyValue;
     $selectedDocument = $documentId !== null ? $documentOptions->firstWhere('id', $documentId) : null;
     $selectedDocumentLabel =
         $selectedDocument !== null
             ? (filled($selectedDocument->title)
                 ? $selectedDocument->title
-                : __($documentTypeOptions[$selectedDocument->type] ?? $selectedDocument->type))
+                : \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.form_person.document_type_options', $selectedDocument->type, $documentTypeOptions[$selectedDocument->type] ?? $selectedDocument->type))
             : __('New document');
 
     if ($selectedDocument !== null && filled($selectedDocument->document_number)) {
@@ -302,7 +302,7 @@
                             >
                                 @foreach ($documentOptions as $document)
                                     <flux:select.option value="{{ (string) $document->id }}">
-                                        {{ filled($document->title) ? $document->title : __($documentTypeOptions[$document->type] ?? $document->type) }}
+                                        {{ filled($document->title) ? $document->title : \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.form_person.document_type_options', $document->type, $documentTypeOptions[$document->type] ?? $document->type) }}
                                         @if (filled($document->document_number))
                                             ({{ $document->document_number }})
                                         @elseif (filled($document->original_filename))
@@ -356,7 +356,7 @@
                             >
                                 @foreach ($documentTypeOptions as $value => $label)
                                     <flux:select.option value="{{ $value }}">
-                                        {{ __($label) }}
+                                        {{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.sections.documents.document_type_options', (string) $value, $label) }}
                                     </flux:select.option>
                                 @endforeach
                                 <flux:select.option.create

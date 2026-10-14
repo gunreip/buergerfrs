@@ -52,7 +52,7 @@ final class OverviewStructure
                     ],
                     'extensionEndLabels' => [
                         5 => [
-                            'text' => [__('Overview')],
+                            'text' => [__('ui.title.overview')],
                             'width' => 'default',
                             'align' => 'center',
                             'side' => 'bottom',
@@ -299,7 +299,7 @@ final class OverviewStructure
                     'start' => [
                         'id' => 'literature.overview.strang-trunk.tabs.start', 'text' => __('Start'),
                         'children' => [
-                            'overview' => ['text' => __('Overview')],
+                            'overview' => ['text' => __('ui.title.overview')],
                             'compare' => ['text' => __('Start compare')],
                             'default' => ['text' => __('Start default')],
                             'long-start' => ['text' => __('Start long start')],
@@ -315,7 +315,7 @@ final class OverviewStructure
                     'end' => [
                         'id' => 'literature.overview.strang-trunk.tabs.end', 'text' => __('End'),
                         'children' => [
-                            'overview' => ['text' => __('Overview')],
+                            'overview' => ['text' => __('ui.title.overview')],
                             'default' => ['text' => __('End default')],
                             'long-end' => ['text' => __('End long end')],
                             'wide-label' => ['text' => __('End wide label')],
@@ -390,7 +390,7 @@ final class OverviewStructure
                         'children' => [],
                     ],
                     'source' => [
-                        'id' => 'literature.overview.strang-rekey.tabs.source', 'text' => __('Source'),
+                        'id' => 'literature.overview.strang-rekey.tabs.source', 'text' => __('ui.source.source'),
                         'children' => [],
                     ],
                     'target' => [

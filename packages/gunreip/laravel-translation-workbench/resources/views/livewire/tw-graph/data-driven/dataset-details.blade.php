@@ -11,7 +11,7 @@
         <flux:separator class="my-4" />
         <flux:heading>
             {{ match ($section) {
-                'overview' => __('Overview'),
+                'overview' => __('ui.title.overview'),
                 'values' => __('Values and changes'),
                 'context' => __('Context and relationships'),
                 default => __('Technical details'),

@@ -22,7 +22,7 @@
             :current="request()->routeIs('management.people.index')"
             wire:navigate
         >
-            {{ __('ui.title.filter') }}
+            {{ __('ui.title.overview') }}
         </flux:sidebar.item>
 
         {{-- Management -> person -> create --}}

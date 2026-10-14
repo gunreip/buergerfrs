@@ -4,7 +4,7 @@
     <x-ui.headers.page
         :title="__('Translation Workbench Settings')"
         :description="__(
-            'Inspect and reset persisted Translation Workbench UI settings for the current user and package defaults.',
+            'packages.gunreip.laravel_translation_workbench.resources.views.livewire.settings.inspect_and_reset_persisted_translation_workbench_ui_settings_for_the_current_user_an_a06c4c2605',
         )"
     >
         <x-slot:meta>
@@ -34,7 +34,7 @@
                 'packages.gunreip.laravel_translation_workbench.resources.views.livewire.settings.settings_overview',
             )"
             :description="__(
-                'User settings are stored on the user record. Export files are diagnostic snapshots that can be reviewed or reused as package defaults later.',
+                'packages.gunreip.laravel_translation_workbench.resources.views.livewire.settings.user_settings_are_stored_on_the_user_record_export_files_are_diagnostic_snapshots_tha_d71eaffe64',
             )"
         />
 

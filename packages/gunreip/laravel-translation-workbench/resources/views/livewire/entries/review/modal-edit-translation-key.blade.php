@@ -587,7 +587,7 @@
                             <x-ui.tooltip.simple
                                 :header="__('Segments')"
                                 :text="__(
-                                    'Remove or restore leading translation key segments while the key has not been manually edited.',
+                                    'ui.remove.remove.remove-or-restore-leading-translation-key-segments-while-the-key-has-not-been-manually-edited',
                                 )"
                             />
                         </span>

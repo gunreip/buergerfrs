@@ -3,7 +3,7 @@
 {{-- Overview / Meta --}}
 <flux:card class="mt-6">
     <x-ui.headers.card
-        :title="__('ui.title.filter')"
+        :title="__('ui.title.overview')"
         :description="__(
             'admin.country_reference_list.meta.summary_of_imported_country_reference_data_address_formats_and_available_subdivi',
         )"

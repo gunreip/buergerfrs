@@ -73,14 +73,14 @@
             'label' => __('Dynamic option list'),
             'color' => 'cyan',
             'text' => __(
-                'This finding is treated as a dynamic multi entry: multiple runtime option values may need separate translations.',
+                'ui.literal.dynamic.this-finding-is-treated-as-a-dynamic-multi-entry-multiple-runtime-option-values-may-n',
             ),
         ],
         $reviewIsDynamicConfirmed || $reviewEffectiveDynamicCandidate || filled($reviewDynamicDataState) => [
             'label' => __('Dynamic translation'),
             'color' => 'teal',
             'text' => __(
-                'This finding is treated as dynamic: the displayed value is resolved from runtime data and still needs structured dynamic data handling.',
+                'ui.literal.dynamic.this-finding-is-treated-as-dynamic-the-displayed-value-is-resolved-from-runtime-data',
             ),
         ],
         default => null,
@@ -367,8 +367,8 @@
                     <x-ui.tooltip.simple
                         :header="__('Dynamic option list')"
                         :text="__(
-                            'This finding is treated as a dynamic multi entry: multiple runtime option values may need separate translations.',
-                        )"
+                'ui.literal.dynamic.this-finding-is-treated-as-a-dynamic-multi-entry-multiple-runtime-option-values-may-n',
+            )"
                     />
                 </flux:badge>
             @elseif ($reviewIsDynamicConfirmed)
@@ -380,8 +380,8 @@
                     <x-ui.tooltip.simple
                         :header="__('Dynamic translation')"
                         :text="__(
-                            'This finding is treated as dynamic: the displayed value is resolved from runtime data and still needs structured dynamic data handling.',
-                        )"
+                'ui.literal.dynamic.this-finding-is-treated-as-dynamic-the-displayed-value-is-resolved-from-runtime-data',
+            )"
                     />
                 </flux:badge>
             @elseif ($reviewEffectiveDynamicMulti)

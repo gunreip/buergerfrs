@@ -227,7 +227,9 @@
 
                     <x-ui.tooltip.simple
                         :title="__('Clear bulk selection')"
-                        :text="__('ui.remove.removes.removes-the-selected-findings-from-the-bulk-translation-key-review')"
+                        :text="__(
+                            'ui.remove.removes.removes-the-selected-findings-from-the-bulk-translation-key-review',
+                        )"
                     >
                         <flux:button
                             class="h-6 w-6"

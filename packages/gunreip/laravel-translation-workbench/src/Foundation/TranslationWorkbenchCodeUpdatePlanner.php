@@ -12,11 +12,12 @@ class TranslationWorkbenchCodeUpdatePlanner
 {
     /**
      * @param  array<int, string>  $paths
+     * @param  array<int, string>  $keys Exact translation keys; empty means unrestricted.
      * @return array<string, mixed>
      */
-    public function plan(array $paths = [], ?int $limit = null): array
+    public function plan(array $paths = [], ?int $limit = null, array $keys = []): array
     {
-        $rows = $this->reviewedFindingRows($paths, $limit);
+        $rows = $this->reviewedFindingRows($paths, $limit, $keys);
         $updates = collect($rows)
             ->map(fn(object $row): array => $this->planRow($row))
             ->values();
@@ -42,12 +43,16 @@ class TranslationWorkbenchCodeUpdatePlanner
      * @param  array<int, string>  $paths
      * @return array<int, object>
      */
-    private function reviewedFindingRows(array $paths, ?int $limit): array
+    private function reviewedFindingRows(array $paths, ?int $limit, array $keys): array
     {
-        $keyLinks = DB::table('translation_workbench_key_findings')
-            ->selectRaw('finding_id, MIN(key_id) as key_id')
-            ->where('status', 'active')
-            ->groupBy('finding_id');
+        $keyLinks = DB::table('translation_workbench_key_findings as links')
+            ->join('translation_workbench_keys as owners', 'owners.id', '=', 'links.key_id')
+            ->selectRaw('links.finding_id, MIN(links.key_id) as key_id, COUNT(DISTINCT owners.translation_key) as reviewed_key_count')
+            ->where('links.status', 'active')
+            ->where('owners.status', 'open')
+            ->where('owners.review_status', 'reviewed')
+            ->whereRaw("NULLIF(BTRIM(owners.translation_key), '') IS NOT NULL")
+            ->groupBy('links.finding_id');
 
         $query = DB::table('translation_workbench_findings as findings')
             ->join('translation_workbench_source_files as source_files', 'source_files.id', '=', 'findings.source_file_id')
@@ -58,6 +63,15 @@ class TranslationWorkbenchCodeUpdatePlanner
             ->where('findings.status', 'active')
             ->where('keys.status', 'open')
             ->where('keys.review_status', 'reviewed')
+            ->when($keys !== [], fn ($query) => $query->whereIn('findings.id',
+                DB::table('translation_workbench_key_findings as selected_links')
+                    ->join('translation_workbench_keys as selected_keys', 'selected_keys.id', '=', 'selected_links.key_id')
+                    ->select('selected_links.finding_id')
+                    ->where('selected_links.status', 'active')
+                    ->where('selected_keys.status', 'open')
+                    ->where('selected_keys.review_status', 'reviewed')
+                    ->whereIn('selected_keys.translation_key', $keys)
+            ))
             ->whereRaw("NULLIF(BTRIM(keys.translation_key), '') IS NOT NULL")
             ->when($paths !== [], function ($query) use ($paths): void {
                 $query->where(function ($query) use ($paths): void {
@@ -81,6 +95,7 @@ class TranslationWorkbenchCodeUpdatePlanner
                 'findings.suggested_key as finding_suggested_key',
                 'source_files.path as source_path',
                 'keys.id as key_id',
+                'key_links.reviewed_key_count',
                 'keys.translation_key',
                 'keys.suggested_key as key_suggested_key',
                 'keys.key_type',
@@ -118,6 +133,15 @@ class TranslationWorkbenchCodeUpdatePlanner
             'reason' => null,
             'lang_state' => $langState,
         ];
+
+        // Never resolve competing reviewed names by insertion order.
+        if ((int) $row->reviewed_key_count > 1) {
+            return [
+                ...$base,
+                'state' => 'manual_review',
+                'reason' => 'multiple_reviewed_translation_keys',
+            ];
+        }
 
         if ((bool) $row->is_dynamic_key || (bool) $row->is_dynamic_multi || str_starts_with((string) $row->kind, 'dynamic')) {
             return [
@@ -159,7 +183,8 @@ class TranslationWorkbenchCodeUpdatePlanner
 
         $source = (string) File::get($sourcePath);
 
-        if (! str_contains($source, $rawExpression)) {
+        $calls = app(\Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanner::class)->activeSourceCalls($source, $rawExpression);
+        if ($calls === []) {
             return [
                 ...$base,
                 'state' => 'stale_source',
@@ -167,6 +192,8 @@ class TranslationWorkbenchCodeUpdatePlanner
             ];
         }
 
+        $rawExpression = $calls[0]['expression'];
+        $base['raw_expression'] = $rawExpression;
         $replacement = $this->replaceFirstTranslationArgument($rawExpression, (string) $row->translation_key);
 
         if ($replacement === null) {

@@ -25,6 +25,8 @@ namespace Gunreip\TranslationWorkbench\Console;
 use Gunreip\TranslationWorkbench\Console\Concerns\ConfirmsTranslationWorkbenchTruncate;
 use Gunreip\TranslationWorkbench\Console\Concerns\WritesTranslationWorkbenchReports;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPipelineRunTracker;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPipelineAccess;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -65,7 +67,51 @@ class RunTranslationWorkbench extends Command
     use ConfirmsTranslationWorkbenchTruncate;
     use WritesTranslationWorkbenchReports;
 
+    /** All command-specific execution options, excluding the tracking ID and console presentation. */
+    public static function executionDefaults(): array
+    {
+        $defaults = [];
+        foreach ((new self)->getDefinition()->getOptions() as $name => $option) {
+            if ($name !== 'pipeline-run-id') {
+                $defaults['--'.$name] = $option->getDefault();
+            }
+        }
+
+        return $defaults;
+    }
+
     public function handle(): int
+    {
+        $id = $this->option('pipeline-run-id');
+        $lock = null;
+        if ($id !== null && ctype_digit((string) $id) && (int) $id > 0) {
+            try {
+                $lock = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPipelineProcess::class)->acquire((int) $id);
+            } catch (\RuntimeException $exception) {
+                $this->components->error($exception->getMessage());
+
+                return self::FAILURE;
+            }
+            if ($lock === null) {
+                $this->components->error('This pipeline process is already active.');
+
+                return self::FAILURE;
+            }
+        }
+        $context = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPipelineContext::class);
+        $previousContext = $context->current();
+        $context->replace(null);
+        try {
+            return $this->executePipeline();
+        } finally {
+            $context->replace($previousContext);
+            if (is_resource($lock)) {
+                fclose($lock);
+            }
+        }
+    }
+
+    private function executePipeline(): int
     {
         $complete = (bool) $this->option('complete');
         $dryRun = (bool) $this->option('dry-run');
@@ -78,7 +124,21 @@ class RunTranslationWorkbench extends Command
         $writeLangFiles = ((bool) $this->option('write-lang-files') || $complete) && ! $dryRun;
         $pipelineStartedAt = microtime(true);
         $pipelineTracker = app(TranslationWorkbenchPipelineRunTracker::class);
-        $pipelineRun = $pipelineTracker->find((int) ($this->option('pipeline-run-id') ?: 0));
+        $runId = $this->option('pipeline-run-id');
+        $pipelineRun = null;
+        if ($runId !== null) {
+            try {
+                $pipelineRun = $pipelineTracker->claim((string) $runId);
+            } catch (AuthorizationException $exception) {
+                $this->components->error($exception->getMessage());
+
+                return self::FAILURE;
+            }
+        }
+        $executionOptions = [];
+        foreach (self::executionDefaults() as $name => $default) {
+            $executionOptions[$name] = $this->option(substr($name, 2));
+        }
         $summary = [
             'steps_planned' => 0,
             'steps_succeeded' => 0,
@@ -87,7 +147,27 @@ class RunTranslationWorkbench extends Command
         ];
         $executedSteps = [];
 
+        $pipelineAccess = app(TranslationWorkbenchPipelineAccess::class);
+        try {
+            $pipelineAccess->authorize($runId === null ? null : (string) $runId);
+            if ($runId !== null) {
+                $pipelineAccess->validateOptions((string) $runId, $executionOptions);
+            }
+        } catch (AuthorizationException $exception) {
+            $this->components->error($exception->getMessage());
+            if ($pipelineRun && in_array($pipelineRun->status, ['pending', 'running'], true)) {
+                $pipelineTracker->fail($pipelineRun, $exception->getMessage(), ['exit_code' => self::FAILURE]);
+            }
+
+            return self::FAILURE;
+        }
+
         $this->components->info('Translation Workbench pipeline started.');
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPipelineContext::class)->replace([
+            'run_id' => $pipelineRun?->id,
+            'origin' => $pipelineRun ? 'ui' : 'cli',
+            'initiated_by_user_id' => $pipelineRun ? (int) $pipelineRun->options['user_id'] : null,
+        ]);
 
         if (! $this->confirmTranslationWorkbenchTruncate(
             $hasTruncateRequest,
@@ -397,6 +477,10 @@ class RunTranslationWorkbench extends Command
             }
 
             try {
+                $pipelineAccess->authorize($runId === null ? null : (string) $runId);
+                if ($runId !== null) {
+                    $pipelineAccess->validateOptions((string) $runId, $executionOptions);
+                }
                 $exitCode = $this->call($step['command'], $step['arguments']);
             } catch (Throwable $exception) {
                 $this->components->error(sprintf(

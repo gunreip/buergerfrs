@@ -1,0 +1,41 @@
+/* <span class="three-red-rings-loader"></span> */
+
+.three-red-rings-loader {
+    --color-1: #ff3d00;
+    --size: 1px;
+
+    width: calc(32 * var(--size));
+    height: calc(32 * var(--size));
+    position: relative;
+    border-radius: 50%;
+    color: var(--color-1);
+    animation: three-red-rings-fill 1s ease-in infinite alternate;
+}
+
+.three-red-rings-loader::before,
+.three-red-rings-loader::after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    left: calc(48 * var(--size));
+    top: 0;
+    animation: three-red-rings-fill 0.9s ease-in infinite alternate;
+}
+
+.three-red-rings-loader::after {
+    left: auto;
+    right: calc(48 * var(--size));
+    animation-duration: 1.1s;
+}
+
+@keyframes three-red-rings-fill {
+    0% {
+        box-shadow: 0 0 0 calc(2 * var(--size)) inset;
+    }
+
+    100% {
+        box-shadow: 0 0 0 calc(10 * var(--size)) inset;
+    }
+}

@@ -200,7 +200,7 @@
                                 <dt class="text-zinc-500 dark:text-zinc-400">{{ __('ui.type') }}
                                 </dt>
                                 <dd class="truncate text-zinc-700 dark:text-zinc-300">
-                                    {{ __($documentTypeOptions[$documentType] ?? $documentType) }}
+                                    {{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.form_person.document_type_options', $documentType, $documentTypeOptions[$documentType] ?? $documentType) }}
                                 </dd>
                             @endif
 

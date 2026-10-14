@@ -497,7 +497,7 @@
                                                                 <x-ui.tooltip.simple
                                                                     :title="__('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.review_duplicate_expression')"
                                                                     :text="__(
-                                                                        'Stores how this duplicate expression should be handled before code updates are applied.',
+                                                                        'packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.stores_how_this_duplicate_expression_should_be_handled_before_code_updates_are_applied',
                                                                     )"
                                                                 >
                                                                     <flux:button

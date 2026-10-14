@@ -86,7 +86,7 @@
                     >
                         @foreach ($emergencyContactRelationshipOptions as $value => $label)
                             <flux:select.option :value="$value">
-                                {{ __($label) }}
+                                {{ \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchOption::label('management.people.create_person.sections.emergency_contact.emergency_contact_relationship_options', (string) $value, $label) }}
                             </flux:select.option>
                         @endforeach
                     </flux:select>

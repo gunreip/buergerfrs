@@ -308,7 +308,7 @@
                 color="zinc"
                 wire:click="closeScalarTransformModal"
             >
-                {{ __('ui.button.cancel') }}
+                {{ __('ui.button.cancel.cancel') }}
             </flux:button>
 
             <flux:button

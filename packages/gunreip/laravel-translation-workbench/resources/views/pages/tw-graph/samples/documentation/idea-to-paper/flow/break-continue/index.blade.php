@@ -102,7 +102,7 @@
         <flux:table.columns>
             <flux:table.column>{{ __('Example') }}</flux:table.column>
             <flux:table.column>{{ __('Purpose') }}</flux:table.column>
-            <flux:table.column>{{ __('Status') }}</flux:table.column>
+            <flux:table.column>{{ __('ui.state.status') }}</flux:table.column>
         </flux:table.columns>
         <flux:table.rows>
             <flux:table.row>

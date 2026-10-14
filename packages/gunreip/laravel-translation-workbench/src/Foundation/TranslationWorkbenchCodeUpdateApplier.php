@@ -17,11 +17,12 @@ class TranslationWorkbenchCodeUpdateApplier
 
     /**
      * @param  array<int, string>  $paths
+     * @param  array<int, string>  $keys Exact translation keys; empty means unrestricted.
      * @return array<string, mixed>
      */
-    public function apply(array $paths = [], ?int $limit = null, bool $write = false): array
+    public function apply(array $paths = [], ?int $limit = null, bool $write = false, array $keys = []): array
     {
-        $plan = $this->planner->plan($paths, $limit);
+        $plan = $keys === [] ? $this->planner->plan($paths, $limit) : $this->planner->plan($paths, $limit, $keys);
         $safeUpdates = collect($plan['updates'])
             ->where('state', 'safe_update')
             ->values();
@@ -202,7 +203,7 @@ class TranslationWorkbenchCodeUpdateApplier
         }
 
         $source = (string) File::get($sourcePath);
-        $occurrences = substr_count($source, $rawExpression);
+        $occurrences = count(app(\Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanner::class)->activeSourceCalls($source, $rawExpression));
         $conflictReview = $this->latestConflictReview(
             findingId: (int) $row['finding_id'],
             keyId: (int) $row['key_id'],
@@ -243,7 +244,7 @@ class TranslationWorkbenchCodeUpdateApplier
                     ];
                 }
 
-                File::put($sourcePath, str_replace($rawExpression, $newExpression, $source));
+                File::put($sourcePath, $this->replaceActiveCalls($source, $rawExpression, $newExpression));
 
                 return [
                     ...$base,
@@ -266,7 +267,7 @@ class TranslationWorkbenchCodeUpdateApplier
                     ];
                 }
 
-                File::put($sourcePath, str_replace($rawExpression, $newExpression, $source));
+                File::put($sourcePath, $this->replaceActiveCalls($source, $rawExpression, $newExpression));
 
                 return [
                     ...$base,
@@ -304,13 +305,23 @@ class TranslationWorkbenchCodeUpdateApplier
             ];
         }
 
-        File::put($sourcePath, str_replace($rawExpression, $newExpression, $source));
+        File::put($sourcePath, $this->replaceActiveCalls($source, $rawExpression, $newExpression));
 
         return [
             ...$base,
             'state' => 'applied',
             'reason' => 'source_file_updated',
         ];
+    }
+
+    private function replaceActiveCalls(string $source, string $expression, string $replacement): string
+    {
+        $calls = app(\Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanner::class)->activeSourceCalls($source, $expression);
+        foreach (array_reverse($calls) as $call) {
+            $source = substr_replace($source, $replacement, $call['offset'], strlen($call['expression']));
+        }
+
+        return $source;
     }
 
     /**
@@ -336,11 +347,11 @@ class TranslationWorkbenchCodeUpdateApplier
                     $rawExpression = (string) ($row['raw_expression'] ?? '');
                     $newExpression = (string) ($row['new_expression'] ?? '');
 
-                    if ($rawExpression === '' || $newExpression === '' || substr_count($newContent, $rawExpression) < 1) {
+                    if ($rawExpression === '' || $newExpression === '') {
                         continue;
                     }
 
-                    $newContent = str_replace($rawExpression, $newExpression, $newContent);
+                    $newContent = $this->replaceActiveCalls($newContent, $rawExpression, $newExpression);
                 }
 
                 if ($oldContent === $newContent) {
