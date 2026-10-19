@@ -1,0 +1,8 @@
+{
+    "mode": "post_commit_read_only_verified",
+    "sources": [
+        3,
+        24,
+        26
+    ]
+}

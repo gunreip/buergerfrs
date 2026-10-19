@@ -1,0 +1,402 @@
+[
+  {
+    "key_id": 617,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.filters.filters",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/filters.blade.php",
+    "creation_event_id": 1975,
+    "link_id": 617,
+    "finding_id": 534
+  },
+  {
+    "key_id": 620,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.filters.search",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/filters.blade.php",
+    "creation_event_id": 1984,
+    "link_id": 620,
+    "finding_id": 236
+  },
+  {
+    "key_id": 624,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.filters.all_kinds",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/filters.blade.php",
+    "creation_event_id": 1996,
+    "link_id": 624,
+    "finding_id": 540
+  },
+  {
+    "key_id": 631,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.filters.dynamic_multi",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/filters.blade.php",
+    "creation_event_id": 2018,
+    "link_id": 631,
+    "finding_id": 439
+  },
+  {
+    "key_id": 645,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.filters.missing_translation_key",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/filters.blade.php",
+    "creation_event_id": 2060,
+    "link_id": 645,
+    "finding_id": 329
+  },
+  {
+    "key_id": 657,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.kind",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit-dynamic.blade.php",
+    "creation_event_id": 2097,
+    "link_id": 657,
+    "finding_id": 240
+  },
+  {
+    "key_id": 662,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.review",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit-dynamic.blade.php",
+    "creation_event_id": 2112,
+    "link_id": 662,
+    "finding_id": 483
+  },
+  {
+    "key_id": 664,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.namespace",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit-dynamic.blade.php",
+    "creation_event_id": 2118,
+    "link_id": 664,
+    "finding_id": 242
+  },
+  {
+    "key_id": 670,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.dynamic_multi",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit-dynamic.blade.php",
+    "creation_event_id": 2136,
+    "link_id": 670,
+    "finding_id": 439
+  },
+  {
+    "key_id": 679,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.dynamic_values",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit-dynamic.blade.php",
+    "creation_event_id": 2163,
+    "link_id": 679,
+    "finding_id": 579
+  },
+  {
+    "key_id": 684,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.target",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit-dynamic.blade.php",
+    "creation_event_id": 2179,
+    "link_id": 684,
+    "finding_id": 584
+  },
+  {
+    "key_id": 688,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_translation_key.edit_translation_key",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit-translation-key.blade.php",
+    "creation_event_id": 2192,
+    "link_id": 688,
+    "finding_id": 434
+  },
+  {
+    "key_id": 701,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit.missing_translation_key",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit.blade.php",
+    "creation_event_id": 2234,
+    "link_id": 701,
+    "finding_id": 329
+  },
+  {
+    "key_id": 711,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit.kind",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit.blade.php",
+    "creation_event_id": 2264,
+    "link_id": 711,
+    "finding_id": 240
+  },
+  {
+    "key_id": 712,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit.entry",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit.blade.php",
+    "creation_event_id": 2267,
+    "link_id": 712,
+    "finding_id": 478
+  },
+  {
+    "key_id": 714,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit.ui",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit.blade.php",
+    "creation_event_id": 2273,
+    "link_id": 714,
+    "finding_id": 600
+  },
+  {
+    "key_id": 716,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit.is_ui",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit.blade.php",
+    "creation_event_id": 2280,
+    "link_id": 716,
+    "finding_id": 435
+  },
+  {
+    "key_id": 723,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit.review",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit.blade.php",
+    "creation_event_id": 2301,
+    "link_id": 723,
+    "finding_id": 483
+  },
+  {
+    "key_id": 724,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit.key",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit.blade.php",
+    "creation_event_id": 2304,
+    "link_id": 724,
+    "finding_id": 482
+  },
+  {
+    "key_id": 727,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit.code",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit.blade.php",
+    "creation_event_id": 2313,
+    "link_id": 727,
+    "finding_id": 604
+  },
+  {
+    "key_id": 728,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit.undecided",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit.blade.php",
+    "creation_event_id": 2316,
+    "link_id": 728,
+    "finding_id": 122
+  },
+  {
+    "key_id": 729,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit.namespace",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit.blade.php",
+    "creation_event_id": 2319,
+    "link_id": 729,
+    "finding_id": 242
+  },
+  {
+    "key_id": 733,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit.keys",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit.blade.php",
+    "creation_event_id": 2331,
+    "link_id": 733,
+    "finding_id": 227
+  },
+  {
+    "key_id": 740,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit.source_value",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-edit.blade.php",
+    "creation_event_id": 2352,
+    "link_id": 740,
+    "finding_id": 247
+  },
+  {
+    "key_id": 771,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.review",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2450,
+    "link_id": 771,
+    "finding_id": 483
+  },
+  {
+    "key_id": 777,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.kind",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2469,
+    "link_id": 777,
+    "finding_id": 240
+  },
+  {
+    "key_id": 778,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.entry",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2472,
+    "link_id": 778,
+    "finding_id": 478
+  },
+  {
+    "key_id": 780,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.ui",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2478,
+    "link_id": 780,
+    "finding_id": 600
+  },
+  {
+    "key_id": 782,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.is_ui",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2485,
+    "link_id": 782,
+    "finding_id": 435
+  },
+  {
+    "key_id": 783,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.no_ui",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2488,
+    "link_id": 783,
+    "finding_id": 490
+  },
+  {
+    "key_id": 794,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.key",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2522,
+    "link_id": 794,
+    "finding_id": 482
+  },
+  {
+    "key_id": 797,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.code",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2531,
+    "link_id": 797,
+    "finding_id": 604
+  },
+  {
+    "key_id": 798,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.undecided",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2534,
+    "link_id": 798,
+    "finding_id": 122
+  },
+  {
+    "key_id": 799,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.namespace",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2537,
+    "link_id": 799,
+    "finding_id": 242
+  },
+  {
+    "key_id": 800,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.missing_translation_key",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2540,
+    "link_id": 800,
+    "finding_id": 329
+  },
+  {
+    "key_id": 804,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.keys",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2552,
+    "link_id": 804,
+    "finding_id": 227
+  },
+  {
+    "key_id": 806,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.no",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2558,
+    "link_id": 806,
+    "finding_id": 627
+  },
+  {
+    "key_id": 816,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.edit_translation_key",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2595,
+    "link_id": 817,
+    "finding_id": 434
+  },
+  {
+    "key_id": 823,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.source_value",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2621,
+    "link_id": 824,
+    "finding_id": 247
+  },
+  {
+    "key_id": 833,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.function",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/modal-review.blade.php",
+    "creation_event_id": 2656,
+    "link_id": 834,
+    "finding_id": 644
+  },
+  {
+    "key_id": 849,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.table_dynamic.matched",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/table-dynamic.blade.php",
+    "creation_event_id": 2707,
+    "link_id": 850,
+    "finding_id": 517
+  },
+  {
+    "key_id": 864,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.table_dynamic.scope",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/table-dynamic.blade.php",
+    "creation_event_id": 2754,
+    "link_id": 865,
+    "finding_id": 370
+  },
+  {
+    "key_id": 874,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.table_dynamic.review",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/table-dynamic.blade.php",
+    "creation_event_id": 2786,
+    "link_id": 875,
+    "finding_id": 483
+  },
+  {
+    "key_id": 878,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.table_entries.entries",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/table-entries.blade.php",
+    "creation_event_id": 2800,
+    "link_id": 879,
+    "finding_id": 670
+  },
+  {
+    "key_id": 884,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.table_entries.reset",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/table-entries.blade.php",
+    "creation_event_id": 2818,
+    "link_id": 885,
+    "finding_id": 235
+  },
+  {
+    "key_id": 885,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.table_entries.id",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/table-entries.blade.php",
+    "creation_event_id": 2821,
+    "link_id": 886,
+    "finding_id": 249
+  },
+  {
+    "key_id": 886,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.table_entries.kind",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/table-entries.blade.php",
+    "creation_event_id": 2824,
+    "link_id": 887,
+    "finding_id": 240
+  },
+  {
+    "key_id": 899,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.table_entries.key",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/table-entries.blade.php",
+    "creation_event_id": 2864,
+    "link_id": 900,
+    "finding_id": 482
+  },
+  {
+    "key_id": 904,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.table_entries.target",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/table-entries.blade.php",
+    "creation_event_id": 2879,
+    "link_id": 905,
+    "finding_id": 584
+  },
+  {
+    "key_id": 908,
+    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.table_entries.review",
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/table-entries.blade.php",
+    "creation_event_id": 2891,
+    "link_id": 909,
+    "finding_id": 483
+  }
+]

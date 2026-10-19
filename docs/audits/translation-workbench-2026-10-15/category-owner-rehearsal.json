@@ -1,0 +1,61 @@
+{
+    "mode": "rollback_rehearsal",
+    "backup": "/home/gunreip/code/buergerfrs/storage/app/private/category-owner-20261015-211259-13d83291.json",
+    "source_path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+    "file_hash": "6336acfad4adadfc3d697516756c29ccd1197358d89e734d91be9daef523b813",
+    "old_finding_id": 2145,
+    "new_finding_id": 23229,
+    "owner_key_id": 3267,
+    "changes": {
+        "source_files": {
+            "275": [
+                "last_seen_at",
+                "scan_count",
+                "updated_at"
+            ]
+        },
+        "findings": {
+            "2145": [
+                "status",
+                "last_seen_at",
+                "meta",
+                "updated_at"
+            ]
+        },
+        "keys": {
+            "3188": [
+                "status",
+                "meta",
+                "updated_at"
+            ]
+        },
+        "key_findings": {
+            "3190": [
+                "status",
+                "meta",
+                "updated_at"
+            ],
+            "3285": [
+                "status",
+                "meta",
+                "updated_at"
+            ]
+        }
+    },
+    "reconciliation": {
+        "findings_obsoleted": 1,
+        "relations_obsoleted": 2,
+        "keys_obsoleted": 1,
+        "timeline_events_created": 4
+    },
+    "retained_tables": [
+        "dynamic_sources",
+        "dynamic_source_values",
+        "dynamic_source_candidates",
+        "dynamic_key_values",
+        "key_values",
+        "lang_values",
+        "reviews",
+        "option_discoveries"
+    ]
+}

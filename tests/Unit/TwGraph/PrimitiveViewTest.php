@@ -355,3 +355,11 @@ it('omits disabled or empty dev counters while preserving zero', function (mixed
     'number' => [1, true],
     'decision' => ['D', true],
 ]);
+
+it('renders Flux icon list lines while escaping their text', function () {
+    $html = Blade::render('<x-translation-workbench::ui.tw-graph.primitives.text :badge="true" :text="$text" />', [
+        'text' => ['Developer', ['icon' => 'dot', 'text' => '<b>Mark the literal</b>']],
+    ]);
+    expect($html)->toContain('data-flux-icon', '&lt;b&gt;Mark the literal&lt;/b&gt;')
+        ->not->toContain('<b>Mark the literal</b>');
+});

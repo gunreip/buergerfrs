@@ -214,6 +214,7 @@ class DetectSuspiciousKeyedAdditions extends Command
         $finding = TranslationWorkbenchFinding::query()
             ->with(['sourceFile'])
             ->where('source_signature', $item->sourceSignature)
+            ->where('status', '!=', 'obsolete')
             ->first();
 
         if (! $finding) {

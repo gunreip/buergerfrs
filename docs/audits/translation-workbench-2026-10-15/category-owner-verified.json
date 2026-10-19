@@ -1,0 +1,16 @@
+{
+    "mode": "read_only_verified",
+    "new_finding_id": 23230,
+    "owner_key_id": 3267,
+    "retained_tables": [
+        "dynamic_sources",
+        "dynamic_source_values",
+        "dynamic_source_candidates",
+        "dynamic_key_values",
+        "key_values",
+        "lang_values",
+        "reviews",
+        "option_discoveries"
+    ],
+    "source_hash_verified": true
+}

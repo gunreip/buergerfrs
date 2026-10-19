@@ -45,6 +45,7 @@ class TranslationWorkbenchValueComparison
                 $groups[$identity][$side][] = $row;
             }
         }
+        $reviewCounts = [];
         $statusDifferences = 0;
         foreach ($groups as &$group) {
             $left = $group['legacy'];
@@ -64,6 +65,8 @@ class TranslationWorkbenchValueComparison
                 $group['status_difference'] = $legacyStatus !== $right[0]['status'];
                 $statusDifferences += (int) $group['status_difference'];
             }
+            $group['review_category'] = $this->reviewCategory($group);
+            $reviewCounts[$group['review_category']] = ($reviewCounts[$group['review_category']] ?? 0) + 1;
             $counts[$category]++;
         }
         unset($group);
@@ -72,10 +75,43 @@ class TranslationWorkbenchValueComparison
         return [
             'scope' => 'legacy_and_foundation_database_values',
             'counts' => $counts,
+            'review_counts' => $reviewCounts,
             'status_differences' => $statusDifferences,
             'multiple_row_pairs' => count(array_filter($groups, fn (array $group): bool => $group['multiple_rows'])),
             'unassigned' => $unassigned,
             'comparisons' => $groups,
         ];
+    }
+
+    /** Describes evidence only; no category grants migration or publication approval. */
+    private function reviewCategory(array $group): string
+    {
+        if ($group['multiple_rows']) {
+            return 'multiple_rows_require_review';
+        }
+        if ($group['legacy'] === []) {
+            return 'workbench_only';
+        }
+        $legacy = $group['legacy'][0];
+        $hasLegacyText = $legacy['value'] !== null && $legacy['value'] !== '';
+        if ($group['workbench'] === []) {
+            return match (true) {
+                ! $hasLegacyText => 'legacy_only_without_text',
+                $legacy['status'] === 'obsolete' => 'legacy_only_obsolete_text',
+                default => 'legacy_only_text_requires_review',
+            };
+        }
+        $workbench = $group['workbench'][0];
+        if ($legacy['value'] === $workbench['value']) {
+            return $group['status_difference'] ? 'same_value_different_status' : 'same_value_same_status';
+        }
+        $hasWorkbenchText = $workbench['value'] !== null && $workbench['value'] !== '';
+
+        return match (true) {
+            ! $hasLegacyText && ! $hasWorkbenchText => 'null_empty_difference',
+            ! $hasLegacyText => 'legacy_without_text',
+            ! $hasWorkbenchText => 'workbench_without_text',
+            default => 'different_text_requires_review',
+        };
     }
 }

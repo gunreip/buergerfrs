@@ -8,12 +8,14 @@
 namespace App\Console\Commands;
 
 use App\Models\TranslationKey;
+use App\Support\ActivityLog\ConsoleActivityContext;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Throwable;
 
 #[Signature('translations:cleanup-stale-dynamic-keys
     {--apply : Persist the cleanup decisions. Without this option the command only reports what would happen.}')]
@@ -107,6 +109,20 @@ class CleanupStaleDynamicTranslationKeys extends Command
 
         if (! $apply) {
             $this->warn('Dry run only: rerun with --apply to persist these decisions.');
+        }
+
+        if ($apply) {
+            try {
+                activity('project')
+                    ->event('translations.cleanup_stale_dynamic_keys.completed')
+                    ->withProperties(ConsoleActivityContext::merge($this, [
+                        'summary' => $summary,
+                        'candidate_count' => $candidates->count(),
+                    ]))
+                    ->log('Legacy stale dynamic translation key cleanup completed.');
+            } catch (Throwable $exception) {
+                $this->warn('Activity log write failed: '.$exception->getMessage());
+            }
         }
 
         return self::SUCCESS;

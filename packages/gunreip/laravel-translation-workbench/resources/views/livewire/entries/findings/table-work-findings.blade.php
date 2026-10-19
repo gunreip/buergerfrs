@@ -1,45 +1,6 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/findings/table-work-findings.blade.php --}}
 
 <flux:separator class="mt-4" />
-{{--
-TODO:: DEV-Section delete --}}
-{{-- <flux:field class="my-4">
-    <flux:heading
-        class="mb-2"
-        size="lg"
-    >
-        {{ __('DEV: Workbench Findings Table') }}
-    </flux:heading>
-    <flux:text class="text-sm text-zinc-500">
-        {{ __('This is a development view of the Workbench findings table. It is used for testing and debugging purposes.') }}
-    </flux:text>
-    <flux:text class="text-sm text-zinc-500">
-        {{ __('Literal') }}
-    </flux:text>
-    <flux:text class="text-sm text-zinc-500">
-        {{ __('Literal') }}
-    </flux:text>
-    <flux:text class="text-sm text-zinc-500">
-        {{ __('ui.literal.literal-testing') }}
-    </flux:text>
-    <flux:text class="text-sm text-zinc-500">
-        {{ __('ui.literal.literal-testing') }}
-    </flux:text>
-    <flux:text class="text-sm text-zinc-500">
-        {{ __('ui.literal.literal-testing-2') }}
-    </flux:text>
-    <flux:text class="text-sm text-zinc-500">
-        {{ __('ui.literal.literal-testing-2') }}
-    </flux:text>
-    <flux:text class="text-sm text-zinc-500">
-        {{ __('ui.label.label-testing-2') }}
-    </flux:text>
-    <flux:text class="text-sm text-zinc-500">
-        {{ __('ui.label.label-testing-2') }}
-    </flux:text>
-</flux:field>
-
-<flux:separator class="mt-4" /> --}}
 
 <div class="mt-4">
     {{-- Pagination Top --}}

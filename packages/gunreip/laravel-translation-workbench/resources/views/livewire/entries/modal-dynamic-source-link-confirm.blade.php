@@ -21,6 +21,8 @@
             </div>
         </div>
 
+        <flux:error name="dynamicSourceLinkRelatedSourceId" />
+
         @if ($dynamicSourceLinkPreview)
             @php
                 $linkPreviewRuntimeSources = collect($dynamicSourceLinkPreview['runtime_sources'] ?? []);

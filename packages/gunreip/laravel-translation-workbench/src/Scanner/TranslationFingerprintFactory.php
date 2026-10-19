@@ -32,6 +32,7 @@ class TranslationFingerprintFactory
         ?string $rawExpression,
         ?string $literalText,
         ?string $translationKey,
+        ?int $sourceColumn = null,
     ): string {
         return $this->signature([
             $sourcePath,
@@ -40,15 +41,17 @@ class TranslationFingerprintFactory
             $kind,
             $suggestedKey ?? '',
             $this->normalizedExpression($rawExpression ?: ($literalText ?? $translationKey ?? $suggestedKey ?? '')),
+            ...($sourceColumn !== null ? ['column', $sourceColumn] : []),
         ]);
     }
 
-    public function sourceFingerprint(string $sourcePath, ?int $sourceLine, ?string $rawExpression): string
+    public function sourceFingerprint(string $sourcePath, ?int $sourceLine, ?string $rawExpression, ?int $sourceColumn = null): string
     {
         return $this->signature([
             $sourcePath,
             (string) ($sourceLine ?? ''),
             $this->normalizedExpression($rawExpression ?? ''),
+            ...($sourceColumn !== null ? ['column', $sourceColumn] : []),
         ]);
     }
 

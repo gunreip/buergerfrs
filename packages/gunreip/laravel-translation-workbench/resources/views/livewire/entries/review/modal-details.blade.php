@@ -5,10 +5,8 @@
     $reviewLiteralSuggested = trim((string) ($reviewFinding->literal_text_suggested ?? ''));
     $reviewTranslationKey = trim((string) ($reviewFinding->translation_key ?? ''));
     $reviewFindingSuggestedKey = trim((string) ($reviewFinding->suggested_key ?? ''));
-    $reviewKeySuggestedKey = trim((string) ($reviewFinding->key_suggested_key ?? ''));
     $reviewExistingKey = trim((string) ($reviewFinding->existing_key ?? ''));
     $reviewFoundTranslationKey = trim((string) ($reviewFinding->found_translation_key ?? ''));
-    $reviewEffectiveSuggestedKey = $reviewKeySuggestedKey !== '' ? $reviewKeySuggestedKey : $reviewFindingSuggestedKey;
     $canEditTranslationKey = (bool) $reviewFinding->key_id;
     $reviewSourceAbsolutePath = str_replace('\\', '/', base_path($reviewFinding->source_path));
     $reviewSourceEditorPath = str_replace('%2F', '/', rawurlencode($reviewSourceAbsolutePath));
@@ -225,7 +223,7 @@
                         />
                     </flux:callout.heading>
                     <div class="wrap-anywhere text-wrap font-mono text-xs text-zinc-500">
-                        {{ $reviewEffectiveSuggestedKey ?: __('ui.state.missing') }}
+                        {{ $reviewFindingSuggestedKey ?: __('ui.state.missing') }}
                     </div>
                 </div>
 

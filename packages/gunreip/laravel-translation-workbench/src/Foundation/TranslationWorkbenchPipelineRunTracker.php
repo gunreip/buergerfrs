@@ -150,6 +150,7 @@ class TranslationWorkbenchPipelineRunTracker
         int $durationMs,
         array $summary = [],
         array $meta = [],
+        ?string $errorMessage = null,
     ): void {
         TranslationWorkbenchPipelineRunStep::query()
             ->where('pipeline_run_id', $run->id)
@@ -157,6 +158,7 @@ class TranslationWorkbenchPipelineRunTracker
             ->update([
                 'status' => $exitCode === 0 ? 'finished' : 'failed',
                 'exit_code' => $exitCode,
+                'error_message' => $errorMessage,
                 'duration_ms' => $durationMs,
                 'summary' => $summary,
                 'meta' => $meta,
@@ -192,11 +194,12 @@ class TranslationWorkbenchPipelineRunTracker
     /**
      * @param  array<string, mixed>  $summary
      */
-    public function finish(TranslationWorkbenchPipelineRun $run, int $exitCode, array $summary = []): void
+    public function finish(TranslationWorkbenchPipelineRun $run, int $exitCode, array $summary = [], ?string $errorMessage = null): void
     {
         $run->forceFill([
             'status' => $exitCode === 0 ? 'finished' : 'failed',
             'exit_code' => $exitCode,
+            'error_message' => $errorMessage,
             'summary' => $summary,
             'finished_at' => now(),
         ])->save();

@@ -127,7 +127,7 @@ return [
             'findingSearch' => '',
             'findingSearchExact' => false,
             'findingSearchCaseSensitive' => false,
-            'findingStatus' => 'all',
+            'findingIdSearch' => '',
             'findingKind' => 'all',
             'findingCandidateType' => 'all',
             'findingNamespace' => 'all',

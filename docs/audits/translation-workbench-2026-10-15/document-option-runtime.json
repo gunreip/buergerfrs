@@ -1,0 +1,153 @@
+{
+    "mode": "read_only",
+    "keys": [
+        {
+            "id": 3039,
+            "translation_key": "management.people.create_person.sections.documents.document_type_options",
+            "status": "open"
+        },
+        {
+            "id": 3267,
+            "translation_key": "management.people.edit_person.sections.documents.document_category_options",
+            "status": "open"
+        }
+    ],
+    "runtime_sources": [
+        {
+            "id": 31,
+            "key_id": 3267,
+            "status": "active",
+            "source_type": "runtime_db_options",
+            "reference": "App\\Livewire\\Management\\People\\EditPerson::documentCategoryOptions",
+            "values_count": 8,
+            "active_values_count": 8,
+            "values_sha256": "d57e856a39960a87a8b467c10380e956df22cf718843a1892d40526ab09fdfef",
+            "confirmed_links": [
+                {
+                    "id": 66,
+                    "key_id": 3188,
+                    "finding_id": 2145,
+                    "candidate_reference": "dynamic_source:12",
+                    "status": "active"
+                },
+                {
+                    "id": 65,
+                    "key_id": 3188,
+                    "finding_id": 2145,
+                    "candidate_reference": "dynamic_source:11",
+                    "status": "active"
+                },
+                {
+                    "id": 70,
+                    "key_id": 3267,
+                    "finding_id": 2688,
+                    "candidate_reference": "dynamic_source:55",
+                    "status": "active"
+                },
+                {
+                    "id": 71,
+                    "key_id": 3267,
+                    "finding_id": 2688,
+                    "candidate_reference": "dynamic_source:56",
+                    "status": "active"
+                }
+            ]
+        },
+        {
+            "id": 42,
+            "key_id": 3039,
+            "status": "active",
+            "source_type": "runtime_db_options",
+            "reference": "App\\Livewire\\Management\\People\\CreatePerson::documentTypeOptions",
+            "values_count": 11,
+            "active_values_count": 11,
+            "values_sha256": "1c02ec5c4b8fcb0a2d4332a355c677396ac6dac4370259979d32fb9043b60a2a",
+            "confirmed_links": [
+                {
+                    "id": 67,
+                    "key_id": 3039,
+                    "finding_id": 2046,
+                    "candidate_reference": "dynamic_source:16",
+                    "status": "active"
+                },
+                {
+                    "id": 68,
+                    "key_id": 3039,
+                    "finding_id": 2046,
+                    "candidate_reference": "dynamic_source:17",
+                    "status": "active"
+                },
+                {
+                    "id": 69,
+                    "key_id": 3039,
+                    "finding_id": 2046,
+                    "candidate_reference": "dynamic_source:18",
+                    "status": "active"
+                },
+                {
+                    "id": 73,
+                    "key_id": 3165,
+                    "finding_id": 2684,
+                    "candidate_reference": "dynamic_source:58",
+                    "status": "active"
+                },
+                {
+                    "id": 74,
+                    "key_id": 3165,
+                    "finding_id": 2684,
+                    "candidate_reference": "dynamic_source:59",
+                    "status": "active"
+                },
+                {
+                    "id": 72,
+                    "key_id": 3165,
+                    "finding_id": 2684,
+                    "candidate_reference": "dynamic_source:57",
+                    "status": "active"
+                }
+            ]
+        }
+    ],
+    "observations": [
+        {
+            "id": 4,
+            "source_path": "resources/views/components/management/people/create-person/sections/\u26a1documents.blade.php",
+            "source_type": "unresolved",
+            "options_count": 0,
+            "options": "[]",
+            "meta": "{\"source\":\"translation-workbench:discover-dynamic-options\",\"matched_entry_translation_key\":null,\"matched_entry_status\":\"open\"}"
+        },
+        {
+            "id": 9,
+            "source_path": "resources/views/components/management/people/edit-person/sections/documents/\u26a1add-modal.blade.php",
+            "source_type": "unresolved",
+            "options_count": 0,
+            "options": "[]",
+            "meta": "{\"source\":\"translation-workbench:discover-dynamic-options\",\"matched_entry_translation_key\":null,\"matched_entry_status\":\"open\"}"
+        },
+        {
+            "id": 10,
+            "source_path": "resources/views/components/management/people/edit-person/sections/documents/\u26a1add-modal.blade.php",
+            "source_type": "unresolved",
+            "options_count": 0,
+            "options": "[]",
+            "meta": "{\"source\":\"translation-workbench:discover-dynamic-options\",\"matched_entry_translation_key\":null,\"matched_entry_status\":\"open\"}"
+        },
+        {
+            "id": 12,
+            "source_path": "resources/views/components/management/people/edit-person/sections/\u26a1documents.blade.php",
+            "source_type": "unresolved",
+            "options_count": 0,
+            "options": "[]",
+            "meta": "{\"source\":\"translation-workbench:discover-dynamic-options\",\"matched_entry_translation_key\":null,\"matched_entry_status\":\"open\"}"
+        },
+        {
+            "id": 13,
+            "source_path": "resources/views/components/management/people/edit-person/sections/\u26a1documents.blade.php",
+            "source_type": "unresolved",
+            "options_count": 0,
+            "options": "[]",
+            "meta": "{\"source\":\"translation-workbench:discover-dynamic-options\",\"matched_entry_translation_key\":null,\"matched_entry_status\":\"open\"}"
+        }
+    ]
+}

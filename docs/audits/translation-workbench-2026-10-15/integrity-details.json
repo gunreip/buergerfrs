@@ -1,0 +1,89 @@
+{
+  "multiple_links_by_distinct_explicit_names": [
+    {
+      "names": 0,
+      "findings": 298
+    },
+    {
+      "names": 1,
+      "findings": 363
+    },
+    {
+      "names": 2,
+      "findings": 2
+    }
+  ],
+  "code_owner_difference": [
+    {
+      "id": 5093,
+      "source_line": 244,
+      "path": "resources/views/livewire/admin/pages/settings/⚡profile.blade.php",
+      "found_translation_key": "ui.save",
+      "key_id": 4507,
+      "translation_key": "ui.button.save.save",
+      "review_status": "reviewed"
+    }
+  ],
+  "reviewed_duplicate_groups": [
+    {
+      "translation_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.dynamic",
+      "records": 2
+    },
+    {
+      "translation_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.review_duplicate_expression",
+      "records": 2
+    },
+    {
+      "translation_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing",
+      "records": 2
+    },
+    {
+      "translation_key": "ui.button.cancel.cancel",
+      "records": 2
+    },
+    {
+      "translation_key": "ui.button.save.save",
+      "records": 2
+    },
+    {
+      "translation_key": "ui.filters.yes",
+      "records": 2
+    },
+    {
+      "translation_key": "ui.sort.sort.sort-order",
+      "records": 3
+    },
+    {
+      "translation_key": "ui.state.status",
+      "records": 2
+    },
+    {
+      "translation_key": "ui.states.all",
+      "records": 2
+    },
+    {
+      "translation_key": "ui.table.headers.actions",
+      "records": 2
+    },
+    {
+      "translation_key": "ui.type",
+      "records": 2
+    },
+    {
+      "translation_key": "ui.ui.ui-candidate",
+      "records": 3
+    }
+  ],
+  "values_without_active_key": [
+    {
+      "id": 1928,
+      "locale": "de",
+      "translation_key": "ui.label"
+    },
+    {
+      "id": 1929,
+      "locale": "en",
+      "translation_key": "ui.label"
+    }
+  ]
+}

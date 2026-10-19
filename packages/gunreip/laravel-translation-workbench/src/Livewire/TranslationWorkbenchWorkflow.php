@@ -11,7 +11,7 @@ class TranslationWorkbenchWorkflow extends Component
 
     public function updatedActiveTab(): void
     {
-        if (! in_array($this->activeTab, ['legacy', 'workbench', 'target', 'write-contract'], true)) {
+        if (! in_array($this->activeTab, ['legacy', 'workbench', 'target', 'target-ui', 'write-contract'], true)) {
             $this->activeTab = 'legacy';
         }
     }

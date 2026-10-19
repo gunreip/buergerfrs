@@ -1,0 +1,564 @@
+{
+    "mode": "read_only_remaining_source_plan",
+    "rows": [
+        {
+            "source_id": 73,
+            "target_finding_id": 9269,
+            "observation_id": 1,
+            "status": "unoccupied_target",
+            "occupied_targets": [],
+            "candidate_links": []
+        },
+        {
+            "source_id": 1,
+            "target_finding_id": 9270,
+            "observation_id": 2,
+            "status": "unoccupied_target",
+            "occupied_targets": [],
+            "candidate_links": []
+        },
+        {
+            "source_id": 3,
+            "target_finding_id": 9271,
+            "observation_id": 3,
+            "status": "existing_target_requires_reconciliation",
+            "occupied_targets": [
+                {
+                    "source_id": 2,
+                    "status": "active",
+                    "values_identical": true
+                }
+            ],
+            "candidate_links": []
+        },
+        {
+            "source_id": 76,
+            "target_finding_id": 9249,
+            "observation_id": 6,
+            "status": "unoccupied_target",
+            "occupied_targets": [],
+            "candidate_links": []
+        },
+        {
+            "source_id": 77,
+            "target_finding_id": 9250,
+            "observation_id": 7,
+            "status": "unoccupied_target",
+            "occupied_targets": [],
+            "candidate_links": []
+        },
+        {
+            "source_id": 5,
+            "target_finding_id": 9251,
+            "observation_id": 8,
+            "status": "unoccupied_target",
+            "occupied_targets": [],
+            "candidate_links": []
+        },
+        {
+            "source_id": 24,
+            "target_finding_id": 9252,
+            "observation_id": 15,
+            "status": "existing_target_requires_reconciliation",
+            "occupied_targets": [
+                {
+                    "source_id": 23,
+                    "status": "active",
+                    "values_identical": true
+                }
+            ],
+            "candidate_links": [
+                {
+                    "id": 78,
+                    "dynamic_source_id": 40,
+                    "finding_id": 2101,
+                    "reference": "dynamic_source:24",
+                    "review_status": "confirmed",
+                    "status": "active"
+                }
+            ]
+        },
+        {
+            "source_id": 26,
+            "target_finding_id": 9253,
+            "observation_id": 16,
+            "status": "existing_target_requires_reconciliation",
+            "occupied_targets": [
+                {
+                    "source_id": 25,
+                    "status": "active",
+                    "values_identical": true
+                }
+            ],
+            "candidate_links": []
+        }
+    ],
+    "requests": [
+        {
+            "observation_id": 1,
+            "target_finding_id": 9269,
+            "key_id": 1988,
+            "file_hash": "bbeb7b909235e8a4df6cefe162dc919e58fcfe69ce9f4df6b8e7db55a4a16ce9",
+            "discovery": {
+                "scope": "role_badge_variant_options",
+                "suggested_key": "admin.partials.role_list.modal_create.role_badge_variant_options",
+                "suggested_dynamic_key": "admin.partials.role_list.modal_create.role_badge_variant_options",
+                "source_path": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+                "source_line": 98,
+                "source_end_line": 102,
+                "options_variable": "roleBadgeVariantOptions",
+                "key_variable": "variant",
+                "label_variable": "label",
+                "label_usage": "workbench_option_label",
+                "source_type": "hardcoded_public_array",
+                "options": {
+                    "solid": "Solid",
+                    "subtle": "Subtle",
+                    "outline": "Outline",
+                    "pill": "Pill"
+                },
+                "source_reference": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeVariants",
+                "source_candidates": [
+                    {
+                        "name": "roleBadgeVariantOptions",
+                        "source_file": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeVariants",
+                        "options": {
+                            "solid": "Solid",
+                            "subtle": "Subtle",
+                            "outline": "Outline",
+                            "pill": "Pill"
+                        },
+                        "view_binding": {
+                            "status": "static_view_path",
+                            "paths": [
+                                [
+                                    "app/Livewire/Admin/RoleList.php",
+                                    "resources/views/components/admin/⚡role-list.blade.php",
+                                    "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php"
+                                ]
+                            ],
+                            "missing_views": [],
+                            "include_traversal_complete": true,
+                            "variable_flow": {
+                                "status": "no_detected_override",
+                                "variable": "roleBadgeVariantOptions",
+                                "findings": []
+                            }
+                        }
+                    }
+                ],
+                "source_resolution": "view_bound_candidate"
+            }
+        },
+        {
+            "observation_id": 2,
+            "target_finding_id": 9270,
+            "key_id": 2006,
+            "file_hash": "32cd9efa7dd7a6c7765504bbb24fb445428baa6ed847037b45e5049dd159a187",
+            "discovery": {
+                "scope": "role_badge_color_options",
+                "suggested_key": "admin.partials.role_list.modal_edit.role_badge_color_options",
+                "suggested_dynamic_key": "admin.partials.role_list.modal_edit.role_badge_color_options",
+                "source_path": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+                "source_line": 108,
+                "source_end_line": 112,
+                "options_variable": "roleBadgeColorOptions",
+                "key_variable": "color",
+                "label_variable": "label",
+                "label_usage": "workbench_option_label",
+                "source_type": "hardcoded_public_array",
+                "options": {
+                    "zinc": "Zinc",
+                    "red": "Red",
+                    "orange": "Orange",
+                    "amber": "Amber",
+                    "yellow": "Yellow",
+                    "lime": "Lime",
+                    "green": "Green",
+                    "emerald": "Emerald",
+                    "teal": "Teal",
+                    "cyan": "Cyan",
+                    "sky": "Sky",
+                    "blue": "Blue",
+                    "indigo": "Indigo",
+                    "violet": "Violet",
+                    "purple": "Purple",
+                    "fuchsia": "Fuchsia",
+                    "pink": "Pink",
+                    "rose": "Rose"
+                },
+                "source_reference": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeColors",
+                "source_candidates": [
+                    {
+                        "name": "roleBadgeColorOptions",
+                        "source_file": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeColors",
+                        "options": {
+                            "zinc": "Zinc",
+                            "red": "Red",
+                            "orange": "Orange",
+                            "amber": "Amber",
+                            "yellow": "Yellow",
+                            "lime": "Lime",
+                            "green": "Green",
+                            "emerald": "Emerald",
+                            "teal": "Teal",
+                            "cyan": "Cyan",
+                            "sky": "Sky",
+                            "blue": "Blue",
+                            "indigo": "Indigo",
+                            "violet": "Violet",
+                            "purple": "Purple",
+                            "fuchsia": "Fuchsia",
+                            "pink": "Pink",
+                            "rose": "Rose"
+                        },
+                        "view_binding": {
+                            "status": "static_view_path",
+                            "paths": [
+                                [
+                                    "app/Livewire/Admin/RoleList.php",
+                                    "resources/views/components/admin/⚡role-list.blade.php",
+                                    "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php"
+                                ]
+                            ],
+                            "missing_views": [],
+                            "include_traversal_complete": true,
+                            "variable_flow": {
+                                "status": "no_detected_override",
+                                "variable": "roleBadgeColorOptions",
+                                "findings": []
+                            }
+                        }
+                    }
+                ],
+                "source_resolution": "view_bound_candidate"
+            }
+        },
+        {
+            "observation_id": 6,
+            "target_finding_id": 9249,
+            "key_id": 3117,
+            "file_hash": "4cbed567323bfeb7563dd5e108ce9c82bf1709566915c984fb0815e0b82d8358",
+            "discovery": {
+                "scope": "salutation_options",
+                "suggested_key": "management.people.create_person.sections.person_core.salutation_options",
+                "suggested_dynamic_key": "management.people.create_person.sections.person_core.salutation_options",
+                "source_path": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+                "source_line": 82,
+                "source_end_line": 89,
+                "options_variable": "salutationOptions",
+                "key_variable": "value",
+                "label_variable": "label",
+                "label_usage": "workbench_option_label",
+                "source_type": "hardcoded_public_array",
+                "options": {
+                    "mr": "Mr.",
+                    "mrs": "Mrs.",
+                    "mx": "Mx."
+                },
+                "source_reference": "app/Livewire/Management/People/CreatePerson.php",
+                "source_candidates": [
+                    {
+                        "name": "salutationOptions",
+                        "source_file": "app/Livewire/Management/People/CreatePerson.php",
+                        "options": {
+                            "mr": "Mr.",
+                            "mrs": "Mrs.",
+                            "mx": "Mx."
+                        },
+                        "view_binding": {
+                            "status": "static_view_path",
+                            "paths": [
+                                [
+                                    "app/Livewire/Management/People/CreatePerson.php",
+                                    "resources/views/components/management/people/⚡create-person.blade.php",
+                                    "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+                                    "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php"
+                                ]
+                            ],
+                            "missing_views": [],
+                            "include_traversal_complete": true,
+                            "variable_flow": {
+                                "status": "no_detected_override",
+                                "variable": "salutationOptions",
+                                "findings": []
+                            }
+                        }
+                    },
+                    {
+                        "name": "salutationOptions",
+                        "source_file": "app/Livewire/Management/People/EditPerson.php",
+                        "options": {
+                            "mr": "Mr.",
+                            "mrs": "Mrs.",
+                            "mx": "Mx."
+                        },
+                        "view_binding": {
+                            "status": "unverified_view_binding",
+                            "paths": [],
+                            "missing_views": [],
+                            "include_traversal_complete": true,
+                            "variable_flow": {
+                                "status": "unverified",
+                                "variable": "salutationOptions",
+                                "findings": []
+                            }
+                        }
+                    }
+                ],
+                "source_resolution": "view_bound_candidate"
+            }
+        },
+        {
+            "observation_id": 7,
+            "target_finding_id": 9250,
+            "key_id": 3120,
+            "file_hash": "4cbed567323bfeb7563dd5e108ce9c82bf1709566915c984fb0815e0b82d8358",
+            "discovery": {
+                "scope": "gender_options",
+                "suggested_key": "management.people.create_person.sections.person_core.gender_options",
+                "suggested_dynamic_key": "management.people.create_person.sections.person_core.gender_options",
+                "source_path": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+                "source_line": 123,
+                "source_end_line": 130,
+                "options_variable": "genderOptions",
+                "key_variable": "value",
+                "label_variable": "label",
+                "label_usage": "workbench_option_label",
+                "source_type": "hardcoded_public_array",
+                "options": {
+                    "female": "Female",
+                    "male": "Male",
+                    "diverse": "Diverse",
+                    "unknown": "Unknown"
+                },
+                "source_reference": "app/Livewire/Management/People/CreatePerson.php",
+                "source_candidates": [
+                    {
+                        "name": "genderOptions",
+                        "source_file": "app/Livewire/Management/People/CreatePerson.php",
+                        "options": {
+                            "female": "Female",
+                            "male": "Male",
+                            "diverse": "Diverse",
+                            "unknown": "Unknown"
+                        },
+                        "view_binding": {
+                            "status": "static_view_path",
+                            "paths": [
+                                [
+                                    "app/Livewire/Management/People/CreatePerson.php",
+                                    "resources/views/components/management/people/⚡create-person.blade.php",
+                                    "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+                                    "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php"
+                                ]
+                            ],
+                            "missing_views": [],
+                            "include_traversal_complete": true,
+                            "variable_flow": {
+                                "status": "no_detected_override",
+                                "variable": "genderOptions",
+                                "findings": []
+                            }
+                        }
+                    },
+                    {
+                        "name": "genderOptions",
+                        "source_file": "app/Livewire/Management/People/EditPerson.php",
+                        "options": {
+                            "female": "Female",
+                            "male": "Male",
+                            "diverse": "Diverse",
+                            "unknown": "Unknown"
+                        },
+                        "view_binding": {
+                            "status": "unverified_view_binding",
+                            "paths": [],
+                            "missing_views": [],
+                            "include_traversal_complete": true,
+                            "variable_flow": {
+                                "status": "unverified",
+                                "variable": "genderOptions",
+                                "findings": []
+                            }
+                        }
+                    }
+                ],
+                "source_resolution": "view_bound_candidate"
+            }
+        },
+        {
+            "observation_id": 8,
+            "target_finding_id": 9251,
+            "key_id": 3137,
+            "file_hash": "4cbed567323bfeb7563dd5e108ce9c82bf1709566915c984fb0815e0b82d8358",
+            "discovery": {
+                "scope": "marital_status_options",
+                "suggested_key": "management.people.create_person.sections.person_core.marital_status_options",
+                "suggested_dynamic_key": "management.people.create_person.sections.person_core.marital_status_options",
+                "source_path": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+                "source_line": 381,
+                "source_end_line": 385,
+                "options_variable": "maritalStatusOptions",
+                "key_variable": "value",
+                "label_variable": "label",
+                "label_usage": "workbench_option_label",
+                "source_type": "hardcoded_public_array",
+                "options": {
+                    "single": "Single",
+                    "married": "Married",
+                    "registered_partnership": "Registered partnership",
+                    "divorced": "Divorced",
+                    "widowed": "Widowed",
+                    "separated": "Separated",
+                    "unknown": "Unknown"
+                },
+                "source_reference": "app/Livewire/Management/People/CreatePerson.php",
+                "source_candidates": [
+                    {
+                        "name": "maritalStatusOptions",
+                        "source_file": "app/Livewire/Management/People/CreatePerson.php",
+                        "options": {
+                            "single": "Single",
+                            "married": "Married",
+                            "registered_partnership": "Registered partnership",
+                            "divorced": "Divorced",
+                            "widowed": "Widowed",
+                            "separated": "Separated",
+                            "unknown": "Unknown"
+                        },
+                        "view_binding": {
+                            "status": "static_view_path",
+                            "paths": [
+                                [
+                                    "app/Livewire/Management/People/CreatePerson.php",
+                                    "resources/views/components/management/people/⚡create-person.blade.php",
+                                    "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+                                    "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php"
+                                ]
+                            ],
+                            "missing_views": [],
+                            "include_traversal_complete": true,
+                            "variable_flow": {
+                                "status": "no_detected_override",
+                                "variable": "maritalStatusOptions",
+                                "findings": []
+                            }
+                        }
+                    },
+                    {
+                        "name": "maritalStatusOptions",
+                        "source_file": "app/Livewire/Management/People/EditPerson.php",
+                        "options": {
+                            "single": "Single",
+                            "married": "Married",
+                            "registered_partnership": "Registered partnership",
+                            "divorced": "Divorced",
+                            "widowed": "Widowed",
+                            "separated": "Separated",
+                            "unknown": "Unknown"
+                        },
+                        "view_binding": {
+                            "status": "unverified_view_binding",
+                            "paths": [],
+                            "missing_views": [],
+                            "include_traversal_complete": true,
+                            "variable_flow": {
+                                "status": "unverified",
+                                "variable": "maritalStatusOptions",
+                                "findings": []
+                            }
+                        }
+                    }
+                ],
+                "source_resolution": "view_bound_candidate"
+            }
+        }
+    ],
+    "sources": [
+        {
+            "source_id": 73,
+            "previous_finding_id": 4033,
+            "historical_observation_id": 1,
+            "key_id": 1988,
+            "file_sha256": "bbeb7b909235e8a4df6cefe162dc919e58fcfe69ce9f4df6b8e7db55a4a16ce9",
+            "targets": [
+                {
+                    "finding_ids": [
+                        9269
+                    ],
+                    "selected_source": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeVariants",
+                    "selected_source_sha256": "ad683acce31bf906cad7b941143f86393ca2b0a2fe939874b66d735e3ea53cc1"
+                }
+            ]
+        },
+        {
+            "source_id": 1,
+            "previous_finding_id": 1407,
+            "historical_observation_id": 2,
+            "key_id": 2006,
+            "file_sha256": "32cd9efa7dd7a6c7765504bbb24fb445428baa6ed847037b45e5049dd159a187",
+            "targets": [
+                {
+                    "finding_ids": [
+                        9270
+                    ],
+                    "selected_source": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeColors",
+                    "selected_source_sha256": "ad683acce31bf906cad7b941143f86393ca2b0a2fe939874b66d735e3ea53cc1"
+                }
+            ]
+        },
+        {
+            "source_id": 76,
+            "previous_finding_id": 4590,
+            "historical_observation_id": 6,
+            "key_id": 3117,
+            "file_sha256": "4cbed567323bfeb7563dd5e108ce9c82bf1709566915c984fb0815e0b82d8358",
+            "targets": [
+                {
+                    "finding_ids": [
+                        9249
+                    ],
+                    "selected_source": "app/Livewire/Management/People/CreatePerson.php",
+                    "selected_source_sha256": "b39489b1a1c3aedb2be85c2ec04eac5c26c4532f48ff8172e612409163a58dd9"
+                }
+            ]
+        },
+        {
+            "source_id": 77,
+            "previous_finding_id": 4593,
+            "historical_observation_id": 7,
+            "key_id": 3120,
+            "file_sha256": "4cbed567323bfeb7563dd5e108ce9c82bf1709566915c984fb0815e0b82d8358",
+            "targets": [
+                {
+                    "finding_ids": [
+                        9250
+                    ],
+                    "selected_source": "app/Livewire/Management/People/CreatePerson.php",
+                    "selected_source_sha256": "b39489b1a1c3aedb2be85c2ec04eac5c26c4532f48ff8172e612409163a58dd9"
+                }
+            ]
+        },
+        {
+            "source_id": 5,
+            "previous_finding_id": 2110,
+            "historical_observation_id": 8,
+            "key_id": 3137,
+            "file_sha256": "4cbed567323bfeb7563dd5e108ce9c82bf1709566915c984fb0815e0b82d8358",
+            "targets": [
+                {
+                    "finding_ids": [
+                        9251
+                    ],
+                    "selected_source": "app/Livewire/Management/People/CreatePerson.php",
+                    "selected_source_sha256": "b39489b1a1c3aedb2be85c2ec04eac5c26c4532f48ff8172e612409163a58dd9"
+                }
+            ]
+        }
+    ],
+    "summary": {
+        "unoccupied_target": 5,
+        "existing_target_requires_reconciliation": 3
+    }
+}

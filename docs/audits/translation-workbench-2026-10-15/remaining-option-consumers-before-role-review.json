@@ -1,0 +1,594 @@
+{
+    "mode": "read_only_actual_consumer_selection",
+    "file_hashes": {
+        "resources/views/components/management/people/create-person/sections/⚡documents.blade.php": "1285f8205e2760c1389191fa68240848e7b2fa33d92fd2967856ba94b2df34e0",
+        "resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php": "2de90547bf0b4103e05dec9a9337317ba97a3b6c6b60b535e1112594e05c39c8",
+        "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php": "b33b77ab84237aa3ef8bce7fc5c2a52948edcc59d8d165b7ed4aef2c0e207c4d",
+        "resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php": "bdead28d0548b8c95d1d6d1541e1dbc34038603d6af44f564798fc183a75dbaf",
+        "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php": "7d2b02c9d191487b978b7f5b279cadc11508695e4562d85a7b601aa5fa6d36f9",
+        "resources/views/components/management/people/edit-person/sections/⚡emergency-contact.blade.php": "41245d441dcade2d25259559e0fdb3aa289899d3fbb1b67325b4a63893f682e5",
+        "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php": "5a95f34f638cef3ef89e0adb1ad81fe426e4d2dfee0d6cf4ec2b3b2e487b67d6",
+        "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/table-card.blade.php": "d1e2a343b7d40ad85a8339714b1f15f485043a7fe30c0ce00fb4d34b67f759fd"
+    },
+    "observations": [
+        {
+            "id": 4,
+            "path": "resources/views/components/management/people/create-person/sections/⚡documents.blade.php",
+            "variable": "documentTypeOptions",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 54,
+                    "resolution": "unresolved",
+                    "options_count": 0
+                }
+            ],
+            "classifier_consumers": [
+                {
+                    "finding_id": 9256,
+                    "key_id": 3039,
+                    "path": "resources/views/components/management/people/create-person/sections/⚡documents.blade.php"
+                },
+                {
+                    "finding_id": 9258,
+                    "key_id": 3039,
+                    "path": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php"
+                },
+                {
+                    "finding_id": 9264,
+                    "key_id": 3039,
+                    "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php"
+                }
+            ],
+            "resolver_consumers": [],
+            "linked_sources": [
+                {
+                    "id": 83,
+                    "finding_id": 4672,
+                    "key_id": 3266,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 57,
+                    "finding_id": 2684,
+                    "key_id": 3165,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 86,
+                    "finding_id": 4673,
+                    "key_id": 3266,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 13,
+                    "finding_id": 2131,
+                    "key_id": 3165,
+                    "status": "obsolete"
+                },
+                {
+                    "id": 74,
+                    "finding_id": 4513,
+                    "key_id": 3039,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 16,
+                    "finding_id": 2046,
+                    "key_id": 3039,
+                    "status": "needs_review"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "path": "resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php",
+            "variable": "emergencyContactRelationshipOptions",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 87,
+                    "resolution": "view_bound_candidate",
+                    "options_count": 9
+                }
+            ],
+            "classifier_consumers": [
+                {
+                    "finding_id": 9265,
+                    "key_id": 3062,
+                    "path": "resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php"
+                },
+                {
+                    "finding_id": 9266,
+                    "key_id": 3315,
+                    "path": "resources/views/components/management/people/edit-person/sections/⚡emergency-contact.blade.php"
+                },
+                {
+                    "finding_id": 9267,
+                    "key_id": 3315,
+                    "path": "resources/views/components/management/people/edit-person/sections/⚡emergency-contact.blade.php"
+                }
+            ],
+            "resolver_consumers": [],
+            "linked_sources": [
+                {
+                    "id": 60,
+                    "finding_id": 2689,
+                    "key_id": 3315,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 19,
+                    "finding_id": 2231,
+                    "key_id": 3315,
+                    "status": "obsolete"
+                },
+                {
+                    "id": 75,
+                    "finding_id": 4535,
+                    "key_id": 3062,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 21,
+                    "finding_id": 2062,
+                    "key_id": 3062,
+                    "status": "needs_review"
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "path": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php",
+            "variable": "documentTypeOptions",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 59,
+                    "resolution": "unresolved",
+                    "options_count": 0
+                }
+            ],
+            "classifier_consumers": [],
+            "resolver_consumers": [],
+            "linked_sources": [
+                {
+                    "id": 87,
+                    "finding_id": 4673,
+                    "key_id": 3266,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 84,
+                    "finding_id": 4672,
+                    "key_id": 3266,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 79,
+                    "finding_id": 4634,
+                    "key_id": 3173,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 58,
+                    "finding_id": 2684,
+                    "key_id": 3165,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 17,
+                    "finding_id": 2046,
+                    "key_id": 3039,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 14,
+                    "finding_id": 2131,
+                    "key_id": 3165,
+                    "status": "obsolete"
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "path": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php",
+            "variable": "documentCategoryOptions",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 263,
+                    "resolution": "unresolved",
+                    "options_count": 0
+                }
+            ],
+            "classifier_consumers": [
+                {
+                    "finding_id": 2145,
+                    "key_id": 3188,
+                    "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php"
+                },
+                {
+                    "finding_id": 9246,
+                    "key_id": 3267,
+                    "path": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php"
+                },
+                {
+                    "finding_id": 9247,
+                    "key_id": 3267,
+                    "path": "resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php"
+                },
+                {
+                    "finding_id": 9248,
+                    "key_id": 3267,
+                    "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php"
+                }
+            ],
+            "resolver_consumers": [],
+            "linked_sources": [
+                {
+                    "id": 80,
+                    "finding_id": 4648,
+                    "key_id": 3188,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 11,
+                    "finding_id": 2145,
+                    "key_id": 3188,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 55,
+                    "finding_id": 2688,
+                    "key_id": 3267,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 9,
+                    "finding_id": 2198,
+                    "key_id": 3267,
+                    "status": "obsolete"
+                }
+            ]
+        },
+        {
+            "id": 11,
+            "path": "resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php",
+            "variable": "archiveFilters",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 47,
+                    "resolution": "unresolved",
+                    "options_count": 0
+                }
+            ],
+            "classifier_consumers": [],
+            "resolver_consumers": [
+                {
+                    "source_id": 52,
+                    "finding_id": 2685,
+                    "key_id": 3213
+                },
+                {
+                    "source_id": 54,
+                    "finding_id": 2687,
+                    "key_id": 3215
+                }
+            ],
+            "linked_sources": []
+        },
+        {
+            "id": 12,
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "variable": "documentCategoryOptions",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 152,
+                    "resolution": "unresolved",
+                    "options_count": 0
+                }
+            ],
+            "classifier_consumers": [
+                {
+                    "finding_id": 2145,
+                    "key_id": 3188,
+                    "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php"
+                },
+                {
+                    "finding_id": 9246,
+                    "key_id": 3267,
+                    "path": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php"
+                },
+                {
+                    "finding_id": 9247,
+                    "key_id": 3267,
+                    "path": "resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php"
+                },
+                {
+                    "finding_id": 9248,
+                    "key_id": 3267,
+                    "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php"
+                }
+            ],
+            "resolver_consumers": [
+                {
+                    "source_id": 11,
+                    "finding_id": 2145,
+                    "key_id": 3188
+                },
+                {
+                    "source_id": 12,
+                    "finding_id": 2145,
+                    "key_id": 3188
+                }
+            ],
+            "linked_sources": [
+                {
+                    "id": 12,
+                    "finding_id": 2145,
+                    "key_id": 3188,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 10,
+                    "finding_id": 2198,
+                    "key_id": 3267,
+                    "status": "obsolete"
+                },
+                {
+                    "id": 56,
+                    "finding_id": 2688,
+                    "key_id": 3267,
+                    "status": "needs_review"
+                }
+            ]
+        },
+        {
+            "id": 13,
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "variable": "documentTypeOptions",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 357,
+                    "resolution": "unresolved",
+                    "options_count": 0
+                }
+            ],
+            "classifier_consumers": [],
+            "resolver_consumers": [],
+            "linked_sources": [
+                {
+                    "id": 88,
+                    "finding_id": 4673,
+                    "key_id": 3266,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 59,
+                    "finding_id": 2684,
+                    "key_id": 3165,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 15,
+                    "finding_id": 2131,
+                    "key_id": 3165,
+                    "status": "obsolete"
+                },
+                {
+                    "id": 18,
+                    "finding_id": 2046,
+                    "key_id": 3039,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 85,
+                    "finding_id": 4672,
+                    "key_id": 3266,
+                    "status": "needs_review"
+                }
+            ]
+        },
+        {
+            "id": 14,
+            "path": "resources/views/components/management/people/edit-person/sections/⚡emergency-contact.blade.php",
+            "variable": "emergencyContactRelationshipOptions",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 210,
+                    "resolution": "view_bound_candidate",
+                    "options_count": 9
+                }
+            ],
+            "classifier_consumers": [
+                {
+                    "finding_id": 9266,
+                    "key_id": 3315,
+                    "path": "resources/views/components/management/people/edit-person/sections/⚡emergency-contact.blade.php"
+                },
+                {
+                    "finding_id": 9267,
+                    "key_id": 3315,
+                    "path": "resources/views/components/management/people/edit-person/sections/⚡emergency-contact.blade.php"
+                }
+            ],
+            "resolver_consumers": [],
+            "linked_sources": [
+                {
+                    "id": 61,
+                    "finding_id": 2689,
+                    "key_id": 3315,
+                    "status": "needs_review"
+                },
+                {
+                    "id": 20,
+                    "finding_id": 2231,
+                    "key_id": 3315,
+                    "status": "obsolete"
+                },
+                {
+                    "id": 22,
+                    "finding_id": 2062,
+                    "key_id": 3062,
+                    "status": "needs_review"
+                }
+            ]
+        },
+        {
+            "id": 17,
+            "path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "variable": "maritalStatusOptions",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 379,
+                    "resolution": "view_bound_candidate",
+                    "options_count": 7
+                }
+            ],
+            "classifier_consumers": [
+                {
+                    "finding_id": 9254,
+                    "key_id": 3452,
+                    "path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php"
+                }
+            ],
+            "resolver_consumers": [],
+            "linked_sources": [
+                {
+                    "id": 27,
+                    "finding_id": 2318,
+                    "key_id": 3452,
+                    "status": "obsolete"
+                }
+            ]
+        },
+        {
+            "id": 18,
+            "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/filters.blade.php",
+            "variable": "kindCounts",
+            "scanned": false,
+            "current_observations": [],
+            "classifier_consumers": [],
+            "resolver_consumers": [],
+            "linked_sources": []
+        },
+        {
+            "id": 19,
+            "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old/entries/filters.blade.php",
+            "variable": "statusCounts",
+            "scanned": false,
+            "current_observations": [],
+            "classifier_consumers": [],
+            "resolver_consumers": [],
+            "linked_sources": []
+        },
+        {
+            "id": 20,
+            "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/table-card.blade.php",
+            "variable": "tooltipRows",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 212,
+                    "resolution": "unresolved",
+                    "options_count": 0
+                }
+            ],
+            "classifier_consumers": [],
+            "resolver_consumers": [],
+            "linked_sources": []
+        },
+        {
+            "id": 21,
+            "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/table-card.blade.php",
+            "variable": "tooltipRows",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 212,
+                    "resolution": "unresolved",
+                    "options_count": 0
+                }
+            ],
+            "classifier_consumers": [],
+            "resolver_consumers": [],
+            "linked_sources": []
+        },
+        {
+            "id": 22,
+            "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/table-card.blade.php",
+            "variable": "tooltipRows",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 212,
+                    "resolution": "unresolved",
+                    "options_count": 0
+                }
+            ],
+            "classifier_consumers": [],
+            "resolver_consumers": [],
+            "linked_sources": []
+        },
+        {
+            "id": 23,
+            "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/table-card.blade.php",
+            "variable": "tooltipRows",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 212,
+                    "resolution": "unresolved",
+                    "options_count": 0
+                }
+            ],
+            "classifier_consumers": [],
+            "resolver_consumers": [],
+            "linked_sources": []
+        },
+        {
+            "id": 24,
+            "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/table-card.blade.php",
+            "variable": "tooltipRows",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 212,
+                    "resolution": "unresolved",
+                    "options_count": 0
+                }
+            ],
+            "classifier_consumers": [],
+            "resolver_consumers": [],
+            "linked_sources": []
+        },
+        {
+            "id": 25,
+            "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/table-card.blade.php",
+            "variable": "tooltipRows",
+            "scanned": true,
+            "current_observations": [
+                {
+                    "line": 212,
+                    "resolution": "unresolved",
+                    "options_count": 0
+                }
+            ],
+            "classifier_consumers": [],
+            "resolver_consumers": [],
+            "linked_sources": []
+        }
+    ],
+    "summary": {
+        "historical_observations": 17,
+        "with_classifier_consumers": 6,
+        "with_resolver_consumers": 2,
+        "currently_recognized": 15
+    }
+}

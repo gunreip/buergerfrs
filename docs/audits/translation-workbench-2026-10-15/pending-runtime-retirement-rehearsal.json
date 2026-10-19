@@ -1,0 +1,18 @@
+{
+    "mode": "rollback_rehearsal",
+    "backup": "\/home\/gunreip\/code\/buergerfrs\/storage\/app\/private\/pending-runtime-retirement-20261015-222352-43f092f7.json",
+    "candidate_ids": [
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95
+    ],
+    "snapshots_and_other_rows_unchanged": true,
+    "repeat_without_new_events": true
+}

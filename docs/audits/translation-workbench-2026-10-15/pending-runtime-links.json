@@ -1,0 +1,356 @@
+{
+    "mode": "read_only",
+    "count": 10,
+    "candidates": [
+        {
+            "id": 86,
+            "runtime_source": {
+                "id": 42,
+                "status": "active",
+                "key_id": 3039,
+                "scope": "document_type_options",
+                "type": "runtime_db_options"
+            },
+            "consumer": {
+                "id": 74,
+                "status": "needs_review",
+                "finding_id": 4513,
+                "key_id": 3039,
+                "scope": "document_type_options"
+            },
+            "finding_id": 4513,
+            "finding_status": "obsolete",
+            "key_id": 3039,
+            "key_status": "open",
+            "active_key_ids": [],
+            "path": "resources/views/components/management/people/create-person/sections/⚡documents.blade.php",
+            "file_status": "active",
+            "source_line": 56,
+            "snapshot_count": 11,
+            "consumer_finding_matches": true,
+            "meta": {
+                "source": "translation-workbench:resolve-unknown-dynamic-sources",
+                "match": "runtime_source_by_dynamic_scope",
+                "runtime_source_id": 42,
+                "runtime_suggested_key": "management.people.create_person.sections.documents.document_type_options",
+                "runtime_translation_key": "management.people.create_person.sections.documents.document_type_options",
+                "consumer_source_id": 74
+            }
+        },
+        {
+            "id": 87,
+            "runtime_source": {
+                "id": 43,
+                "status": "active",
+                "key_id": 3062,
+                "scope": "emergency_contact_relationship_options",
+                "type": "runtime_options"
+            },
+            "consumer": {
+                "id": 75,
+                "status": "needs_review",
+                "finding_id": 4535,
+                "key_id": 3062,
+                "scope": "emergency_contact_relationship_options"
+            },
+            "finding_id": 4535,
+            "finding_status": "obsolete",
+            "key_id": 3062,
+            "key_status": "open",
+            "active_key_ids": [],
+            "path": "resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php",
+            "file_status": "active",
+            "source_line": 89,
+            "snapshot_count": 9,
+            "consumer_finding_matches": true,
+            "meta": {
+                "source": "translation-workbench:resolve-unknown-dynamic-sources",
+                "match": "runtime_source_by_dynamic_scope",
+                "runtime_source_id": 43,
+                "runtime_suggested_key": "management.people.create_person.sections.emergency_contact.emergency_contact_relationship_options",
+                "runtime_translation_key": "management.people.create_person.sections.emergency_contact.emergency_contact_relationship_options",
+                "consumer_source_id": 75
+            }
+        },
+        {
+            "id": 88,
+            "runtime_source": {
+                "id": 42,
+                "status": "active",
+                "key_id": 3039,
+                "scope": "document_type_options",
+                "type": "runtime_db_options"
+            },
+            "consumer": {
+                "id": 79,
+                "status": "needs_review",
+                "finding_id": 4634,
+                "key_id": 3173,
+                "scope": "document_type_options"
+            },
+            "finding_id": 4634,
+            "finding_status": "obsolete",
+            "key_id": 3173,
+            "key_status": "open",
+            "active_key_ids": [],
+            "path": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php",
+            "file_status": "active",
+            "source_line": 61,
+            "snapshot_count": 11,
+            "consumer_finding_matches": true,
+            "meta": {
+                "source": "translation-workbench:resolve-unknown-dynamic-sources",
+                "match": "runtime_source_by_dynamic_scope",
+                "runtime_source_id": 42,
+                "runtime_suggested_key": "management.people.create_person.sections.documents.document_type_options",
+                "runtime_translation_key": "management.people.create_person.sections.documents.document_type_options",
+                "consumer_source_id": 79
+            }
+        },
+        {
+            "id": 89,
+            "runtime_source": {
+                "id": 31,
+                "status": "active",
+                "key_id": 3267,
+                "scope": "document_category_options",
+                "type": "runtime_db_options"
+            },
+            "consumer": {
+                "id": 80,
+                "status": "needs_review",
+                "finding_id": 4648,
+                "key_id": 3188,
+                "scope": "document_category_options"
+            },
+            "finding_id": 4648,
+            "finding_status": "obsolete",
+            "key_id": 3188,
+            "key_status": "obsolete",
+            "active_key_ids": [],
+            "path": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php",
+            "file_status": "active",
+            "source_line": 265,
+            "snapshot_count": 8,
+            "consumer_finding_matches": true,
+            "meta": {
+                "source": "translation-workbench:resolve-unknown-dynamic-sources",
+                "match": "runtime_source_by_dynamic_scope",
+                "runtime_source_id": 31,
+                "runtime_suggested_key": "management.people.edit_person.sections.documents.document_category_options",
+                "runtime_translation_key": "management.people.edit_person.sections.documents.document_category_options",
+                "consumer_source_id": 80
+            }
+        },
+        {
+            "id": 90,
+            "runtime_source": {
+                "id": 42,
+                "status": "active",
+                "key_id": 3039,
+                "scope": "document_type_options",
+                "type": "runtime_db_options"
+            },
+            "consumer": {
+                "id": 83,
+                "status": "needs_review",
+                "finding_id": 4672,
+                "key_id": 3266,
+                "scope": "document_type_options"
+            },
+            "finding_id": 4672,
+            "finding_status": "obsolete",
+            "key_id": 3266,
+            "key_status": "open",
+            "active_key_ids": [],
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "file_status": "active",
+            "source_line": 5,
+            "snapshot_count": 11,
+            "consumer_finding_matches": true,
+            "meta": {
+                "source": "translation-workbench:resolve-unknown-dynamic-sources",
+                "match": "runtime_source_by_dynamic_scope",
+                "runtime_source_id": 42,
+                "runtime_suggested_key": "management.people.create_person.sections.documents.document_type_options",
+                "runtime_translation_key": "management.people.create_person.sections.documents.document_type_options",
+                "consumer_source_id": 83
+            }
+        },
+        {
+            "id": 91,
+            "runtime_source": {
+                "id": 42,
+                "status": "active",
+                "key_id": 3039,
+                "scope": "document_type_options",
+                "type": "runtime_db_options"
+            },
+            "consumer": {
+                "id": 84,
+                "status": "needs_review",
+                "finding_id": 4672,
+                "key_id": 3266,
+                "scope": "document_type_options"
+            },
+            "finding_id": 4672,
+            "finding_status": "obsolete",
+            "key_id": 3266,
+            "key_status": "open",
+            "active_key_ids": [],
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "file_status": "active",
+            "source_line": 5,
+            "snapshot_count": 11,
+            "consumer_finding_matches": true,
+            "meta": {
+                "source": "translation-workbench:resolve-unknown-dynamic-sources",
+                "match": "runtime_source_by_dynamic_scope",
+                "runtime_source_id": 42,
+                "runtime_suggested_key": "management.people.create_person.sections.documents.document_type_options",
+                "runtime_translation_key": "management.people.create_person.sections.documents.document_type_options",
+                "consumer_source_id": 84
+            }
+        },
+        {
+            "id": 92,
+            "runtime_source": {
+                "id": 42,
+                "status": "active",
+                "key_id": 3039,
+                "scope": "document_type_options",
+                "type": "runtime_db_options"
+            },
+            "consumer": {
+                "id": 85,
+                "status": "needs_review",
+                "finding_id": 4672,
+                "key_id": 3266,
+                "scope": "document_type_options"
+            },
+            "finding_id": 4672,
+            "finding_status": "obsolete",
+            "key_id": 3266,
+            "key_status": "open",
+            "active_key_ids": [],
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "file_status": "active",
+            "source_line": 5,
+            "snapshot_count": 11,
+            "consumer_finding_matches": true,
+            "meta": {
+                "source": "translation-workbench:resolve-unknown-dynamic-sources",
+                "match": "runtime_source_by_dynamic_scope",
+                "runtime_source_id": 42,
+                "runtime_suggested_key": "management.people.create_person.sections.documents.document_type_options",
+                "runtime_translation_key": "management.people.create_person.sections.documents.document_type_options",
+                "consumer_source_id": 85
+            }
+        },
+        {
+            "id": 93,
+            "runtime_source": {
+                "id": 42,
+                "status": "active",
+                "key_id": 3039,
+                "scope": "document_type_options",
+                "type": "runtime_db_options"
+            },
+            "consumer": {
+                "id": 86,
+                "status": "needs_review",
+                "finding_id": 4673,
+                "key_id": 3266,
+                "scope": "document_type_options"
+            },
+            "finding_id": 4673,
+            "finding_status": "obsolete",
+            "key_id": 3266,
+            "key_status": "open",
+            "active_key_ids": [],
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "file_status": "active",
+            "source_line": 13,
+            "snapshot_count": 11,
+            "consumer_finding_matches": true,
+            "meta": {
+                "source": "translation-workbench:resolve-unknown-dynamic-sources",
+                "match": "runtime_source_by_dynamic_scope",
+                "runtime_source_id": 42,
+                "runtime_suggested_key": "management.people.create_person.sections.documents.document_type_options",
+                "runtime_translation_key": "management.people.create_person.sections.documents.document_type_options",
+                "consumer_source_id": 86
+            }
+        },
+        {
+            "id": 94,
+            "runtime_source": {
+                "id": 42,
+                "status": "active",
+                "key_id": 3039,
+                "scope": "document_type_options",
+                "type": "runtime_db_options"
+            },
+            "consumer": {
+                "id": 87,
+                "status": "needs_review",
+                "finding_id": 4673,
+                "key_id": 3266,
+                "scope": "document_type_options"
+            },
+            "finding_id": 4673,
+            "finding_status": "obsolete",
+            "key_id": 3266,
+            "key_status": "open",
+            "active_key_ids": [],
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "file_status": "active",
+            "source_line": 13,
+            "snapshot_count": 11,
+            "consumer_finding_matches": true,
+            "meta": {
+                "source": "translation-workbench:resolve-unknown-dynamic-sources",
+                "match": "runtime_source_by_dynamic_scope",
+                "runtime_source_id": 42,
+                "runtime_suggested_key": "management.people.create_person.sections.documents.document_type_options",
+                "runtime_translation_key": "management.people.create_person.sections.documents.document_type_options",
+                "consumer_source_id": 87
+            }
+        },
+        {
+            "id": 95,
+            "runtime_source": {
+                "id": 42,
+                "status": "active",
+                "key_id": 3039,
+                "scope": "document_type_options",
+                "type": "runtime_db_options"
+            },
+            "consumer": {
+                "id": 88,
+                "status": "needs_review",
+                "finding_id": 4673,
+                "key_id": 3266,
+                "scope": "document_type_options"
+            },
+            "finding_id": 4673,
+            "finding_status": "obsolete",
+            "key_id": 3266,
+            "key_status": "open",
+            "active_key_ids": [],
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "file_status": "active",
+            "source_line": 13,
+            "snapshot_count": 11,
+            "consumer_finding_matches": true,
+            "meta": {
+                "source": "translation-workbench:resolve-unknown-dynamic-sources",
+                "match": "runtime_source_by_dynamic_scope",
+                "runtime_source_id": 42,
+                "runtime_suggested_key": "management.people.create_person.sections.documents.document_type_options",
+                "runtime_translation_key": "management.people.create_person.sections.documents.document_type_options",
+                "consumer_source_id": 88
+            }
+        }
+    ]
+}

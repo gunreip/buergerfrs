@@ -1,0 +1,132 @@
+<?php
+
+// Historical test excerpt; requires the former workflow fixture and retired scan command.
+
+it('reconciles only successfully scanned files including files with zero remaining calls', function (string $command) {
+    File::put(base_path('resources/views/a.blade.php'), "{{ __('Alpha') }}");
+    File::put(base_path('resources/views/b.blade.php'), "{{ __('Beta') }}");
+    expect(Artisan::call($command, ['--paths' => 'resources/views']))->toBe(0);
+    File::put(base_path('resources/views/a.blade.php'), '<p>No translation calls left</p>');
+    expect(Artisan::call($command, ['--paths' => 'resources/views/a.blade.php', '--mark-obsolete' => true]))->toBe(0);
+    if ($command === 'translation-workbench:scan') {
+        $rows = \Gunreip\TranslationWorkbench\Models\TranslationWorkbenchOccurrence::all()->keyBy('source_path');
+        expect($rows['resources/views/a.blade.php']->status)->toBe('stale')
+            ->and($rows['resources/views/b.blade.php']->status)->toBe('active')
+            ->and($rows['resources/views/a.blade.php']->entry->status)->toBe('obsolete')
+            ->and($rows['resources/views/b.blade.php']->entry->status)->not->toBe('obsolete');
+    } else {
+        expect(TranslationWorkbenchFinding::where('status', 'obsolete')->count())->toBe(1)
+            ->and(TranslationWorkbenchFinding::where('status', 'active')->count())->toBe(1)
+            ->and(TranslationWorkbenchKeyFinding::where('status', 'obsolete')->count())->toBe(1);
+    }
+})->with(['translation-workbench:scan', 'translation-workbench:sync-foundation']);
+
+it('leaves records unchanged when the requested scan path is absent or excluded', function (string $command, bool $excluded) {
+    File::put(base_path('resources/views/a.blade.php'), "{{ __('Alpha') }}");
+    Artisan::call($command, ['--paths' => 'resources/views']);
+    $tables = ['translation_workbench_entries', 'translation_workbench_occurrences', 'translation_workbench_findings', 'translation_workbench_keys', 'translation_workbench_key_findings'];
+    $snapshot = fn () => collect($tables)->mapWithKeys(fn ($table) => [$table => DB::table($table)->orderBy('id')->get()->toJson()])->all();
+    $before = $snapshot();
+    if ($excluded) {
+        config(['translation-workbench.exclude_paths' => ['resources/views']]);
+    }
+    Artisan::call($command, ['--paths' => $excluded ? 'resources/views' : 'resources/missing', '--mark-obsolete' => true]);
+    expect($snapshot())->toBe($before);
+})->with(['translation-workbench:scan', 'translation-workbench:sync-foundation'])->with([true, false]);
+
+it('retains a shared legacy entry while an occurrence outside the scan remains active', function () {
+    File::put(base_path('resources/views/a.blade.php'), "{{ __('Same text') }}");
+    File::put(base_path('resources/views/b.blade.php'), "{{ __('Same text') }}");
+    Artisan::call('translation-workbench:scan', ['--paths' => 'resources/views']);
+    File::put(base_path('resources/views/a.blade.php'), '<p>Removed</p>');
+    Artisan::call('translation-workbench:scan', ['--paths' => 'resources/views/a.blade.php', '--mark-obsolete' => true]);
+    expect(\Gunreip\TranslationWorkbench\Models\TranslationWorkbenchEntry::sole()->status)->not->toBe('obsolete')
+        ->and(\Gunreip\TranslationWorkbench\Models\TranslationWorkbenchOccurrence::where('status', 'active')->count())->toBe(1);
+});
+
+it('aborts before database changes when a later source file cannot be read', function (string $command) {
+    File::put(base_path('resources/views/a.blade.php'), "{{ __('Alpha') }}");
+    File::put(base_path('resources/views/b.blade.php'), "{{ __('Beta') }}");
+    Artisan::call($command, ['--paths' => 'resources/views']);
+    $tables = ['translation_workbench_entries', 'translation_workbench_occurrences', 'translation_workbench_findings', 'translation_workbench_keys', 'translation_workbench_key_findings'];
+    $snapshot = fn () => collect($tables)->mapWithKeys(fn ($table) => [$table => DB::table($table)->orderBy('id')->get()->toJson()])->all();
+    $before = $snapshot();
+    File::put(base_path('resources/views/a.blade.php'), '<p>Removed</p>');
+    File::partialMock()->shouldReceive('get')->with(base_path('resources/views/b.blade.php'))->once()
+        ->andThrow(new RuntimeException('Source cannot be read'));
+    expect(fn () => Artisan::call($command, ['--paths' => 'resources/views', '--mark-obsolete' => true]))
+        ->toThrow(RuntimeException::class, 'Source cannot be read');
+    expect($snapshot())->toBe($before);
+})->with(['translation-workbench:scan', 'translation-workbench:sync-foundation']);
+
+it('requires an explicit successful file manifest for foundation removal reconciliation', function () {
+    File::put(base_path('resources/views/a.blade.php'), "{{ __('Alpha') }}");
+    $items = app(TranslationWorkbenchScanner::class)->scan(['resources/views']);
+    expect(fn () => app(TranslationWorkbenchFoundationSyncer::class)->sync($items, markObsolete: true))
+        ->toThrow(InvalidArgumentException::class, 'successfully scanned file manifest');
+    expect(TranslationWorkbenchFinding::count())->toBe(0);
+});
+
+it('reconciles a deleted file only through a successfully scanned containing directory', function (string $command, string $scope) {
+    File::put(base_path('resources/views/deleted.blade.php'), "{{ __('Deleted text') }}");
+    Artisan::call($command, ['--paths' => 'resources/views']);
+    File::delete(base_path('resources/views/deleted.blade.php'));
+    Artisan::call($command, ['--paths' => $scope, '--mark-obsolete' => true]);
+    $removed = $scope === 'resources/views';
+    if ($command === 'translation-workbench:scan') {
+        expect(\Gunreip\TranslationWorkbench\Models\TranslationWorkbenchOccurrence::sole()->status)->toBe($removed ? 'stale' : 'active');
+    } else {
+        expect(TranslationWorkbenchFinding::sole()->status)->toBe($removed ? 'obsolete' : 'active');
+    }
+})->with(['translation-workbench:scan', 'translation-workbench:sync-foundation'])
+    ->with(['resources/views', 'resources/views/deleted.blade.php', 'resources/absent']);
+
+it('preserves deleted findings outside the effective eligible directory scope', function (string $command, string $restriction) {
+    File::ensureDirectoryExists(base_path('resources/views-neighbor'));
+    File::put(base_path('resources/views/gone.blade.php'), "{{ __('Gone') }}");
+    File::put(base_path('resources/views-neighbor/gone.blade.php'), "{{ __('Neighbor') }}");
+    Artisan::call($command, ['--paths' => 'resources/views,resources/views-neighbor']);
+    File::delete(base_path('resources/views/gone.blade.php'));
+    File::delete(base_path('resources/views-neighbor/gone.blade.php'));
+    if ($restriction === 'excluded') {
+        config(['translation-workbench.exclude_paths' => ['resources/views']]);
+    } elseif ($restriction === 'pattern') {
+        config(['translation-workbench.file_patterns' => ['*.js']]);
+    } else {
+        config(['translation-workbench.ignored_filename_contains' => ['gone']]);
+    }
+    Artisan::call($command, ['--paths' => 'resources/views', '--mark-obsolete' => true]);
+    expect(TranslationWorkbenchFinding::where('status', 'obsolete')->count())->toBe(0)
+        ->and(\Gunreip\TranslationWorkbench\Models\TranslationWorkbenchOccurrence::where('status', 'stale')->count())->toBe(0);
+})->with(['translation-workbench:scan', 'translation-workbench:sync-foundation'])->with(['excluded', 'pattern', 'parked']);
+
+it('keeps directory boundaries when reconciling deleted sources', function (string $command) {
+    File::ensureDirectoryExists(base_path('resources/views-neighbor'));
+    File::put(base_path('resources/views/gone.blade.php'), "{{ __('Gone') }}");
+    File::put(base_path('resources/views-neighbor/neighbor.blade.php'), "{{ __('Neighbor') }}");
+    Artisan::call($command, ['--paths' => 'resources/views,resources/views-neighbor']);
+    File::delete(base_path('resources/views/gone.blade.php'));
+    File::delete(base_path('resources/views-neighbor/neighbor.blade.php'));
+    Artisan::call($command, ['--paths' => 'resources/views', '--mark-obsolete' => true]);
+    if ($command === 'translation-workbench:scan') {
+        $rows = \Gunreip\TranslationWorkbench\Models\TranslationWorkbenchOccurrence::all()->keyBy('source_path');
+        expect($rows['resources/views/gone.blade.php']->status)->toBe('stale')
+            ->and($rows['resources/views-neighbor/neighbor.blade.php']->status)->toBe('active');
+    } else {
+        $rows = DB::table('translation_workbench_findings as f')->join('translation_workbench_source_files as s', 's.id', '=', 'f.source_file_id')->pluck('f.status', 's.path');
+        expect($rows['resources/views/gone.blade.php'])->toBe('obsolete')
+            ->and($rows['resources/views-neighbor/neighbor.blade.php'])->toBe('active');
+    }
+})->with(['translation-workbench:scan', 'translation-workbench:sync-foundation']);
+
+it('does not reconcile deleted sources after a directory scan read failure', function (string $command) {
+    File::put(base_path('resources/views/gone.blade.php'), "{{ __('Gone') }}");
+    File::put(base_path('resources/views/blocked.blade.php'), "{{ __('Blocked') }}");
+    Artisan::call($command, ['--paths' => 'resources/views']);
+    File::delete(base_path('resources/views/gone.blade.php'));
+    File::partialMock()->shouldReceive('get')->with(base_path('resources/views/blocked.blade.php'))->once()
+        ->andThrow(new RuntimeException('Read failed'));
+    expect(fn () => Artisan::call($command, ['--paths' => 'resources/views', '--mark-obsolete' => true]))->toThrow(RuntimeException::class, 'Read failed');
+    expect(TranslationWorkbenchFinding::where('status', 'obsolete')->count())->toBe(0)
+        ->and(\Gunreip\TranslationWorkbench\Models\TranslationWorkbenchOccurrence::where('status', 'stale')->count())->toBe(0);
+})->with(['translation-workbench:scan', 'translation-workbench:sync-foundation']);

@@ -13,6 +13,7 @@ namespace Gunreip\TranslationWorkbench\Console;
 
 use Gunreip\TranslationWorkbench\Console\Concerns\ConfirmsTranslationWorkbenchTruncate;
 use Gunreip\TranslationWorkbench\Console\Concerns\WritesTranslationWorkbenchReports;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchLangImportConflict;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchLangValueImporter;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -22,9 +23,9 @@ use Illuminate\Console\Command;
     {--source-locale=en : Source locale directory below lang/ to import.}
     {--all-locales : Import all locale directories below lang/, excluding lang/vendor.}
     {--dry-run : Read and report only; do not write lang value rows.}
-    {--truncate-lang-values : Truncate imported lang value rows before importing.}
+    {--truncate-lang-values : Legacy reset option; rejected when lang values already exist.}
     {--force-truncate : Skip the interactive safety confirmation for --truncate-lang-values.}')]
-#[Description('Import existing lang file values into the separate Translation Workbench lang values table.')]
+#[Description('Import new lang values and observe matching values; reject conflicts with saved values.')]
 class ImportTranslationWorkbenchLangValues extends Command
 {
     use ConfirmsTranslationWorkbenchTruncate;
@@ -39,7 +40,7 @@ class ImportTranslationWorkbenchLangValues extends Command
         if (! $this->confirmTranslationWorkbenchTruncate(
             $truncate,
             $dryRun,
-            'The --truncate-lang-values option will delete imported Translation Workbench lang values before importing.',
+            'The legacy --truncate-lang-values reset is rejected when saved lang values exist; it cannot overwrite them.',
             'force-truncate',
             [
                 'scope' => 'lang_values',
@@ -60,7 +61,14 @@ class ImportTranslationWorkbenchLangValues extends Command
         ];
 
         if (! $dryRun) {
-            $summary = $importer->importLocales($locales, $truncate);
+            try {
+                $summary = $importer->importLocales($locales, $truncate);
+            } catch (TranslationWorkbenchLangImportConflict $exception) {
+                $this->components->error($exception->getMessage());
+                $this->warn('No lang values were changed by this import. No dependent pipeline steps should continue.');
+
+                return self::FAILURE;
+            }
         }
 
         $this->components->info('Translation Workbench lang value import finished.');

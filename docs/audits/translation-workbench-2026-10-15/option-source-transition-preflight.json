@@ -1,0 +1,176 @@
+{
+    "mode": "read_only",
+    "requests": [
+        {
+            "source_id": 73,
+            "old_finding_id": 4033,
+            "target_finding_id": 9269,
+            "key_id": 1988,
+            "options": {
+                "outline": "Outline",
+                "pill": "Pill",
+                "solid": "Solid",
+                "subtle": "Subtle"
+            },
+            "file_hash": "bbeb7b909235e8a4df6cefe162dc919e58fcfe69ce9f4df6b8e7db55a4a16ce9"
+        },
+        {
+            "source_id": 1,
+            "old_finding_id": 1407,
+            "target_finding_id": 9270,
+            "key_id": 2006,
+            "options": {
+                "amber": "Amber",
+                "blue": "Blue",
+                "cyan": "Cyan",
+                "emerald": "Emerald",
+                "fuchsia": "Fuchsia",
+                "green": "Green",
+                "indigo": "Indigo",
+                "lime": "Lime",
+                "orange": "Orange",
+                "pink": "Pink",
+                "purple": "Purple",
+                "red": "Red",
+                "rose": "Rose",
+                "sky": "Sky",
+                "teal": "Teal",
+                "violet": "Violet",
+                "yellow": "Yellow",
+                "zinc": "Zinc"
+            },
+            "file_hash": "32cd9efa7dd7a6c7765504bbb24fb445428baa6ed847037b45e5049dd159a187"
+        },
+        {
+            "source_id": 3,
+            "old_finding_id": 1401,
+            "target_finding_id": 9271,
+            "key_id": 1988,
+            "options": {
+                "outline": "Outline",
+                "pill": "Pill",
+                "solid": "Solid",
+                "subtle": "Subtle"
+            },
+            "file_hash": "32cd9efa7dd7a6c7765504bbb24fb445428baa6ed847037b45e5049dd159a187"
+        },
+        {
+            "source_id": 76,
+            "old_finding_id": 4590,
+            "target_finding_id": 9249,
+            "key_id": 3117,
+            "options": {
+                "mr": "Mr.",
+                "mrs": "Mrs.",
+                "mx": "Mx."
+            },
+            "file_hash": "4cbed567323bfeb7563dd5e108ce9c82bf1709566915c984fb0815e0b82d8358"
+        },
+        {
+            "source_id": 77,
+            "old_finding_id": 4593,
+            "target_finding_id": 9250,
+            "key_id": 3120,
+            "options": {
+                "diverse": "Diverse",
+                "female": "Female",
+                "male": "Male",
+                "unknown": "Unknown"
+            },
+            "file_hash": "4cbed567323bfeb7563dd5e108ce9c82bf1709566915c984fb0815e0b82d8358"
+        },
+        {
+            "source_id": 5,
+            "old_finding_id": 2110,
+            "target_finding_id": 9251,
+            "key_id": 3137,
+            "options": {
+                "divorced": "Divorced",
+                "married": "Married",
+                "registered_partnership": "Registered partnership",
+                "separated": "Separated",
+                "single": "Single",
+                "unknown": "Unknown",
+                "widowed": "Widowed"
+            },
+            "file_hash": "4cbed567323bfeb7563dd5e108ce9c82bf1709566915c984fb0815e0b82d8358"
+        },
+        {
+            "source_id": 24,
+            "old_finding_id": 2101,
+            "target_finding_id": 9252,
+            "key_id": 3120,
+            "options": {
+                "diverse": "Diverse",
+                "female": "Female",
+                "male": "Male",
+                "unknown": "Unknown"
+            },
+            "file_hash": "5a95f34f638cef3ef89e0adb1ad81fe426e4d2dfee0d6cf4ec2b3b2e487b67d6"
+        },
+        {
+            "source_id": 26,
+            "old_finding_id": 2099,
+            "target_finding_id": 9253,
+            "key_id": 3117,
+            "options": {
+                "mr": "Mr.",
+                "mrs": "Mrs.",
+                "mx": "Mx."
+            },
+            "file_hash": "5a95f34f638cef3ef89e0adb1ad81fe426e4d2dfee0d6cf4ec2b3b2e487b67d6"
+        }
+    ],
+    "result": [
+        {
+            "source_id": 73,
+            "target_finding_id": 9269,
+            "status": "ready",
+            "candidate_ids": []
+        },
+        {
+            "source_id": 1,
+            "target_finding_id": 9270,
+            "status": "ready",
+            "candidate_ids": []
+        },
+        {
+            "source_id": 3,
+            "target_finding_id": 9271,
+            "status": "ready",
+            "candidate_ids": []
+        },
+        {
+            "source_id": 76,
+            "target_finding_id": 9249,
+            "status": "ready",
+            "candidate_ids": []
+        },
+        {
+            "source_id": 77,
+            "target_finding_id": 9250,
+            "status": "ready",
+            "candidate_ids": []
+        },
+        {
+            "source_id": 5,
+            "target_finding_id": 9251,
+            "status": "ready",
+            "candidate_ids": []
+        },
+        {
+            "source_id": 24,
+            "target_finding_id": 9252,
+            "status": "ready",
+            "candidate_ids": [
+                78
+            ]
+        },
+        {
+            "source_id": 26,
+            "target_finding_id": 9253,
+            "status": "ready",
+            "candidate_ids": []
+        }
+    ]
+}

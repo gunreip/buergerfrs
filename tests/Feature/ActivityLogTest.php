@@ -117,3 +117,66 @@ it('accepts terminal actor context without requiring a model subject', function 
     $this->app->useStoragePath($originalStoragePath);
     File::deleteDirectory($testStoragePath);
 });
+
+it('logs component version changes with their previous value and terminal actor', function (): void {
+    $path = tempnam(sys_get_temp_dir(), 'version-audit-');
+    file_put_contents($path, json_encode([
+        'buergerfrs' => '1.2.3',
+        'translation-workbench' => '1.0.0',
+        'tw-graph' => '1.0.0',
+    ]));
+    $this->app->instance(\App\Support\VersionManifest::class, new \App\Support\VersionManifest($path));
+
+    try {
+        $this->artisan('app:version buergerfrs')->assertSuccessful();
+        expect(DB::table('activity_log')->where('event', 'app.version.updated')->count())->toBe(0);
+
+        $this->artisan('app:version buergerfrs --bump=patch')->assertSuccessful();
+        $activity = DB::table('activity_log')->where('event', 'app.version.updated')->sole();
+        $properties = json_decode($activity->properties, true);
+
+        expect($properties['component'])->toBe('buergerfrs')
+            ->and($properties['before'])->toBe('1.2.3')
+            ->and($properties['after'])->toBe('1.2.4')
+            ->and($properties['command'])->toBe('app:version')
+            ->and($properties['actor']['type'])->toBe('terminal')
+            ->and(json_decode(file_get_contents($path), true)['buergerfrs'])->toBe('1.2.4');
+    } finally {
+        unlink($path);
+    }
+});
+
+it('logs applied legacy cleanup summaries without reporting a dry run as a mutation', function (): void {
+    $key = TranslationKey::query()->create([
+        'fingerprint' => hash('sha256', 'cleanup-activity-test'),
+        'classification' => 'dynamic',
+        'status' => 'dynamic',
+        'workflow_status' => 'open',
+        'source' => 'test',
+        'first_seen_at' => now(),
+        'last_seen_at' => now(),
+    ]);
+    DB::table('translation_audit_events')->insert([
+        'translation_key_id' => $key->id,
+        'entity_type' => 'translation_key',
+        'event_type' => 'stale_marked',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+    $event = 'translations.cleanup_stale_dynamic_keys.completed';
+
+    $this->artisan('translations:cleanup-stale-dynamic-keys')->assertSuccessful();
+    expect($key->fresh()->status)->toBe('dynamic')
+        ->and(DB::table('activity_log')->where('event', $event)->count())->toBe(0);
+
+    $this->artisan('translations:cleanup-stale-dynamic-keys --apply')->assertSuccessful();
+    $activity = DB::table('activity_log')->where('event', $event)->sole();
+    $properties = json_decode($activity->properties, true);
+
+    expect($key->fresh()->status)->toBe('obsolete')
+        ->and($properties['summary']['obsolete'])->toBe(1)
+        ->and($properties['candidate_count'])->toBe(1)
+        ->and($properties['command'])->toBe('translations:cleanup-stale-dynamic-keys')
+        ->and($properties['actor']['type'])->toBe('terminal')
+        ->and(DB::table('translation_audit_events')->where('event_type', 'legacy_dynamic_stale_obsoleted')->count())->toBe(1);
+});

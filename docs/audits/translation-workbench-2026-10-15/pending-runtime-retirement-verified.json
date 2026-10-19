@@ -1,0 +1,16 @@
+{
+    "mode": "read_only_verified",
+    "candidate_ids": [
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95
+    ],
+    "snapshots_and_other_rows_unchanged": true
+}

@@ -346,3 +346,20 @@ it('preserves an explicit side when an already normalized label is normalized ag
         'badgeColor' => 'green',
     ]);
 });
+
+
+it('leaves an unspecified side to the consuming component for all label forms', function (): void {
+    foreach (['Start', ['text' => 'Start'], ['text' => ['Start'], 'side' => null]] as $input) {
+        $label = TextLabel::normalize($input);
+        expect($label)->not->toHaveKey('side')
+            ->and(TextLabel::normalize($label))->toBe($label);
+    }
+    expect(TextLabel::normalize(['text' => 'Start', 'side' => 'right'])['side'])->toBe('right');
+});
+
+it('preserves Flux icon list lines through repeated label normalization', function () {
+    $text = ['Heading', ['icon' => 'dot', 'text' => 'First|Second']];
+    $expected = ['Heading', ['icon' => 'dot', 'text' => 'First'], ['icon' => 'dot', 'text' => 'Second']];
+    expect(TextLabel::lines($text))->toBe($expected)
+        ->and(TextLabel::lines(TextLabel::lines($text)))->toBe($expected);
+});

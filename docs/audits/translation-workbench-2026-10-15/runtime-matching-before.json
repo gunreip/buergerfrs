@@ -1,0 +1,21 @@
+{
+    "mode": "read_only",
+    "consumers": [],
+    "existing_links": [
+        {
+            "review_status": "confirmed",
+            "status": "active",
+            "count": 16
+        },
+        {
+            "review_status": "confirmed",
+            "status": "obsolete",
+            "count": 1
+        },
+        {
+            "review_status": "pending",
+            "status": "active",
+            "count": 10
+        }
+    ]
+}

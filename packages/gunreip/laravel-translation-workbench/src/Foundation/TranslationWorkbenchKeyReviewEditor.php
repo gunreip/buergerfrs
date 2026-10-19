@@ -56,7 +56,7 @@ class TranslationWorkbenchKeyReviewEditor
 
         return DB::transaction(function () use ($keyId, $findingId): bool {
             [$key, $finding] = $this->access->assignment($keyId, $findingId);
-            $suggestedKey = trim((string) ($key->suggested_key ?: $finding->suggested_key));
+            $suggestedKey = trim((string) $finding->suggested_key);
 
             // Preserve the existing suggestion acceptance policy, distinct from manual renaming.
             return $this->writer->acceptSuggestedKey($key, $finding, $suggestedKey);

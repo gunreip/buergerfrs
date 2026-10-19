@@ -1,0 +1,91 @@
+{
+    "mode": "rolled_back_rehearsal",
+    "backup_path": "/home/gunreip/code/buergerfrs/storage/app/private/option-consolidation-20261015-202316-9909a869.json",
+    "requests": [
+        {
+            "source_id": 3,
+            "canonical_source_id": 2,
+            "key_id": 1988,
+            "options": {
+                "outline": "Outline",
+                "pill": "Pill",
+                "solid": "Solid",
+                "subtle": "Subtle"
+            },
+            "file_hash": "32cd9efa7dd7a6c7765504bbb24fb445428baa6ed847037b45e5049dd159a187",
+            "candidate_replacements": []
+        },
+        {
+            "source_id": 24,
+            "canonical_source_id": 23,
+            "key_id": 3120,
+            "options": {
+                "diverse": "Diverse",
+                "female": "Female",
+                "male": "Male",
+                "unknown": "Unknown"
+            },
+            "file_hash": "5a95f34f638cef3ef89e0adb1ad81fe426e4d2dfee0d6cf4ec2b3b2e487b67d6",
+            "candidate_replacements": {
+                "78": 77
+            }
+        },
+        {
+            "source_id": 26,
+            "canonical_source_id": 25,
+            "key_id": 3117,
+            "options": {
+                "mr": "Mr.",
+                "mrs": "Mrs.",
+                "mx": "Mx."
+            },
+            "file_hash": "5a95f34f638cef3ef89e0adb1ad81fe426e4d2dfee0d6cf4ec2b3b2e487b67d6",
+            "candidate_replacements": []
+        }
+    ],
+    "result": [
+        {
+            "source_id": 3,
+            "canonical_source_id": 2,
+            "status": "consolidated",
+            "candidate_replacements": []
+        },
+        {
+            "source_id": 24,
+            "canonical_source_id": 23,
+            "status": "consolidated",
+            "candidate_replacements": {
+                "78": 77
+            }
+        },
+        {
+            "source_id": 26,
+            "canonical_source_id": 25,
+            "status": "consolidated",
+            "candidate_replacements": []
+        }
+    ],
+    "repeat": [
+        {
+            "source_id": 3,
+            "canonical_source_id": 2,
+            "status": "already_consolidated",
+            "candidate_replacements": []
+        },
+        {
+            "source_id": 24,
+            "canonical_source_id": 23,
+            "status": "already_consolidated",
+            "candidate_replacements": {
+                "78": 77
+            }
+        },
+        {
+            "source_id": 26,
+            "canonical_source_id": 25,
+            "status": "already_consolidated",
+            "candidate_replacements": []
+        }
+    ],
+    "values_reviews_translations_ui": "unchanged"
+}

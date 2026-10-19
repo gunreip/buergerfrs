@@ -1,0 +1,30 @@
+{
+  "plan_id": "8814b817b6216bab8b46d260a72e2631",
+  "applied": true,
+  "moves": 508,
+  "consolidations": 190,
+  "selected_consolidations": [
+    {
+      "source": 1249,
+      "target": 1236,
+      "links": [
+        6712
+      ]
+    },
+    {
+      "source": 1263,
+      "target": 1236,
+      "links": [
+        6718
+      ]
+    },
+    {
+      "source": 1283,
+      "target": 1236,
+      "links": [
+        6725
+      ]
+    }
+  ],
+  "verification_report": "source-repair-applied-2026-10-16.json"
+}

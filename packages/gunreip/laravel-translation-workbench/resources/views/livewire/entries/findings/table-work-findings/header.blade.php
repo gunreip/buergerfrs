@@ -33,33 +33,12 @@
     {{-- Table Findings Header Column Status --}}
     <flux:table.column class="text-center">
         <div class="flex flex-col items-center gap-1">
-            <x-ui.tooltip.simple
-                :title="$showObsoleteFindings ? __('Obsolete findings visible') : __('Obsolete findings hidden')"
-                :text="$showObsoleteFindings
-                    ? __('Obsolete findings are included in the current table view.')
-                    : __(
-                        'Obsolete findings are hidden from the default work list. Use this toggle or the explicit status filter to show them.',
-                    )"
-            >
-                {{-- Button Obsolete (Table Header) --}}
-                <flux:button
-                    class="h-5 px-1.5 text-[10px]"
-                    type="button"
-                    size="xs"
-                    variant="{{ $showObsoleteFindings ? 'primary' : 'subtle' }}"
-                    color="{{ $showObsoleteFindings ? 'amber' : 'zinc' }}"
-                    icon="archive"
-                    wire:click.stop="toggleObsoleteFindings"
-                >
-                    {{ __('Obsolete') }}
-                </flux:button>
-            </x-ui.tooltip.simple>
             <span class="inline-flex items-center justify-center gap-1 text-center">
                 <span>{{ __('ui.state.status') }}</span>
                 <x-ui.tooltip.simple
                     :header="__('Finding status')"
                     :text="__(
-                        'Current scanner lifecycle state for this finding. Obsolete entries are hidden by default unless the toggle or status filter includes them.',
+                        'Current scanner lifecycle state for this finding. Obsolete entries are hidden by default unless the Obsolete toggle includes them.',
                     )"
                 />
             </span>

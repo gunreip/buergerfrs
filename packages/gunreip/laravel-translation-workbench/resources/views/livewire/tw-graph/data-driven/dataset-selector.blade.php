@@ -11,7 +11,12 @@
     <flux:field>
         <div class="grid grid-cols-4 gap-3">
 
-            <flux:input.group class="w-40">
+            <flux:input.group>
+                <flux:select wire:model="datasetIdType" :aria-label="__('ID type')">
+                    <flux:select.option value="dataset">{{ __('Dataset ID') }}</flux:select.option>
+                    <flux:select.option value="finding">{{ __('Finding ID') }}</flux:select.option>
+                    <flux:select.option value="key">{{ __('Key ID') }}</flux:select.option>
+                </flux:select>
 
                 <flux:input
                     {{-- type="number" --}}
@@ -19,8 +24,8 @@
                     {{-- min="1" --}}
                     {{-- step="1" --}}
                     clearable
-                    :aria-label="__('Dataset ID')"
-                    :placeholder="__('Dataset ID')"
+                    :aria-label="__('ID')"
+                    :placeholder="__('ID')"
                 />
 
                 <flux:button
@@ -39,6 +44,7 @@
                 </flux:button>
             </flux:input.group>
             <flux:error name="datasetIdInput" />
+            <flux:error name="datasetIdType" />
 
             @if (!empty($datasetHistory))
                 <div class="col-span-2 w-full">

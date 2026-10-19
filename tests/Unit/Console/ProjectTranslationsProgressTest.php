@@ -44,7 +44,7 @@ it('counts selected translation steps and forwards options as separate process a
     expect($command->commands[3])->toContain('--paths=resources/views,a path', '--no-interaction', '--no-ansi');
     foreach ($command->commands as $tokens) {
         if (in_array('translations:export-lang-files', $tokens, true)) {
-            expect($tokens)->toContain('--locales=de,en');
+            expect($tokens)->toContain('--locales=de,en', '--dry-run');
         }
         if (in_array('translations:usage-decisions:apply', $tokens, true)) {
             expect($tokens)->toContain('--write');

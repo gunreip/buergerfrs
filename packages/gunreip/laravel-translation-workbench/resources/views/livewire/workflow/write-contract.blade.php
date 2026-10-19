@@ -308,8 +308,7 @@
                         <div class="mt-2 space-y-2">
                             <div class="wrap-break-word font-mono text-xs">translations:sync-audits / sync-dynamic-keys
                             </div>
-                            <div class="wrap-break-word font-mono text-xs">translation-workbench:import-existing /
-                                import-lang-values</div>
+                            <div class="wrap-break-word font-mono text-xs">translation-workbench:import-lang-values</div>
                             <div class="wrap-break-word font-mono text-xs">TranslationWorkbenchLangValueImporter</div>
                         </div>
                     </flux:table.cell>
@@ -383,7 +382,7 @@
                     <flux:table.cell class="whitespace-normal align-top">
                         <flux:heading size="sm">W05 · {{ __('Publish language files') }}</flux:heading>
                         <div class="mt-2 space-y-2">
-                            <div class="wrap-break-word font-mono text-xs">translations:export-lang-files</div>
+                            <div class="wrap-break-word font-mono text-xs">TranslationWorkbenchPublicationRunner</div>
                             <div class="wrap-break-word font-mono text-xs">translation-workbench:export-lang-files
                             </div>
                             <div class="wrap-break-word font-mono text-xs">TranslationWorkbenchLangFileExporter</div>
@@ -393,7 +392,7 @@
                         <flux:heading size="sm">
                             {{ __('Publication coordinator + language exporter — one approved plan') }}</flux:heading>
                         <flux:text class="mt-2">
-                            {{ __('Foundation supplies publishable values; lang/ remains the runtime output. No independent Legacy exporter may write these files after cutover.') }}
+                            {{ __('Foundation supplies publishable values; lang/ remains the runtime output. The Legacy export command is comparison-only (--dry-run). Direct exporter writes are disabled; UI and CLI publication use the same coordinator.') }}
                         </flux:text>
                     </flux:table.cell>
                     <flux:table.cell class="whitespace-normal align-top">

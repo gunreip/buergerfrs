@@ -18,13 +18,13 @@ use Illuminate\Support\Str;
 /**
  * Existing Bulk Equalize selection and write rules, independent of Livewire state.
  * Writes require the current Admin or Super-Admin role; no source or language file is published.
- * This is not an optimistic-concurrency or idempotent operation-ID implementation.
+ * UI callers supply a preview-context fingerprint; operation IDs are not idempotency keys.
  */
 class TranslationWorkbenchBulkKeyWriter
 {
     public const TARGET_KEY_RULES = ['required', 'string', 'regex:/^[a-z0-9][a-z0-9_-]*(\.[a-z0-9][a-z0-9_-]*)+$/'];
 
-    public function equalize(array $selectedFindingIds, string $translationKey): int
+    public function equalize(array $selectedFindingIds, string $translationKey, ?string $expectedContextFingerprint = null): int
     {
         app(TranslationWorkbenchEditorAccess::class)->authorize();
 
@@ -33,8 +33,19 @@ class TranslationWorkbenchBulkKeyWriter
             'translation_key' => self::TARGET_KEY_RULES,
         ])->validate();
 
-        return DB::transaction(function () use ($selectedFindingIds, $translationKey): int {
+        return DB::transaction(function () use ($selectedFindingIds, $translationKey, $expectedContextFingerprint): int {
+            $this->lockWriteInputs();
             $context = $this->context($selectedFindingIds);
+            if ($expectedContextFingerprint !== null && ! hash_equals($expectedContextFingerprint, $this->contextFingerprint($context))) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'bulkEqualizeSelectedFindingIds' => __('The selection changed after the preview. Reopen the dialog and review the current findings before confirming.'),
+                ]);
+            }
+            if ($context['selection_error'] !== null) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'bulkEqualizeSelectedFindingIds' => $context['selection_error'],
+                ]);
+            }
             if (! $context['can_confirm']) {
                 return 0;
             }
@@ -136,7 +147,25 @@ class TranslationWorkbenchBulkKeyWriter
             }
 
             return $updated;
-        });
+        }, 3);
+    }
+
+    public function contextFingerprint(array $context): string
+    {
+        return hash('sha256', json_encode($context, JSON_THROW_ON_ERROR));
+    }
+
+    private function lockWriteInputs(): void
+    {
+        if (DB::transactionLevel() === 0) {
+            throw new \LogicException('Bulk key equalization requires a write transaction.');
+        }
+        if (DB::getDriverName() !== 'pgsql') {
+            return;
+        }
+        // Protect existing rows and newly inserted links/reviews through history recording.
+        // Serialize writers without blocking ordinary SELECT queries.
+        DB::statement('LOCK TABLE translation_workbench_source_files, translation_workbench_findings, translation_workbench_keys, translation_workbench_key_findings, translation_workbench_reviews IN SHARE ROW EXCLUSIVE MODE');
     }
 
     public function context(array $selectedFindingIds): array
@@ -149,18 +178,37 @@ class TranslationWorkbenchBulkKeyWriter
 
         if ($selectedIds->isEmpty() || ! $this->hasTables([
             'translation_workbench_findings',
+            'translation_workbench_source_files',
             'translation_workbench_keys',
             'translation_workbench_key_findings',
         ])) {
             return $this->emptyBulkEqualizeContext($selectedIds->all());
         }
 
-        $keyLinks = DB::table('translation_workbench_key_findings')
-            ->selectRaw('finding_id, MIN(key_id) as key_id')
-            ->where('status', 'active')
-            ->groupBy('finding_id');
+        $conflicts = app(TranslationWorkbenchDynamicKeyAssignment::class)->conflicts($selectedIds->all());
+        if ($conflicts->isNotEmpty()) {
+            return [
+                ...$this->emptyBulkEqualizeContext($selectedIds->all()),
+                'key_assignment_conflicts' => $conflicts->all(),
+                'selection_error' => __('Multiple active keys are linked to selected findings: :assignments. Resolve these assignments before equalizing.', [
+                    'assignments' => $conflicts->map(static fn (array $conflict): string =>
+                        $conflict['finding_id'].' → '.implode(', ', $conflict['key_ids'])
+                    )->implode('; '),
+                ]),
+            ];
+        }
+
+        $keyLinks = DB::table('translation_workbench_key_findings as links')
+            ->join('translation_workbench_keys as linked_keys', 'linked_keys.id', '=', 'links.key_id')
+            ->selectRaw('links.finding_id, MIN(links.key_id) as key_id')
+            ->where('links.status', 'active')
+            ->where('linked_keys.status', '<>', 'obsolete')
+            ->groupBy('links.finding_id');
 
         $rows = DB::table('translation_workbench_findings as findings')
+            ->join('translation_workbench_source_files as source_files', 'source_files.id', '=', 'findings.source_file_id')
+            ->where('findings.status', 'active')
+            ->where('source_files.status', 'active')
             ->leftJoinSub($keyLinks, 'key_links', function ($join): void {
                 $join->on('key_links.finding_id', '=', 'findings.id');
             })
@@ -233,7 +281,25 @@ class TranslationWorkbenchBulkKeyWriter
             ?? ($existingSharedKey['translation_key'] ?? null)
             ?? collect($suggestedKeys)->first()
             ?? $this->bulkTranslationKeySuggestionFromLiteral($literal);
-        $canConfirm = count($rows) >= 1
+        $selectionError = null;
+        $missingKeyCandidates = [];
+        if ($missingKeyCount > 0 && $existingSharedKey !== null && filled($suggestedTargetKey)) {
+            foreach ($rows as $row) {
+                if (! empty($row['key_id'])) {
+                    continue;
+                }
+                try {
+                    [, , $candidate] = $this->missingKeyCandidate($row, $suggestedTargetKey);
+                    $missingKeyCandidates[$row['id']] = $candidate?->id;
+                } catch (\Illuminate\Validation\ValidationException $exception) {
+                    $selectionError = $exception->errors()['bulkEqualizeSelectedFindingIds'][0];
+                    break;
+                }
+            }
+        }
+        $canConfirm = $selectionError === null
+            && count($rows) >= 1
+            && count($rows) === $selectedIds->count()
             && $literalGroups->count() === 1
             && ($missingKeyCount === 0 || $existingSharedKey !== null)
             && filled($suggestedTargetKey)
@@ -248,6 +314,9 @@ class TranslationWorkbenchBulkKeyWriter
             'literal_count' => $literalGroups->count(),
             'missing_key_count' => $missingKeyCount,
             'can_confirm' => $canConfirm,
+            'key_assignment_conflicts' => [],
+            'selection_error' => $selectionError,
+            'missing_key_candidates' => $missingKeyCandidates,
             'equalize_to_existing_shared_key' => $existingSharedKey !== null && collect($translationKeys)->isEmpty(),
             'existing_shared_key' => $existingSharedKey['translation_key'] ?? null,
             'existing_shared_key_count' => $existingSharedKey['finding_count'] ?? 0,
@@ -261,6 +330,7 @@ class TranslationWorkbenchBulkKeyWriter
     {
         if ($normalizedLiteral === '' || ! $this->hasTables([
             'translation_workbench_findings',
+            'translation_workbench_source_files',
             'translation_workbench_key_findings',
             'translation_workbench_keys',
             'translation_workbench_reviews',
@@ -277,6 +347,7 @@ class TranslationWorkbenchBulkKeyWriter
             ->all();
 
         $query = DB::table('translation_workbench_findings as findings')
+            ->join('translation_workbench_source_files as source_files', 'source_files.id', '=', 'findings.source_file_id')
             ->join('translation_workbench_key_findings as key_findings', function ($join): void {
                 $join
                     ->on('key_findings.finding_id', '=', 'findings.id')
@@ -284,40 +355,43 @@ class TranslationWorkbenchBulkKeyWriter
             })
             ->join('translation_workbench_keys as keys', 'keys.id', '=', 'key_findings.key_id')
             ->where('findings.status', 'active')
+            ->where('source_files.status', 'active')
+            ->where('keys.status', '<>', 'obsolete')
             ->whereRaw($literalExpression.' = ?', [$normalizedLiteral])
             ->whereRaw("NULLIF(BTRIM(keys.translation_key), '') IS NOT NULL")
-            ->where(function ($query): void {
-                $query
-                    ->whereExists(function ($query): void {
-                        $query
-                            ->selectRaw('1')
-                            ->from('translation_workbench_reviews as bulk_reviews')
-                            ->where('bulk_reviews.decision', 'translation_key_bulk_equalized')
-                            ->whereColumn('bulk_reviews.finding_id', 'findings.id');
-                    })
-                    ->orWhereExists(function ($query): void {
-                        $query
-                            ->selectRaw('1')
-                            ->from('translation_workbench_reviews as bulk_reviews')
-                            ->where('bulk_reviews.decision', 'translation_key_bulk_equalized')
-                            ->whereColumn('bulk_reviews.key_id', 'keys.id');
-                    });
+            ->whereExists(function ($query) use ($literalExpression): void {
+                $query->selectRaw('1')->from('translation_workbench_reviews as bulk_reviews')
+                    ->where('bulk_reviews.decision', 'translation_key_bulk_equalized')
+                    ->whereColumn('bulk_reviews.finding_id', 'findings.id')
+                    ->whereColumn('bulk_reviews.key_id', 'keys.id')
+                    ->whereColumn('bulk_reviews.new_values->translation_key', 'keys.translation_key')
+                    ->whereColumn('bulk_reviews.meta->normalized_literal', DB::raw($literalExpression));
+            })
+            ->whereNotExists(function ($query): void {
+                $query->selectRaw('1')->from('translation_workbench_key_findings as competing_links')
+                    ->join('translation_workbench_keys as competing_keys', 'competing_keys.id', '=', 'competing_links.key_id')
+                    ->whereColumn('competing_links.finding_id', 'findings.id')
+                    ->whereColumn('competing_links.key_id', '<>', 'keys.id')
+                    ->where('competing_links.status', 'active')
+                    ->where('competing_keys.status', '<>', 'obsolete');
             });
 
         if ($selectedIds !== []) {
             $query->whereNotIn('findings.id', $selectedIds);
         }
 
-        $row = $query
+        $targets = $query
             ->selectRaw('keys.translation_key, COUNT(DISTINCT findings.id) as finding_count')
             ->groupBy('keys.translation_key')
-            ->orderByDesc('finding_count')
-            ->orderBy('keys.translation_key')
-            ->first();
+            ->limit(2)
+            ->get();
 
-        if (! $row || ! filled($row->translation_key ?? null)) {
+        // Competing confirmed targets must never be resolved by frequency or name.
+        if ($targets->count() !== 1) {
             return null;
         }
+
+        $row = $targets->sole();
 
         return [
             'translation_key' => (string) $row->translation_key,
@@ -336,6 +410,8 @@ class TranslationWorkbenchBulkKeyWriter
             'literal_count' => 0,
             'missing_key_count' => 0,
             'can_confirm' => false,
+            'key_assignment_conflicts' => [],
+            'selection_error' => null,
             'suggested_target_key' => null,
             'translation_keys' => [],
             'suggested_keys' => [],
@@ -369,6 +445,46 @@ class TranslationWorkbenchBulkKeyWriter
         return $lastSegment !== '' ? 'ui.'.$lastSegment : null;
     }
 
+    /** @return array{0: string, 1: string, 2: ?TranslationWorkbenchKey} */
+    private function missingKeyCandidate(array $row, string $translationKey): array
+    {
+        $suggestedKey = $this->nullableString($row['key_suggested_key'] ?? null)
+            ?? $this->nullableString($row['finding_suggested_key'] ?? null)
+            ?? $translationKey;
+        $fingerprint = app(TranslationFingerprintFactory::class)->signature([
+            'foundation-key',
+            '',
+            $suggestedKey,
+        ]);
+        $candidates = TranslationWorkbenchKey::query()
+            ->where('fingerprint', $fingerprint)
+            ->orWhere(function ($query) use ($suggestedKey): void {
+                $query->where('suggested_key', $suggestedKey)
+                    ->where(function ($query): void {
+                        $query->whereNull('translation_key')
+                            ->orWhereRaw("NULLIF(BTRIM(translation_key), '') IS NULL");
+                    });
+            })
+            ->orderBy('id')
+            ->get();
+        $key = $candidates->count() === 1 ? $candidates->sole() : null;
+        if ($candidates->count() > 1 || ($key && (
+            $key->status === 'obsolete'
+            || $key->review_status !== 'pending'
+            || $this->nullableString($key->translation_key) !== null
+            || TranslationWorkbenchKeyFinding::query()->where('key_id', $key->id)
+                ->where('finding_id', '<>', $row['id'])->where('status', 'active')->exists()
+        ))) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'bulkEqualizeSelectedFindingIds' => __('Finding :finding cannot reuse key candidates :keys. Review the existing keys and assignments before equalizing.', [
+                    'finding' => $row['id'],
+                    'keys' => $candidates->pluck('id')->implode(', '),
+                ]),
+            ]);
+        }
+        return [$suggestedKey, $fingerprint, $key];
+    }
+
     private function keyForBulkEqualizeRow(
         array $row,
         ?TranslationWorkbenchFinding $finding,
@@ -379,26 +495,7 @@ class TranslationWorkbenchBulkKeyWriter
             return null;
         }
 
-        $suggestedKey = $this->nullableString($row['key_suggested_key'] ?? null)
-            ?? $this->nullableString($row['finding_suggested_key'] ?? null)
-            ?? $this->nullableString($finding->suggested_key ?? null)
-            ?? $translationKey;
-        $fingerprint = app(TranslationFingerprintFactory::class)->signature([
-            'foundation-key',
-            '',
-            $suggestedKey,
-        ]);
-        $key = TranslationWorkbenchKey::query()
-            ->where('fingerprint', $fingerprint)
-            ->first()
-            ?? TranslationWorkbenchKey::query()
-                ->where('suggested_key', $suggestedKey)
-                ->where(function ($query): void {
-                    $query
-                        ->whereNull('translation_key')
-                        ->orWhereRaw("NULLIF(BTRIM(translation_key), '') IS NULL");
-                })
-                ->first();
+        [$suggestedKey, $fingerprint, $key] = $this->missingKeyCandidate($row, $translationKey);
         $timelineRecorder = app(TranslationWorkbenchTimelineRecorder::class);
 
         if (! $key) {

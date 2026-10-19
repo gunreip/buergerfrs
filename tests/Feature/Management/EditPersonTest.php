@@ -201,7 +201,7 @@ test('edit person page shows the person avatar in the page header', function ():
         ->get(route('management.people.edit', $person))
         ->assertOk()
         ->assertSee(Storage::disk('public')->url($avatarPath), false)
-        ->assertSee('Avatar for Avatar Person');
+        ->assertSee('alt="Avatar Person"', false);
 });
 
 test('edit person saves core and contact fields and logs activity', function (): void {
@@ -755,11 +755,18 @@ test('edit person document archive button shows document and image counters', fu
         'is_current' => true,
     ]);
 
-    $this->actingAs($user)
+    $response = $this->actingAs($user)
         ->get(route('management.people.edit', $person))
-        ->assertOk()
-        ->assertSee('aria-label="Images: 1"', false)
-        ->assertSee('aria-label="Documents: 1"', false);
+        ->assertOk();
+
+    $document = \Dom\HTMLDocument::createFromString($response->getContent(), LIBXML_NOERROR);
+    $buttons = (new \Dom\XPath($document))->query(
+        '//*[local-name()="button" and @*[name()="wire:click"]="openDocumentArchive"]',
+    );
+
+    expect($buttons)->toHaveCount(3)
+        ->and(trim($buttons->item(0)->textContent))->toBe('1')
+        ->and(trim($buttons->item(2)->textContent))->toBe('1');
 });
 
 test('edit person can add uploaded documents from the document workflow', function (): void {

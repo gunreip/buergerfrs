@@ -1,6 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/modal-timeline.blade.php --}}
 
 <flux:modal
+    wire:key="translation-workbench-finding-timeline-modal"
     class="max-w-[calc(90vw-2rem)] overflow-hidden lg:w-[calc(90vw-4rem)] lg:max-w-[calc(90vw-4rem)]"
     name="translation-workbench-finding-timeline"
     wire:model="timelineModalOpen"
@@ -9,7 +10,7 @@
         <div class="flex shrink-0 items-start justify-between gap-4">
             <x-ui.headers.card
                 :title="__('ui.time.timeline')"
-                :description="__('The latest workflow events for the selected finding and its linked key.')"
+                :description="__('Shows up to the latest 100 workflow events for the selected finding and its linked key. Older events remain stored.')"
             />
 
             @if ($timelineFinding)
@@ -34,6 +35,8 @@
                 </div>
             @endif
         </div>
+
+        @include('translation-workbench::livewire.entries.review.finding-lineage', ['findingLineage' => $timelineFindingLineage ?? []])
 
         @if ($timelineFinding)
             @if (count($timelineRows) === 0)

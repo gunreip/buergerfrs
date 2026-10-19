@@ -22,20 +22,107 @@ class TranslationWorkbenchScanner
      */
     public function scan(?array $paths = null): Collection
     {
-        $items = collect();
+        return $this->scanWithManifest($paths)['items'];
+    }
 
-        foreach ($this->scannableFiles($paths) as $file) {
-            $items = $items->merge($this->scanFile($file->getPathname()));
+    /**
+     * Successfully read eligible files and confirmed missing files authorize reconciliation.
+     * Zero-hit files are included; an absent requested root is not evidence of removal.
+     * A read/discovery failure aborts the scan before any caller receives a manifest.
+     *
+     * @param array<int, string>|null $paths
+     * @param iterable<string> $knownPaths Previously recorded source paths, supplied by the caller.
+     * @return array{items: Collection<int, DiscoveredTranslation>, scanned_paths: array<int, string>, missing_paths: array<int, string>, scanned_directories: array<int, string>, reconciliation_paths: array<int, string>}
+     */
+    public function scanWithManifest(?array $paths = null, iterable $knownPaths = []): array
+    {
+        $session = app(TranslationWorkbenchScanSession::class);
+        if ($session->active()) {
+            return $session->resolve($paths, fn (array $scope, array $known): array => $this->captureManifest($scope, $known));
         }
 
-        return $items
-            ->sortBy(fn (DiscoveredTranslation $item): array => [
+        return $this->captureManifest($paths, $knownPaths);
+    }
+
+    private function captureManifest(?array $paths, iterable $knownPaths): array
+    {
+        $paths ??= (array) config('translation-workbench.paths', []);
+        $directories = collect($paths)
+            ->map(static fn (string $path): string => base_path($path))
+            ->filter(static fn (string $path): bool => File::isDirectory($path))
+            ->reject(fn (string $path): bool => $this->isExcludedPath($path))
+            ->values()->all();
+        $items = collect();
+        $scannedPaths = [];
+        $fileHashes = [];
+        foreach ($this->scannableFiles($paths) as $file) {
+            $contents = File::get($file->getPathname());
+            $items = $items->merge($this->scanContents($file->getPathname(), $contents));
+            $relative = $this->relativePath($file->getPathname());
+            $scannedPaths[] = $relative;
+            $fileHashes[$relative] = hash('sha256', $contents);
+        }
+
+        // scannableFiles completes directory discovery, and every eligible file has
+        // been read above. A failure throws before this negative evidence is returned.
+        foreach ($directories as $directory) {
+            if (! File::isDirectory($directory)) {
+                throw new \RuntimeException('Scan directory disappeared during scanning: '.$directory);
+            }
+        }
+        $directoryPaths = array_values(array_unique(array_map(
+            fn (string $path): string => rtrim($this->relativePath($path), '/'),
+            $directories,
+        )));
+        $missingPaths = $this->missingPathsInDirectories($knownPaths, $directoryPaths);
+
+        return [
+            'items' => $items->sortBy(fn (DiscoveredTranslation $item): array => [
                 $item->sourcePath,
                 $item->sourceLine ?? 0,
                 $item->kind,
                 $item->rawExpression ?? '',
-            ])
-            ->values();
+            ])->values(),
+            'file_hashes' => $fileHashes,
+            'scanned_paths' => array_values(array_unique($scannedPaths)),
+            'scanned_directories' => $directoryPaths,
+            'missing_paths' => $missingPaths,
+            'reconciliation_paths' => array_values(array_unique([...$scannedPaths, ...$missingPaths])),
+        ];
+    }
+
+    /**
+     * @param iterable<string> $knownPaths
+     * @param array<int, string> $directories
+     * @return array<int, string>
+     */
+    private function missingPathsInDirectories(iterable $knownPaths, array $directories): array
+    {
+        $missing = [];
+        $patterns = (array) config('translation-workbench.file_patterns', ['*.php', '*.blade.php']);
+        foreach ($knownPaths as $path) {
+            $path = str_replace('\\', '/', $path);
+            $segments = explode('/', $path);
+            // Match Finder's hidden/VCS exclusions; never expand the scope via a stored path.
+            if (collect($segments)->contains(fn (string $segment): bool => $segment === ''
+                || str_starts_with($segment, '.') || in_array($segment, ['_svn', 'CVS', '_darcs'], true))) {
+                continue;
+            }
+            if (! collect($directories)->contains(fn (string $directory): bool => $directory === '' || str_starts_with($path, $directory.'/'))) {
+                continue;
+            }
+            $absolutePath = base_path($path);
+            if ($this->isExcludedPath($absolutePath) || $this->isParkedFile($absolutePath)
+                || ! collect($patterns)->contains(fn (string $pattern): bool => fnmatch($pattern, basename($path)))) {
+                continue;
+            }
+            // A present but unvisited file is not proof of deletion (e.g. a symlink).
+            if (! File::exists($absolutePath) && ! is_link($absolutePath)) {
+                $missing[] = $path;
+            }
+        }
+
+        return array_values(array_unique($missing));
     }
 
     /**
@@ -86,11 +173,29 @@ class TranslationWorkbenchScanner
      */
     public function scanFile(string $path): Collection
     {
+        $session = app(TranslationWorkbenchScanSession::class);
+        if ($session->active()) {
+            $manifest = $this->scanWithManifest();
+
+            return $manifest['items']->filter(fn (DiscoveredTranslation $item): bool => $item->sourcePath === $this->relativePath($path))->values();
+        }
         if ($this->isExcludedPath($path) || $this->isParkedFile($path)) {
             return collect();
         }
 
-        $contents = File::get($path);
+        return $this->scanContents($path, File::get($path));
+    }
+
+    /** One-based byte column, matching PHP regex offsets (independent of editor tab width). */
+    private function columnForOffset(string $contents, int $offset): int
+    {
+        $newline = strrpos(substr($contents, 0, $offset), "\n");
+
+        return $offset - ($newline === false ? -1 : $newline);
+    }
+
+    private function scanContents(string $path, string $contents): Collection
+    {
         $relativePath = $this->relativePath($path);
         $commentRanges = $this->commentRanges($contents);
 
@@ -99,7 +204,8 @@ class TranslationWorkbenchScanner
             ->merge($this->extractDynamicTranslationCalls($contents, $relativePath, $commentRanges))
             ->merge($this->extractDynamicLabelCalls($contents, $relativePath, $commentRanges))
             ->merge($this->extractWorkbenchOptionCalls($contents, $relativePath, $commentRanges))
-            ->unique(static fn (DiscoveredTranslation $item): string => $item->sourceSignature)
+            // Deduplicate extractor overlap, never two separate calls on the same line.
+            ->unique(static fn (DiscoveredTranslation $item): string => $item->sourceSignature.':'.$item->meta['source_offset'])
             ->values();
     }
 
@@ -116,6 +222,20 @@ class TranslationWorkbenchScanner
                 continue;
             }
             $offset = $match[0][1];
+            $raw = $this->rawCallAt($contents, $offset);
+            $call = WorkbenchOptionCall::matches($raw)[0] ?? null;
+            $context = $call === null ? null : $this->optionLoopContextForDynamicArgument($contents, $offset, '$'.$call['label']);
+            if ($context !== null && ($context['key_variable'] !== $call['key'] || $context['label_variable'] !== $call['label'])) {
+                $context = null;
+            }
+            $indexed = WorkbenchOptionCall::indexedMatches($raw)[0] ?? null;
+            if ($indexed !== null) {
+                $context = [
+                    'options_variable' => $indexed['options'], 'key_variable' => $indexed['key'],
+                    'label_variable' => '', 'argument_variable_role' => 'label',
+                    'source_expression_type' => 'indexed_option',
+                ];
+            }
             $items[] = $this->makeDiscoveredTranslation(
                 kind: 'dynamic_multi', sourcePath: $relativePath,
                 sourceLine: $this->lineNumberForOffset($contents, $offset),
@@ -125,6 +245,9 @@ class TranslationWorkbenchScanner
                 keyResult: $this->suggestedKeyFactory->forExistingKey($key),
                 meta: [
                     'scanner' => 'workbench_option_call',
+                    'source_offset' => $offset,
+                    'source_column' => $this->columnForOffset($contents, $offset),
+                    'dynamic_option_context' => $context,
                     'dynamic_scope' => substr($key, strrpos($key, '.') + 1),
                     'option_owner_key' => $key,
                     ...$this->commentContextForOffset($commentRanges, $offset),
@@ -184,6 +307,8 @@ class TranslationWorkbenchScanner
                     keyResult: $suggestedKey,
                     meta: [
                         'scanner' => 'literal_translation_call',
+                        'source_offset' => $offset,
+                        'source_column' => $this->columnForOffset($contents, $offset),
                         'existing_key' => $existingKey,
                         'suggested_key_path' => $suggestedKey?->pathSegments,
                         'suggested_key_name' => $suggestedKey?->keyName,
@@ -253,6 +378,8 @@ class TranslationWorkbenchScanner
                     keyResult: $suggestedKey,
                     meta: [
                         'scanner' => 'dynamic_translation_call',
+                        'source_offset' => $offset,
+                        'source_column' => $this->columnForOffset($contents, $offset),
                         'dynamic_expression' => $argument,
                         'dynamic_key_name' => $dynamicKeyName,
                         'dynamic_scope' => $scope,
@@ -368,6 +495,8 @@ class TranslationWorkbenchScanner
                 keyResult: $suggestedKey,
                 meta: [
                     'scanner' => 'dynamic_label',
+                    'source_offset' => $offset,
+                    'source_column' => $this->columnForOffset($contents, $offset),
                     'dynamic_scope' => $scope,
                     'suggested_key_path' => $suggestedKey->pathSegments,
                     'suggested_key_name' => $suggestedKey->keyName,
@@ -427,6 +556,7 @@ class TranslationWorkbenchScanner
             rawExpression: $rawExpression,
             literalText: $literalText,
             translationKey: $translationKey,
+            sourceColumn: $meta['source_column'] ?? null,
         );
         $semanticValue = $this->fingerprintFactory->normalizedExpression(
             $literalText
@@ -436,7 +566,7 @@ class TranslationWorkbenchScanner
                 ?? $suggestedKey
                 ?? '',
         );
-        $sourceFingerprint = $this->fingerprintFactory->sourceFingerprint($sourcePath, $sourceLine, $rawExpression);
+        $sourceFingerprint = $this->fingerprintFactory->sourceFingerprint($sourcePath, $sourceLine, $rawExpression, $meta['source_column'] ?? null);
         $expressionFingerprint = $this->fingerprintFactory->expressionFingerprint($rawExpression);
         $semanticFingerprint = $this->fingerprintFactory->semanticFingerprint($kind, $functionName, $semanticValue);
         $fingerprint = $this->fingerprintFactory->entryFingerprint(
@@ -473,6 +603,7 @@ class TranslationWorkbenchScanner
             entryType: $classification['entry_type'],
             candidateType: $classification['candidate_type'],
             candidateReason: $classification['candidate_reason'],
+            sourceColumn: $meta['source_column'] ?? null,
         );
     }
 

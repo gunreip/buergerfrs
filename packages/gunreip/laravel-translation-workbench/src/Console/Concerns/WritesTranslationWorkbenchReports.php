@@ -3,6 +3,7 @@
 namespace Gunreip\TranslationWorkbench\Console\Concerns;
 
 use Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanner;
+use Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanSession;
 use Gunreip\TranslationWorkbench\Scanner\TranslationKeyPartsFactory;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -42,12 +43,15 @@ trait WritesTranslationWorkbenchReports
             @unlink($path);
         }
 
+        $rawData = $this->translationWorkbenchReportRawData();
         File::put($path, json_encode([
             'command' => $commandName,
             'generated_at' => now()->toISOString(),
             'summary' => $summary,
             'plan_summary' => $planSummary,
-            'raw_data' => $this->translationWorkbenchReportRawData(),
+            'raw_data' => $rawData,
+            'scan_run' => app(TranslationWorkbenchScanSession::class)->manifest()['scan_run'] ?? null,
+            'scan_runs' => app(TranslationWorkbenchScanSession::class)->references(),
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL);
         @chmod($path, 0666);
 
@@ -59,18 +63,22 @@ trait WritesTranslationWorkbenchReports
     /**
      * @return array{scanned_paths: array<int, string>, file_patterns: array<int, string>, files: int, found: int, files_found: array<int, array{file: string, found: int, findings: array<int, array{line: int|null, kind: string, function: string|null, literal_text: string|null, literal_text_suggested: string|null, translation_key: string|null, existing_key: string|null, raw_expression: string|null, suggested_key: string|null, namespace: string|null, group: string|null, path_key: string|null, scope: string|null, dynamic_scope: string|null}>}>}
      */
-    private function translationWorkbenchReportRawData(): array
+    private function translationWorkbenchReportRawData(bool $capture = true): array
     {
         $scanner = app(TranslationWorkbenchScanner::class);
         $keyPartsFactory = app(TranslationKeyPartsFactory::class);
         $paths = $this->translationWorkbenchReportPaths();
-        $files = collect($scanner->scannableFiles($paths))
-            ->map(static fn(\SplFileInfo $file): string => str_replace('\\', '/', $file->getPathname()))
-            ->sort()
-            ->values();
+        $session = app(TranslationWorkbenchScanSession::class);
+        $manifest = $session->active() ? $session->manifest() : null;
+        if ($manifest === null && $capture && ! $session->failed()) {
+            $manifest = $scanner->scanWithManifest($paths);
+        }
+        $paths = $session->active() ? $session->paths() : $paths;
+        $files = collect($manifest['scanned_paths'] ?? [])->sort()->values();
+        $itemsByFile = ($manifest['items'] ?? collect())->groupBy('sourcePath');
         $filesFound = $files
-            ->map(function (string $path) use ($scanner, $keyPartsFactory): array {
-                $findings = $scanner->scanFile($path)
+            ->map(function (string $path) use ($itemsByFile, $keyPartsFactory): array {
+                $findings = $itemsByFile->get($path, collect())
                     ->map(function ($item) use ($keyPartsFactory): array {
                         $keyParts = $keyPartsFactory->fromKey($item->suggestedKey);
 

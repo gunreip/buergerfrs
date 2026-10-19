@@ -18,6 +18,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\ValidationException;
 
 #[Signature('translation-workbench:classify-dynamic-values
     {--dry-run : Report classifications without writing database rows.}')]
@@ -35,9 +36,20 @@ class ClassifyDynamicValues extends Command
 
     public function handle(): int
     {
+        return $this->option('dry-run')
+            ? $this->classify()
+            : DB::transaction(fn (): int => $this->classify());
+    }
+
+    private function classify(): int
+    {
         if (! $this->hasRequiredTables()) {
             $this->error('Dynamic classification tables are missing. Run the workbench migrations first.');
-            $this->writeTranslationWorkbenchReport();
+            $this->writeTranslationWorkbenchReport(summary: [
+                'dry_run' => (bool) $this->option('dry-run'),
+                'exit_code' => self::FAILURE,
+                'error' => 'missing_required_tables',
+            ]);
 
             return self::FAILURE;
         }
@@ -45,6 +57,8 @@ class ClassifyDynamicValues extends Command
         $dryRun = (bool) $this->option('dry-run');
         $now = now();
         $summary = [
+            'dry_run' => $dryRun,
+            'exit_code' => self::SUCCESS,
             'dynamic_findings' => 0,
             'sources_created' => 0,
             'sources_updated' => 0,
@@ -54,27 +68,43 @@ class ClassifyDynamicValues extends Command
             'source_values_updated' => 0,
             'source_values_unchanged' => 0,
             'source_values_removed' => 0,
+            'source_values_preserved' => 0,
             'structured_keys' => 0,
             'unstructured_keys' => 0,
             'timeline_events_created' => 0,
         ];
 
+        if (! $dryRun) {
+            $this->lockDiscoveryInventory();
+        }
+
+        // Retirement may only inspect sources that existed when this run began.
+        $initialSources = $dryRun ? collect() : $this->retirementSourceSnapshot();
         $rows = $this->dynamicFindingRows();
         $summary['dynamic_findings'] = $rows->count();
-        $seenFingerprints = [];
-
-        if (! $dryRun) {
-            DB::table('translation_workbench_dynamic_sources')
-                ->whereNotIn('source_type', $this->runtimeSourceTypes())
-                ->update(['status' => 'obsolete']);
+        $conflicts = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchDynamicKeyAssignment::class)
+            ->conflicts($rows->pluck('finding_id')->all());
+        if ($conflicts->isNotEmpty()) {
+            $this->error('Ambiguous active key assignments; no dynamic sources were changed.');
+            foreach ($conflicts as $conflict) {
+                $this->line('Finding '.$conflict['finding_id'].' -> Key IDs: '.implode(', ', $conflict['key_ids']));
+            }
+            $this->writeTranslationWorkbenchReport(
+                summary: [...$summary, 'exit_code' => self::FAILURE, 'error' => 'ambiguous_active_key_assignments', 'conflicting_findings' => $conflicts->count()],
+                planSummary: ['key_assignment_conflicts' => $conflicts->values()->all()],
+            );
+            return self::FAILURE;
         }
+        $seenSourceIds = [];
 
         foreach ($rows as $row) {
             $classifications = $this->classificationsForRow($row);
+            if (! $dryRun) {
+                $this->lockClassificationInput($row, $classifications);
+            }
             $rowHasStructuredSource = false;
 
             foreach ($classifications as $classification) {
-                $seenFingerprints[] = $classification['fingerprint'];
                 $rowHasStructuredSource = $rowHasStructuredSource || $classification['classification'] !== 'unknown';
 
                 if ($dryRun) {
@@ -82,6 +112,7 @@ class ClassifyDynamicValues extends Command
                 }
 
                 $sourceResult = $this->syncDynamicSource($row, $classification, $now);
+                $seenSourceIds[] = (int) $sourceResult['source_id'];
                 $summary[$sourceResult['result']]++;
                 $summary['timeline_events_created'] += $sourceResult['timeline_events_created'];
 
@@ -99,11 +130,13 @@ class ClassifyDynamicValues extends Command
             if (! $dryRun) {
                 $state = $rowHasStructuredSource ? 'structured' : 'unstructured';
                 $summary[$state === 'structured' ? 'structured_keys' : 'unstructured_keys'] += $this->syncDynamicDataState($row, $state);
+                $this->retainOwnClassificationState($initialSources, $row, $state);
             }
         }
 
         if (! $dryRun) {
-            $summary['sources_obsoleted'] = $this->obsoleteUnseenSources($seenFingerprints);
+            $summary['sources_obsoleted'] = $this->obsoleteUnseenSources($seenSourceIds, $initialSources);
+            $summary['timeline_events_created'] += $summary['sources_obsoleted'];
         }
 
         $this->components->info('Translation Workbench dynamic value classification finished.');
@@ -112,6 +145,7 @@ class ClassifyDynamicValues extends Command
         $this->line('Sources updated: ' . number_format($summary['sources_updated']));
         $this->line('Source values created: ' . number_format($summary['source_values_created']));
         $this->line('Source values updated: ' . number_format($summary['source_values_updated']));
+        $this->line('Source values preserved (unresolved options): ' . number_format($summary['source_values_preserved']));
         $this->line('Structured keys/findings: ' . number_format($summary['structured_keys']));
         $this->line('Unstructured keys/findings: ' . number_format($summary['unstructured_keys']));
 
@@ -119,9 +153,23 @@ class ClassifyDynamicValues extends Command
             $this->warn('Dry run only: no dynamic classifications were written.');
         }
 
-        $this->writeTranslationWorkbenchReport();
+        $this->writeTranslationWorkbenchReport(summary: $summary);
 
         return self::SUCCESS;
+    }
+
+    /** Keep PostgreSQL discovery inserts/updates/deletes out of this classification pass. */
+    private function lockDiscoveryInventory(): void
+    {
+        if (DB::transactionLevel() < 1) {
+            throw new \LogicException('Discovery inventory locking requires the classification transaction.');
+        }
+        if (DB::connection()->getDriverName() === 'pgsql'
+            && Schema::hasTable('translation_workbench_option_discoveries')) {
+            // Row locks cannot protect the absence of a matching discovery. SHARE also
+            // blocks inserts, while permitting ordinary readers, until commit/rollback.
+            DB::statement('LOCK TABLE translation_workbench_option_discoveries IN SHARE MODE');
+        }
     }
 
     private function hasRequiredTables(): bool
@@ -137,12 +185,13 @@ class ClassifyDynamicValues extends Command
     /**
      * @return Collection<int, object>
      */
-    private function dynamicFindingRows(): Collection
+    private function dynamicFindingRows(?int $findingId = null): Collection
     {
-        $keyLinks = DB::table('translation_workbench_key_findings')
-            ->selectRaw('finding_id, MIN(key_id) as key_id')
-            ->where('status', 'active')
-            ->groupBy('finding_id');
+        $keyLinks = DB::table('translation_workbench_key_findings as links')
+            ->join('translation_workbench_keys as linked_keys', 'linked_keys.id', '=', 'links.key_id')
+            ->selectRaw('links.finding_id, MIN(links.key_id) as key_id')
+            ->where('links.status', 'active')->where('linked_keys.status', '<>', 'obsolete')
+            ->groupBy('links.finding_id');
 
         return DB::table('translation_workbench_findings as findings')
             ->join('translation_workbench_source_files as source_files', 'source_files.id', '=', 'findings.source_file_id')
@@ -160,9 +209,12 @@ class ClassifyDynamicValues extends Command
                     ->orWhere('keys.is_dynamic_key', true)
                     ->orWhere('keys.is_dynamic_multi', true);
             })
+            ->when($findingId !== null, fn ($query) => $query->where('findings.id', $findingId))
             ->where('findings.status', 'active')
+            ->where('source_files.status', 'active')
             ->get([
                 'findings.id as finding_id',
+                'findings.source_file_id',
                 'findings.source_line',
                 'findings.raw_expression',
                 'findings.suggested_key as finding_suggested_key',
@@ -177,12 +229,41 @@ class ClassifyDynamicValues extends Command
             ]);
     }
 
+    /** Lock existing owners before validating the inputs selected for this finding. */
+    private function lockClassificationInput(object $row, array $classifications): void
+    {
+        if (DB::transactionLevel() < 1) {
+            throw new \LogicException('Classification input validation requires a write transaction.');
+        }
+
+        // Match the source -> finding -> file -> links -> keys order used by source review.
+        DB::table('translation_workbench_dynamic_sources')->where('finding_id', $row->finding_id)
+            ->where(fn ($query) => $query->whereNull('source_type')->orWhereNotIn('source_type', $this->runtimeSourceTypes()))
+            ->orderBy('id')->lockForUpdate()->get();
+        DB::table('translation_workbench_findings')->where('id', $row->finding_id)->lockForUpdate()->first();
+        DB::table('translation_workbench_source_files')->where('id', $row->source_file_id)->lockForUpdate()->first();
+        $links = DB::table('translation_workbench_key_findings')->where('finding_id', $row->finding_id)
+            ->orderBy('id')->lockForUpdate()->get();
+        DB::table('translation_workbench_keys')->whereIn('id', $links->pluck('key_id'))
+            ->orderBy('id')->lockForUpdate()->get();
+
+        $current = $this->dynamicFindingRows((int) $row->finding_id)->first();
+        $conflicts = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchDynamicKeyAssignment::class)
+            ->conflicts([(int) $row->finding_id]);
+        if ($current === null || (array) $current !== (array) $row || $conflicts->isNotEmpty()
+            || $this->classificationsForRow($current, lock: true) !== $classifications) {
+            throw ValidationException::withMessages([
+                'dynamic_source' => 'Classification input for finding '.$row->finding_id.' changed during classification. No classification changes were saved; retry with the current source context.',
+            ]);
+        }
+    }
+
     /**
      * @return array<int, array<string, mixed>>
      */
-    private function classificationsForRow(object $row): array
+    private function classificationsForRow(object $row, bool $lock = false): array
     {
-        $discoveries = $this->matchingOptionDiscoveries($row);
+        $discoveries = $this->matchingOptionDiscoveries($row, $lock);
 
         if ($discoveries->isEmpty()) {
             return [$this->unknownClassification($row)];
@@ -197,7 +278,7 @@ class ClassifyDynamicValues extends Command
     /**
      * @return Collection<int, object>
      */
-    private function matchingOptionDiscoveries(object $row): Collection
+    private function matchingOptionDiscoveries(object $row, bool $lock = false): Collection
     {
         if (! Schema::hasTable('translation_workbench_option_discoveries')) {
             return collect();
@@ -215,10 +296,11 @@ class ClassifyDynamicValues extends Command
             ->unique()
             ->values();
 
-        return DB::table('translation_workbench_option_discoveries')
+        $matches = DB::table('translation_workbench_option_discoveries')
             ->where('status', '!=', 'obsolete')
             ->where(function ($query) use ($row, $keys): void {
-                $query->where(function ($query) use ($row): void {
+                $query->where('meta->foundation_assignment->finding_id', (int) $row->finding_id);
+                $query->orWhere(function ($query) use ($row): void {
                     $query
                         ->where('source_path', $row->source_path)
                         ->where('source_line', $row->source_line);
@@ -232,7 +314,19 @@ class ClassifyDynamicValues extends Command
                 }
             })
             ->orderBy('id')
-            ->get();
+            ->when($lock, fn ($query) => $query->lockForUpdate())
+            ->get()->filter(fn ($discovery) => \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchDynamicOptionSynchronizer::appliesTo(
+                $discovery, (int) $row->finding_id, $row->key_id === null ? null : (int) $row->key_id,
+            ));
+
+        // A proven assignment supersedes the transitional broad historical matching.
+        // Keep those historical observations intact for their own consumers.
+        $assigned = $matches->filter(function ($discovery): bool {
+            $meta = is_string($discovery->meta) ? json_decode($discovery->meta, true) : $discovery->meta;
+            return ($meta['foundation_assignment']['status'] ?? null) === 'matched';
+        });
+
+        return $assigned->isNotEmpty() ? $assigned : $matches;
     }
 
     /**
@@ -325,6 +419,7 @@ class ClassifyDynamicValues extends Command
                 'label_usage' => $discovery->label_usage,
                 'suggested_dynamic_key' => $discovery->suggested_dynamic_key,
                 'workbench_suggested_key' => $discovery->workbench_suggested_key,
+                'option_values_state' => $options === [] ? 'unresolved' : 'observed',
             ],
         ];
     }
@@ -372,6 +467,7 @@ class ClassifyDynamicValues extends Command
     private function syncDynamicSource(object $row, array $classification, mixed $now): array
     {
         $attributes = [
+            'fingerprint' => $classification['fingerprint'],
             'key_id' => $row->key_id,
             'finding_id' => $row->finding_id,
             'option_discovery_id' => $classification['option_discovery_id'],
@@ -392,7 +488,26 @@ class ClassifyDynamicValues extends Command
         ];
         $source = DB::table('translation_workbench_dynamic_sources')
             ->where('fingerprint', $classification['fingerprint'])
+            ->lockForUpdate()
             ->first();
+
+        // Position is mutable; finding, key and observation establish the identity.
+        // Only recorded finding succession may retain the source identity; equal text is insufficient.
+        if ($classification['option_discovery_id'] !== null) {
+            $existing = DB::table('translation_workbench_dynamic_sources')
+                ->whereIn('finding_id', \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchFindingVersioner::lineageIds((int) $row->finding_id))
+                ->where('key_id', $row->key_id)
+                ->where('option_discovery_id', $classification['option_discovery_id'])
+                ->where('source_path', $row->source_path)
+                ->whereNotIn('source_type', $this->runtimeSourceTypes())
+                ->lockForUpdate()->get();
+            if ($existing->count() > 1 || ($source !== null && $existing->count() === 1 && $source->id !== $existing->sole()->id)) {
+                throw new \LogicException('Ambiguous dynamic source identity for finding '.$row->finding_id
+                    .', key '.$row->key_id.', observation '.$classification['option_discovery_id']
+                    .'; source IDs: '.$existing->pluck('id')->implode(', '));
+            }
+            $source ??= $existing->first();
+        }
 
         if (! $source) {
             $sourceId = (int) DB::table('translation_workbench_dynamic_sources')->insertGetId([
@@ -444,7 +559,7 @@ class ClassifyDynamicValues extends Command
 
     /**
      * @param  array<string, mixed>  $classification
-     * @return array{source_values_created: int, source_values_updated: int, source_values_unchanged: int, source_values_removed: int}
+     * @return array{source_values_created: int, source_values_updated: int, source_values_unchanged: int, source_values_removed: int, source_values_preserved: int, timeline_events_created: int}
      */
     private function syncDynamicSourceValues(int $dynamicSourceId, object $row, array $classification): array
     {
@@ -453,8 +568,20 @@ class ClassifyDynamicValues extends Command
             'source_values_updated' => 0,
             'source_values_unchanged' => 0,
             'source_values_removed' => 0,
+            'source_values_preserved' => 0,
+            'timeline_events_created' => 0,
         ];
+        // The current discovery contract cannot prove an authoritative empty set.
+        // Keep the last observed values while the source itself needs review.
+        if ($classification['options'] === []) {
+            $summary['source_values_preserved'] = DB::table('translation_workbench_dynamic_source_values')
+                ->where('dynamic_source_id', $dynamicSourceId)->count();
+
+            return $summary;
+        }
         $seenValueKeys = [];
+        $oldValues = [];
+        $newValues = [];
         $translationKey = $row->translation_key ?: $row->key_suggested_key ?: $row->finding_suggested_key;
 
         foreach ($classification['options'] as $valueKey => $nativeLabel) {
@@ -472,7 +599,7 @@ class ClassifyDynamicValues extends Command
             $existing = DB::table('translation_workbench_dynamic_source_values')
                 ->where('dynamic_source_id', $dynamicSourceId)
                 ->where('value_key', (string) $valueKey)
-                ->first();
+                ->lockForUpdate()->first();
 
             if (! $existing) {
                 DB::table('translation_workbench_dynamic_source_values')->insert([
@@ -482,6 +609,8 @@ class ClassifyDynamicValues extends Command
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+                $oldValues[(string) $valueKey] = null;
+                $newValues[(string) $valueKey] = $attributes;
                 $summary['source_values_created']++;
 
                 continue;
@@ -505,14 +634,30 @@ class ClassifyDynamicValues extends Command
                         ->all(),
                     'updated_at' => now(),
                 ]);
+            $oldValues[(string) $valueKey] = collect((array) $existing)->only(array_keys($attributes))->all();
+            $newValues[(string) $valueKey] = $attributes;
             $summary['source_values_updated']++;
         }
 
-        $deleted = DB::table('translation_workbench_dynamic_source_values')
+        $removed = DB::table('translation_workbench_dynamic_source_values')
             ->where('dynamic_source_id', $dynamicSourceId)
             ->when($seenValueKeys !== [], fn($query) => $query->whereNotIn('value_key', $seenValueKeys))
-            ->delete();
-        $summary['source_values_removed'] += (int) $deleted;
+            ->lockForUpdate()->get();
+        foreach ($removed as $value) {
+            $oldValues[(string) $value->value_key] = collect((array) $value)
+                ->only(['native_label', 'origin', 'translation_key', 'status', 'meta'])->all();
+            $newValues[(string) $value->value_key] = null;
+        }
+        $summary['source_values_removed'] += DB::table('translation_workbench_dynamic_source_values')
+            ->whereIn('id', $removed->pluck('id'))->delete();
+
+        if ($oldValues !== []) {
+            $this->recordTimelineEvent($row, 'dynamic_source_options_reconciled',
+                ['values' => $oldValues], ['values' => $newValues],
+                ['dynamic_source_id' => $dynamicSourceId, 'option_discovery_id' => $classification['option_discovery_id']],
+            );
+            $summary['timeline_events_created']++;
+        }
 
         return $summary;
     }
@@ -542,19 +687,103 @@ class ClassifyDynamicValues extends Command
         return $updates;
     }
 
-    /**
-     * @param  array<int, string>  $seenFingerprints
-     */
-    private function obsoleteUnseenSources(array $seenFingerprints): int
+    /** @return Collection<int, object> */
+    private function retirementSourceSnapshot(): Collection
     {
-        return (int) DB::table('translation_workbench_dynamic_sources')
+        return DB::table('translation_workbench_dynamic_sources')
             ->where('status', '!=', 'obsolete')
-            ->whereNotIn('source_type', $this->runtimeSourceTypes())
-            ->when($seenFingerprints !== [], fn($query) => $query->whereNotIn('fingerprint', array_values(array_unique($seenFingerprints))))
-            ->update([
-                'status' => 'obsolete',
-                'updated_at' => now(),
-            ]);
+            ->where(fn ($query) => $query->whereNull('source_type')->orWhereNotIn('source_type', $this->runtimeSourceTypes()))
+            ->orderBy('id')->get()->keyBy('id')->map(function (object $source): object {
+                $source->retirement_context = $this->retirementContext($source);
+                return $source;
+            });
+    }
+
+    /** Capture the owners even when inactive: inactivity can be a valid retirement reason. */
+    private function retirementContext(object $source, bool $lock = false): array
+    {
+        $read = static function (string $table, array $ids) use ($lock): array {
+            return DB::table('translation_workbench_'.$table)->whereIn('id', array_filter($ids))
+                ->orderBy('id')->when($lock, fn ($query) => $query->lockForUpdate())->get()
+                ->mapWithKeys(fn (object $row): array => [(int) $row->id => (array) $row])->all();
+        };
+        $findings = $read('findings', [$source->finding_id]);
+        $files = $read('source_files', array_column($findings, 'source_file_id'));
+        $links = DB::table('translation_workbench_key_findings')->where('finding_id', $source->finding_id)
+            ->orderBy('id')->when($lock, fn ($query) => $query->lockForUpdate())->get()
+            ->mapWithKeys(fn (object $row): array => [(int) $row->id => (array) $row])->all();
+        $keys = $read('keys', array_unique([$source->key_id, ...array_column($links, 'key_id')]));
+        $discoveries = Schema::hasTable('translation_workbench_option_discoveries')
+            ? $read('option_discoveries', [$source->option_discovery_id]) : [];
+
+        // Timestamps do not define ownership or classification; our own state writes update them.
+        return collect(compact('findings', 'files', 'links', 'keys', 'discoveries'))
+            ->map(fn (array $rows): array => array_map(static function (array $row): array {
+                unset($row['updated_at'], $row['created_at']);
+                return $row;
+            }, $rows))->all();
+    }
+
+    /** Account only for the state fields explicitly written by this transaction. */
+    private function retainOwnClassificationState(Collection $sources, object $row, string $state): void
+    {
+        foreach ($sources as $source) {
+            if (isset($source->retirement_context['findings'][$row->finding_id])) {
+                $source->retirement_context['findings'][$row->finding_id]['dynamic_data_state'] = $state;
+            }
+            if ($row->key_id !== null && isset($source->retirement_context['keys'][$row->key_id])) {
+                $source->retirement_context['keys'][$row->key_id]['dynamic_data_state'] = $state;
+            }
+        }
+    }
+
+    /**
+     * @param  array<int, int>  $seenSourceIds
+     * @param  Collection<int, object>  $initialSources
+     */
+    private function obsoleteUnseenSources(array $seenSourceIds, Collection $initialSources): int
+    {
+        if (DB::transactionLevel() < 1) {
+            throw new \LogicException('Source retirement requires the classification transaction.');
+        }
+
+        $candidates = $initialSources->reject(
+            fn (object $source): bool => in_array((int) $source->id, $seenSourceIds, true),
+        );
+        if ($candidates->isEmpty()) {
+            return 0;
+        }
+
+        // Read again after acquiring the locks: another writer may have changed a source
+        // while classification was running. Never retire that newer state from an old plan.
+        $current = DB::table('translation_workbench_dynamic_sources')
+            ->whereIn('id', $candidates->keys()->all())->orderBy('id')
+            ->lockForUpdate()->get()->keyBy('id');
+        foreach ($candidates as $id => $snapshot) {
+            $expected = clone $snapshot;
+            unset($expected->retirement_context);
+            if (! $current->has($id) || (array) $current->get($id) !== (array) $expected
+                || $this->retirementContext($expected, lock: true) !== $snapshot->retirement_context) {
+                throw ValidationException::withMessages([
+                    'dynamic_source' => 'Dynamic source '.$id.' changed during classification. No classification changes were saved; retry with the current source context.',
+                ]);
+            }
+        }
+
+        $retired = (int) DB::table('translation_workbench_dynamic_sources')
+            ->whereIn('id', $candidates->keys()->all())
+            ->update(['status' => 'obsolete', 'updated_at' => now()]);
+        foreach ($current as $source) {
+            $this->recordTimelineEvent($source, 'dynamic_source_obsoleted',
+                ['status' => $source->status], ['status' => 'obsolete'], [
+                    'dynamic_source_id' => (int) $source->id,
+                    'option_discovery_id' => $source->option_discovery_id,
+                    'fingerprint' => $source->fingerprint,
+                    'reason' => 'not_classified_in_current_pass',
+                ]);
+        }
+
+        return $retired;
     }
 
     /**
@@ -576,7 +805,7 @@ class ClassifyDynamicValues extends Command
      * @param  array<string, mixed>|null  $oldValues
      * @param  array<string, mixed>|null  $newValues
      */
-    private function recordTimelineEvent(object $row, string $eventType, ?array $oldValues, ?array $newValues): void
+    private function recordTimelineEvent(object $row, string $eventType, ?array $oldValues, ?array $newValues, array $context = []): void
     {
         $this->timelineRecorder->record(
             eventType: $eventType,
@@ -588,6 +817,7 @@ class ClassifyDynamicValues extends Command
                 'source' => 'translation-workbench:classify-dynamic-values',
                 'source_path' => $row->source_path,
                 'source_line' => $row->source_line,
+                ...$context,
             ],
         );
     }

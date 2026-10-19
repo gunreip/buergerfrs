@@ -20,12 +20,15 @@ trait SelectsTimelineChainDataset
 
     public string $datasetIdInput = '';
 
+    public string $datasetIdType = 'dataset';
+
     public int $reloadTick = 0;
 
     protected function initializeDatasetSelection(): void
     {
         $this->timelineChainId ??= $this->randomTimelineChainId();
         $this->selectedHistoryId = $this->timelineChainId !== null ? (string) $this->timelineChainId : null;
+        $this->datasetIdType = 'dataset';
         $this->datasetIdInput = $this->selectedHistoryId ?? '';
         $this->selectedCriticalDatasetId = isset(self::CRITICAL_DATASETS[$this->timelineChainId ?? 0])
             ? (string) $this->timelineChainId : null;
@@ -41,6 +44,7 @@ trait SelectsTimelineChainDataset
     {
         $this->timelineChainId = $this->randomTimelineChainId();
         $this->selectedHistoryId = $this->timelineChainId !== null ? (string) $this->timelineChainId : null;
+        $this->datasetIdType = 'dataset';
         $this->datasetIdInput = $this->selectedHistoryId ?? '';
         $this->selectedCriticalDatasetId = isset(self::CRITICAL_DATASETS[$this->timelineChainId ?? 0])
             ? (string) $this->timelineChainId : null;
@@ -56,12 +60,32 @@ trait SelectsTimelineChainDataset
     public function loadDataset(): void
     {
         $this->validate(
-            ['datasetIdInput' => ['required', 'integer', 'min:1']],
+            ['datasetIdInput' => ['required', 'integer', 'min:1'], 'datasetIdType' => ['required', 'in:dataset,finding,key']],
             [],
             ['datasetIdInput' => __('Dataset ID')],
         );
 
         $id = (int) $this->datasetIdInput;
+        if ($this->datasetIdType !== 'dataset') {
+            $type = $this->datasetIdType;
+            $ids = Schema::hasTable('translation_workbench_timeline_chains')
+                ? DB::table('translation_workbench_timeline_chains')
+                    ->where(fn ($query) => $query->where('root_'.$type.'_id', $id)
+                        ->orWhereJsonContains($type.'_ids', $id))
+                    ->orderBy('id')->pluck('id')->all()
+                : [];
+            if (count($ids) !== 1) {
+                $this->addError('datasetIdInput', $ids === []
+                    ? __('No timeline-chain dataset contains this :type ID #:id. The graph dataset may need rebuilding.', ['type' => $type, 'id' => $id])
+                    : __('Multiple datasets match: :ids. Select Dataset ID and load the desired dataset explicitly.', ['ids' => implode(', ', $ids)]));
+                return;
+            }
+            $this->updatedSelectedHistoryId($ids[0]);
+            if ($type === 'finding' && method_exists($this, 'selectedFindingForGraph')) {
+                $this->selectedFindingForGraph($id);
+            }
+            return;
+        }
         if (! Schema::hasTable('translation_workbench_timeline_chains')
             || ! DB::table('translation_workbench_timeline_chains')->where('id', $id)->exists()) {
             $this->addError('datasetIdInput', __('No dataset found for ID #:id.', ['id' => $id]));
@@ -78,6 +102,7 @@ trait SelectsTimelineChainDataset
             return;
         }
 
+        $this->datasetIdType = 'dataset';
         $this->datasetIdInput = (string) $value;
         $this->loadDataset();
         $this->selectedCriticalDatasetId = isset(self::CRITICAL_DATASETS[$this->timelineChainId ?? 0])
@@ -101,6 +126,7 @@ trait SelectsTimelineChainDataset
         if ($id > 0) {
             $this->timelineChainId = $id;
             $this->selectedHistoryId = (string) $id;
+            $this->datasetIdType = 'dataset';
             $this->datasetIdInput = (string) $id;
             $this->selectedCriticalDatasetId = isset(self::CRITICAL_DATASETS[$id]) ? (string) $id : null;
             $this->resetValidation('datasetIdInput');

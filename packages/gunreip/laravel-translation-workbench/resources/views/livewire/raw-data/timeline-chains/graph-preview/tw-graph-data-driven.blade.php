@@ -416,7 +416,9 @@
                                 @foreach ((array) data_get($twGraphDataDrivenPreviewGraph->get('header'), 'text', []) as $graphHeaderLine)
                                     <span>{{ $graphHeaderLine }}</span>
                                 @endforeach
-                                <flux:icon.information-circle class="inline size-3.5" aria-hidden="true" />
+                                <span class="inline-block" title="{{ __('More information: right-click') }}" aria-hidden="true">
+                                    <flux:icon.information-circle class="inline size-3.5" />
+                                </span>
                             </flux:callout.heading>
                             <flux:menu>
                                 @foreach (data_get($twGraphDataDrivenPreviewGraph->get('header'), 'contextMenu', []) as $contextItem)

@@ -1,0 +1,3317 @@
+{
+  "date": "2026-10-17",
+  "purpose": "Reviewed historical-context position repair; no runtime per-ID matching rules.",
+  "reviewed_plan": {
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+    "revision": "929f61a7",
+    "historical_sha256": "c51dfc10d075662644d564717c2fc696b2353dee3aedb85e9dbd7651505f7013",
+    "current_sha256": "0d7303e386ed7f40ba415c4ff7ac0c6aab686ebaef8633cf510b554686051089",
+    "actions": [
+      {
+        "id": 7131,
+        "reason": "Suggested-key heading",
+        "before": {
+          "id": 7131,
+          "source_file_id": 27,
+          "fingerprint": "3bfd7b58b84b2f29d641b5d15caa7ccfde1807a6c82f9740e84030464c8aae80",
+          "source_signature": "fc9f95ee2a3a140b2ce52e2556e40e03f1fa1cb1528627091806077d88b724d4",
+          "source_fingerprint": "a3e967b7d89333c4f527f4b026c46b03fd9e9efa398a5f8bb0071e6e0f1e7768",
+          "expression_fingerprint": "22e7ae6114f6482cf2abb7c1384923d92860c35a945a82d4368c0b41b8c896c9",
+          "semantic_fingerprint": "cc6c613830ce8be1d08a9a382b10c52da113976fee2b181de137c13290f48d78",
+          "source_line": 213,
+          "kind": "key",
+          "function_name": "__",
+          "raw_expression": "__('ui.key.suggested-key')",
+          "literal_text": null,
+          "literal_text_suggested": "suggested key",
+          "found_translation_key": "ui.key.suggested-key",
+          "existing_key": "ui.key.suggested-key",
+          "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_edit_translation_key.suggested_key",
+          "namespace": "packages",
+          "group": "gunreip",
+          "path_key": "laravel_translation_workbench.resources.views.livewire.entries.review",
+          "scope": "modal_edit_translation_key",
+          "dynamic_scope": null,
+          "entry_type": "key",
+          "candidate_type": null,
+          "candidate_reason": null,
+          "status": "active",
+          "first_seen_at": "2026-07-31 14:33:51",
+          "last_seen_at": "2026-08-07 11:58:33",
+          "scan_count": 196,
+          "meta": "{\"scanner\":\"literal_translation_call\",\"existing_key\":\"ui.key.suggested-key\",\"suggested_key_path\":[\"packages\",\"gunreip\",\"laravel_translation_workbench\",\"resources\",\"views\",\"livewire\",\"entries\",\"review\",\"modal_edit_translation_key\"],\"suggested_key_name\":\"suggested_key\",\"suggested_key_source\":\"existing_key_at_source\"}",
+          "created_at": "2026-07-31 14:33:53",
+          "updated_at": "2026-08-07 11:58:37",
+          "dynamic_data_state": null
+        },
+        "after": {
+          "source_line": 235,
+          "source_signature": "97635f1e646da6d2775800e340ec6eaa8b1a08af395219ad3e793234e0851894",
+          "source_fingerprint": "86f67df109e668bc557becb2d6c92fa9f3edd62c4ca6899eac4e2eb5fd5069b6"
+        },
+        "old_context": [
+          "                            <span class=\"flex w-full items-center justify-between gap-2\">",
+          "                                <span class=\"inline-flex items-center gap-1.5\">",
+          "                                    <span>{{ __('ui.key.suggested-key') }}</span>",
+          "                                    <x-ui.tooltip.simple",
+          "                                        :header=\"__('ui.key.suggested-key')\""
+        ],
+        "current_context": [
+          "                                        <span class=\"flex w-full items-center justify-between gap-2\">",
+          "                                            <span class=\"inline-flex items-center gap-1.5\">",
+          "                                                <span>{{ __('ui.key.suggested-key') }}</span>",
+          "                                                <x-ui.tooltip.simple",
+          "                                                    :header=\"__('ui.key.suggested-key')\""
+        ]
+      },
+      {
+        "id": 7132,
+        "reason": "Suggested-key tooltip header",
+        "before": {
+          "id": 7132,
+          "source_file_id": 27,
+          "fingerprint": "3bfd7b58b84b2f29d641b5d15caa7ccfde1807a6c82f9740e84030464c8aae80",
+          "source_signature": "7046da075410a930cc33ce9ee666f5e7715e4e9ec46228d1304d1b2ae547d9d2",
+          "source_fingerprint": "24314455b744a85115f2fcc44bb9b90491f6bfceb544ff8cae8326a85b45dfb3",
+          "expression_fingerprint": "22e7ae6114f6482cf2abb7c1384923d92860c35a945a82d4368c0b41b8c896c9",
+          "semantic_fingerprint": "cc6c613830ce8be1d08a9a382b10c52da113976fee2b181de137c13290f48d78",
+          "source_line": 215,
+          "kind": "key",
+          "function_name": "__",
+          "raw_expression": "__('ui.key.suggested-key')",
+          "literal_text": null,
+          "literal_text_suggested": "suggested key",
+          "found_translation_key": "ui.key.suggested-key",
+          "existing_key": "ui.key.suggested-key",
+          "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_edit_translation_key.suggested_key",
+          "namespace": "packages",
+          "group": "gunreip",
+          "path_key": "laravel_translation_workbench.resources.views.livewire.entries.review",
+          "scope": "modal_edit_translation_key",
+          "dynamic_scope": null,
+          "entry_type": "key",
+          "candidate_type": null,
+          "candidate_reason": null,
+          "status": "active",
+          "first_seen_at": "2026-07-31 14:33:51",
+          "last_seen_at": "2026-08-07 11:58:33",
+          "scan_count": 196,
+          "meta": "{\"scanner\":\"literal_translation_call\",\"existing_key\":\"ui.key.suggested-key\",\"suggested_key_path\":[\"packages\",\"gunreip\",\"laravel_translation_workbench\",\"resources\",\"views\",\"livewire\",\"entries\",\"review\",\"modal_edit_translation_key\"],\"suggested_key_name\":\"suggested_key\",\"suggested_key_source\":\"existing_key_at_source\"}",
+          "created_at": "2026-07-31 14:33:53",
+          "updated_at": "2026-08-07 11:58:37",
+          "dynamic_data_state": null
+        },
+        "after": {
+          "source_line": 237,
+          "source_signature": "5b2ab7cbb2895b5c26205e9f343f2541e58a58baac3fa9cf5deb2b2ebd1ce9f2",
+          "source_fingerprint": "0078c35e9ee67b0ebe60262d56063c1d4d79d486b8f59c43b24973137aff6789"
+        },
+        "old_context": [
+          "                                    <span>{{ __('ui.key.suggested-key') }}</span>",
+          "                                    <x-ui.tooltip.simple",
+          "                                        :header=\"__('ui.key.suggested-key')\"",
+          "                                        :text=\"__(",
+          "                                            'The deterministic key suggestion generated from the Workbench key rules and scan context.',"
+        ],
+        "current_context": [
+          "                                                <span>{{ __('ui.key.suggested-key') }}</span>",
+          "                                                <x-ui.tooltip.simple",
+          "                                                    :header=\"__('ui.key.suggested-key')\"",
+          "                                                    :text=\"__(",
+          "                                                        'The key suggestion generated from scan context and Workbench rules. Editing the Current key does not change this suggestion. It is not an immutable original: scanning and synchronization can recalculate it. The key record suggestion is shown first, with the finding suggestion as fallback.',"
+        ]
+      },
+      {
+        "id": 7149,
+        "reason": "Current-key match result in segment statistics",
+        "before": {
+          "id": 7149,
+          "source_file_id": 27,
+          "fingerprint": "f605971491f81ac9b2bcbdaabb933d29bd38ceccbb0259cb0b853185c7d09275",
+          "source_signature": "970770939e22b1d1d9031096d82c85c4b2c7d326a8d9daceba30af7a715e7466",
+          "source_fingerprint": "53f0293dbeeb7a173d34877a8c6b5312e767f216ee6c5cf70c5a09dfcec43da5",
+          "expression_fingerprint": "8cd84e15f9bb42e70c15975a9444a7ceac5e6f160f757102d2d1786624b44c6b",
+          "semantic_fingerprint": "9aa9721962ea92bef8fd6cd0da8fb07ddb8c206203574ee4a0909cafd49af84c",
+          "source_line": 333,
+          "kind": "key",
+          "function_name": "__",
+          "raw_expression": "__('ui.translation.translation-key')",
+          "literal_text": null,
+          "literal_text_suggested": "translation key",
+          "found_translation_key": "ui.translation.translation-key",
+          "existing_key": "ui.translation.translation-key",
+          "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_edit_translation_key.translation_key",
+          "namespace": "packages",
+          "group": "gunreip",
+          "path_key": "laravel_translation_workbench.resources.views.livewire.entries.review",
+          "scope": "modal_edit_translation_key",
+          "dynamic_scope": null,
+          "entry_type": "key",
+          "candidate_type": null,
+          "candidate_reason": null,
+          "status": "active",
+          "first_seen_at": "2026-07-31 14:33:51",
+          "last_seen_at": "2026-08-07 11:58:33",
+          "scan_count": 196,
+          "meta": "{\"scanner\":\"literal_translation_call\",\"existing_key\":\"ui.translation.translation-key\",\"suggested_key_path\":[\"packages\",\"gunreip\",\"laravel_translation_workbench\",\"resources\",\"views\",\"livewire\",\"entries\",\"review\",\"modal_edit_translation_key\"],\"suggested_key_name\":\"translation_key\",\"suggested_key_source\":\"existing_key_at_source\"}",
+          "created_at": "2026-07-31 14:33:53",
+          "updated_at": "2026-08-07 11:58:37",
+          "dynamic_data_state": null
+        },
+        "after": {
+          "source_line": 499,
+          "source_signature": "345d938738033305032053fd1f046ba5531de8b82a45c07b01b0583b285b7f96",
+          "source_fingerprint": "b46ad64d5558763d02a4a657d77839ac01248709e7315e412d6a61172e33bbe6"
+        },
+        "old_context": [
+          "                                    @php",
+          "                                        $sectionLabel = match ($segmentStat['label']) {",
+          "                                            __('Current key') => __('ui.translation.translation-key'),",
+          "                                            __('ui.key.suggested-key') => __('ui.key.suggested-key'),",
+          "                                            default => $segmentStat['label'],"
+        ],
+        "current_context": [
+          "                                    @php",
+          "                                        $sectionLabel = match ($segmentStat['label']) {",
+          "                                            __('Current key') => __('ui.translation.translation-key'),",
+          "                                            __('ui.key.suggested-key') => __('ui.key.suggested-key'),",
+          "                                            default => $segmentStat['label'],"
+        ]
+      },
+      {
+        "id": 7155,
+        "reason": "Translation-key count in segment statistics",
+        "before": {
+          "id": 7155,
+          "source_file_id": 27,
+          "fingerprint": "f605971491f81ac9b2bcbdaabb933d29bd38ceccbb0259cb0b853185c7d09275",
+          "source_signature": "c8fbaa89679ddd071fed8000b1ce003fa37923573741553246848d4279811f06",
+          "source_fingerprint": "806f3950e18c9ef9178be8ec058f2d66fd455febd07a98593331bb94a310293d",
+          "expression_fingerprint": "8cd84e15f9bb42e70c15975a9444a7ceac5e6f160f757102d2d1786624b44c6b",
+          "semantic_fingerprint": "9aa9721962ea92bef8fd6cd0da8fb07ddb8c206203574ee4a0909cafd49af84c",
+          "source_line": 368,
+          "kind": "key",
+          "function_name": "__",
+          "raw_expression": "__('ui.translation.translation-key')",
+          "literal_text": null,
+          "literal_text_suggested": "translation key",
+          "found_translation_key": "ui.translation.translation-key",
+          "existing_key": "ui.translation.translation-key",
+          "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_edit_translation_key.translation_key",
+          "namespace": "packages",
+          "group": "gunreip",
+          "path_key": "laravel_translation_workbench.resources.views.livewire.entries.review",
+          "scope": "modal_edit_translation_key",
+          "dynamic_scope": null,
+          "entry_type": "key",
+          "candidate_type": null,
+          "candidate_reason": null,
+          "status": "active",
+          "first_seen_at": "2026-07-31 14:33:51",
+          "last_seen_at": "2026-08-07 11:58:33",
+          "scan_count": 196,
+          "meta": "{\"scanner\":\"literal_translation_call\",\"existing_key\":\"ui.translation.translation-key\",\"suggested_key_path\":[\"packages\",\"gunreip\",\"laravel_translation_workbench\",\"resources\",\"views\",\"livewire\",\"entries\",\"review\",\"modal_edit_translation_key\"],\"suggested_key_name\":\"translation_key\",\"suggested_key_source\":\"existing_key_at_source\"}",
+          "created_at": "2026-07-31 14:33:53",
+          "updated_at": "2026-08-07 11:58:37",
+          "dynamic_data_state": null
+        },
+        "after": {
+          "source_line": 544,
+          "source_signature": "0af48bb9a5dfa57d5aed6e924fef482d65b368c7e6a1d1f5411702c138c59731",
+          "source_fingerprint": "c29aebca5129c58bc9723f768a691a70c2dee12ef6a0ea73bcbac175ee2f0803"
+        },
+        "old_context": [
+          "                                                {{-- Text Translation Key --}}",
+          "                                                <flux:callout.text class=\"col-span-2 text-xs\">",
+          "                                                    {{ __('ui.translation.translation-key') }}",
+          "                                                </flux:callout.text>",
+          "                                                <flux:callout.text class=\"text-xs tabular-nums\">"
+        ],
+        "current_context": [
+          "                                                {{-- Text Translation Key --}}",
+          "                                                <flux:callout.text class=\"col-span-2 text-xs\">",
+          "                                                    {{ __('ui.translation.translation-key') }}",
+          "                                                </flux:callout.text>",
+          "                                                <flux:callout.text class=\"text-xs tabular-nums\">"
+        ]
+      },
+      {
+        "id": 7156,
+        "reason": "Suggested-key count in segment statistics",
+        "before": {
+          "id": 7156,
+          "source_file_id": 27,
+          "fingerprint": "3bfd7b58b84b2f29d641b5d15caa7ccfde1807a6c82f9740e84030464c8aae80",
+          "source_signature": "91a0a9478a7bd1314c68f39dd2f473cc329bb084d9164d5cc1988fd272cf608d",
+          "source_fingerprint": "caa887c9ede1a9647ddbb4c72018d8e914804571ff2f400eae5b72062789100c",
+          "expression_fingerprint": "22e7ae6114f6482cf2abb7c1384923d92860c35a945a82d4368c0b41b8c896c9",
+          "semantic_fingerprint": "cc6c613830ce8be1d08a9a382b10c52da113976fee2b181de137c13290f48d78",
+          "source_line": 376,
+          "kind": "key",
+          "function_name": "__",
+          "raw_expression": "__('ui.key.suggested-key')",
+          "literal_text": null,
+          "literal_text_suggested": "suggested key",
+          "found_translation_key": "ui.key.suggested-key",
+          "existing_key": "ui.key.suggested-key",
+          "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_edit_translation_key.suggested_key",
+          "namespace": "packages",
+          "group": "gunreip",
+          "path_key": "laravel_translation_workbench.resources.views.livewire.entries.review",
+          "scope": "modal_edit_translation_key",
+          "dynamic_scope": null,
+          "entry_type": "key",
+          "candidate_type": null,
+          "candidate_reason": null,
+          "status": "active",
+          "first_seen_at": "2026-07-31 14:33:51",
+          "last_seen_at": "2026-08-07 11:58:33",
+          "scan_count": 196,
+          "meta": "{\"scanner\":\"literal_translation_call\",\"existing_key\":\"ui.key.suggested-key\",\"suggested_key_path\":[\"packages\",\"gunreip\",\"laravel_translation_workbench\",\"resources\",\"views\",\"livewire\",\"entries\",\"review\",\"modal_edit_translation_key\"],\"suggested_key_name\":\"suggested_key\",\"suggested_key_source\":\"existing_key_at_source\"}",
+          "created_at": "2026-07-31 14:33:53",
+          "updated_at": "2026-08-07 11:58:37",
+          "dynamic_data_state": null
+        },
+        "after": {
+          "source_line": 552,
+          "source_signature": "4463323973043b561bb61c59765458e7aa462eddda7dd56b2a26b10ceee47a54",
+          "source_fingerprint": "9409b7b6d863ef63cc2020f0472232c1e89d45874b1cee46a6eb27a48423047b"
+        },
+        "old_context": [
+          "                                                {{-- Text Suggested Key --}}",
+          "                                                <flux:callout.text class=\"col-span-2 text-xs\">",
+          "                                                    {{ __('ui.key.suggested-key') }}",
+          "                                                </flux:callout.text>",
+          "                                                <flux:callout.text class=\"text-xs tabular-nums\">"
+        ],
+        "current_context": [
+          "                                                {{-- Text Suggested Key --}}",
+          "                                                <flux:callout.text class=\"col-span-2 text-xs\">",
+          "                                                    {{ __('ui.key.suggested-key') }}",
+          "                                                </flux:callout.text>",
+          "                                                <flux:callout.text class=\"text-xs tabular-nums\">"
+        ]
+      },
+      {
+        "id": 7159,
+        "reason": "Editable translation-key heading",
+        "before": {
+          "id": 7159,
+          "source_file_id": 27,
+          "fingerprint": "f605971491f81ac9b2bcbdaabb933d29bd38ceccbb0259cb0b853185c7d09275",
+          "source_signature": "a9203dc9e8d07063ff7f8669fb4d763cf3a2c518ab918adf54ed092a26a90f6d",
+          "source_fingerprint": "29199a61927f802951084ca48f9a06d0a8d83270d441ec1ba3e3ed40791cb9b2",
+          "expression_fingerprint": "8cd84e15f9bb42e70c15975a9444a7ceac5e6f160f757102d2d1786624b44c6b",
+          "semantic_fingerprint": "9aa9721962ea92bef8fd6cd0da8fb07ddb8c206203574ee4a0909cafd49af84c",
+          "source_line": 412,
+          "kind": "key",
+          "function_name": "__",
+          "raw_expression": "__('ui.translation.translation-key')",
+          "literal_text": null,
+          "literal_text_suggested": "translation key",
+          "found_translation_key": "ui.translation.translation-key",
+          "existing_key": "ui.translation.translation-key",
+          "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_edit_translation_key.translation_key",
+          "namespace": "packages",
+          "group": "gunreip",
+          "path_key": "laravel_translation_workbench.resources.views.livewire.entries.review",
+          "scope": "modal_edit_translation_key",
+          "dynamic_scope": null,
+          "entry_type": "key",
+          "candidate_type": null,
+          "candidate_reason": null,
+          "status": "active",
+          "first_seen_at": "2026-07-31 14:33:51",
+          "last_seen_at": "2026-08-07 11:58:33",
+          "scan_count": 196,
+          "meta": "{\"scanner\":\"literal_translation_call\",\"existing_key\":\"ui.translation.translation-key\",\"suggested_key_path\":[\"packages\",\"gunreip\",\"laravel_translation_workbench\",\"resources\",\"views\",\"livewire\",\"entries\",\"review\",\"modal_edit_translation_key\"],\"suggested_key_name\":\"translation_key\",\"suggested_key_source\":\"existing_key_at_source\"}",
+          "created_at": "2026-07-31 14:33:53",
+          "updated_at": "2026-08-07 11:58:37",
+          "dynamic_data_state": null
+        },
+        "after": {
+          "source_line": 301,
+          "source_signature": "9f52d65691d0d05c000e1c8d7d438be5a4fc034ef32bb25bfa3703efe3707ed8",
+          "source_fingerprint": "e24104543b366c3f8210b57b0e031fb0effc8fd95beb1f6cd7cff65449d36e1b"
+        },
+        "old_context": [
+          "                            <span class=\"flex w-full items-center justify-between gap-2\">",
+          "                                <span class=\"inline-flex items-center gap-1.5\">",
+          "                                    <span>{{ __('ui.translation.translation-key') }}</span>",
+          "                                    <x-ui.tooltip.simple",
+          "                                        :header=\"__('ui.translation.translation-key')\""
+        ],
+        "current_context": [
+          "                            <span class=\"flex w-full items-center justify-between gap-2\">",
+          "                                <span class=\"inline-flex items-center gap-1.5\">",
+          "                                    <span>{{ __('ui.translation.translation-key') }}</span>",
+          "                                    <x-ui.tooltip.simple",
+          "                                        :header=\"__('ui.translation.translation-key')\""
+        ]
+      },
+      {
+        "id": 7160,
+        "reason": "Editable translation-key tooltip header",
+        "before": {
+          "id": 7160,
+          "source_file_id": 27,
+          "fingerprint": "f605971491f81ac9b2bcbdaabb933d29bd38ceccbb0259cb0b853185c7d09275",
+          "source_signature": "8fef803e0c43f17a8b4d0528b0919c25ffacbc66ec62c1b36223d64a6d113fd5",
+          "source_fingerprint": "d62772500c8c6be2324d66205f9c982a2cc0445f0fd39416246268e8390a0deb",
+          "expression_fingerprint": "8cd84e15f9bb42e70c15975a9444a7ceac5e6f160f757102d2d1786624b44c6b",
+          "semantic_fingerprint": "9aa9721962ea92bef8fd6cd0da8fb07ddb8c206203574ee4a0909cafd49af84c",
+          "source_line": 414,
+          "kind": "key",
+          "function_name": "__",
+          "raw_expression": "__('ui.translation.translation-key')",
+          "literal_text": null,
+          "literal_text_suggested": "translation key",
+          "found_translation_key": "ui.translation.translation-key",
+          "existing_key": "ui.translation.translation-key",
+          "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_edit_translation_key.translation_key",
+          "namespace": "packages",
+          "group": "gunreip",
+          "path_key": "laravel_translation_workbench.resources.views.livewire.entries.review",
+          "scope": "modal_edit_translation_key",
+          "dynamic_scope": null,
+          "entry_type": "key",
+          "candidate_type": null,
+          "candidate_reason": null,
+          "status": "active",
+          "first_seen_at": "2026-07-31 14:33:51",
+          "last_seen_at": "2026-08-07 11:58:33",
+          "scan_count": 196,
+          "meta": "{\"scanner\":\"literal_translation_call\",\"existing_key\":\"ui.translation.translation-key\",\"suggested_key_path\":[\"packages\",\"gunreip\",\"laravel_translation_workbench\",\"resources\",\"views\",\"livewire\",\"entries\",\"review\",\"modal_edit_translation_key\"],\"suggested_key_name\":\"translation_key\",\"suggested_key_source\":\"existing_key_at_source\"}",
+          "created_at": "2026-07-31 14:33:53",
+          "updated_at": "2026-08-07 11:58:37",
+          "dynamic_data_state": null
+        },
+        "after": {
+          "source_line": 303,
+          "source_signature": "7c00742b51252d7ec71bc3a873e4469a0002bdabfd9bd07b7a0431e66199a011",
+          "source_fingerprint": "5149bf5e71ce8e8a3f4de00700e107d36bf73038b716adecf947df98668f6cfe"
+        },
+        "old_context": [
+          "                                    <span>{{ __('ui.translation.translation-key') }}</span>",
+          "                                    <x-ui.tooltip.simple",
+          "                                        :header=\"__('ui.translation.translation-key')\"",
+          "                                        :text=\"__(",
+          "                                            'The translation key to use for this finding. It will be saved to the workbench key record and can be used in the source code.',"
+        ],
+        "current_context": [
+          "                                    <span>{{ __('ui.translation.translation-key') }}</span>",
+          "                                    <x-ui.tooltip.simple",
+          "                                        :header=\"__('ui.translation.translation-key')\"",
+          "                                        :text=\"__(",
+          "                                            'The translation key to use for this finding. It will be saved to the workbench key record and can be used in the source code.',"
+        ]
+      },
+      {
+        "id": 8800,
+        "reason": "Translation-key column heading in segment details",
+        "before": {
+          "id": 8800,
+          "source_file_id": 27,
+          "fingerprint": "f605971491f81ac9b2bcbdaabb933d29bd38ceccbb0259cb0b853185c7d09275",
+          "source_signature": "5878886d5479e85e65918025f79d1b5ee6cedd25ab60f18c3ade135365146127",
+          "source_fingerprint": "c656ac00bab26c600dc053bc1aeb8a25efa3541559b34b43e70f0b3b7c1d6dc5",
+          "expression_fingerprint": "8cd84e15f9bb42e70c15975a9444a7ceac5e6f160f757102d2d1786624b44c6b",
+          "semantic_fingerprint": "9aa9721962ea92bef8fd6cd0da8fb07ddb8c206203574ee4a0909cafd49af84c",
+          "source_line": 524,
+          "kind": "key",
+          "function_name": "__",
+          "raw_expression": "__('ui.translation.translation-key')",
+          "literal_text": null,
+          "literal_text_suggested": "translation key",
+          "found_translation_key": "ui.translation.translation-key",
+          "existing_key": "ui.translation.translation-key",
+          "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_edit_translation_key.translation_key",
+          "namespace": "packages",
+          "group": "gunreip",
+          "path_key": "laravel_translation_workbench.resources.views.livewire.entries.review",
+          "scope": "modal_edit_translation_key",
+          "dynamic_scope": null,
+          "entry_type": "key",
+          "candidate_type": null,
+          "candidate_reason": null,
+          "status": "active",
+          "first_seen_at": "2026-08-06 08:34:47",
+          "last_seen_at": "2026-08-07 11:58:33",
+          "scan_count": 41,
+          "meta": "{\"scanner\":\"literal_translation_call\",\"existing_key\":\"ui.translation.translation-key\",\"suggested_key_path\":[\"packages\",\"gunreip\",\"laravel_translation_workbench\",\"resources\",\"views\",\"livewire\",\"entries\",\"review\",\"modal_edit_translation_key\"],\"suggested_key_name\":\"translation_key\",\"suggested_key_source\":\"existing_key_at_source\"}",
+          "created_at": "2026-08-06 08:34:52",
+          "updated_at": "2026-08-07 11:58:37",
+          "dynamic_data_state": null
+        },
+        "after": {
+          "source_line": 413,
+          "source_signature": "091a418a0a03bd6073f2b4cdfcb6b6b42b376ec1fa68a8e8a5111f98634905b2",
+          "source_fingerprint": "dcac4a8d6cf0d4520345170e4945841d5d1c28eb4a5551b245d9376c241ba3b1"
+        },
+        "old_context": [
+          "                                                        class=\"grid max-h-40 grid-cols-2 gap-x-3 gap-y-2 overflow-y-auto pr-1\">",
+          "                                                        <flux:callout.heading>",
+          "                                                            {{ __('ui.translation.translation-key') }}",
+          "                                                        </flux:callout.heading>",
+          "                                                        <flux:callout.heading>"
+        ],
+        "current_context": [
+          "                                                        class=\"grid max-h-40 grid-cols-2 gap-x-3 gap-y-2 overflow-y-auto pr-1\">",
+          "                                                        <flux:callout.heading>",
+          "                                                            {{ __('ui.translation.translation-key') }}",
+          "                                                        </flux:callout.heading>",
+          "                                                        <flux:callout.heading>"
+        ]
+      }
+    ]
+  },
+  "verification": {
+    "key_and_value_tables_unchanged": true,
+    "table_hashes": {
+      "keys": "91fb1bbe5fbe5dc9ee64220a3754c0d8e7752cfb8d51b76836f6d65ec1d90601",
+      "key_findings": "e5b3d170dbd981768ce035876953aacb0122ae45ae24bf4e8e54a421afa13ae6",
+      "key_values": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lang_values": "9d4533b38a4023a348f4d7471b5fa45f5a1644e3eb3bc4b33390e89adfe012af"
+    },
+    "archived_findings_unchanged": true,
+    "archived_finding_ids": [
+      6566,
+      7072,
+      7075
+    ],
+    "history_events_added": 8,
+    "repeat_result": {
+      "state": "already_applied",
+      "actions": 0
+    },
+    "positions": [
+      {
+        "id": 7131,
+        "source_line": 235,
+        "status": "active"
+      },
+      {
+        "id": 7132,
+        "source_line": 237,
+        "status": "active"
+      },
+      {
+        "id": 7149,
+        "source_line": 499,
+        "status": "active"
+      },
+      {
+        "id": 7151,
+        "source_line": 334,
+        "status": "active"
+      },
+      {
+        "id": 7155,
+        "source_line": 544,
+        "status": "active"
+      },
+      {
+        "id": 7156,
+        "source_line": 552,
+        "status": "active"
+      },
+      {
+        "id": 7159,
+        "source_line": 301,
+        "status": "active"
+      },
+      {
+        "id": 7160,
+        "source_line": 303,
+        "status": "active"
+      },
+      {
+        "id": 8800,
+        "source_line": 413,
+        "status": "active"
+      }
+    ]
+  },
+  "remaining_case": {
+    "finding_id": 7151,
+    "current_line": 500,
+    "reason": "Two distinct identical calls share the line-based source signature. Scanner now retains both offsets; matcher blocks ambiguous writes and preserves active findings. Persistent occurrence identity still needs finer granularity."
+  },
+  "file_reconciliation": {
+    "read_only": true,
+    "scope": {
+      "scanned_paths": [
+        "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php"
+      ],
+      "missing_paths": []
+    },
+    "summary": {
+      "unchanged": 18,
+      "moved": 32,
+      "ambiguous": 29,
+      "new": 8,
+      "missing": 9
+    },
+    "rows": [
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "2a4c4432fd441b46998ff5e19ddad56d5c0182529e37fbc6e77caa88a5c9e498",
+        "old_line": 42,
+        "line": 42,
+        "finding_ids": [
+          6940
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 42,
+          "source_signature": "2a4c4432fd441b46998ff5e19ddad56d5c0182529e37fbc6e77caa88a5c9e498",
+          "source_fingerprint": "b85f1adfe51a99bf19ee6d7f201594508f728e4c04297b78ba316e39cefc628e"
+        },
+        "assignments": [
+          {
+            "finding_id": 6940,
+            "id": 4900,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "6fa057e8d89855a3deaae64f03eb88310958a2056f084f0201ed2ea0971277da",
+        "old_line": 43,
+        "line": 43,
+        "finding_ids": [
+          6941
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 43,
+          "source_signature": "6fa057e8d89855a3deaae64f03eb88310958a2056f084f0201ed2ea0971277da",
+          "source_fingerprint": "5e4fd90e283ae8073a6b481e6c2ff75355b1bd2ecb3621b5ca184203f2197e9d"
+        },
+        "assignments": [
+          {
+            "finding_id": 6941,
+            "id": 4901,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "3b52aafa3dda16d6bf26ee6b470859760c8aee14ad061111b9cde1f58cb1c289",
+        "old_line": 44,
+        "line": 44,
+        "finding_ids": [
+          6942
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 44,
+          "source_signature": "3b52aafa3dda16d6bf26ee6b470859760c8aee14ad061111b9cde1f58cb1c289",
+          "source_fingerprint": "e528cfa9afbf5a1546f658614475740f96000b450943bd34ffd9ee92dd57b8bc"
+        },
+        "assignments": [
+          {
+            "finding_id": 6942,
+            "id": 4902,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "15fca56bf36307597b3100fdcfcafc283b5aa025012de08b404be55714ced2b3",
+        "old_line": 45,
+        "line": 45,
+        "finding_ids": [
+          6943
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 45,
+          "source_signature": "15fca56bf36307597b3100fdcfcafc283b5aa025012de08b404be55714ced2b3",
+          "source_fingerprint": "dc6175aa96db95193151bf079a933fc71bb1e708d1d14c76a9803c983b38de60"
+        },
+        "assignments": [
+          {
+            "finding_id": 6943,
+            "id": 4903,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "fde63cf25e8f021b5d85d97b53e588d43268ba51bb61d1cc9635c7892f75e193",
+        "old_line": 48,
+        "line": 48,
+        "finding_ids": [
+          7106
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 48,
+          "source_signature": "fde63cf25e8f021b5d85d97b53e588d43268ba51bb61d1cc9635c7892f75e193",
+          "source_fingerprint": "2da8300bfc832244f5e14f33a1c7696a779ac0367300258e96eb01d46eaf4839"
+        },
+        "assignments": [
+          {
+            "finding_id": 7106,
+            "id": 4904,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "424d55c0d49b2d3bb49b7a8efbffede752ed9d2f93fdef0977f861d7a9789c5e",
+        "old_line": 51,
+        "line": 51,
+        "finding_ids": [
+          7107
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 51,
+          "source_signature": "424d55c0d49b2d3bb49b7a8efbffede752ed9d2f93fdef0977f861d7a9789c5e",
+          "source_fingerprint": "42b93114b58cbfdf0f81aa1b87eb16b4e4b11964d3fa537c99d2327f1c914c15"
+        },
+        "assignments": [
+          {
+            "finding_id": 7107,
+            "id": 4905,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "e4be4fb9bf39c1f40eb8e3a1aa2438ae1123e509f631595f6b0c553113ec3e4d",
+        "old_line": 54,
+        "line": 54,
+        "finding_ids": [
+          7108
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 54,
+          "source_signature": "e4be4fb9bf39c1f40eb8e3a1aa2438ae1123e509f631595f6b0c553113ec3e4d",
+          "source_fingerprint": "e62f12f7ecc0fda0934cd9ae3646edd76b3d6356a54df48e6c32e0061d03d0ec"
+        },
+        "assignments": [
+          {
+            "finding_id": 7108,
+            "id": 4906,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "644d74785fb2a9d96010264bb1769446e2065596e00c223d5f713bc874b4cc87",
+        "old_line": 57,
+        "line": 57,
+        "finding_ids": [
+          7109
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 57,
+          "source_signature": "644d74785fb2a9d96010264bb1769446e2065596e00c223d5f713bc874b4cc87",
+          "source_fingerprint": "138ff3d55c943a8067aa5bff9c8463a8705674359af11b0b2a8ebfdac856fd1f"
+        },
+        "assignments": [
+          {
+            "finding_id": 7109,
+            "id": 4907,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "722ab0842189ff8b4904d934d3b73cb0c669a8c676c1a54c74a0f2bcd2d6df65",
+        "old_line": 211,
+        "line": 211,
+        "finding_ids": [
+          7126
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 211,
+          "source_signature": "722ab0842189ff8b4904d934d3b73cb0c669a8c676c1a54c74a0f2bcd2d6df65",
+          "source_fingerprint": "4cccbee948e33e006d530f5db59aca2b5734040a3182bd18928b08a3b51c9b15"
+        },
+        "assignments": [
+          {
+            "finding_id": 7126,
+            "id": 3903,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "97635f1e646da6d2775800e340ec6eaa8b1a08af395219ad3e793234e0851894",
+        "old_line": 235,
+        "line": 235,
+        "finding_ids": [
+          7131
+        ],
+        "scanned_key": "ui.key.suggested-key",
+        "position": {
+          "source_line": 235,
+          "source_signature": "97635f1e646da6d2775800e340ec6eaa8b1a08af395219ad3e793234e0851894",
+          "source_fingerprint": "86f67df109e668bc557becb2d6c92fa9f3edd62c4ca6899eac4e2eb5fd5069b6"
+        },
+        "assignments": [
+          {
+            "finding_id": 7131,
+            "id": 473,
+            "translation_key": "ui.key.suggested-key",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "5b2ab7cbb2895b5c26205e9f343f2541e58a58baac3fa9cf5deb2b2ebd1ce9f2",
+        "old_line": 237,
+        "line": 237,
+        "finding_ids": [
+          7132
+        ],
+        "scanned_key": "ui.key.suggested-key",
+        "position": {
+          "source_line": 237,
+          "source_signature": "5b2ab7cbb2895b5c26205e9f343f2541e58a58baac3fa9cf5deb2b2ebd1ce9f2",
+          "source_fingerprint": "0078c35e9ee67b0ebe60262d56063c1d4d79d486b8f59c43b24973137aff6789"
+        },
+        "assignments": [
+          {
+            "finding_id": 7132,
+            "id": 473,
+            "translation_key": "ui.key.suggested-key",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "8b2f26a25ec72793cc80ef38749a6289b256ce05e84dfff7e78955bf510eca0b",
+        "old_line": 263,
+        "line": 263,
+        "finding_ids": [
+          7136
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 263,
+          "source_signature": "8b2f26a25ec72793cc80ef38749a6289b256ce05e84dfff7e78955bf510eca0b",
+          "source_fingerprint": "86ed2e8688fa0f01ed43fbd1b1b14ad21c83037fbd1ebc64cd2dc381a495dcdc"
+        },
+        "assignments": [
+          {
+            "finding_id": 7136,
+            "id": 3904,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "9f52d65691d0d05c000e1c8d7d438be5a4fc034ef32bb25bfa3703efe3707ed8",
+        "old_line": 301,
+        "line": 301,
+        "finding_ids": [
+          7159
+        ],
+        "scanned_key": "ui.translation.translation-key",
+        "position": {
+          "source_line": 301,
+          "source_signature": "9f52d65691d0d05c000e1c8d7d438be5a4fc034ef32bb25bfa3703efe3707ed8",
+          "source_fingerprint": "e24104543b366c3f8210b57b0e031fb0effc8fd95beb1f6cd7cff65449d36e1b"
+        },
+        "assignments": [
+          {
+            "finding_id": 7159,
+            "id": 339,
+            "translation_key": "ui.translation.translation-key",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "7c00742b51252d7ec71bc3a873e4469a0002bdabfd9bd07b7a0431e66199a011",
+        "old_line": 303,
+        "line": 303,
+        "finding_ids": [
+          7160
+        ],
+        "scanned_key": "ui.translation.translation-key",
+        "position": {
+          "source_line": 303,
+          "source_signature": "7c00742b51252d7ec71bc3a873e4469a0002bdabfd9bd07b7a0431e66199a011",
+          "source_fingerprint": "5149bf5e71ce8e8a3f4de00700e107d36bf73038b716adecf947df98668f6cfe"
+        },
+        "assignments": [
+          {
+            "finding_id": 7160,
+            "id": 339,
+            "translation_key": "ui.translation.translation-key",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "091a418a0a03bd6073f2b4cdfcb6b6b42b376ec1fa68a8e8a5111f98634905b2",
+        "old_line": 413,
+        "line": 413,
+        "finding_ids": [
+          8800
+        ],
+        "scanned_key": "ui.translation.translation-key",
+        "position": {
+          "source_line": 413,
+          "source_signature": "091a418a0a03bd6073f2b4cdfcb6b6b42b376ec1fa68a8e8a5111f98634905b2",
+          "source_fingerprint": "dcac4a8d6cf0d4520345170e4945841d5d1c28eb4a5551b245d9376c241ba3b1"
+        },
+        "assignments": [
+          {
+            "finding_id": 8800,
+            "id": 339,
+            "translation_key": "ui.translation.translation-key",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "345d938738033305032053fd1f046ba5531de8b82a45c07b01b0583b285b7f96",
+        "old_line": 499,
+        "line": 499,
+        "finding_ids": [
+          7149
+        ],
+        "scanned_key": "ui.translation.translation-key",
+        "position": {
+          "source_line": 499,
+          "source_signature": "345d938738033305032053fd1f046ba5531de8b82a45c07b01b0583b285b7f96",
+          "source_fingerprint": "b46ad64d5558763d02a4a657d77839ac01248709e7315e412d6a61172e33bbe6"
+        },
+        "assignments": [
+          {
+            "finding_id": 7149,
+            "id": 339,
+            "translation_key": "ui.translation.translation-key",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "0af48bb9a5dfa57d5aed6e924fef482d65b368c7e6a1d1f5411702c138c59731",
+        "old_line": 544,
+        "line": 544,
+        "finding_ids": [
+          7155
+        ],
+        "scanned_key": "ui.translation.translation-key",
+        "position": {
+          "source_line": 544,
+          "source_signature": "0af48bb9a5dfa57d5aed6e924fef482d65b368c7e6a1d1f5411702c138c59731",
+          "source_fingerprint": "c29aebca5129c58bc9723f768a691a70c2dee12ef6a0ea73bcbac175ee2f0803"
+        },
+        "assignments": [
+          {
+            "finding_id": 7155,
+            "id": 339,
+            "translation_key": "ui.translation.translation-key",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "unchanged",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "4463323973043b561bb61c59765458e7aa462eddda7dd56b2a26b10ceee47a54",
+        "old_line": 552,
+        "line": 552,
+        "finding_ids": [
+          7156
+        ],
+        "scanned_key": "ui.key.suggested-key",
+        "position": {
+          "source_line": 552,
+          "source_signature": "4463323973043b561bb61c59765458e7aa462eddda7dd56b2a26b10ceee47a54",
+          "source_fingerprint": "9409b7b6d863ef63cc2020f0472232c1e89d45874b1cee46a6eb27a48423047b"
+        },
+        "assignments": [
+          {
+            "finding_id": 7156,
+            "id": 473,
+            "translation_key": "ui.key.suggested-key",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "abe415c26d5aa084dd57f3bba3b063862ab10849e37ea240f07f0367ea042ffa",
+        "old_line": 99,
+        "line": 89,
+        "finding_ids": [
+          7110
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 89,
+          "source_signature": "abe415c26d5aa084dd57f3bba3b063862ab10849e37ea240f07f0367ea042ffa",
+          "source_fingerprint": "930a194bdc6aff33be1065cc748b9d9df1bdb53b3e7970d814573347e1742124"
+        },
+        "assignments": [
+          {
+            "finding_id": 7110,
+            "id": 484,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "a7e5c66045e92ac08175ad068d6c7e5657173a024c19082bf20210cba5eb2231",
+        "old_line": 107,
+        "line": 97,
+        "finding_ids": [
+          8642
+        ],
+        "scanned_key": "ui.ui.ui-candidate",
+        "position": {
+          "source_line": 97,
+          "source_signature": "a7e5c66045e92ac08175ad068d6c7e5657173a024c19082bf20210cba5eb2231",
+          "source_fingerprint": "52a12ca28e119d17f6dab57f31ade2832977a2493e9ae3486b0285824bdfbfed"
+        },
+        "assignments": [
+          {
+            "finding_id": 8642,
+            "id": 273,
+            "translation_key": "ui.ui.ui-candidate",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "baa0f820fae0623b104711a8c3430349c7b235b8bc99cfe923b725765f2410b2",
+        "old_line": 107,
+        "line": 97,
+        "finding_ids": [
+          7112
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 97,
+          "source_signature": "baa0f820fae0623b104711a8c3430349c7b235b8bc99cfe923b725765f2410b2",
+          "source_fingerprint": "2e75fe069f81f78e44541895b063b3c34f716ef6e9a3e481cbd4c55245f2f282"
+        },
+        "assignments": [
+          {
+            "finding_id": 7112,
+            "id": 485,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "3fd858177b6f13d6eafaadd1accc50461097c8764755beaa1549151191e752ed",
+        "old_line": 107,
+        "line": 97,
+        "finding_ids": [
+          7113
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 97,
+          "source_signature": "3fd858177b6f13d6eafaadd1accc50461097c8764755beaa1549151191e752ed",
+          "source_fingerprint": "13f65dd54906cb568151c241067e026e474ca7356ae57d096c565408ff9224d3"
+        },
+        "assignments": [
+          {
+            "finding_id": 7113,
+            "id": 486,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "5519492d8f2fbf968641671a3fe074e040e1f5bb2f926b3b1966c891267c4f10",
+        "old_line": 114,
+        "line": 104,
+        "finding_ids": [
+          7114
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 104,
+          "source_signature": "5519492d8f2fbf968641671a3fe074e040e1f5bb2f926b3b1966c891267c4f10",
+          "source_fingerprint": "3ef45e0d3e2e8ccfae09acfcfd2b6b25a9abefc9d99c72d90dd21aa3dd875e97"
+        },
+        "assignments": [
+          {
+            "finding_id": 7114,
+            "id": 4095,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "27a0820de487ea49002e161369d106ddce0daf08f94bb2fe46ca03e1a1d66ad3",
+        "old_line": null,
+        "line": 104,
+        "finding_ids": [
+          7038,
+          7117
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 104,
+          "source_signature": "27a0820de487ea49002e161369d106ddce0daf08f94bb2fe46ca03e1a1d66ad3",
+          "source_fingerprint": "a4dddecdba235f6b5bafc2488553a5f3bb22ecc5fb779230eea4bf4efeaca173"
+        },
+        "assignments": [
+          {
+            "finding_id": 7038,
+            "id": 4096,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7117,
+            "id": 4096,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "15eb4adc5fd83988765281ed2c2fb31607530046081f7e0f2865e210e23ffd65",
+        "old_line": 114,
+        "line": 104,
+        "finding_ids": [
+          7115
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 104,
+          "source_signature": "15eb4adc5fd83988765281ed2c2fb31607530046081f7e0f2865e210e23ffd65",
+          "source_fingerprint": "a14f702ac9c0218cb4811ddc70beda8d3caec087c0801706a4a9f73a6f185d73"
+        },
+        "assignments": [
+          {
+            "finding_id": 7115,
+            "id": 4097,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "c7715e57c8a44acf98884cdb5f8301f3f20f289894bed7bd557d36ff67fa8782",
+        "old_line": 122,
+        "line": 112,
+        "finding_ids": [
+          7116
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 112,
+          "source_signature": "c7715e57c8a44acf98884cdb5f8301f3f20f289894bed7bd557d36ff67fa8782",
+          "source_fingerprint": "c7419bba46c0619e1efc9579a297150c1253c4427c1294e597da1fa8e152defe"
+        },
+        "assignments": [
+          {
+            "finding_id": 7116,
+            "id": 4098,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "fbd23a2513e0ce81bbf85d1068d01937177d9689531bedcb74c6518d3c01721d",
+        "old_line": null,
+        "line": 112,
+        "finding_ids": [
+          7038,
+          7117
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 112,
+          "source_signature": "fbd23a2513e0ce81bbf85d1068d01937177d9689531bedcb74c6518d3c01721d",
+          "source_fingerprint": "37c18adc7b2722d072404be78a98812ea5652dc18b9378b475a5b3a5fbb323d0"
+        },
+        "assignments": [
+          {
+            "finding_id": 7038,
+            "id": 4096,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7117,
+            "id": 4096,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "9fc0e45d2770115c881cc7f20f58da1d68ebd158911b6958d4b939df68a2caa2",
+        "old_line": 141,
+        "line": 131,
+        "finding_ids": [
+          7118
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 131,
+          "source_signature": "9fc0e45d2770115c881cc7f20f58da1d68ebd158911b6958d4b939df68a2caa2",
+          "source_fingerprint": "c58b27787e3a745e9a9a3fe1a2c273430095105cd2c3cf36d3a923aae5192785"
+        },
+        "assignments": [
+          {
+            "finding_id": 7118,
+            "id": 493,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "new",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "4ff9fd63ba83b113a4b9a3de95e63c2dfe0f39395b59dc176edea9f4cda02b66",
+        "old_line": null,
+        "line": 162,
+        "finding_ids": [],
+        "scanned_key": null,
+        "position": {
+          "source_line": 162,
+          "source_signature": "4ff9fd63ba83b113a4b9a3de95e63c2dfe0f39395b59dc176edea9f4cda02b66",
+          "source_fingerprint": "492109dd3972089cff765ef2404727719757eb5a5e228368a6aceb13e061fcfe"
+        },
+        "assignments": [],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "new",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "15b742ae7fa05ba61d27259fcb380e487bd62a46a5bd3f453998a8bf38f13415",
+        "old_line": null,
+        "line": 176,
+        "finding_ids": [],
+        "scanned_key": null,
+        "position": {
+          "source_line": 176,
+          "source_signature": "15b742ae7fa05ba61d27259fcb380e487bd62a46a5bd3f453998a8bf38f13415",
+          "source_fingerprint": "d13ad5deb381b6135853feff818769ab39a0ed3dd9e720a8b656fc9ab15bfec2"
+        },
+        "assignments": [],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "36dcfa4134d7b7c796073e71c230b12d71a0bb76b7a3c65980f44451ba95fa8c",
+        "old_line": null,
+        "line": 183,
+        "finding_ids": [
+          7119,
+          7120,
+          7150
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 183,
+          "source_signature": "36dcfa4134d7b7c796073e71c230b12d71a0bb76b7a3c65980f44451ba95fa8c",
+          "source_fingerprint": "e302c556f7be8a7a3b3e2135fcc8ab499e389128d8031abfffb64a8b47e4f143"
+        },
+        "assignments": [
+          {
+            "finding_id": 7119,
+            "id": 494,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7120,
+            "id": 494,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7150,
+            "id": 494,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "9a2c6018d23dcb4ce799acc51485233135512df9c15978e9b0c55dacd486a46b",
+        "old_line": null,
+        "line": 185,
+        "finding_ids": [
+          7119,
+          7120,
+          7150
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 185,
+          "source_signature": "9a2c6018d23dcb4ce799acc51485233135512df9c15978e9b0c55dacd486a46b",
+          "source_fingerprint": "9760c7ae19b7747cdddbc6abf22692beca43635b23da4d8b1c66ababb9888815"
+        },
+        "assignments": [
+          {
+            "finding_id": 7119,
+            "id": 494,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7120,
+            "id": 494,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7150,
+            "id": 494,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "new",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "3c05db8c18a428377c7b431a836c293648e2361dfa058c42fbd973f6e439ee06",
+        "old_line": null,
+        "line": 186,
+        "finding_ids": [],
+        "scanned_key": null,
+        "position": {
+          "source_line": 186,
+          "source_signature": "3c05db8c18a428377c7b431a836c293648e2361dfa058c42fbd973f6e439ee06",
+          "source_fingerprint": "805dd3daefabf1807eed4a5a9ec6d9ebb4babf16f753e5eda992b2ee9f252970"
+        },
+        "assignments": [],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "6ae88b70a0a942582664173a049dddfc5a356f38a5dbd0f5e15e1dd1fa3686d6",
+        "old_line": null,
+        "line": 194,
+        "finding_ids": [
+          8245,
+          8246,
+          8247
+        ],
+        "scanned_key": "ui.state.missing",
+        "position": {
+          "source_line": 194,
+          "source_signature": "6ae88b70a0a942582664173a049dddfc5a356f38a5dbd0f5e15e1dd1fa3686d6",
+          "source_fingerprint": "9e5ed79edd8dacc40ce25d4b71c4ccb661e19860df499baf7b6430e64485bdbd"
+        },
+        "assignments": [
+          {
+            "finding_id": 8245,
+            "id": 250,
+            "translation_key": "ui.state.missing",
+            "review_status": "reviewed",
+            "status": "open"
+          },
+          {
+            "finding_id": 8246,
+            "id": 250,
+            "translation_key": "ui.state.missing",
+            "review_status": "reviewed",
+            "status": "open"
+          },
+          {
+            "finding_id": 8247,
+            "id": 250,
+            "translation_key": "ui.state.missing",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "fc1340b4b88719aebdd94b21050c407d9277f448d58157e73af61978b814bcc9",
+        "old_line": null,
+        "line": 200,
+        "finding_ids": [
+          7123,
+          7124,
+          7157
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 200,
+          "source_signature": "fc1340b4b88719aebdd94b21050c407d9277f448d58157e73af61978b814bcc9",
+          "source_fingerprint": "29578b37cdcab6e578c4a008e52f546d0bfa21880e764d81dcef0f36db25305f"
+        },
+        "assignments": [
+          {
+            "finding_id": 7123,
+            "id": 497,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7124,
+            "id": 497,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7157,
+            "id": 497,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "4d1fb1984f3077dc224a451d1c8526186450090a6589546ad8f5f62dd1d38de9",
+        "old_line": null,
+        "line": 202,
+        "finding_ids": [
+          7123,
+          7124,
+          7157
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 202,
+          "source_signature": "4d1fb1984f3077dc224a451d1c8526186450090a6589546ad8f5f62dd1d38de9",
+          "source_fingerprint": "f183432da6ea4d181072814408b0cbf06babb3ba23f97979ff1da8f41eac740e"
+        },
+        "assignments": [
+          {
+            "finding_id": 7123,
+            "id": 497,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7124,
+            "id": 497,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7157,
+            "id": 497,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "new",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "fcc6003767415b8e7df0ab6c4a1b24ca13925c5bf9f096c701c0853d76c39c62",
+        "old_line": null,
+        "line": 203,
+        "finding_ids": [],
+        "scanned_key": null,
+        "position": {
+          "source_line": 203,
+          "source_signature": "fcc6003767415b8e7df0ab6c4a1b24ca13925c5bf9f096c701c0853d76c39c62",
+          "source_fingerprint": "83c77300d468a555658722ac871344f4efdfc91a5a45bb5488ae01e3567082a9"
+        },
+        "assignments": [],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "403c7e463f0299402d023d2515d3b7100729ed27097a84f599ad5e092992b415",
+        "old_line": null,
+        "line": 217,
+        "finding_ids": [
+          7127,
+          7128
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 217,
+          "source_signature": "403c7e463f0299402d023d2515d3b7100729ed27097a84f599ad5e092992b415",
+          "source_fingerprint": "0b75e6566da24644797b6208a6a3c1239c4b8a4eff4516052c860108ef97f09e"
+        },
+        "assignments": [
+          {
+            "finding_id": 7127,
+            "id": 499,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7128,
+            "id": 499,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "8450778ebec031061eb8c0a7e52fb62ad5bba3e34684b17819b55aa53f76b359",
+        "old_line": null,
+        "line": 219,
+        "finding_ids": [
+          7127,
+          7128
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 219,
+          "source_signature": "8450778ebec031061eb8c0a7e52fb62ad5bba3e34684b17819b55aa53f76b359",
+          "source_fingerprint": "aa3104af5427eccad4e12d26bbd3c374e3d293f4d755e8ca469c54a763cd5bb1"
+        },
+        "assignments": [
+          {
+            "finding_id": 7127,
+            "id": 499,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7128,
+            "id": 499,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "new",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "813c5302202262c23cb01da16643713193c125009d63b9bb340ea7f341fb6124",
+        "old_line": null,
+        "line": 220,
+        "finding_ids": [],
+        "scanned_key": null,
+        "position": {
+          "source_line": 220,
+          "source_signature": "813c5302202262c23cb01da16643713193c125009d63b9bb340ea7f341fb6124",
+          "source_fingerprint": "bebc9c6285d7ad2d9972fe07b7d9cd8a6d14e888ab3262c7ea47d58e1dd90aa5"
+        },
+        "assignments": [],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "c625559d261922df71117b8cd6dd5b1b852f2812583def8c11c968ee87a1daeb",
+        "old_line": null,
+        "line": 228,
+        "finding_ids": [
+          8245,
+          8246,
+          8247
+        ],
+        "scanned_key": "ui.state.missing",
+        "position": {
+          "source_line": 228,
+          "source_signature": "c625559d261922df71117b8cd6dd5b1b852f2812583def8c11c968ee87a1daeb",
+          "source_fingerprint": "528bcf799eef7d6e8baee0972eee1e52594b8735a2aa4cad1619fd1bc35f8840"
+        },
+        "assignments": [
+          {
+            "finding_id": 8245,
+            "id": 250,
+            "translation_key": "ui.state.missing",
+            "review_status": "reviewed",
+            "status": "open"
+          },
+          {
+            "finding_id": 8246,
+            "id": 250,
+            "translation_key": "ui.state.missing",
+            "review_status": "reviewed",
+            "status": "open"
+          },
+          {
+            "finding_id": 8247,
+            "id": 250,
+            "translation_key": "ui.state.missing",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "new",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "10ed09ff41e091d009f380560b676f4eaba17e948da2c0649aaa9f131960c58e",
+        "old_line": null,
+        "line": 238,
+        "finding_ids": [],
+        "scanned_key": null,
+        "position": {
+          "source_line": 238,
+          "source_signature": "10ed09ff41e091d009f380560b676f4eaba17e948da2c0649aaa9f131960c58e",
+          "source_fingerprint": "dca0109f75e40e09371052bd32d07a9e9b43fa6c84b655ffd01626cae5e56bff"
+        },
+        "assignments": [],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "4d83ab0f42828764e71305b76d77968ec6b4b8b9356a90ac7c2fa6caefef9dd2",
+        "old_line": null,
+        "line": 246,
+        "finding_ids": [
+          7134,
+          7135
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 246,
+          "source_signature": "4d83ab0f42828764e71305b76d77968ec6b4b8b9356a90ac7c2fa6caefef9dd2",
+          "source_fingerprint": "2681b83ff5e549b2b24bb4ab88220dcb7eba4851aedbb5be3d8ebec39108662b"
+        },
+        "assignments": [
+          {
+            "finding_id": 7134,
+            "id": 503,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7135,
+            "id": 503,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "bf2fec230db538888ff8b714cb1f809fb9a358be8638de58a5e913fa9fba6789",
+        "old_line": null,
+        "line": 256,
+        "finding_ids": [
+          7134,
+          7135
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 256,
+          "source_signature": "bf2fec230db538888ff8b714cb1f809fb9a358be8638de58a5e913fa9fba6789",
+          "source_fingerprint": "d3778bcb2665dc012734f8b286008874c77d020b554461ba5125c977f51d5cd6"
+        },
+        "assignments": [
+          {
+            "finding_id": 7134,
+            "id": 503,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7135,
+            "id": 503,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "d899882b5ddb163cf953c5b8a14762c43ce94d6e4173c43f0eab0067b03feac8",
+        "old_line": null,
+        "line": 264,
+        "finding_ids": [
+          7137,
+          7138
+        ],
+        "scanned_key": "ui.translation.transform-suggested-key-to-ui-translation-key",
+        "position": {
+          "source_line": 264,
+          "source_signature": "d899882b5ddb163cf953c5b8a14762c43ce94d6e4173c43f0eab0067b03feac8",
+          "source_fingerprint": "8588e84f413d5489e3c46a6c62c493526bf2c58bc353d44d290f03314b62119e"
+        },
+        "assignments": [
+          {
+            "finding_id": 7137,
+            "id": 504,
+            "translation_key": "ui.translation.transform-suggested-key-to-ui-translation-key",
+            "review_status": "reviewed",
+            "status": "open"
+          },
+          {
+            "finding_id": 7138,
+            "id": 504,
+            "translation_key": "ui.translation.transform-suggested-key-to-ui-translation-key",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "0508246d105ed801afc1283f1116f71c39aee1fa792139803aa2a196c348abe9",
+        "old_line": null,
+        "line": 274,
+        "finding_ids": [
+          7137,
+          7138
+        ],
+        "scanned_key": "ui.translation.transform-suggested-key-to-ui-translation-key",
+        "position": {
+          "source_line": 274,
+          "source_signature": "0508246d105ed801afc1283f1116f71c39aee1fa792139803aa2a196c348abe9",
+          "source_fingerprint": "018c841f473fbd39e7541242b400b5574449efddf68ae734df897e23b1ea8c26"
+        },
+        "assignments": [
+          {
+            "finding_id": 7137,
+            "id": 504,
+            "translation_key": "ui.translation.transform-suggested-key-to-ui-translation-key",
+            "review_status": "reviewed",
+            "status": "open"
+          },
+          {
+            "finding_id": 7138,
+            "id": 504,
+            "translation_key": "ui.translation.transform-suggested-key-to-ui-translation-key",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "d23bfd470be3739aeb7f574e4bd5f00c352589944048cb1b7e07eb4f72a26023",
+        "old_line": null,
+        "line": 283,
+        "finding_ids": [
+          8245,
+          8246,
+          8247
+        ],
+        "scanned_key": "ui.state.missing",
+        "position": {
+          "source_line": 283,
+          "source_signature": "d23bfd470be3739aeb7f574e4bd5f00c352589944048cb1b7e07eb4f72a26023",
+          "source_fingerprint": "399c5ed05b2c3b19a9beaafdf09e0ffe15bc6ce2cd2613d35819f1cf5d2b7078"
+        },
+        "assignments": [
+          {
+            "finding_id": 8245,
+            "id": 250,
+            "translation_key": "ui.state.missing",
+            "review_status": "reviewed",
+            "status": "open"
+          },
+          {
+            "finding_id": 8246,
+            "id": 250,
+            "translation_key": "ui.state.missing",
+            "review_status": "reviewed",
+            "status": "open"
+          },
+          {
+            "finding_id": 8247,
+            "id": 250,
+            "translation_key": "ui.state.missing",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "c69368cae02cdaf0474d6ecf7e3b0a4a9ce831315b60a2d0cb546909767a611b",
+        "old_line": 405,
+        "line": 304,
+        "finding_ids": [
+          7161
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 304,
+          "source_signature": "c69368cae02cdaf0474d6ecf7e3b0a4a9ce831315b60a2d0cb546909767a611b",
+          "source_fingerprint": "5afe045fa19466627dd6cbab3cecc6121fc447d06c773acc7ab8742e718227f6"
+        },
+        "assignments": [
+          {
+            "finding_id": 7161,
+            "id": 516,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "2798bc7b94685e245b9aad93656aa3ef56248e7ee798e84b1be294a88e615da5",
+        "old_line": 415,
+        "line": 314,
+        "finding_ids": [
+          7162
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 314,
+          "source_signature": "2798bc7b94685e245b9aad93656aa3ef56248e7ee798e84b1be294a88e615da5",
+          "source_fingerprint": "f2b67d66bfaed15b6c837efef3273d7f0d74ea6fbebe7c72d4c57f66e926c5a3"
+        },
+        "assignments": [
+          {
+            "finding_id": 7162,
+            "id": 517,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "8d06dfc989ddbdb47723f1b32cd2d6026b1e0f64cdddd3e81040514e0f0edfad",
+        "old_line": 424,
+        "line": 323,
+        "finding_ids": [
+          7163
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 323,
+          "source_signature": "8d06dfc989ddbdb47723f1b32cd2d6026b1e0f64cdddd3e81040514e0f0edfad",
+          "source_fingerprint": "648dd4cd9e0cce1809e98132b018526bb9d27479f6d61a9bd5210f70ef5b5f3e"
+        },
+        "assignments": [
+          {
+            "finding_id": 7163,
+            "id": 518,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "783228ce76b6e144d8c01f32fdfb09544a1321ecea2dc7981fa9377564b4f128",
+        "old_line": 427,
+        "line": 326,
+        "finding_ids": [
+          7934
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 326,
+          "source_signature": "783228ce76b6e144d8c01f32fdfb09544a1321ecea2dc7981fa9377564b4f128",
+          "source_fingerprint": "44380a728b36d82a2b14bf46f1522ea6d3e27d7be06a6d7ef21840c3d14e9dde"
+        },
+        "assignments": [
+          {
+            "finding_id": 7934,
+            "id": 519,
+            "translation_key": "ui.delete",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "79dac1380355b847d8748e0b29a260450ae174711e344664c1d0568f055a9f62",
+        "old_line": null,
+        "line": 327,
+        "finding_ids": [
+          7165,
+          7168
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 327,
+          "source_signature": "79dac1380355b847d8748e0b29a260450ae174711e344664c1d0568f055a9f62",
+          "source_fingerprint": "8d78c202f87a9865a47539a3f201b20b3555e9e14c93b673b4c8cb7e93e48b99"
+        },
+        "assignments": [
+          {
+            "finding_id": 7165,
+            "id": 520,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7168,
+            "id": 520,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "be0216448da04c6030a6318cb332cd858fc819a2e356794c2d21679e8aab1151",
+        "old_line": 438,
+        "line": 337,
+        "finding_ids": [
+          7166
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 337,
+          "source_signature": "be0216448da04c6030a6318cb332cd858fc819a2e356794c2d21679e8aab1151",
+          "source_fingerprint": "0046cd615d56dce0d4933d7675dacce71533d44e86990109df12c8cc9391ea40"
+        },
+        "assignments": [
+          {
+            "finding_id": 7166,
+            "id": 521,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "e19de5b89a541c9c000d60337c1765de776123a946dadc10c29d70a48e475594",
+        "old_line": 441,
+        "line": 340,
+        "finding_ids": [
+          7167
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 340,
+          "source_signature": "e19de5b89a541c9c000d60337c1765de776123a946dadc10c29d70a48e475594",
+          "source_fingerprint": "e9f3bc1ef484f9ded6e3eb7a6db9671d7a260f0272b3db55fddc9c4d47eef5cf"
+        },
+        "assignments": [
+          {
+            "finding_id": 7167,
+            "id": 522,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "b9d9fd3b48bc688b1ae5bea293b4ffaf810c6870b16f16aabe2badfdfb55400d",
+        "old_line": null,
+        "line": 341,
+        "finding_ids": [
+          7165,
+          7168
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 341,
+          "source_signature": "b9d9fd3b48bc688b1ae5bea293b4ffaf810c6870b16f16aabe2badfdfb55400d",
+          "source_fingerprint": "c45567ea9caecebb27f8b5df5992bf5f9745b9577dba38e75f8b0ba37d5395f2"
+        },
+        "assignments": [
+          {
+            "finding_id": 7165,
+            "id": 520,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7168,
+            "id": 520,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "33b620f905a613962c1f83cd575cbc708194e1ee5c32737e4d728d86f874678c",
+        "old_line": null,
+        "line": 351,
+        "finding_ids": [
+          8819,
+          8820
+        ],
+        "scanned_key": "ui.remove.remove.remove-hash-suffix",
+        "position": {
+          "source_line": 351,
+          "source_signature": "33b620f905a613962c1f83cd575cbc708194e1ee5c32737e4d728d86f874678c",
+          "source_fingerprint": "5c917c74788655956a0fe196e4e45601cf1a8f544b42381c2e13f10dcf94040d"
+        },
+        "assignments": [
+          {
+            "finding_id": 8819,
+            "id": 4812,
+            "translation_key": "ui.remove.remove.remove-hash-suffix",
+            "review_status": "reviewed",
+            "status": "open"
+          },
+          {
+            "finding_id": 8820,
+            "id": 4812,
+            "translation_key": "ui.remove.remove.remove-hash-suffix",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "faed69a6faa50aece281cb81f9f0031627dacedd131ec1e583d805a77ea3d409",
+        "old_line": null,
+        "line": 354,
+        "finding_ids": [
+          8819,
+          8820
+        ],
+        "scanned_key": "ui.remove.remove.remove-hash-suffix",
+        "position": {
+          "source_line": 354,
+          "source_signature": "faed69a6faa50aece281cb81f9f0031627dacedd131ec1e583d805a77ea3d409",
+          "source_fingerprint": "a6f51dba23d0c55e7e7dbda231875edf20f9dd387909fccd5f90058ee0a3c146"
+        },
+        "assignments": [
+          {
+            "finding_id": 8819,
+            "id": 4812,
+            "translation_key": "ui.remove.remove.remove-hash-suffix",
+            "review_status": "reviewed",
+            "status": "open"
+          },
+          {
+            "finding_id": 8820,
+            "id": 4812,
+            "translation_key": "ui.remove.remove.remove-hash-suffix",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "93ab0822926201ba8c0e2291f7abfbdd08eedf44d99636c8fc6ccfa1ba6641d0",
+        "old_line": null,
+        "line": 366,
+        "finding_ids": [
+          7171,
+          7172
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 366,
+          "source_signature": "93ab0822926201ba8c0e2291f7abfbdd08eedf44d99636c8fc6ccfa1ba6641d0",
+          "source_fingerprint": "0304873f6e1c46ed29b829f251f6c33b203ba1681e1e491ef4f72ebb1156afb6"
+        },
+        "assignments": [
+          {
+            "finding_id": 7171,
+            "id": 4911,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7172,
+            "id": 4911,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "f70f217edf61ab66eadfcc06c12ae62738211f6e4e2351b788d988b707069d1a",
+        "old_line": null,
+        "line": 368,
+        "finding_ids": [
+          7171,
+          7172
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 368,
+          "source_signature": "f70f217edf61ab66eadfcc06c12ae62738211f6e4e2351b788d988b707069d1a",
+          "source_fingerprint": "cbe1e223338cb53e7e157cab295e566e1fef6130c6de445ffac969a83bd74818"
+        },
+        "assignments": [
+          {
+            "finding_id": 7171,
+            "id": 4911,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7172,
+            "id": 4911,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "4fcaec7f8629cffc29aecda37f155306ceaa9f13f0210cddfb397b646cd81cb5",
+        "old_line": 470,
+        "line": 369,
+        "finding_ids": [
+          7173
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 369,
+          "source_signature": "4fcaec7f8629cffc29aecda37f155306ceaa9f13f0210cddfb397b646cd81cb5",
+          "source_fingerprint": "e931511e5602d25f3af37091b4653118f54b2c4006c1c7873acdc9c344016232"
+        },
+        "assignments": [
+          {
+            "finding_id": 7173,
+            "id": 4912,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "4f36f4b3a96c01085eb19211362fd91822472b5d14fc78caa5cab26776bbc934",
+        "old_line": 478,
+        "line": 377,
+        "finding_ids": [
+          7174
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 377,
+          "source_signature": "4f36f4b3a96c01085eb19211362fd91822472b5d14fc78caa5cab26776bbc934",
+          "source_fingerprint": "13846a28de1b74e51f5e5e424111d028ea231c12ed09e6b6e30cf26e6c5da978"
+        },
+        "assignments": [
+          {
+            "finding_id": 7174,
+            "id": 4913,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "92196d885e1134b6f56f58434d330b97cab7bbf8db0a7eb78b7a7612d21f2764",
+        "old_line": 499,
+        "line": 398,
+        "finding_ids": [
+          7175
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 398,
+          "source_signature": "92196d885e1134b6f56f58434d330b97cab7bbf8db0a7eb78b7a7612d21f2764",
+          "source_fingerprint": "c7f9cad524300b465d70d86daacf616fd8a787f77204ccd5faca265b82bd1692"
+        },
+        "assignments": [
+          {
+            "finding_id": 7175,
+            "id": 4914,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "1f7e62aa08206cf27c2c12acd5a80937a4786d23b24660f4e9f6adbc0203ec47",
+        "old_line": 508,
+        "line": 407,
+        "finding_ids": [
+          7176
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 407,
+          "source_signature": "1f7e62aa08206cf27c2c12acd5a80937a4786d23b24660f4e9f6adbc0203ec47",
+          "source_fingerprint": "43573c605b4e70837881182163e3c46fe2d3f0056fb6ea87329a2c29dae54960"
+        },
+        "assignments": [
+          {
+            "finding_id": 7176,
+            "id": 4915,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "e8eb034d0ad92442d7be22074d734ef51cd6b9692c76a3c6d44d658d1e78e3c2",
+        "old_line": 517,
+        "line": 416,
+        "finding_ids": [
+          7178
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 416,
+          "source_signature": "e8eb034d0ad92442d7be22074d734ef51cd6b9692c76a3c6d44d658d1e78e3c2",
+          "source_fingerprint": "c6fcbdb32ee57fb020e0aa47a09daffe60652a51bd92021b6fbbab7882e43837"
+        },
+        "assignments": [
+          {
+            "finding_id": 7178,
+            "id": 4919,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "f7fc753c95494975c28a4222e043121ed32f54e3949f0caa1f3b9b89f77639da",
+        "old_line": 543,
+        "line": 442,
+        "finding_ids": [
+          7179
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 442,
+          "source_signature": "f7fc753c95494975c28a4222e043121ed32f54e3949f0caa1f3b9b89f77639da",
+          "source_fingerprint": "bc7a3c17b119f51011e430eb7fa2743792487c643625a8557a04a820abeaa286"
+        },
+        "assignments": [
+          {
+            "finding_id": 7179,
+            "id": 4920,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "9c25c3a22ce5012282229f8e76a30ec1250f8ce25d98e6e38c06945494dfefa9",
+        "old_line": 561,
+        "line": 460,
+        "finding_ids": [
+          7180
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 460,
+          "source_signature": "9c25c3a22ce5012282229f8e76a30ec1250f8ce25d98e6e38c06945494dfefa9",
+          "source_fingerprint": "2ac62500fbbac7f385113af520453c9a2e7aad4cbaf9dcf4256b4e8f6bee84d6"
+        },
+        "assignments": [
+          {
+            "finding_id": 7180,
+            "id": 523,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "2b5c047270279d6160dc75c8c3b7f54b86f8c0e0c43b1573b5dba426c4e438a6",
+        "old_line": null,
+        "line": 477,
+        "finding_ids": [
+          7145,
+          7146
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 477,
+          "source_signature": "2b5c047270279d6160dc75c8c3b7f54b86f8c0e0c43b1573b5dba426c4e438a6",
+          "source_fingerprint": "47837c1c87c1ec564ccc9ca9bf5d9068e183ba6e99957cab02707b6b6dbfa101"
+        },
+        "assignments": [
+          {
+            "finding_id": 7145,
+            "id": 509,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7146,
+            "id": 509,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "4f421616704d60038f0c11e95bebab5a7eabb7800132f4c4decbafb441562891",
+        "old_line": null,
+        "line": 479,
+        "finding_ids": [
+          7145,
+          7146
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 479,
+          "source_signature": "4f421616704d60038f0c11e95bebab5a7eabb7800132f4c4decbafb441562891",
+          "source_fingerprint": "6d7de97c698b020066d2d8ab39b13d732bcdc99140706669d182010163716c2b"
+        },
+        "assignments": [
+          {
+            "finding_id": 7145,
+            "id": 509,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7146,
+            "id": 509,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "8ad02846c9361a5f41fe9b315a5b7ff1202670e4e4cc61cdfca81b3bca0ab231",
+        "old_line": 304,
+        "line": 480,
+        "finding_ids": [
+          7147
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 480,
+          "source_signature": "8ad02846c9361a5f41fe9b315a5b7ff1202670e4e4cc61cdfca81b3bca0ab231",
+          "source_fingerprint": "b57ac0e19e23761d0e2a9def6b183943c83219d5397255b3a8ada31016a47eb3"
+        },
+        "assignments": [
+          {
+            "finding_id": 7147,
+            "id": 510,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "33f013f2f09bad56420041b65f258bbe41e1d769d6396fe835047a79ef2a0d57",
+        "old_line": 311,
+        "line": 487,
+        "finding_ids": [
+          7148
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 487,
+          "source_signature": "33f013f2f09bad56420041b65f258bbe41e1d769d6396fe835047a79ef2a0d57",
+          "source_fingerprint": "36019cb5aec412031971dbf2659a0b5c053926512f409a198131e19b48649329"
+        },
+        "assignments": [
+          {
+            "finding_id": 7148,
+            "id": 511,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "90cedd5e4541358162a485264a6758630699d0a79a5e8f95e73242471255a36d",
+        "old_line": null,
+        "line": 499,
+        "finding_ids": [
+          7119,
+          7120,
+          7150
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 499,
+          "source_signature": "90cedd5e4541358162a485264a6758630699d0a79a5e8f95e73242471255a36d",
+          "source_fingerprint": "d82f0ab75d5e91b090e95ff00c077786af0ec0fbac0324605cb47661925fdde0"
+        },
+        "assignments": [
+          {
+            "finding_id": 7119,
+            "id": 494,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7120,
+            "id": 494,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7150,
+            "id": 494,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "562be56308435a255a6ad45f234fca06c62594f0c6ea5af15325c9ffb14c6cff",
+        "old_line": 334,
+        "line": 500,
+        "finding_ids": [
+          7151
+        ],
+        "scanned_key": "ui.key.suggested-key",
+        "position": {
+          "source_line": 500,
+          "source_signature": "562be56308435a255a6ad45f234fca06c62594f0c6ea5af15325c9ffb14c6cff",
+          "source_fingerprint": "81626eeebbb25bf72528d841569830ee57a4d95f9d8a01bb077ecdcddb1f71ac"
+        },
+        "assignments": [
+          {
+            "finding_id": 7151,
+            "id": 473,
+            "translation_key": "ui.key.suggested-key",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "562be56308435a255a6ad45f234fca06c62594f0c6ea5af15325c9ffb14c6cff",
+        "old_line": 334,
+        "line": 500,
+        "finding_ids": [
+          7151
+        ],
+        "scanned_key": "ui.key.suggested-key",
+        "position": {
+          "source_line": 500,
+          "source_signature": "562be56308435a255a6ad45f234fca06c62594f0c6ea5af15325c9ffb14c6cff",
+          "source_fingerprint": "81626eeebbb25bf72528d841569830ee57a4d95f9d8a01bb077ecdcddb1f71ac"
+        },
+        "assignments": [
+          {
+            "finding_id": 7151,
+            "id": 473,
+            "translation_key": "ui.key.suggested-key",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "bedc20053b8e0cdda88e01673402a6ea427661ec6f555be7e6b95213357798e3",
+        "old_line": 338,
+        "line": 524,
+        "finding_ids": [
+          7153
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 524,
+          "source_signature": "bedc20053b8e0cdda88e01673402a6ea427661ec6f555be7e6b95213357798e3",
+          "source_fingerprint": "dd0ae1631823835851a1222808241a06554305c1fe45515395ab980b1a029f3a"
+        },
+        "assignments": [
+          {
+            "finding_id": 7153,
+            "id": 512,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "ef8bd084d2ae8587789b111b7a3e34f374b8bfe10c6a73475e69b29c431c2760",
+        "old_line": 350,
+        "line": 536,
+        "finding_ids": [
+          7154
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 536,
+          "source_signature": "ef8bd084d2ae8587789b111b7a3e34f374b8bfe10c6a73475e69b29c431c2760",
+          "source_fingerprint": "4c829b5f44a9ffe0cea8843b6aea2437f4a82f6573841798ebe43918e46dd5a9"
+        },
+        "assignments": [
+          {
+            "finding_id": 7154,
+            "id": 513,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "e78710247f642a22a93d4d6a0d502c5437177b2e5385664ce40553c628a5df4f",
+        "old_line": null,
+        "line": 560,
+        "finding_ids": [
+          7123,
+          7124,
+          7157
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 560,
+          "source_signature": "e78710247f642a22a93d4d6a0d502c5437177b2e5385664ce40553c628a5df4f",
+          "source_fingerprint": "f6f7b0bcf5e5f9f61ce98a1726cb7b466fe8a320209f7b0c976c760dfae80fb4"
+        },
+        "assignments": [
+          {
+            "finding_id": 7123,
+            "id": 497,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7124,
+            "id": 497,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7157,
+            "id": 497,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "6f4b6a6a8f2db68854eb7752882e4d05a544f94d4866a3296832df29f5b01645",
+        "old_line": 386,
+        "line": 572,
+        "finding_ids": [
+          7158
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 572,
+          "source_signature": "6f4b6a6a8f2db68854eb7752882e4d05a544f94d4866a3296832df29f5b01645",
+          "source_fingerprint": "b87b9781696493ac39229e85aa15be90459ec0570833d261058ccc1357e139c8"
+        },
+        "assignments": [
+          {
+            "finding_id": 7158,
+            "id": 515,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "new",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "6091b699e9ac38ab2547c24cff34f0feedb9dac4b12c77de348ff06ec1f1422e",
+        "old_line": null,
+        "line": 599,
+        "finding_ids": [],
+        "scanned_key": null,
+        "position": {
+          "source_line": 599,
+          "source_signature": "6091b699e9ac38ab2547c24cff34f0feedb9dac4b12c77de348ff06ec1f1422e",
+          "source_fingerprint": "f8b67fc238d8a9433999c81bbaa981af13710b70cb353c39bc8c5bc6831e860d"
+        },
+        "assignments": [],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "new",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "737f60b3056c49cf5028ef96623b27a36cc57c14a6cdb9d1506f1a4c738bd6ba",
+        "old_line": null,
+        "line": 614,
+        "finding_ids": [],
+        "scanned_key": null,
+        "position": {
+          "source_line": 614,
+          "source_signature": "737f60b3056c49cf5028ef96623b27a36cc57c14a6cdb9d1506f1a4c738bd6ba",
+          "source_fingerprint": "6e6c7f1d6b73a749a1b909bde4a9d63a1e8feb9a657b715203c1ed55ad08950f"
+        },
+        "assignments": [],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "281b5ab36e010dc3338ecb094ad37fa1a5304b6941ff44e1f192d8898d5c525f",
+        "old_line": null,
+        "line": 629,
+        "finding_ids": [
+          7181,
+          7182
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 629,
+          "source_signature": "281b5ab36e010dc3338ecb094ad37fa1a5304b6941ff44e1f192d8898d5c525f",
+          "source_fingerprint": "4b96d5de062268aff70e85655237f49857410d844882f2192735dd95fdbf5100"
+        },
+        "assignments": [
+          {
+            "finding_id": 7181,
+            "id": 524,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7182,
+            "id": 524,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "ambiguous",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "1f355e42495703c3aca758243873d4c03f1b290ecea59e9d52b313d2b5f23e13",
+        "old_line": null,
+        "line": 631,
+        "finding_ids": [
+          7181,
+          7182
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 631,
+          "source_signature": "1f355e42495703c3aca758243873d4c03f1b290ecea59e9d52b313d2b5f23e13",
+          "source_fingerprint": "b90d4bd7d7504c6f8447c9db39c2b2dc7aeac6c2a6e527ce12421489fc644b5c"
+        },
+        "assignments": [
+          {
+            "finding_id": 7181,
+            "id": 524,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          },
+          {
+            "finding_id": 7182,
+            "id": 524,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "e593d21f20d8a7b4f2be70595696ddc6144eca16bf23a22853fde29d9f201da3",
+        "old_line": 589,
+        "line": 632,
+        "finding_ids": [
+          9226
+        ],
+        "scanned_key": "ui.remove.remove.remove-or-restore-leading-translation-key-segments-while-the-key-has-not-been-manually-edited",
+        "position": {
+          "source_line": 632,
+          "source_signature": "e593d21f20d8a7b4f2be70595696ddc6144eca16bf23a22853fde29d9f201da3",
+          "source_fingerprint": "ef320eda0c2cd383c95447460b9dca9bf4b366f6b35e2e69e0cbdbeebcd27786"
+        },
+        "assignments": [
+          {
+            "finding_id": 9226,
+            "id": 525,
+            "translation_key": "ui.remove.remove.remove-or-restore-leading-translation-key-segments-while-the-key-has-not-been-manually-edited",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "95a37b1d811eaf51256143a31adfaaecd73d75a59b6cef59e5aa531715375d35",
+        "old_line": 600,
+        "line": 643,
+        "finding_ids": [
+          7184
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 643,
+          "source_signature": "95a37b1d811eaf51256143a31adfaaecd73d75a59b6cef59e5aa531715375d35",
+          "source_fingerprint": "0c2ad321009efc4c7cceda2ce7c802a9268e8bb6a7544a7224ac7e6089b03e5e"
+        },
+        "assignments": [
+          {
+            "finding_id": 7184,
+            "id": 526,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "020f122852b20c2f641e8ad81aa956b38da72d503cec71ec8580c7d9ebb23892",
+        "old_line": 608,
+        "line": 651,
+        "finding_ids": [
+          7185
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 651,
+          "source_signature": "020f122852b20c2f641e8ad81aa956b38da72d503cec71ec8580c7d9ebb23892",
+          "source_fingerprint": "6ebca60ac0df276bb9669f6a3fa4c5194ecffab18c509a7965918401f07208f2"
+        },
+        "assignments": [
+          {
+            "finding_id": 7185,
+            "id": 527,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "bd823db007c4daa42d78ed866571ed37d28adff43a83a2a77926ca4e8419f5a5",
+        "old_line": 614,
+        "line": 657,
+        "finding_ids": [
+          7186
+        ],
+        "scanned_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_edit_translation_key.segment_actions_are_disabled_because_the_translation_key_was_edited_manually_or_transformed",
+        "position": {
+          "source_line": 657,
+          "source_signature": "bd823db007c4daa42d78ed866571ed37d28adff43a83a2a77926ca4e8419f5a5",
+          "source_fingerprint": "6e84f6b03aae4727b77542063614ae41992701bac35b05f0e2eafcbbca895cf6"
+        },
+        "assignments": [
+          {
+            "finding_id": 7186,
+            "id": 528,
+            "translation_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_edit_translation_key.segment_actions_are_disabled_because_the_translation_key_was_edited_manually_or_transformed",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "a9c87369f540add93a16a075c57a2777ff6a0f01c730ecf1735308bd704424f7",
+        "old_line": 631,
+        "line": 674,
+        "finding_ids": [
+          7187
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 674,
+          "source_signature": "a9c87369f540add93a16a075c57a2777ff6a0f01c730ecf1735308bd704424f7",
+          "source_fingerprint": "862fd51bfac68a8166074f13059ec3411ca853d4d7262ab9c41890ded8301968"
+        },
+        "assignments": [
+          {
+            "finding_id": 7187,
+            "id": 529,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "moved",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "source_signature": "8f05e60a3c56989982007c60c0f9d59cf5e1c476e0676b69e6a90f1861421312",
+        "old_line": 637,
+        "line": 680,
+        "finding_ids": [
+          7188
+        ],
+        "scanned_key": null,
+        "position": {
+          "source_line": 680,
+          "source_signature": "8f05e60a3c56989982007c60c0f9d59cf5e1c476e0676b69e6a90f1861421312",
+          "source_fingerprint": "4f719197e7591d67b28f0ee7cb7d52c654f5380c6d97aa51d0a30afef61fc2db"
+        },
+        "assignments": [
+          {
+            "finding_id": 7188,
+            "id": 530,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "missing",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "old_line": 164,
+        "line": null,
+        "finding_ids": [
+          7121
+        ],
+        "scanned_key": null,
+        "assignments": [
+          {
+            "finding_id": 7121,
+            "id": 495,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "missing",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "old_line": 181,
+        "line": null,
+        "finding_ids": [
+          7125
+        ],
+        "scanned_key": null,
+        "assignments": [
+          {
+            "finding_id": 7125,
+            "id": 3902,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "missing",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "old_line": 198,
+        "line": null,
+        "finding_ids": [
+          7129
+        ],
+        "scanned_key": null,
+        "assignments": [
+          {
+            "finding_id": 7129,
+            "id": 500,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "missing",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "old_line": 216,
+        "line": null,
+        "finding_ids": [
+          7133
+        ],
+        "scanned_key": null,
+        "assignments": [
+          {
+            "finding_id": 7133,
+            "id": 502,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "missing",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "old_line": 276,
+        "line": null,
+        "finding_ids": [
+          7142
+        ],
+        "scanned_key": null,
+        "assignments": [
+          {
+            "finding_id": 7142,
+            "id": 506,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "missing",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "old_line": 282,
+        "line": null,
+        "finding_ids": [
+          7143
+        ],
+        "scanned_key": null,
+        "assignments": [
+          {
+            "finding_id": 7143,
+            "id": 507,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "missing",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "old_line": 291,
+        "line": null,
+        "finding_ids": [
+          7144
+        ],
+        "scanned_key": null,
+        "assignments": [
+          {
+            "finding_id": 7144,
+            "id": 508,
+            "translation_key": null,
+            "review_status": "pending",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "missing",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "old_line": 273,
+        "line": null,
+        "finding_ids": [
+          8461
+        ],
+        "scanned_key": null,
+        "assignments": [
+          {
+            "finding_id": 8461,
+            "id": 229,
+            "translation_key": "ui.source.source",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      },
+      {
+        "state": "missing",
+        "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+        "old_line": 275,
+        "line": null,
+        "finding_ids": [
+          8462
+        ],
+        "scanned_key": null,
+        "assignments": [
+          {
+            "finding_id": 8462,
+            "id": 229,
+            "translation_key": "ui.source.source",
+            "review_status": "reviewed",
+            "status": "open"
+          }
+        ],
+        "assignment_issue": null,
+        "reviewed_key_differs_from_code": false
+      }
+    ],
+    "limitations": [
+      "Cross-file moves are not inferred.",
+      "Scanner line/signature granularity is retained; indistinguishable occurrences require review.",
+      "Differences in reviewed keys are not automatically corrected."
+    ]
+  },
+  "tests": {
+    "tool": "pest",
+    "result": "passed",
+    "tests": 760,
+    "passed": 760,
+    "assertions": 4795,
+    "duration_ms": 70409
+  }
+}

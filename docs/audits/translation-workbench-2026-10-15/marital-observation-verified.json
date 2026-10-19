@@ -1,0 +1,27 @@
+{
+    "mode": "read_only_verified",
+    "observation_id": 17,
+    "finding_id": 9254,
+    "key_id": 3452,
+    "changes": {
+        "findings": {
+            "9254": [
+                "meta",
+                "updated_at"
+            ]
+        },
+        "option_discoveries": {
+            "17": [
+                "matched_entry_id",
+                "workbench_suggested_key",
+                "suggested_state",
+                "label_usage",
+                "source_reference",
+                "last_seen_at",
+                "meta",
+                "updated_at"
+            ]
+        }
+    },
+    "ui_unchanged": true
+}

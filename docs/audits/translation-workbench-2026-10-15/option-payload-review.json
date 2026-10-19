@@ -1,0 +1,786 @@
+{
+    "captured_at": "2026-10-15T16:46:25+02:00",
+    "mode": "read_only_payload_and_direct_link_audit",
+    "transaction": "REPEATABLE READ READ ONLY",
+    "plan_sha256": "ef4b2b7efc20fc4cf778fb20d83f62298b4dcea494b2b76396b664125821c837",
+    "source_hashes": {
+        "app/Livewire/Admin/RoleList.php": "ad683acce31bf906cad7b941143f86393ca2b0a2fe939874b66d735e3ea53cc1",
+        "app/Livewire/Management/People/CreatePerson.php": "b39489b1a1c3aedb2be85c2ec04eac5c26c4532f48ff8172e612409163a58dd9",
+        "app/Livewire/Management/People/EditPerson.php": "08ee85a7f81d6423e0882d2b376589f34e38ee59efb30c5a737b091a150b5185"
+    },
+    "summary": {
+        "identical": 8
+    },
+    "sources": [
+        {
+            "source_id": 73,
+            "observation_id": 1,
+            "key_id": 1988,
+            "finding_id": 4033,
+            "target_finding_ids": [
+                9269
+            ],
+            "current_payloads": [
+                {
+                    "reference": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeVariants",
+                    "basis": "config:buergerfrs-icons.categories.role_user_management.badge.variants",
+                    "values": {
+                        "outline": "Outline",
+                        "pill": "Pill",
+                        "solid": "Solid",
+                        "subtle": "Subtle"
+                    }
+                }
+            ],
+            "observation_values": {
+                "outline": "Outline",
+                "pill": "Pill",
+                "solid": "Solid",
+                "subtle": "Subtle"
+            },
+            "active_source_values": {
+                "outline": "Outline",
+                "pill": "Pill",
+                "solid": "Solid",
+                "subtle": "Subtle"
+            },
+            "comparison": "identical",
+            "source_value_statuses": {
+                "active": 4
+            },
+            "editor_baseline_en_de": [
+                {
+                    "field_key": "v_e57362d579b61ac9d08f5012ee0adf6fde22a855",
+                    "value_key": "outline",
+                    "source": "Outline",
+                    "target": "Outline",
+                    "native_label": "Outline",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_93720caa841037718a719bd20ac5b110383b6e63",
+                    "value_key": "pill",
+                    "source": "Pill",
+                    "target": "Pill",
+                    "native_label": "Pill",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_69e699bc1f92cb92acfb304f419753e2ff473845",
+                    "value_key": "solid",
+                    "source": "Solid",
+                    "target": "Solid",
+                    "native_label": "Solid",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_10a4d47a931f75823185defd572833c140001b1f",
+                    "value_key": "subtle",
+                    "source": "Subtle",
+                    "target": "Subtle",
+                    "native_label": "Subtle",
+                    "status": "active"
+                }
+            ],
+            "editor_linked_runtime_source_ids": [],
+            "candidate_links": [],
+            "stored_translation_count_for_key": 8
+        },
+        {
+            "source_id": 1,
+            "observation_id": 2,
+            "key_id": 2006,
+            "finding_id": 1407,
+            "target_finding_ids": [
+                9270
+            ],
+            "current_payloads": [
+                {
+                    "reference": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeColors",
+                    "basis": "config:buergerfrs-icons.categories.role_user_management.badge.colors",
+                    "values": {
+                        "amber": "Amber",
+                        "blue": "Blue",
+                        "cyan": "Cyan",
+                        "emerald": "Emerald",
+                        "fuchsia": "Fuchsia",
+                        "green": "Green",
+                        "indigo": "Indigo",
+                        "lime": "Lime",
+                        "orange": "Orange",
+                        "pink": "Pink",
+                        "purple": "Purple",
+                        "red": "Red",
+                        "rose": "Rose",
+                        "sky": "Sky",
+                        "teal": "Teal",
+                        "violet": "Violet",
+                        "yellow": "Yellow",
+                        "zinc": "Zinc"
+                    }
+                }
+            ],
+            "observation_values": {
+                "amber": "Amber",
+                "blue": "Blue",
+                "cyan": "Cyan",
+                "emerald": "Emerald",
+                "fuchsia": "Fuchsia",
+                "green": "Green",
+                "indigo": "Indigo",
+                "lime": "Lime",
+                "orange": "Orange",
+                "pink": "Pink",
+                "purple": "Purple",
+                "red": "Red",
+                "rose": "Rose",
+                "sky": "Sky",
+                "teal": "Teal",
+                "violet": "Violet",
+                "yellow": "Yellow",
+                "zinc": "Zinc"
+            },
+            "active_source_values": {
+                "amber": "Amber",
+                "blue": "Blue",
+                "cyan": "Cyan",
+                "emerald": "Emerald",
+                "fuchsia": "Fuchsia",
+                "green": "Green",
+                "indigo": "Indigo",
+                "lime": "Lime",
+                "orange": "Orange",
+                "pink": "Pink",
+                "purple": "Purple",
+                "red": "Red",
+                "rose": "Rose",
+                "sky": "Sky",
+                "teal": "Teal",
+                "violet": "Violet",
+                "yellow": "Yellow",
+                "zinc": "Zinc"
+            },
+            "comparison": "identical",
+            "source_value_statuses": {
+                "active": 18
+            },
+            "editor_baseline_en_de": [
+                {
+                    "field_key": "v_ef4bfd1e6d278f6bc7d4a478f02be2cb9581a0a5",
+                    "value_key": "amber",
+                    "source": "Amber",
+                    "target": "Amber",
+                    "native_label": "Amber",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_4c9a82ce72ca2519f38d0af0abbb4cecb9fceca9",
+                    "value_key": "blue",
+                    "source": "Blue",
+                    "target": "Blue",
+                    "native_label": "Blue",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_1571b29d8677d461f1f147c170615ce59a848d13",
+                    "value_key": "cyan",
+                    "source": "Cyan",
+                    "target": "Cyan",
+                    "native_label": "Cyan",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_46c80c42aee41cae5bdd1595f2eefd7fcde422d7",
+                    "value_key": "emerald",
+                    "source": "Emerald",
+                    "target": "Emerald",
+                    "native_label": "Emerald",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_c16e7f2f8f525944f8090de5534a9d3769026dc7",
+                    "value_key": "fuchsia",
+                    "source": "Fuchsia",
+                    "target": "Fuchsia",
+                    "native_label": "Fuchsia",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_bc74f4f071a5a33f00ab88a6d6385b5e6638b86c",
+                    "value_key": "green",
+                    "source": "Green",
+                    "target": "Green",
+                    "native_label": "Green",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_914ece8cee76a984575a0c0f1176c27272b19be8",
+                    "value_key": "indigo",
+                    "source": "Indigo",
+                    "target": "Indigo",
+                    "native_label": "Indigo",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_cbd777d76165cb4414217d3d7d501080165149e4",
+                    "value_key": "lime",
+                    "source": "Lime",
+                    "target": "Lime",
+                    "native_label": "Lime",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_ef0ebbb77298e1fbd81f756a4efc35b977c93dae",
+                    "value_key": "orange",
+                    "source": "Orange",
+                    "target": "Orange",
+                    "native_label": "Orange",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_b0f7f128338b504edbff2838d59a991df26b398a",
+                    "value_key": "pink",
+                    "source": "Pink",
+                    "target": "Pink",
+                    "native_label": "Pink",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_afaed75406bd414820cea4a5119f90c259c05755",
+                    "value_key": "purple",
+                    "source": "Purple",
+                    "target": "Purple",
+                    "native_label": "Purple",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_78988010b890ce6f4d2136481f392787ec6d6106",
+                    "value_key": "red",
+                    "source": "Red",
+                    "target": "Red",
+                    "native_label": "Red",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_7b7074fca36fc89fb3f1e3c46d74f6ffe2477a09",
+                    "value_key": "rose",
+                    "source": "Rose",
+                    "target": "Rose",
+                    "native_label": "Rose",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_5737ef08a3ec16a337ac79a1d719fb91acba20a4",
+                    "value_key": "sky",
+                    "source": "Sky",
+                    "target": "Sky",
+                    "native_label": "Sky",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_03e06c4b7a097e464b3b18a5314bb6b96855b6c4",
+                    "value_key": "teal",
+                    "source": "Teal",
+                    "target": "Teal",
+                    "native_label": "Teal",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_13818a5684a7ed4dce8433c3f57e13b589b88852",
+                    "value_key": "violet",
+                    "source": "Violet",
+                    "target": "Violet",
+                    "native_label": "Violet",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_96de5543d183d7de52ac5fa21c46fc811f673f89",
+                    "value_key": "yellow",
+                    "source": "Yellow",
+                    "target": "Yellow",
+                    "native_label": "Yellow",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_723dbc80cc4ec3a8eb63e638198ab54e7f1a88e4",
+                    "value_key": "zinc",
+                    "source": "Zinc",
+                    "target": "Zinc",
+                    "native_label": "Zinc",
+                    "status": "active"
+                }
+            ],
+            "editor_linked_runtime_source_ids": [],
+            "candidate_links": [],
+            "stored_translation_count_for_key": 36
+        },
+        {
+            "source_id": 3,
+            "observation_id": 3,
+            "key_id": 1988,
+            "finding_id": 1401,
+            "target_finding_ids": [
+                9271
+            ],
+            "current_payloads": [
+                {
+                    "reference": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeVariants",
+                    "basis": "config:buergerfrs-icons.categories.role_user_management.badge.variants",
+                    "values": {
+                        "outline": "Outline",
+                        "pill": "Pill",
+                        "solid": "Solid",
+                        "subtle": "Subtle"
+                    }
+                }
+            ],
+            "observation_values": {
+                "outline": "Outline",
+                "pill": "Pill",
+                "solid": "Solid",
+                "subtle": "Subtle"
+            },
+            "active_source_values": {
+                "outline": "Outline",
+                "pill": "Pill",
+                "solid": "Solid",
+                "subtle": "Subtle"
+            },
+            "comparison": "identical",
+            "source_value_statuses": {
+                "active": 4
+            },
+            "editor_baseline_en_de": [
+                {
+                    "field_key": "v_e57362d579b61ac9d08f5012ee0adf6fde22a855",
+                    "value_key": "outline",
+                    "source": "Outline",
+                    "target": "Outline",
+                    "native_label": "Outline",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_93720caa841037718a719bd20ac5b110383b6e63",
+                    "value_key": "pill",
+                    "source": "Pill",
+                    "target": "Pill",
+                    "native_label": "Pill",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_69e699bc1f92cb92acfb304f419753e2ff473845",
+                    "value_key": "solid",
+                    "source": "Solid",
+                    "target": "Solid",
+                    "native_label": "Solid",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_10a4d47a931f75823185defd572833c140001b1f",
+                    "value_key": "subtle",
+                    "source": "Subtle",
+                    "target": "Subtle",
+                    "native_label": "Subtle",
+                    "status": "active"
+                }
+            ],
+            "editor_linked_runtime_source_ids": [],
+            "candidate_links": [],
+            "stored_translation_count_for_key": 8
+        },
+        {
+            "source_id": 76,
+            "observation_id": 6,
+            "key_id": 3117,
+            "finding_id": 4590,
+            "target_finding_ids": [
+                9249
+            ],
+            "current_payloads": [
+                {
+                    "reference": "app/Livewire/Management/People/CreatePerson.php",
+                    "basis": "declared_property_default",
+                    "values": {
+                        "mr": "Mr.",
+                        "mrs": "Mrs.",
+                        "mx": "Mx."
+                    }
+                }
+            ],
+            "observation_values": {
+                "mr": "Mr.",
+                "mrs": "Mrs.",
+                "mx": "Mx."
+            },
+            "active_source_values": {
+                "mr": "Mr.",
+                "mrs": "Mrs.",
+                "mx": "Mx."
+            },
+            "comparison": "identical",
+            "source_value_statuses": {
+                "active": 3
+            },
+            "editor_baseline_en_de": [
+                {
+                    "field_key": "v_8e7be411ad89ade93d144531f3925d0bb4011004",
+                    "value_key": "mr",
+                    "source": "Mr.",
+                    "target": "Herr",
+                    "native_label": "Mr.",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_a9937de3c5d9a091a742e0696b2b64071260b30d",
+                    "value_key": "mrs",
+                    "source": "Mrs.",
+                    "target": "Frau",
+                    "native_label": "Mrs.",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_3ab846d50e49eefc72763de7d742d06f2ec3a1d5",
+                    "value_key": "mx",
+                    "source": "Mx.",
+                    "target": "Divers",
+                    "native_label": "Mx.",
+                    "status": "active"
+                }
+            ],
+            "editor_linked_runtime_source_ids": [],
+            "candidate_links": [],
+            "stored_translation_count_for_key": 6
+        },
+        {
+            "source_id": 77,
+            "observation_id": 7,
+            "key_id": 3120,
+            "finding_id": 4593,
+            "target_finding_ids": [
+                9250
+            ],
+            "current_payloads": [
+                {
+                    "reference": "app/Livewire/Management/People/CreatePerson.php",
+                    "basis": "declared_property_default",
+                    "values": {
+                        "diverse": "Diverse",
+                        "female": "Female",
+                        "male": "Male",
+                        "unknown": "Unknown"
+                    }
+                }
+            ],
+            "observation_values": {
+                "diverse": "Diverse",
+                "female": "Female",
+                "male": "Male",
+                "unknown": "Unknown"
+            },
+            "active_source_values": {
+                "diverse": "Diverse",
+                "female": "Female",
+                "male": "Male",
+                "unknown": "Unknown"
+            },
+            "comparison": "identical",
+            "source_value_statuses": {
+                "active": 4
+            },
+            "editor_baseline_en_de": [
+                {
+                    "field_key": "v_f622104b73aa7f6791caac4c89f6f39b4f651303",
+                    "value_key": "diverse",
+                    "source": "Diverse",
+                    "target": "Divers",
+                    "native_label": "Diverse",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_96a1a08dcded48b7e695aed7c577dc04c982a4f7",
+                    "value_key": "female",
+                    "source": "Female",
+                    "target": "Weiblich",
+                    "native_label": "Female",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_030ef4a52619b493d3cc75d8034e3df378dae231",
+                    "value_key": "male",
+                    "source": "Male",
+                    "target": "Männlich",
+                    "native_label": "Male",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_50d8b4a941c26b89482c94ab324b5a274f9ced66",
+                    "value_key": "unknown",
+                    "source": "Unknown",
+                    "target": "Unbekannt",
+                    "native_label": "Unknown",
+                    "status": "active"
+                }
+            ],
+            "editor_linked_runtime_source_ids": [
+                40
+            ],
+            "candidate_links": [],
+            "stored_translation_count_for_key": 8
+        },
+        {
+            "source_id": 5,
+            "observation_id": 8,
+            "key_id": 3137,
+            "finding_id": 2110,
+            "target_finding_ids": [
+                9251
+            ],
+            "current_payloads": [
+                {
+                    "reference": "app/Livewire/Management/People/CreatePerson.php",
+                    "basis": "declared_property_default",
+                    "values": {
+                        "divorced": "Divorced",
+                        "married": "Married",
+                        "registered_partnership": "Registered partnership",
+                        "separated": "Separated",
+                        "single": "Single",
+                        "unknown": "Unknown",
+                        "widowed": "Widowed"
+                    }
+                }
+            ],
+            "observation_values": {
+                "divorced": "Divorced",
+                "married": "Married",
+                "registered_partnership": "Registered partnership",
+                "separated": "Separated",
+                "single": "Single",
+                "unknown": "Unknown",
+                "widowed": "Widowed"
+            },
+            "active_source_values": {
+                "divorced": "Divorced",
+                "married": "Married",
+                "registered_partnership": "Registered partnership",
+                "separated": "Separated",
+                "single": "Single",
+                "unknown": "Unknown",
+                "widowed": "Widowed"
+            },
+            "comparison": "identical",
+            "source_value_statuses": {
+                "active": 7
+            },
+            "editor_baseline_en_de": [
+                {
+                    "field_key": "v_2a4e85e1b4e11ad32e4f7e6f4fe34f3f1befafd9",
+                    "value_key": "divorced",
+                    "source": "Divorced",
+                    "target": "Geschieden",
+                    "native_label": "Divorced",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_52d081ef4d70e170c7b704e2b3ee66c59de75a27",
+                    "value_key": "married",
+                    "source": "Married",
+                    "target": "Verheiratet",
+                    "native_label": "Married",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_4eeddb5f5b6dd3c0c5323e21254fb834634c2cfe",
+                    "value_key": "registered_partnership",
+                    "source": "Registered partnership",
+                    "target": "Eingetragene Lebenspartnerschaft",
+                    "native_label": "Registered partnership",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_513fd31089408e68bd132be5cd5901fdffbb0642",
+                    "value_key": "separated",
+                    "source": "Separated",
+                    "target": "Getrennt",
+                    "native_label": "Separated",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_ce0b1612aa711b78a720295d271a33894e2b72bf",
+                    "value_key": "single",
+                    "source": "Single",
+                    "target": "Single",
+                    "native_label": "Single",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_50d8b4a941c26b89482c94ab324b5a274f9ced66",
+                    "value_key": "unknown",
+                    "source": "Unknown",
+                    "target": "Unbekannt",
+                    "native_label": "Unknown",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_23de62b69076d7351636a367b753f60a012cdcf2",
+                    "value_key": "widowed",
+                    "source": "Widowed",
+                    "target": "verwitwet",
+                    "native_label": "Widowed",
+                    "status": "active"
+                }
+            ],
+            "editor_linked_runtime_source_ids": [],
+            "candidate_links": [],
+            "stored_translation_count_for_key": 14
+        },
+        {
+            "source_id": 24,
+            "observation_id": 15,
+            "key_id": 3120,
+            "finding_id": 2101,
+            "target_finding_ids": [
+                9252
+            ],
+            "current_payloads": [
+                {
+                    "reference": "app/Livewire/Management/People/EditPerson.php",
+                    "basis": "declared_property_default",
+                    "values": {
+                        "diverse": "Diverse",
+                        "female": "Female",
+                        "male": "Male",
+                        "unknown": "Unknown"
+                    }
+                }
+            ],
+            "observation_values": {
+                "diverse": "Diverse",
+                "female": "Female",
+                "male": "Male",
+                "unknown": "Unknown"
+            },
+            "active_source_values": {
+                "diverse": "Diverse",
+                "female": "Female",
+                "male": "Male",
+                "unknown": "Unknown"
+            },
+            "comparison": "identical",
+            "source_value_statuses": {
+                "active": 4
+            },
+            "editor_baseline_en_de": [
+                {
+                    "field_key": "v_f622104b73aa7f6791caac4c89f6f39b4f651303",
+                    "value_key": "diverse",
+                    "source": "Diverse",
+                    "target": "Divers",
+                    "native_label": "Diverse",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_96a1a08dcded48b7e695aed7c577dc04c982a4f7",
+                    "value_key": "female",
+                    "source": "Female",
+                    "target": "Weiblich",
+                    "native_label": "Female",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_030ef4a52619b493d3cc75d8034e3df378dae231",
+                    "value_key": "male",
+                    "source": "Male",
+                    "target": "Männlich",
+                    "native_label": "Male",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_50d8b4a941c26b89482c94ab324b5a274f9ced66",
+                    "value_key": "unknown",
+                    "source": "Unknown",
+                    "target": "Unbekannt",
+                    "native_label": "Unknown",
+                    "status": "active"
+                }
+            ],
+            "editor_linked_runtime_source_ids": [
+                40
+            ],
+            "candidate_links": [
+                {
+                    "id": 78,
+                    "dynamic_source_id": 40,
+                    "finding_id": 2101,
+                    "reference": "dynamic_source:24",
+                    "status": "active",
+                    "review_status": "confirmed"
+                }
+            ],
+            "stored_translation_count_for_key": 8
+        },
+        {
+            "source_id": 26,
+            "observation_id": 16,
+            "key_id": 3117,
+            "finding_id": 2099,
+            "target_finding_ids": [
+                9253
+            ],
+            "current_payloads": [
+                {
+                    "reference": "app/Livewire/Management/People/EditPerson.php",
+                    "basis": "declared_property_default",
+                    "values": {
+                        "mr": "Mr.",
+                        "mrs": "Mrs.",
+                        "mx": "Mx."
+                    }
+                }
+            ],
+            "observation_values": {
+                "mr": "Mr.",
+                "mrs": "Mrs.",
+                "mx": "Mx."
+            },
+            "active_source_values": {
+                "mr": "Mr.",
+                "mrs": "Mrs.",
+                "mx": "Mx."
+            },
+            "comparison": "identical",
+            "source_value_statuses": {
+                "active": 3
+            },
+            "editor_baseline_en_de": [
+                {
+                    "field_key": "v_8e7be411ad89ade93d144531f3925d0bb4011004",
+                    "value_key": "mr",
+                    "source": "Mr.",
+                    "target": "Herr",
+                    "native_label": "Mr.",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_a9937de3c5d9a091a742e0696b2b64071260b30d",
+                    "value_key": "mrs",
+                    "source": "Mrs.",
+                    "target": "Frau",
+                    "native_label": "Mrs.",
+                    "status": "active"
+                },
+                {
+                    "field_key": "v_3ab846d50e49eefc72763de7d742d06f2ec3a1d5",
+                    "value_key": "mx",
+                    "source": "Mx.",
+                    "target": "Divers",
+                    "native_label": "Mx.",
+                    "status": "active"
+                }
+            ],
+            "editor_linked_runtime_source_ids": [],
+            "candidate_links": [],
+            "stored_translation_count_for_key": 6
+        }
+    ]
+}

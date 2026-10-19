@@ -55,7 +55,7 @@ class ProjectTranslations extends Command
         {--locales= : Comma-separated locale list for translations:export-lang-files}
         {--apply-diffs : Apply generated latest.patch automatically}
         {--apply-usage-decisions : Apply ready translation usage audit decisions to source files}
-        {--skip-export : Skip translations:export-lang-files}
+        {--skip-export : Skip the read-only Legacy export comparison}
         {--skip-audits : Skip final translations:audit-lang and translations:audit-compare}';
 
     /**
@@ -117,7 +117,7 @@ class ProjectTranslations extends Command
                 }
 
                 $this->runArtisanStep('Sub-Language-Redundanz prüfen', 'translations:audit-sub-language-redundancy', $exportOptions);
-                $this->runArtisanStep('Translation-Dateien nach lang exportieren', 'translations:export-lang-files', $exportOptions);
+                $this->runArtisanStep('Legacy-Translation-Export vergleichen (ohne Schreiben)', 'translations:export-lang-files', $exportOptions + ['--dry-run' => true]);
             } else {
                 $this->warn('ℹ️ Export übersprungen (--skip-export).');
             }

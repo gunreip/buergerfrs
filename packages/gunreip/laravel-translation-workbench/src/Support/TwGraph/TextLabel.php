@@ -57,6 +57,12 @@ class TextLabel
             break;
         }
 
+        if (is_array($text) && filled($text['icon'] ?? null) && array_key_exists('text', $text)) {
+            return collect(self::lines($text['text']))
+                ->map(static fn ($line): array => ['icon' => $text['icon'], 'text' => $line])
+                ->all();
+        }
+
         if (is_array($text) && array_key_exists('text', $text)) {
             $resolvedLabel = array_replace($resolvedLabel, $text);
             $text = data_get($text, 'text');
@@ -81,10 +87,11 @@ class TextLabel
             ->filter(static fn (mixed $value): bool => $value !== null)
             ->all();
 
-        return array_replace($defaults, $labelOptions, [
-            'text' => $lines,
-            'side' => $side,
-        ]);
+        // An unspecified side must stay absent so the consuming component can
+        // apply its placement default (for example a centered start/end label).
+        return array_replace($defaults, $labelOptions, ['text' => $lines],
+            $side !== null ? ['side' => $side] : [],
+        );
     }
 
     /**
@@ -164,6 +171,12 @@ class TextLabel
             return [];
         }
 
+        if (is_array($text) && filled($text['icon'] ?? null) && array_key_exists('text', $text)) {
+            return collect(self::lines($text['text']))
+                ->map(static fn ($line): array => ['icon' => $text['icon'], 'text' => $line])
+                ->all();
+        }
+
         if (is_array($text) && array_key_exists('text', $text)) {
             return self::lines(data_get($text, 'text'));
         }
@@ -171,6 +184,10 @@ class TextLabel
         return collect(is_iterable($text) && ! is_string($text) ? $text : explode('|', (string) $text))
             ->flatMap(static function (mixed $line): Collection {
                 if (is_array($line)) {
+                    if (filled($line['icon'] ?? null) && array_key_exists('text', $line)) {
+                        return collect(self::lines($line));
+                    }
+
                     if (data_get($line, 'ordinal')) {
                         return collect([$line]);
                     }

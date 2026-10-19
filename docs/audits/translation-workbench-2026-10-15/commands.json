@@ -1,0 +1,919 @@
+[
+  {
+    "command": "project:bootstrap-data",
+    "source": "app/Console/Commands/ProjectBootstrapData.php",
+    "signature": "project:bootstrap-data\n        {--skip-migrate : Skip running database migrations}\n        {--skip-seed : Skip running DatabaseSeeder}\n        {--skip-reference-import : Skip locale/country/language reference import}\n        {--with-test-users : Also run TestUsersSeeder (adds generated test users)}\n        {--without-subdivisions : Skip country subdivisions import}",
+    "options": [
+      "--skip-migrate : Skip running database migrations",
+      "--skip-seed : Skip running DatabaseSeeder",
+      "--skip-reference-import : Skip locale/country/language reference import",
+      "--with-test-users : Also run TestUsersSeeder (adds generated test users)",
+      "--without-subdivisions : Skip country subdivisions import"
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [],
+    "direct_tables": []
+  },
+  {
+    "command": "project:build",
+    "source": "app/Console/Commands/ProjectBuild.php",
+    "signature": "project:build\n        {--no-assets : Überspringt npm run build}\n        {--no-optimize : Überspringt php artisan optimize}\n        {--allow-empty-db : Erlaubt Build auch bei leeren Kern-Tabellen}",
+    "options": [
+      "--no-assets : Überspringt npm run build",
+      "--no-optimize : Überspringt php artisan optimize",
+      "--allow-empty-db : Erlaubt Build auch bei leeren Kern-Tabellen"
+    ],
+    "calls": [
+      "translations:audit-code",
+      "translations:audit-compare",
+      "translations:audit-duplicate-usage-literals",
+      "translations:audit-frequent-usage-literals",
+      "translations:audit-lang",
+      "translations:audit-lang-ballast",
+      "translations:audit-sub-language-redundancy",
+      "translations:cleanup-stale-dynamic-keys",
+      "translations:ensure-lang-directories",
+      "translations:export-lang-files",
+      "translations:sync-audits",
+      "translations:sync-dynamic-keys"
+    ],
+    "models": [],
+    "foundation": [],
+    "direct_tables": []
+  },
+  {
+    "command": "project:translations",
+    "source": "app/Console/Commands/ProjectTranslations.php",
+    "signature": "project:translations\n        {--paths= : Comma-separated scan paths for translations:generate-literal-diffs}\n        {--locales= : Comma-separated locale list for translations:export-lang-files}\n        {--apply-diffs : Apply generated latest.patch automatically}\n        {--apply-usage-decisions : Apply ready translation usage audit decisions to source files}\n        {--skip-export : Skip translations:export-lang-files}\n        {--skip-audits : Skip final translations:audit-lang and translations:audit-compare}",
+    "options": [
+      "--paths= : Comma-separated scan paths for translations:generate-literal-diffs",
+      "--locales= : Comma-separated locale list for translations:export-lang-files",
+      "--apply-diffs : Apply generated latest.patch automatically",
+      "--apply-usage-decisions : Apply ready translation usage audit decisions to source files",
+      "--skip-export : Skip translations:export-lang-files",
+      "--skip-audits : Skip final translations:audit-lang and translations:audit-compare"
+    ],
+    "calls": [
+      "translations:audit-code",
+      "translations:audit-compare",
+      "translations:audit-duplicate-usage-literals",
+      "translations:audit-frequent-usage-literals",
+      "translations:audit-lang",
+      "translations:audit-lang-ballast",
+      "translations:audit-sub-language-redundancy",
+      "translations:ensure-lang-directories",
+      "translations:export-lang-files",
+      "translations:generate-literal-diffs",
+      "translations:sync-audits"
+    ],
+    "models": [],
+    "foundation": [],
+    "direct_tables": []
+  },
+  {
+    "command": "translation-workbench:apply-code-updates",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/ApplyTranslationWorkbenchCodeUpdates.php",
+    "signature": "translation-workbench:apply-code-updates\n    {--paths= : Comma-separated relative paths to limit the code update apply plan.}\n    {--limit= : Maximum number of reviewed findings to inspect before applying safe updates.}\n    {--write : Actually update source files. Without this option the command only reports what would be changed.}\n    {--suppress-dry-run-warning : Suppress the dry-run warning when the command is used as an orchestrated report refresh step.}",
+    "options": [
+      "--paths= : Comma-separated relative paths to limit the code update apply plan.",
+      "--limit= : Maximum number of reviewed findings to inspect before applying safe updates.",
+      "--write : Actually update source files. Without this option the command only reports what would be changed.",
+      "--suppress-dry-run-warning : Suppress the dry-run warning when the command is used as an orchestrated report refresh step."
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [
+      "Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchCodeUpdateApplier"
+    ],
+    "direct_tables": []
+  },
+  {
+    "command": "translation-workbench:apply-suspicious-key-restores",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/ApplySuspiciousKeyRestores.php",
+    "signature": "translation-workbench:apply-suspicious-key-restores\n    {--paths= : Comma-separated relative paths to limit suspicious key restores.}\n    {--source-locale=en : Source locale used to restore literal text from lang/* values.}\n    {--limit= : Maximum number of reviewed restore decisions to inspect.}\n    {--write : Actually update source files. Without this option the command only reports what would be changed.}\n    {--only-apply : Mark this run as an early pipeline apply step for already reviewed restore decisions.}\n    {--suppress-dry-run-warning : Suppress the dry-run warning when the command is used as an orchestrated report refresh step.}",
+    "options": [
+      "--paths= : Comma-separated relative paths to limit suspicious key restores.",
+      "--source-locale=en : Source locale used to restore literal text from lang/* values.",
+      "--limit= : Maximum number of reviewed restore decisions to inspect.",
+      "--write : Actually update source files. Without this option the command only reports what would be changed.",
+      "--only-apply : Mark this run as an early pipeline apply step for already reviewed restore decisions.",
+      "--suppress-dry-run-warning : Suppress the dry-run warning when the command is used as an orchestrated report refresh step."
+    ],
+    "calls": [
+      "translation-workbench:apply-suspicious-key-restores"
+    ],
+    "models": [
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchFinding",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchKey",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchLangValue",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchReview"
+    ],
+    "foundation": [
+      "Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchTimelineRecorder"
+    ],
+    "direct_tables": []
+  },
+  {
+    "command": "translation-workbench:classify-dynamic-values",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/ClassifyDynamicValues.php",
+    "signature": "translation-workbench:classify-dynamic-values\n    {--dry-run : Report classifications without writing database rows.}",
+    "options": [
+      "--dry-run : Report classifications without writing database rows."
+    ],
+    "calls": [
+      "translation-workbench:classify-dynamic-values"
+    ],
+    "models": [
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchFinding",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchKey"
+    ],
+    "foundation": [
+      "Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchTimelineRecorder"
+    ],
+    "direct_tables": [
+      "translation_workbench_dynamic_source_values",
+      "translation_workbench_dynamic_sources",
+      "translation_workbench_findings",
+      "translation_workbench_findings as findings",
+      "translation_workbench_key_findings",
+      "translation_workbench_keys",
+      "translation_workbench_option_discoveries",
+      "translation_workbench_source_files"
+    ]
+  },
+  {
+    "command": "translation-workbench:classify-lang-node-types",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/ClassifyLangNodeTypes.php",
+    "signature": "translation-workbench:classify-lang-node-types\n    {--dry-run : Report lang-node type changes without writing database rows.}",
+    "options": [
+      "--dry-run : Report lang-node type changes without writing database rows."
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [
+      "Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchLangNodeClassifier"
+    ],
+    "direct_tables": [
+      "translation_workbench_keys",
+      "translation_workbench_lang_values"
+    ]
+  },
+  {
+    "command": "translation-workbench:classify-timeline-event-noise",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/ClassifyTimelineEventNoise.php",
+    "signature": "translation-workbench:classify-timeline-event-noise\n    {--write : Mark candidate events as dead_dev_event. Without this option the command only reports candidates.}\n    {--threshold=50 : Minimum dynamic_source_classification_changed count before a chain is considered noisy.}\n    {--chain-id=* : Limit the analysis to one or more timeline-chain IDs.}",
+    "options": [
+      "--write : Mark candidate events as dead_dev_event. Without this option the command only reports candidates.",
+      "--threshold=50 : Minimum dynamic_source_classification_changed count before a chain is considered noisy.",
+      "--chain-id=* : Limit the analysis to one or more timeline-chain IDs."
+    ],
+    "calls": [],
+    "models": [
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchTimelineChain",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchTimelineEvent"
+    ],
+    "foundation": [],
+    "direct_tables": [
+      "translation_workbench_timeline_events"
+    ]
+  },
+  {
+    "command": "translation-workbench:cleanup-excluded-paths",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/CleanupExcludedTranslationWorkbenchPaths.php",
+    "signature": "translation-workbench:cleanup-excluded-paths\n    {--apply : Mark currently active rows below configured exclude_paths as obsolete/stale.}\n    {--force : Skip the interactive confirmation when --apply is used.}\n    {--samples=8 : Number of sample paths to print per affected table.}",
+    "options": [
+      "--apply : Mark currently active rows below configured exclude_paths as obsolete/stale.",
+      "--force : Skip the interactive confirmation when --apply is used.",
+      "--samples=8 : Number of sample paths to print per affected table."
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [],
+    "direct_tables": [
+      "translation_workbench_dynamic_source_candidates",
+      "translation_workbench_dynamic_source_candidates as candidates",
+      "translation_workbench_dynamic_sources",
+      "translation_workbench_dynamic_sources as dynamic_sources",
+      "translation_workbench_entries",
+      "translation_workbench_findings",
+      "translation_workbench_findings as findings",
+      "translation_workbench_key_findings",
+      "translation_workbench_key_findings as key_findings",
+      "translation_workbench_occurrences",
+      "translation_workbench_option_discoveries",
+      "translation_workbench_source_files"
+    ]
+  },
+  {
+    "command": "translation-workbench:collect-timeline-chains",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/CollectTimelineChains.php",
+    "signature": "translation-workbench:collect-timeline-chains\n    {--sync : Write the current timeline-chain snapshot into the database.}\n    {--dry-run : Report only; do not write timeline-chain database rows.}",
+    "options": [
+      "--sync : Write the current timeline-chain snapshot into the database.",
+      "--dry-run : Report only; do not write timeline-chain database rows."
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [
+      "Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchTimelineChainCollector"
+    ],
+    "direct_tables": []
+  },
+  {
+    "command": "translation-workbench:compare-values",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/CompareTranslationWorkbenchValues.php",
+    "signature": "translation-workbench:compare-values\n        {--json : Output the complete comparison as JSON, including original values and row IDs}",
+    "options": [
+      "--json : Output the complete comparison as JSON, including original values and row IDs"
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [
+      "Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchValueComparison"
+    ],
+    "direct_tables": []
+  },
+  {
+    "command": "translation-workbench:detect-duplicates",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/DetectDuplicateCandidates.php",
+    "signature": "translation-workbench:detect-duplicates\n    {--dry-run : Report duplicate groups without writing candidate rows.}",
+    "options": [
+      "--dry-run : Report duplicate groups without writing candidate rows."
+    ],
+    "calls": [],
+    "models": [
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchDuplicateCandidate",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchEntry"
+    ],
+    "foundation": [],
+    "direct_tables": [
+      "translation_workbench_duplicate_candidates"
+    ]
+  },
+  {
+    "command": "translation-workbench:detect-shared-key-candidates",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/DetectSharedKeyCandidates.php",
+    "signature": "translation-workbench:detect-shared-key-candidates\n    {--dry-run : Report possible shared-key candidates without writing database rows.}",
+    "options": [
+      "--dry-run : Report possible shared-key candidates without writing database rows."
+    ],
+    "calls": [
+      "translation-workbench:detect-shared-key-candidates"
+    ],
+    "models": [
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchSharedKeyCandidate"
+    ],
+    "foundation": [],
+    "direct_tables": [
+      "translation_workbench_findings",
+      "translation_workbench_findings as findings",
+      "translation_workbench_key_findings",
+      "translation_workbench_reviews as reviews"
+    ]
+  },
+  {
+    "command": "translation-workbench:detect-suspicious-keyed-additions",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/DetectSuspiciousKeyedAdditions.php",
+    "signature": "translation-workbench:detect-suspicious-keyed-additions\n    {--paths= : Comma-separated relative paths to scan. Defaults to translation-workbench.paths.}\n    {--source-locale=en : Source locale used to check whether the keyed call already exists in lang/* files.}\n    {--since-hours=72 : Only report newly seen keyed additions from the last N hours unless --all is used.}\n    {--all : Report all suspicious keyed additions, including historical rows.}\n    {--skip-raw-data : Write only suspicious-key results and summary, without the centralized raw scanner data.}\n    {--fail-on-suspicious : Return a failing exit code when suspicious keyed additions are found.}",
+    "options": [
+      "--paths= : Comma-separated relative paths to scan. Defaults to translation-workbench.paths.",
+      "--source-locale=en : Source locale used to check whether the keyed call already exists in lang/* files.",
+      "--since-hours=72 : Only report newly seen keyed additions from the last N hours unless --all is used.",
+      "--all : Report all suspicious keyed additions, including historical rows.",
+      "--skip-raw-data : Write only suspicious-key results and summary, without the centralized raw scanner data.",
+      "--fail-on-suspicious : Return a failing exit code when suspicious keyed additions are found."
+    ],
+    "calls": [
+      "translation-workbench:detect-suspicious-keyed-additions",
+      "translation:workbench"
+    ],
+    "models": [
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchFinding",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchKey",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchLangValue",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchReview",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchTimelineEvent"
+    ],
+    "foundation": [],
+    "direct_tables": [
+      "translation_workbench_key_findings",
+      "translation_workbench_key_findings as key_findings",
+      "translation_workbench_reviews"
+    ]
+  },
+  {
+    "command": "translation-workbench:discover-dynamic-options",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/DiscoverDynamicOptions.php",
+    "signature": "translation-workbench:discover-dynamic-options\n    {--paths= : Comma-separated relative view paths to scan. Defaults to translation-workbench paths.}\n    {--source-locale=en : Source locale used when writing discovered option labels as dynamic source values.}\n    {--sync : Write discovered options into translation_workbench_values and translation_workbench_dynamic_values.}\n    {--dry-run : Report only; do not write database rows.}",
+    "options": [
+      "--paths= : Comma-separated relative view paths to scan. Defaults to translation-workbench paths.",
+      "--source-locale=en : Source locale used when writing discovered option labels as dynamic source values.",
+      "--sync : Write discovered options into translation_workbench_values and translation_workbench_dynamic_values.",
+      "--dry-run : Report only; do not write database rows."
+    ],
+    "calls": [
+      "translation-workbench:discover-dynamic-options"
+    ],
+    "models": [
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchEntry",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchEvent",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchDynamicValue",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchValue",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchOptionDiscovery"
+    ],
+    "foundation": [],
+    "direct_tables": [
+      "translation_workbench_dynamic_values"
+    ]
+  },
+  {
+    "command": "translation-workbench:discover-dynamic-source-candidates",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/DiscoverDynamicSourceCandidates.php",
+    "signature": "translation-workbench:discover-dynamic-source-candidates\n    {--dry-run : Report dynamic source candidates without writing database rows.}",
+    "options": [
+      "--dry-run : Report dynamic source candidates without writing database rows."
+    ],
+    "calls": [
+      "translation-workbench:discover-dynamic-source-candidates"
+    ],
+    "models": [],
+    "foundation": [],
+    "direct_tables": [
+      "translation_workbench_dynamic_source_candidates",
+      "translation_workbench_dynamic_sources",
+      "translation_workbench_dynamic_sources as sources",
+      "translation_workbench_findings",
+      "translation_workbench_key_findings",
+      "translation_workbench_keys",
+      "translation_workbench_source_files"
+    ]
+  },
+  {
+    "command": "translation-workbench:export-lang-files",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/ExportTranslationWorkbenchLangFiles.php",
+    "signature": "translation-workbench:export-lang-files\n    {--locale=* : Locale(s) to export. Defaults to all locales with active Workbench lang values.}\n    {--namespace=* : Namespace file(s) to export, for example ui or admin. Defaults to all namespaces.}\n    {--key=* : Exact translation key(s) to export or prune. Repeat for multiple keys; omitted means all keys.}\n    {--dynamic-options : Export reviewed option values for explicit --key owners; does not prune.}\n    {--write : Write lang files. Without this option the command only reports the export plan.}\n    {--suppress-dry-run-warning : Suppress the dry-run warning when the command is used as an orchestrated report refresh step.}",
+    "options": [
+      "--locale=* : Locale(s) to export. Defaults to all locales with active Workbench lang values.",
+      "--namespace=* : Namespace file(s) to export, for example ui or admin. Defaults to all namespaces.",
+      "--key=* : Exact translation key(s) to export or prune. Repeat for multiple keys; omitted means all keys.",
+      "--dynamic-options : Export reviewed option values for explicit --key owners; does not prune.",
+      "--write : Write lang files. Without this option the command only reports the export plan.",
+      "--suppress-dry-run-warning : Suppress the dry-run warning when the command is used as an orchestrated report refresh step."
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [
+      "Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchLangFileExporter"
+    ],
+    "direct_tables": []
+  },
+  {
+    "command": "translation-workbench:import-existing",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/ImportExistingTranslations.php",
+    "signature": "translation-workbench:import-existing\n    {--source-locale=en : Source language locale directory to import as the translation basis.}\n    {--dry-run : Report only; do not write database rows.}",
+    "options": [
+      "--source-locale=en : Source language locale directory to import as the translation basis.",
+      "--dry-run : Report only; do not write database rows."
+    ],
+    "calls": [
+      "translation-workbench:import-existing"
+    ],
+    "models": [
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchEntry",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchEvent",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchValue"
+    ],
+    "foundation": [],
+    "direct_tables": []
+  },
+  {
+    "command": "translation-workbench:import-lang-values",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/ImportTranslationWorkbenchLangValues.php",
+    "signature": "translation-workbench:import-lang-values\n    {--source-locale=en : Source locale directory below lang/ to import.}\n    {--all-locales : Import all locale directories below lang/, excluding lang/vendor.}\n    {--dry-run : Read and report only; do not write lang value rows.}\n    {--truncate-lang-values : Truncate imported lang value rows before importing.}\n    {--force-truncate : Skip the interactive safety confirmation for --truncate-lang-values.}",
+    "options": [
+      "--source-locale=en : Source locale directory below lang/ to import.",
+      "--all-locales : Import all locale directories below lang/, excluding lang/vendor.",
+      "--dry-run : Read and report only; do not write lang value rows.",
+      "--truncate-lang-values : Truncate imported lang value rows before importing.",
+      "--force-truncate : Skip the interactive safety confirmation for --truncate-lang-values."
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [
+      "Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchLangValueImporter"
+    ],
+    "direct_tables": []
+  },
+  {
+    "command": "translation-workbench:inventory-keys",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/InventoryTranslationWorkbenchKeys.php",
+    "signature": "translation-workbench:inventory-keys\n    {--sync : Write the current established-key inventory into the database.}\n    {--dry-run : Report only; do not write inventory database rows.}\n    {--source-locale=en : Source locale used to split source and target lang values.}",
+    "options": [
+      "--sync : Write the current established-key inventory into the database.",
+      "--dry-run : Report only; do not write inventory database rows.",
+      "--source-locale=en : Source locale used to split source and target lang values."
+    ],
+    "calls": [
+      "translation-workbench:inventory-keys"
+    ],
+    "models": [
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchKeyInventory"
+    ],
+    "foundation": [],
+    "direct_tables": [
+      "translation_workbench_dynamic_key_values",
+      "translation_workbench_dynamic_sources",
+      "translation_workbench_dynamic_sources as sources",
+      "translation_workbench_key_findings as key_findings",
+      "translation_workbench_key_values",
+      "translation_workbench_keys",
+      "translation_workbench_lang_values",
+      "translation_workbench_reviews as reviews"
+    ]
+  },
+  {
+    "command": "translation-workbench:plan-code-updates",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/PlanTranslationWorkbenchCodeUpdates.php",
+    "signature": "translation-workbench:plan-code-updates\n    {--paths= : Comma-separated relative paths to limit the code update plan.}\n    {--limit= : Maximum number of reviewed findings to inspect.}",
+    "options": [
+      "--paths= : Comma-separated relative paths to limit the code update plan.",
+      "--limit= : Maximum number of reviewed findings to inspect."
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [
+      "Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchCodeUpdatePlanner"
+    ],
+    "direct_tables": []
+  },
+  {
+    "command": "translation-workbench:profile-findings",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/ProfileTranslationWorkbenchFindings.php",
+    "signature": "translation-workbench:profile-findings\n    {--per-page=25 : Number of rows requested by each profiled paginator call.}",
+    "options": [
+      "--per-page=25 : Number of rows requested by each profiled paginator call."
+    ],
+    "calls": [
+      "translation-workbench:profile-findings"
+    ],
+    "models": [],
+    "foundation": [],
+    "direct_tables": []
+  },
+  {
+    "command": "translation-workbench:resolve-unknown-dynamic-sources",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/ResolveUnknownDynamicSources.php",
+    "signature": "translation-workbench:resolve-unknown-dynamic-sources\n    {--dry-run : Report resolvable unknown dynamic sources without writing database rows.}",
+    "options": [
+      "--dry-run : Report resolvable unknown dynamic sources without writing database rows."
+    ],
+    "calls": [
+      "translation-workbench:resolve-unknown-dynamic-sources"
+    ],
+    "models": [
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchFinding",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchKey"
+    ],
+    "foundation": [
+      "Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchTimelineRecorder"
+    ],
+    "direct_tables": [
+      "translation_workbench_dynamic_source_candidates",
+      "translation_workbench_dynamic_source_values",
+      "translation_workbench_dynamic_sources",
+      "translation_workbench_dynamic_sources as runtime_sources",
+      "translation_workbench_dynamic_sources as sources",
+      "translation_workbench_findings",
+      "translation_workbench_key_findings",
+      "translation_workbench_keys",
+      "translation_workbench_option_discoveries",
+      "translation_workbench_source_files"
+    ]
+  },
+  {
+    "command": "translation-workbench:scan",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/ScanTranslationWorkbench.php",
+    "signature": "translation-workbench:scan\n    {--paths= : Comma-separated relative paths to scan. Defaults to config translation-workbench.paths.}\n    {--dry-run : Scan and report only; do not write database rows.}\n    {--truncate : Truncate translation workbench tables before writing scanned entries.}\n    {--force-truncate : Skip the interactive safety confirmation for --truncate.}\n    {--mark-obsolete : Mark previously seen but now missing entries as obsolete.}",
+    "options": [
+      "--paths= : Comma-separated relative paths to scan. Defaults to config translation-workbench.paths.",
+      "--dry-run : Scan and report only; do not write database rows.",
+      "--truncate : Truncate translation workbench tables before writing scanned entries.",
+      "--force-truncate : Skip the interactive safety confirmation for --truncate.",
+      "--mark-obsolete : Mark previously seen but now missing entries as obsolete."
+    ],
+    "calls": [
+      "translation-workbench:scan"
+    ],
+    "models": [
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchEntry",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchEvent",
+      "Gunreip\\TranslationWorkbench\\Models\\TranslationWorkbenchOccurrence"
+    ],
+    "foundation": [],
+    "direct_tables": []
+  },
+  {
+    "command": "translation-workbench:sync-foundation",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/SyncTranslationWorkbenchFoundation.php",
+    "signature": "translation-workbench:sync-foundation\n    {--paths= : Comma-separated relative paths to scan. Defaults to config translation-workbench.paths.}\n    {--dry-run : Scan and report only; do not write foundation database rows.}\n    {--truncate-foundation : Truncate only the new foundation tables before writing.}\n    {--force-truncate : Skip the interactive safety confirmation for --truncate-foundation.}\n    {--mark-obsolete : Mark active foundation rows as obsolete when they are no longer seen in the latest scan.}",
+    "options": [
+      "--paths= : Comma-separated relative paths to scan. Defaults to config translation-workbench.paths.",
+      "--dry-run : Scan and report only; do not write foundation database rows.",
+      "--truncate-foundation : Truncate only the new foundation tables before writing.",
+      "--force-truncate : Skip the interactive safety confirmation for --truncate-foundation.",
+      "--mark-obsolete : Mark active foundation rows as obsolete when they are no longer seen in the latest scan."
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [
+      "Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchFoundationSyncer"
+    ],
+    "direct_tables": []
+  },
+  {
+    "command": "translation:workbench",
+    "source": "packages/gunreip/laravel-translation-workbench/src/Console/RunTranslationWorkbench.php",
+    "signature": "translation:workbench\n    {--paths= : Comma-separated relative paths passed to scan and dynamic option discovery.}\n    {--source-locale=en : Source locale used for importing existing translations and dynamic option values.}\n    {--dry-run : Report only; do not write database rows.}\n    {--truncate : Truncate all Translation Workbench tables before rebuilding.}\n    {--force-truncate : Skip the interactive safety confirmation for --truncate.}\n    {--truncate-foundation : Truncate only the new foundation tables before syncing foundation rows.}\n    {--mark-obsolete : Mark previously seen but now missing entries and occurrences as obsolete/stale.}\n    {--skip-foundation : Skip syncing scanner findings into the new foundation tables.}\n    {--skip-lang-values : Skip importing existing lang file values into the separate lang values table.}\n    {--skip-import : Skip importing existing source language values.}\n    {--skip-dynamic-options : Skip discovering dynamic option values.}\n    {--skip-duplicates : Skip duplicate candidate detection.}\n    {--skip-shared-key-candidates : Skip detecting new findings that may reuse reviewed shared translation keys.}\n    {--skip-suspicious-keyed-additions : Skip detecting code-level translation keys without Workbench/code-update provenance.}\n    {--skip-suspicious-key-restores : Skip applying reviewed suspicious key restore decisions.}\n    {--skip-dynamic-classification : Skip classifying dynamic value sources.}\n    {--skip-dynamic-resolution : Skip resolving unknown dynamic sources from option discoveries.}\n    {--skip-dynamic-source-candidates : Skip discovering reviewable dynamic source candidates.}\n    {--skip-lang-file-export : Skip the final lang file export dry-run/report step.}\n    {--skip-lang-node-classification : Skip classifying keys as lang-file leaf/container/conflict nodes.}\n    {--skip-key-inventory : Skip established translation-key inventory aggregation.}\n    {--skip-code-update-plan : Skip the final code update planning report step.}\n    {--skip-code-update-apply : Skip the final code update apply dry-run and patch report step.}\n    {--write-lang-files : Write exported lang files as the final pipeline step. Without this option the export step is a dry-run report only.}\n    {--pipeline-run-id= : Existing Translation Workbench pipeline run ID used for UI progress tracking.}\n    {--complete : Run the full safe write workflow: mark obsolete, write lang files, apply safe code updates, then refresh reports.}",
+    "options": [
+      "--paths= : Comma-separated relative paths passed to scan and dynamic option discovery.",
+      "--source-locale=en : Source locale used for importing existing translations and dynamic option values.",
+      "--dry-run : Report only; do not write database rows.",
+      "--truncate : Truncate all Translation Workbench tables before rebuilding.",
+      "--force-truncate : Skip the interactive safety confirmation for --truncate.",
+      "--truncate-foundation : Truncate only the new foundation tables before syncing foundation rows.",
+      "--mark-obsolete : Mark previously seen but now missing entries and occurrences as obsolete/stale.",
+      "--skip-foundation : Skip syncing scanner findings into the new foundation tables.",
+      "--skip-lang-values : Skip importing existing lang file values into the separate lang values table.",
+      "--skip-import : Skip importing existing source language values.",
+      "--skip-dynamic-options : Skip discovering dynamic option values.",
+      "--skip-duplicates : Skip duplicate candidate detection.",
+      "--skip-shared-key-candidates : Skip detecting new findings that may reuse reviewed shared translation keys.",
+      "--skip-suspicious-keyed-additions : Skip detecting code-level translation keys without Workbench/code-update provenance.",
+      "--skip-suspicious-key-restores : Skip applying reviewed suspicious key restore decisions.",
+      "--skip-dynamic-classification : Skip classifying dynamic value sources.",
+      "--skip-dynamic-resolution : Skip resolving unknown dynamic sources from option discoveries.",
+      "--skip-dynamic-source-candidates : Skip discovering reviewable dynamic source candidates.",
+      "--skip-lang-file-export : Skip the final lang file export dry-run/report step.",
+      "--skip-lang-node-classification : Skip classifying keys as lang-file leaf/container/conflict nodes.",
+      "--skip-key-inventory : Skip established translation-key inventory aggregation.",
+      "--skip-code-update-plan : Skip the final code update planning report step.",
+      "--skip-code-update-apply : Skip the final code update apply dry-run and patch report step.",
+      "--write-lang-files : Write exported lang files as the final pipeline step. Without this option the export step is a dry-run report only.",
+      "--pipeline-run-id= : Existing Translation Workbench pipeline run ID used for UI progress tracking.",
+      "--complete : Run the full safe write workflow: mark obsolete, write lang files, apply safe code updates, then refresh reports."
+    ],
+    "calls": [
+      "translation-workbench:apply-code-updates",
+      "translation-workbench:apply-suspicious-key-restores",
+      "translation-workbench:classify-dynamic-values",
+      "translation-workbench:classify-lang-node-types",
+      "translation-workbench:detect-duplicates",
+      "translation-workbench:detect-shared-key-candidates",
+      "translation-workbench:detect-suspicious-keyed-additions",
+      "translation-workbench:discover-dynamic-options",
+      "translation-workbench:discover-dynamic-source-candidates",
+      "translation-workbench:export-lang-files",
+      "translation-workbench:import-existing",
+      "translation-workbench:import-lang-values",
+      "translation-workbench:inventory-keys",
+      "translation-workbench:plan-code-updates",
+      "translation-workbench:resolve-unknown-dynamic-sources",
+      "translation-workbench:scan",
+      "translation-workbench:sync-foundation"
+    ],
+    "models": [],
+    "foundation": [
+      "Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchPipelineRunTracker",
+      "Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchPipelineAccess"
+    ],
+    "direct_tables": []
+  },
+  {
+    "command": "translations:audit-code",
+    "source": "app/Console/Commands/TranslationsAuditCode.php",
+    "signature": "translations:audit-code",
+    "options": [],
+    "calls": [
+      "translations:audit-code"
+    ],
+    "models": [],
+    "foundation": [],
+    "direct_tables": []
+  },
+  {
+    "command": "translations:audit-compare",
+    "source": "app/Console/Commands/TranslationsAuditCompare.php",
+    "signature": "translations:audit-compare",
+    "options": [],
+    "calls": [
+      "translations:audit-compare"
+    ],
+    "models": [],
+    "foundation": [],
+    "direct_tables": [
+      "translation_values"
+    ]
+  },
+  {
+    "command": "translations:audit-duplicate-usage-literals",
+    "source": "app/Console/Commands/TranslationsAuditDuplicateUsageLiterals.php",
+    "signature": "translations:audit-duplicate-usage-literals\n    {--source-locale=en : Source locale used for duplicate literal detection}\n    {--locales= : Comma-separated target locale list to include in the report, e.g. de,en}\n    {--min-keys=2 : Minimum number of different translation keys for the same source literal}\n    {--min-length=2 : Minimum trimmed source literal length}\n    {--exclude-ui : Exclude values that already contain ui.* keys}",
+    "options": [
+      "--source-locale=en : Source locale used for duplicate literal detection",
+      "--locales= : Comma-separated target locale list to include in the report, e.g. de,en",
+      "--min-keys=2 : Minimum number of different translation keys for the same source literal",
+      "--min-length=2 : Minimum trimmed source literal length",
+      "--exclude-ui : Exclude values that already contain ui.* keys"
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [],
+    "direct_tables": [
+      "translation_usages",
+      "translation_values",
+      "translation_values as tv"
+    ]
+  },
+  {
+    "command": "translations:audit-frequent-usage-literals",
+    "source": "app/Console/Commands/TranslationsAuditFrequentUsageLiterals.php",
+    "signature": "translations:audit-frequent-usage-literals\n    {--source-locale=en : Source locale used for usage literal reporting}\n    {--locales= : Comma-separated target locale list to include in the report, e.g. de,en}\n    {--min-usages=2 : Minimum usage count for a source literal}\n    {--min-length=2 : Minimum trimmed source literal length}\n    {--include-zero-usage : Include source values without usage records}",
+    "options": [
+      "--source-locale=en : Source locale used for usage literal reporting",
+      "--locales= : Comma-separated target locale list to include in the report, e.g. de,en",
+      "--min-usages=2 : Minimum usage count for a source literal",
+      "--min-length=2 : Minimum trimmed source literal length",
+      "--include-zero-usage : Include source values without usage records"
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [],
+    "direct_tables": [
+      "translation_usages",
+      "translation_values",
+      "translation_values as tv"
+    ]
+  },
+  {
+    "command": "translations:audit-lang",
+    "source": "app/Console/Commands/TranslationsAuditLang.php",
+    "signature": "translations:audit-lang",
+    "options": [],
+    "calls": [
+      "translations:audit-lang"
+    ],
+    "models": [],
+    "foundation": [],
+    "direct_tables": []
+  },
+  {
+    "command": "translations:audit-lang-ballast",
+    "source": "app/Console/Commands/TranslationsAuditLangBallast.php",
+    "signature": "translations:audit-lang-ballast",
+    "options": [],
+    "calls": [
+      "translations:audit-lang-ballast"
+    ],
+    "models": [
+      "App\\Models\\TranslationLangBallastDecision"
+    ],
+    "foundation": [],
+    "direct_tables": [
+      "translation_keys",
+      "translation_values"
+    ]
+  },
+  {
+    "command": "translations:audit-sub-language-redundancy",
+    "source": "app/Console/Commands/TranslationsAuditSubLanguageRedundancy.php",
+    "signature": "translations:audit-sub-language-redundancy\n        {--locales= : Comma-separated sub-language locales override (e.g. de-at,de-ch)}\n        {--dry-run : Show what would be changed without persisting}",
+    "options": [
+      "--locales= : Comma-separated sub-language locales override (e.g. de-at,de-ch)",
+      "--dry-run : Show what would be changed without persisting"
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [],
+    "direct_tables": [
+      "translation_values"
+    ]
+  },
+  {
+    "command": "translations:backfill-audit-discovered-events",
+    "source": "app/Console/Commands/BackfillTranslationAuditDiscoveredEvents.php",
+    "signature": "translations:backfill-audit-discovered-events {--dry-run : Report missing baselines without writing them}",
+    "options": [
+      "--dry-run : Report missing baselines without writing them"
+    ],
+    "calls": [],
+    "models": [
+      "App\\Models\\TranslationKey"
+    ],
+    "foundation": [],
+    "direct_tables": [
+      "translation_audit_events"
+    ]
+  },
+  {
+    "command": "translations:backfill-native-text-from-values",
+    "source": "app/Console/Commands/TranslationsBackfillNativeTextFromValues.php",
+    "signature": "translations:backfill-native-text-from-values\n        {--prefer-locales=en,de : Comma-separated locale priority list for selecting source values}\n        {--limit=0 : Maximum number of keys to backfill (0 = no limit)}\n        {--dry-run : Preview updates without writing to the database}",
+    "options": [
+      "--prefer-locales=en,de : Comma-separated locale priority list for selecting source values",
+      "--limit=0 : Maximum number of keys to backfill (0 = no limit)",
+      "--dry-run : Preview updates without writing to the database"
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [],
+    "direct_tables": [
+      "translation_keys",
+      "translation_values"
+    ]
+  },
+  {
+    "command": "translations:cleanup-stale-dynamic-keys",
+    "source": "app/Console/Commands/CleanupStaleDynamicTranslationKeys.php",
+    "signature": "translations:cleanup-stale-dynamic-keys\n    {--apply : Persist the cleanup decisions. Without this option the command only reports what would happen.}",
+    "options": [
+      "--apply : Persist the cleanup decisions. Without this option the command only reports what would happen."
+    ],
+    "calls": [
+      "translations:cleanup-stale-dynamic-keys"
+    ],
+    "models": [
+      "App\\Models\\TranslationKey"
+    ],
+    "foundation": [],
+    "direct_tables": [
+      "translation_audit_events"
+    ]
+  },
+  {
+    "command": "translations:ensure-lang-directories",
+    "source": "app/Console/Commands/TranslationsEnsureLangDirectories.php",
+    "signature": "translations:ensure-lang-directories\n        {--locales= : Comma-separated locale list override (e.g. de,en,fr)}\n        {--dry-run : Show what would be created without writing to disk}",
+    "options": [
+      "--locales= : Comma-separated locale list override (e.g. de,en,fr)",
+      "--dry-run : Show what would be created without writing to disk"
+    ],
+    "calls": [],
+    "models": [
+      "App\\Models\\TranslationLanguage"
+    ],
+    "foundation": [],
+    "direct_tables": [
+      "translation_values"
+    ]
+  },
+  {
+    "command": "translations:export-lang-files",
+    "source": "app/Console/Commands/TranslationsExportLangFiles.php",
+    "signature": "translations:export-lang-files\n        {--locales= : Comma-separated locale list override (e.g. de,en,fr)}\n        {--dry-run : Show what would be written without writing files}",
+    "options": [
+      "--locales= : Comma-separated locale list override (e.g. de,en,fr)",
+      "--dry-run : Show what would be written without writing files"
+    ],
+    "calls": [],
+    "models": [
+      "App\\Models\\TranslationLanguage"
+    ],
+    "foundation": [],
+    "direct_tables": [
+      "translation_values",
+      "translation_workbench_lang_values"
+    ]
+  },
+  {
+    "command": "translations:generate-literal-diffs",
+    "source": "app/Console/Commands/TranslationsGenerateLiteralDiffs.php",
+    "signature": "translations:generate-literal-diffs\n        {--paths= : Comma-separated relative paths to scan (default: translation-workbench.paths)}\n        {--output-dir= : Relative output directory for generated patch files}\n        {--allow-suggested : Also use suggested_key when key is empty}\n        {--require-complete-values : Require non-empty translation values for all enabled locales (default: true)}\n        {--no-require-complete-values : Allow mappings even if some locale values are missing}\n        {--write-per-file-patches : Also write individual per-file patch files}",
+    "options": [
+      "--paths= : Comma-separated relative paths to scan (default: translation-workbench.paths)",
+      "--output-dir= : Relative output directory for generated patch files",
+      "--allow-suggested : Also use suggested_key when key is empty",
+      "--require-complete-values : Require non-empty translation values for all enabled locales (default: true)",
+      "--no-require-complete-values : Allow mappings even if some locale values are missing",
+      "--write-per-file-patches : Also write individual per-file patch files"
+    ],
+    "calls": [],
+    "models": [
+      "App\\Models\\TranslationKey",
+      "App\\Models\\TranslationLanguage",
+      "App\\Models\\TranslationValue"
+    ],
+    "foundation": [],
+    "direct_tables": []
+  },
+  {
+    "command": "translations:lang-ballast:apply",
+    "source": "app/Console/Commands/TranslationsApplyLangBallastDecisions.php",
+    "signature": "translations:lang-ballast:apply {--write : Actually modify lang files. Without --write only preview files are generated.}",
+    "options": [
+      "--write : Actually modify lang files. Without --write only preview files are generated."
+    ],
+    "calls": [],
+    "models": [
+      "App\\Models\\TranslationLangBallastDecision"
+    ],
+    "foundation": [],
+    "direct_tables": []
+  },
+  {
+    "command": "translations:normalize-keyed-native-statuses",
+    "source": "app/Console/Commands/TranslationsNormalizeKeyedNativeStatuses.php",
+    "signature": "translations:normalize-keyed-native-statuses\n        {--limit=0 : Maximum number of rows to normalize (0 = no limit)}\n        {--dry-run : Preview affected rows without writing changes}",
+    "options": [
+      "--limit=0 : Maximum number of rows to normalize (0 = no limit)",
+      "--dry-run : Preview affected rows without writing changes"
+    ],
+    "calls": [],
+    "models": [],
+    "foundation": [],
+    "direct_tables": [
+      "translation_keys"
+    ]
+  },
+  {
+    "command": "translations:rewrite-literals",
+    "source": "app/Console/Commands/TranslationsRewriteLiterals.php",
+    "signature": "translations:rewrite-literals\n        {--dry-run : Show replacements without writing files}\n        {--paths= : Comma-separated relative paths to scan (default: app,routes,resources/views)}",
+    "options": [
+      "--dry-run : Show replacements without writing files",
+      "--paths= : Comma-separated relative paths to scan (default: app,routes,resources/views)"
+    ],
+    "calls": [],
+    "models": [
+      "App\\Models\\TranslationKey"
+    ],
+    "foundation": [],
+    "direct_tables": []
+  },
+  {
+    "command": "translations:sync-audits",
+    "source": "app/Console/Commands/SyncTranslationAudits.php",
+    "signature": "translations:sync-audits",
+    "options": [],
+    "calls": [
+      "translations:sync-audits"
+    ],
+    "models": [
+      "App\\Models\\TranslationKey",
+      "App\\Models\\TranslationUsage",
+      "App\\Models\\TranslationValue"
+    ],
+    "foundation": [],
+    "direct_tables": [
+      "translation_audit_events"
+    ]
+  },
+  {
+    "command": "translations:sync-dynamic-keys",
+    "source": "app/Console/Commands/SyncDynamicTranslationKeys.php",
+    "signature": "translations:sync-dynamic-keys\n    {--paths= : Comma-separated relative paths to scan (default: translation-workbench.paths)}\n    {--output-dir= : Relative output directory for generated audit files}\n    {--dry-run : Write audit files only; do not sync database rows}",
+    "options": [
+      "--paths= : Comma-separated relative paths to scan (default: translation-workbench.paths)",
+      "--output-dir= : Relative output directory for generated audit files",
+      "--dry-run : Write audit files only; do not sync database rows"
+    ],
+    "calls": [
+      "translations:sync-dynamic-keys"
+    ],
+    "models": [
+      "App\\Models\\TranslationKey",
+      "App\\Models\\TranslationUsage"
+    ],
+    "foundation": [],
+    "direct_tables": [
+      "translation_audit_events"
+    ]
+  },
+  {
+    "command": "translations:usage-decisions:apply",
+    "source": "app/Console/Commands/ApplyTranslationUsageAuditDecisions.php",
+    "signature": "translations:usage-decisions:apply {--write : Write changes to files. Defaults to dry-run.} {--sample=20 : Maximum number of items written to sample report files.}",
+    "options": [
+      "--write : Write changes to files. Defaults to dry-run.",
+      "--sample=20 : Maximum number of items written to sample report files."
+    ],
+    "calls": [],
+    "models": [
+      "App\\Models\\TranslationUsageAuditDecision"
+    ],
+    "foundation": [],
+    "direct_tables": []
+  },
+  {
+    "command": "translations:usage-decisions:preview",
+    "source": "app/Console/Commands/PreviewTranslationUsageAuditDecisions.php",
+    "signature": "translations:usage-decisions:preview",
+    "options": [],
+    "calls": [],
+    "models": [
+      "App\\Models\\TranslationUsageAuditDecision"
+    ],
+    "foundation": [],
+    "direct_tables": []
+  }
+]

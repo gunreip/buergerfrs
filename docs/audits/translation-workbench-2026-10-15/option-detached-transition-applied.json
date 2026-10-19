@@ -1,0 +1,114 @@
+{
+    "mode": "committed",
+    "backup_path": "/home/gunreip/code/buergerfrs/storage/app/private/option-transition-20261015-195348-798dda2d.json",
+    "prepared": [
+        {
+            "target_finding_id": 9271,
+            "observation_id": 3,
+            "status": "prepared"
+        },
+        {
+            "target_finding_id": 9253,
+            "observation_id": 16,
+            "status": "prepared"
+        },
+        {
+            "target_finding_id": 9252,
+            "observation_id": 15,
+            "status": "prepared"
+        },
+        {
+            "target_finding_id": 9255,
+            "observation_id": 27,
+            "status": "prepared"
+        }
+    ],
+    "transitions": [
+        {
+            "source_id": 2,
+            "target_finding_id": 9271,
+            "status": "transitioned",
+            "candidate_ids": []
+        },
+        {
+            "source_id": 25,
+            "target_finding_id": 9253,
+            "status": "transitioned",
+            "candidate_ids": []
+        },
+        {
+            "source_id": 23,
+            "target_finding_id": 9252,
+            "status": "transitioned",
+            "candidate_ids": [
+                77
+            ]
+        },
+        {
+            "source_id": 62,
+            "target_finding_id": 9255,
+            "status": "transitioned",
+            "candidate_ids": []
+        }
+    ],
+    "repeat": [
+        {
+            "source_id": 2,
+            "target_finding_id": 9271,
+            "status": "already_transitioned",
+            "candidate_ids": []
+        },
+        {
+            "source_id": 25,
+            "target_finding_id": 9253,
+            "status": "already_transitioned",
+            "candidate_ids": []
+        },
+        {
+            "source_id": 23,
+            "target_finding_id": 9252,
+            "status": "already_transitioned",
+            "candidate_ids": [
+                77
+            ]
+        },
+        {
+            "source_id": 62,
+            "target_finding_id": 9255,
+            "status": "already_transitioned",
+            "candidate_ids": []
+        }
+    ],
+    "changed_rows": {
+        "findings": [
+            9252,
+            9253,
+            9255,
+            9271
+        ],
+        "option_discoveries": [
+            3,
+            15,
+            16,
+            27
+        ],
+        "dynamic_sources": [
+            2,
+            23,
+            25,
+            62
+        ],
+        "dynamic_source_candidates": [
+            77
+        ]
+    },
+    "unchanged": [
+        "all_source_value_rows",
+        "all_translation_rows",
+        "all_reviews",
+        "all_key_relations",
+        "other_observations_and_sources",
+        "UI_resolver_en_de"
+    ],
+    "classification_scope": "four_targets_only_no_global_cleanup"
+}

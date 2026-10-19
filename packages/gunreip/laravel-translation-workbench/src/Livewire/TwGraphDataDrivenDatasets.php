@@ -33,6 +33,43 @@ class TwGraphDataDrivenDatasets extends Component
 
     use Concerns\MeasuresTimelineChainLayout;
 
+    use \Livewire\WithPagination;
+
+    public string $graphScope = 'chain';
+
+    public ?int $graphFindingId = null;
+
+    #[\Livewire\Attributes\Locked]
+    public ?int $findingSelectionDatasetId = null;
+
+    public function updatedGraphScope(): void
+    {
+        $this->validate(['graphScope' => 'in:chain,finding']);
+        $this->resetPage('findingEventsPage');
+        $this->reloadTick++;
+    }
+
+    public function updatedGraphFindingId(): void
+    {
+        $this->resetPage('findingEventsPage');
+        $this->reloadTick++;
+    }
+
+    protected function datasetSelectionChanged(): void
+    {
+        if ($this->findingSelectionDatasetId !== $this->timelineChainId) {
+            $this->graphFindingId = null;
+            $this->findingSelectionDatasetId = $this->timelineChainId;
+            $this->resetPage('findingEventsPage');
+        }
+    }
+
+    protected function selectedFindingForGraph(int $id): void
+    {
+        $this->graphFindingId = $id;
+        $this->resetPage('findingEventsPage');
+    }
+
     public function mount(): void
     {
         $this->initializeDatasetSelection();
@@ -45,10 +82,24 @@ class TwGraphDataDrivenDatasets extends Component
             $mainRow['dataset_context'] = true;
         }
 
+        $findingIds = array_values(array_unique(array_filter(array_map('intval', [
+            ...($mainRow['finding_ids'] ?? []), $mainRow['root_finding_id'] ?? 0,
+        ]))));
+        $findingId = $this->graphFindingId ?? ($mainRow['root_finding_id'] ?? null);
+        $finding = $this->graphScope === 'finding' && in_array($findingId, $findingIds, true)
+            ? DB::table('translation_workbench_findings')->find($findingId) : null;
+        $findingEvents = $finding
+            ? DB::table('translation_workbench_timeline_events')->where('finding_id', $finding->id)
+                ->orderBy('created_at')->orderBy('id')->paginate(20, ['*'], 'findingEventsPage', $this->getPage('findingEventsPage'))
+            : null;
+
         return view('translation-workbench::livewire.tw-graph.data-driven.datasets', [
+            'findingIds' => $findingIds,
+            'finding' => $finding,
+            'findingEvents' => $findingEvents,
             'mainRow' => $mainRow,
-            'rootRows' => $mainRow ? $this->timelineChainRootRows($mainRow) : [],
-            'originRows' => $mainRow ? $this->timelineChainOriginRows($mainRow) : [],
+            'rootRows' => $mainRow && $this->graphScope === 'chain' ? $this->timelineChainRootRows($mainRow) : [],
+            'originRows' => $mainRow && $this->graphScope === 'chain' ? $this->timelineChainOriginRows($mainRow) : [],
             'datasetHistory' => $this->datasetHistory,
             'reloadTick' => $this->reloadTick,
             'horizontalLabelLayout' => $this->horizontalLabelLayout,

@@ -20,6 +20,9 @@ class TwGraphDatasetDetails extends Component
     #[Locked]
     public int $datasetId;
 
+    #[Locked]
+    public ?int $findingId = null;
+
     public bool $show = false;
 
     #[Locked]
@@ -37,6 +40,9 @@ class TwGraphDatasetDetails extends Component
         abort_unless(in_array($section, ['overview', 'values', 'context', 'technical'], true), 422);
         $dataset = DB::table('translation_workbench_timeline_chains')->find($this->datasetId);
         abort_unless($dataset !== null, 404);
+        if ($this->findingId !== null) {
+            abort_unless(in_array($this->findingId, $this->findingIds($dataset), true), 404);
+        }
         $type = (string) ($source['type'] ?? '');
         $id = (int) ($source['id'] ?? 0);
         if (in_array($type, ['event-group', 'finding-group', 'rekey-group', 'merge-group'], true)) {
@@ -69,7 +75,7 @@ class TwGraphDatasetDetails extends Component
             'finding' => $query->whereIn('id', $this->findingIds($dataset)),
             'lang-value' => $query->where('translation_key', $dataset->translation_key),
             'review' => $query->where('key_id', $dataset->root_key_id ?? 0),
-            'event' => $query->whereIn('id', is_array($dataset->timeline_event_ids) ? $dataset->timeline_event_ids : (json_decode($dataset->timeline_event_ids ?? '[]', true) ?: [])),
+            'event' => $this->findingId !== null ? $query->where('finding_id', $this->findingId) : $query->whereIn('id', is_array($dataset->timeline_event_ids) ? $dataset->timeline_event_ids : (json_decode($dataset->timeline_event_ids ?? '[]', true) ?: [])),
         };
         $record = $query->first();
         abort_unless($record !== null, 404);

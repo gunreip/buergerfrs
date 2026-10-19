@@ -12,7 +12,7 @@
         <flux:tooltip toggleable>
             <flux:button size="sm" variant="outline" icon="information-circle">{{ __('2. DetectDuplicateCandidates') }}</flux:button>
             <flux:tooltip.content class="max-w-xl whitespace-normal">
-                <p class="font-mono text-xs break-all">packages/gunreip/laravel-translation-workbench/src/Console/DetectDuplicateCandidates.php::handle</p>
+                <p class="font-mono text-xs break-all">packages/gunreip/laravel-translation-workbench/src/_old/Console/DetectDuplicateCandidates.php::handle</p>
                 <p class="mt-2">{{ __('Detect duplicate candidates') }}</p>
             </flux:tooltip.content>
         </flux:tooltip>

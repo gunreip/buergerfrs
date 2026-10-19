@@ -1,0 +1,169 @@
+{
+    "mode": "source_only_audit_with_two_reviewed_config_readers",
+    "summary": {
+        "view_bound_candidate": 14,
+        "unresolved": 6
+    },
+    "observations": [
+        {
+            "path": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+            "line": 85,
+            "variable": "roleBadgeColorOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeColors",
+            "options_count": 18
+        },
+        {
+            "path": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+            "line": 98,
+            "variable": "roleBadgeVariantOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeVariants",
+            "options_count": 4
+        },
+        {
+            "path": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+            "line": 108,
+            "variable": "roleBadgeColorOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeColors",
+            "options_count": 18
+        },
+        {
+            "path": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+            "line": 120,
+            "variable": "roleBadgeVariantOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeVariants",
+            "options_count": 4
+        },
+        {
+            "path": "resources/views/components/management/people/create-person/sections/⚡documents.blade.php",
+            "line": 54,
+            "variable": "documentTypeOptions",
+            "resolution": "unresolved",
+            "selected_source": "resources/views/components/management/people/create-person/sections/⚡documents.blade.php:54",
+            "options_count": 0
+        },
+        {
+            "path": "resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php",
+            "line": 87,
+            "variable": "emergencyContactRelationshipOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Management/People/CreatePerson.php",
+            "options_count": 9
+        },
+        {
+            "path": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "line": 82,
+            "variable": "salutationOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Management/People/CreatePerson.php",
+            "options_count": 3
+        },
+        {
+            "path": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "line": 123,
+            "variable": "genderOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Management/People/CreatePerson.php",
+            "options_count": 4
+        },
+        {
+            "path": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "line": 381,
+            "variable": "maritalStatusOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Management/People/CreatePerson.php",
+            "options_count": 7
+        },
+        {
+            "path": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php",
+            "line": 59,
+            "variable": "documentTypeOptions",
+            "resolution": "unresolved",
+            "selected_source": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php:59",
+            "options_count": 0
+        },
+        {
+            "path": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php",
+            "line": 263,
+            "variable": "documentCategoryOptions",
+            "resolution": "unresolved",
+            "selected_source": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php:263",
+            "options_count": 0
+        },
+        {
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "line": 152,
+            "variable": "documentCategoryOptions",
+            "resolution": "unresolved",
+            "selected_source": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php:152",
+            "options_count": 0
+        },
+        {
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "line": 357,
+            "variable": "documentTypeOptions",
+            "resolution": "unresolved",
+            "selected_source": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php:357",
+            "options_count": 0
+        },
+        {
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "line": 5,
+            "variable": "documentTypeOptions",
+            "resolution": "unresolved",
+            "selected_source": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php:5",
+            "options_count": 0
+        },
+        {
+            "path": "resources/views/components/management/people/edit-person/sections/⚡emergency-contact.blade.php",
+            "line": 210,
+            "variable": "emergencyContactRelationshipOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Management/People/EditPerson.php",
+            "options_count": 9
+        },
+        {
+            "path": "resources/views/components/management/people/edit-person/sections/⚡emergency-contact.blade.php",
+            "line": 7,
+            "variable": "emergencyContactRelationshipOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Management/People/EditPerson.php",
+            "options_count": 9
+        },
+        {
+            "path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "line": 54,
+            "variable": "genderOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Management/People/EditPerson.php",
+            "options_count": 4
+        },
+        {
+            "path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "line": 97,
+            "variable": "salutationOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Management/People/EditPerson.php",
+            "options_count": 3
+        },
+        {
+            "path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "line": 379,
+            "variable": "maritalStatusOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Management/People/EditPerson.php",
+            "options_count": 7
+        },
+        {
+            "path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "line": 387,
+            "variable": "maritalStatusOptions",
+            "resolution": "view_bound_candidate",
+            "selected_source": "app/Livewire/Management/People/EditPerson.php",
+            "options_count": 7
+        }
+    ]
+}

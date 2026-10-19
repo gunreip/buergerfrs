@@ -1,0 +1,185 @@
+{
+    "captured_at": "2026-10-15T17:23:46+02:00",
+    "bindings": [
+        {
+            "entry_id": 1401,
+            "source": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeVariants",
+            "target": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+            "status": "static_view_path",
+            "paths": [
+                [
+                    "app/Livewire/Admin/RoleList.php",
+                    "resources/views/components/admin/⚡role-list.blade.php",
+                    "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php"
+                ]
+            ],
+            "missing_views": [],
+            "include_traversal_complete": true,
+            "variable_flow": {
+                "status": "no_detected_override",
+                "variable": "roleBadgeVariantOptions",
+                "findings": []
+            }
+        },
+        {
+            "entry_id": 1407,
+            "source": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeColors",
+            "target": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+            "status": "static_view_path",
+            "paths": [
+                [
+                    "app/Livewire/Admin/RoleList.php",
+                    "resources/views/components/admin/⚡role-list.blade.php",
+                    "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php"
+                ]
+            ],
+            "missing_views": [],
+            "include_traversal_complete": true,
+            "variable_flow": {
+                "status": "no_detected_override",
+                "variable": "roleBadgeColorOptions",
+                "findings": []
+            }
+        },
+        {
+            "entry_id": 2099,
+            "source": "app/Livewire/Management/People/CreatePerson.php",
+            "target": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "status": "static_view_path",
+            "paths": [
+                [
+                    "app/Livewire/Management/People/CreatePerson.php",
+                    "resources/views/components/management/people/⚡create-person.blade.php",
+                    "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+                    "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php"
+                ]
+            ],
+            "missing_views": [],
+            "include_traversal_complete": true,
+            "variable_flow": {
+                "status": "no_detected_override",
+                "variable": "salutationOptions",
+                "findings": []
+            }
+        },
+        {
+            "entry_id": 2099,
+            "source": "app/Livewire/Management/People/EditPerson.php",
+            "target": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "status": "unverified_view_binding",
+            "paths": [],
+            "missing_views": [],
+            "include_traversal_complete": true,
+            "variable_flow": {
+                "status": "unverified",
+                "variable": "salutationOptions",
+                "findings": []
+            }
+        },
+        {
+            "entry_id": 2101,
+            "source": "app/Livewire/Management/People/CreatePerson.php",
+            "target": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "status": "static_view_path",
+            "paths": [
+                [
+                    "app/Livewire/Management/People/CreatePerson.php",
+                    "resources/views/components/management/people/⚡create-person.blade.php",
+                    "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+                    "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php"
+                ]
+            ],
+            "missing_views": [],
+            "include_traversal_complete": true,
+            "variable_flow": {
+                "status": "no_detected_override",
+                "variable": "genderOptions",
+                "findings": []
+            }
+        },
+        {
+            "entry_id": 2101,
+            "source": "app/Livewire/Management/People/EditPerson.php",
+            "target": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "status": "unverified_view_binding",
+            "paths": [],
+            "missing_views": [],
+            "include_traversal_complete": true,
+            "variable_flow": {
+                "status": "unverified",
+                "variable": "genderOptions",
+                "findings": []
+            }
+        },
+        {
+            "entry_id": 2110,
+            "source": "app/Livewire/Management/People/CreatePerson.php",
+            "target": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "status": "static_view_path",
+            "paths": [
+                [
+                    "app/Livewire/Management/People/CreatePerson.php",
+                    "resources/views/components/management/people/⚡create-person.blade.php",
+                    "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+                    "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php"
+                ]
+            ],
+            "missing_views": [],
+            "include_traversal_complete": true,
+            "variable_flow": {
+                "status": "no_detected_override",
+                "variable": "maritalStatusOptions",
+                "findings": []
+            }
+        },
+        {
+            "entry_id": 2110,
+            "source": "app/Livewire/Management/People/EditPerson.php",
+            "target": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "status": "unverified_view_binding",
+            "paths": [],
+            "missing_views": [],
+            "include_traversal_complete": true,
+            "variable_flow": {
+                "status": "unverified",
+                "variable": "maritalStatusOptions",
+                "findings": []
+            }
+        },
+        {
+            "entry_id": 2318,
+            "source": "app/Livewire/Management/People/CreatePerson.php",
+            "target": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "status": "unverified_view_binding",
+            "paths": [],
+            "missing_views": [],
+            "include_traversal_complete": true,
+            "variable_flow": {
+                "status": "unverified",
+                "variable": "maritalStatusOptions",
+                "findings": []
+            }
+        },
+        {
+            "entry_id": 2318,
+            "source": "app/Livewire/Management/People/EditPerson.php",
+            "target": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "status": "static_view_path",
+            "paths": [
+                [
+                    "app/Livewire/Management/People/EditPerson.php",
+                    "resources/views/components/management/people/⚡edit-person.blade.php",
+                    "resources/views/components/management/people/edit-person/⚡form-person.blade.php",
+                    "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php"
+                ]
+            ],
+            "missing_views": [],
+            "include_traversal_complete": true,
+            "variable_flow": {
+                "status": "no_detected_override",
+                "variable": "maritalStatusOptions",
+                "findings": []
+            }
+        }
+    ]
+}

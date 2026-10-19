@@ -98,6 +98,7 @@ it('opens a raw timeline row in the graph tab using the existing dataset selecti
     ]);
     $host = new TranslationWorkbenchRawDataNew;
     $host->activeTable = 'translation_workbench_timeline_chains';
+    $host->datasetIdType = 'finding';
     $host->showTimelineChainGraph(853);
 
     expect($host->timelineChainTab)->toBe('tw-graph')
@@ -121,3 +122,57 @@ it('keeps the raw table visible if a requested timeline row no longer exists', f
         ->and($host->timelineChainPreviewId)->toBe('auto')
         ->and($host->getErrorBag()->has('datasetIdInput'))->toBeTrue();
 });
+
+
+it('resolves explicitly typed finding and key IDs without confusing dataset IDs', function (string $type, string $scenario) {
+    if (! in_array('sqlite', PDO::getAvailableDrivers(), true)) {
+        $this->markTestSkipped('SQLite is required for isolated dataset selection tests.');
+    }
+    $previous = config('database.default');
+    config(['database.default' => 'dataset_selection_test', 'database.connections.dataset_selection_test' => [
+        'driver' => 'sqlite', 'database' => ':memory:', 'prefix' => '',
+    ]]);
+    DB::purge('dataset_selection_test');
+    try {
+        Schema::create('translation_workbench_timeline_chains', function ($table) {
+            $table->id();
+            $table->integer('root_finding_id');
+            $table->integer('root_key_id');
+            $table->json('finding_ids');
+            $table->json('key_ids');
+            $table->string('translation_key');
+            $table->string('chain_type');
+            $table->string('chain_status');
+        });
+        $row = ['root_finding_id' => 891, 'root_key_id' => 1236, 'finding_ids' => '[891,892]',
+            'key_ids' => '[1236,1237]', 'translation_key' => 'ui.fixture.selected', 'chain_type' => 'single', 'chain_status' => 'active'];
+        DB::table('translation_workbench_timeline_chains')->insert(['id' => 252] + $row);
+        DB::table('translation_workbench_timeline_chains')->insert(['id' => 891, 'root_finding_id' => 6134, 'root_key_id' => 1496,
+            'finding_ids' => '[6134]', 'key_ids' => '[1496]', 'translation_key' => 'ui.fixture.unrelated', 'chain_type' => 'single', 'chain_status' => 'active']);
+        if ($scenario === 'ambiguous') {
+            DB::table('translation_workbench_timeline_chains')->insert(['id' => 253] + $row);
+        }
+        $component = new TwGraphDataDrivenDatasets;
+        $component->timelineChainId = 891;
+        $component->datasetIdType = $type;
+        $component->datasetIdInput = (string) match ($scenario) {
+            'missing' => 99999,
+            'member' => $type === 'finding' ? 892 : 1237,
+            default => $type === 'finding' ? 891 : 1236,
+        };
+        $component->loadDataset();
+        if (in_array($scenario, ['missing', 'ambiguous'], true)) {
+            expect($component->timelineChainId)->toBe(891)
+                ->and($component->getErrorBag()->has('datasetIdInput'))->toBeTrue()
+                ->and($component->reloadTick)->toBe(0);
+        } else {
+            expect($component->timelineChainId)->toBe(252)
+                ->and($component->datasetIdType)->toBe('dataset')
+                ->and($component->datasetIdInput)->toBe('252')
+                ->and($component->datasetHistory[0]['id'])->toBe(252);
+        }
+    } finally {
+        DB::purge('dataset_selection_test');
+        config(['database.default' => $previous]);
+    }
+})->with(['finding', 'key'])->with(['root', 'member', 'missing', 'ambiguous']);

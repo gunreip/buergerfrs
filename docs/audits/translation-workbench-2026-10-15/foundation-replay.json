@@ -1,0 +1,546 @@
+{
+    "snapshot": "tw-status-snapshot-20261015-034741.sqlite",
+    "working_copy": "tw-status-replay-9420f206b10a9e87.sqlite",
+    "source_files": "Current repository, scanner reads only; no exporter/applier executed",
+    "items": 19759,
+    "runs": [
+        {
+            "mark_obsolete": false,
+            "summary": {
+                "found": 19759,
+                "truncated": 0,
+                "source_files_created": 10,
+                "source_files_updated": 807,
+                "findings_created": 846,
+                "findings_updated": 18913,
+                "findings_commented_out": 131,
+                "findings_obsoleted": 0,
+                "keys_created": 766,
+                "keys_updated": 18861,
+                "keys_obsoleted": 0,
+                "relations_created": 810,
+                "relations_updated": 18817,
+                "relations_commented_out": 0,
+                "relations_obsoleted": 0,
+                "timeline_events_created": 2443
+            },
+            "diff": {
+                "translation_workbench_keys": {
+                    "created": 766,
+                    "removed": 0,
+                    "changed": 0,
+                    "sample": []
+                },
+                "translation_workbench_findings": {
+                    "created": 846,
+                    "removed": 0,
+                    "changed": 4,
+                    "sample": [
+                        {
+                            "id": 4771,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 9931,
+                            "changed_fields": [
+                                "source_signature"
+                            ]
+                        },
+                        {
+                            "id": 9932,
+                            "changed_fields": [
+                                "source_signature"
+                            ]
+                        },
+                        {
+                            "id": 22834,
+                            "changed_fields": [
+                                "source_signature"
+                            ]
+                        }
+                    ]
+                },
+                "translation_workbench_key_findings": {
+                    "created": 810,
+                    "removed": 0,
+                    "changed": 0,
+                    "sample": []
+                },
+                "translation_workbench_lang_values": {
+                    "created": 0,
+                    "removed": 0,
+                    "changed": 0,
+                    "sample": []
+                },
+                "translation_workbench_reviews": {
+                    "created": 0,
+                    "removed": 0,
+                    "changed": 0,
+                    "sample": []
+                }
+            }
+        },
+        {
+            "mark_obsolete": true,
+            "summary": {
+                "found": 19759,
+                "truncated": 0,
+                "source_files_created": 0,
+                "source_files_updated": 817,
+                "findings_created": 0,
+                "findings_updated": 19759,
+                "findings_commented_out": 131,
+                "findings_obsoleted": 39,
+                "keys_created": 0,
+                "keys_updated": 19627,
+                "keys_obsoleted": 16,
+                "relations_created": 0,
+                "relations_updated": 19627,
+                "relations_commented_out": 0,
+                "relations_obsoleted": 40,
+                "timeline_events_created": 97
+            },
+            "diff": {
+                "translation_workbench_keys": {
+                    "created": 0,
+                    "removed": 0,
+                    "changed": 16,
+                    "sample": [
+                        {
+                            "id": 1288,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 2709,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 2889,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 3113,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 3249,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 3619,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 3626,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 3628,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 3759,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 3771,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 4507,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 4613,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 4763,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 5665,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 5666,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 5667,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        }
+                    ]
+                },
+                "translation_workbench_findings": {
+                    "created": 0,
+                    "removed": 0,
+                    "changed": 39,
+                    "sample": [
+                        {
+                            "id": 2402,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 2405,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 2406,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 2407,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 2492,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 2499,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 3655,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 4368,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 4443,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 4587,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 4667,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 4797,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 5093,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 6212,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 7936,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 7937,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 7938,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 8776,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 8777,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 8779,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        }
+                    ]
+                },
+                "translation_workbench_key_findings": {
+                    "created": 0,
+                    "removed": 0,
+                    "changed": 40,
+                    "sample": [
+                        {
+                            "id": 3627,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 3634,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 3635,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 3636,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 3768,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 3780,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 5259,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 5972,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 6047,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 6191,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 6271,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 6401,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 6697,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 7163,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 8359,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 10147,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 10148,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 10149,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 11255,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        },
+                        {
+                            "id": 11256,
+                            "changed_fields": [
+                                "status"
+                            ]
+                        }
+                    ]
+                },
+                "translation_workbench_lang_values": {
+                    "created": 0,
+                    "removed": 0,
+                    "changed": 0,
+                    "sample": []
+                },
+                "translation_workbench_reviews": {
+                    "created": 0,
+                    "removed": 0,
+                    "changed": 0,
+                    "sample": []
+                }
+            }
+        },
+        {
+            "mark_obsolete": true,
+            "summary": {
+                "found": 19759,
+                "truncated": 0,
+                "source_files_created": 0,
+                "source_files_updated": 817,
+                "findings_created": 0,
+                "findings_updated": 19759,
+                "findings_commented_out": 131,
+                "findings_obsoleted": 0,
+                "keys_created": 0,
+                "keys_updated": 19627,
+                "keys_obsoleted": 0,
+                "relations_created": 0,
+                "relations_updated": 19627,
+                "relations_commented_out": 0,
+                "relations_obsoleted": 0,
+                "timeline_events_created": 2
+            },
+            "diff": {
+                "translation_workbench_keys": {
+                    "created": 0,
+                    "removed": 0,
+                    "changed": 0,
+                    "sample": []
+                },
+                "translation_workbench_findings": {
+                    "created": 0,
+                    "removed": 0,
+                    "changed": 0,
+                    "sample": []
+                },
+                "translation_workbench_key_findings": {
+                    "created": 0,
+                    "removed": 0,
+                    "changed": 0,
+                    "sample": []
+                },
+                "translation_workbench_lang_values": {
+                    "created": 0,
+                    "removed": 0,
+                    "changed": 0,
+                    "sample": []
+                },
+                "translation_workbench_reviews": {
+                    "created": 0,
+                    "removed": 0,
+                    "changed": 0,
+                    "sample": []
+                }
+            }
+        }
+    ],
+    "reviewed_key_changes": {
+        "created": 0,
+        "removed": 0,
+        "changed": 1,
+        "sample": [
+            {
+                "id": 4507,
+                "changed_fields": [
+                    "status"
+                ]
+            }
+        ]
+    },
+    "baseline_values_unchanged": true,
+    "baseline_reviews_unchanged": true
+}

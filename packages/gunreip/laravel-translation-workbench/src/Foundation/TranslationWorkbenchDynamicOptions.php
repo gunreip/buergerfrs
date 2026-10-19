@@ -39,6 +39,9 @@ class TranslationWorkbenchDynamicOptions
         if (! $this->hasTables([
             'translation_workbench_dynamic_sources',
             'translation_workbench_dynamic_source_values',
+            'translation_workbench_findings',
+            'translation_workbench_source_files',
+            'translation_workbench_key_findings',
         ])) {
             $sourceRows = collect();
         } else {
@@ -49,17 +52,47 @@ class TranslationWorkbenchDynamicOptions
                 ->where('sources.status', '<>', 'obsolete')
                 ->where('source_values.status', 'active')
                 ->where(function ($query) use ($selectedFinding, $linkedRuntimeSourceIds): void {
-                    $query->where('sources.finding_id', $selectedFinding->id)
-                        ->orWhere('sources.key_id', $selectedFinding->key_id);
+                    $query->where(function ($runtime) use ($selectedFinding): void {
+                        $runtime->whereNull('sources.finding_id')
+                            ->whereIn('sources.source_type', $this->dynamicRuntimeSourceTypes())
+                            ->where('sources.key_id', $selectedFinding->key_id)
+                            ->whereExists(fn ($key) => $key->selectRaw('1')->from('translation_workbench_keys as runtime_key')
+                                ->whereColumn('runtime_key.id', 'sources.key_id')->where('runtime_key.status', '<>', 'obsolete'));
+                    })->orWhere(function ($owned) use ($selectedFinding): void {
+                        $owned->where(function ($identity) use ($selectedFinding): void {
+                            $identity->where('sources.finding_id', $selectedFinding->id)->orWhere('sources.key_id', $selectedFinding->key_id);
+                        })->whereExists(function ($owner) use ($selectedFinding): void {
+                            $owner->selectRaw('1')->from('translation_workbench_findings as source_owner')
+                                ->join('translation_workbench_source_files as source_file', 'source_file.id', '=', 'source_owner.source_file_id')
+                                ->join('translation_workbench_key_findings as source_link', 'source_link.finding_id', '=', 'source_owner.id')
+                                ->join('translation_workbench_keys as source_key', 'source_key.id', '=', 'source_link.key_id')
+                                ->whereColumn('source_owner.id', 'sources.finding_id')
+                                ->where('source_link.key_id', $selectedFinding->key_id)
+                                ->where(fn ($key) => $key->whereNull('sources.key_id')->orWhereColumn('sources.key_id', 'source_link.key_id'))
+                                ->where('source_owner.status', 'active')->where('source_file.status', 'active')
+                                ->where('source_link.status', 'active')->where('source_key.status', '<>', 'obsolete');
+                        });
+                    });
 
                     if ($linkedRuntimeSourceIds !== []) {
                         $query->orWhereIn('sources.id', $linkedRuntimeSourceIds);
                     }
                 })
                 ->orderBy('source_values.value_key')
-                ->get(['source_values.value_key', 'source_values.native_label', 'source_values.status'])
+                ->orderBy('sources.id')
+                ->get(['source_values.value_key', 'source_values.native_label', 'source_values.status', 'sources.id as source_id', 'sources.source_reference'])
                 ->groupBy('value_key')
-                ->map(static fn ($values) => $values->first());
+                ->map(static function ($values) {
+                    if ($values->pluck('native_label')->uniqueStrict()->count() <= 1) {
+                        return $values->first();
+                    }
+
+                    return (object) ['native_label' => null, 'status' => 'needs_review',
+                        'source_conflicts' => $values->map(static fn ($value) => [
+                            'source_id' => $value->source_id, 'reference' => $value->source_reference,
+                            'value' => $value->native_label,
+                        ])->all()];
+                });
         }
 
         $valueKeys = $sourceRows
@@ -86,6 +119,7 @@ class TranslationWorkbenchDynamicOptions
                     'target' => $this->nullableString($targetRow?->value),
                     'native_label' => $this->nullableString($sourceValueRow?->native_label ?? $sourceRow?->native_label ?? $targetRow?->native_label),
                     'status' => $this->nullableString($targetRow?->status ?? $sourceRow?->status ?? $sourceValueRow?->status),
+                    ...(isset($sourceValueRow->source_conflicts) ? ['source_conflicts' => $sourceValueRow->source_conflicts] : []),
                 ];
             })
             ->values()
@@ -97,6 +131,10 @@ class TranslationWorkbenchDynamicOptions
         if (! $this->hasTables([
             'translation_workbench_dynamic_sources',
             'translation_workbench_dynamic_source_candidates',
+            'translation_workbench_findings',
+            'translation_workbench_source_files',
+            'translation_workbench_key_findings',
+            'translation_workbench_keys',
         ])) {
             return [];
         }
@@ -106,6 +144,18 @@ class TranslationWorkbenchDynamicOptions
             ->where('candidates.candidate_source_type', 'related_dynamic_source')
             ->where('candidates.review_status', 'confirmed')
             ->where('candidates.status', 'active')
+            // A historical confirmation remains stored, but only an active owner can supply current links.
+            ->whereExists(function ($query): void {
+                $query->selectRaw('1')
+                    ->from('translation_workbench_findings as owner')
+                    ->join('translation_workbench_source_files as file', 'file.id', '=', 'owner.source_file_id')
+                    ->join('translation_workbench_key_findings as link', 'link.finding_id', '=', 'owner.id')
+                    ->join('translation_workbench_keys as key', 'key.id', '=', 'link.key_id')
+                    ->whereColumn('owner.id', 'candidates.finding_id')
+                    ->whereColumn('link.key_id', 'candidates.key_id')
+                    ->where('owner.status', 'active')->where('file.status', 'active')
+                    ->where('link.status', 'active')->where('key.status', '<>', 'obsolete');
+            })
             ->where('runtime_sources.status', '<>', 'obsolete')
             ->whereIn('runtime_sources.source_type', $this->dynamicRuntimeSourceTypes())
             ->where(function ($query) use ($selectedFinding): void {

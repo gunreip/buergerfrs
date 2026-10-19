@@ -1,0 +1,64 @@
+{
+  "plan_id": "8814b817b6216bab8b46d260a72e2631",
+  "verification": {
+    "verified_moves": 508,
+    "verified_consolidations": 190,
+    "verified_merged_links": 227,
+    "failures": [],
+    "repair_events": [
+      {
+        "event_type": "finding_position_reconciled",
+        "count": 508
+      },
+      {
+        "event_type": "key_assignment_reconciled",
+        "count": 227
+      },
+      {
+        "event_type": "key_consolidation_reconciled",
+        "count": 190
+      }
+    ],
+    "selected_links": [
+      {
+        "finding_id": 891,
+        "key_id": 1236
+      },
+      {
+        "finding_id": 891,
+        "key_id": 1858
+      },
+      {
+        "finding_id": 3618,
+        "key_id": 1236
+      },
+      {
+        "finding_id": 3630,
+        "key_id": 1236
+      },
+      {
+        "finding_id": 3640,
+        "key_id": 1236
+      },
+      {
+        "finding_id": 3652,
+        "key_id": 1236
+      }
+    ]
+  },
+  "repeat": {
+    "skipped": 698
+  },
+  "after_summary": {
+    "unchanged": 18650,
+    "ignored": 129,
+    "reappeared": 3,
+    "new": 974,
+    "ambiguous": 157,
+    "missing": 47
+  },
+  "after_assignment_issues": {
+    "multiple_active_assignments": 435,
+    "no_active_assignment": 99
+  }
+}

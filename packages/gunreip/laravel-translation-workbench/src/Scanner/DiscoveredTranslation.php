@@ -31,6 +31,7 @@ final class DiscoveredTranslation
         public readonly ?string $entryType = null,
         public readonly ?string $candidateType = null,
         public readonly ?string $candidateReason = null,
+        public readonly ?int $sourceColumn = null,
     ) {}
 
     /**

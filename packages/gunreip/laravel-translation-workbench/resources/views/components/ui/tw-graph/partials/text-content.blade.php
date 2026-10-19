@@ -20,7 +20,12 @@
                 >
                     @foreach ($lines as $line)
                         <span @class(['tw-graph-protocol-primitive-text-line wrap-anywhere text-wrap', 'block w-full' => (bool) $justify, 'text-xs' => !$loop->first])>
-                            @if (is_array($line) && data_get($line, 'ordinal'))
+                            @if (is_array($line) && filled($line['icon'] ?? null))
+                                <span class="inline-flex items-start gap-1">
+                                    <flux:icon :name="$line['icon']" class="inline-block size-4 shrink-0" />
+                                    <span>{{ $line['text'] }}</span>
+                                </span>
+                            @elseif (is_array($line) && data_get($line, 'ordinal'))
                                 <span>{{ data_get($line, 'ordinal.number') }}</span><sup class="text-[0.58em] leading-none">{{ data_get($line, 'ordinal.suffix') }}</sup>
                                 <span>{{ data_get($line, 'text') }}</span>
                             @else
@@ -32,6 +37,6 @@
             </flux:badge>
         @else
             <span class="font-mono text-[0.625rem] text-zinc-100">
-                {{ $lines->join(' / ') }}
+                {{ $lines->map(static fn ($line) => is_array($line) ? ($line['text'] ?? '') : $line)->join(' / ') }}
             </span>
         @endif

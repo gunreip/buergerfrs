@@ -1546,3 +1546,22 @@ it('keeps earlier actions off a later open ELSEIF output in either orientation',
     expect($offset)->toBe($side === 'left' ? -9.0 : 9.0);
     expect($html)->not->toContain('data-tw-graph-path="outer.elseif.nested.true.stem"');
 })->with(['left', 'right'])->with(['bottom-top', 'top-bottom'])->with([false, true]);
+
+
+it('centers flow start labels by default in both vertical directions', function (string $direction, string $side): void {
+    $html = Blade::render(<<<'BLADE'
+        <x-translation-workbench::ui.tw-graph graph-id="start-placement">
+            <x-translation-workbench::ui.tw-graph.strang.flow-start
+                id="start-placement.start"
+                :direction="$direction"
+                :start-label="['text' => ['Start', 'Second line'], 'width' => 'long', 'align' => 'center']"
+            />
+        </x-translation-workbench::ui.tw-graph>
+    BLADE, ['direction' => $direction]);
+
+    expect($html)->toContain('start-placement.start.label.'.$side.'.1')
+        ->not->toContain('start-placement.start.label.right.1');
+})->with([
+    ['top-bottom', 'top'],
+    ['bottom-top', 'bottom'],
+]);

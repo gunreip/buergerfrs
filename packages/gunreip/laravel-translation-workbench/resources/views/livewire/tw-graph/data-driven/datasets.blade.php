@@ -22,12 +22,12 @@
     @if ($mainRow)
         <flux:callout
             class="mt-6"
-            color="zinc"
+            :color="$graphScope === 'finding' ? 'violet' : 'cyan'"
             icon="database"
         >
             <flux:callout.heading>
                 <span class="inline-flex min-w-0 flex-wrap items-center gap-2">
-                    <span>{{ __('Selected dataset') }}</span>
+                    <span>{{ $graphScope === 'finding' ? __('Finding history') : __('Timeline chain') }}</span>
                     <flux:badge
                         size="sm"
                         color="zinc"
@@ -47,8 +47,37 @@
                     {{ $mainRow['translation_key'] }}
                 </span>
             </flux:callout.text>
+            <flux:callout.text>
+                {{ __('Dataset #:dataset · Root finding #:finding · Root key #:key', ['dataset' => $mainRow['id'], 'finding' => $mainRow['root_finding_id'] ?? '—', 'key' => $mainRow['root_key_id'] ?? '—']) }}
+            </flux:callout.text>
+            <flux:callout.text>
+                @if ($graphScope === 'chain')
+                {{ __('Stored graph snapshot updated: :date. The current Workbench history may contain newer events.', ['date' => $mainRow['updated_at'] ?? '—']) }}
+                @else
+                    {{ __('Current finding history from the database; key assignments are context, not a change of finding ID.') }}
+                @endif
+                {{ __('Label details: right-click a text label marked with the information icon.') }}
+            </flux:callout.text>
         </flux:callout>
 
+        <div class="my-3 flex flex-wrap gap-3">
+            <flux:select wire:model.live="graphScope" :label="__('Graph view')" class="max-w-xs">
+                <flux:select.option value="chain">{{ __('Timeline chain') }}</flux:select.option>
+                <flux:select.option value="finding">{{ __('Finding history') }}</flux:select.option>
+            </flux:select>
+            @if ($graphScope === 'finding')
+                <flux:select wire:model.live="graphFindingId" :label="__('Finding ID')" class="max-w-xs">
+                    <flux:select.option value="">{{ __('Root finding') }} #{{ $mainRow['root_finding_id'] }}</flux:select.option>
+                    @foreach ($findingIds as $findingOption)
+                        <flux:select.option :value="$findingOption">Finding #{{ $findingOption }}</flux:select.option>
+                    @endforeach
+                </flux:select>
+            @endif
+        </div>
+        @if ($graphScope === 'finding')
+            @include('translation-workbench::livewire.tw-graph.data-driven.dataset-selector')
+            @include('translation-workbench::livewire.tw-graph.data-driven.finding-graph')
+        @else
         @include(
             'translation-workbench::livewire.raw-data.timeline-chains.graph-preview.tw-graph-data-driven',
             [
@@ -60,6 +89,7 @@
                 'coordinates' => false,
             ]
         )
+        @endif
     @else
         @include('translation-workbench::livewire.tw-graph.data-driven.dataset-selector')
         <flux:callout
@@ -74,6 +104,6 @@
         </flux:callout>
     @endif
     @if ($mainRow)
-        <livewire:translation-workbench.tw-graph.data-driven.dataset-details :dataset-id="(int) $mainRow['id']" :key="'dataset-details-'.$mainRow['id']" />
+        <livewire:translation-workbench.tw-graph.data-driven.dataset-details :dataset-id="(int) $mainRow['id']" :finding-id="$finding?->id" :key="'dataset-details-'.$mainRow['id'].'-'.($finding?->id ?? 'chain')" />
     @endif
 </flux:card>

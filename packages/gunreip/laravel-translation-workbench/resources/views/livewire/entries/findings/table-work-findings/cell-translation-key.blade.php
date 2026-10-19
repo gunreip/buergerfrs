@@ -3,6 +3,10 @@
 {{-- Table Findings Cell Translation Key --}}
 <flux:table.cell>
     <div class="max-w-md space-y-2">
+        @include('translation-workbench::livewire.entries.review.duplicate-key-warning', ['ownerCount' => (int) ($finding->active_key_owner_count ?? 0), 'ownerIds' => [], 'compactWarning' => true])
+        @if (!($finding->is_dynamic_multi ?? false) && ($finding->lang_node_type ?? '') !== 'container')
+            @include('translation-workbench::livewire.entries.review.root-scalar-warning', ['structureKey' => $translationKey, 'compactWarning' => true])
+        @endif
         @if ($translationWorkflowEdited && $hasTranslationKey)
             <div class="wrap-anywhere text-wrap font-mono text-xs">
                 <x-translation-workbench::text.highlight

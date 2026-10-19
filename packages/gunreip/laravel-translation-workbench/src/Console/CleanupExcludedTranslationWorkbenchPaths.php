@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Schema;
     {--apply : Mark currently active rows below configured exclude_paths as obsolete/stale.}
     {--force : Skip the interactive confirmation when --apply is used.}
     {--samples=8 : Number of sample paths to print per affected table.}')]
-#[Description('Report and optionally obsolete Translation Workbench rows that match configured exclude_paths.')]
+#[Description('Report and optionally obsolete Foundation rows and option observations below excluded paths; retain historical Legacy rows.')]
 class CleanupExcludedTranslationWorkbenchPaths extends Command
 {
     use ConfirmsTranslationWorkbenchTruncate;
@@ -42,7 +42,7 @@ class CleanupExcludedTranslationWorkbenchPaths extends Command
         $summary = $this->summary($excludedPaths, $samples);
         $affectedRows = collect($summary)->sum('active_rows');
 
-        $this->components->info('Translation Workbench excluded-path cleanup report.');
+        $this->components->info('Foundation and option-observation excluded-path cleanup report.');
         $this->line('Configured exclude paths:');
         $excludedPaths->each(fn(string $path) => $this->line('  - ' . $path));
         $this->newLine();
@@ -133,8 +133,6 @@ class CleanupExcludedTranslationWorkbenchPaths extends Command
             $this->keyFindingsSummary($excludedPaths, $samples),
             $this->dynamicSourcesSummary($excludedPaths, $samples),
             $this->dynamicSourceCandidatesSummary($excludedPaths, $samples),
-            $this->legacyEntriesSummary($excludedPaths, $samples),
-            $this->legacyOccurrencesSummary($excludedPaths, $samples),
             $this->optionDiscoveriesSummary($excludedPaths, $samples),
         ])
             ->filter()
@@ -237,47 +235,13 @@ class CleanupExcludedTranslationWorkbenchPaths extends Command
         );
     }
 
-    private function legacyEntriesSummary(Collection $excludedPaths, int $samples): ?array
-    {
-        if (! Schema::hasTable('translation_workbench_entries')) {
-            return null;
-        }
-
-        $query = $this->legacyPathQuery('translation_workbench_entries', 'source_path', $excludedPaths)
-            ->where('status', '<>', 'obsolete');
-
-        return $this->tableSummary(
-            'translation_workbench_entries',
-            $query,
-            'obsolete',
-            $query->clone()->orderBy('source_path')->limit($samples)->pluck('source_path'),
-        );
-    }
-
-    private function legacyOccurrencesSummary(Collection $excludedPaths, int $samples): ?array
-    {
-        if (! Schema::hasTable('translation_workbench_occurrences')) {
-            return null;
-        }
-
-        $query = $this->legacyPathQuery('translation_workbench_occurrences', 'source_path', $excludedPaths)
-            ->where('status', '<>', 'stale');
-
-        return $this->tableSummary(
-            'translation_workbench_occurrences',
-            $query,
-            'stale',
-            $query->clone()->orderBy('source_path')->limit($samples)->pluck('source_path'),
-        );
-    }
-
     private function optionDiscoveriesSummary(Collection $excludedPaths, int $samples): ?array
     {
         if (! Schema::hasTable('translation_workbench_option_discoveries')) {
             return null;
         }
 
-        $query = $this->legacyPathQuery('translation_workbench_option_discoveries', 'source_path', $excludedPaths)
+        $query = $this->pathQuery('translation_workbench_option_discoveries', 'source_path', $excludedPaths)
             ->where('status', '<>', 'obsolete');
 
         return $this->tableSummary(
@@ -364,7 +328,7 @@ class CleanupExcludedTranslationWorkbenchPaths extends Command
     /**
      * @param  Collection<int, string>  $excludedPaths
      */
-    private function legacyPathQuery(string $table, string $column, Collection $excludedPaths): Builder
+    private function pathQuery(string $table, string $column, Collection $excludedPaths): Builder
     {
         return $this->whereExcludedPath(DB::table($table), $column, $excludedPaths);
     }
@@ -376,8 +340,11 @@ class CleanupExcludedTranslationWorkbenchPaths extends Command
     {
         return $query->where(function (Builder $query) use ($column, $excludedPaths): void {
             foreach ($excludedPaths as $path) {
+                // Configuration paths are literal prefixes, not SQL LIKE patterns.
+                $prefix = str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $path);
+                $wrappedColumn = $query->getGrammar()->wrap($column);
                 $query->orWhere($column, $path)
-                    ->orWhere($column, 'like', $path . '/%');
+                    ->orWhereRaw($wrappedColumn . " LIKE ? ESCAPE '!'", [$prefix . '/%']);
             }
         });
     }
@@ -396,9 +363,7 @@ class CleanupExcludedTranslationWorkbenchPaths extends Command
             'translation_workbench_dynamic_sources' => $this->updateDynamicSources($excludedPaths, $now),
             'translation_workbench_findings' => $this->updateFindings($excludedPaths, $now),
             'translation_workbench_source_files' => $this->updateSourceFiles($excludedPaths, $now),
-            'translation_workbench_entries' => $this->updateLegacyPathTable('translation_workbench_entries', 'obsolete', $excludedPaths, $now),
-            'translation_workbench_occurrences' => $this->updateLegacyPathTable('translation_workbench_occurrences', 'stale', $excludedPaths, $now),
-            'translation_workbench_option_discoveries' => $this->updateLegacyPathTable('translation_workbench_option_discoveries', 'obsolete', $excludedPaths, $now),
+            'translation_workbench_option_discoveries' => $this->updatePathTable('translation_workbench_option_discoveries', 'obsolete', $excludedPaths, $now),
         ];
     }
 
@@ -464,13 +429,13 @@ class CleanupExcludedTranslationWorkbenchPaths extends Command
             ->update(['status' => 'obsolete', 'updated_at' => $now]);
     }
 
-    private function updateLegacyPathTable(string $table, string $status, Collection $excludedPaths, mixed $now): int
+    private function updatePathTable(string $table, string $status, Collection $excludedPaths, mixed $now): int
     {
         if (! Schema::hasTable($table)) {
             return 0;
         }
 
-        return $this->legacyPathQuery($table, 'source_path', $excludedPaths)
+        return $this->pathQuery($table, 'source_path', $excludedPaths)
             ->where('status', '<>', $status)
             ->update(['status' => $status, 'updated_at' => $now]);
     }

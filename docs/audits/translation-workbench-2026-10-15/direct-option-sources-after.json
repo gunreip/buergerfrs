@@ -1,0 +1,520 @@
+{
+    "mode": "read_only",
+    "sources": [
+        {
+            "id": 1,
+            "type": "hardcoded_public_array",
+            "status": "active",
+            "finding_id": 9270,
+            "key_id": 2006,
+            "finding_status": "active",
+            "file_status": "active",
+            "active_key_ids": [
+                2006
+            ],
+            "values_count": 18
+        },
+        {
+            "id": 2,
+            "type": "hardcoded_public_array",
+            "status": "active",
+            "finding_id": 9271,
+            "key_id": 1988,
+            "finding_status": "active",
+            "file_status": "active",
+            "active_key_ids": [
+                1988
+            ],
+            "values_count": 4
+        },
+        {
+            "id": 5,
+            "type": "hardcoded_public_array",
+            "status": "active",
+            "finding_id": 9251,
+            "key_id": 3137,
+            "finding_status": "active",
+            "file_status": "active",
+            "active_key_ids": [
+                3137
+            ],
+            "values_count": 7
+        },
+        {
+            "id": 23,
+            "type": "hardcoded_public_array",
+            "status": "active",
+            "finding_id": 9252,
+            "key_id": 3120,
+            "finding_status": "active",
+            "file_status": "active",
+            "active_key_ids": [
+                3120
+            ],
+            "values_count": 4
+        },
+        {
+            "id": 25,
+            "type": "hardcoded_public_array",
+            "status": "active",
+            "finding_id": 9253,
+            "key_id": 3117,
+            "finding_status": "active",
+            "file_status": "active",
+            "active_key_ids": [
+                3117
+            ],
+            "values_count": 3
+        },
+        {
+            "id": 31,
+            "type": "runtime_db_options",
+            "status": "active",
+            "finding_id": null,
+            "key_id": 3267,
+            "finding_status": null,
+            "file_status": null,
+            "active_key_ids": [],
+            "values_count": 8
+        },
+        {
+            "id": 33,
+            "type": "runtime_options",
+            "status": "active",
+            "finding_id": null,
+            "key_id": 3772,
+            "finding_status": null,
+            "file_status": null,
+            "active_key_ids": [],
+            "values_count": 18
+        },
+        {
+            "id": 34,
+            "type": "runtime_options",
+            "status": "active",
+            "finding_id": null,
+            "key_id": 1988,
+            "finding_status": null,
+            "file_status": null,
+            "active_key_ids": [],
+            "values_count": 4
+        },
+        {
+            "id": 35,
+            "type": "runtime_options",
+            "status": "active",
+            "finding_id": null,
+            "key_id": 3773,
+            "finding_status": null,
+            "file_status": null,
+            "active_key_ids": [],
+            "values_count": 18
+        },
+        {
+            "id": 36,
+            "type": "runtime_options",
+            "status": "active",
+            "finding_id": null,
+            "key_id": 2006,
+            "finding_status": null,
+            "file_status": null,
+            "active_key_ids": [],
+            "values_count": 18
+        },
+        {
+            "id": 37,
+            "type": "runtime_options",
+            "status": "active",
+            "finding_id": null,
+            "key_id": 2008,
+            "finding_status": null,
+            "file_status": null,
+            "active_key_ids": [],
+            "values_count": 4
+        },
+        {
+            "id": 38,
+            "type": "runtime_options",
+            "status": "active",
+            "finding_id": null,
+            "key_id": 3774,
+            "finding_status": null,
+            "file_status": null,
+            "active_key_ids": [],
+            "values_count": 18
+        },
+        {
+            "id": 39,
+            "type": "runtime_options",
+            "status": "active",
+            "finding_id": null,
+            "key_id": 3117,
+            "finding_status": null,
+            "file_status": null,
+            "active_key_ids": [],
+            "values_count": 3
+        },
+        {
+            "id": 40,
+            "type": "runtime_options",
+            "status": "active",
+            "finding_id": null,
+            "key_id": 3120,
+            "finding_status": null,
+            "file_status": null,
+            "active_key_ids": [],
+            "values_count": 4
+        },
+        {
+            "id": 41,
+            "type": "runtime_options",
+            "status": "active",
+            "finding_id": null,
+            "key_id": 3137,
+            "finding_status": null,
+            "file_status": null,
+            "active_key_ids": [],
+            "values_count": 7
+        },
+        {
+            "id": 42,
+            "type": "runtime_db_options",
+            "status": "active",
+            "finding_id": null,
+            "key_id": 3039,
+            "finding_status": null,
+            "file_status": null,
+            "active_key_ids": [],
+            "values_count": 11
+        },
+        {
+            "id": 43,
+            "type": "runtime_options",
+            "status": "active",
+            "finding_id": null,
+            "key_id": 3062,
+            "finding_status": null,
+            "file_status": null,
+            "active_key_ids": [],
+            "values_count": 9
+        },
+        {
+            "id": 62,
+            "type": "hardcoded_public_array",
+            "status": "active",
+            "finding_id": 9255,
+            "key_id": 3452,
+            "finding_status": "active",
+            "file_status": "active",
+            "active_key_ids": [
+                3452
+            ],
+            "values_count": 7
+        },
+        {
+            "id": 65,
+            "type": "runtime_db_options",
+            "status": "active",
+            "finding_id": null,
+            "key_id": 2947,
+            "finding_status": null,
+            "file_status": null,
+            "active_key_ids": [],
+            "values_count": 1
+        },
+        {
+            "id": 73,
+            "type": "hardcoded_public_array",
+            "status": "active",
+            "finding_id": 9269,
+            "key_id": 1988,
+            "finding_status": "active",
+            "file_status": "active",
+            "active_key_ids": [
+                1988
+            ],
+            "values_count": 4
+        },
+        {
+            "id": 76,
+            "type": "hardcoded_public_array",
+            "status": "active",
+            "finding_id": 9249,
+            "key_id": 3117,
+            "finding_status": "active",
+            "file_status": "active",
+            "active_key_ids": [
+                3117
+            ],
+            "values_count": 3
+        },
+        {
+            "id": 77,
+            "type": "hardcoded_public_array",
+            "status": "active",
+            "finding_id": 9250,
+            "key_id": 3120,
+            "finding_status": "active",
+            "file_status": "active",
+            "active_key_ids": [
+                3120
+            ],
+            "values_count": 4
+        }
+    ],
+    "ui": [
+        {
+            "finding_id": 2685,
+            "key_id": 3213,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 2687,
+            "key_id": 3215,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 2718,
+            "key_id": 3577,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 2719,
+            "key_id": 3578,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 2720,
+            "key_id": 4107,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 2721,
+            "key_id": 4108,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 2722,
+            "key_id": 4109,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 2723,
+            "key_id": 4110,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 2724,
+            "key_id": 4111,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 4783,
+            "key_id": 4110,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 4784,
+            "key_id": 4111,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 9078,
+            "key_id": 5653,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 9079,
+            "key_id": 5654,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 9080,
+            "key_id": 5654,
+            "count": 0,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+            "finding_id": 9246,
+            "key_id": 3267,
+            "count": 8,
+            "sha256": "6a816e2fe4fa3c224351bd542a7e81f25a90cf2bfea4f0c4a437e30f73eb7e2a"
+        },
+        {
+            "finding_id": 9247,
+            "key_id": 3267,
+            "count": 8,
+            "sha256": "6a816e2fe4fa3c224351bd542a7e81f25a90cf2bfea4f0c4a437e30f73eb7e2a"
+        },
+        {
+            "finding_id": 9248,
+            "key_id": 3267,
+            "count": 8,
+            "sha256": "6a816e2fe4fa3c224351bd542a7e81f25a90cf2bfea4f0c4a437e30f73eb7e2a"
+        },
+        {
+            "finding_id": 9249,
+            "key_id": 3117,
+            "count": 3,
+            "sha256": "b175df210231a0385a3f07531d2ae8fee17857d51256eb833cb5eb1a8c0b3191"
+        },
+        {
+            "finding_id": 9250,
+            "key_id": 3120,
+            "count": 4,
+            "sha256": "9e61c95fc23299ab1907a9a0b191e1d35f15f83a3c103a816db2f647e7f8f611"
+        },
+        {
+            "finding_id": 9251,
+            "key_id": 3137,
+            "count": 7,
+            "sha256": "9fe57edec0a4b92259a8081772cd0ff3380208e4f2929942f24af60307d49f5b"
+        },
+        {
+            "finding_id": 9252,
+            "key_id": 3120,
+            "count": 4,
+            "sha256": "9e61c95fc23299ab1907a9a0b191e1d35f15f83a3c103a816db2f647e7f8f611"
+        },
+        {
+            "finding_id": 9253,
+            "key_id": 3117,
+            "count": 3,
+            "sha256": "b175df210231a0385a3f07531d2ae8fee17857d51256eb833cb5eb1a8c0b3191"
+        },
+        {
+            "finding_id": 9254,
+            "key_id": 3452,
+            "count": 7,
+            "sha256": "9fe57edec0a4b92259a8081772cd0ff3380208e4f2929942f24af60307d49f5b"
+        },
+        {
+            "finding_id": 9255,
+            "key_id": 3452,
+            "count": 7,
+            "sha256": "9fe57edec0a4b92259a8081772cd0ff3380208e4f2929942f24af60307d49f5b"
+        },
+        {
+            "finding_id": 9256,
+            "key_id": 3039,
+            "count": 11,
+            "sha256": "f5cccfeff3b5315c4240b466c0ce402820c057283c67ab50550acf0139090ced"
+        },
+        {
+            "finding_id": 9257,
+            "key_id": 3165,
+            "count": 11,
+            "sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726"
+        },
+        {
+            "finding_id": 9258,
+            "key_id": 3039,
+            "count": 11,
+            "sha256": "f5cccfeff3b5315c4240b466c0ce402820c057283c67ab50550acf0139090ced"
+        },
+        {
+            "finding_id": 9259,
+            "key_id": 3165,
+            "count": 11,
+            "sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726"
+        },
+        {
+            "finding_id": 9260,
+            "key_id": 3165,
+            "count": 11,
+            "sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726"
+        },
+        {
+            "finding_id": 9261,
+            "key_id": 3165,
+            "count": 11,
+            "sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726"
+        },
+        {
+            "finding_id": 9262,
+            "key_id": 3165,
+            "count": 11,
+            "sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726"
+        },
+        {
+            "finding_id": 9263,
+            "key_id": 3165,
+            "count": 11,
+            "sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726"
+        },
+        {
+            "finding_id": 9264,
+            "key_id": 3039,
+            "count": 11,
+            "sha256": "f5cccfeff3b5315c4240b466c0ce402820c057283c67ab50550acf0139090ced"
+        },
+        {
+            "finding_id": 9265,
+            "key_id": 3062,
+            "count": 9,
+            "sha256": "e3b40b9f1e98b962eea26de1be6166eefdddf58b97a73c2b69b06229e36f2778"
+        },
+        {
+            "finding_id": 9266,
+            "key_id": 3315,
+            "count": 9,
+            "sha256": "afe6fa483a237f188a036a51ccf232d95c1797363d3290eab9dc4c7335815485"
+        },
+        {
+            "finding_id": 9267,
+            "key_id": 3315,
+            "count": 9,
+            "sha256": "afe6fa483a237f188a036a51ccf232d95c1797363d3290eab9dc4c7335815485"
+        },
+        {
+            "finding_id": 9268,
+            "key_id": 2006,
+            "count": 18,
+            "sha256": "452968c5fad2b1ff9d97dd4863ae7f47377ebc5d95498b5e90d9a0fdea20754a"
+        },
+        {
+            "finding_id": 9269,
+            "key_id": 1988,
+            "count": 4,
+            "sha256": "b15ce341dec5b2a75db493cf1eee9cd1d7223a7ea1e7fe183b7c0930eb06f487"
+        },
+        {
+            "finding_id": 9270,
+            "key_id": 2006,
+            "count": 18,
+            "sha256": "452968c5fad2b1ff9d97dd4863ae7f47377ebc5d95498b5e90d9a0fdea20754a"
+        },
+        {
+            "finding_id": 9271,
+            "key_id": 1988,
+            "count": 4,
+            "sha256": "b15ce341dec5b2a75db493cf1eee9cd1d7223a7ea1e7fe183b7c0930eb06f487"
+        },
+        {
+            "finding_id": 9272,
+            "key_id": 2947,
+            "count": 1,
+            "sha256": "0c127cb6e9b9d60085b2d59858c624eb910e3f8907ec162effcf4ab7701b333c"
+        },
+        {
+            "finding_id": 23230,
+            "key_id": 3267,
+            "count": 8,
+            "sha256": "6a816e2fe4fa3c224351bd542a7e81f25a90cf2bfea4f0c4a437e30f73eb7e2a"
+        }
+    ],
+    "ui_unchanged": true
+}

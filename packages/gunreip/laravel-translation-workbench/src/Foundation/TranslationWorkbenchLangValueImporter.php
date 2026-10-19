@@ -51,8 +51,11 @@ class TranslationWorkbenchLangValueImporter
 
         DB::transaction(function () use ($values, $truncate, $now, &$summary): void {
             if ($truncate) {
-                $summary['truncated'] = (int) TranslationWorkbenchLangValue::query()->count();
-                $this->truncateLangValues();
+                if (TranslationWorkbenchLangValue::query()->lockForUpdate()->first() !== null) {
+                    throw new TranslationWorkbenchLangImportConflict(
+                        'Truncating existing lang values is not a safe import. Use a separately reviewed migration.',
+                    );
+                }
             }
 
             foreach ($values as $value) {
@@ -213,6 +216,7 @@ class TranslationWorkbenchLangValueImporter
             ->where('locale', $attributes['locale'])
             ->where('namespace', $attributes['namespace'])
             ->where('lang_key', $attributes['lang_key'])
+            ->lockForUpdate()
             ->first();
 
         if (! $langValue) {
@@ -250,35 +254,33 @@ class TranslationWorkbenchLangValueImporter
             return ['result' => 'values_created', 'timeline_events_created' => 1];
         }
 
-        $oldValues = $langValue->only(array_keys($attributes));
-        $changed = collect($attributes)
-            ->filter(static fn(mixed $value, string $key): bool => ($oldValues[$key] ?? null) !== $value)
-            ->all();
+        // There is no reliable draft/publication revision boundary yet. Never infer
+        // permission to replace a saved value from an import-origin metadata flag.
+        $conflictingFields = [];
+        foreach (['translation_key', 'value', 'value_type', 'status'] as $field) {
+            if ($langValue->getAttribute($field) !== $attributes[$field]) {
+                $conflictingFields[] = $field;
+            }
+        }
 
+        if ($conflictingFields !== []) {
+            throw new TranslationWorkbenchLangImportConflict(sprintf(
+                'Lang import conflict: %s / %s (row %s; differing fields: %s). Resolve the saved/file state explicitly before importing.',
+                $attributes['locale'],
+                $attributes['translation_key'],
+                $langValue->id,
+                implode(', ', $conflictingFields),
+            ));
+        }
+
+        // Rediscovery is an observation, not a new editorial change. In particular,
+        // retain editor provenance and hashes instead of replacing them with import metadata.
         $langValue->forceFill([
-            ...$attributes,
             'last_seen_at' => $now,
             'scan_count' => ((int) $langValue->scan_count) + 1,
         ])->save();
 
-        if ($changed === []) {
-            return ['result' => 'values_unchanged', 'timeline_events_created' => 0];
-        }
-
-        $this->timelineRecorder->record(
-            eventType: 'lang_value_changed',
-            oldValues: collect(array_keys($changed))
-                ->mapWithKeys(static fn(string $key): array => [$key => $oldValues[$key] ?? null])
-                ->all(),
-            newValues: $changed,
-            context: [
-                'source' => 'translation-workbench:import-lang-values',
-                'lang_value_id' => $langValue->id,
-                'changed_fields' => array_keys($changed),
-            ],
-        );
-
-        return ['result' => 'values_updated', 'timeline_events_created' => 1];
+        return ['result' => 'values_unchanged', 'timeline_events_created' => 0];
     }
 
     /**
@@ -346,26 +348,6 @@ class TranslationWorkbenchLangValueImporter
         return str_starts_with($path, $basePath . '/')
             ? substr($path, strlen($basePath) + 1)
             : $path;
-    }
-
-    private function truncateLangValues(): void
-    {
-        match (DB::getDriverName()) {
-            'pgsql' => DB::statement('TRUNCATE TABLE translation_workbench_lang_values RESTART IDENTITY CASCADE'),
-            'mysql', 'mariadb' => $this->truncateMysqlLangValues(),
-            default => TranslationWorkbenchLangValue::query()->delete(),
-        };
-    }
-
-    private function truncateMysqlLangValues(): void
-    {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
-        try {
-            DB::table('translation_workbench_lang_values')->truncate();
-        } finally {
-            DB::statement('SET FOREIGN_KEY_CHECKS=1');
-        }
     }
 
     /**

@@ -90,7 +90,7 @@ class ProjectBuild extends Command
                 'translations:cleanup-stale-dynamic-keys',
             );
             $this->runArtisanStep('Sub-Language-Redundanz prüfen', 'translations:audit-sub-language-redundancy');
-            $this->runArtisanStep('Translation-Dateien nach lang exportieren', 'translations:export-lang-files');
+            $this->runArtisanStep('Legacy-Translation-Export vergleichen (ohne Schreiben)', 'translations:export-lang-files', ['--dry-run' => true]);
 
             $this->runArtisanStep('Translation-Lang-Audit schreiben', 'translations:audit-lang');
             $this->runArtisanStep('Translation-Compare-Audit schreiben', 'translations:audit-compare');

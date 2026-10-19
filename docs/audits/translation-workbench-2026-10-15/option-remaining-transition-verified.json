@@ -1,0 +1,43 @@
+{
+    "mode": "post_commit_read_only_verification",
+    "checks": {
+        "dynamic_source_values": "unchanged",
+        "dynamic_key_values": "unchanged",
+        "lang_values": "unchanged",
+        "reviews": "unchanged",
+        "keys": "unchanged",
+        "key_findings": "unchanged"
+    },
+    "sources": [
+        {
+            "source_id": 73,
+            "finding_id": 9269,
+            "observation_id": 1,
+            "status": "active"
+        },
+        {
+            "source_id": 1,
+            "finding_id": 9270,
+            "observation_id": 2,
+            "status": "active"
+        },
+        {
+            "source_id": 76,
+            "finding_id": 9249,
+            "observation_id": 6,
+            "status": "active"
+        },
+        {
+            "source_id": 77,
+            "finding_id": 9250,
+            "observation_id": 7,
+            "status": "active"
+        },
+        {
+            "source_id": 5,
+            "finding_id": 9251,
+            "observation_id": 8,
+            "status": "active"
+        }
+    ]
+}

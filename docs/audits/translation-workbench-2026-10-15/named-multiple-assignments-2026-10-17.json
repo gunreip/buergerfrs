@@ -1,0 +1,2923 @@
+{
+    "read_only": true,
+    "multiple_findings": 32,
+    "classification_counts": {
+        "multiple_reviewed_records": 28,
+        "reviewed_and_pending_records": 3,
+        "different_translation_keys": 1
+    },
+    "cases": [
+        {
+            "finding": {
+                "id": 2965,
+                "source_line": 507,
+                "literal_text": null,
+                "suggested_key": "livewire.admin.activity_log.all",
+                "path": "app\/Livewire\/Admin\/ActivityLog.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 5,
+                    "translation_key": "ui.states.all",
+                    "suggested_key": "livewire.admin.activity_log.all",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-27 10:03:23",
+                    "link_id": 4569,
+                    "review_count": 32,
+                    "reviews": [
+                        {
+                            "id": 344,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-27 10:00:20"
+                        },
+                        {
+                            "id": 345,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 349,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 350,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 351,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 352,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 353,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 354,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 355,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 356,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 357,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 358,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 359,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 360,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 361,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 362,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 365,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 366,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 367,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 368,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 369,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 370,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 371,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 372,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 373,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 374,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 375,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 376,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 377,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 378,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 379,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 380,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 243,
+                    "translation_key": "ui.states.all",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings_table.all",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-27 10:03:23",
+                    "link_id": 7587,
+                    "review_count": 38,
+                    "reviews": [
+                        {
+                            "id": 163,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-26 15:31:44"
+                        },
+                        {
+                            "id": 194,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-27 04:00:20"
+                        },
+                        {
+                            "id": 202,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 203,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 204,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 205,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 206,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 207,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 208,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 209,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 210,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 211,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 212,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 213,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 214,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 215,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 381,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 382,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 383,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 384,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 385,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 386,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 387,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 388,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 389,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 390,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 391,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 392,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 393,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 394,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 395,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 396,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 397,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 398,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 399,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 400,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 401,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 402,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 2966,
+                "source_line": 555,
+                "literal_text": null,
+                "suggested_key": "livewire.admin.activity_log.all",
+                "path": "app\/Livewire\/Admin\/ActivityLog.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 5,
+                    "translation_key": "ui.states.all",
+                    "suggested_key": "livewire.admin.activity_log.all",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-27 10:03:23",
+                    "link_id": 4570,
+                    "review_count": 32,
+                    "reviews": [
+                        {
+                            "id": 344,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-27 10:00:20"
+                        },
+                        {
+                            "id": 345,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 349,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 350,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 351,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 352,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 353,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 354,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 355,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 356,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 357,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 358,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 359,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 360,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 361,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 362,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 365,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 366,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 367,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 368,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 369,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 370,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 371,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 372,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 373,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 374,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 375,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 376,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 377,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 378,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 379,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 380,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 243,
+                    "translation_key": "ui.states.all",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings_table.all",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-27 10:03:23",
+                    "link_id": 7588,
+                    "review_count": 38,
+                    "reviews": [
+                        {
+                            "id": 163,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-26 15:31:44"
+                        },
+                        {
+                            "id": 194,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-27 04:00:20"
+                        },
+                        {
+                            "id": 202,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 203,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 204,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 205,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 206,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 207,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 208,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 209,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 210,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 211,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 212,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 213,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 214,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 215,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 04:00:59"
+                        },
+                        {
+                            "id": 381,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 382,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 383,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 384,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 385,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 386,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 387,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 388,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 389,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 390,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 391,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 392,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 393,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 394,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 395,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 396,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 397,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 398,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 399,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 400,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 401,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        },
+                        {
+                            "id": 402,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 10:03:23"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6731,
+                "source_line": 139,
+                "literal_text": null,
+                "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.modal_edit_dynamic_multi.stored_values",
+                "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/livewire\/entries\/modal-edit-dynamic-multi.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "reviewed_and_pending_records",
+            "owners": [
+                {
+                    "key_id": 321,
+                    "translation_key": "ui.values.stored-values",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings_table.stored_values",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 17:09:30",
+                    "link_id": 8934,
+                    "review_count": 7,
+                    "reviews": [
+                        {
+                            "id": 829,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 16:33:28"
+                        },
+                        {
+                            "id": 903,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-30 16:56:02"
+                        },
+                        {
+                            "id": 904,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 16:56:19"
+                        },
+                        {
+                            "id": 905,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 16:56:19"
+                        },
+                        {
+                            "id": 912,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-30 17:09:03"
+                        },
+                        {
+                            "id": 913,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 17:09:30"
+                        },
+                        {
+                            "id": 914,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 17:09:30"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 4827,
+                    "translation_key": "ui.values.stored-values",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.modal_edit_dynamic_multi.stored_values",
+                    "status": "open",
+                    "review_status": "pending",
+                    "reviewed_at": null,
+                    "link_id": 8971,
+                    "review_count": 0,
+                    "reviews": []
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6716,
+                "source_line": 182,
+                "literal_text": null,
+                "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.table_work_findings.cell_dynamic_context.stored_values",
+                "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/livewire\/entries\/findings\/table-work-findings\/cell-dynamic-context.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "reviewed_and_pending_records",
+            "owners": [
+                {
+                    "key_id": 321,
+                    "translation_key": "ui.values.stored-values",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings_table.stored_values",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 17:09:30",
+                    "link_id": 8919,
+                    "review_count": 7,
+                    "reviews": [
+                        {
+                            "id": 829,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 16:33:28"
+                        },
+                        {
+                            "id": 903,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-30 16:56:02"
+                        },
+                        {
+                            "id": 904,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 16:56:19"
+                        },
+                        {
+                            "id": 905,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 16:56:19"
+                        },
+                        {
+                            "id": 912,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-30 17:09:03"
+                        },
+                        {
+                            "id": 913,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 17:09:30"
+                        },
+                        {
+                            "id": 914,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 17:09:30"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 4826,
+                    "translation_key": "ui.values.stored-values",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.table_work_findings.cell_dynamic_context.stored_values",
+                    "status": "open",
+                    "review_status": "pending",
+                    "reviewed_at": null,
+                    "link_id": 8970,
+                    "review_count": 0,
+                    "reviews": []
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 4949,
+                "source_line": 418,
+                "literal_text": null,
+                "suggested_key": "admin.partials.translation_list.filter.dynamic",
+                "path": "resources\/views\/components\/admin\/partials\/translation-list\/⚡filter.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 335,
+                    "translation_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.dynamic",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.modal_dynamic_review.dynamic",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:42:51",
+                    "link_id": 8078,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 611,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-28 14:42:51"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 4582,
+                    "translation_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.dynamic",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.dynamic",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:42:51",
+                    "link_id": 6553,
+                    "review_count": 2,
+                    "reviews": [
+                        {
+                            "id": 610,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:42:21"
+                        },
+                        {
+                            "id": 614,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-28 14:42:51"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 4951,
+                "source_line": 10,
+                "literal_text": null,
+                "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing",
+                "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/livewire\/entries\/review\/modal-states.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 421,
+                    "translation_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.modal_edit.translation_key_missing",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:08:37",
+                    "link_id": 8589,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 729,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:08:37"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 4597,
+                    "translation_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:08:37",
+                    "link_id": 6555,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 728,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:08:37"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6072,
+                "source_line": 83,
+                "literal_text": null,
+                "suggested_key": "admin.partials.html_view_audit.modal.type",
+                "path": "resources\/views\/components\/admin\/partials\/html-view-audit\/⚡modal.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8599,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8219,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6077,
+                "source_line": 93,
+                "literal_text": null,
+                "suggested_key": "admin.partials.html_view_audit.table.type",
+                "path": "resources\/views\/components\/admin\/partials\/html-view-audit\/⚡table.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8600,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8224,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6097,
+                "source_line": 152,
+                "literal_text": null,
+                "suggested_key": "admin.partials.translation_list.modal_history.timeline.type",
+                "path": "resources\/views\/components\/admin\/partials\/translation-list\/modal-history\/timeline.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8601,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8244,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6100,
+                "source_line": 462,
+                "literal_text": null,
+                "suggested_key": "admin.partials.translation_list.filter.type",
+                "path": "resources\/views\/components\/admin\/partials\/translation-list\/⚡filter.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8602,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8247,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6103,
+                "source_line": 241,
+                "literal_text": null,
+                "suggested_key": "admin.partials.translation_list.meta.type",
+                "path": "resources\/views\/components\/admin\/partials\/translation-list\/⚡meta.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8603,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8250,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6115,
+                "source_line": 47,
+                "literal_text": null,
+                "suggested_key": "admin.partials.translation_statistics.table.type",
+                "path": "resources\/views\/components\/admin\/partials\/translation-statistics\/⚡table.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8604,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8262,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6116,
+                "source_line": 52,
+                "literal_text": null,
+                "suggested_key": "admin.partials.translation_statistics.table.type",
+                "path": "resources\/views\/components\/admin\/partials\/translation-statistics\/⚡table.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8605,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8263,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6124,
+                "source_line": 200,
+                "literal_text": null,
+                "suggested_key": "management.people.create_person.form_person.type",
+                "path": "resources\/views\/components\/management\/people\/create-person\/⚡form-person.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8606,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8271,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6007,
+                "source_line": 9,
+                "literal_text": null,
+                "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                "path": "resources\/views\/components\/admin\/partials\/activity-log\/table\/⚡active-filter-badges.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8590,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8154,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6009,
+                "source_line": 94,
+                "literal_text": null,
+                "suggested_key": "admin.partials.activity_log.table.all.type",
+                "path": "resources\/views\/components\/admin\/partials\/activity-log\/table\/⚡all.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8591,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8156,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6022,
+                "source_line": 49,
+                "literal_text": null,
+                "suggested_key": "admin.partials.client_list.filter.type",
+                "path": "resources\/views\/components\/admin\/partials\/client-list\/⚡filter.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8592,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8169,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6032,
+                "source_line": 53,
+                "literal_text": null,
+                "suggested_key": "admin.partials.client_list.table.type",
+                "path": "resources\/views\/components\/admin\/partials\/client-list\/⚡table.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8593,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8179,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6033,
+                "source_line": 56,
+                "literal_text": null,
+                "suggested_key": "admin.partials.client_list.table.type",
+                "path": "resources\/views\/components\/admin\/partials\/client-list\/⚡table.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8594,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8180,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6061,
+                "source_line": 64,
+                "literal_text": null,
+                "suggested_key": "admin.partials.fallback_report_list.table.type",
+                "path": "resources\/views\/components\/admin\/partials\/fallback-report-list\/⚡table.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8595,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8208,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6062,
+                "source_line": 67,
+                "literal_text": null,
+                "suggested_key": "admin.partials.fallback_report_list.table.type",
+                "path": "resources\/views\/components\/admin\/partials\/fallback-report-list\/⚡table.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8596,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8209,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6064,
+                "source_line": 36,
+                "literal_text": null,
+                "suggested_key": "admin.partials.flag_reference_list.filter.type",
+                "path": "resources\/views\/components\/admin\/partials\/flag-reference-list\/⚡filter.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8597,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8211,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6066,
+                "source_line": 31,
+                "literal_text": null,
+                "suggested_key": "admin.partials.flag_reference_list.table.type",
+                "path": "resources\/views\/components\/admin\/partials\/flag-reference-list\/⚡table.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8598,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8213,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 6126,
+                "source_line": 101,
+                "literal_text": null,
+                "suggested_key": "management.people.edit_person.sections.documents.archive_modal.type",
+                "path": "resources\/views\/components\/management\/people\/edit-person\/sections\/documents\/⚡archive-modal.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 656,
+                    "translation_key": "ui.type",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_dynamic.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 10:01:03",
+                    "link_id": 8607,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 715,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 10:01:03"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 1212,
+                    "translation_key": "ui.type",
+                    "suggested_key": "admin.partials.activity_log.table.active_filter_badges.type",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-28 14:07:52",
+                    "link_id": 8273,
+                    "review_count": 1,
+                    "reviews": [
+                        {
+                            "id": 594,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-28 14:07:52"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 4763,
+                "source_line": 13,
+                "literal_text": null,
+                "suggested_key": "ui.button.cancel.cancel",
+                "path": "resources\/views\/components\/ui\/button\/cancel.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 699,
+                    "translation_key": "ui.button.cancel.cancel",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_edit_translation_key.cancel",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-10-13 17:23:51",
+                    "link_id": 11789,
+                    "review_count": 10,
+                    "reviews": [
+                        {
+                            "id": 255,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-27 07:34:25"
+                        },
+                        {
+                            "id": 256,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-27 07:35:10"
+                        },
+                        {
+                            "id": 957,
+                            "type": "suspicious_key_provenance",
+                            "decision": "needs_key_review",
+                            "reviewed_at": "2026-08-02 12:00:48"
+                        },
+                        {
+                            "id": 1016,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-08-03 23:02:09"
+                        },
+                        {
+                            "id": 1017,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-08-03 23:02:09"
+                        },
+                        {
+                            "id": 1018,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-08-03 23:02:09"
+                        },
+                        {
+                            "id": 1019,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-08-03 23:02:09"
+                        },
+                        {
+                            "id": 1020,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-08-03 23:02:09"
+                        },
+                        {
+                            "id": 1021,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-08-03 23:02:09"
+                        },
+                        {
+                            "id": 1331,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-10-13 17:23:51"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 3560,
+                    "translation_key": "ui.button.cancel.cancel",
+                    "suggested_key": "ui.button.cancel.cancel",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-10-13 17:23:51",
+                    "link_id": 6367,
+                    "review_count": 4,
+                    "reviews": [
+                        {
+                            "id": 1013,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-08-03 22:56:53"
+                        },
+                        {
+                            "id": 1014,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-08-03 23:00:20"
+                        },
+                        {
+                            "id": 1015,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-08-03 23:02:09"
+                        },
+                        {
+                            "id": 1332,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-10-13 17:23:51"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 5701,
+                "source_line": 428,
+                "literal_text": null,
+                "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.yes",
+                "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/livewire\/entries\/findings\/code-update-plan.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 809,
+                    "translation_key": "ui.filters.yes",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.yes",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 07:57:50",
+                    "link_id": 8380,
+                    "review_count": 2,
+                    "reviews": [
+                        {
+                            "id": 651,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-30 07:56:45"
+                        },
+                        {
+                            "id": 652,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 993,
+                    "translation_key": "ui.filters.yes",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.filters.keys.dynamic_multi.yes",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 07:57:50",
+                    "link_id": 7847,
+                    "review_count": 11,
+                    "reviews": [
+                        {
+                            "id": 164,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-26 18:11:13"
+                        },
+                        {
+                            "id": 165,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-26 18:11:44"
+                        },
+                        {
+                            "id": 657,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 658,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 659,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 660,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 661,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 662,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 663,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 664,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 665,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 5302,
+                "source_line": 376,
+                "literal_text": null,
+                "suggested_key": "admin.partials.translation_usage_audit.table.yes",
+                "path": "resources\/views\/components\/admin\/partials\/translation-usage-audit\/⚡table.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 809,
+                    "translation_key": "ui.filters.yes",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.yes",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 07:57:50",
+                    "link_id": 8476,
+                    "review_count": 2,
+                    "reviews": [
+                        {
+                            "id": 651,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-30 07:56:45"
+                        },
+                        {
+                            "id": 652,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 993,
+                    "translation_key": "ui.filters.yes",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.filters.keys.dynamic_multi.yes",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 07:57:50",
+                    "link_id": 7373,
+                    "review_count": 11,
+                    "reviews": [
+                        {
+                            "id": 164,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-26 18:11:13"
+                        },
+                        {
+                            "id": 165,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-26 18:11:44"
+                        },
+                        {
+                            "id": 657,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 658,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 659,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 660,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 661,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 662,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 663,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 664,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 665,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 5296,
+                "source_line": 25,
+                "literal_text": null,
+                "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.filters.keys.ui.yes",
+                "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/livewire\/raw-data\/filters\/keys\/ui.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 809,
+                    "translation_key": "ui.filters.yes",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.yes",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 07:57:50",
+                    "link_id": 8471,
+                    "review_count": 2,
+                    "reviews": [
+                        {
+                            "id": 651,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-30 07:56:45"
+                        },
+                        {
+                            "id": 652,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 993,
+                    "translation_key": "ui.filters.yes",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.filters.keys.dynamic_multi.yes",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 07:57:50",
+                    "link_id": 7367,
+                    "review_count": 11,
+                    "reviews": [
+                        {
+                            "id": 164,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-26 18:11:13"
+                        },
+                        {
+                            "id": 165,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-26 18:11:44"
+                        },
+                        {
+                            "id": 657,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 658,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 659,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 660,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 661,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 662,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 663,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 664,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 665,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 5294,
+                "source_line": 25,
+                "literal_text": null,
+                "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.filters.keys.dynamic.yes",
+                "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/livewire\/raw-data\/filters\/keys\/dynamic.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 809,
+                    "translation_key": "ui.filters.yes",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.yes",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 07:57:50",
+                    "link_id": 8470,
+                    "review_count": 2,
+                    "reviews": [
+                        {
+                            "id": 651,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-30 07:56:45"
+                        },
+                        {
+                            "id": 652,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 993,
+                    "translation_key": "ui.filters.yes",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.filters.keys.dynamic_multi.yes",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 07:57:50",
+                    "link_id": 7365,
+                    "review_count": 11,
+                    "reviews": [
+                        {
+                            "id": 164,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-26 18:11:13"
+                        },
+                        {
+                            "id": 165,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-26 18:11:44"
+                        },
+                        {
+                            "id": 657,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 658,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 659,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 660,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 661,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 662,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 663,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 664,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 665,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 5293,
+                "source_line": 25,
+                "literal_text": null,
+                "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.filters.keys.dynamic_multi.yes",
+                "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/livewire\/raw-data\/filters\/keys\/dynamic-multi.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "multiple_reviewed_records",
+            "owners": [
+                {
+                    "key_id": 809,
+                    "translation_key": "ui.filters.yes",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.old.entries.modal_review.yes",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 07:57:50",
+                    "link_id": 8469,
+                    "review_count": 2,
+                    "reviews": [
+                        {
+                            "id": 651,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-30 07:56:45"
+                        },
+                        {
+                            "id": 652,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 993,
+                    "translation_key": "ui.filters.yes",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.raw_data.filters.keys.dynamic_multi.yes",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-07-30 07:57:50",
+                    "link_id": 7364,
+                    "review_count": 11,
+                    "reviews": [
+                        {
+                            "id": 164,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-07-26 18:11:13"
+                        },
+                        {
+                            "id": 165,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-26 18:11:44"
+                        },
+                        {
+                            "id": 657,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 658,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 659,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 660,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 661,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 662,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 663,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 664,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        },
+                        {
+                            "id": 665,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-07-30 07:57:50"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 4617,
+                "source_line": 12,
+                "literal_text": null,
+                "suggested_key": "management.people.create_person.actions.reset",
+                "path": "resources\/views\/components\/management\/people\/create-person\/⚡actions.blade.php"
+            },
+            "source_state": "position_refined",
+            "classification": "reviewed_and_pending_records",
+            "owners": [
+                {
+                    "key_id": 3145,
+                    "translation_key": "ui.button.reset.reset",
+                    "suggested_key": "management.people.create_person.actions.reset",
+                    "status": "open",
+                    "review_status": "pending",
+                    "reviewed_at": null,
+                    "link_id": 6221,
+                    "review_count": 0,
+                    "reviews": []
+                },
+                {
+                    "key_id": 5240,
+                    "translation_key": "ui.button.reset.reset",
+                    "suggested_key": "ui.button.reset.reset",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-08-05 08:46:05",
+                    "link_id": 10950,
+                    "review_count": 4,
+                    "reviews": [
+                        {
+                            "id": 1134,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-08-05 08:45:41"
+                        },
+                        {
+                            "id": 1135,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-08-05 08:46:05"
+                        },
+                        {
+                            "id": 1136,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-08-05 08:46:05"
+                        },
+                        {
+                            "id": 1137,
+                            "type": "translation_key",
+                            "decision": "translation_key_bulk_equalized",
+                            "reviewed_at": "2026-08-05 08:46:05"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "finding": {
+                "id": 5093,
+                "source_line": 244,
+                "literal_text": null,
+                "suggested_key": "livewire.admin.pages.settings.profile.save",
+                "path": "resources\/views\/livewire\/admin\/pages\/settings\/⚡profile.blade.php"
+            },
+            "source_state": "missing",
+            "classification": "different_translation_keys",
+            "owners": [
+                {
+                    "key_id": 4507,
+                    "translation_key": "ui.button.save.save",
+                    "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.modal_edit.save",
+                    "status": "open",
+                    "review_status": "reviewed",
+                    "reviewed_at": "2026-08-06 09:16:49",
+                    "link_id": 6697,
+                    "review_count": 2,
+                    "reviews": [
+                        {
+                            "id": 107,
+                            "type": "code_update_conflict",
+                            "decision": "duplicate_dynamic_manual_workflow",
+                            "reviewed_at": "2026-07-24 12:34:01"
+                        },
+                        {
+                            "id": 1246,
+                            "type": "translation_key",
+                            "decision": "translation_key_updated",
+                            "reviewed_at": "2026-08-06 09:16:49"
+                        }
+                    ]
+                },
+                {
+                    "key_id": 4613,
+                    "translation_key": "ui.save",
+                    "suggested_key": "livewire.admin.pages.settings.profile.save",
+                    "status": "open",
+                    "review_status": "pending",
+                    "reviewed_at": null,
+                    "link_id": 7163,
+                    "review_count": 0,
+                    "reviews": []
+                }
+            ]
+        }
+    ],
+    "stored_language_value_counts": [
+        {
+            "translation_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.dynamic",
+            "status": "active",
+            "count": 2
+        },
+        {
+            "translation_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing",
+            "status": "active",
+            "count": 2
+        },
+        {
+            "translation_key": "ui.button.cancel.cancel",
+            "status": "active",
+            "count": 2
+        },
+        {
+            "translation_key": "ui.button.reset.reset",
+            "status": "active",
+            "count": 2
+        },
+        {
+            "translation_key": "ui.button.save.save",
+            "status": "active",
+            "count": 2
+        },
+        {
+            "translation_key": "ui.filters.yes",
+            "status": "active",
+            "count": 2
+        },
+        {
+            "translation_key": "ui.save",
+            "status": "obsolete",
+            "count": 2
+        },
+        {
+            "translation_key": "ui.states.all",
+            "status": "active",
+            "count": 2
+        },
+        {
+            "translation_key": "ui.type",
+            "status": "active",
+            "count": 2
+        },
+        {
+            "translation_key": "ui.values.stored-values",
+            "status": "active",
+            "count": 2
+        }
+    ]
+}

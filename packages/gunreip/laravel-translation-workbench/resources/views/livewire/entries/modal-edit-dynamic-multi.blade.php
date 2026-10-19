@@ -6,6 +6,9 @@
     wire:model="dynamicMultiEditModalOpen"
 >
     <div class="space-y-4">
+        <flux:button variant="outline" size="sm" icon="check-badge" wire:click="openValueApproval('option')">
+            {{ __('Review stored values') }}
+        </flux:button>
         <div class="flex items-start gap-3">
             <div class="min-w-0 space-y-1">
                 <div class="flex min-w-0 flex-wrap items-center gap-2">
@@ -70,6 +73,7 @@
                 $sourceLocale = (string) ($editLocales['source'] ?? 'en');
                 $activeLocale = (string) ($editLocales['active'] ?? app()->getLocale());
                 $rows = collect($dynamicMultiRows ?? []);
+                $sourceConflicts = $rows->filter(fn ($row) => !empty($row['source_conflicts']));
                 $overrideButtonCount = $rows
                     ->filter(function (array $row) use (
                         $dynamicMultiTargetValues,
@@ -90,6 +94,28 @@
                     })
                     ->count();
             @endphp
+
+            <flux:error name="dynamicMultiSourceValues" />
+            @if ($sourceConflicts->isNotEmpty())
+                <flux:callout variant="warning" icon="exclamation-triangle">
+                    <flux:callout.heading>{{ __('Conflicting option sources') }}</flux:callout.heading>
+                    <flux:callout.text>{{ __('These sources provide different values for the same option. Existing translations are preserved. Review the sources before saving.') }}</flux:callout.text>
+                    @foreach ($sourceConflicts as $conflict)
+                        <div class="mt-3 space-y-1 break-words">
+                            <div class="font-mono font-semibold">{{ $conflict['value_key'] }}</div>
+                            @foreach ($conflict['source_conflicts'] as $sourceConflict)
+                                <div>
+                                    <span class="font-mono">{{ __('Source :id', ['id' => $sourceConflict['source_id']]) }}</span>
+                                    @if (filled($sourceConflict['reference']))
+                                        <span class="text-xs">({{ $sourceConflict['reference'] }})</span>
+                                    @endif
+                                    <span class="whitespace-pre-wrap">{{ $sourceConflict['value'] ?? __('No source value') }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endforeach
+                </flux:callout>
+            @endif
 
             <flux:card>
                 <x-ui.headers.card

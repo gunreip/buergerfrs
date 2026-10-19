@@ -1,0 +1,180 @@
+{
+  "migration": "2026_10_17_000001_scope_finding_signature_uniqueness_to_current",
+  "before": {
+    "tables": {
+      "translation_workbench_findings": {
+        "count": 23216,
+        "sha256": "b46f2579df93d618f459a529868a276e2276627f074d09ae231c0d8872feadee"
+      },
+      "translation_workbench_key_findings": {
+        "count": 25816,
+        "sha256": "e5b3d170dbd981768ce035876953aacb0122ae45ae24bf4e8e54a421afa13ae6"
+      }
+    },
+    "indexes": [
+      {
+        "indexname": "translation_workbench_findings_candidate_reason_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_candidate_reason_index ON public.translation_workbench_findings USING btree (candidate_reason)"
+      },
+      {
+        "indexname": "translation_workbench_findings_candidate_type_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_candidate_type_index ON public.translation_workbench_findings USING btree (candidate_type)"
+      },
+      {
+        "indexname": "translation_workbench_findings_dynamic_data_state_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_dynamic_data_state_index ON public.translation_workbench_findings USING btree (dynamic_data_state)"
+      },
+      {
+        "indexname": "translation_workbench_findings_entry_type_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_entry_type_index ON public.translation_workbench_findings USING btree (entry_type)"
+      },
+      {
+        "indexname": "translation_workbench_findings_expression_fingerprint_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_expression_fingerprint_index ON public.translation_workbench_findings USING btree (expression_fingerprint)"
+      },
+      {
+        "indexname": "translation_workbench_findings_fingerprint_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_fingerprint_index ON public.translation_workbench_findings USING btree (fingerprint)"
+      },
+      {
+        "indexname": "translation_workbench_findings_first_seen_at_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_first_seen_at_index ON public.translation_workbench_findings USING btree (first_seen_at)"
+      },
+      {
+        "indexname": "translation_workbench_findings_function_name_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_function_name_index ON public.translation_workbench_findings USING btree (function_name)"
+      },
+      {
+        "indexname": "translation_workbench_findings_kind_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_kind_index ON public.translation_workbench_findings USING btree (kind)"
+      },
+      {
+        "indexname": "translation_workbench_findings_last_seen_at_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_last_seen_at_index ON public.translation_workbench_findings USING btree (last_seen_at)"
+      },
+      {
+        "indexname": "translation_workbench_findings_pkey",
+        "indexdef": "CREATE UNIQUE INDEX translation_workbench_findings_pkey ON public.translation_workbench_findings USING btree (id)"
+      },
+      {
+        "indexname": "translation_workbench_findings_semantic_fingerprint_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_semantic_fingerprint_index ON public.translation_workbench_findings USING btree (semantic_fingerprint)"
+      },
+      {
+        "indexname": "translation_workbench_findings_source_fingerprint_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_source_fingerprint_index ON public.translation_workbench_findings USING btree (source_fingerprint)"
+      },
+      {
+        "indexname": "translation_workbench_findings_source_line_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_source_line_index ON public.translation_workbench_findings USING btree (source_line)"
+      },
+      {
+        "indexname": "translation_workbench_findings_source_signature_unique",
+        "indexdef": "CREATE UNIQUE INDEX translation_workbench_findings_source_signature_unique ON public.translation_workbench_findings USING btree (source_signature)"
+      },
+      {
+        "indexname": "translation_workbench_findings_status_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_status_index ON public.translation_workbench_findings USING btree (status)"
+      },
+      {
+        "indexname": "tw_findings_file_line_index",
+        "indexdef": "CREATE INDEX tw_findings_file_line_index ON public.translation_workbench_findings USING btree (source_file_id, source_line)"
+      },
+      {
+        "indexname": "tw_findings_namespace_group_index",
+        "indexdef": "CREATE INDEX tw_findings_namespace_group_index ON public.translation_workbench_findings USING btree (namespace, \"group\")"
+      }
+    ]
+  },
+  "after": {
+    "tables": {
+      "translation_workbench_findings": {
+        "count": 23216,
+        "sha256": "b46f2579df93d618f459a529868a276e2276627f074d09ae231c0d8872feadee"
+      },
+      "translation_workbench_key_findings": {
+        "count": 25816,
+        "sha256": "e5b3d170dbd981768ce035876953aacb0122ae45ae24bf4e8e54a421afa13ae6"
+      }
+    },
+    "indexes": [
+      {
+        "indexname": "translation_workbench_findings_candidate_reason_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_candidate_reason_index ON public.translation_workbench_findings USING btree (candidate_reason)"
+      },
+      {
+        "indexname": "translation_workbench_findings_candidate_type_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_candidate_type_index ON public.translation_workbench_findings USING btree (candidate_type)"
+      },
+      {
+        "indexname": "translation_workbench_findings_dynamic_data_state_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_dynamic_data_state_index ON public.translation_workbench_findings USING btree (dynamic_data_state)"
+      },
+      {
+        "indexname": "translation_workbench_findings_entry_type_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_entry_type_index ON public.translation_workbench_findings USING btree (entry_type)"
+      },
+      {
+        "indexname": "translation_workbench_findings_expression_fingerprint_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_expression_fingerprint_index ON public.translation_workbench_findings USING btree (expression_fingerprint)"
+      },
+      {
+        "indexname": "translation_workbench_findings_fingerprint_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_fingerprint_index ON public.translation_workbench_findings USING btree (fingerprint)"
+      },
+      {
+        "indexname": "translation_workbench_findings_first_seen_at_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_first_seen_at_index ON public.translation_workbench_findings USING btree (first_seen_at)"
+      },
+      {
+        "indexname": "translation_workbench_findings_function_name_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_function_name_index ON public.translation_workbench_findings USING btree (function_name)"
+      },
+      {
+        "indexname": "translation_workbench_findings_kind_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_kind_index ON public.translation_workbench_findings USING btree (kind)"
+      },
+      {
+        "indexname": "translation_workbench_findings_last_seen_at_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_last_seen_at_index ON public.translation_workbench_findings USING btree (last_seen_at)"
+      },
+      {
+        "indexname": "translation_workbench_findings_pkey",
+        "indexdef": "CREATE UNIQUE INDEX translation_workbench_findings_pkey ON public.translation_workbench_findings USING btree (id)"
+      },
+      {
+        "indexname": "translation_workbench_findings_semantic_fingerprint_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_semantic_fingerprint_index ON public.translation_workbench_findings USING btree (semantic_fingerprint)"
+      },
+      {
+        "indexname": "translation_workbench_findings_source_fingerprint_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_source_fingerprint_index ON public.translation_workbench_findings USING btree (source_fingerprint)"
+      },
+      {
+        "indexname": "translation_workbench_findings_source_line_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_source_line_index ON public.translation_workbench_findings USING btree (source_line)"
+      },
+      {
+        "indexname": "translation_workbench_findings_status_index",
+        "indexdef": "CREATE INDEX translation_workbench_findings_status_index ON public.translation_workbench_findings USING btree (status)"
+      },
+      {
+        "indexname": "tw_findings_current_signature_unique",
+        "indexdef": "CREATE UNIQUE INDEX tw_findings_current_signature_unique ON public.translation_workbench_findings USING btree (source_signature) WHERE ((status)::text <> 'obsolete'::text)"
+      },
+      {
+        "indexname": "tw_findings_file_line_index",
+        "indexdef": "CREATE INDEX tw_findings_file_line_index ON public.translation_workbench_findings USING btree (source_file_id, source_line)"
+      },
+      {
+        "indexname": "tw_findings_namespace_group_index",
+        "indexdef": "CREATE INDEX tw_findings_namespace_group_index ON public.translation_workbench_findings USING btree (namespace, \"group\")"
+      },
+      {
+        "indexname": "tw_findings_signature_history_index",
+        "indexdef": "CREATE INDEX tw_findings_signature_history_index ON public.translation_workbench_findings USING btree (source_signature)"
+      }
+    ]
+  },
+  "data_unchanged": true
+}

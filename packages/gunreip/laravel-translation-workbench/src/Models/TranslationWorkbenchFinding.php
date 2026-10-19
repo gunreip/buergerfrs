@@ -15,6 +15,7 @@ class TranslationWorkbenchFinding extends Model
 
     protected $casts = [
         'meta' => 'array',
+        'source_column' => 'integer',
         'first_seen_at' => 'datetime',
         'last_seen_at' => 'datetime',
         'scan_count' => 'integer',

@@ -27,7 +27,7 @@
             'color' => 'green',
             'icon' => 'circle-check',
             'text' => __(
-                'Reviewed static translation calls where the first literal argument can be replaced with the final translation key.',
+                'Reviewed static translation calls with a published source-language text. Missing target translations use the language fallback.',
             ),
         ],
         'manual_review' => [
@@ -43,7 +43,7 @@
             'color' => 'red',
             'icon' => 'languages',
             'text' => __(
-                'Reviewed keys where the source or target translation value is missing. These rows must not be written to source code before the lang/* values exist.',
+                'Reviewed keys whose source-language value is missing from the database or published language file. Publish the source-language text before updating the code; target translations may follow later.',
             ),
         ],
         'stale_source' => [
@@ -406,7 +406,7 @@
                                                         </div>
                                                         <div
                                                             class="wrap-anywhere mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                                                            {{ $row['reason'] }}
+                                                            {{ ($row['reason'] ?? '') === 'source_lang_value_not_published' ? __('Publish the source-language translation before updating the source code.') : (($row['reason'] ?? '') === 'source_lang_value_missing' ? __('Enter the source-language translation before publication and source-code update.') : $row['reason']) }}
                                                         </div>
                                                     </flux:table.cell>
                                                     <flux:table.cell>
@@ -744,7 +744,7 @@
                                                 @else
                                                     <div
                                                         class="wrap-anywhere text-wrap text-xs text-zinc-600 dark:text-zinc-300">
-                                                        {{ $row['reason'] }}
+                                                        {{ ($row['reason'] ?? '') === 'source_lang_value_not_published' ? __('Publish the source-language translation before updating the source code.') : (($row['reason'] ?? '') === 'source_lang_value_missing' ? __('Enter the source-language translation before publication and source-code update.') : $row['reason']) }}
                                                     </div>
                                                 @endif
                                             </flux:table.cell>

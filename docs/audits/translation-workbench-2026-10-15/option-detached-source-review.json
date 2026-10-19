@@ -1,0 +1,312 @@
+{
+    "captured_at": "2026-10-15T19:12:33+02:00",
+    "mode": "read_only_no_assignment",
+    "transaction": "REPEATABLE READ READ ONLY",
+    "plan_sha256": "ef4b2b7efc20fc4cf778fb20d83f62298b4dcea494b2b76396b664125821c837",
+    "summary": {
+        "target_verified_observation_rebinding_required": 4
+    },
+    "sources": [
+        {
+            "source_id": 2,
+            "previous_finding_id": 1401,
+            "previous_finding_status": "obsolete",
+            "previous_expression": "__($label)",
+            "source_path": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+            "file_sha256": "32cd9efa7dd7a6c7765504bbb24fb445428baa6ed847037b45e5049dd159a187",
+            "historical_observation_id": 1,
+            "key_id": 1988,
+            "context_basis": "stored_previous_context",
+            "targets": [
+                {
+                    "line": 122,
+                    "expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('admin.partials.role_list.modal_create.role_badge_variant_options', (string) $variant, $label)",
+                    "owner_key": "admin.partials.role_list.modal_create.role_badge_variant_options",
+                    "finding_ids": [
+                        9271
+                    ],
+                    "same_active_key": true,
+                    "source_resolution": "view_bound_candidate",
+                    "selected_source": "app/Livewire/Admin/RoleList.php:roleUserManagementBadgeVariants",
+                    "options_count": 4,
+                    "values_identical": true,
+                    "existing_observation_ids": [
+                        3
+                    ],
+                    "selected_source_sha256": "ad683acce31bf906cad7b941143f86393ca2b0a2fe939874b66d735e3ea53cc1",
+                    "editor_baseline_en_de": [
+                        {
+                            "field_key": "v_e57362d579b61ac9d08f5012ee0adf6fde22a855",
+                            "value_key": "outline",
+                            "source": "Outline",
+                            "target": "Outline",
+                            "native_label": "Outline",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_93720caa841037718a719bd20ac5b110383b6e63",
+                            "value_key": "pill",
+                            "source": "Pill",
+                            "target": "Pill",
+                            "native_label": "Pill",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_69e699bc1f92cb92acfb304f419753e2ff473845",
+                            "value_key": "solid",
+                            "source": "Solid",
+                            "target": "Solid",
+                            "native_label": "Solid",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_10a4d47a931f75823185defd572833c140001b1f",
+                            "value_key": "subtle",
+                            "source": "Subtle",
+                            "target": "Subtle",
+                            "native_label": "Subtle",
+                            "status": "active"
+                        }
+                    ],
+                    "linked_runtime_source_ids": [],
+                    "existing_target_source_ids": []
+                }
+            ],
+            "status": "target_verified_observation_rebinding_required",
+            "candidate_links": [],
+            "translation_rows_for_shared_key": 8
+        },
+        {
+            "source_id": 25,
+            "previous_finding_id": 2099,
+            "previous_finding_status": "obsolete",
+            "previous_expression": "__($label)",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "file_sha256": "5a95f34f638cef3ef89e0adb1ad81fe426e4d2dfee0d6cf4ec2b3b2e487b67d6",
+            "historical_observation_id": 6,
+            "key_id": 3117,
+            "context_basis": "stored_previous_context",
+            "targets": [
+                {
+                    "line": 101,
+                    "expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.sections.person_core.salutation_options', (string) $value, $label)",
+                    "owner_key": "management.people.create_person.sections.person_core.salutation_options",
+                    "finding_ids": [
+                        9253
+                    ],
+                    "same_active_key": true,
+                    "source_resolution": "view_bound_candidate",
+                    "selected_source": "app/Livewire/Management/People/EditPerson.php",
+                    "options_count": 3,
+                    "values_identical": true,
+                    "existing_observation_ids": [
+                        16
+                    ],
+                    "selected_source_sha256": "08ee85a7f81d6423e0882d2b376589f34e38ee59efb30c5a737b091a150b5185",
+                    "editor_baseline_en_de": [
+                        {
+                            "field_key": "v_8e7be411ad89ade93d144531f3925d0bb4011004",
+                            "value_key": "mr",
+                            "source": "Mr.",
+                            "target": "Herr",
+                            "native_label": "Mr.",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_a9937de3c5d9a091a742e0696b2b64071260b30d",
+                            "value_key": "mrs",
+                            "source": "Mrs.",
+                            "target": "Frau",
+                            "native_label": "Mrs.",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_3ab846d50e49eefc72763de7d742d06f2ec3a1d5",
+                            "value_key": "mx",
+                            "source": "Mx.",
+                            "target": "Divers",
+                            "native_label": "Mx.",
+                            "status": "active"
+                        }
+                    ],
+                    "linked_runtime_source_ids": [],
+                    "existing_target_source_ids": []
+                }
+            ],
+            "status": "target_verified_observation_rebinding_required",
+            "candidate_links": [],
+            "translation_rows_for_shared_key": 6
+        },
+        {
+            "source_id": 23,
+            "previous_finding_id": 2101,
+            "previous_finding_status": "obsolete",
+            "previous_expression": "__($label)",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "file_sha256": "5a95f34f638cef3ef89e0adb1ad81fe426e4d2dfee0d6cf4ec2b3b2e487b67d6",
+            "historical_observation_id": 7,
+            "key_id": 3120,
+            "context_basis": "stored_previous_context",
+            "targets": [
+                {
+                    "line": 58,
+                    "expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.sections.person_core.gender_options', (string) $value, $label)",
+                    "owner_key": "management.people.create_person.sections.person_core.gender_options",
+                    "finding_ids": [
+                        9252
+                    ],
+                    "same_active_key": true,
+                    "source_resolution": "view_bound_candidate",
+                    "selected_source": "app/Livewire/Management/People/EditPerson.php",
+                    "options_count": 4,
+                    "values_identical": true,
+                    "existing_observation_ids": [
+                        15
+                    ],
+                    "selected_source_sha256": "08ee85a7f81d6423e0882d2b376589f34e38ee59efb30c5a737b091a150b5185",
+                    "editor_baseline_en_de": [
+                        {
+                            "field_key": "v_f622104b73aa7f6791caac4c89f6f39b4f651303",
+                            "value_key": "diverse",
+                            "source": "Diverse",
+                            "target": "Divers",
+                            "native_label": "Diverse",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_96a1a08dcded48b7e695aed7c577dc04c982a4f7",
+                            "value_key": "female",
+                            "source": "Female",
+                            "target": "Weiblich",
+                            "native_label": "Female",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_030ef4a52619b493d3cc75d8034e3df378dae231",
+                            "value_key": "male",
+                            "source": "Male",
+                            "target": "Männlich",
+                            "native_label": "Male",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_50d8b4a941c26b89482c94ab324b5a274f9ced66",
+                            "value_key": "unknown",
+                            "source": "Unknown",
+                            "target": "Unbekannt",
+                            "native_label": "Unknown",
+                            "status": "active"
+                        }
+                    ],
+                    "linked_runtime_source_ids": [
+                        40
+                    ],
+                    "existing_target_source_ids": []
+                }
+            ],
+            "status": "target_verified_observation_rebinding_required",
+            "candidate_links": [
+                {
+                    "id": 77,
+                    "dynamic_source_id": 40,
+                    "finding_id": 2101,
+                    "reference": "dynamic_source:23",
+                    "status": "active",
+                    "review_status": "confirmed"
+                }
+            ],
+            "translation_rows_for_shared_key": 8
+        },
+        {
+            "source_id": 62,
+            "previous_finding_id": 2690,
+            "previous_finding_status": "obsolete",
+            "previous_expression": "__($maritalStatusOptions[$maritalStatus] ?? $emptyValue)",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "file_sha256": "5a95f34f638cef3ef89e0adb1ad81fe426e4d2dfee0d6cf4ec2b3b2e487b67d6",
+            "historical_observation_id": 17,
+            "key_id": 3452,
+            "context_basis": "restricted_legacy_indexed_expression",
+            "targets": [
+                {
+                    "line": 387,
+                    "expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.edit_person.sections.person_core.marital_status_options', (string) $maritalStatus, $maritalStatusOptions[$maritalStatus] ?? $emptyValue)",
+                    "owner_key": "management.people.edit_person.sections.person_core.marital_status_options",
+                    "finding_ids": [
+                        9255
+                    ],
+                    "same_active_key": true,
+                    "source_resolution": "view_bound_candidate",
+                    "selected_source": "app/Livewire/Management/People/EditPerson.php",
+                    "options_count": 7,
+                    "values_identical": true,
+                    "existing_observation_ids": [],
+                    "selected_source_sha256": "08ee85a7f81d6423e0882d2b376589f34e38ee59efb30c5a737b091a150b5185",
+                    "editor_baseline_en_de": [
+                        {
+                            "field_key": "v_2a4e85e1b4e11ad32e4f7e6f4fe34f3f1befafd9",
+                            "value_key": "divorced",
+                            "source": "Divorced",
+                            "target": "Geschieden",
+                            "native_label": "Divorced",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_52d081ef4d70e170c7b704e2b3ee66c59de75a27",
+                            "value_key": "married",
+                            "source": "Married",
+                            "target": "Verheiratet",
+                            "native_label": "Married",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_4eeddb5f5b6dd3c0c5323e21254fb834634c2cfe",
+                            "value_key": "registered_partnership",
+                            "source": "Registered partnership",
+                            "target": "Eingetragene Lebenspartnerschaft",
+                            "native_label": "Registered partnership",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_513fd31089408e68bd132be5cd5901fdffbb0642",
+                            "value_key": "separated",
+                            "source": "Separated",
+                            "target": "Getrennt",
+                            "native_label": "Separated",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_ce0b1612aa711b78a720295d271a33894e2b72bf",
+                            "value_key": "single",
+                            "source": "Single",
+                            "target": "Single",
+                            "native_label": "Single",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_50d8b4a941c26b89482c94ab324b5a274f9ced66",
+                            "value_key": "unknown",
+                            "source": "Unknown",
+                            "target": "Unbekannt",
+                            "native_label": "Unknown",
+                            "status": "active"
+                        },
+                        {
+                            "field_key": "v_23de62b69076d7351636a367b753f60a012cdcf2",
+                            "value_key": "widowed",
+                            "source": "Widowed",
+                            "target": "verwitwet",
+                            "native_label": "Widowed",
+                            "status": "active"
+                        }
+                    ],
+                    "linked_runtime_source_ids": [],
+                    "existing_target_source_ids": []
+                }
+            ],
+            "status": "target_verified_observation_rebinding_required",
+            "candidate_links": [],
+            "translation_rows_for_shared_key": 14
+        }
+    ]
+}

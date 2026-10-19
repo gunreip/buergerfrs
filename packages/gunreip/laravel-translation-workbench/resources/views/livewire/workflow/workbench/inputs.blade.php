@@ -12,7 +12,7 @@
         <flux:tooltip toggleable>
             <flux:button size="sm" variant="outline" icon="information-circle">{{ __('2. ScanTranslationWorkbench') }}</flux:button>
             <flux:tooltip.content class="max-w-xl whitespace-normal">
-                <p class="font-mono text-xs break-all">packages/gunreip/laravel-translation-workbench/src/Console/ScanTranslationWorkbench.php::handle</p>
+                <p class="font-mono text-xs break-all">packages/gunreip/laravel-translation-workbench/src/_old/Console/ScanTranslationWorkbench.php::handle</p>
                 <p class="mt-2">{{ __('Scan into older package tables') }}</p>
             </flux:tooltip.content>
         </flux:tooltip>
@@ -33,7 +33,7 @@
         <flux:tooltip toggleable>
             <flux:button size="sm" variant="outline" icon="information-circle">{{ __('5. ImportExistingTranslations') }}</flux:button>
             <flux:tooltip.content class="max-w-xl whitespace-normal">
-                <p class="font-mono text-xs break-all">packages/gunreip/laravel-translation-workbench/src/Console/ImportExistingTranslations.php::handle</p>
+                <p class="font-mono text-xs break-all">packages/gunreip/laravel-translation-workbench/src/_old/Console/ImportExistingTranslations.php::handle</p>
                 <p class="mt-2">{{ __('Import source-language values') }}</p>
             </flux:tooltip.content>
         </flux:tooltip>

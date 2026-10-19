@@ -1,0 +1,83 @@
+{
+    "isolation": "SQLite :memory:, source/lang/reports under unique /tmp directory",
+    "fixture": "/tmp/tw-status-audit-74e91ed031a49321",
+    "cases": {
+        "legacy_partial_scan_obsoletes_outside_scope": {
+            "outside_entry": "obsolete",
+            "outside_occurrence": "stale"
+        },
+        "legacy_nonexistent_path_obsoletes_all": {
+            "entry": "obsolete"
+        },
+        "foundation_last_occurrence_removed": {
+            "finding": "active",
+            "relation": "active",
+            "obsoleted": 0
+        },
+        "same_line_identical_occurrences": {
+            "authored_calls": 2,
+            "scanner_items": 1
+        },
+        "commented_calls_still_captured": {
+            "scanner_items": 1,
+            "finding_status": "commented_out",
+            "key_count": 0
+        },
+        "import_overwrites_saved_unpublished_value": {
+            "before": "Saved new draft",
+            "after": "Published old",
+            "meta_source": "translation-workbench:import-lang-values"
+        },
+        "scalar_export_accepts_pending_key": {
+            "key_review_status": "pending",
+            "files_written": 1,
+            "written_value": "Not reviewed"
+        },
+        "repeated_legacy_scan_identical_source": {
+            "entries": 1,
+            "extra_events": 2,
+            "changed_fields": [
+                "{\"source\":\"translation-workbench:scan\",\"changed_fields\":[\"source_fingerprint\",\"meta\",\"suggested_key\",\"namespace\"]}",
+                "{\"source\":\"translation-workbench:scan\",\"changed_fields\":[\"source_fingerprint\",\"meta\",\"suggested_key\",\"namespace\"]}",
+                "{\"source\":\"translation-workbench:scan\",\"changed_fields\":[\"source_fingerprint\",\"meta\",\"suggested_key\",\"namespace\"]}"
+            ]
+        },
+        "repeated_foundation_sync_preserves_reviewed_key": {
+            "translation_key": "audit.reviewed",
+            "review_status": "reviewed",
+            "first_rescan_events": 1,
+            "second_rescan_events": 0
+        },
+        "legacy_import_identical_source_relogs_observation": {
+            "extra_change_events": 1
+        },
+        "export_conflict_in_second_file_leaves_first_written": {
+            "files_written": 1,
+            "conflicts": 1,
+            "first_file_exists": true,
+            "second_file": {
+                "parent": "Existing scalar"
+            }
+        },
+        "export_command_returns_success_despite_conflict": {
+            "exit_code": 0,
+            "first_file_written": true,
+            "conflict_warning": true
+        },
+        "distinct_literal_whitespace_on_same_line": {
+            "authored_calls": 2,
+            "scanner_items": 1,
+            "texts": [
+                "Hello  world"
+            ]
+        },
+        "last_language_file_removed_leaves_active_value": {
+            "remaining_status": "active"
+        },
+        "legacy_rewriter_chooses_first_key_for_all_contexts": {
+            "door": "{{ __('audit.open_door') }}",
+            "file": "{{ __('audit.open_door') }}",
+            "foundation_provenance_events": 0
+        }
+    }
+}

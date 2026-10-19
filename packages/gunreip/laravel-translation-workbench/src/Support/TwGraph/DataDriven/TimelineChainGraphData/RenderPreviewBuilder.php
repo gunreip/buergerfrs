@@ -647,6 +647,7 @@ final class RenderPreviewBuilder
                             $stateLine = trim($timestamp . ' · ' . $state, ' ·');
                             $labelText = array_values(array_filter([
                                 $event,
+                                ! empty($row['dataset_source']['id']) ? ucfirst((string) ($row['dataset_source']['type'] ?? 'Record')).' #'.$row['dataset_source']['id'] : null,
                                 $stateLine,
                             ]));
                             $labels[] = [

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Schema;
  * Persistence for resolved single-key review actions.
  * Callers still enforce authorization, action-specific eligibility and container/key validation.
  * Manual edits rekey existing values; accepting a suggestion retains its existing snapshot-only behavior.
- * Existing rename conflict policy is preserved, not replaced with the planned conflict workflow.
+ * Ambiguous source ownership and occupied target values require an explicit conflict decision.
  */
 class TranslationWorkbenchKeyReviewWriter
 {
@@ -54,6 +54,19 @@ class TranslationWorkbenchKeyReviewWriter
         }
 
         DB::transaction(function () use ($key, $finding, $selectedFinding, $oldValues, $changedValues, $reviewType, $decision): void {
+            if (array_key_exists('translation_key', $changedValues)) {
+                if (DB::getDriverName() === 'pgsql') {
+                    DB::statement('LOCK TABLE translation_workbench_keys, translation_workbench_lang_values IN SHARE ROW EXCLUSIVE MODE');
+                }
+                $current = TranslationWorkbenchKey::query()->findOrFail($key->id);
+                if ($current->translation_key !== ($oldValues['translation_key'] ?? null)) {
+                    throw \Illuminate\Validation\ValidationException::withMessages(['translationKeyValue' => __('The key changed while editing. Refresh the editor before renaming it.')]);
+                }
+                $oldKey = $this->nullableString($oldValues['translation_key'] ?? null);
+                if ($oldKey !== null && count(TranslationWorkbenchKeyOwnership::ids($oldKey)) > 1) {
+                    throw \Illuminate\Validation\ValidationException::withMessages(['translationKeyValue' => __('Multiple active records share the source key. Resolve their assignments before moving its translations; nothing was changed.')]);
+                }
+            }
             $key->forceFill($changedValues)->save();
 
             $review = TranslationWorkbenchReview::query()->create([
@@ -202,24 +215,7 @@ class TranslationWorkbenchKeyReviewWriter
             $oldRowValues = $row->only(['id', 'locale', 'namespace', 'lang_key', 'translation_key', 'status']);
 
             if ($target && $target->id !== $row->id) {
-                $row->forceFill([
-                    'status' => 'obsolete',
-                    'last_seen_at' => $now,
-                    'meta' => [
-                        ...(is_array($row->meta) ? $row->meta : []),
-                        'obsolete_reason' => 'translation_key_rekey_target_exists',
-                        'rekeyed_to_translation_key' => $newTranslationKey,
-                        'rekeyed_to_lang_value_id' => $target->id,
-                    ],
-                ])->save();
-
-                $obsoleted[] = [
-                    'id' => $row->id,
-                    'locale' => $row->locale,
-                    'target_id' => $target->id,
-                ];
-
-                continue;
+                throw \Illuminate\Validation\ValidationException::withMessages(['translationKeyValue' => __('The target key already has a value for :locale. Review the conflict explicitly; no values were moved or marked obsolete.', ['locale' => $row->locale])]);
             }
 
             $row->forceFill([

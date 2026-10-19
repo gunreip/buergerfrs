@@ -72,6 +72,7 @@
                             placeholder="ui.common.all"
                         />
                         <flux:error name="bulkEqualizeTranslationKey" />
+                        <flux:error name="bulkEqualizeSelectedFindingIds" />
                     </flux:field>
                 </flux:callout.text>
             </flux:callout>

@@ -1,0 +1,47 @@
+{
+    "mode": "rollback_rehearsal",
+    "backup": "/home/gunreip/code/buergerfrs/storage/app/private/emergency-observation-5-20261015-214427-ac4bd7cf.json",
+    "file_hashes": {
+        "resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php": "2de90547bf0b4103e05dec9a9337317ba97a3b6c6b60b535e1112594e05c39c8",
+        "app/Livewire/Management/People/CreatePerson.php": "b39489b1a1c3aedb2be85c2ec04eac5c26c4532f48ff8172e612409163a58dd9"
+    },
+    "options": {
+        "parent": "Parent",
+        "child": "Child",
+        "spouse": "Spouse",
+        "partner": "Partner",
+        "sibling": "Sibling",
+        "guardian": "Guardian",
+        "caregiver": "Caregiver",
+        "friend": "Friend",
+        "other": "Other"
+    },
+    "observation_id": 5,
+    "finding_id": 9265,
+    "key_id": 3062,
+    "changes": {
+        "findings": {
+            "9265": [
+                "meta",
+                "updated_at"
+            ]
+        },
+        "option_discoveries": {
+            "5": [
+                "matched_entry_id",
+                "workbench_suggested_key",
+                "suggested_state",
+                "label_usage",
+                "source_type",
+                "source_reference",
+                "options_count",
+                "last_seen_at",
+                "options",
+                "meta",
+                "updated_at"
+            ]
+        }
+    },
+    "ui_unchanged": true,
+    "repeat_without_new_events": true
+}

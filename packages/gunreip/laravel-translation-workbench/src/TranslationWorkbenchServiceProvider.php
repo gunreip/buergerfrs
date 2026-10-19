@@ -9,20 +9,17 @@ use Gunreip\TranslationWorkbench\Console\ClassifyLangNodeTypes;
 use Gunreip\TranslationWorkbench\Console\ClassifyTimelineEventNoise;
 use Gunreip\TranslationWorkbench\Console\CleanupExcludedTranslationWorkbenchPaths;
 use Gunreip\TranslationWorkbench\Console\CollectTimelineChains;
-use Gunreip\TranslationWorkbench\Console\DetectDuplicateCandidates;
 use Gunreip\TranslationWorkbench\Console\DetectSharedKeyCandidates;
 use Gunreip\TranslationWorkbench\Console\DetectSuspiciousKeyedAdditions;
 use Gunreip\TranslationWorkbench\Console\DiscoverDynamicOptions;
 use Gunreip\TranslationWorkbench\Console\DiscoverDynamicSourceCandidates;
 use Gunreip\TranslationWorkbench\Console\ExportTranslationWorkbenchLangFiles;
-use Gunreip\TranslationWorkbench\Console\ImportExistingTranslations;
 use Gunreip\TranslationWorkbench\Console\ImportTranslationWorkbenchLangValues;
 use Gunreip\TranslationWorkbench\Console\InventoryTranslationWorkbenchKeys;
 use Gunreip\TranslationWorkbench\Console\PlanTranslationWorkbenchCodeUpdates;
 use Gunreip\TranslationWorkbench\Console\ProfileTranslationWorkbenchFindings;
 use Gunreip\TranslationWorkbench\Console\ResolveUnknownDynamicSources;
 use Gunreip\TranslationWorkbench\Console\RunTranslationWorkbench;
-use Gunreip\TranslationWorkbench\Console\ScanTranslationWorkbench;
 use Gunreip\TranslationWorkbench\Console\SyncTranslationWorkbenchFoundation;
 use Gunreip\TranslationWorkbench\Foundation\RuntimeDynamicTranslationCollector;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchEntries;
@@ -60,6 +57,7 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
         );
 
         $this->app->singleton(RuntimeDynamicTranslationCollector::class);
+        $this->app->scoped(\Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanSession::class);
         $this->app->scoped(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPipelineContext::class);
     }
 
@@ -92,12 +90,10 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
             ClassifyTimelineEventNoise::class,
             CleanupExcludedTranslationWorkbenchPaths::class,
             CollectTimelineChains::class,
-            DetectDuplicateCandidates::class,
             DetectSharedKeyCandidates::class,
             DetectSuspiciousKeyedAdditions::class,
             DiscoverDynamicOptions::class,
             DiscoverDynamicSourceCandidates::class,
-            ImportExistingTranslations::class,
             ImportTranslationWorkbenchLangValues::class,
             InventoryTranslationWorkbenchKeys::class,
             ExportTranslationWorkbenchLangFiles::class,
@@ -106,8 +102,8 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
             ProfileTranslationWorkbenchFindings::class,
             ResolveUnknownDynamicSources::class,
             RunTranslationWorkbench::class,
-            ScanTranslationWorkbench::class,
             SyncTranslationWorkbenchFoundation::class,
+            \Gunreip\TranslationWorkbench\Console\ReconcileTranslationWorkbenchSources::class,
         ]);
 
         if ($this->app->runningInConsole()) {

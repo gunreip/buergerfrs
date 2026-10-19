@@ -75,7 +75,18 @@
             >
                 <dt class="text-zinc-300">{{ __('Length') }}</dt>
                 <dd class="font-semibold">{{ $status }}</dd>
-                <dt class="text-zinc-300">{{ __('ID') }}</dt>
+                <dt class="text-zinc-300">
+                    <flux:button
+                        data-copy-id="{{ $details['owner'] }}"
+                        size="xs"
+                        variant="ghost"
+                        icon="clipboard"
+                        :aria-label="__('Copy ID')"
+                        x-on:click.stop="navigator.clipboard?.writeText($el.dataset.copyId)"
+                    >
+                        {{ __('ID') }}
+                    </flux:button>
+                </dt>
                 <dd
                     class="font-mono"
                     style="overflow-wrap:anywhere"

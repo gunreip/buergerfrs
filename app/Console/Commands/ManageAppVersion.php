@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\ActivityLog\ConsoleActivityContext;
 use App\Support\AppVersion;
 use App\Support\VersionManifest;
 use App\Support\WatchVersion;
@@ -35,7 +36,20 @@ class ManageAppVersion extends Command
                 $version = $manifest->all()[$component] ?? throw new InvalidArgumentException('Unknown component: '.$component);
                 $this->line($component.': '.$version);
             } else {
+                $before = $manifest->all()[$component] ?? null;
                 $version = $manifest->update($component, $bump, $set);
+                try {
+                    activity('project')
+                        ->event('app.version.updated')
+                        ->withProperties(ConsoleActivityContext::merge($this, [
+                            'component' => $component,
+                            'before' => $before,
+                            'after' => $version,
+                        ]))
+                        ->log('Application component version updated.');
+                } catch (Throwable $exception) {
+                    $this->warn('Activity log write failed: '.$exception->getMessage());
+                }
                 $this->info($component.': '.$version.' — commit versions.json with the corresponding code changes.');
             }
 

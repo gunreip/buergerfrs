@@ -2,19 +2,17 @@
 
 @php
     $reviewFindingSuggestedKey = trim((string) ($reviewFinding->suggested_key ?? ''));
-    $reviewKeySuggestedKey = trim((string) ($reviewFinding->key_suggested_key ?? ''));
     $reviewTranslationKey = trim((string) ($reviewFinding->translation_key ?? ''));
-    $reviewEffectiveSuggestedKey = $reviewKeySuggestedKey !== '' ? $reviewKeySuggestedKey : $reviewFindingSuggestedKey;
     $reviewKeyState = match (true) {
         $reviewTranslationKey === '' => [
             'label' => __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_states.translation_key_missing'),
             'color' => 'red',
         ],
-        $reviewEffectiveSuggestedKey !== '' && $reviewTranslationKey === $reviewEffectiveSuggestedKey => [
+        $reviewFindingSuggestedKey !== '' && $reviewTranslationKey === $reviewFindingSuggestedKey => [
             'label' => __('Translation key equal'),
             'color' => 'green',
         ],
-        $reviewEffectiveSuggestedKey !== '' && $reviewTranslationKey !== $reviewEffectiveSuggestedKey => [
+        $reviewFindingSuggestedKey !== '' && $reviewTranslationKey !== $reviewFindingSuggestedKey => [
             'label' => __('Translation key different'),
             'color' => 'sky',
         ],

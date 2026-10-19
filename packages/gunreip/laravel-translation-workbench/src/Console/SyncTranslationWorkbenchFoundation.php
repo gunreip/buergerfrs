@@ -15,6 +15,7 @@ use Gunreip\TranslationWorkbench\Console\Concerns\ConfirmsTranslationWorkbenchTr
 use Gunreip\TranslationWorkbench\Console\Concerns\WritesTranslationWorkbenchReports;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchFoundationSyncer;
 use Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanner;
+use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchSourceFile;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -51,17 +52,24 @@ class SyncTranslationWorkbenchFoundation extends Command
             return self::FAILURE;
         }
 
-        $items = $scanner->scan($this->paths());
+        $scan = $scanner->scanWithManifest($this->paths(), $markObsolete
+            ? TranslationWorkbenchSourceFile::query()->pluck('path') : []);
+        $items = $scan['items'];
         $summary = [
             'found' => $items->count(),
         ];
 
         if (! $dryRun) {
-            $summary = $syncer->sync($items, $truncate, $markObsolete);
+            $summary = $syncer->sync($items, $truncate, $markObsolete, $scan['reconciliation_paths']);
         }
 
         $this->components->info('Translation Workbench foundation sync finished.');
         $this->line('Items found: ' . number_format($summary['found']));
+        $this->line('Files successfully scanned: ' . count($scan['scanned_paths']));
+        $this->line('Missing files in successfully scanned directories: ' . count($scan['missing_paths']));
+        if ($markObsolete && $scan['reconciliation_paths'] === []) {
+            $this->warn('No eligible files were successfully scanned; missing-occurrence reconciliation was skipped. Check the requested paths and exclusions.');
+        }
 
         if (! $dryRun) {
             $this->line('Source files created: ' . number_format($summary['source_files_created']));

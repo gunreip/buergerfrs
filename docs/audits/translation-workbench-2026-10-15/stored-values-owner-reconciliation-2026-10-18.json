@@ -1,0 +1,54 @@
+{
+  "applied": [
+    {
+      "state": "applied",
+      "retired_key": 4826,
+      "canonical_key": 321,
+      "merged_link_ids": [
+        8970
+      ],
+      "timeline_events_created": 2,
+      "unchanged_hashes": {
+        "keys": "a68fbb2d7c24b348346d4a83a04128059bf4a04ee4fe934d9ea516e9c67668f5",
+        "key_findings": "806b287dede5ad0dcdd32081352a2fcc941ec6dba5b96caa1bfec25d8a5ddb87",
+        "findings": "a89a1417969f9cff7a0faa43b00a21ca4c4edb9f0dd0226f7f61d00379af64e8",
+        "key_values": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dynamic_key_values": "1d166b22a072d492fdb08e074a8f8f30f80bcfbbda1a7368767f89816cac992e",
+        "lang_values": "9d4533b38a4023a348f4d7471b5fa45f5a1644e3eb3bc4b33390e89adfe012af",
+        "reviews": "0f5cc19785191211f22defbc75aba2ffa81733757445067250d495813c02df5b"
+      }
+    },
+    {
+      "state": "applied",
+      "retired_key": 4827,
+      "canonical_key": 321,
+      "merged_link_ids": [
+        8971
+      ],
+      "timeline_events_created": 2,
+      "unchanged_hashes": {
+        "keys": "ebde8ac9354c1399954a23d12fd690b0a18d1c871ead0242ba6da6ac39fc3f94",
+        "key_findings": "e28c199e7b6a97a8ae7f179204f793f0c1646faf54d96b20186708dbc09fa069",
+        "findings": "a89a1417969f9cff7a0faa43b00a21ca4c4edb9f0dd0226f7f61d00379af64e8",
+        "key_values": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dynamic_key_values": "1d166b22a072d492fdb08e074a8f8f30f80bcfbbda1a7368767f89816cac992e",
+        "lang_values": "9d4533b38a4023a348f4d7471b5fa45f5a1644e3eb3bc4b33390e89adfe012af",
+        "reviews": "0f5cc19785191211f22defbc75aba2ffa81733757445067250d495813c02df5b"
+      }
+    }
+  ],
+  "verification": [
+    {
+      "state": "already_applied"
+    },
+    {
+      "state": "already_applied"
+    }
+  ],
+  "remaining_findings": 30,
+  "remaining_classification": {
+    "multiple_reviewed_records": 28,
+    "reviewed_and_pending_records": 1,
+    "different_translation_keys": 1
+  }
+}

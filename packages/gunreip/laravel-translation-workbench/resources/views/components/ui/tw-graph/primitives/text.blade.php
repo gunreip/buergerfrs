@@ -85,7 +85,9 @@
             <flux:context class="contents">
                 <span class="relative inline-block" tabindex="0" aria-label="{{ __('More information: right-click') }}">
                     @include('translation-workbench::components.ui.tw-graph.partials.text-content')
-                    <flux:icon.information-circle class="pointer-events-none absolute -right-1 -top-1 size-3.5" aria-hidden="true" />
+                    <span class="absolute -right-1 -top-1 size-3.5" title="{{ __('More information: right-click') }}" aria-hidden="true">
+                        <flux:icon.information-circle class="pointer-events-none size-3.5" />
+                    </span>
                 </span>
                 <flux:menu>
                     @foreach ($contextMenu as $contextItem)

@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Schema;
 
 class TranslationWorkbenchLangNodeClassifier
 {
+    /** A scalar leaf must sit below an array in its PHP language file. */
+    public static function isRootScalarKey(?string $translationKey): bool
+    {
+        // Package namespaces do not count as an additional array level.
+        $key = trim((string) $translationKey);
+        $key = str_contains($key, '::') ? explode('::', $key, 2)[1] : $key;
+
+        return preg_match('/^[^.]+\.[^.]+$/', $key) === 1;
+    }
+
     public const UNKNOWN = 'unknown';
     public const LEAF = 'leaf';
     public const CONTAINER = 'container';
@@ -115,6 +125,7 @@ class TranslationWorkbenchLangNodeClassifier
      * @return array{
      *     translation_key: ?string,
      *     node_type: string,
+     *     active_owner_ids: array<int, int>,
      *     has_leaf_value: bool,
      *     has_children: bool,
      *     is_blocked: bool,
@@ -134,6 +145,7 @@ class TranslationWorkbenchLangNodeClassifier
             'has_leaf_value' => false,
             'has_children' => false,
             'is_blocked' => false,
+            'active_owner_ids' => [],
             'proposed_leaf_key' => null,
             'child_keys' => [],
             'child_key_rows' => [],
@@ -192,6 +204,7 @@ class TranslationWorkbenchLangNodeClassifier
 
         return [
             'translation_key' => $translationKey,
+            'active_owner_ids' => TranslationWorkbenchKeyOwnership::ids($translationKey),
             'node_type' => $nodeType,
             'has_leaf_value' => $hasLeafValue,
             'has_children' => $hasChildren,

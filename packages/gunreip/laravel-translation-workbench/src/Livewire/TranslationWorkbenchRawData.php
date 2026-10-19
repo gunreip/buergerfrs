@@ -560,6 +560,7 @@ class TranslationWorkbenchRawData extends Component
     {
         abort_unless($this->activeTable === 'translation_workbench_timeline_chains', 422);
 
+        $this->datasetIdType = 'dataset';
         $this->datasetIdInput = (string) $id;
         $this->loadDataset();
 

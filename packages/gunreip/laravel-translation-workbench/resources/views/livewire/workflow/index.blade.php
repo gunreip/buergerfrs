@@ -16,6 +16,7 @@
             <flux:tab name="legacy">{{ __('Legacy workflow') }}</flux:tab>
             <flux:tab name="workbench">{{ __('Workbench workflow') }}</flux:tab>
             <flux:tab name="target">{{ __('Target workflow') }}</flux:tab>
+            <flux:tab name="target-ui">{{ __('Target workflow UI') }}</flux:tab>
             <flux:tab name="write-contract">{{ __('Write contract') }}</flux:tab>
         </flux:tabs>
 
@@ -39,6 +40,11 @@
         <flux:tab.panel name="target">
             @if ($activeTab === 'target')
                 @include('translation-workbench::livewire.workflow.target')
+            @endif
+        </flux:tab.panel>
+        <flux:tab.panel name="target-ui">
+            @if ($activeTab === 'target-ui')
+                @include('translation-workbench::livewire.workflow.target-ui')
             @endif
         </flux:tab.panel>
         <flux:tab.panel name="write-contract">

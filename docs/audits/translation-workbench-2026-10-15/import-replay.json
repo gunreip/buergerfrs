@@ -1,0 +1,1969 @@
+{
+  "snapshot": "tw-status-snapshot-20261015-034741.sqlite",
+  "locales": [
+    "de",
+    "de-at",
+    "de-be",
+    "de-ch",
+    "de-de",
+    "de-it",
+    "de-li",
+    "de-lu",
+    "en"
+  ],
+  "summary": {
+    "locales": 9,
+    "files": 40,
+    "values_found": 2016,
+    "values_created": 184,
+    "values_updated": 1832,
+    "values_unchanged": 0,
+    "values_obsoleted": 12,
+    "truncated": 0,
+    "timeline_events_created": 2028
+  },
+  "existing_row_differences": [
+    {
+      "id": 9,
+      "translation_key": "account.preferences.current_user.nickname",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 19,
+      "translation_key": "admin.app_settings.app_settings",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 28,
+      "translation_key": "admin.app_settings.locale.current",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 30,
+      "translation_key": "admin.app_settings.locale.do_you_really_want_to_deactivate_this_language",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 45,
+      "translation_key": "admin.app_settings.locale.the_country_language_flag_of_the_global_available_app_ui_language",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 60,
+      "translation_key": "admin.app_settings.meta_overview.overview",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 69,
+      "translation_key": "admin.app_settings.table_icon_registry.available",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 70,
+      "translation_key": "admin.app_settings.table_icon_registry.icon",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 72,
+      "translation_key": "admin.app_settings.table_icon_registry.label",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 73,
+      "translation_key": "admin.app_settings.table_icon_registry.missing",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 74,
+      "translation_key": "admin.app_settings.table_icon_registry.status",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 75,
+      "translation_key": "admin.app_settings.table_icon_registry.text",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 76,
+      "translation_key": "admin.app_settings.table_icon_registry.view",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 77,
+      "translation_key": "admin.app_settings.table_role_badges.color",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 78,
+      "translation_key": "admin.app_settings.table_role_badges.icon",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 82,
+      "translation_key": "admin.app_settings.table_role_badges.preview",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 84,
+      "translation_key": "admin.app_settings.table_role_badges.role",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 88,
+      "translation_key": "admin.app_settings.table_role_badges.status",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 89,
+      "translation_key": "admin.app_settings.table_role_badges.text",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 91,
+      "translation_key": "admin.app_settings.table_role_badges.variant",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 95,
+      "translation_key": "admin.app_settings.without_role",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 97,
+      "translation_key": "admin.client_list.filter.all_statuses",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 98,
+      "translation_key": "admin.client_list.filter.all_types",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 101,
+      "translation_key": "admin.client_list.filter.filter_by_status",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 110,
+      "translation_key": "admin.client_list.filter.with_people",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 111,
+      "translation_key": "admin.client_list.filter.without_people",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 121,
+      "translation_key": "admin.client_list.meta.with_people",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 122,
+      "translation_key": "admin.client_list.meta.without_people",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 126,
+      "translation_key": "admin.client_list.table.client_number",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 127,
+      "translation_key": "admin.client_list.table.created",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 133,
+      "translation_key": "admin.client_list.table.pagination",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 134,
+      "translation_key": "admin.client_list.table.people",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 135,
+      "translation_key": "admin.client_list.table.status",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 136,
+      "translation_key": "admin.client_list.table.type",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 141,
+      "translation_key": "admin.country_reference_list.filter.active",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 143,
+      "translation_key": "admin.country_reference_list.filter.eea",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 145,
+      "translation_key": "admin.country_reference_list.filter.eu",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 149,
+      "translation_key": "admin.country_reference_list.filter.inactive",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 153,
+      "translation_key": "admin.country_reference_list.filter.missing_capital",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 156,
+      "translation_key": "admin.country_reference_list.filter.region",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 164,
+      "translation_key": "admin.country_reference_list.meta.active",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 166,
+      "translation_key": "admin.country_reference_list.meta.eu",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 167,
+      "translation_key": "admin.country_reference_list.meta.missing_capital",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 172,
+      "translation_key": "admin.country_reference_list.table.active",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 174,
+      "translation_key": "admin.country_reference_list.table.address",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 179,
+      "translation_key": "admin.country_reference_list.table.inactive",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 186,
+      "translation_key": "admin.country_reference_list.table.subdivisions",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 188,
+      "translation_key": "admin.pages.settings.two_factor_setup_modal.two_factor_authentication_is_now_enabled_scan_the_qr_code_or_enter_the_setup_key_in_y",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 195,
+      "translation_key": "admin.permission_list.filter.search",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 208,
+      "translation_key": "admin.permission_list.table_permissions.pagination",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 222,
+      "translation_key": "admin.permissions.labels.assigned_roles",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 238,
+      "translation_key": "admin.permissions.modals.edit.title",
+      "locale": "de",
+      "fields": [
+        "meta"
+      ]
+    },
+    {
+      "id": 271,
+      "translation_key": "admin.roles.labels.assignable_through_ui",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 272,
+      "translation_key": "admin.roles.labels.assigned_users",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 273,
+      "translation_key": "admin.roles.labels.sort_order",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 359,
+      "translation_key": "admin.translation_list.meta.group",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 363,
+      "translation_key": "admin.translation_list.meta.namespace",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 372,
+      "translation_key": "admin.translation_list.meta.per_page",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 391,
+      "translation_key": "admin.translation_list.meta.workflow",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 421,
+      "translation_key": "admin.translation_list.modal.suggested_key",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 480,
+      "translation_key": "admin.translation_list.table.no_history_entries_available",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 483,
+      "translation_key": "admin.translation_list.table.open_history",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 498,
+      "translation_key": "admin.translation_list.table.usage",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 513,
+      "translation_key": "admin.user_list.meta.assignable_roles",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 515,
+      "translation_key": "admin.user_list.meta.assigned_users",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 520,
+      "translation_key": "admin.user_list.meta.overview",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 522,
+      "translation_key": "admin.user_list.meta.system",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 535,
+      "translation_key": "admin.user_list.modal.roles",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 536,
+      "translation_key": "admin.user_list.modal.without_role",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 539,
+      "translation_key": "admin.user_list.table.actions",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 541,
+      "translation_key": "admin.user_list.table.edit_roles",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 544,
+      "translation_key": "admin.user_list.table.name",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 545,
+      "translation_key": "admin.user_list.table.roles",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 549,
+      "translation_key": "admin.user_list.table.without_role",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 553,
+      "translation_key": "dynamic.ui.button.show_hide.hide_label",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 554,
+      "translation_key": "dynamic.ui.button.show_hide.show_label",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 564,
+      "translation_key": "laravel_translation_workbench.resources.views.livewire.raw_data.translation_workbench_raw_data",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 565,
+      "translation_key": "layouts.header.search",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 569,
+      "translation_key": "layouts.sidebar.management.create",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 570,
+      "translation_key": "management.people.create_person.form_person.emergency",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 574,
+      "translation_key": "pages.auth.confirm_password.confirm_password",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 581,
+      "translation_key": "pages.auth.register.name",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 584,
+      "translation_key": "pages.settings.appearance.system",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 588,
+      "translation_key": "pages.settings.security.confirm_password",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 592,
+      "translation_key": "pages.settings.security.save",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 597,
+      "translation_key": "pages.settings.two_factor_setup_modal.close",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 674,
+      "translation_key": "ui.button.activate_deactivate.activate_language",
+      "locale": "de",
+      "fields": [
+        "value"
+      ]
+    },
+    {
+      "id": 675,
+      "translation_key": "ui.button.activate_deactivate.deactivate_language",
+      "locale": "de",
+      "fields": [
+        "value"
+      ]
+    },
+    {
+      "id": 676,
+      "translation_key": "ui.button.cancel.cancel",
+      "locale": "de",
+      "fields": [
+        "meta"
+      ]
+    },
+    {
+      "id": 679,
+      "translation_key": "ui.button.delete.delete",
+      "locale": "de",
+      "fields": [
+        "meta"
+      ]
+    },
+    {
+      "id": 701,
+      "translation_key": "ui.laravel_translation_workbench.resources.views.livewire.entries.table_entries.show_entries",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 713,
+      "translation_key": "ui.states.yes",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 715,
+      "translation_key": "ui.table.pagination.to",
+      "locale": "de",
+      "fields": [
+        "value"
+      ]
+    },
+    {
+      "id": 718,
+      "translation_key": "ui.tooltip.badge_required.required",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 721,
+      "translation_key": "ui.welcome.welcome",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 738,
+      "translation_key": "admin.translation_list.table.open_history",
+      "locale": "de-at",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 747,
+      "translation_key": "admin.translation_list.table.open_history",
+      "locale": "de-be",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 756,
+      "translation_key": "admin.translation_list.table.open_history",
+      "locale": "de-ch",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 770,
+      "translation_key": "admin.translation_list.table.open_history",
+      "locale": "de-de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 779,
+      "translation_key": "admin.translation_list.table.open_history",
+      "locale": "de-it",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 788,
+      "translation_key": "admin.translation_list.table.open_history",
+      "locale": "de-li",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 797,
+      "translation_key": "admin.translation_list.table.open_history",
+      "locale": "de-lu",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 808,
+      "translation_key": "account.preferences.current_user.nickname",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 818,
+      "translation_key": "admin.app_settings.app_settings",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 827,
+      "translation_key": "admin.app_settings.locale.current",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 829,
+      "translation_key": "admin.app_settings.locale.do_you_really_want_to_deactivate_this_language",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 844,
+      "translation_key": "admin.app_settings.locale.the_country_language_flag_of_the_global_available_app_ui_language",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 859,
+      "translation_key": "admin.app_settings.meta_overview.overview",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 868,
+      "translation_key": "admin.app_settings.table_icon_registry.available",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 869,
+      "translation_key": "admin.app_settings.table_icon_registry.icon",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 871,
+      "translation_key": "admin.app_settings.table_icon_registry.label",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 872,
+      "translation_key": "admin.app_settings.table_icon_registry.missing",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 873,
+      "translation_key": "admin.app_settings.table_icon_registry.status",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 874,
+      "translation_key": "admin.app_settings.table_icon_registry.text",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 875,
+      "translation_key": "admin.app_settings.table_icon_registry.view",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 876,
+      "translation_key": "admin.app_settings.table_role_badges.color",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 877,
+      "translation_key": "admin.app_settings.table_role_badges.icon",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 881,
+      "translation_key": "admin.app_settings.table_role_badges.preview",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 883,
+      "translation_key": "admin.app_settings.table_role_badges.role",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 887,
+      "translation_key": "admin.app_settings.table_role_badges.status",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 888,
+      "translation_key": "admin.app_settings.table_role_badges.text",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 890,
+      "translation_key": "admin.app_settings.table_role_badges.variant",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 894,
+      "translation_key": "admin.app_settings.without_role",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 896,
+      "translation_key": "admin.client_list.filter.all_statuses",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 897,
+      "translation_key": "admin.client_list.filter.all_types",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 900,
+      "translation_key": "admin.client_list.filter.filter_by_status",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 909,
+      "translation_key": "admin.client_list.filter.with_people",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 910,
+      "translation_key": "admin.client_list.filter.without_people",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 920,
+      "translation_key": "admin.client_list.meta.with_people",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 921,
+      "translation_key": "admin.client_list.meta.without_people",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 925,
+      "translation_key": "admin.client_list.table.client_number",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 926,
+      "translation_key": "admin.client_list.table.created",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 932,
+      "translation_key": "admin.client_list.table.pagination",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 933,
+      "translation_key": "admin.client_list.table.people",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 934,
+      "translation_key": "admin.client_list.table.status",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 935,
+      "translation_key": "admin.client_list.table.type",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 940,
+      "translation_key": "admin.country_reference_list.filter.active",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 942,
+      "translation_key": "admin.country_reference_list.filter.eea",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 944,
+      "translation_key": "admin.country_reference_list.filter.eu",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 948,
+      "translation_key": "admin.country_reference_list.filter.inactive",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 952,
+      "translation_key": "admin.country_reference_list.filter.missing_capital",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 955,
+      "translation_key": "admin.country_reference_list.filter.region",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 963,
+      "translation_key": "admin.country_reference_list.meta.active",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 965,
+      "translation_key": "admin.country_reference_list.meta.eu",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 966,
+      "translation_key": "admin.country_reference_list.meta.missing_capital",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 971,
+      "translation_key": "admin.country_reference_list.table.active",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 973,
+      "translation_key": "admin.country_reference_list.table.address",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 979,
+      "translation_key": "admin.country_reference_list.table.inactive",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 987,
+      "translation_key": "admin.country_reference_list.table.subdivisions",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 990,
+      "translation_key": "admin.pages.settings.two_factor_setup_modal.two_factor_authentication_is_now_enabled_scan_the_qr_code_or_enter_the_setup_key_in_y",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 993,
+      "translation_key": "admin.permission_list.filter.filter_by_category",
+      "locale": "en",
+      "fields": [
+        "value"
+      ]
+    },
+    {
+      "id": 997,
+      "translation_key": "admin.permission_list.filter.search",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1010,
+      "translation_key": "admin.permission_list.table_permissions.pagination",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1024,
+      "translation_key": "admin.permissions.labels.assigned_roles",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1040,
+      "translation_key": "admin.permissions.modals.edit.title",
+      "locale": "en",
+      "fields": [
+        "meta"
+      ]
+    },
+    {
+      "id": 1074,
+      "translation_key": "admin.roles.labels.assignable_through_ui",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1075,
+      "translation_key": "admin.roles.labels.assigned_users",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1076,
+      "translation_key": "admin.roles.labels.sort_order",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1162,
+      "translation_key": "admin.translation_list.meta.group",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1166,
+      "translation_key": "admin.translation_list.meta.namespace",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1175,
+      "translation_key": "admin.translation_list.meta.per_page",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1194,
+      "translation_key": "admin.translation_list.meta.workflow",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1224,
+      "translation_key": "admin.translation_list.modal.suggested_key",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1283,
+      "translation_key": "admin.translation_list.table.no_history_entries_available",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1286,
+      "translation_key": "admin.translation_list.table.open_history",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1301,
+      "translation_key": "admin.translation_list.table.usage",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1316,
+      "translation_key": "admin.user_list.meta.assignable_roles",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1318,
+      "translation_key": "admin.user_list.meta.assigned_users",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1323,
+      "translation_key": "admin.user_list.meta.overview",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1325,
+      "translation_key": "admin.user_list.meta.system",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1338,
+      "translation_key": "admin.user_list.modal.roles",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1339,
+      "translation_key": "admin.user_list.modal.without_role",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1342,
+      "translation_key": "admin.user_list.table.actions",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1344,
+      "translation_key": "admin.user_list.table.edit_roles",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1347,
+      "translation_key": "admin.user_list.table.name",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1349,
+      "translation_key": "admin.user_list.table.roles",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1353,
+      "translation_key": "admin.user_list.table.without_role",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1357,
+      "translation_key": "dynamic.ui.button.show_hide.hide_label",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1358,
+      "translation_key": "dynamic.ui.button.show_hide.show_label",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1368,
+      "translation_key": "laravel_translation_workbench.resources.views.livewire.raw_data.translation_workbench_raw_data",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1369,
+      "translation_key": "layouts.header.search",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1373,
+      "translation_key": "layouts.sidebar.management.create",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1374,
+      "translation_key": "management.people.create_person.form_person.emergency",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1378,
+      "translation_key": "pages.auth.confirm_password.confirm_password",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1385,
+      "translation_key": "pages.auth.register.name",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1388,
+      "translation_key": "pages.settings.appearance.system",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1392,
+      "translation_key": "pages.settings.security.confirm_password",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1396,
+      "translation_key": "pages.settings.security.save",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1401,
+      "translation_key": "pages.settings.two_factor_setup_modal.close",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1480,
+      "translation_key": "ui.button.cancel.cancel",
+      "locale": "en",
+      "fields": [
+        "meta"
+      ]
+    },
+    {
+      "id": 1483,
+      "translation_key": "ui.button.delete.delete",
+      "locale": "en",
+      "fields": [
+        "meta"
+      ]
+    },
+    {
+      "id": 1505,
+      "translation_key": "ui.laravel_translation_workbench.resources.views.livewire.entries.table_entries.show_entries",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1517,
+      "translation_key": "ui.states.yes",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1522,
+      "translation_key": "ui.tooltip.badge_required.required",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1525,
+      "translation_key": "ui.welcome.welcome",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1536,
+      "translation_key": "management.people.edit_person.sections.documents.archive_modal.category",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1537,
+      "translation_key": "management.people.edit_person.sections.documents.archive_modal.category",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1550,
+      "translation_key": "ui.open",
+      "locale": "en",
+      "fields": [
+        "meta"
+      ]
+    },
+    {
+      "id": 1551,
+      "translation_key": "ui.open",
+      "locale": "de",
+      "fields": [
+        "meta"
+      ]
+    },
+    {
+      "id": 1575,
+      "translation_key": "ui.badge.create_person.person_created",
+      "locale": "de",
+      "fields": [
+        "meta"
+      ]
+    },
+    {
+      "id": 1611,
+      "translation_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.dev_playground",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1612,
+      "translation_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.dev_playground",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1735,
+      "translation_key": "ui.all.all-entries",
+      "locale": "en",
+      "fields": [
+        "value"
+      ]
+    },
+    {
+      "id": 1736,
+      "translation_key": "ui.all.all-entries",
+      "locale": "de",
+      "fields": [
+        "value"
+      ]
+    },
+    {
+      "id": 1737,
+      "translation_key": "ui.states.all-statuses",
+      "locale": "en",
+      "fields": [
+        "value"
+      ]
+    },
+    {
+      "id": 1739,
+      "translation_key": "ui.all.all-types",
+      "locale": "en",
+      "fields": [
+        "value"
+      ]
+    },
+    {
+      "id": 1740,
+      "translation_key": "ui.all.all-types",
+      "locale": "de",
+      "fields": [
+        "value"
+      ]
+    },
+    {
+      "id": 1751,
+      "translation_key": "admin.permissions.actions.edit_role_permissions",
+      "locale": "de-at",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1752,
+      "translation_key": "admin.permissions.actions.edit_role_permissions",
+      "locale": "de-ch",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1753,
+      "translation_key": "admin.permissions.actions.edit_role_permissions",
+      "locale": "de-it",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1920,
+      "translation_key": "ui.literal.literal-testing",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1921,
+      "translation_key": "ui.literal.literal-testing",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1926,
+      "translation_key": "ui.literal.literal-testing-2",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1927,
+      "translation_key": "ui.literal.literal-testing-2",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1930,
+      "translation_key": "ui.label.label-testing-2",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1931,
+      "translation_key": "ui.label.label-testing-2",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1932,
+      "translation_key": "ui.table.per_page_selector.per_page",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1933,
+      "translation_key": "ui.table.per_page_selector.per_page",
+      "locale": "de-at",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1934,
+      "translation_key": "ui.table.per_page_selector.per_page",
+      "locale": "de-be",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1935,
+      "translation_key": "ui.table.per_page_selector.per_page",
+      "locale": "de-ch",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1936,
+      "translation_key": "ui.table.per_page_selector.per_page",
+      "locale": "de-de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1937,
+      "translation_key": "ui.table.per_page_selector.per_page",
+      "locale": "de-it",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1938,
+      "translation_key": "ui.table.per_page_selector.per_page",
+      "locale": "de-li",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1939,
+      "translation_key": "ui.table.per_page_selector.per_page",
+      "locale": "de-lu",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1940,
+      "translation_key": "ui.table.per_page_selector.per_page",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1995,
+      "translation_key": "pages.auth.register.already_have_an_account",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1996,
+      "translation_key": "pages.auth.register.already_have_an_account",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 1998,
+      "translation_key": "ui.assignable-through-ui",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 2002,
+      "translation_key": "ui.assignable-through-ui",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 2007,
+      "translation_key": "admin.roles.actions.create",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 2008,
+      "translation_key": "admin.translation_list.modal.edit",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 2009,
+      "translation_key": "pages.settings.two_factor_setup_modal.confirm",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 2011,
+      "translation_key": "admin.roles.actions.create",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 2012,
+      "translation_key": "admin.translation_list.modal.edit",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 2013,
+      "translation_key": "pages.settings.two_factor_setup_modal.confirm",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 2031,
+      "translation_key": "admin.translation_list.modal_edit.open_next_editable_entry",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 2033,
+      "translation_key": "ui.button.prev_edit.open_previous_editable_entry",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 2034,
+      "translation_key": "admin.translation_list.modal_edit.open_next_editable_entry",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 2036,
+      "translation_key": "ui.button.prev_edit.open_previous_editable_entry",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 2099,
+      "translation_key": "admin.client_list.filter.filtering",
+      "locale": "de",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "id": 2101,
+      "translation_key": "admin.client_list.filter.filtering",
+      "locale": "en",
+      "fields": [
+        "status"
+      ]
+    }
+  ],
+  "verified_comparison": {
+    "existing_rows_checked": 2216,
+    "unchanged_in_value_status_meta_key": 1975,
+    "obsolete_to_active": 211,
+    "active_to_obsolete": 12,
+    "value_changes": 9,
+    "metadata_only_changes": 9,
+    "new_rows": 184,
+    "notes": [
+      "Values_updated and event counts include SQLite 0 versus PHP false comparisons for is_source_locale. These totals are not a PostgreSQL change forecast.",
+      "The actual value/status/meta/key comparison is independent of is_source_locale.",
+      "Reactivation and text differences demonstrate authority conflicts; individual correctness still requires review."
+    ]
+  }
+}

@@ -381,7 +381,6 @@ class RuntimeDynamicTranslationCollector
             'candidate_values_count' => count($values),
             'candidate_values' => json_encode($values, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'confidence' => 'runtime',
-            'review_status' => 'pending',
             'status' => 'active',
             'meta' => json_encode([
                 'source' => 'translation-workbench:runtime-collector',
@@ -399,6 +398,7 @@ class RuntimeDynamicTranslationCollector
             DB::table('translation_workbench_dynamic_source_candidates')->insert([
                 'dynamic_source_id' => $sourceId,
                 ...$attributes,
+                'review_status' => 'pending',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

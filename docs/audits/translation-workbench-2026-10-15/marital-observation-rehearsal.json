@@ -1,0 +1,33 @@
+{
+    "mode": "rollback_rehearsal",
+    "backup": "/home/gunreip/code/buergerfrs/storage/app/private/marital-observation-20261015-212444-32f94294.json",
+    "file_hashes": {
+        "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php": "5a95f34f638cef3ef89e0adb1ad81fe426e4d2dfee0d6cf4ec2b3b2e487b67d6",
+        "app/Livewire/Management/People/EditPerson.php": "08ee85a7f81d6423e0882d2b376589f34e38ee59efb30c5a737b091a150b5185"
+    },
+    "observation_id": 17,
+    "finding_id": 9254,
+    "key_id": 3452,
+    "changes": {
+        "findings": {
+            "9254": [
+                "meta",
+                "updated_at"
+            ]
+        },
+        "option_discoveries": {
+            "17": [
+                "matched_entry_id",
+                "workbench_suggested_key",
+                "suggested_state",
+                "label_usage",
+                "source_reference",
+                "last_seen_at",
+                "meta",
+                "updated_at"
+            ]
+        }
+    },
+    "ui_unchanged": true,
+    "repeat_without_new_events": true
+}

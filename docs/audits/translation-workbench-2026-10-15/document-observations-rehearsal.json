@@ -1,0 +1,105 @@
+{
+    "mode": "rollback_rehearsal",
+    "targets": {
+        "4": [
+            9256,
+            3039
+        ],
+        "9": [
+            9258,
+            3039
+        ],
+        "10": [
+            9246,
+            3267
+        ],
+        "12": [
+            23230,
+            3267
+        ],
+        "13": [
+            9264,
+            3039
+        ]
+    },
+    "backup": "\/home\/gunreip\/code\/buergerfrs\/storage\/app\/private\/document-observations-20261015-215531-4c5a6e40",
+    "file_hashes": {
+        "resources\/views\/components\/management\/people\/create-person\/sections\/\u26a1documents.blade.php": "1285f8205e2760c1389191fa68240848e7b2fa33d92fd2967856ba94b2df34e0",
+        "resources\/views\/components\/management\/people\/edit-person\/sections\/documents\/\u26a1add-modal.blade.php": "b33b77ab84237aa3ef8bce7fc5c2a52948edcc59d8d165b7ed4aef2c0e207c4d",
+        "resources\/views\/components\/management\/people\/edit-person\/sections\/\u26a1documents.blade.php": "6336acfad4adadfc3d697516756c29ccd1197358d89e734d91be9daef523b813"
+    },
+    "changes": {
+        "findings": {
+            "9246": [
+                "meta",
+                "updated_at"
+            ],
+            "9256": [
+                "meta",
+                "updated_at"
+            ],
+            "9258": [
+                "meta",
+                "updated_at"
+            ],
+            "9264": [
+                "meta",
+                "updated_at"
+            ]
+        },
+        "option_discoveries": {
+            "4": [
+                "matched_entry_id",
+                "workbench_suggested_key",
+                "suggested_state",
+                "label_usage",
+                "status",
+                "last_seen_at",
+                "meta",
+                "updated_at"
+            ],
+            "9": [
+                "matched_entry_id",
+                "workbench_suggested_key",
+                "suggested_state",
+                "label_usage",
+                "status",
+                "last_seen_at",
+                "meta",
+                "updated_at"
+            ],
+            "10": [
+                "matched_entry_id",
+                "workbench_suggested_key",
+                "suggested_state",
+                "label_usage",
+                "status",
+                "last_seen_at",
+                "meta",
+                "updated_at"
+            ],
+            "12": [
+                "matched_entry_id",
+                "workbench_suggested_key",
+                "suggested_state",
+                "label_usage",
+                "status",
+                "last_seen_at",
+                "meta",
+                "updated_at"
+            ],
+            "13": [
+                "matched_entry_id",
+                "workbench_suggested_key",
+                "suggested_state",
+                "label_usage",
+                "status",
+                "last_seen_at",
+                "meta",
+                "updated_at"
+            ]
+        }
+    },
+    "ui_unchanged": true,
+    "repeat_without_new_events": true
+}

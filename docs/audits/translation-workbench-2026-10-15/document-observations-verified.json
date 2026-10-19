@@ -1,0 +1,27 @@
+{
+    "mode": "read_only_verified",
+    "targets": {
+        "4": [
+            9256,
+            3039
+        ],
+        "9": [
+            9258,
+            3039
+        ],
+        "10": [
+            9246,
+            3267
+        ],
+        "12": [
+            23230,
+            3267
+        ],
+        "13": [
+            9264,
+            3039
+        ]
+    },
+    "ui_unchanged": true,
+    "runtime_and_translation_tables_unchanged": true
+}

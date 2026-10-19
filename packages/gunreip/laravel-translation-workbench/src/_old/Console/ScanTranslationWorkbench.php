@@ -63,7 +63,10 @@ class ScanTranslationWorkbench extends Command
             return self::FAILURE;
         }
 
-        $items = $scanner->scan($paths);
+        $scan = $scanner->scanWithManifest($paths, $markObsolete
+            ? TranslationWorkbenchOccurrence::query()->distinct()->pluck('source_path') : []);
+        $items = $scan['items'];
+        $scannedPaths = $scan['reconciliation_paths'];
         $summary = [
             'found' => $items->count(),
             'created' => 0,
@@ -82,7 +85,7 @@ class ScanTranslationWorkbench extends Command
         ];
 
         if (! $dryRun) {
-            DB::transaction(function () use ($items, $truncate, $markObsolete, $now, &$summary): void {
+            DB::transaction(function () use ($items, $scannedPaths, $truncate, $markObsolete, $now, &$summary): void {
                 $seenSignatures = [];
                 $seenFingerprints = [];
 
@@ -102,14 +105,19 @@ class ScanTranslationWorkbench extends Command
                 }
 
                 if ($markObsolete) {
-                    $summary['obsolete'] = $this->markMissingEntriesObsolete($seenFingerprints, $now);
-                    $summary['occurrences_stale'] = $this->markMissingOccurrencesStale($seenSignatures, $now);
+                    $summary['occurrences_stale'] = $this->markMissingOccurrencesStale($seenSignatures, $scannedPaths, $now);
+                    $summary['obsolete'] = $this->markMissingEntriesObsolete($seenFingerprints, $scannedPaths, $now);
                 }
             });
         }
 
         $this->components->info('Translation workbench scan finished.');
         $this->line('Items found: ' . number_format($summary['found']));
+        $this->line('Files successfully scanned: ' . count($scan['scanned_paths']));
+        $this->line('Missing files in successfully scanned directories: ' . count($scan['missing_paths']));
+        if ($markObsolete && $scan['reconciliation_paths'] === []) {
+            $this->warn('No eligible files were successfully scanned; missing-occurrence reconciliation was skipped. Check the requested paths and exclusions.');
+        }
         $this->line('Commented out: ' . number_format($summary['commented_out'] ?? 0));
 
         if ($dryRun) {
@@ -449,12 +457,15 @@ class ScanTranslationWorkbench extends Command
 
     /**
      * @param  array<int, string>  $seenFingerprints
+     * @param  array<int, string>  $scannedPaths
      */
-    private function markMissingEntriesObsolete(array $seenFingerprints, mixed $now): int
+    private function markMissingEntriesObsolete(array $seenFingerprints, array $scannedPaths, mixed $now): int
     {
         $count = 0;
 
         TranslationWorkbenchEntry::query()
+            ->whereHas('occurrences', fn ($query) => $query->whereIn('source_path', $scannedPaths))
+            ->whereDoesntHave('occurrences', fn ($query) => $query->where('status', '!=', 'stale'))
             ->where('status', '!=', 'obsolete')
             ->when($seenFingerprints !== [], fn($query) => $query->whereNotIn('fingerprint', array_values(array_unique($seenFingerprints))))
             ->orderBy('id')
@@ -481,12 +492,14 @@ class ScanTranslationWorkbench extends Command
 
     /**
      * @param  array<int, string>  $seenSignatures
+     * @param  array<int, string>  $scannedPaths
      */
-    private function markMissingOccurrencesStale(array $seenSignatures, mixed $now): int
+    private function markMissingOccurrencesStale(array $seenSignatures, array $scannedPaths, mixed $now): int
     {
         $count = 0;
 
         TranslationWorkbenchOccurrence::query()
+            ->whereIn('source_path', $scannedPaths)
             ->where('status', '!=', 'stale')
             ->when($seenSignatures !== [], fn($query) => $query->whereNotIn('source_signature', array_values(array_unique($seenSignatures))))
             ->orderBy('id')

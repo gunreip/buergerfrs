@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Schema;
 use Throwable;
 
 /**
- * Exports translation values from database records into lang files.
+ * Compares legacy translation records with lang files without publishing.
  */
 class TranslationsExportLangFiles extends Command
 {
@@ -29,13 +29,18 @@ class TranslationsExportLangFiles extends Command
     /**
      * The console command description.
      */
-    protected $description = 'Export translation values from database to lang/{locale}/*.php and lang/{locale}.json files.';
+    protected $description = 'Compare legacy translation values with lang files (--dry-run only); publication belongs to Translation Workbench.';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
+        if (! (bool) $this->option('dry-run')) {
+            $this->error('Legacy export writes are disabled. No language files were written. Use --dry-run for comparison; publish reviewed Workbench values through translation-workbench:export-lang-files.');
+
+            return self::FAILURE;
+        }
         $locales = $this->targetLocales();
         $dryRun = (bool) $this->option('dry-run');
 
@@ -68,14 +73,11 @@ class TranslationsExportLangFiles extends Command
         foreach ($locales as $locale) {
             if (! File::isDirectory(lang_path($locale))) {
                 $createdDirectories++;
-                if (! $dryRun) {
-                    File::ensureDirectoryExists(lang_path($locale));
-                }
             }
         }
 
         foreach ($plans as $plan) {
-            $result = $this->writeTranslationFile($plan['path'], $plan['content'], $dryRun);
+            $result = $this->previewTranslationFile($plan['path'], $plan['content']);
             $writtenFiles += $result['written'];
             $createdFiles += $result['created'];
             $updatedFiles += $result['updated'];
@@ -83,7 +85,7 @@ class TranslationsExportLangFiles extends Command
             $rows[] = [$plan['locale'], $this->relativePath($plan['path']), $result['status']];
         }
 
-        $this->components->info('Translation export finished.');
+        $this->components->info('Legacy export comparison finished; publication belongs to Translation Workbench.');
 
         if ($rows !== []) {
             $this->table(['Locale', 'File', 'Status'], $rows);
@@ -92,9 +94,9 @@ class TranslationsExportLangFiles extends Command
         }
 
         $this->line('');
-        $this->line('Directories created: '.$createdDirectories);
-        $this->line('Files created: '.$createdFiles);
-        $this->line('Files updated: '.$updatedFiles);
+        $this->line('Directories that would be created: '.$createdDirectories);
+        $this->line('Files that would be created: '.$createdFiles);
+        $this->line('Files that would be updated: '.$updatedFiles);
         $this->line('Files unchanged: '.$unchangedFiles);
 
         if ($dryRun) {
@@ -446,25 +448,21 @@ class TranslationsExportLangFiles extends Command
     /**
      * @return array{status: string, created: int, updated: int, unchanged: int, written: int}
      */
-    private function writeTranslationFile(
+    private function previewTranslationFile(
         string $path,
         string $content,
-        bool $dryRun,
     ): array {
         $exists = File::exists($path);
         $current = $exists ? (string) File::get($path) : null;
 
         if (! $exists) {
-            if (! $dryRun) {
-                File::put($path, $content);
-            }
 
             return [
-                'status' => $dryRun ? 'would_create' : 'created',
+                'status' => 'would_create',
                 'created' => 1,
                 'updated' => 0,
                 'unchanged' => 0,
-                'written' => 1,
+                'written' => 0,
             ];
         }
 
@@ -478,16 +476,13 @@ class TranslationsExportLangFiles extends Command
             ];
         }
 
-        if (! $dryRun) {
-            File::put($path, $content);
-        }
 
         return [
-            'status' => $dryRun ? 'would_update' : 'updated',
+            'status' => 'would_update',
             'created' => 0,
             'updated' => 1,
             'unchanged' => 0,
-            'written' => 1,
+            'written' => 0,
         ];
     }
 

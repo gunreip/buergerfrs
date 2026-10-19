@@ -6,6 +6,10 @@
     wire:model="dynamicEditModalOpen"
 >
     <div class="space-y-4">
+        <flux:button variant="outline" size="sm" icon="check-badge" wire:click="openValueApproval('scalar')">
+            {{ __('Review stored values') }}
+        </flux:button>
+        <flux:error name="scalarEditConflict" />
         <div class="flex items-start gap-3">
             <div class="min-w-0 space-y-1">
                 <div class="flex min-w-0 flex-wrap items-center gap-2">

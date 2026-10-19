@@ -22,7 +22,7 @@ class TranslationWorkbenchDynamicSourceLinkWriter
      * @param  array<int, array<string, mixed>>  $runtimeSources
      * @param  array<string, mixed>  $relatedSource
      */
-    public function confirm(object $selectedFinding, array $runtimeSources, array $relatedSource): void
+    public function confirm(object $selectedFinding, array $runtimeSources, array $relatedSource, array $expectedLinks): void
     {
         app(TranslationWorkbenchEditorAccess::class)->authorize();
 
@@ -39,7 +39,11 @@ class TranslationWorkbenchDynamicSourceLinkWriter
         $createdOrUpdated = [];
         $oldValues = [];
 
-        DB::transaction(function () use ($runtimeSources, $relatedSource, $selectedFinding, $key, $finding, &$createdOrUpdated, &$oldValues): void {
+        DB::transaction(function () use ($runtimeSources, $relatedSource, $selectedFinding, $key, $finding, $expectedLinks, &$createdOrUpdated, &$oldValues): void {
+            [$consumerFinding, $consumerKey] = $this->consumerOwner($relatedSource);
+            $relatedSource = $this->currentSource($relatedSource, false);
+            $runtimeSources = $runtimeSources->map(fn (array $source) => $this->currentSource($source, true));
+            $this->requireCurrentLinks($runtimeSources->pluck('id')->all(), $relatedSource['id'], $expectedLinks);
             foreach ($runtimeSources as $runtimeSource) {
                 $candidateReference = 'dynamic_source:'.$relatedSource['id'];
                 $candidateValues = collect($relatedSource['values'] ?? [])
@@ -48,8 +52,8 @@ class TranslationWorkbenchDynamicSourceLinkWriter
                     ])
                     ->all();
                 $attributes = [
-                    'key_id' => $runtimeSource['key_id'] ?? $selectedFinding->key_id,
-                    'finding_id' => $relatedSource['finding_id'] ?? $selectedFinding->id,
+                    'key_id' => $consumerKey,
+                    'finding_id' => $consumerFinding,
                     'suggested_key' => $relatedSource['suggested_key'] ?? $selectedFinding->suggested_key,
                     'dynamic_scope' => $relatedSource['dynamic_scope'] ?? $selectedFinding->dynamic_scope,
                     'source_expression' => $relatedSource['source_expression'] ?? null,
@@ -147,11 +151,101 @@ class TranslationWorkbenchDynamicSourceLinkWriter
 
     }
 
+    /** The same ordered snapshot is used for the displayed review and the transactional comparison. */
+    public function linkSnapshot(array $runtimeSourceIds, int $relatedSourceId, bool $lock = false): array
+    {
+        $query = DB::table('translation_workbench_dynamic_source_candidates')
+            ->whereIn('dynamic_source_id', $runtimeSourceIds)
+            ->where('candidate_source_type', 'related_dynamic_source')
+            ->where('candidate_reference', 'dynamic_source:'.$relatedSourceId)
+            ->orderBy('id');
+        if ($lock) {
+            $query->lockForUpdate();
+        }
+
+        return $query->get(['id', 'dynamic_source_id', 'key_id', 'finding_id', 'review_status', 'status', 'candidate_values'])
+            ->map(static fn (object $row): array => (array) $row)->all();
+    }
+
+    private function requireCurrentLinks(array $runtimeSourceIds, int $relatedSourceId, array $expectedLinks): void
+    {
+        if ($this->linkSnapshot($runtimeSourceIds, $relatedSourceId, true) !== $expectedLinks) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'dynamicSourceLinkRelatedSourceId' => __('The links have changed since the source review. Close and reopen the confirmation before saving.'),
+            ]);
+        }
+    }
+
+    /** Read and lock the authoritative snapshot; reject a preview that changed before this write. */
+    private function currentSource(array $preview, bool $runtime): array
+    {
+        $invalid = static function (): never {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'dynamicSourceLinkRelatedSourceId' => __('The source values or provenance have changed. Refresh the source review before confirming.'),
+            ]);
+        };
+        $source = DB::table('translation_workbench_dynamic_sources')->where('id', $preview['id'] ?? null)->lockForUpdate()->first();
+        if (! $source || ! in_array($source->status, ['active', 'needs_review'], true)
+            || in_array($source->source_type, ['runtime_options', 'runtime_db_options'], true) !== $runtime) {
+            $invalid();
+        }
+        $displayText = static fn ($value) => trim((string) $value) === '' ? null : trim((string) $value);
+        foreach (['key_id', 'finding_id', 'source_type', 'dynamic_scope', 'source_expression', 'source_reference'] as $field) {
+            $actual = $source->{$field};
+            $shown = $preview[$field] ?? null;
+            if (! in_array($field, ['key_id', 'finding_id'], true)) {
+                $actual = $displayText($actual);
+                $shown = $displayText($shown);
+            }
+            if ($shown !== $actual) { $invalid(); }
+        }
+        $values = DB::table('translation_workbench_dynamic_source_values')->where('dynamic_source_id', $source->id)
+            ->where('status', '<>', 'obsolete')->orderBy('value_key')->lockForUpdate()
+            ->get(['value_key', 'native_label', 'status'])->map(fn ($row) => (array) $row)->all();
+        $normalize = static fn (array $rows) => collect($rows)->map(fn ($row) => [
+            'value_key' => (string) $row['value_key'], 'native_label' => $displayText($row['native_label']), 'status' => $row['status'],
+        ])->sortBy('value_key')->values()->all();
+        if ($normalize($values) !== $normalize($preview['values'] ?? [])) { $invalid(); }
+        $key = $source->key_id ? TranslationWorkbenchKey::find($source->key_id) : null;
+        if ($key?->status === 'obsolete') { $invalid(); }
+
+        return [...(array) $source, 'suggested_key' => $key?->suggested_key, 'values' => $values, 'values_count' => count($values)];
+    }
+
+    /** Resolve the consumer's current identity; a runtime provider's key is not its consumer's key. */
+    private function consumerOwner(array $relatedSource): array
+    {
+        $invalid = static function (): never {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'dynamicSourceLinkRelatedSourceId' => __('The source assignment has changed or is no longer active. Refresh the source review before confirming.'),
+            ]);
+        };
+        $source = DB::table('translation_workbench_dynamic_sources')->where('id', $relatedSource['id'])->lockForUpdate()->first();
+        if (! $source || $source->status === 'obsolete' || ! $source->finding_id
+            || $source->finding_id !== ($relatedSource['finding_id'] ?? null)
+            || $source->key_id !== ($relatedSource['key_id'] ?? null)) {
+            $invalid();
+        }
+        $finding = TranslationWorkbenchFinding::with('sourceFile')->whereKey($source->finding_id)->lockForUpdate()->first();
+        if (! $finding || $finding->status !== 'active' || $finding->sourceFile?->status !== 'active') {
+            $invalid();
+        }
+        $keys = DB::table('translation_workbench_key_findings as links')
+            ->join('translation_workbench_keys as keys', 'keys.id', '=', 'links.key_id')
+            ->where('links.finding_id', $finding->id)->where('links.status', 'active')->where('keys.status', '<>', 'obsolete')
+            ->pluck('keys.id')->unique()->values();
+        if ($keys->count() !== 1 || ($source->key_id !== null && $source->key_id !== $keys->sole())) {
+            $invalid();
+        }
+
+        return [$finding->id, $keys->sole()];
+    }
+
     /**
      * @param  array<int, array<string, mixed>>  $runtimeSources
      * @param  array<string, mixed>  $relatedSource
      */
-    public function unlink(object $selectedFinding, array $runtimeSources, array $relatedSource): bool
+    public function unlink(object $selectedFinding, array $runtimeSources, array $relatedSource, array $expectedLinks): bool
     {
         app(TranslationWorkbenchEditorAccess::class)->authorize();
 
@@ -172,16 +266,32 @@ class TranslationWorkbenchDynamicSourceLinkWriter
         $oldValues = [];
         $newValues = [];
 
-        DB::transaction(function () use ($runtimeSourceIds, $candidateReference, $relatedSource, $runtimeSources, $key, $finding, &$oldValues, &$newValues): void {
+        DB::transaction(function () use ($runtimeSourceIds, $candidateReference, $relatedSource, $runtimeSources, $key, $finding, $expectedLinks, &$oldValues, &$newValues): void {
+            [$consumerFinding, $consumerKey] = $this->consumerOwner($relatedSource);
+            $this->currentSource($relatedSource, false);
+            foreach ($runtimeSources as $runtimeSource) {
+                $this->currentSource($runtimeSource, true);
+            }
+
+            $this->requireCurrentLinks($runtimeSourceIds, $relatedSource['id'], $expectedLinks);
+
             $candidates = DB::table('translation_workbench_dynamic_source_candidates')
                 ->whereIn('dynamic_source_id', $runtimeSourceIds)
                 ->where('candidate_source_type', 'related_dynamic_source')
                 ->where('candidate_reference', $candidateReference)
                 ->where('status', 'active')
-                ->get();
+                ->lockForUpdate()->get();
 
             if ($candidates->isEmpty()) {
                 return;
+            }
+
+            foreach ($candidates as $candidate) {
+                if ($candidate->key_id !== $consumerKey || $candidate->finding_id !== $consumerFinding) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'dynamicSourceLinkRelatedSourceId' => __('The link ownership has changed. Reopen the source review before removing links.'),
+                    ]);
+                }
             }
 
             $oldValues = $candidates

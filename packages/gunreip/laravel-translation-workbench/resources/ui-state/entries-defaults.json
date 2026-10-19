@@ -5,7 +5,7 @@
     "findingValueSearch": "",
     "findingValueSearchExact": false,
     "findingValueSearchCaseSensitive": false,
-    "findingStatus": "all",
+    "findingIdSearch": "",
     "findingKind": "all",
     "findingCandidateType": "all",
     "findingNamespace": "all",

@@ -1,0 +1,152 @@
+{
+  "scope_files": 1668,
+  "summary": {
+    "unchanged": 18142,
+    "ignored": 129,
+    "reappeared": 3,
+    "new": 974,
+    "ambiguous": 157,
+    "moved": 508,
+    "missing": 47
+  },
+  "assignment_issues": {
+    "multiple_active_assignments": 662,
+    "no_active_assignment": 99
+  },
+  "reviewed_differences": 0,
+  "selected_findings": [
+    {
+      "state": "unchanged",
+      "path": "resources/views/components/admin/partials/activity-log/table/⚡all.blade.php",
+      "old_line": 468,
+      "line": 468,
+      "finding_ids": [
+        3618
+      ],
+      "scanned_key": "admin.permissions.modals.roles.changes",
+      "assignments": [
+        {
+          "finding_id": 3618,
+          "id": 1236,
+          "translation_key": "admin.permissions.modals.roles.changes",
+          "review_status": "pending",
+          "status": "open"
+        }
+      ],
+      "assignment_issue": null,
+      "reviewed_key_differs_from_code": false
+    },
+    {
+      "state": "unchanged",
+      "path": "resources/views/components/admin/partials/activity-log/table/⚡app.blade.php",
+      "old_line": 313,
+      "line": 313,
+      "finding_ids": [
+        3630
+      ],
+      "scanned_key": "admin.permissions.modals.roles.changes",
+      "assignments": [
+        {
+          "finding_id": 3630,
+          "id": 1236,
+          "translation_key": "admin.permissions.modals.roles.changes",
+          "review_status": "pending",
+          "status": "open"
+        },
+        {
+          "finding_id": 3630,
+          "id": 1249,
+          "translation_key": "admin.permissions.modals.roles.changes",
+          "review_status": "pending",
+          "status": "open"
+        }
+      ],
+      "assignment_issue": "multiple_active_assignments",
+      "reviewed_key_differs_from_code": false
+    },
+    {
+      "state": "unchanged",
+      "path": "resources/views/components/admin/partials/activity-log/table/⚡artisan.blade.php",
+      "old_line": 352,
+      "line": 352,
+      "finding_ids": [
+        3640
+      ],
+      "scanned_key": "admin.permissions.modals.roles.changes",
+      "assignments": [
+        {
+          "finding_id": 3640,
+          "id": 1236,
+          "translation_key": "admin.permissions.modals.roles.changes",
+          "review_status": "pending",
+          "status": "open"
+        },
+        {
+          "finding_id": 3640,
+          "id": 1263,
+          "translation_key": "admin.permissions.modals.roles.changes",
+          "review_status": "pending",
+          "status": "open"
+        }
+      ],
+      "assignment_issue": "multiple_active_assignments",
+      "reviewed_key_differs_from_code": false
+    },
+    {
+      "state": "unchanged",
+      "path": "resources/views/components/admin/partials/activity-log/table/⚡system.blade.php",
+      "old_line": 323,
+      "line": 323,
+      "finding_ids": [
+        3652
+      ],
+      "scanned_key": "admin.permissions.modals.roles.changes",
+      "assignments": [
+        {
+          "finding_id": 3652,
+          "id": 1236,
+          "translation_key": "admin.permissions.modals.roles.changes",
+          "review_status": "pending",
+          "status": "open"
+        },
+        {
+          "finding_id": 3652,
+          "id": 1283,
+          "translation_key": "admin.permissions.modals.roles.changes",
+          "review_status": "pending",
+          "status": "open"
+        }
+      ],
+      "assignment_issue": "multiple_active_assignments",
+      "reviewed_key_differs_from_code": false
+    },
+    {
+      "state": "unchanged",
+      "path": "resources/views/components/admin/partials/permission-list/⚡modal-role-permissions.blade.php",
+      "old_line": 123,
+      "line": 123,
+      "finding_ids": [
+        891
+      ],
+      "scanned_key": "admin.permissions.modals.roles.changes",
+      "assignments": [
+        {
+          "finding_id": 891,
+          "id": 1236,
+          "translation_key": "admin.permissions.modals.roles.changes",
+          "review_status": "pending",
+          "status": "open"
+        },
+        {
+          "finding_id": 891,
+          "id": 1858,
+          "translation_key": "admin.permissions.modals.roles.changes",
+          "review_status": "pending",
+          "status": "open"
+        }
+      ],
+      "assignment_issue": "multiple_active_assignments",
+      "reviewed_key_differs_from_code": false
+    }
+  ]
+}

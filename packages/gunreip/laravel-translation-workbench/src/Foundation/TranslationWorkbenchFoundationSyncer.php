@@ -27,10 +27,15 @@ class TranslationWorkbenchFoundationSyncer
 
     /**
      * @param  Collection<int, DiscoveredTranslation>  $items
+     * @param  array<int, string>|null  $reconciliationPaths Successfully read or confirmed missing files from the scan manifest.
      * @return array<string, int>
      */
-    public function sync(Collection $items, bool $truncate = false, bool $markObsolete = false): array
+    public function sync(Collection $items, bool $truncate = false, bool $markObsolete = false, ?array $reconciliationPaths = null): array
     {
+        if ($markObsolete && $reconciliationPaths === null) {
+            throw new \InvalidArgumentException('Missing-occurrence reconciliation requires the successfully scanned file manifest.');
+        }
+
         $summary = [
             'found' => $items->count(),
             'truncated' => 0,
@@ -51,14 +56,45 @@ class TranslationWorkbenchFoundationSyncer
         ];
         $now = now();
 
-        DB::transaction(function () use ($items, $truncate, $markObsolete, $now, &$summary): void {
+        DB::transaction(function () use ($items, $reconciliationPaths, $truncate, $markObsolete, $now, &$summary): void {
             $sourceFiles = [];
 
             if ($truncate) {
                 $summary['truncated'] = $this->truncateFoundationTables();
             }
 
+            // One immutable matching snapshot per file, including occurrences outside selected subsets.
+            if (DB::getDriverName() === 'pgsql') {
+                DB::statement('LOCK TABLE translation_workbench_findings IN SHARE ROW EXCLUSIVE MODE');
+            }
+            $matches = [];
+            foreach ($items->groupBy('sourcePath') as $path => $selectedItems) {
+                $current = app(\Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanner::class)->scanFile(base_path($path));
+                // Explicit scanner items may come from an in-memory scan rather than a physical file.
+                $signatures = $current->pluck('sourceSignature')->flip();
+                $current = $current->concat($selectedItems->reject(fn ($item) => $signatures->has($item->sourceSignature)))->values();
+                $stored = DB::table('translation_workbench_findings as f')
+                    ->join('translation_workbench_source_files as s', 's.id', '=', 'f.source_file_id')
+                    ->where('s.path', $path)->orderBy('f.id')->get(['f.*', 's.path as source_path']);
+                $transitions = app(TranslationWorkbenchCodeUpdateTransition::class)->matches($path, $current, $stored);
+                $transitionIds = array_merge([], ...array_column(array_values($transitions), 'finding_ids'));
+                $matches = [...$matches, ...$transitions];
+                foreach (app(TranslationWorkbenchOccurrenceMatcher::class)->compare(
+                    $current->reject(fn ($item) => isset($transitions[$item->sourceSignature]))->values(),
+                    $stored->reject(fn ($finding) => in_array($finding->id, $transitionIds, true))->values(),
+                ) as $row) {
+                    if (isset($row['source_signature'])) {
+                        $matches[$row['source_signature']] = $row;
+                    }
+                }
+            }
+
             foreach ($items as $item) {
+                $match = $matches[$item->sourceSignature];
+                if ($match['state'] === 'ambiguous') {
+                    throw new \RuntimeException('Ambiguous finding occurrence in '.$item->sourcePath.':'.$item->sourceLine
+                        .' (active candidates: '.implode(', ', $match['finding_ids']).'). No findings were changed.');
+                }
                 if (! array_key_exists($item->sourcePath, $sourceFiles)) {
                     $sourceFileResult = $this->syncSourceFile($item, $now);
                     $sourceFiles[$item->sourcePath] = $sourceFileResult['source_file'];
@@ -66,8 +102,11 @@ class TranslationWorkbenchFoundationSyncer
                     $summary['timeline_events_created'] += $sourceFileResult['timeline_events_created'];
                 }
 
-                $findingResult = $this->syncFinding($item, $sourceFiles[$item->sourcePath], $now);
+                $findingResult = $this->syncFinding($item, $sourceFiles[$item->sourcePath], $now, $match);
                 $summary[$findingResult['result']]++;
+                $summary['findings_obsoleted'] += $findingResult['findings_obsoleted'] ?? 0;
+                $summary['relations_obsoleted'] += $findingResult['relations_obsoleted'] ?? 0;
+                $summary['relations_created'] += $findingResult['relations_created'] ?? 0;
                 $summary['timeline_events_created'] += $findingResult['timeline_events_created'];
                 $obsoletedFindings = $this->markSupersededFindingDuplicates($findingResult['finding'], $item, $now);
                 $summary['findings_obsoleted'] += $obsoletedFindings;
@@ -91,7 +130,42 @@ class TranslationWorkbenchFoundationSyncer
                     continue;
                 }
 
-                $keyResult = $this->syncKey($item, $now);
+                $explicitKey = app(TranslationWorkbenchCodeUpdateTransition::class)->assignedKey($findingResult['finding'], $item)
+                    ?? app(TranslationWorkbenchKeySeparation::class)->assignedKey($findingResult['finding'], $item)
+                    ?? app(TranslationWorkbenchFindingAssignment::class)->assignedKey($findingResult['finding'], $item);
+                // A successor inherits the existing task(s), including unresolved multiple ownership.
+                // Do not generate another key from its new position or silently choose among links.
+                if (! $explicitKey && isset($findingResult['finding']->meta['predecessor_finding_id'])) {
+                    $inherited = TranslationWorkbenchKeyFinding::where('finding_id', $findingResult['finding']->id)->where('status', 'active')->get();
+                    foreach ($inherited as $link) {
+                        $key = TranslationWorkbenchKey::findOrFail($link->key_id);
+                        if ($key->status === 'obsolete') { throw new \RuntimeException('A finding successor points to an archived key. Review its assignment.'); }
+                    }
+                    if ($inherited->isNotEmpty()) { continue; }
+                }
+                if ($explicitKey) {
+                    // This reviewed choice applies only to this current finding; other occurrences
+                    // still pass through the normal consolidation and ownership guards.
+                    $keyResult = ['result' => 'keys_updated', 'key' => $explicitKey, 'timeline_events_created' => 0];
+                } elseif (TranslationWorkbenchSourceRelocation::matches($findingResult['finding'], $item)) {
+                    $key = TranslationWorkbenchSourceRelocation::assignedKey($findingResult['finding']);
+                    $this->assertNoRetiredAssignment($key);
+                    $keyResult = ['result' => 'keys_updated', 'key' => $key, 'timeline_events_created' => 0];
+                } else {
+                    $retainedKey = in_array($match['state'], ['unchanged', 'moved', 'position_refined'], true)
+                        ? $this->reviewedAssignment($findingResult['finding']) : null;
+                    if ($retainedKey) {
+                        $this->assertNoRetiredAssignment($retainedKey);
+                        $keyResult = ['result' => 'keys_updated', 'key' => $retainedKey, 'timeline_events_created' => 0];
+                    } else {
+                        $keyItem = $item;
+                        if ($item->suggestedKey !== $findingResult['finding']->suggested_key) {
+                            $keyItem = new DiscoveredTranslation(...[...get_object_vars($item),
+                                'suggestedKey' => $findingResult['finding']->suggested_key]);
+                        }
+                        $keyResult = $this->syncKey($keyItem, $now);
+                    }
+                }
 
                 if ($keyResult !== null) {
                     $summary[$keyResult['result']]++;
@@ -108,7 +182,7 @@ class TranslationWorkbenchFoundationSyncer
             }
 
             if ($markObsolete && ! $truncate) {
-                $obsoleteResult = $this->markMissingFoundationRowsObsolete($items, $now);
+                $obsoleteResult = $this->markMissingFoundationRowsObsolete($items, $reconciliationPaths, $now);
                 $summary['findings_obsoleted'] += $obsoleteResult['findings_obsoleted'];
                 $summary['relations_obsoleted'] += $obsoleteResult['relations_obsoleted'];
                 $summary['keys_obsoleted'] += $obsoleteResult['keys_obsoleted'];
@@ -117,6 +191,47 @@ class TranslationWorkbenchFoundationSyncer
         });
 
         return $summary;
+    }
+
+    /** Archive only reviewed IDs that a fresh, complete file comparison still reports as missing. */
+    public function reconcileMissingFindings(array $findingIds, array $paths): array
+    {
+        if ($findingIds === [] || $paths === [] || count(array_filter($findingIds, fn ($id) => is_int($id) && $id > 0)) !== count($findingIds)) {
+            throw new \InvalidArgumentException('Explicit finding IDs and source file paths are required.');
+        }
+        return DB::transaction(function () use ($findingIds, $paths): array {
+            if (DB::getDriverName() === 'pgsql') {
+                DB::statement('LOCK TABLE translation_workbench_source_files, translation_workbench_findings, translation_workbench_keys, translation_workbench_key_findings, translation_workbench_timeline_events IN SHARE ROW EXCLUSIVE MODE');
+            }
+            $hashes = [];
+            foreach ($paths as $path) {
+                if (! is_string($path) || is_dir(base_path($path))) {
+                    throw new \InvalidArgumentException('Missing-finding reconciliation accepts explicit file paths only.');
+                }
+                $hashes[$path] = is_file(base_path($path)) ? hash_file('sha256', base_path($path)) : null;
+            }
+            $report = app(TranslationWorkbenchSourceReconciliation::class)->plan($paths);
+            $missing = collect($report['rows'])->where('state', 'missing')->pluck('finding_ids')->flatten()->all();
+            $selected = TranslationWorkbenchFinding::with('sourceFile')->whereIn('id', $findingIds)->get();
+            if ($selected->count() !== count(array_unique($findingIds))) {
+                throw new \RuntimeException('Unknown finding in missing-finding reconciliation.');
+            }
+            foreach ($selected as $finding) {
+                if (! in_array($finding->sourceFile->path, $paths, true)
+                    || ($finding->status !== 'obsolete' && ! in_array($finding->id, $missing, true))) {
+                    throw new \RuntimeException('Finding #'.$finding->id.' is not confirmed missing; nothing was archived.');
+                }
+            }
+            // Missing IDs were verified against all occurrences; no selected subset can hide a live call.
+            $result = $this->markMissingFoundationRowsObsolete(collect(), $paths, now(), $findingIds);
+            foreach ($hashes as $path => $hash) {
+                $current = is_file(base_path($path)) ? hash_file('sha256', base_path($path)) : null;
+                if ($current !== $hash) {
+                    throw new \RuntimeException('Source changed during missing-finding reconciliation; transaction rolled back.');
+                }
+            }
+            return $result;
+        });
     }
 
     /**
@@ -214,6 +329,7 @@ class TranslationWorkbenchFoundationSyncer
         DiscoveredTranslation $item,
         TranslationWorkbenchSourceFile $sourceFile,
         mixed $now,
+        array $match,
     ): array {
         $keyParts = $this->keyPartsFactory->fromKey($item->suggestedKey);
         $isEmptyLiteralFinding = $this->isEmptyLiteralFinding($item);
@@ -225,6 +341,7 @@ class TranslationWorkbenchFoundationSyncer
             'expression_fingerprint' => $item->expressionFingerprint,
             'semantic_fingerprint' => $item->semanticFingerprint,
             'source_line' => $item->sourceLine,
+            'source_column' => $item->sourceColumn,
             'kind' => $item->kind,
             'function_name' => $item->functionName,
             'raw_expression' => $item->rawExpression,
@@ -265,12 +382,62 @@ class TranslationWorkbenchFoundationSyncer
             unset($attributes['dynamic_data_state']);
         }
 
-        $finding = TranslationWorkbenchFinding::query()
-            ->where('source_signature', $item->sourceSignature)
-            ->first();
-
-        if (! $finding && ! $isCommentedOutFinding && ! $isEmptyLiteralFinding) {
-            $finding = $this->uniquelyRelocatedFinding($item, $sourceFile);
+        $finding = isset($match['finding_ids'][0])
+            ? TranslationWorkbenchFinding::findOrFail($match['finding_ids'][0]) : null;
+        $version = null;
+        if ($finding && $match['state'] === 'moved') {
+            $version = app(TranslationWorkbenchFindingVersioner::class)->move($finding, $match['position'], 'translation-workbench:sync-foundation');
+            $finding = $version['finding'];
+        }
+        if ($finding && isset($finding->meta['predecessor_finding_id'])) {
+            // Keep original capture and lineage; a changed location does not change the task.
+            foreach (['suggested_key', 'namespace', 'group', 'path_key', 'scope', 'literal_text'] as $field) {
+                $attributes[$field] = $finding->{$field};
+            }
+            $attributes['meta'] = [...($finding->meta ?? []), ...$attributes['meta']];
+        }
+        if ($finding && isset($finding->meta['explicit_key_assignment'])) {
+            $attributes['meta']['explicit_key_assignment'] = $finding->meta['explicit_key_assignment'];
+        }
+        if ($finding && isset($finding->meta['code_update_assignment'])) {
+            $attributes['meta']['code_update_assignment'] = $finding->meta['code_update_assignment'];
+        }
+        if ($finding && isset($finding->meta['pending_key_separation'])) {
+            $attributes['meta']['pending_key_separation'] = $finding->meta['pending_key_separation'];
+        }
+        if ($finding && $match['state'] === 'code_updated') {
+            unset($attributes['meta']['pending_key_separation']);
+            $attributes['meta']['code_update_assignment'] = [
+                'event_id' => $match['event_id'], 'key_id' => $match['key_id'],
+                'translation_key' => $item->translationKey, 'expression_fingerprint' => $item->expressionFingerprint,
+                'previous_explicit_assignment' => $finding->meta['explicit_key_assignment'] ?? null,
+            ];
+            if (isset($attributes['meta']['explicit_key_assignment'])) {
+                $attributes['meta']['explicit_key_assignment']['translation_key'] = $item->translationKey;
+                $attributes['meta']['explicit_key_assignment']['expression_fingerprint'] = $item->expressionFingerprint;
+            }
+        }
+        if ($finding && isset($attributes['meta']['code_update_assignment'])) {
+            foreach (['suggested_key', 'namespace', 'group', 'path_key', 'scope'] as $field) {
+                $attributes[$field] = $finding->{$field};
+            }
+        }
+        if ($finding && TranslationWorkbenchSourceRelocation::matches($finding, $item)) {
+            // These describe the original capture, not the new file's generated suggestion.
+            foreach (['suggested_key', 'namespace', 'group', 'path_key', 'scope'] as $field) {
+                $attributes[$field] = $finding->{$field};
+            }
+            $attributes['meta'] = [...($finding->meta ?? []), ...$attributes['meta']];
+            foreach (['suggested_key_path', 'suggested_key_name', 'suggested_key_source'] as $field) {
+                if (array_key_exists($field, $finding->meta ?? [])) {
+                    $attributes['meta'][$field] = $finding->meta[$field];
+                }
+            }
+        }
+        // Empty translation calls stay irrelevant and must not create a fresh archive row on every scan.
+        if (! $finding && $isEmptyLiteralFinding) {
+            $finding = TranslationWorkbenchFinding::where('source_signature', $item->sourceSignature)
+                ->where('status', 'obsolete')->orderByDesc('id')->first();
         }
 
         if (! $finding) {
@@ -321,6 +488,17 @@ class TranslationWorkbenchFoundationSyncer
             ];
         }
 
+        // The initial suggestion describes the capture, not the latest scanner rules.
+        foreach (['suggested_key', 'namespace', 'group', 'path_key', 'scope'] as $field) {
+            $attributes[$field] = $finding->{$field};
+        }
+        foreach (['suggested_key_path', 'suggested_key_name', 'suggested_key_source'] as $field) {
+            unset($attributes['meta'][$field]);
+            if (array_key_exists($field, $finding->meta ?? [])) {
+                $attributes['meta'][$field] = $finding->meta[$field];
+            }
+        }
+
         if (
             array_key_exists('dynamic_data_state', $attributes)
             && $finding->dynamic_data_state === 'structured'
@@ -352,52 +530,28 @@ class TranslationWorkbenchFoundationSyncer
         }
 
         return [
-            'result' => 'findings_updated',
+            'result' => $version ? 'findings_created' : 'findings_updated',
             'finding' => $finding,
-            'timeline_events_created' => $changed !== [] ? 1 : 0,
+            'findings_obsoleted' => $version ? 1 : 0,
+            'relations_obsoleted' => $version['relations_obsoleted'] ?? 0,
+            'relations_created' => $version['relations_obsoleted'] ?? 0,
+            'timeline_events_created' => ($changed !== [] ? 1 : 0) + ($version['timeline_events_created'] ?? 0),
         ];
-    }
-
-    /** Preserve identity only when both the current file and active history are unambiguous. */
-    private function uniquelyRelocatedFinding(
-        DiscoveredTranslation $item,
-        TranslationWorkbenchSourceFile $sourceFile,
-    ): ?TranslationWorkbenchFinding {
-        $candidates = TranslationWorkbenchFinding::query()
-            ->where('source_file_id', $sourceFile->id)
-            ->where('expression_fingerprint', $item->expressionFingerprint)
-            ->where('status', 'active')
-            ->get();
-
-        if ($candidates->count() !== 1) {
-            return null;
-        }
-
-        $candidate = $candidates->first();
-        if ($candidate->kind !== $item->kind || $candidate->suggested_key !== $item->suggestedKey) {
-            return null;
-        }
-
-        // Inspect the entire file, even when sync() receives only a selected subset.
-        $current = app(\Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanner::class)
-            ->scanFile(base_path($item->sourcePath))
-            ->filter(fn (DiscoveredTranslation $current): bool => ($current->meta['source_context'] ?? '') !== 'commented_out');
-        $matching = $current->filter(fn (DiscoveredTranslation $current): bool => $current->expressionFingerprint === $item->expressionFingerprint);
-
-        if ($matching->count() !== 1 || $matching->first()->sourceSignature !== $item->sourceSignature) {
-            return null;
-        }
-
-        if ($current->contains(fn (DiscoveredTranslation $current): bool => $current->sourceSignature === $candidate->source_signature)) {
-            return null;
-        }
-
-        return $candidate;
     }
 
     /**
      * @return array{result: string, key: TranslationWorkbenchKey, timeline_events_created: int}|null
      */
+    /** An unchanged occurrence with one reviewed scalar task must not acquire a sibling task. */
+    private function reviewedAssignment(TranslationWorkbenchFinding $finding): ?TranslationWorkbenchKey
+    {
+        if ($finding->kind !== 'literal') { return null; }
+        $ids = TranslationWorkbenchKeyFinding::where('finding_id', $finding->id)->where('status', 'active')->pluck('key_id');
+        if ($ids->count() !== 1) { return null; }
+        return TranslationWorkbenchKey::where('id', $ids->first())->where('status', 'open')
+            ->where('review_status', 'reviewed')->where('is_dynamic_key', false)->first();
+    }
+
     private function syncKey(DiscoveredTranslation $item, mixed $now): ?array
     {
         if ($this->isEmptyLiteralFinding($item)) {
@@ -442,10 +596,21 @@ class TranslationWorkbenchFoundationSyncer
             unset($attributes['dynamic_data_state']);
         }
 
+        $fingerprintKey = TranslationWorkbenchKey::query()->where('fingerprint', $fingerprint)->first();
+        if ($fingerprintKey && ($fingerprintKey->meta['reconciled_canonical_key_id'] ?? null)) {
+            $canonical = TranslationWorkbenchKey::find($fingerprintKey->meta['reconciled_canonical_key_id']);
+            if (! $canonical || $fingerprintKey->status !== 'obsolete' || $canonical->status === 'obsolete'
+                || $canonical->translation_key !== $item->translationKey
+                || ($canonical->meta['reconciled_canonical_key_id'] ?? null)) {
+                throw new \InvalidArgumentException('The reconciled key assignment changed. Review it before syncing.');
+            }
+            return ['result' => 'keys_updated', 'key' => $canonical, 'timeline_events_created' => 0];
+        }
+        if ($fingerprintKey) {
+            $this->assertNoRetiredAssignment($fingerprintKey);
+        }
         $key = $this->reviewedKeyForTranslationKey($item->translationKey, $fingerprint)
-            ?? TranslationWorkbenchKey::query()
-                ->where('fingerprint', $fingerprint)
-                ->first();
+            ?? $fingerprintKey;
 
         if (! $key) {
             $key = TranslationWorkbenchKey::query()->create([
@@ -481,6 +646,7 @@ class TranslationWorkbenchFoundationSyncer
                     'source' => 'translation-workbench:sync-foundation',
                     'source_path' => $item->sourcePath,
                     'source_line' => $item->sourceLine,
+                    'source_column' => $item->sourceColumn,
                 ],
             );
 
@@ -531,6 +697,8 @@ class TranslationWorkbenchFoundationSyncer
             $attributes['status'] = 'open';
         }
 
+        $attributes['suggested_key'] = $key->suggested_key;
+
         $oldValues = $key->only(array_keys($attributes));
         $changed = $this->changedValues($oldValues, $attributes);
 
@@ -546,6 +714,7 @@ class TranslationWorkbenchFoundationSyncer
                     'source' => 'translation-workbench:sync-foundation',
                     'source_path' => $item->sourcePath,
                     'source_line' => $item->sourceLine,
+                    'source_column' => $item->sourceColumn,
                     'changed_fields' => array_keys($changed),
                 ],
             );
@@ -624,6 +793,26 @@ class TranslationWorkbenchFoundationSyncer
         return $result;
     }
 
+    /** Historical consolidation is a decision, not a missing occurrence to reactivate. */
+    private function assertNoRetiredAssignment(TranslationWorkbenchKey $key): void
+    {
+        $decision = TranslationWorkbenchKeyFinding::query()
+            ->where(function ($query) use ($key): void {
+                $query->where(function ($query) use ($key): void {
+                    $query->where('key_id', $key->id)->where('status', 'merged');
+                })->orWhere(function ($query) use ($key): void {
+                    $query->where('meta->source', 'duplicate_key_consolidation')
+                        ->where('meta->duplicate_key_id', (int) $key->id);
+                });
+            })->orderBy('id')->first();
+
+        if ($decision) {
+            throw new \InvalidArgumentException(__('Foundation sync stopped: key #:key has a recorded consolidation at link #:link (finding #:finding). Resolve the assignment explicitly before scanning again; the sync transaction was rolled back.', [
+                'key' => $key->id, 'link' => $decision->id, 'finding' => $decision->finding_id,
+            ]));
+        }
+    }
+
     private function reviewedKeyForTranslationKey(?string $translationKey, string $fingerprint): ?TranslationWorkbenchKey
     {
         $translationKey = trim((string) $translationKey);
@@ -632,14 +821,24 @@ class TranslationWorkbenchFoundationSyncer
             return null;
         }
 
-        return TranslationWorkbenchKey::query()
+        $owners = TranslationWorkbenchKey::query()
             ->where('translation_key', $translationKey)
             ->where('status', 'open')
             ->where('review_status', 'reviewed')
-            ->where('fingerprint', '!=', $fingerprint)
-            ->orderByDesc('is_ui_key')
-            ->orderBy('id')
-            ->first();
+            ->orderBy('id')->get();
+
+        if ($owners->count() > 1) {
+            throw new \InvalidArgumentException(__('Foundation sync stopped: translation key :key has multiple reviewed owners (:ids). Resolve the assignment explicitly; the sync transaction was rolled back.', [
+                'key' => $translationKey, 'ids' => $owners->pluck('id')->implode(', '),
+            ]));
+        }
+
+        $owner = $owners->first();
+        if ($owner) {
+            $this->assertNoRetiredAssignment($owner);
+        }
+
+        return $owner && $owner->fingerprint !== $fingerprint ? $owner : null;
     }
 
     /**
@@ -748,6 +947,7 @@ class TranslationWorkbenchFoundationSyncer
             ->where('id', '!=', $finding->id)
             ->where('source_file_id', $finding->source_file_id)
             ->where('source_line', $item->sourceLine)
+            ->where('source_column', $item->sourceColumn)
             ->where('raw_expression', $item->rawExpression)
             ->where('suggested_key', $item->suggestedKey)
             ->where('status', 'active')
@@ -774,6 +974,7 @@ class TranslationWorkbenchFoundationSyncer
                     'reason' => 'same_source_expression_reclassified',
                     'source_path' => $item->sourcePath,
                     'source_line' => $item->sourceLine,
+                    'source_column' => $item->sourceColumn,
                     'suggested_key' => $item->suggestedKey,
                 ],
             );
@@ -786,7 +987,7 @@ class TranslationWorkbenchFoundationSyncer
      * @param  Collection<int, DiscoveredTranslation>  $items
      * @return array{findings_obsoleted: int, relations_obsoleted: int, keys_obsoleted: int, timeline_events_created: int}
      */
-    private function markMissingFoundationRowsObsolete(Collection $items, mixed $now): array
+    private function markMissingFoundationRowsObsolete(Collection $items, array $reconciliationPaths, mixed $now, ?array $findingIds = null): array
     {
         $result = [
             'findings_obsoleted' => 0,
@@ -794,8 +995,7 @@ class TranslationWorkbenchFoundationSyncer
             'keys_obsoleted' => 0,
             'timeline_events_created' => 0,
         ];
-        $sourcePaths = $items
-            ->pluck('sourcePath')
+        $sourcePaths = collect($reconciliationPaths)
             ->filter()
             ->unique()
             ->values();
@@ -820,6 +1020,7 @@ class TranslationWorkbenchFoundationSyncer
 
         $missingFindingsQuery = TranslationWorkbenchFinding::query()
             ->whereIn('source_file_id', $sourceFileIds->all())
+            ->when($findingIds !== null, fn ($query) => $query->whereIn('id', $findingIds))
             ->where('status', 'active');
 
         if ($seenSourceSignatures !== []) {
@@ -939,11 +1140,14 @@ class TranslationWorkbenchFoundationSyncer
             ->where('relation_type', 'candidate')
             ->first();
 
+        if ($relation && $relation->status === 'merged') {
+            throw new \InvalidArgumentException(__('Foundation sync stopped: link #:link was merged. Resolve the assignment explicitly; the sync transaction was rolled back.', ['link' => $relation->id]));
+        }
         $attributes = [
             'status' => 'active',
-            'meta' => [
-                'source' => 'foundation_sync',
-            ],
+            'meta' => ($relation->meta['source'] ?? null) === 'duplicate_key_consolidation'
+                ? $relation->meta
+                : [...($relation?->meta ?? []), 'source' => 'foundation_sync'],
         ];
 
         if (! $relation) {

@@ -35,13 +35,19 @@ class ResolveUnknownDynamicSources extends Command
     {
         if (! $this->hasRequiredTables()) {
             $this->error('Dynamic source tables are missing. Run the workbench migrations first.');
-            $this->writeTranslationWorkbenchReport();
+            $this->writeTranslationWorkbenchReport(summary: [
+                'dry_run' => (bool) $this->option('dry-run'),
+                'exit_code' => self::FAILURE,
+                'error' => 'missing_required_tables',
+            ]);
 
             return self::FAILURE;
         }
 
         $dryRun = (bool) $this->option('dry-run');
         $summary = [
+            'dry_run' => $dryRun,
+            'exit_code' => self::SUCCESS,
             'unknown_sources' => 0,
             'sources_resolved' => 0,
             'sources_still_unknown' => 0,
@@ -59,6 +65,19 @@ class ResolveUnknownDynamicSources extends Command
 
         $sources = $this->unknownSources();
         $summary['unknown_sources'] = $sources->count();
+        $conflicts = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchDynamicKeyAssignment::class)
+            ->conflicts($sources->pluck('finding_id')->all());
+        if ($conflicts->isNotEmpty()) {
+            $this->error('Ambiguous active key assignments; no dynamic sources were changed.');
+            foreach ($conflicts as $conflict) {
+                $this->line('Finding '.$conflict['finding_id'].' -> Key IDs: '.implode(', ', $conflict['key_ids']));
+            }
+            $this->writeTranslationWorkbenchReport(
+                summary: [...$summary, 'exit_code' => self::FAILURE, 'error' => 'ambiguous_active_key_assignments', 'conflicting_findings' => $conflicts->count()],
+                planSummary: ['key_assignment_conflicts' => $conflicts->values()->all()],
+            );
+            return self::FAILURE;
+        }
 
         foreach ($sources as $source) {
             $discovery = $this->bestDiscoveryForSource($source);
@@ -77,14 +96,67 @@ class ResolveUnknownDynamicSources extends Command
                 continue;
             }
 
-            $attributes = $this->resolvedAttributes($source, $discovery, $options);
-
             if ($dryRun) {
                 $summary['sources_resolved']++;
 
                 continue;
             }
 
+            foreach ($this->resolveDiscoverySource($source, $discovery) as $key => $value) {
+                $summary[$key] += $value;
+            }
+        }
+
+        $this->components->info('Translation Workbench unknown dynamic source resolver finished.');
+        $this->line('Unknown sources: ' . number_format($summary['unknown_sources']));
+        $this->line('Sources resolved: ' . number_format($summary['sources_resolved']));
+        $this->line('Sources still unknown: ' . number_format($summary['sources_still_unknown']));
+        $this->line('Source values created: ' . number_format($summary['source_values_created']));
+        $this->line('Source values updated: ' . number_format($summary['source_values_updated']));
+        $this->line('Runtime sources matched: ' . number_format($summary['runtime_sources_matched']));
+        $this->line('Runtime source links created: ' . number_format($summary['runtime_source_links_created']));
+        $this->line('Runtime source links updated: ' . number_format($summary['runtime_source_links_updated']));
+
+        if ($dryRun) {
+            $this->warn('Dry run only: no unknown dynamic sources were updated.');
+        }
+
+        $this->writeTranslationWorkbenchReport(summary: $summary);
+
+        return self::SUCCESS;
+    }
+
+    /** Resolve one selected source atomically; successful earlier sources remain committed. */
+    private function resolveDiscoverySource(object $source, object $discovery): array
+    {
+        return DB::transaction(function () use ($source, $discovery): array {
+            foreach ([['translation_workbench_dynamic_sources', $source], ['translation_workbench_option_discoveries', $discovery]] as [$table, $selected]) {
+                $current = DB::table($table)->where('id', $selected->id)->lockForUpdate()->first();
+                if (! $current || $current->status === 'obsolete') {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'dynamic_source' => __('The source or discovery changed during resolution. Run the resolver again with the current context.'),
+                    ]);
+                }
+                // Query-added aliases are not stored fields; compare all actual stored fields.
+                foreach ((array) $current as $field => $value) {
+                    if (! property_exists($selected, $field) || $selected->{$field} !== $value) {
+                        throw \Illuminate\Validation\ValidationException::withMessages([
+                            'dynamic_source' => __('The source or discovery changed during resolution. Run the resolver again with the current context.'),
+                        ]);
+                    }
+                }
+            }
+            app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchDynamicKeyAssignment::class)->lockCurrentSourceOwner($source);
+            $options = $this->optionsFromDiscovery($discovery);
+            if ($options === []) {
+                throw new \LogicException('A discovery without options cannot resolve a dynamic source.');
+            }
+            $attributes = $this->resolvedAttributes($source, $discovery, $options);
+            $summary = [
+                'sources_resolved' => 0, 'sources_still_unknown' => 0,
+                'source_values_created' => 0, 'source_values_updated' => 0, 'source_values_unchanged' => 0,
+                'dynamic_states_structured' => 0, 'timeline_events_created' => 0,
+            ];
             $oldValues = collect($attributes)
                 ->keys()
                 ->mapWithKeys(static fn(string $key): array => [$key => $source->{$key} ?? null])
@@ -113,25 +185,9 @@ class ResolveUnknownDynamicSources extends Command
             }
 
             $summary['dynamic_states_structured'] += $this->syncStructuredState($source);
-        }
 
-        $this->components->info('Translation Workbench unknown dynamic source resolver finished.');
-        $this->line('Unknown sources: ' . number_format($summary['unknown_sources']));
-        $this->line('Sources resolved: ' . number_format($summary['sources_resolved']));
-        $this->line('Sources still unknown: ' . number_format($summary['sources_still_unknown']));
-        $this->line('Source values created: ' . number_format($summary['source_values_created']));
-        $this->line('Source values updated: ' . number_format($summary['source_values_updated']));
-        $this->line('Runtime sources matched: ' . number_format($summary['runtime_sources_matched']));
-        $this->line('Runtime source links created: ' . number_format($summary['runtime_source_links_created']));
-        $this->line('Runtime source links updated: ' . number_format($summary['runtime_source_links_updated']));
-
-        if ($dryRun) {
-            $this->warn('Dry run only: no unknown dynamic sources were updated.');
-        }
-
-        $this->writeTranslationWorkbenchReport();
-
-        return self::SUCCESS;
+            return $summary;
+        });
     }
 
     private function hasRequiredTables(): bool
@@ -150,10 +206,11 @@ class ResolveUnknownDynamicSources extends Command
      */
     private function unknownSources(): Collection
     {
-        $keyLinks = DB::table('translation_workbench_key_findings')
-            ->selectRaw('finding_id, MIN(key_id) as key_id')
-            ->where('status', 'active')
-            ->groupBy('finding_id');
+        $keyLinks = DB::table('translation_workbench_key_findings as links')
+            ->join('translation_workbench_keys as linked_keys', 'linked_keys.id', '=', 'links.key_id')
+            ->selectRaw('links.finding_id, MIN(links.key_id) as key_id')
+            ->where('links.status', 'active')->where('linked_keys.status', '<>', 'obsolete')
+            ->groupBy('links.finding_id');
 
         return DB::table('translation_workbench_dynamic_sources as sources')
             ->leftJoin('translation_workbench_findings as findings', 'findings.id', '=', 'sources.finding_id')
@@ -163,6 +220,8 @@ class ResolveUnknownDynamicSources extends Command
             })
             ->leftJoin('translation_workbench_keys as keys', 'keys.id', '=', 'key_links.key_id')
             ->where('sources.status', '<>', 'obsolete')
+            ->where('findings.status', 'active')
+            ->where('source_files.status', 'active')
             ->where(function ($query): void {
                 $query
                     ->where('sources.classification', 'unknown')
@@ -172,6 +231,8 @@ class ResolveUnknownDynamicSources extends Command
             ->orderBy('sources.id')
             ->get([
                 'sources.*',
+                'keys.id as assigned_key_id',
+                'findings.source_file_id as finding_source_file_id',
                 'findings.suggested_key as finding_suggested_key',
                 'findings.found_translation_key',
                 'findings.existing_key',
@@ -199,6 +260,7 @@ class ResolveUnknownDynamicSources extends Command
         $query = DB::table('translation_workbench_option_discoveries')
             ->where('status', '<>', 'obsolete')
             ->where(function ($query) use ($source, $keys): void {
+                $query->where('meta->foundation_assignment->finding_id', (int) $source->finding_id);
                 if ($keys->isNotEmpty()) {
                     $query
                         ->orWhereIn('suggested_key', $keys->all())
@@ -210,19 +272,26 @@ class ResolveUnknownDynamicSources extends Command
                     $query->orWhere('scope', $source->dynamic_scope);
                 }
 
-                if (filled($source->finding_source_path ?? $source->source_path)) {
-                    $query->orWhere('source_path', (string) ($source->finding_source_path ?? $source->source_path));
-                }
+                // File proximity can rank identity candidates, but cannot establish an options identity.
             });
 
-        return $query
+        $matches = $query
             ->get()
+            ->filter(fn ($discovery) => \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchDynamicOptionSynchronizer::appliesTo(
+                $discovery, (int) $source->finding_id, $source->key_id === null ? null : (int) $source->key_id,
+            ));
+        $assigned = $matches->filter(function ($discovery): bool {
+            $meta = is_string($discovery->meta) ? json_decode($discovery->meta, true) : $discovery->meta;
+            return ($meta['foundation_assignment']['status'] ?? null) === 'matched';
+        });
+
+        return ($assigned->isNotEmpty() ? $assigned : $matches)
             ->sortByDesc(fn(object $discovery): int => $this->discoveryScore($source, $discovery, $keys))
             ->first();
     }
 
     /**
-     * @param  array<string, int>  $summary
+     * @param  array<string, int|bool>  $summary
      */
     private function tryRuntimeSourceMatch(object $source, array &$summary, bool $dryRun): void
     {
@@ -252,10 +321,12 @@ class ResolveUnknownDynamicSources extends Command
             return null;
         }
 
-        return DB::table('translation_workbench_dynamic_sources as runtime_sources')
+        $matches = DB::table('translation_workbench_dynamic_sources as runtime_sources')
             ->leftJoin('translation_workbench_keys as runtime_keys', 'runtime_keys.id', '=', 'runtime_sources.key_id')
             ->whereIn('runtime_sources.source_type', $this->runtimeSourceTypes())
             ->where('runtime_sources.dynamic_scope', $source->dynamic_scope)
+            ->where('runtime_sources.status', 'active')
+            ->where('runtime_sources.id', '<>', $source->id)
             ->where('runtime_sources.values_count', '>', 0)
             ->whereExists(function ($query): void {
                 $query
@@ -264,21 +335,49 @@ class ResolveUnknownDynamicSources extends Command
                     ->whereColumn('source_values.dynamic_source_id', 'runtime_sources.id')
                     ->whereIn('source_values.status', ['active', 'stale']);
             })
-            ->orderByRaw("CASE WHEN runtime_sources.status = 'active' THEN 0 WHEN runtime_sources.status = 'needs_review' THEN 1 ELSE 2 END")
-            ->orderByDesc('runtime_sources.values_count')
-            ->orderByDesc('runtime_sources.last_seen_at')
             ->orderBy('runtime_sources.id')
-            ->first([
+            ->limit(2)->get([
                 'runtime_sources.*',
                 'runtime_keys.suggested_key as runtime_suggested_key',
                 'runtime_keys.translation_key as runtime_translation_key',
             ]);
+
+        // Scope suggests a source; it cannot resolve competing sources by size or recency.
+        return $matches->count() === 1 ? $matches->sole() : null;
     }
 
     /**
      * @return array{runtime_source_links_created: int, runtime_source_links_updated: int, runtime_source_links_unchanged: int, runtime_sources_reactivated: int, timeline_events_created: int}
      */
     private function syncRuntimeSourceLink(object $runtimeSource, object $consumerSource): array
+    {
+        return DB::transaction(function () use ($runtimeSource, $consumerSource): array {
+            // Same lock order as the manual review: consumer, owner, provider, candidates.
+            foreach ([$consumerSource, $runtimeSource] as $source) {
+                $current = DB::table('translation_workbench_dynamic_sources')->where('id', $source->id)->lockForUpdate()->first();
+                if (! $current || $current->status === 'obsolete') {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'dynamic_source' => __('The source changed during resolution. Run the resolver again with the current source context.'),
+                    ]);
+                }
+                foreach (['key_id', 'finding_id', 'source_type', 'dynamic_scope', 'source_expression', 'status'] as $field) {
+                    if ($current->{$field} !== $source->{$field}) {
+                        throw \Illuminate\Validation\ValidationException::withMessages([
+                            'dynamic_source' => __('The source changed during resolution. Run the resolver again with the current source context.'),
+                        ]);
+                    }
+                }
+                if ($source->id === $consumerSource->id) {
+                    app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchDynamicKeyAssignment::class)->lockCurrentSourceOwner($consumerSource);
+                }
+            }
+
+            return $this->writeRuntimeSourceLink($runtimeSource, $consumerSource);
+        });
+    }
+
+    /** Called only while the consumer/provider rows are locked in the same transaction. */
+    private function writeRuntimeSourceLink(object $runtimeSource, object $consumerSource): array
     {
         $summary = [
             'runtime_source_links_created' => 0,
@@ -319,21 +418,17 @@ class ResolveUnknownDynamicSources extends Command
             ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
         ];
 
-        if ($runtimeSource->status === 'obsolete') {
-            DB::table('translation_workbench_dynamic_sources')
-                ->where('id', $runtimeSource->id)
-                ->update([
-                    'status' => 'active',
-                    'updated_at' => now(),
-                ]);
-            $summary['runtime_sources_reactivated']++;
-        }
-
         $existing = DB::table('translation_workbench_dynamic_source_candidates')
             ->where('dynamic_source_id', $runtimeSource->id)
             ->where('candidate_source_type', 'related_dynamic_source')
             ->where('candidate_reference', $candidateReference)
-            ->first();
+            ->lockForUpdate()->first();
+
+        // Only the review workflow may change a decision or reactivate a retired link.
+        if ($existing && ($existing->review_status !== 'pending' || $existing->status !== 'active')) {
+            $summary['runtime_source_links_unchanged']++;
+            return $summary;
+        }
 
         if (! $existing) {
             DB::table('translation_workbench_dynamic_source_candidates')->insert([
@@ -349,7 +444,6 @@ class ResolveUnknownDynamicSources extends Command
         }
 
         $changedValues = collect($attributes)
-            ->reject(static fn(mixed $value, string $key): bool => $key === 'review_status' && $existing->review_status === 'confirmed')
             ->filter(static fn(mixed $value, string $key): bool => ($existing->{$key} ?? null) != $value)
             ->all();
 
@@ -539,7 +633,7 @@ class ResolveUnknownDynamicSources extends Command
             $existing = DB::table('translation_workbench_dynamic_source_values')
                 ->where('dynamic_source_id', $dynamicSourceId)
                 ->where('value_key', $valueKey)
-                ->first();
+                ->lockForUpdate()->first();
 
             $attributes = [
                 'native_label' => $nativeLabel,

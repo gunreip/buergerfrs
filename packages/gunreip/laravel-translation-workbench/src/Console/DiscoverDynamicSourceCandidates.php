@@ -8,6 +8,9 @@
 namespace Gunreip\TranslationWorkbench\Console;
 
 use Gunreip\TranslationWorkbench\Console\Concerns\WritesTranslationWorkbenchReports;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchTimelineRecorder;
+use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchFinding;
+use Gunreip\TranslationWorkbench\Models\TranslationWorkbenchKey;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -22,38 +25,94 @@ class DiscoverDynamicSourceCandidates extends Command
 {
     use WritesTranslationWorkbenchReports;
 
+    public function __construct(private readonly TranslationWorkbenchTimelineRecorder $timelineRecorder)
+    {
+        parent::__construct();
+    }
+
     public function handle(): int
     {
+        $dryRun = (bool) $this->option('dry-run');
         if (! $this->hasRequiredTables()) {
             $this->error('Dynamic source candidate tables are missing. Run the workbench migrations first.');
-            $this->writeTranslationWorkbenchReport();
+            $this->writeTranslationWorkbenchReport(summary: ['dry_run' => $dryRun, 'exit_code' => self::FAILURE, 'error' => 'missing_required_tables']);
 
             return self::FAILURE;
         }
 
-        $dryRun = (bool) $this->option('dry-run');
         $summary = [
+            'dry_run' => $dryRun,
+            'exit_code' => self::SUCCESS,
             'unresolved_sources' => 0,
             'candidates_discovered' => 0,
             'candidates_created' => 0,
             'candidates_updated' => 0,
             'candidates_unchanged' => 0,
+            'candidates_preserved' => 0,
+            'truncated_value_samples' => 0,
+            'timeline_events_created' => 0,
         ];
 
         $sources = $this->unresolvedSources();
         $summary['unresolved_sources'] = $sources->count();
 
+        $conflicts = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchDynamicKeyAssignment::class)
+            ->conflicts($sources->pluck('finding_id')->filter()->all());
+        if ($conflicts->isNotEmpty()) {
+            $this->error('Ambiguous active key assignments; no candidates were changed.');
+            foreach ($conflicts as $conflict) {
+                $this->line('Finding '.$conflict['finding_id'].' -> Key IDs: '.implode(', ', $conflict['key_ids']));
+            }
+            $this->writeTranslationWorkbenchReport(
+                summary: [...$summary, 'exit_code' => self::FAILURE, 'error' => 'ambiguous_active_key_assignments', 'conflicting_findings' => $conflicts->count()],
+                planSummary: ['key_assignment_conflicts' => $conflicts->all()],
+            );
+            return self::FAILURE;
+        }
+
+        $plan = [];
+        $candidateConflicts = [];
         foreach ($sources as $source) {
             $candidates = $this->candidatesForSource($source);
             $summary['candidates_discovered'] += count($candidates);
-
-            if ($dryRun) {
-                continue;
+            foreach ($candidates as $candidate) {
+                if ($candidate['meta']['value_observation']['truncated'] ?? false) {
+                    $summary['truncated_value_samples']++;
+                    $this->warn('Source '.$source->dynamic_source_id.': candidate '.$candidate['candidate_reference'].' contains only the first 200 distinct values; this is an unverified sample.');
+                }
             }
 
             foreach ($candidates as $candidate) {
+                $matches = $this->candidateMatches($candidate)->get(['id']);
+                if ($matches->count() > 1) {
+                    $candidateConflicts[] = [
+                        'dynamic_source_id' => (int) $source->dynamic_source_id,
+                        'candidate_reference' => $candidate['candidate_reference'],
+                        'candidate_ids' => $matches->pluck('id')->map(fn ($id): int => (int) $id)->all(),
+                    ];
+                }
+                $plan[] = ['source' => $source, 'candidate' => $candidate];
+            }
+        }
+        if ($candidateConflicts !== []) {
+            $this->error('Ambiguous candidate identities; no candidates were changed.');
+            foreach ($candidateConflicts as $conflict) {
+                $this->line('Source '.$conflict['dynamic_source_id'].' ('.$conflict['candidate_reference'].') -> Candidate IDs: '.implode(', ', $conflict['candidate_ids']));
+            }
+            $this->writeTranslationWorkbenchReport(
+                summary: [...$summary, 'exit_code' => self::FAILURE, 'error' => 'ambiguous_candidate_identities', 'candidate_conflicts' => count($candidateConflicts)],
+                planSummary: ['candidate_identity_conflicts' => $candidateConflicts],
+            );
+            return self::FAILURE;
+        }
+
+        if (! $dryRun) {
+            foreach ($plan as ['source' => $source, 'candidate' => $candidate]) {
                 $result = $this->syncCandidate($source, $candidate);
                 $summary[$result]++;
+                if (in_array($result, ['candidates_created', 'candidates_updated'], true)) {
+                    $summary['timeline_events_created']++;
+                }
             }
         }
 
@@ -62,12 +121,13 @@ class DiscoverDynamicSourceCandidates extends Command
         $this->line('Candidates discovered: ' . number_format($summary['candidates_discovered']));
         $this->line('Candidates created: ' . number_format($summary['candidates_created']));
         $this->line('Candidates updated: ' . number_format($summary['candidates_updated']));
+        $this->line('Reviewed/inactive candidates preserved: ' . number_format($summary['candidates_preserved']));
 
         if ($dryRun) {
             $this->warn('Dry run only: no dynamic source candidates were written.');
         }
 
-        $this->writeTranslationWorkbenchReport();
+        $this->writeTranslationWorkbenchReport(summary: $summary);
 
         return self::SUCCESS;
     }
@@ -85,12 +145,15 @@ class DiscoverDynamicSourceCandidates extends Command
     /**
      * @return Collection<int, object>
      */
-    private function unresolvedSources(): Collection
+    private function unresolvedSources(?int $sourceId = null): Collection
     {
-        $keyLinks = DB::table('translation_workbench_key_findings')
-            ->selectRaw('finding_id, MIN(key_id) as key_id')
-            ->where('status', 'active')
-            ->groupBy('finding_id');
+        // MIN only keeps one row per source. Multiple valid keys are rejected by
+        // the command preflight and again under the per-candidate write locks.
+        $keyLinks = DB::table('translation_workbench_key_findings as links')
+            ->join('translation_workbench_keys as linked_keys', 'linked_keys.id', '=', 'links.key_id')
+            ->selectRaw('links.finding_id, MIN(links.key_id) as key_id, COUNT(DISTINCT links.key_id) as key_count')
+            ->where('links.status', 'active')->where('linked_keys.status', '<>', 'obsolete')
+            ->groupBy('links.finding_id');
 
         return DB::table('translation_workbench_dynamic_sources as sources')
             ->leftJoin('translation_workbench_findings as findings', 'findings.id', '=', 'sources.finding_id')
@@ -99,6 +162,21 @@ class DiscoverDynamicSourceCandidates extends Command
                 $join->on('key_links.finding_id', '=', 'findings.id');
             })
             ->leftJoin('translation_workbench_keys as keys', 'keys.id', '=', 'key_links.key_id')
+            ->leftJoin('translation_workbench_keys as source_keys', 'source_keys.id', '=', 'sources.key_id')
+            ->where(function ($query): void {
+                $query->whereNull('sources.finding_id')->orWhere(function ($query): void {
+                    $query->where('findings.status', 'active')->where('source_files.status', 'active');
+                });
+            })
+            ->where(function ($query): void {
+                $query->whereNull('sources.key_id')->orWhere(function ($query): void {
+                    $query->where('source_keys.status', '<>', 'obsolete')
+                        ->where(function ($query): void {
+                            $query->whereNull('sources.finding_id')->orWhereColumn('sources.key_id', 'key_links.key_id')
+                                ->orWhere('key_links.key_count', '>', 1);
+                        });
+                });
+            })
             ->where('sources.status', '<>', 'obsolete')
             ->where(function ($query): void {
                 $query
@@ -106,6 +184,7 @@ class DiscoverDynamicSourceCandidates extends Command
                     ->orWhere('sources.cardinality', 'unknown')
                     ->orWhere('sources.origin', 'unknown');
             })
+            ->when($sourceId !== null, fn ($query) => $query->where('sources.id', $sourceId))
             ->orderBy('sources.id')
             ->get([
                 'sources.id as dynamic_source_id',
@@ -121,8 +200,11 @@ class DiscoverDynamicSourceCandidates extends Command
                 'findings.found_translation_key',
                 'findings.existing_key',
                 'source_files.path as finding_source_path',
-                'keys.translation_key',
-                'keys.suggested_key as key_suggested_key',
+                'findings.source_file_id as finding_source_file_id',
+                'key_links.key_count',
+                'key_links.key_id as assigned_key_id',
+                DB::raw('COALESCE(source_keys.translation_key, keys.translation_key) as translation_key'),
+                DB::raw('COALESCE(source_keys.suggested_key, keys.suggested_key) as key_suggested_key'),
             ]);
     }
 
@@ -140,7 +222,8 @@ class DiscoverDynamicSourceCandidates extends Command
             $model = (string) $match['model'];
             $column = (string) $match['column'];
             $reference = $model . '.' . $column;
-            $values = $this->valuesForModelColumn($model, $column);
+            $observation = $this->valuesForModelColumn($model, $column);
+            $values = $observation['values'];
 
             $candidates[] = $this->candidate(
                 source: $source,
@@ -153,6 +236,7 @@ class DiscoverDynamicSourceCandidates extends Command
                     'model_variable' => $model,
                     'column' => $column,
                     'heuristic' => 'source_expression_model_column',
+                    'value_observation' => $observation['meta'],
                 ],
             );
         }
@@ -239,29 +323,36 @@ class DiscoverDynamicSourceCandidates extends Command
         return null;
     }
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array{values: array, meta: array} */
     private function valuesForModelColumn(string $modelVariable, string $column): array
     {
         $table = match ($modelVariable) {
             'document' => 'person_documents',
             default => null,
         };
-
+        $meta = [
+            'table' => $table, 'column' => $column, 'limit' => 200,
+            'truncated' => false, 'source_verified' => false,
+            'label_origin' => 'raw_database_value',
+        ];
         if (! $table || ! Schema::hasTable($table) || ! Schema::hasColumn($table, $column)) {
-            return [];
+            return ['values' => [], 'meta' => [...$meta, 'status' => 'unavailable']];
         }
 
-        return DB::table($table)
+        // One extra distinct value proves truncation without a separate, racing count query.
+        $observed = DB::table($table)
             ->whereNotNull($column)
             ->select($column)
             ->distinct()
             ->orderBy($column)
-            ->limit(200)
-            ->pluck($column)
-            ->mapWithKeys(static fn(mixed $value): array => [(string) $value => str((string) $value)->headline()->toString()])
-            ->all();
+            ->limit(201)
+            ->pluck($column);
+
+        return [
+            'values' => $observed->take(200)
+                ->mapWithKeys(static fn (mixed $value): array => [(string) $value => (string) $value])->all(),
+            'meta' => [...$meta, 'status' => 'observed', 'truncated' => $observed->count() > 200],
+        ];
     }
 
     /**
@@ -302,50 +393,128 @@ class DiscoverDynamicSourceCandidates extends Command
         ];
     }
 
+    /** Both preflight and locked writes must use exactly the same identity rules. */
+    private function candidateMatches(array $candidate): \Illuminate\Database\Query\Builder
+    {
+        // Availability changes the state, not the identity of a model-column proposal.
+        $types = in_array($candidate['candidate_source_type'], ['model_column', 'model_column_unresolved'], true)
+            ? ['model_column', 'model_column_unresolved']
+            : [$candidate['candidate_source_type']];
+
+        return DB::table('translation_workbench_dynamic_source_candidates')
+            ->where('dynamic_source_id', $candidate['dynamic_source_id'])
+            ->whereIn('candidate_source_type', $types)
+            ->where('candidate_reference', $candidate['candidate_reference'])
+            ->orderBy('id');
+    }
+
+    /** Source is already locked; preserve the context used to build the suggestion. */
+    private function lockCandidateContext(object $source): void
+    {
+        $keyIds = collect([$source->key_id])->filter();
+        if ($source->finding_id !== null) {
+            $finding = DB::table('translation_workbench_findings')->where('id', $source->finding_id)->lockForUpdate()->first();
+            if ($finding) {
+                DB::table('translation_workbench_source_files')->where('id', $finding->source_file_id)->lockForUpdate()->first();
+            }
+            $links = DB::table('translation_workbench_key_findings')->where('finding_id', $source->finding_id)
+                ->where('status', 'active')->orderBy('id')->lockForUpdate()->get();
+            $keyIds = $keyIds->merge($links->pluck('key_id'));
+        }
+        DB::table('translation_workbench_keys')->whereIn('id', $keyIds->unique())->orderBy('id')->lockForUpdate()->get();
+        $fresh = $this->unresolvedSources((int) $source->dynamic_source_id)->first();
+        if (! $fresh || (int) $fresh->key_count > 1) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'dynamic_source' => 'The candidate source ownership changed. Refresh its context before retrying.',
+            ]);
+        }
+        foreach (['translation_key', 'key_suggested_key', 'finding_suggested_key', 'found_translation_key', 'existing_key',
+            'finding_source_path', 'finding_source_file_id', 'assigned_key_id'] as $field) {
+            if (property_exists($source, $field) && $source->{$field} !== $fresh->{$field}) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'dynamic_source' => 'The candidate source context changed. Refresh it before retrying.',
+                ]);
+            }
+        }
+    }
+
     /**
      * @param  array<string, mixed>  $candidate
      */
     private function syncCandidate(object $source, array $candidate): string
     {
-        $existing = DB::table('translation_workbench_dynamic_source_candidates')
-            ->where('dynamic_source_id', $candidate['dynamic_source_id'])
-            ->where('candidate_source_type', $candidate['candidate_source_type'])
-            ->where('candidate_reference', $candidate['candidate_reference'])
-            ->first();
+        return DB::transaction(function () use ($source, $candidate): string {
+            // Serialize discovery and manual review on the same source, including first inserts.
+            $current = DB::table('translation_workbench_dynamic_sources')
+                ->where('id', $source->dynamic_source_id)->lockForUpdate()->first();
+            $changed = $current === null || $current->status === 'obsolete';
+            if ($current) {
+                foreach (['key_id', 'finding_id', 'dynamic_scope', 'source_expression', 'source_type', 'source_reference', 'source_path', 'source_line'] as $field) {
+                    $changed = $changed || $current->{$field} !== $source->{$field};
+                }
+                $changed = $changed || ! in_array('unknown', [$current->classification, $current->cardinality, $current->origin], true);
+            }
+            if ($changed) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'dynamic_source' => 'The dynamic source changed during candidate discovery. Refresh its context before retrying.',
+                ]);
+            }
+            $this->lockCandidateContext($source);
+            $matches = $this->candidateMatches($candidate)->lockForUpdate()->get();
+            if ($matches->count() > 1) {
+                throw new \LogicException('Ambiguous candidate identity for dynamic source '.$source->dynamic_source_id
+                    .' ('.$candidate['candidate_reference'].'); candidate IDs: '.$matches->pluck('id')->implode(', ').'.');
+            }
+            $existing = $matches->first();
+            if ($existing && ($existing->review_status !== 'pending' || $existing->status !== 'active')) {
+                return 'candidates_preserved';
+            }
 
-        $attributes = [
-            ...$candidate,
-            'candidate_values' => $candidate['candidate_values'] !== null
-                ? json_encode($candidate['candidate_values'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
-                : null,
-            'meta' => json_encode($candidate['meta'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-        ];
+            $attributes = [
+                ...$candidate,
+                'candidate_values' => $candidate['candidate_values'] !== null
+                    ? json_encode($candidate['candidate_values'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                    : null,
+                'meta' => json_encode($candidate['meta'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            ];
+            $oldValues = $existing ? collect($attributes)->keys()
+                ->mapWithKeys(fn (string $key): array => [$key => $existing->{$key} ?? null])->all() : null;
+            $changedValues = collect($attributes)->filter(static function (mixed $value, string $key) use ($oldValues): bool {
+                $old = $oldValues[$key] ?? null;
+                if (in_array($key, ['candidate_values', 'meta'], true)) {
+                    return json_decode((string) $old, true) != json_decode((string) $value, true);
+                }
+                return $old != $value;
+            })->all();
+            if ($existing && $changedValues === []) {
+                return 'candidates_unchanged';
+            }
 
-        if (! $existing) {
-            DB::table('translation_workbench_dynamic_source_candidates')->insert([
-                ...$attributes,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            if ($existing) {
+                $candidateId = (int) $existing->id;
+                DB::table('translation_workbench_dynamic_source_candidates')->where('id', $candidateId)
+                    ->update([...$changedValues, 'updated_at' => now()]);
+            } else {
+                $candidateId = DB::table('translation_workbench_dynamic_source_candidates')->insertGetId([
+                    ...$attributes, 'created_at' => now(), 'updated_at' => now(),
+                ]);
+            }
+            $this->timelineRecorder->record(
+                eventType: $existing ? 'dynamic_source_candidate_updated' : 'dynamic_source_candidate_discovered',
+                key: $source->key_id ? TranslationWorkbenchKey::query()->find($source->key_id) : null,
+                finding: $source->finding_id ? TranslationWorkbenchFinding::query()->find($source->finding_id) : null,
+                oldValues: $oldValues,
+                newValues: $attributes,
+                context: [
+                    'source' => 'translation-workbench:discover-dynamic-source-candidates',
+                    'dynamic_source_id' => (int) $source->dynamic_source_id,
+                    'candidate_id' => $candidateId,
+                    'source_path' => $source->source_path,
+                    'source_line' => $source->source_line,
+                ],
+            );
 
-            return 'candidates_created';
-        }
-
-        $changedValues = collect($attributes)
-            ->filter(static fn(mixed $value, string $key): bool => ($existing->{$key} ?? null) != $value)
-            ->all();
-
-        if ($changedValues === []) {
-            return 'candidates_unchanged';
-        }
-
-        DB::table('translation_workbench_dynamic_source_candidates')
-            ->where('id', $existing->id)
-            ->update([
-                ...$changedValues,
-                'updated_at' => now(),
-            ]);
-
-        return 'candidates_updated';
+            return $existing ? 'candidates_updated' : 'candidates_created';
+        });
     }
 }

@@ -44,6 +44,14 @@ class TranslationWorkbenchCodeUpdateApplier
                     ->values()
                     ->all(),
             ]);
+        // A key/limit filter must not conceal other tasks sharing the same source call.
+        $contextPlan = ($keys !== [] || $limit !== null) && $safeUpdates->isNotEmpty()
+            ? $this->planner->plan($safeUpdates->pluck('source_path')->unique()->values()->all()) : $plan;
+        $conflictingExpressions = collect($contextPlan['updates'])
+            ->groupBy(static fn (array $row): string => ($row['source_path'] ?? '')."\n".($row['raw_expression'] ?? ''))
+            ->filter(static fn (Collection $rows): bool => $rows->pluck('translation_key')->unique()->count() > 1
+                || $rows->contains(fn ($row) => in_array($row['reason'] ?? '', ['multiple_reviewed_translation_keys', 'multiple_reviewed_key_records'], true)))
+            ->keys()->flip();
         // Capture the actual pre-write contents; after applyRow() the old expression is gone.
         $originalSources = $write
             ? $safeUpdates->pluck('source_path')->filter()->unique()
@@ -51,8 +59,22 @@ class TranslationWorkbenchCodeUpdateApplier
                 ->mapWithKeys(static fn (string $path): array => [$path => (string) File::get(base_path($path))])
                 ->all()
             : null;
+        $positionedPaths = $safeUpdates->filter(fn ($row) => ($row['requires_positioned_update'] ?? false)
+            || $conflictingExpressions->has(($row['source_path'] ?? '')."\n".($row['raw_expression'] ?? '')))
+            ->pluck('source_path')->unique();
+        $positionedContext = collect($contextPlan['updates'])->whereIn('source_path', $positionedPaths)->map(function ($row) {
+            $review = $this->latestConflictReview((int) $row['finding_id'], (int) $row['key_id']);
+            if ($review && ! in_array($review['decision'], ['duplicate_confirmed_same_key', 'existing_key_should_be_replaced'], true)) {
+                $row['state'] = 'manual_review';
+            }
+            return $row;
+        });
+        $positioned = app(TranslationWorkbenchPositionedCodeUpdates::class)->apply(
+            $safeUpdates->whereIn('source_path', $positionedPaths), $positionedContext, $write);
         $results = $safeUpdates
-            ->map(fn(array $row): array => $this->applyRow($row, $write, $duplicateGroups[
+            ->map(fn(array $row): array => isset($positioned[$row['finding_id']])
+                ? $positioned[$row['finding_id']]
+                : $this->applyRow($row, $write, $duplicateGroups[
                 ($row['source_path'] ?? '') . "\n" . ($row['raw_expression'] ?? '')
             ] ?? null))
             ->values();
@@ -145,6 +167,8 @@ class TranslationWorkbenchCodeUpdateApplier
                     'raw_expression' => $row['raw_expression'] ?? null,
                     'source_path' => $row['source_path'] ?? null,
                     'source_line' => $row['source_line'] ?? null,
+                    'source_column' => $row['source_column'] ?? null,
+                    'source_offset' => $row['source_offset'] ?? null,
                     'translation_key' => $row['translation_key'] ?? null,
                     'reason' => $row['reason'] ?? null,
                     'replacement_scope' => $row['replacement_scope'] ?? null,
@@ -152,6 +176,9 @@ class TranslationWorkbenchCodeUpdateApplier
                 ],
                 newValues: [
                     'new_expression' => $row['new_expression'] ?? null,
+                    'source_hash' => $row['updated_source_hash'] ?? null,
+                    'source_column' => $row['updated_source_column'] ?? null,
+                    'updated_source_line' => $row['updated_source_line'] ?? null,
                     'source_path' => $row['source_path'] ?? null,
                     'source_line' => $row['source_line'] ?? null,
                     'translation_key' => $row['translation_key'] ?? null,
@@ -343,7 +370,7 @@ class TranslationWorkbenchCodeUpdateApplier
                 $oldContent = $originalSources === null ? $currentContent : $originalSources[$sourcePath];
                 $newContent = $currentContent;
 
-                foreach ($originalSources === null ? $fileRows : [] as $row) {
+                foreach ($originalSources === null ? $fileRows->sortByDesc('source_offset') : [] as $row) {
                     $rawExpression = (string) ($row['raw_expression'] ?? '');
                     $newExpression = (string) ($row['new_expression'] ?? '');
 
@@ -351,7 +378,9 @@ class TranslationWorkbenchCodeUpdateApplier
                         continue;
                     }
 
-                    $newContent = $this->replaceActiveCalls($newContent, $rawExpression, $newExpression);
+                    $newContent = ($row['replacement_scope'] ?? null) === 'single_verified_source_position'
+                        ? substr_replace($newContent, $newExpression, $row['source_offset'], $row['source_length'])
+                        : $this->replaceActiveCalls($newContent, $rawExpression, $newExpression);
                 }
 
                 if ($oldContent === $newContent) {

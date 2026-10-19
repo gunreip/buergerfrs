@@ -26,6 +26,21 @@ class TranslationWorkbenchLangFileExporter
      */
     public function export(array $locales = [], array $namespaces = [], bool $write = false, array $keys = [], bool $dynamicOptions = false): array
     {
+        if ($write) {
+            throw new \LogicException('Direct lang-file writes are disabled. Use TranslationWorkbenchPublicationRunner with a reviewed preview.');
+        }
+
+        return $this->buildExport($locales, $namespaces, $keys, $dynamicOptions, false);
+    }
+
+    /** Server-side prepared contents; never returned by the normal report API. */
+    public function prepare(array $locales, array $keys, bool $dynamicOptions = false): array
+    {
+        return $this->buildExport($locales, [], $keys, $dynamicOptions, true);
+    }
+
+    private function buildExport(array $locales, array $namespaces, array $keys, bool $dynamicOptions, bool $retainContents): array
+    {
         // Explicit keys are exact matches, never wildcards or an implicit "all".
         foreach ($keys as $key) {
             if (! is_string($key) || trim($key) === '') {
@@ -47,7 +62,6 @@ class TranslationWorkbenchLangFileExporter
         $plans = $fileScopes
             ->map(fn(array $scope): array => $this->planFile(
                 rows: $rowGroups->get($scope['key'], collect()),
-                write: $write,
                 locale: $scope['locale'],
                 namespace: $scope['namespace'],
                 keys: $keys,
@@ -55,10 +69,18 @@ class TranslationWorkbenchLangFileExporter
             ))
             ->values()
             ->all();
-        $timelineEventsCreated = $write ? $this->recordLangFileTimelineEvents($plans) : 0;
+        foreach ($plans as &$plan) {
+            $plan['write_skipped_no_changes'] = false;
+            // Prepared file contents are internal, not part of the JSON report contract.
+            if (! $retainContents) {
+                unset($plan['_contents']);
+            }
+        }
+        unset($plan);
+        $timelineEventsCreated = 0;
 
         return [
-            'dry_run' => ! $write,
+            'dry_run' => true,
             'dynamic_options' => $dynamicOptions,
             'keys' => $keys,
             'locales' => collect($plans)->pluck('locale')->unique()->sort()->values()->all(),
@@ -151,7 +173,7 @@ class TranslationWorkbenchLangFileExporter
     {
         $locales = $this->normalizedFilters($locales);
         $namespaces = $this->normalizedFilters($namespaces);
-        $activeScopes = $rows
+        $activeScopes = $rows->toBase()
             ->map(static fn(TranslationWorkbenchLangValue $row): array => [
                 'locale' => (string) $row->locale,
                 'namespace' => (string) $row->namespace,
@@ -199,14 +221,21 @@ class TranslationWorkbenchLangFileExporter
      * @param  Collection<int, TranslationWorkbenchLangValue>  $rows
      * @return array<string, mixed>
      */
-    private function planFile(Collection $rows, bool $write, ?string $locale = null, ?string $namespace = null, array $keys = [], bool $prune = true): array
+    private function planFile(Collection $rows, ?string $locale = null, ?string $namespace = null, array $keys = [], bool $prune = true): array
     {
         /** @var TranslationWorkbenchLangValue $first */
         $first = $rows->first();
         $locale = (string) ($locale ?? $first?->locale);
         $namespace = (string) ($namespace ?? $first?->namespace);
         $path = lang_path($locale . '/' . $namespace . '.php');
+        $sourceHash = $this->fileHash($path);
+        if ($sourceHash !== null && function_exists('opcache_invalidate')) {
+            opcache_invalidate($path, true);
+        }
         $existing = $this->readExistingFile($path);
+        if ($sourceHash !== $this->fileHash($path)) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['valueApproval' => __('A language file changed while planning. Create a new publication preview.')]);
+        }
         $merged = $existing;
         $changes = [];
         $pruned = [];
@@ -288,31 +317,21 @@ class TranslationWorkbenchLangFileExporter
         }
 
         $changes = collect($changes);
-        $written = false;
-        $hasWritableChanges = $changes
-            ->whereIn('state', ['new', 'changed'])
-            ->isNotEmpty() || count($pruned) > 0;
-
-        if ($write && $conflicts === [] && $hasWritableChanges) {
-            $merged = $this->removeEmptyArrays($merged);
-
-            File::ensureDirectoryExists(dirname($path));
-            File::put($path, $this->formatPhpArray($merged));
-            $written = true;
-        }
-
         return [
             'locale' => $locale,
             'namespace' => $namespace,
             'path' => $this->relativePath($path),
+            'source_hash' => $sourceHash,
+            'result_hash' => hash('sha256', $this->formatPhpArray($this->removeEmptyArrays($merged))),
             'rows' => $rows->count(),
             'values_new' => $changes->where('state', 'new')->count(),
             'values_changed' => $changes->where('state', 'changed')->count(),
             'values_unchanged' => $changes->where('state', 'unchanged')->count(),
             'values_pruned' => count($pruned),
             'values_conflicted' => count($conflicts),
-            'written' => $written,
-            'write_skipped_no_changes' => $write && $conflicts === [] && ! $hasWritableChanges,
+            'written' => false,
+            'write_skipped_no_changes' => false,
+            '_contents' => $this->formatPhpArray($this->removeEmptyArrays($merged)),
             'conflicts' => $conflicts,
             'pruned' => $pruned,
             'changes' => $changes
@@ -362,17 +381,26 @@ class TranslationWorkbenchLangFileExporter
     /**
      * @param  array<int, array<string, mixed>>  $plans
      */
-    private function recordLangFileTimelineEvents(array $plans): int
+    public function recordPreparedPublicationHistory(array $plans, string $runId): int
+    {
+        return $this->recordLangFileTimelineEvents($plans, $runId);
+    }
+
+    private function recordLangFileTimelineEvents(array $plans, ?string $runId = null): int
     {
         $eventRows = collect($plans)
             ->filter(static fn(array $plan): bool => (bool) ($plan['written'] ?? false))
-            ->flatMap(function (array $plan): Collection {
+            ->flatMap(function (array $plan) use ($runId): Collection {
                 $baseContext = [
                     'source' => 'translation-workbench:export-lang-files',
                     'locale' => $plan['locale'] ?? null,
                     'namespace' => $plan['namespace'] ?? null,
                     'path' => $plan['path'] ?? null,
                 ];
+
+                if ($runId !== null) {
+                    $baseContext['publication_run_id'] = $runId;
+                }
 
                 $changes = collect($plan['changes'] ?? [])
                     ->map(static fn(array $change): array => [
@@ -474,8 +502,32 @@ class TranslationWorkbenchLangFileExporter
     }
 
     /**
-     * @return array<string, mixed>
+     * @param array<int, array<string, mixed>> $plans
      */
+    public function assertSourceFilesUnchanged(array $plans): void
+    {
+        foreach ($plans as $plan) {
+            $path = lang_path($plan['locale'].'/'.$plan['namespace'].'.php');
+            if (! array_key_exists('source_hash', $plan) || $plan['source_hash'] !== $this->fileHash($path)) {
+                throw \Illuminate\Validation\ValidationException::withMessages(['valueApproval' => __('A language file changed. Create a new publication preview before continuing.')]);
+            }
+        }
+    }
+
+    private function fileHash(string $path): ?string
+    {
+        clearstatcache(true, $path);
+        if (! file_exists($path)) {
+            return null;
+        }
+        $hash = hash_file('sha256', $path);
+        if ($hash === false) {
+            throw new \RuntimeException('Unable to read the language file: '.$path);
+        }
+
+        return $hash;
+    }
+
     private function readExistingFile(string $path): array
     {
         if (! File::exists($path)) {

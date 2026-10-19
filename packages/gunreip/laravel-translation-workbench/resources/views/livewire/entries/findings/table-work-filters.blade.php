@@ -96,51 +96,30 @@
 
     </div>
 
-    {{-- Status Field --}}
+    {{-- Exact finding ID search --}}
     <flux:field class="col-span-1">
-        {{-- Status Filter --}}
         <flux:label>
             <span class="inline-flex items-center gap-1">
-                <span>{{ __('ui.state.status') }}</span>
+                <span>{{ __('Finding ID') }}</span>
                 <x-ui.tooltip.simple
-                    :header="__('Finding status')"
+                    :header="__('Finding ID')"
                     :text="__(
-                        'Filters scanner lifecycle state: active findings are executable code, commented out findings are still present but inside comments, and obsolete findings are no longer present in scanned code.',
+                        'Search for an exact finding ID. Other filters still apply; enable Obsolete or Commented out when needed.',
                     )"
                 />
             </span>
         </flux:label>
         <flux:input.group>
             <flux:input.group.prefix>
-                <flux:icon.pencil-sparkles />
+                <flux:icon.database-check />
             </flux:input.group.prefix>
-            <flux:select
-                wire:model.live="findingStatus"
-                variant="listbox"
-                searchable
-                {{-- clearable --}}
-            >
-                <flux:select.option value="all">
-                    <div class="flex items-center gap-2">
-                        <flux:icon.pencil-sparkles
-                            class="text-zinc-400"
-                            variant="mini"
-                        />
-                        {{ __('ui.states.all') }}
-                    </div>
-                </flux:select.option>
-                @foreach ($findingStatusOptions as $option)
-                    <flux:select.option value="{{ $option }}">
-                        <div class="flex items-center gap-2">
-                            <flux:icon.pencil-sparkles
-                                class="text-zinc-400"
-                                variant="mini"
-                            />
-                            {{ $option }}
-                        </div>
-                    </flux:select.option>
-                @endforeach
-            </flux:select>
+            <flux:input
+                wire:model.live.debounce.300ms="findingIdSearch"
+                inputmode="numeric"
+                placeholder="{{ __('Finding ID') }}"
+                clearable
+                copyable
+            />
         </flux:input.group>
     </flux:field>
 
@@ -551,9 +530,9 @@
 
 <flux:separator text="{{ __('Translation search') }}" />
 
-<div class="grid w-full grid-cols-5 gap-3">
+<div class="grid w-full grid-cols-8 gap-3">
     {{-- Translation Value Search Field --}}
-    <flux:field class="col-span-2">
+    <flux:field class="col-span-4">
         <flux:label>
             <span class="inline-flex items-center gap-1">
                 <span>{{ __('Translation value search') }}</span>
@@ -636,7 +615,7 @@
         </flux:input.group>
     </flux:field>
 
-    <flux:field class="col-span-2">
+    <flux:field class="col-span-1">
         <flux:label>{{ __('Commented out') }}</flux:label>
         <div x-data="{
             get includeCommentedOut() {
@@ -647,19 +626,76 @@
             },
         }">
             <flux:toggle
+                class="w-full cursor-pointer"
                 x-model="includeCommentedOut"
-                on:icon="plus"
-                off:icon="ban"
                 :on:label="__('YES')"
                 :off:label="__('NO')"
                 variant="filled"
                 :aria-label="__('Include commented-out findings')"
-            />
+            >
+                <x-slot:icon>
+                    <flux:icon.plus
+                        class="group-data-checked:block hidden size-6"
+                        variant="outline"
+                    />
+                    <flux:icon.ban
+                        class="group-data-checked:hidden size-6"
+                        variant="outline"
+                    />
+                </x-slot:icon>
+            </flux:toggle>
         </div>
     </flux:field>
 
+    <flux:field class="col-span-1">
+        <flux:label>{{ __('Obsolete') }}</flux:label>
+        <flux:toggle
+            class="w-full cursor-pointer"
+            wire:model.live="showObsoleteFindings"
+            :on:label="__('YES')"
+            :off:label="__('NO')"
+            variant="filled"
+            :aria-label="__('Include obsolete findings')"
+        >
+            <x-slot:icon>
+                <flux:icon.plus
+                    class="group-data-checked:block hidden size-6"
+                    variant="outline"
+                />
+                <flux:icon.ban
+                    class="group-data-checked:hidden size-6"
+                    variant="outline"
+                />
+            </x-slot:icon>
+        </flux:toggle>
+    </flux:field>
+
+    <flux:field class="col-span-1">
+        <flux:label>{{ __('Only Errors') }}</flux:label>
+        <flux:toggle
+            class="w-full cursor-pointer"
+            wire:model.live="findingOnlyErrors"
+            :on:label="__('Errors')"
+            :off:label="__('All')"
+            variant="filled"
+            :aria-label="__('Show only errors')"
+        >
+            {{-- The toggle requests solid for on:icon; Lucide bug supports outline only. --}}
+            <x-slot:icon>
+                <flux:icon.bug
+                    class="group-data-checked:block hidden size-6"
+                    variant="outline"
+                />
+                <flux:icon.list-checks
+                    class="group-data-checked:hidden size-6"
+                    variant="outline"
+                />
+            </x-slot:icon>
+        </flux:toggle>
+    </flux:field>
+
     {{-- PerPage Selector Buttons --}}
-    <div class="col-span-1 w-fit justify-self-end">
+    <div class="col-span-1 w-full justify-self-end">
         <x-ui.table.per-page-selector
             id="translation-workbench-findings-per-page"
             name="translation-workbench-findings-per-page"

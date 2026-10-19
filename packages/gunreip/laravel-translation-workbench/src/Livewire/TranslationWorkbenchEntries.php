@@ -38,6 +38,7 @@ use Gunreip\TranslationWorkbench\Scanner\TranslationFingerprintFactory;
 use Gunreip\TranslationWorkbench\Scanner\TranslationKeyPartsFactory;
 use Gunreip\TranslationWorkbench\Support\TranslationKeySegmentFactory;
 use Gunreip\TranslationWorkbench\Support\TranslationWorkbenchVersion;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -45,11 +46,13 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -72,7 +75,7 @@ class TranslationWorkbenchEntries extends Component
         'findingValueSearch',
         'findingValueSearchExact',
         'findingValueSearchCaseSensitive',
-        'findingStatus',
+        'findingIdSearch',
         'findingKind',
         'findingCandidateType',
         'findingNamespace',
@@ -80,6 +83,7 @@ class TranslationWorkbenchEntries extends Component
         'findingKeyRelation',
         'findingLiteralState',
         'findingCommentedOutScope',
+        'findingOnlyErrors',
         'langCleanupSearch',
         'langCleanupNamespace',
         'langCleanupGroup',
@@ -124,7 +128,7 @@ class TranslationWorkbenchEntries extends Component
 
     public bool $findingValueSearchCaseSensitive = false;
 
-    public string $findingStatus = 'all';
+    public string $findingIdSearch = '';
 
     public string $findingKind = 'all';
 
@@ -137,6 +141,8 @@ class TranslationWorkbenchEntries extends Component
     public string $findingKeyRelation = 'all';
 
     public string $findingLiteralState = 'all';
+
+    public bool $findingOnlyErrors = false;
 
     public string $findingCommentedOutScope = 'commentedOutPresentNo';
 
@@ -222,9 +228,42 @@ class TranslationWorkbenchEntries extends Component
 
     public ?int $editFindingId = null;
 
+    #[\Livewire\Attributes\Locked]
+    public ?string $scalarEditFingerprint = null;
+
+    #[\Livewire\Attributes\Locked]
+    public ?string $dynamicEditFingerprint = null;
+
+    #[\Livewire\Attributes\Locked]
+    public ?array $storedPublicationComparison = null;
+
+    public bool $valueApprovalModalOpen = false;
+
+    #[\Livewire\Attributes\Locked]
+    public array $valueApprovalRows = [];
+
+    #[\Livewire\Attributes\Locked]
+    public ?array $valuePublicationPreview = null;
+
+    #[\Livewire\Attributes\Locked]
+    public bool $valuePublicationVerified = false;
+
+    #[\Livewire\Attributes\Locked]
+    public array $valuePublicationRuns = [];
+
+    #[\Livewire\Attributes\Locked]
+    public ?array $valuePublicationClosure = null;
+
+    public string $valuePublicationClosureReason = '';
+
+    #[\Livewire\Attributes\Locked]
+    public ?array $valueApprovalContext = null;
+
     public ?int $dynamicReviewFindingId = null;
 
     public ?int $dynamicSourceLinkRelatedSourceId = null;
+
+    public ?string $dynamicSourceLinkPreviewProof = null;
 
     public ?string $obsoleteSourceValueTranslationKey = null;
 
@@ -269,7 +308,44 @@ class TranslationWorkbenchEntries extends Component
 
     public ?string $bulkEqualizeTranslationKey = null;
 
+    #[\Livewire\Attributes\Locked]
+    public ?string $bulkEqualizeContextFingerprint = null;
+
     public ?string $translationKeyValue = null;
+
+    #[\Livewire\Attributes\Locked]
+    public ?array $keyConflictInspection = null;
+
+    public string $selectedAssignmentKeyId = '';
+
+    public bool $keyAssignmentConfirmOpen = false;
+
+    #[\Livewire\Attributes\Locked]
+    public ?array $pendingKeyAssignment = null;
+
+    public bool $keyOwnershipModalOpen = false;
+
+    #[\Livewire\Attributes\Locked]
+    public ?array $keyOwnershipPlan = null;
+
+    public string $ownershipTargetKeyId = '';
+
+    public string $ownershipSeparateKeyId = '';
+
+    public string $ownershipSeparateTarget = '';
+
+    #[\Livewire\Attributes\Locked]
+    public ?array $ownershipSeparationPlan = null;
+
+    public bool $ownershipMergeConfirmed = false;
+
+    public bool $keyConflictInspectionOpen = false;
+
+    #[\Livewire\Attributes\Locked]
+    public array $translationKeySources = [];
+
+    #[\Livewire\Attributes\Locked]
+    public array $translationKeySourceSorts = [];
 
     public ?string $translationKeySegmentBaseValue = null;
 
@@ -397,6 +473,8 @@ class TranslationWorkbenchEntries extends Component
             'dynamicMultiRows' => $this->dynamicMultiRows($this->editFindingId, $editLocales),
             'timelineFinding' => $this->selectedFinding($this->timelineFindingId),
             'timelineRows' => $this->timelineRows($this->timelineFindingId),
+            'timelineFindingLineage' => $this->timelineModalOpen ? app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchFindingLineage::class)->rows($this->timelineFindingId) : [],
+            'translationKeyFindingLineage' => $this->translationKeyModalOpen ? app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchFindingLineage::class)->rows($this->translationKeyFindingId) : [],
             'translationKeyFinding' => $this->selectedFinding($this->translationKeyFindingId),
             'codeUpdateConflictReview' => $this->codeUpdateConflictReview(),
             'exportConflictResolveContext' => $this->exportConflictResolveContext(),
@@ -405,7 +483,6 @@ class TranslationWorkbenchEntries extends Component
             'translationKeyCandidateReview' => $this->translationKeyCandidateReview(),
             'previousReviewFindingId' => $this->reviewAdjacentFindingId('previous'),
             'nextReviewFindingId' => $this->reviewAdjacentFindingId('next'),
-            'findingStatusOptions' => $this->distinctOptions('translation_workbench_findings', 'status'),
             'findingKindOptions' => $this->distinctOptions('translation_workbench_findings', 'kind'),
             'findingCandidateTypeOptions' => $this->findingCandidateTypeOptions(),
             'findingNamespaceOptions' => $this->findingNamespaceOptions(),
@@ -457,7 +534,7 @@ class TranslationWorkbenchEntries extends Component
         $this->findingValueSearch = trim((string) ($state['findingValueSearch'] ?? $defaults['findingValueSearch'] ?? $this->findingValueSearch));
         $this->findingValueSearchExact = (bool) ($state['findingValueSearchExact'] ?? $defaults['findingValueSearchExact'] ?? $this->findingValueSearchExact);
         $this->findingValueSearchCaseSensitive = (bool) ($state['findingValueSearchCaseSensitive'] ?? $defaults['findingValueSearchCaseSensitive'] ?? $this->findingValueSearchCaseSensitive);
-        $this->findingStatus = $this->normalizeOptionState($state['findingStatus'] ?? $defaults['findingStatus'] ?? $this->findingStatus);
+        $this->findingIdSearch = trim((string) ($state['findingIdSearch'] ?? $defaults['findingIdSearch'] ?? ''));
         $this->findingKind = $this->normalizeOptionState($state['findingKind'] ?? $defaults['findingKind'] ?? $this->findingKind);
         $this->findingCandidateType = $this->normalizeOptionState($state['findingCandidateType'] ?? $defaults['findingCandidateType'] ?? $this->findingCandidateType);
         $this->findingNamespace = $this->normalizeOptionState($state['findingNamespace'] ?? $defaults['findingNamespace'] ?? $this->findingNamespace);
@@ -468,6 +545,7 @@ class TranslationWorkbenchEntries extends Component
                 ?? $defaults['findingLiteralState']
                 ?? $this->legacyFindingLiteralState($state['findingSourceValue'] ?? $defaults['findingSourceValue'] ?? null),
         );
+        $this->findingOnlyErrors = (bool) ($state['findingOnlyErrors'] ?? $defaults['findingOnlyErrors'] ?? false);
         $this->findingCommentedOutScope = $this->normalizeFindingCommentedOutScope(
             $state['findingCommentedOutScope'] ?? $defaults['findingCommentedOutScope'] ?? $this->findingCommentedOutScope,
         );
@@ -506,7 +584,7 @@ class TranslationWorkbenchEntries extends Component
             'findingValueSearch',
             'findingValueSearchExact',
             'findingValueSearchCaseSensitive',
-            'findingStatus',
+            'findingIdSearch',
             'findingKind',
             'findingCandidateType',
             'findingNamespace',
@@ -514,6 +592,7 @@ class TranslationWorkbenchEntries extends Component
             'findingKeyRelation',
             'findingLiteralState',
             'findingCommentedOutScope',
+            'findingOnlyErrors',
             'langCleanupSearch',
             'langCleanupNamespace',
             'langCleanupGroup',
@@ -751,13 +830,14 @@ class TranslationWorkbenchEntries extends Component
         $this->findingValueSearch = '';
         $this->findingValueSearchExact = false;
         $this->findingValueSearchCaseSensitive = false;
-        $this->findingStatus = 'all';
+        $this->findingIdSearch = '';
         $this->findingKind = 'all';
         $this->findingCandidateType = 'all';
         $this->findingNamespace = 'all';
         $this->findingGroup = 'all';
         $this->findingKeyRelation = 'all';
         $this->findingLiteralState = 'all';
+        $this->findingOnlyErrors = false;
         $this->findingCommentedOutScope = 'commentedOutPresentNo';
         $this->showObsoleteFindings = false;
     }
@@ -837,20 +917,6 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $writePreflightFailures = $this->pipelineLangWritePreflightFailures();
-
-        if ($writePreflightFailures !== []) {
-            Flux::toast(
-                heading: __('Lang files are not writable'),
-                text: __('The UI runner cannot write :path. Fix file permissions or run the complete pipeline from the console.', [
-                    'path' => $writePreflightFailures[0],
-                ]),
-                variant: 'danger',
-            );
-
-            return;
-        }
-
         $sourceWriteFailures = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchCodeUpdateApplier::class)->unwritableSourcePaths();
         if ($sourceWriteFailures !== []) {
             Flux::toast(
@@ -868,6 +934,7 @@ class TranslationWorkbenchEntries extends Component
         $run = $tracker->create('translation:workbench', [
             ...\Gunreip\TranslationWorkbench\Console\RunTranslationWorkbench::executionDefaults(),
             '--complete' => true,
+            '--skip-lang-file-export' => true,
             'started_from' => 'ui',
             'user_id' => Auth::id(),
         ]);
@@ -892,6 +959,7 @@ class TranslationWorkbenchEntries extends Component
             escapeshellarg(base_path('artisan')),
             'translation:workbench',
             '--complete',
+            '--skip-lang-file-export',
             '--pipeline-run-id=' . (int) $run->id,
             '>',
             escapeshellarg($logPath),
@@ -926,39 +994,9 @@ class TranslationWorkbenchEntries extends Component
 
         Flux::toast(
             heading: __('Pipeline started'),
-            text: __('translation:workbench --complete is running in the background.'),
+            text: __('The pipeline is running without language-file publication. Publish approved values separately through the value review dialog.'),
             variant: 'success',
         );
-    }
-
-    /**
-     * @return array<int, string>
-     */
-    private function pipelineLangWritePreflightFailures(): array
-    {
-        $langPath = lang_path();
-
-        if (! File::exists($langPath) || ! is_writable($langPath)) {
-            return [$this->relativePath($langPath)];
-        }
-
-        $paths = collect(File::directories($langPath))
-            ->reject(static fn(string $path): bool => basename($path) === 'vendor')
-            ->flatMap(function (string $directory): array {
-                return [
-                    $directory,
-                    ...collect(File::files($directory))
-                        ->filter(static fn($file): bool => $file->getExtension() === 'php')
-                        ->map(static fn($file): string => $file->getPathname())
-                        ->all(),
-                ];
-            });
-
-        return $paths
-            ->filter(static fn(string $path): bool => ! is_writable($path))
-            ->map(fn(string $path): string => $this->relativePath($path))
-            ->values()
-            ->all();
     }
 
     private function relativePath(string $path): string
@@ -1046,9 +1084,11 @@ class TranslationWorkbenchEntries extends Component
 
     public function openBulkEqualizeTranslationKeyModal(): void
     {
+        $this->resetValidation('bulkEqualizeSelectedFindingIds');
+        $this->bulkEqualizeContextFingerprint = null;
         $context = $this->bulkEqualizeContext();
 
-        if ($context['selected_count'] < 2) {
+        if ($context['selected_count'] < 2 && ! $context['can_confirm'] && $context['selection_error'] === null) {
             Flux::toast(
                 heading: __('Selection incomplete'),
                 text: __('Select at least two findings with the same literal before equalizing their translation key.'),
@@ -1061,7 +1101,7 @@ class TranslationWorkbenchEntries extends Component
         if (! $context['can_confirm']) {
             Flux::toast(
                 heading: __('Selection needs review'),
-                text: __('The selected findings need linked keys and exactly one shared literal before they can be equalized.'),
+                text: $context['selection_error'] ?? __('The selected findings need linked keys and exactly one shared literal before they can be equalized.'),
                 variant: 'warning',
             );
 
@@ -1069,12 +1109,14 @@ class TranslationWorkbenchEntries extends Component
         }
 
         $this->bulkEqualizeTranslationKey = $context['suggested_target_key'];
+        $this->bulkEqualizeContextFingerprint = app(TranslationWorkbenchBulkKeyWriter::class)->contextFingerprint($context);
         $this->bulkEqualizeTranslationKeyModalOpen = true;
     }
 
     public function closeBulkEqualizeTranslationKeyModal(): void
     {
         $this->bulkEqualizeTranslationKeyModalOpen = false;
+        $this->bulkEqualizeContextFingerprint = null;
         $this->bulkEqualizeTranslationKey = null;
     }
 
@@ -1128,7 +1170,7 @@ class TranslationWorkbenchEntries extends Component
         if (! $context['can_confirm']) {
             Flux::toast(
                 heading: __('Selection needs review'),
-                text: __('Only findings with linked keys and exactly one shared literal can be equalized.'),
+                text: $context['selection_error'] ?? __('Only findings with linked keys and exactly one shared literal can be equalized.'),
                 variant: 'warning',
             );
 
@@ -1142,9 +1184,16 @@ class TranslationWorkbenchEntries extends Component
         ]);
 
         $translationKey = (string) $this->bulkEqualizeTranslationKey;
+
+        if ($this->bulkEqualizeContextFingerprint === null) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'bulkEqualizeSelectedFindingIds' => __('Open the dialog and review the current findings before confirming.'),
+            ]);
+        }
         $updated = app(TranslationWorkbenchBulkKeyWriter::class)->equalize(
             $this->bulkEqualizeSelectedFindingIds,
             $translationKey,
+            $this->bulkEqualizeContextFingerprint,
         );
 
         $this->bulkEqualizeSelectedFindingIds = [];
@@ -1323,13 +1372,6 @@ class TranslationWorkbenchEntries extends Component
     public function toggleOverviewTabs(): void
     {
         $this->showOverviewTabs = ! $this->showOverviewTabs;
-        $this->persistUiState();
-    }
-
-    public function toggleObsoleteFindings(): void
-    {
-        $this->showObsoleteFindings = ! $this->showObsoleteFindings;
-        $this->resetPage();
         $this->persistUiState();
     }
 
@@ -1516,7 +1558,7 @@ class TranslationWorkbenchEntries extends Component
         $this->findingSearch = $translationKey;
         $this->findingSearchExact = false;
         $this->findingSearchCaseSensitive = false;
-        $this->findingStatus = 'all';
+        $this->findingIdSearch = '';
         $this->findingKind = 'all';
         $this->findingCandidateType = 'all';
         $this->findingNamespace = 'all';
@@ -1700,6 +1742,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function openEditModal(int $findingId): void
     {
+        $this->storedPublicationComparison = null;
+        $this->resetValidation('storedPublicationComparison');
         $selectedFinding = $this->selectedFinding($findingId);
 
         if (! $selectedFinding || ! $selectedFinding->key_id) {
@@ -1740,6 +1784,8 @@ class TranslationWorkbenchEntries extends Component
 
     public function openDynamicReviewModal(int $findingId): void
     {
+        $this->closeValueApproval();
+        $this->dynamicEditFingerprint = null;
         $selectedFinding = $this->selectedFinding($findingId);
 
         if (! $selectedFinding) {
@@ -1835,6 +1881,9 @@ class TranslationWorkbenchEntries extends Component
 
     public function openDynamicSourceLinkConfirm(int $relatedSourceId): void
     {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $this->closeDynamicSourceLinkConfirm();
+        $this->resetValidation('dynamicSourceLinkRelatedSourceId');
         $sources = collect($this->dynamicReviewSources($this->dynamicReviewFindingId));
         $relatedSource = $sources->firstWhere('id', $relatedSourceId);
 
@@ -1859,6 +1908,15 @@ class TranslationWorkbenchEntries extends Component
         }
 
         $this->dynamicSourceLinkRelatedSourceId = $relatedSourceId;
+        $preview = $this->dynamicSourceLinkPreview();
+        if ($preview === null) {
+            $this->closeDynamicSourceLinkConfirm();
+
+            return;
+        }
+
+        // Authenticated proof binds confirmation to the preview opened by this editor.
+        $this->dynamicSourceLinkPreviewProof = Crypt::encryptString($this->dynamicSourceLinkPreviewHash($preview));
         $this->dynamicSourceLinkConfirmModalOpen = true;
     }
 
@@ -1866,6 +1924,7 @@ class TranslationWorkbenchEntries extends Component
     {
         $this->dynamicSourceLinkConfirmModalOpen = false;
         $this->dynamicSourceLinkRelatedSourceId = null;
+        $this->dynamicSourceLinkPreviewProof = null;
     }
 
     public function confirmDynamicSourceLink(): void
@@ -1913,8 +1972,10 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
+        $this->requireUnchangedDynamicSourceLinkPreview($preview);
+
         app(TranslationWorkbenchDynamicSourceLinkWriter::class)->confirm(
-            $selectedFinding, $runtimeSources->all(), $relatedSource,
+            $selectedFinding, $runtimeSources->all(), $relatedSource, $preview['links'],
         );
 
         $this->closeDynamicSourceLinkConfirm();
@@ -1971,8 +2032,10 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
+        $this->requireUnchangedDynamicSourceLinkPreview($preview);
+
         $changed = app(TranslationWorkbenchDynamicSourceLinkWriter::class)->unlink(
-            $selectedFinding, $runtimeSources->all(), $relatedSource,
+            $selectedFinding, $runtimeSources->all(), $relatedSource, $preview['links'],
         );
 
         if (! $changed) {
@@ -2029,6 +2092,7 @@ class TranslationWorkbenchEntries extends Component
         $editLocales = $this->editLocales();
         $changes = app(TranslationWorkbenchDynamicEditor::class)->save(
             $key->id, $finding->id, $this->dynamicMultiSourceValues, $this->dynamicMultiTargetValues,
+            $this->requireDynamicEditFingerprint(),
         );
 
         if ($changes === []) {
@@ -2048,6 +2112,205 @@ class TranslationWorkbenchEntries extends Component
             text: __('The dynamic option translations have been saved.'),
             variant: 'success',
         );
+    }
+
+    public function compareStoredPublication(): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $this->storedPublicationComparison = null;
+        $this->resetValidation('storedPublicationComparison');
+        $this->editModalAutoCloseCountdown = 0;
+        $finding = $this->selectedFinding($this->editFindingId);
+        if (! $this->editModalOpen || ! $finding || ! $finding->key_id || blank($finding->translation_key)) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['storedPublicationComparison' => __('Open a translation editor with an assigned key first.')]);
+        }
+        [$key] = app(TranslationWorkbenchEditorAccess::class)->assignment((int) $finding->key_id, (int) $finding->id);
+        $locales = $this->editLocales();
+        $this->storedPublicationComparison = app(TranslationWorkbenchLangFileExporter::class)->export(
+            locales: array_values(array_unique([$locales['source'], $locales['active'], ...$locales['sub']])),
+            write: false,
+            keys: [$key->translation_key],
+        );
+    }
+
+    public function openValueApproval(string $kind): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        \Illuminate\Support\Facades\Validator::make(['valueApproval' => $kind], ['valueApproval' => 'required|in:scalar,option'])->validate();
+        $this->valueApprovalRows = [];
+        $this->valuePublicationRuns = [];
+        $this->valuePublicationClosure = null;
+        $this->valuePublicationClosureReason = '';
+        $this->valuePublicationPreview = null;
+        $this->valuePublicationVerified = false;
+        $this->valueApprovalContext = null;
+        $this->valueApprovalModalOpen = true;
+        $this->editModalAutoCloseCountdown = 0;
+        $this->resetValidation('valueApproval');
+        $finding = $this->selectedFinding($this->editFindingId);
+        if (! $finding || ! $finding->key_id) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['valueApproval' => __('Open a translation editor before reviewing stored values.')]);
+        }
+        $locales = $this->editLocales();
+        $this->valueApprovalContext = ['kind' => $kind, 'key_id' => (int) $finding->key_id, 'finding_id' => (int) $finding->id,
+            'locales' => array_values(array_unique([$locales['source'], $locales['active'], ...$locales['sub']]))];
+        $this->valueApprovalRows = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchValueApproval::class)->inspect(
+            $kind, (int) $finding->key_id, (int) $finding->id,
+            array_values(array_unique([$locales['source'], $locales['active'], ...$locales['sub']])),
+        );
+        $this->refreshValuePublicationRuns();
+    }
+
+    public function refreshValuePublicationRuns(): void
+    {
+        $context = $this->publicationContext();
+        $this->valuePublicationRuns = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPublicationRunner::class)
+            ->runs($context['kind'], $context['key_id'], $context['finding_id']);
+    }
+
+    private function publicationContext(): array
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        if (! $this->valueApprovalModalOpen || $this->valueApprovalContext === null) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['valueApproval' => __('Open the stored value preview before publishing.')]);
+        }
+
+        return $this->valueApprovalContext;
+    }
+
+    public function publishValuePublication(): void
+    {
+        $context = $this->publicationContext();
+        if ($this->valuePublicationPreview === null) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['valueApproval' => __('Create a publication preview before publishing.')]);
+        }
+        $fingerprint = $this->valuePublicationPreview['fingerprint'];
+        $this->executeValuePublication(fn () => app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPublicationRunner::class)
+            ->publish($context['kind'], $context['key_id'], $context['finding_id'], $context['locales'], $fingerprint));
+    }
+
+    public function resumeValuePublication(int $index): void
+    {
+        $context = $this->publicationContext();
+        $run = $this->valuePublicationRuns[$index] ?? null;
+        if ($run === null) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['valueApproval' => __('Refresh the publication runs before resuming.')]);
+        }
+        $this->executeValuePublication(fn () => app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPublicationRunner::class)
+            ->resume($run['id'], ['kind' => $context['kind'], 'keyId' => $context['key_id'], 'findingId' => $context['finding_id']]));
+    }
+
+    public function previewValuePublicationClosure(int $index): void
+    {
+        $context = $this->publicationContext();
+        $this->valuePublicationClosure = null;
+        $this->valuePublicationClosureReason = '';
+        $this->resetValidation('valueApproval');
+        $run = $this->valuePublicationRuns[$index] ?? null;
+        if ($run === null) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['valueApproval' => __('Refresh the publication runs before reviewing closure.')]);
+        }
+        $this->valuePublicationClosure = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPublicationRunner::class)
+            ->previewClosure($run['id'], ['kind' => $context['kind'], 'keyId' => $context['key_id'], 'findingId' => $context['finding_id']]);
+    }
+
+    public function closeValuePublicationWithoutWriting(): void
+    {
+        $context = $this->publicationContext();
+        $proof = $this->valuePublicationClosure;
+        if ($proof === null) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['valueApproval' => __('Review the closure preview before closing a publication.')]);
+        }
+        $this->executeValuePublication(fn () => app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPublicationRunner::class)
+            ->closeWithoutWriting($proof['id'], ['kind' => $context['kind'], 'keyId' => $context['key_id'], 'findingId' => $context['finding_id']],
+                $proof['fingerprint'], $this->valuePublicationClosureReason));
+    }
+
+    private function executeValuePublication(callable $action): void
+    {
+        $this->resetValidation('valueApproval');
+        try {
+            $action();
+        } catch (\Illuminate\Validation\ValidationException $exception) {
+            $this->addError('valueApproval', $exception->getMessage());
+        } catch (\RuntimeException $exception) {
+            report($exception);
+            $this->addError('valueApproval', $exception->getMessage());
+        } finally {
+            $this->valuePublicationClosure = null;
+            $this->valuePublicationClosureReason = '';
+            // A write attempt consumes its preview, including after partial failure.
+            $this->valuePublicationPreview = null;
+            $this->valuePublicationVerified = false;
+            $this->refreshValuePublicationRuns();
+        }
+    }
+
+    public function previewValuePublication(): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $this->valuePublicationPreview = null;
+        $this->valuePublicationVerified = false;
+        if (! $this->valueApprovalModalOpen || $this->valueApprovalContext === null) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['valueApproval' => __('Open the stored value preview before checking publication.')]);
+        }
+        $context = $this->valueApprovalContext;
+        $this->valuePublicationPreview = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPublicationPreview::class)->preview(
+            $context['kind'], $context['key_id'], $context['finding_id'], $context['locales'],
+        );
+    }
+
+    public function verifyValuePublication(): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $this->valuePublicationVerified = false;
+        $this->resetValidation('valueApproval');
+        if (! $this->valueApprovalModalOpen || $this->valueApprovalContext === null || $this->valuePublicationPreview === null) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['valueApproval' => __('Create a publication preview before checking it again.')]);
+        }
+        $context = $this->valueApprovalContext;
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchPublicationPreview::class)->verify(
+            $context['kind'], $context['key_id'], $context['finding_id'], $context['locales'], $this->valuePublicationPreview['fingerprint'],
+        );
+        $this->valuePublicationVerified = true;
+    }
+
+    public function approveStoredValue(int $index): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $row = $this->valueApprovalRows[$index] ?? null;
+        if (! $this->valueApprovalModalOpen || $row === null) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['valueApproval' => __('Open the stored value preview before approving.')]);
+        }
+        // Even a rejected approval invalidates a previously verified publication preview.
+        $this->valuePublicationPreview = null;
+        $this->valuePublicationVerified = false;
+        $snapshot = $row['snapshot'];
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchValueApproval::class)->approve(
+            $snapshot['kind'], $snapshot['value_id'], $snapshot['key_id'], $snapshot['finding_id'], $row['fingerprint'],
+        );
+        $this->valueApprovalRows[$index]['state'] = 'approved';
+        $this->resetValidation('valueApproval');
+    }
+
+    public function updatedValueApprovalModalOpen(bool $open): void
+    {
+        if (! $open) {
+            $this->closeValueApproval();
+        }
+    }
+
+    public function closeValueApproval(): void
+    {
+        $this->valueApprovalModalOpen = false;
+        $this->valueApprovalRows = [];
+        $this->valuePublicationRuns = [];
+        $this->valuePublicationClosure = null;
+        $this->valuePublicationClosureReason = '';
+        $this->valueApprovalContext = null;
+        $this->valuePublicationPreview = null;
+        $this->valuePublicationVerified = false;
+        $this->resetValidation('valueApproval');
     }
 
     public function saveTranslationValue(): void
@@ -2091,9 +2354,14 @@ class TranslationWorkbenchEntries extends Component
             $values[] = ['locale' => $subLocale, 'value' => $this->targetSubTranslationValues[$subLocale] ?? null];
         }
 
-        $changes = app(TranslationWorkbenchScalarEditor::class)->save(
-            $key->id, $finding->id, $values,
+        if ($this->scalarEditFingerprint === null) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['scalarEditConflict' => __('Open the translation editor before saving.')]);
+        }
+        $result = app(TranslationWorkbenchScalarEditor::class)->savePreview(
+            $key->id, $finding->id, $values, $this->scalarEditFingerprint,
         );
+        $changes = $result['changes'];
+        $this->scalarEditFingerprint = $result['fingerprint'];
 
         if ($changes === []) {
             Flux::toast(
@@ -2357,6 +2625,7 @@ class TranslationWorkbenchEntries extends Component
         $editLocales = $this->editLocales();
         $change = app(TranslationWorkbenchDynamicEditor::class)->saveSource(
             $key->id, $finding->id, $fieldKey, $this->dynamicMultiSourceValues[$fieldKey],
+            $this->requireDynamicEditFingerprint(),
         );
 
         if ($change === null) {
@@ -2391,6 +2660,18 @@ class TranslationWorkbenchEntries extends Component
         $this->sourceTranslationEditable = true;
 
         $this->dispatch('buergerfrs:focus-field-and-select', inputId: 'translation-workbench-source-translation-value');
+    }
+
+    public function openFindingVersion(int $findingId): void
+    {
+        $lineage = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchFindingLineage::class);
+        $rows = [
+            ...($this->timelineModalOpen ? $lineage->rows($this->timelineFindingId) : []),
+            ...($this->translationKeyModalOpen ? $lineage->rows($this->translationKeyFindingId) : []),
+        ];
+        if (! in_array($findingId, array_column($rows, 'id'), true)) { abort(403); }
+        $this->openTimelineModal($findingId);
+        $this->dispatch('modal-show', name: 'translation-workbench-finding-timeline', scope: $this->getId());
     }
 
     public function openTimelineModal(int $findingId): void
@@ -2850,8 +3131,69 @@ class TranslationWorkbenchEntries extends Component
         };
     }
 
+    public function sortTranslationKeySources(int $keyId, string $field): void
+    {
+        if (! in_array($field, ['id', 'path'], true) || ! $this->translationKeyModalOpen) {
+            return;
+        }
+
+        foreach ($this->translationKeySources as &$owner) {
+            if ((int) $owner['key_id'] !== $keyId) {
+                continue;
+            }
+
+            $previous = $this->translationKeySourceSorts[$keyId] ?? null;
+            $direction = ($previous['field'] ?? null) === $field && ($previous['direction'] ?? null) === 'asc'
+                ? 'desc' : 'asc';
+            $this->translationKeySourceSorts[$keyId] = compact('field', 'direction');
+            usort($owner['findings'], static function (array $left, array $right) use ($field, $direction): int {
+                $comparison = $field === 'id'
+                    ? (int) $left['id'] <=> (int) $right['id']
+                    : strnatcasecmp((string) ($left['path'] ?? ''), (string) ($right['path'] ?? ''));
+                if ($comparison === 0 && $field === 'path') {
+                    $comparison = (int) ($left['source_line'] ?? 0) <=> (int) ($right['source_line'] ?? 0);
+                }
+                $comparison = $comparison ?: ((int) $left['id'] <=> (int) $right['id']);
+
+                return $direction === 'desc' ? -$comparison : $comparison;
+            });
+            break;
+        }
+        unset($owner);
+    }
+
+    public function openRelatedKeyFinding(int $findingId): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $related = collect($this->keyConflictInspection['groups'] ?? [])
+            ->flatMap(fn ($group) => $group['findings'] ?? [])
+            ->contains(fn ($row) => (int) $row['id'] === $findingId
+                && $row['link_status'] === 'active' && $row['status'] === 'active');
+        if (! $this->translationKeyModalOpen || ! $related) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['translationKeyValue' => __('Reopen the inspection before opening a related finding.')]);
+        }
+        if (trim((string) $this->translationKeyValue) !== trim((string) $this->translationKeySegmentBaseValue)) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['translationKeyValue' => __('The translation key has unsaved changes. Save it or restore the original input before opening another finding.')]);
+        }
+        $this->openTranslationKeyModal($findingId);
+        if ($this->translationKeyFindingId === $findingId) {
+            $this->keyConflictInspectionOpen = true;
+            $this->inspectTranslationKeyConflict();
+        }
+    }
+
     public function openTranslationKeyModal(int $findingId): void
     {
+        $this->keyOwnershipModalOpen = false;
+        $this->keyOwnershipPlan = null;
+        $this->ownershipSeparationPlan = null;
+        $this->translationKeySources = [];
+        $this->translationKeySourceSorts = [];
+        $this->keyConflictInspectionOpen = false;
+        $this->keyConflictInspection = null;
+        $this->selectedAssignmentKeyId = '';
+        $this->keyAssignmentConfirmOpen = false;
+        $this->pendingKeyAssignment = null;
         $selectedFinding = $this->selectedFinding($findingId);
 
         if (! $selectedFinding || ! $selectedFinding->key_id) {
@@ -2864,6 +3206,8 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
+        $this->translationKeySources = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchKeyConflictInspector::class)
+            ->sources((int) $selectedFinding->key_id);
         $this->translationKeyFindingId = $findingId;
         $this->translationKeyValue = $this->nullableString($selectedFinding->translation_key);
         $this->translationKeySegmentBaseValue = $this->translationKeyValue;
@@ -2879,7 +3223,7 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $suggestedKey = $this->nullableString($selectedFinding->key_suggested_key ?: $selectedFinding->suggested_key);
+        $suggestedKey = $this->nullableString($selectedFinding->suggested_key);
 
         if ($suggestedKey === null) {
             Flux::toast(
@@ -2914,7 +3258,7 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $suggestedKey = $this->nullableString($selectedFinding->key_suggested_key ?: $selectedFinding->suggested_key);
+        $suggestedKey = $this->nullableString($selectedFinding->suggested_key);
 
         if ($suggestedKey === null) {
             Flux::toast(
@@ -3046,6 +3390,197 @@ class TranslationWorkbenchEntries extends Component
         $this->translationKeyDeletedSegments = [];
     }
 
+    public function updatedKeyConflictInspectionOpen(bool $open): void
+    {
+        if ($open) {
+            $this->inspectTranslationKeyConflict();
+        } else {
+            $this->keyConflictInspection = null;
+            $this->selectedAssignmentKeyId = '';
+            $this->keyAssignmentConfirmOpen = false;
+            $this->pendingKeyAssignment = null;
+        }
+    }
+
+    public function openKeyOwnershipConflict(int $keyId): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $group = collect($this->keyConflictInspection['groups'] ?? [])->first(
+            fn ($group) => in_array($keyId, array_column($group['owners'], 'id'), true));
+        if (! $this->translationKeyModalOpen || ! $group) { abort(403); }
+        if (trim((string) $this->translationKeyValue) !== trim((string) $this->translationKeySegmentBaseValue)) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['translationKeyValue' => __('Save or discard the entered key before resolving ownership.')]);
+        }
+        $this->resetValidation();
+        $this->keyOwnershipPlan = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchKeyConsolidation::class)->preview($group['key']);
+        $this->ownershipTargetKeyId = '';
+        $this->ownershipSeparateKeyId = '';
+        $this->ownershipSeparateTarget = '';
+        $this->ownershipSeparationPlan = null;
+        $this->ownershipMergeConfirmed = false;
+        $this->keyOwnershipModalOpen = true;
+        $this->dispatch('modal-show', name: 'translation-workbench-key-ownership', scope: $this->getId());
+    }
+
+    public function updatedOwnershipTargetKeyId(): void
+    {
+        $this->ownershipMergeConfirmed = false;
+    }
+
+    public function confirmKeyOwnershipMerge(): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $this->validate(['ownershipTargetKeyId' => ['required', 'integer', 'min:1'], 'ownershipMergeConfirmed' => ['accepted']]);
+        if (! $this->keyOwnershipModalOpen || ! $this->translationKeyModalOpen || ! ($this->keyOwnershipPlan['proof'] ?? null)) { abort(403); }
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchKeyConsolidation::class)->merge(
+            (int) $this->ownershipTargetKeyId, $this->keyOwnershipPlan['proof']);
+        $this->finishKeyOwnershipResolution();
+    }
+
+    public function previewOwnershipSeparation(): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $this->ownershipSeparationPlan = null;
+        $this->validate(['ownershipSeparateKeyId' => ['required', 'integer', 'min:1'], 'ownershipSeparateTarget' => ['required', 'string']]);
+        $keyId = (int) $this->ownershipSeparateKeyId;
+        if (! $this->keyOwnershipModalOpen || ! in_array($keyId, array_column($this->keyOwnershipPlan['owners'] ?? [], 'id'), true)) { abort(403); }
+        $finding = collect($this->keyOwnershipPlan['findings'])->first(fn ($row) => in_array($keyId, $row['key_ids'], true));
+        if (! $finding) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['ownershipSeparateKeyId' => __('This key has no active finding to separate.')]);
+        }
+        $plan = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchKeySeparation::class)->preview($keyId, $finding['id'], $this->ownershipSeparateTarget);
+        if (! $plan) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['ownershipSeparateTarget' => __('Enter a different translation key for this task.')]);
+        }
+        $this->ownershipSeparationPlan = [...$plan, 'finding_id' => $finding['id']];
+    }
+
+    public function confirmOwnershipSeparation(): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $plan = $this->ownershipSeparationPlan;
+        if (! $this->keyOwnershipModalOpen || ! $this->translationKeyModalOpen || ! ($plan['proof'] ?? null)
+            || $plan['key_id'] !== (int) $this->ownershipSeparateKeyId || $plan['target'] !== trim($this->ownershipSeparateTarget)) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['ownershipSeparateTarget' => __('Preview the current selection before confirming separation.')]);
+        }
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchKeySeparation::class)->separate(
+            $plan['key_id'], $plan['finding_id'], $plan['target'], $plan['proof']);
+        $this->finishKeyOwnershipResolution();
+    }
+
+    private function finishKeyOwnershipResolution(): void
+    {
+        $this->keyOwnershipModalOpen = false;
+        $this->keyOwnershipPlan = null;
+        $this->ownershipSeparationPlan = null;
+        $this->dispatch('modal-close', name: 'translation-workbench-key-ownership', scope: $this->getId());
+        $this->openTranslationKeyModal((int) $this->translationKeyFindingId);
+        $this->keyConflictInspectionOpen = true;
+        $this->inspectTranslationKeyConflict();
+        Flux::toast(heading: __('Key ownership decision saved'), text: __('The inspection has been refreshed. History and existing translation values were retained.'), variant: 'success');
+    }
+
+    public function inspectTranslationKeyConflict(): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $this->keyConflictInspection = null;
+        $this->selectedAssignmentKeyId = '';
+        $this->keyAssignmentConfirmOpen = false;
+        $this->pendingKeyAssignment = null;
+        $selected = $this->selectedFinding($this->translationKeyFindingId);
+        if (! $this->translationKeyModalOpen || ! $selected || ! $selected->key_id) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'translationKeyValue' => __('Open the key editor before inspecting assignments.'),
+            ]);
+        }
+        $this->keyConflictInspection = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchKeyConflictInspector::class)
+            ->inspect((string) $selected->translation_key, trim((string) $this->translationKeyValue));
+        $this->keyConflictInspection['assignment'] = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchFindingAssignment::class)
+            ->preview((int) $selected->id);
+        $this->keyConflictInspection['assignment_decision'] = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchFindingAssignment::class)
+            ->savedDecision((int) $selected->id);
+        $this->keyConflictInspection['retirements'] = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchUnusedKeyRetirement::class)
+            ->preview((string) $selected->translation_key);
+        $this->keyConflictInspection['separation'] = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchKeySeparation::class)
+            ->preview((int) $selected->key_id, (int) $selected->id, (string) $this->translationKeyValue);
+        $this->keyConflictInspection['pending_separation'] = TranslationWorkbenchFinding::findOrFail($selected->id)->meta['pending_key_separation'] ?? null;
+    }
+
+    public function separateTranslationTask(): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $plan = $this->keyConflictInspection['separation'] ?? null;
+        if (! $this->translationKeyModalOpen || ! $plan || ! ($plan['proof'] ?? null)
+            || trim((string) $this->translationKeyValue) !== $plan['target']) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['translationKeyValue' => __('Reopen the inspection before separating this task.')]);
+        }
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchKeySeparation::class)->separate(
+            $plan['key_id'], (int) $this->translationKeyFindingId, $plan['target'], $plan['proof']);
+        $this->openTranslationKeyModal((int) $this->translationKeyFindingId);
+        $this->keyConflictInspectionOpen = true;
+        $this->inspectTranslationKeyConflict();
+        Flux::toast(heading: __('Translation task separated'), text: __('Shared values were retained at the old key. Enter and review translations for the new key before publication and code updates.'), variant: 'success');
+    }
+
+    public function retireUnassignedKey(int $keyId): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $candidate = collect($this->keyConflictInspection['retirements'] ?? [])->firstWhere('key_id', $keyId);
+        if (! $this->translationKeyModalOpen || ! $candidate) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['translationKeyValue' => __('Open the assignment inspection first.')]);
+        }
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchUnusedKeyRetirement::class)->retire($keyId, $candidate['proof']);
+        $this->translationKeySources = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchKeyConflictInspector::class)->sources($candidate['target_id']);
+        $this->translationKeySourceSorts = [];
+        $this->inspectTranslationKeyConflict();
+        Flux::toast(heading: __('Key record archived'), text: __('Findings, reviews and translation values were retained.'), variant: 'success');
+    }
+
+    public function openKeyAssignmentConfirmation(): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $this->validate(['selectedAssignmentKeyId' => ['required', 'integer', 'min:1']]);
+        $assignment = $this->keyConflictInspection['assignment'] ?? null;
+        $choice = collect($assignment['keys'] ?? [])->firstWhere('id', (int) $this->selectedAssignmentKeyId);
+        if (! $this->translationKeyModalOpen || ! $choice || ($assignment['finding_id'] ?? null) !== $this->translationKeyFindingId) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['selectedAssignmentKeyId' => __('Reopen the inspection before choosing a key.')]);
+        }
+        $this->pendingKeyAssignment = ['finding_id' => $assignment['finding_id'], 'key_id' => $choice['id'],
+            'suggested_key' => $choice['suggested_key'], 'proof' => $assignment['proof']];
+        $this->keyAssignmentConfirmOpen = true;
+        $this->dispatch('modal-show', name: 'translation-workbench-key-assignment-confirm', scope: $this->getId());
+    }
+
+    public function confirmFindingKeyAssignment(): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $pending = $this->pendingKeyAssignment;
+        if (! $this->keyAssignmentConfirmOpen || ! $pending
+            || $pending['finding_id'] !== $this->translationKeyFindingId
+            || $pending['proof'] !== ($this->keyConflictInspection['assignment']['proof'] ?? null)) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['translationKeyValue' => __('Reopen the confirmation before assigning this finding.')]);
+        }
+        $this->chooseFindingKeyAssignment($pending['key_id']);
+    }
+
+    public function chooseFindingKeyAssignment(?int $keyId = null): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        if ($keyId === null) {
+            $this->validate(['selectedAssignmentKeyId' => ['required', 'integer', 'min:1']]);
+            $keyId = (int) $this->selectedAssignmentKeyId;
+        }
+        if (! $this->translationKeyModalOpen || ! $this->translationKeyFindingId || ! ($this->keyConflictInspection['assignment']['proof'] ?? null)) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['translationKeyValue' => __('Open the assignment inspection first.')]);
+        }
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchFindingAssignment::class)->choose(
+            (int) $this->translationKeyFindingId, $keyId, $this->keyConflictInspection['assignment']['proof']);
+        $this->translationKeySources = app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchKeyConflictInspector::class)->sources($keyId);
+        $this->translationKeySourceSorts = [];
+        $this->inspectTranslationKeyConflict();
+        Flux::toast(heading: __('Finding assignment saved'), text: __('Only this finding was assigned. Other keys and translation values were retained.'), variant: 'success');
+    }
+
     public function saveTranslationKeyModal(): void
     {
         app(TranslationWorkbenchEditorAccess::class)->authorize();
@@ -3134,7 +3669,7 @@ class TranslationWorkbenchEntries extends Component
             return;
         }
 
-        $suggestedKey = trim((string) ($selectedFinding->key_suggested_key ?: $selectedFinding->suggested_key));
+        $suggestedKey = trim((string) ($selectedFinding->suggested_key));
 
         if ($suggestedKey === '') {
             Flux::toast(
@@ -3506,11 +4041,15 @@ class TranslationWorkbenchEntries extends Component
 
     public function closeEditModal(): void
     {
+        $this->storedPublicationComparison = null;
+        $this->closeValueApproval();
         $shouldRemindBulkEqualize = $this->bulkEqualizeReminderPending
             && $this->bulkEqualizeContext()['can_confirm'];
 
         $this->editModalOpen = false;
         $this->editFindingId = null;
+        $this->scalarEditFingerprint = null;
+        $this->dynamicEditFingerprint = null;
         $this->editModalAutoCloseCountdown = 0;
         $this->bulkEqualizeReminderPending = false;
 
@@ -3565,6 +4104,13 @@ class TranslationWorkbenchEntries extends Component
 
     public function closeTranslationKeyModal(): void
     {
+        $this->translationKeySources = [];
+        $this->translationKeySourceSorts = [];
+        $this->keyConflictInspectionOpen = false;
+        $this->keyConflictInspection = null;
+        $this->selectedAssignmentKeyId = '';
+        $this->keyAssignmentConfirmOpen = false;
+        $this->pendingKeyAssignment = null;
         $this->translationKeyModalOpen = false;
         $this->translationKeyFindingId = null;
         $this->translationKeyValue = null;
@@ -3593,7 +4139,7 @@ class TranslationWorkbenchEntries extends Component
             ->groupBy('finding_id');
         $needsBulkLiteralCounts = $this->needsBulkLiteralCounts();
         $bulkLiteralCounts = $needsBulkLiteralCounts
-            ? $this->bulkLiteralCountsQuery($sourceLocale, $targetLocale)
+            ? $this->bulkLiteralCountsQuery()
             : null;
 
         $query = DB::table('translation_workbench_findings as findings')
@@ -3601,7 +4147,10 @@ class TranslationWorkbenchEntries extends Component
             ->leftJoinSub($keyLinks, 'key_links', function ($join): void {
                 $join->on('key_links.finding_id', '=', 'findings.id');
             })
-            ->leftJoin('translation_workbench_keys as keys', 'keys.id', '=', 'key_links.key_id');
+            ->leftJoin('translation_workbench_keys as keys', 'keys.id', '=', 'key_links.key_id')
+            ->leftJoinSub(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchKeyOwnership::counts(), 'key_ownership', function ($join): void {
+                $join->on('key_ownership.translation_key', '=', 'keys.translation_key');
+            });
 
         if ($needsBulkLiteralCounts && $bulkLiteralCounts !== null) {
             $query->leftJoinSub($bulkLiteralCounts, 'bulk_literals', function ($join) use ($findingBulkLiteralExpression): void {
@@ -3640,6 +4189,7 @@ class TranslationWorkbenchEntries extends Component
                     : '0 as bulk_literal_count'),
             ])
             ->addSelect([
+                DB::raw('COALESCE(key_ownership.owner_count, 0) as active_key_owner_count'),
                 $this->schemaHasColumn('translation_workbench_findings', 'dynamic_data_state')
                     ? 'findings.dynamic_data_state'
                     : DB::raw('null as dynamic_data_state'),
@@ -5187,7 +5737,7 @@ class TranslationWorkbenchEntries extends Component
             ->groupBy('finding_id');
         $needsBulkLiteralCounts = $this->needsBulkLiteralCounts();
         $bulkLiteralCounts = $needsBulkLiteralCounts
-            ? $this->bulkLiteralCountsQuery($sourceLocale, $targetLocale)
+            ? $this->bulkLiteralCountsQuery()
             : null;
 
         $query = DB::table('translation_workbench_findings as findings')
@@ -5250,6 +5800,7 @@ class TranslationWorkbenchEntries extends Component
                 'findings.found_translation_key',
                 'findings.existing_key',
                 'findings.suggested_key',
+                'findings.meta as finding_meta',
                 'findings.namespace',
                 'findings.group',
                 'findings.path_key',
@@ -5321,7 +5872,7 @@ class TranslationWorkbenchEntries extends Component
             ],
             'suggested' => [
                 'label' => __('Suggested key'),
-                'key' => $this->nullableString($selectedFinding->key_suggested_key ?: $selectedFinding->suggested_key),
+                'key' => $this->nullableString($selectedFinding->suggested_key),
             ],
         ];
 
@@ -5556,6 +6107,9 @@ class TranslationWorkbenchEntries extends Component
 
     private function bootstrapEditState(object $selectedFinding): void
     {
+        $this->closeValueApproval();
+        $this->resetValidation('scalarEditConflict');
+        $this->scalarEditFingerprint = app(TranslationWorkbenchScalarEditor::class)->fingerprint((int) $selectedFinding->key_id, (int) $selectedFinding->id, $selectedFinding->translation_key);
         $editLocales = $this->editLocales();
         $editValues = $this->editValues($selectedFinding, $editLocales);
         $this->editFindingId = (int) $selectedFinding->id;
@@ -5571,11 +6125,20 @@ class TranslationWorkbenchEntries extends Component
         $this->sourceTranslationEditable = false;
     }
 
-    /**
-     * @param  array{source: string, active: string, sub: array<int, string>}  $editLocales
-     */
+    private function requireDynamicEditFingerprint(): string
+    {
+        if ($this->dynamicEditFingerprint === null) {
+            throw \Illuminate\Validation\ValidationException::withMessages(['dynamicMultiSourceValues' => __('Open the options editor before saving.')]);
+        }
+
+        return $this->dynamicEditFingerprint;
+    }
+
+    /** @param array{source: string, active: string, sub: array<int, string>} $editLocales */
     private function bootstrapDynamicMultiEditState(object $selectedFinding, array $editLocales): void
     {
+        $this->resetValidation('dynamicMultiSourceValues');
+        $this->dynamicEditFingerprint = app(TranslationWorkbenchDynamicEditor::class)->fingerprint((int) $selectedFinding->key_id, (int) $selectedFinding->id);
         $rows = collect($this->dynamicMultiRows((int) $selectedFinding->id, $editLocales));
 
         $this->dynamicMultiValueKeyMap = $rows
@@ -5797,7 +6360,8 @@ class TranslationWorkbenchEntries extends Component
                         FROM translation_workbench_option_discoveries as option_discoveries
                         WHERE option_discoveries.status <> ?
                             AND (
-                                option_discoveries.suggested_key = keys.translation_key
+                                (option_discoveries.meta->\'foundation_assignment\'->>\'finding_id\') = CAST(findings.id AS TEXT)
+                                OR option_discoveries.suggested_key = keys.translation_key
                                 OR option_discoveries.suggested_key = keys.suggested_key
                                 OR option_discoveries.suggested_key = findings.suggested_key
                                 OR option_discoveries.workbench_suggested_key = keys.translation_key
@@ -5820,7 +6384,8 @@ class TranslationWorkbenchEntries extends Component
                         FROM translation_workbench_option_discoveries as option_discoveries
                         WHERE option_discoveries.status <> ?
                             AND (
-                                option_discoveries.suggested_key = keys.translation_key
+                                (option_discoveries.meta->\'foundation_assignment\'->>\'finding_id\') = CAST(findings.id AS TEXT)
+                                OR option_discoveries.suggested_key = keys.translation_key
                                 OR option_discoveries.suggested_key = keys.suggested_key
                                 OR option_discoveries.suggested_key = findings.suggested_key
                                 OR option_discoveries.workbench_suggested_key = keys.translation_key
@@ -5847,7 +6412,8 @@ class TranslationWorkbenchEntries extends Component
                                 AND option_discoveries.source_type IS NOT NULL
                                 AND option_discoveries.source_type <> ?
                                 AND (
-                                    option_discoveries.suggested_key = keys.translation_key
+                                    (option_discoveries.meta->\'foundation_assignment\'->>\'finding_id\') = CAST(findings.id AS TEXT)
+                                OR option_discoveries.suggested_key = keys.translation_key
                                     OR option_discoveries.suggested_key = keys.suggested_key
                                     OR option_discoveries.suggested_key = findings.suggested_key
                                     OR option_discoveries.workbench_suggested_key = keys.translation_key
@@ -6068,7 +6634,7 @@ class TranslationWorkbenchEntries extends Component
     }
 
     /**
-     * @return array{finding: object, runtime_sources: array<int, array<string, mixed>>, related_source: array<string, mixed>}|null
+     * @return array{finding: object, runtime_sources: array<int, array<string, mixed>>, related_source: array<string, mixed>, links: array<int, array<string, mixed>>}|null
      */
     private function dynamicSourceLinkPreview(): ?array
     {
@@ -6097,7 +6663,40 @@ class TranslationWorkbenchEntries extends Component
             'finding' => $selectedFinding,
             'runtime_sources' => $runtimeSources->all(),
             'related_source' => $relatedSource,
+            'links' => $this->hasTables(['translation_workbench_dynamic_source_candidates'])
+                ? app(TranslationWorkbenchDynamicSourceLinkWriter::class)->linkSnapshot($runtimeSources->pluck('id')->all(), $relatedSource['id'])
+                : [],
         ];
+    }
+
+    private function dynamicSourceLinkPreviewHash(array $preview): string
+    {
+        $runtimeSources = collect($preview['runtime_sources'])->sortBy('id')->values()->all();
+
+        return hash('sha256', json_encode([
+            'actor' => Auth::id(),
+            'finding' => (int) $preview['finding']->id,
+            'key' => $preview['finding']->key_id ?? null,
+            'runtime_sources' => $runtimeSources,
+            'related_source' => $preview['related_source'],
+            'links' => $preview['links'],
+        ], JSON_THROW_ON_ERROR));
+    }
+
+    private function requireUnchangedDynamicSourceLinkPreview(array $preview): void
+    {
+        try {
+            $expected = Crypt::decryptString($this->dynamicSourceLinkPreviewProof ?? '');
+        } catch (DecryptException) {
+            $expected = '';
+        }
+
+        if (! $this->dynamicSourceLinkConfirmModalOpen
+            || ! hash_equals($expected, $this->dynamicSourceLinkPreviewHash($preview))) {
+            throw ValidationException::withMessages([
+                'dynamicSourceLinkRelatedSourceId' => __('The source review has changed or expired. Close and reopen the confirmation to review the current sources before confirming.'),
+            ]);
+        }
     }
 
     private function isDynamicReviewReady(object $selectedFinding): bool
@@ -6526,13 +7125,24 @@ class TranslationWorkbenchEntries extends Component
 
     private function applyFindingFilters($query, string $sourceLocale, string $targetLocale): void
     {
-        if ($this->findingStatus !== 'all') {
-            $query->where('findings.status', $this->findingStatus);
-        } elseif (! $this->showObsoleteFindings) {
+        if ($this->findingOnlyErrors) {
+            \Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchFindingErrors::apply($query);
+        }
+
+        $findingId = trim($this->findingIdSearch);
+        if ($findingId !== '') {
+            if (preg_match('/^[1-9][0-9]{0,17}$/D', $findingId)) {
+                $query->where('findings.id', (int) $findingId);
+            } else {
+                $query->whereRaw('1 = 0');
+            }
+        }
+
+        if (! $this->showObsoleteFindings) {
             $query->where('findings.status', '!=', 'obsolete');
         }
 
-        if ($this->findingStatus === 'all' && $this->findingCommentedOutScope !== 'commentedOutPresentYes') {
+        if ($this->findingCommentedOutScope !== 'commentedOutPresentYes') {
             $query->where('findings.status', '!=', 'commented_out');
         }
 
@@ -6591,7 +7201,10 @@ class TranslationWorkbenchEntries extends Component
         if (in_array($this->findingKeyRelation, ['shared_candidates', 'shared_candidates_open', 'shared_candidates_done'], true)) {
             $query
                 ->whereRaw("NULLIF(BTRIM(COALESCE(findings.literal_text, findings.literal_text_suggested, ?)), ?) IS NOT NULL", ['', ''])
-                ->where('bulk_literals.bulk_literal_count', '>', 1);
+                ->where('bulk_literals.bulk_literal_count', '>', 1)
+                ->where('findings.status', 'active')
+                ->where('source_files.status', 'active')
+                ->whereRaw("NULLIF(BTRIM(findings.suggested_key), '') IS NOT NULL");
 
             if ($this->findingKeyRelation === 'shared_candidates_done') {
                 $this->applyBulkEqualizedFilter($query, true);
@@ -6820,27 +7433,9 @@ class TranslationWorkbenchEntries extends Component
         return [$totalSql, $targetSql];
     }
 
-    private function bulkLiteralCountsQuery(string $sourceLocale, string $targetLocale)
+    private function bulkLiteralCountsQuery()
     {
-        $keyLinks = DB::table('translation_workbench_key_findings')
-            ->selectRaw('finding_id, MIN(key_id) as key_id')
-            ->where('status', 'active')
-            ->groupBy('finding_id');
-        $bulkLiteralExpression = $this->bulkLiteralSqlExpression('duplicate_findings');
-
-        $query = DB::table('translation_workbench_findings as duplicate_findings')
-            ->join('translation_workbench_source_files as duplicate_source_files', 'duplicate_source_files.id', '=', 'duplicate_findings.source_file_id')
-            ->leftJoinSub($keyLinks, 'duplicate_key_links', function ($join): void {
-                $join->on('duplicate_key_links.finding_id', '=', 'duplicate_findings.id');
-            })
-            ->leftJoin('translation_workbench_keys as duplicate_keys', 'duplicate_keys.id', '=', 'duplicate_key_links.key_id')
-            ->selectRaw($bulkLiteralExpression . ' as bulk_literal')
-            ->selectRaw('COUNT(*) as bulk_literal_count')
-            ->whereRaw("NULLIF(BTRIM(COALESCE(duplicate_findings.literal_text, duplicate_findings.literal_text_suggested, ?)), ?) IS NOT NULL", ['', '']);
-
-        $this->applyBulkLiteralCountScopeFilters($query, $sourceLocale, $targetLocale);
-
-        return $query->groupByRaw($bulkLiteralExpression);
+        return app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchSharedLiteralCandidates::class)->groups();
     }
 
     private function needsBulkLiteralCounts(): bool
@@ -6850,65 +7445,6 @@ class TranslationWorkbenchEntries extends Component
             'shared_candidates_open',
             'shared_candidates_done',
         ], true) || $this->bulkEqualizeSelectedFindingIds !== [];
-    }
-
-    private function applyBulkLiteralCountScopeFilters($query, string $sourceLocale, string $targetLocale): void
-    {
-        if ($this->findingStatus !== 'all') {
-            $query->where('duplicate_findings.status', $this->findingStatus);
-        } elseif (! $this->showObsoleteFindings) {
-            $query->where('duplicate_findings.status', '!=', 'obsolete');
-        }
-
-        if ($this->findingKind !== 'all') {
-            $query->where('duplicate_findings.kind', $this->findingKind);
-        }
-
-        if ($this->findingCandidateType !== 'all') {
-            match ($this->findingCandidateType) {
-                'NULL' => $query->whereNull('duplicate_findings.candidate_type'),
-                'is_ui' => $query->where('duplicate_keys.is_ui_key', true),
-                'is_dynamic' => $query
-                    ->where('duplicate_keys.is_dynamic_key', true)
-                    ->where('duplicate_keys.is_dynamic_multi', false),
-                'dynamic_multi' => $query->where('duplicate_keys.is_dynamic_multi', true),
-                'dynamic_numeric' => $query->where('duplicate_findings.kind', 'dynamic_numeric'),
-                'dynamic_unstructured' => $this->hasDynamicDataStateColumns()
-                    ? $query->where(function ($query): void {
-                        $query
-                            ->where('duplicate_keys.dynamic_data_state', 'unstructured')
-                            ->orWhere('duplicate_findings.dynamic_data_state', 'unstructured');
-                    })
-                    : $query->whereRaw('1 = 0'),
-                default => $query->where('duplicate_findings.candidate_type', $this->findingCandidateType),
-            };
-        }
-
-        if ($this->findingNamespace !== 'all') {
-            $this->applyFindingNamespaceFilter($query, $this->findingNamespace, 'duplicate_findings', 'duplicate_keys');
-        }
-
-        if ($this->findingGroup !== 'all') {
-            $this->applyFindingGroupFilter($query, $this->findingGroup, 'duplicate_findings', 'duplicate_keys');
-        }
-
-        match ($this->findingLiteralState) {
-            'source_available' => $this->applyLanguageLiteralExistsFilter($query, $sourceLocale, true, 'duplicate_findings', 'duplicate_keys'),
-            'source_missing' => $this->applyLanguageLiteralExistsFilter($query, $sourceLocale, false, 'duplicate_findings', 'duplicate_keys'),
-            'target_available' => $this->applyLanguageLiteralExistsFilter($query, $targetLocale, true, 'duplicate_findings', 'duplicate_keys'),
-            'target_missing' => $this->applyLanguageLiteralExistsFilter($query, $targetLocale, false, 'duplicate_findings', 'duplicate_keys'),
-            default => null,
-        };
-
-        $search = trim($this->findingSearch);
-
-        if ($search !== '') {
-            $query->where(function ($query) use ($search): void {
-                foreach ($this->findingSearchColumns('duplicate_source_files', 'duplicate_findings', 'duplicate_keys') as $column) {
-                    $this->orWhereFindingSearchColumn($query, $column, $search);
-                }
-            });
-        }
     }
 
     private function addFindingBulkEqualizedSelect($query): void
@@ -7053,7 +7589,7 @@ class TranslationWorkbenchEntries extends Component
             ->selectRaw('finding_id, MIN(key_id) as key_id')
             ->where('status', 'active')
             ->groupBy('finding_id');
-        $bulkLiteralCounts = $this->bulkLiteralCountsQuery($sourceLocale, $targetLocale);
+        $bulkLiteralCounts = $this->bulkLiteralCountsQuery();
 
         $query = DB::table('translation_workbench_findings as findings')
             ->join('translation_workbench_source_files as source_files', 'source_files.id', '=', 'findings.source_file_id')
@@ -7784,7 +8320,7 @@ class TranslationWorkbenchEntries extends Component
             || $this->findingValueSearch !== ''
             || $this->findingValueSearchExact
             || $this->findingValueSearchCaseSensitive
-            || $this->findingStatus !== 'all'
+            || $this->findingIdSearch !== ''
             || $this->showObsoleteFindings
             || $this->findingKind !== 'all'
             || $this->findingCandidateType !== 'all'
@@ -7792,6 +8328,7 @@ class TranslationWorkbenchEntries extends Component
             || $this->findingGroup !== 'all'
             || $this->findingKeyRelation !== 'all'
             || $this->findingLiteralState !== 'all'
+            || $this->findingOnlyErrors
             || $this->findingCommentedOutScope !== 'commentedOutPresentNo';
     }
 
@@ -7939,7 +8476,7 @@ class TranslationWorkbenchEntries extends Component
             'findingValueSearch' => $this->findingValueSearch,
             'findingValueSearchExact' => $this->findingValueSearchExact,
             'findingValueSearchCaseSensitive' => $this->findingValueSearchCaseSensitive,
-            'findingStatus' => $this->findingStatus,
+            'findingIdSearch' => $this->findingIdSearch,
             'findingKind' => $this->findingKind,
             'findingCandidateType' => $this->findingCandidateType,
             'findingNamespace' => $this->findingNamespace,
@@ -8299,17 +8836,17 @@ class TranslationWorkbenchEntries extends Component
             ],
             [
                 'title' => __('Last scanned files'),
-                'count' => (int) (collect($rows)->firstWhere('command', 'translation-workbench:scan')['files'] ?? 0),
+                'count' => (int) (collect($rows)->firstWhere('command', 'translation-workbench:sync-foundation')['files'] ?? 0),
                 'color' => 'indigo',
                 'icon' => 'files',
-                'text' => __('Files from the latest translation-workbench:scan report.'),
+                'text' => __('Files from the latest translation-workbench:sync-foundation report.'),
             ],
             [
                 'title' => __('Last findings'),
-                'count' => (int) (collect($rows)->firstWhere('command', 'translation-workbench:scan')['found'] ?? 0),
+                'count' => (int) (collect($rows)->firstWhere('command', 'translation-workbench:sync-foundation')['found'] ?? 0),
                 'color' => 'violet',
                 'icon' => 'scan-search',
-                'text' => __('Findings from the latest translation-workbench:scan report.'),
+                'text' => __('Findings from the latest translation-workbench:sync-foundation report.'),
             ],
             [
                 'title' => __('Active source files'),
@@ -8484,12 +9021,9 @@ class TranslationWorkbenchEntries extends Component
     private function pipelineStepDefinitions(): array
     {
         return [
-            ['label' => 'Scan source code', 'command' => 'translation-workbench:scan'],
             ['label' => 'Sync foundation tables', 'command' => 'translation-workbench:sync-foundation'],
             ['label' => 'Import lang values', 'command' => 'translation-workbench:import-lang-values'],
-            ['label' => 'Import source language values', 'command' => 'translation-workbench:import-existing'],
             ['label' => 'Discover dynamic options', 'command' => 'translation-workbench:discover-dynamic-options'],
-            ['label' => 'Detect duplicates', 'command' => 'translation-workbench:detect-duplicates'],
             ['label' => 'Detect suspicious keyed additions', 'command' => 'translation-workbench:detect-suspicious-keyed-additions'],
             ['label' => 'Apply suspicious key restores', 'command' => 'translation-workbench:apply-suspicious-key-restores'],
             ['label' => 'Classify dynamic values', 'command' => 'translation-workbench:classify-dynamic-values'],
@@ -9060,7 +9594,7 @@ class TranslationWorkbenchEntries extends Component
 
         $finding = ! empty($row['finding_id'])
             ? TranslationWorkbenchFinding::query()->with('sourceFile')->find((int) $row['finding_id'])
-            : TranslationWorkbenchFinding::query()->with('sourceFile')->where('source_signature', $sourceSignature)->first();
+            : TranslationWorkbenchFinding::query()->with('sourceFile')->where('source_signature', $sourceSignature)->where('status', '!=', 'obsolete')->first();
         $key = ! empty($row['key_id'])
             ? TranslationWorkbenchKey::query()->find((int) $row['key_id'])
             : TranslationWorkbenchKey::query()

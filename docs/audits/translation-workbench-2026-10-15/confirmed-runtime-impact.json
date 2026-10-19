@@ -1,0 +1,279 @@
+{
+    "mode": "read_only_counterfactual_not_applied",
+    "targets": [
+        {
+            "finding_id": 9246,
+            "key_id": 3267,
+            "path": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php",
+            "linked_source_ids": [
+                31
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 8,
+            "strict_row_count": 8,
+            "ui_unchanged": true,
+            "current_sha256": "6a816e2fe4fa3c224351bd542a7e81f25a90cf2bfea4f0c4a437e30f73eb7e2a",
+            "strict_sha256": "6a816e2fe4fa3c224351bd542a7e81f25a90cf2bfea4f0c4a437e30f73eb7e2a"
+        },
+        {
+            "finding_id": 9247,
+            "key_id": 3267,
+            "path": "resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php",
+            "linked_source_ids": [
+                31
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 8,
+            "strict_row_count": 8,
+            "ui_unchanged": true,
+            "current_sha256": "6a816e2fe4fa3c224351bd542a7e81f25a90cf2bfea4f0c4a437e30f73eb7e2a",
+            "strict_sha256": "6a816e2fe4fa3c224351bd542a7e81f25a90cf2bfea4f0c4a437e30f73eb7e2a"
+        },
+        {
+            "finding_id": 9248,
+            "key_id": 3267,
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "linked_source_ids": [
+                31
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 8,
+            "strict_row_count": 8,
+            "ui_unchanged": true,
+            "current_sha256": "6a816e2fe4fa3c224351bd542a7e81f25a90cf2bfea4f0c4a437e30f73eb7e2a",
+            "strict_sha256": "6a816e2fe4fa3c224351bd542a7e81f25a90cf2bfea4f0c4a437e30f73eb7e2a"
+        },
+        {
+            "finding_id": 9250,
+            "key_id": 3120,
+            "path": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "linked_source_ids": [
+                40
+            ],
+            "strict_linked_source_ids": [
+                40
+            ],
+            "current_row_count": 4,
+            "strict_row_count": 4,
+            "ui_unchanged": true,
+            "current_sha256": "9e61c95fc23299ab1907a9a0b191e1d35f15f83a3c103a816db2f647e7f8f611",
+            "strict_sha256": "9e61c95fc23299ab1907a9a0b191e1d35f15f83a3c103a816db2f647e7f8f611"
+        },
+        {
+            "finding_id": 9252,
+            "key_id": 3120,
+            "path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "linked_source_ids": [
+                40
+            ],
+            "strict_linked_source_ids": [
+                40
+            ],
+            "current_row_count": 4,
+            "strict_row_count": 4,
+            "ui_unchanged": true,
+            "current_sha256": "9e61c95fc23299ab1907a9a0b191e1d35f15f83a3c103a816db2f647e7f8f611",
+            "strict_sha256": "9e61c95fc23299ab1907a9a0b191e1d35f15f83a3c103a816db2f647e7f8f611"
+        },
+        {
+            "finding_id": 9256,
+            "key_id": 3039,
+            "path": "resources/views/components/management/people/create-person/sections/⚡documents.blade.php",
+            "linked_source_ids": [
+                42
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 11,
+            "strict_row_count": 11,
+            "ui_unchanged": true,
+            "current_sha256": "f5cccfeff3b5315c4240b466c0ce402820c057283c67ab50550acf0139090ced",
+            "strict_sha256": "f5cccfeff3b5315c4240b466c0ce402820c057283c67ab50550acf0139090ced"
+        },
+        {
+            "finding_id": 9257,
+            "key_id": 3165,
+            "path": "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+            "linked_source_ids": [
+                42
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 11,
+            "strict_row_count": 11,
+            "ui_unchanged": true,
+            "current_sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726",
+            "strict_sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726"
+        },
+        {
+            "finding_id": 9258,
+            "key_id": 3039,
+            "path": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php",
+            "linked_source_ids": [
+                42
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 11,
+            "strict_row_count": 11,
+            "ui_unchanged": true,
+            "current_sha256": "f5cccfeff3b5315c4240b466c0ce402820c057283c67ab50550acf0139090ced",
+            "strict_sha256": "f5cccfeff3b5315c4240b466c0ce402820c057283c67ab50550acf0139090ced"
+        },
+        {
+            "finding_id": 9259,
+            "key_id": 3165,
+            "path": "resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php",
+            "linked_source_ids": [
+                42
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 11,
+            "strict_row_count": 11,
+            "ui_unchanged": true,
+            "current_sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726",
+            "strict_sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726"
+        },
+        {
+            "finding_id": 9260,
+            "key_id": 3165,
+            "path": "resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php",
+            "linked_source_ids": [
+                42
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 11,
+            "strict_row_count": 11,
+            "ui_unchanged": true,
+            "current_sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726",
+            "strict_sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726"
+        },
+        {
+            "finding_id": 9261,
+            "key_id": 3165,
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "linked_source_ids": [
+                42
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 11,
+            "strict_row_count": 11,
+            "ui_unchanged": true,
+            "current_sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726",
+            "strict_sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726"
+        },
+        {
+            "finding_id": 9262,
+            "key_id": 3165,
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "linked_source_ids": [
+                42
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 11,
+            "strict_row_count": 11,
+            "ui_unchanged": true,
+            "current_sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726",
+            "strict_sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726"
+        },
+        {
+            "finding_id": 9263,
+            "key_id": 3165,
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "linked_source_ids": [
+                42
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 11,
+            "strict_row_count": 11,
+            "ui_unchanged": true,
+            "current_sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726",
+            "strict_sha256": "050df6f28c211a42c5cfc89eb5a9d10b4aac63e143e4f4ebf0541fb0135f0726"
+        },
+        {
+            "finding_id": 9264,
+            "key_id": 3039,
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "linked_source_ids": [
+                42
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 11,
+            "strict_row_count": 11,
+            "ui_unchanged": true,
+            "current_sha256": "f5cccfeff3b5315c4240b466c0ce402820c057283c67ab50550acf0139090ced",
+            "strict_sha256": "f5cccfeff3b5315c4240b466c0ce402820c057283c67ab50550acf0139090ced"
+        },
+        {
+            "finding_id": 9265,
+            "key_id": 3062,
+            "path": "resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php",
+            "linked_source_ids": [
+                43
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 9,
+            "strict_row_count": 9,
+            "ui_unchanged": true,
+            "current_sha256": "e3b40b9f1e98b962eea26de1be6166eefdddf58b97a73c2b69b06229e36f2778",
+            "strict_sha256": "e3b40b9f1e98b962eea26de1be6166eefdddf58b97a73c2b69b06229e36f2778"
+        },
+        {
+            "finding_id": 9266,
+            "key_id": 3315,
+            "path": "resources/views/components/management/people/edit-person/sections/⚡emergency-contact.blade.php",
+            "linked_source_ids": [
+                43
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 9,
+            "strict_row_count": 9,
+            "ui_unchanged": true,
+            "current_sha256": "afe6fa483a237f188a036a51ccf232d95c1797363d3290eab9dc4c7335815485",
+            "strict_sha256": "afe6fa483a237f188a036a51ccf232d95c1797363d3290eab9dc4c7335815485"
+        },
+        {
+            "finding_id": 9267,
+            "key_id": 3315,
+            "path": "resources/views/components/management/people/edit-person/sections/⚡emergency-contact.blade.php",
+            "linked_source_ids": [
+                43
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 9,
+            "strict_row_count": 9,
+            "ui_unchanged": true,
+            "current_sha256": "afe6fa483a237f188a036a51ccf232d95c1797363d3290eab9dc4c7335815485",
+            "strict_sha256": "afe6fa483a237f188a036a51ccf232d95c1797363d3290eab9dc4c7335815485"
+        },
+        {
+            "finding_id": 9272,
+            "key_id": 2947,
+            "path": "resources/views/components/admin/partials/user-list/⚡modal.blade.php",
+            "linked_source_ids": [
+                65
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 1,
+            "strict_row_count": 1,
+            "ui_unchanged": true,
+            "current_sha256": "0c127cb6e9b9d60085b2d59858c624eb910e3f8907ec162effcf4ab7701b333c",
+            "strict_sha256": "0c127cb6e9b9d60085b2d59858c624eb910e3f8907ec162effcf4ab7701b333c"
+        },
+        {
+            "finding_id": 23230,
+            "key_id": 3267,
+            "path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "linked_source_ids": [
+                31
+            ],
+            "strict_linked_source_ids": [],
+            "current_row_count": 8,
+            "strict_row_count": 8,
+            "ui_unchanged": true,
+            "current_sha256": "6a816e2fe4fa3c224351bd542a7e81f25a90cf2bfea4f0c4a437e30f73eb7e2a",
+            "strict_sha256": "6a816e2fe4fa3c224351bd542a7e81f25a90cf2bfea4f0c4a437e30f73eb7e2a"
+        }
+    ],
+    "summary": {
+        "targets": 19,
+        "changed_ui": 0
+    }
+}

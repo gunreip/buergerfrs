@@ -1,0 +1,166 @@
+{
+  "date": "2026-10-17",
+  "change": "Source identities include a one-based byte column; historical positions remain unknown until unambiguously reconciled. Archived findings are not reactivated.",
+  "migration": "2026_10_17_000002_add_finding_source_column",
+  "migration_existing_values_unchanged": true,
+  "reviewed_plan": {
+    "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+    "revision": "53b3c654",
+    "historical_sha256": "669d73af5fcfc4a1ae65f698f6f3c3d834d481210834719effe11475bef957bf",
+    "current_sha256": "0d7303e386ed7f40ba415c4ff7ac0c6aab686ebaef8633cf510b554686051089",
+    "actions": [
+      {
+        "id": 7151,
+        "reason": "Right-hand match result: the only keyed expression at this position in the July source",
+        "before": {
+          "id": 7151,
+          "source_file_id": 27,
+          "fingerprint": "3bfd7b58b84b2f29d641b5d15caa7ccfde1807a6c82f9740e84030464c8aae80",
+          "source_signature": "39378c4c25f67b665c0cc15ef1f72e114bc44f288a8eb8fcfe64af20b5e67f5f",
+          "source_fingerprint": "03b2b915c6380c143d7c039b5421655fc9092716568b31dc7fffd2dc8efbef58",
+          "expression_fingerprint": "22e7ae6114f6482cf2abb7c1384923d92860c35a945a82d4368c0b41b8c896c9",
+          "semantic_fingerprint": "cc6c613830ce8be1d08a9a382b10c52da113976fee2b181de137c13290f48d78",
+          "source_line": 334,
+          "kind": "key",
+          "function_name": "__",
+          "raw_expression": "__('ui.key.suggested-key')",
+          "literal_text": null,
+          "literal_text_suggested": "suggested key",
+          "found_translation_key": "ui.key.suggested-key",
+          "existing_key": "ui.key.suggested-key",
+          "suggested_key": "packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.review.modal_edit_translation_key.suggested_key",
+          "namespace": "packages",
+          "group": "gunreip",
+          "path_key": "laravel_translation_workbench.resources.views.livewire.entries.review",
+          "scope": "modal_edit_translation_key",
+          "dynamic_scope": null,
+          "entry_type": "key",
+          "candidate_type": null,
+          "candidate_reason": null,
+          "status": "active",
+          "first_seen_at": "2026-07-31 14:33:51",
+          "last_seen_at": "2026-08-07 11:58:33",
+          "scan_count": 196,
+          "meta": "{\"scanner\":\"literal_translation_call\",\"existing_key\":\"ui.key.suggested-key\",\"suggested_key_path\":[\"packages\",\"gunreip\",\"laravel_translation_workbench\",\"resources\",\"views\",\"livewire\",\"entries\",\"review\",\"modal_edit_translation_key\"],\"suggested_key_name\":\"suggested_key\",\"suggested_key_source\":\"existing_key_at_source\"}",
+          "created_at": "2026-07-31 14:33:53",
+          "updated_at": "2026-08-07 11:58:37",
+          "dynamic_data_state": null,
+          "source_column": null
+        },
+        "after": {
+          "source_line": 500,
+          "source_column": 75,
+          "source_signature": "714157562352519ea0f9d7458b51f8637edf5093737388b8e5c32d312f44b568",
+          "source_fingerprint": "aa7bf8caf3a81775827bd8af3c1f03ff7ae6de06a364a350a34ec3fe3c92d60d"
+        },
+        "old_context": [
+          "                                        $sectionLabel = match ($segmentStat['label']) {",
+          "                                            __('Current key') => __('ui.translation.translation-key'),",
+          "                                            __('Suggested key') => __('ui.key.suggested-key'),",
+          "                                            default => $segmentStat['label'],",
+          "                                        };"
+        ],
+        "current_context": [
+          "                                        $sectionLabel = match ($segmentStat['label']) {",
+          "                                            __('Current key') => __('ui.translation.translation-key'),",
+          "                                            __('ui.key.suggested-key') => __('ui.key.suggested-key'),",
+          "                                            default => $segmentStat['label'],",
+          "                                        };"
+        ]
+      }
+    ]
+  },
+  "verification": {
+    "unchanged_key_value_tables": true,
+    "finding_count_before": 23216,
+    "finding_count_after": 23216,
+    "new_timeline_events": 1,
+    "changes": {
+      "source_signature": [
+        "39378c4c25f67b665c0cc15ef1f72e114bc44f288a8eb8fcfe64af20b5e67f5f",
+        "714157562352519ea0f9d7458b51f8637edf5093737388b8e5c32d312f44b568"
+      ],
+      "source_fingerprint": [
+        "03b2b915c6380c143d7c039b5421655fc9092716568b31dc7fffd2dc8efbef58",
+        "aa7bf8caf3a81775827bd8af3c1f03ff7ae6de06a364a350a34ec3fe3c92d60d"
+      ],
+      "source_line": [
+        334,
+        500
+      ],
+      "updated_at": [
+        "2026-08-07 11:58:37",
+        "2026-10-17 16:52:39"
+      ],
+      "source_column": [
+        null,
+        75
+      ]
+    },
+    "repeat_result": {
+      "state": "already_applied",
+      "actions": 0
+    }
+  },
+  "same_line_reconciliation": [
+    {
+      "state": "unchanged",
+      "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+      "source_signature": "714157562352519ea0f9d7458b51f8637edf5093737388b8e5c32d312f44b568",
+      "old_line": 500,
+      "line": 500,
+      "finding_ids": [
+        7151
+      ],
+      "scanned_key": "ui.key.suggested-key",
+      "position": {
+        "source_line": 500,
+        "source_column": 75,
+        "source_signature": "714157562352519ea0f9d7458b51f8637edf5093737388b8e5c32d312f44b568",
+        "source_fingerprint": "aa7bf8caf3a81775827bd8af3c1f03ff7ae6de06a364a350a34ec3fe3c92d60d"
+      },
+      "assignments": [
+        {
+          "finding_id": 7151,
+          "id": 473,
+          "translation_key": "ui.key.suggested-key",
+          "review_status": "reviewed",
+          "status": "open"
+        }
+      ],
+      "assignment_issue": null,
+      "reviewed_key_differs_from_code": false
+    },
+    {
+      "state": "new",
+      "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/modal-edit-translation-key.blade.php",
+      "source_signature": "0e4b8b1553463564086ec8f9890919e5bd14a1cbf6086dd3d51f4956a0308cc4",
+      "old_line": null,
+      "line": 500,
+      "finding_ids": [],
+      "scanned_key": "ui.key.suggested-key",
+      "position": {
+        "source_line": 500,
+        "source_column": 45,
+        "source_signature": "0e4b8b1553463564086ec8f9890919e5bd14a1cbf6086dd3d51f4956a0308cc4",
+        "source_fingerprint": "d544151c3b2d72dfa69d5b45637f55a6df0a6611dc12f272a7496eb10a3741e6"
+      },
+      "assignments": [],
+      "assignment_issue": null,
+      "reviewed_key_differs_from_code": false
+    }
+  ],
+  "tests": {
+    "tool": "pest",
+    "result": "passed",
+    "tests": 763,
+    "passed": 763,
+    "assertions": 4807,
+    "duration_ms": 74825
+  },
+  "postgresql_tests": {
+    "count": 96,
+    "passed": true
+  },
+  "remaining": "The additional call at column 45 is recognized as new, not yet captured by a productive scan. Other ambiguous historical findings require evidence; no broad synchronization was performed."
+}

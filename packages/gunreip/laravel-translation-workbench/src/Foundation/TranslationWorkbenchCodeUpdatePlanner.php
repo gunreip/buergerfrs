@@ -48,6 +48,7 @@ class TranslationWorkbenchCodeUpdatePlanner
         $keyLinks = DB::table('translation_workbench_key_findings as links')
             ->join('translation_workbench_keys as owners', 'owners.id', '=', 'links.key_id')
             ->selectRaw('links.finding_id, MIN(links.key_id) as key_id, COUNT(DISTINCT owners.translation_key) as reviewed_key_count')
+            ->selectRaw('COUNT(DISTINCT owners.id) as reviewed_owner_count')
             ->where('links.status', 'active')
             ->where('owners.status', 'open')
             ->where('owners.review_status', 'reviewed')
@@ -86,6 +87,8 @@ class TranslationWorkbenchCodeUpdatePlanner
             ->select([
                 'findings.id as finding_id',
                 'findings.source_line',
+                'findings.source_column',
+                'findings.meta as finding_meta',
                 'findings.kind',
                 'findings.function_name',
                 'findings.raw_expression',
@@ -96,6 +99,7 @@ class TranslationWorkbenchCodeUpdatePlanner
                 'source_files.path as source_path',
                 'keys.id as key_id',
                 'key_links.reviewed_key_count',
+                'key_links.reviewed_owner_count',
                 'keys.translation_key',
                 'keys.suggested_key as key_suggested_key',
                 'keys.key_type',
@@ -121,6 +125,8 @@ class TranslationWorkbenchCodeUpdatePlanner
             'key_id' => (int) $row->key_id,
             'source_path' => (string) $row->source_path,
             'source_line' => $row->source_line ? (int) $row->source_line : null,
+            'source_column' => $row->source_column ? (int) $row->source_column : null,
+            'requires_positioned_update' => isset((json_decode($row->finding_meta ?? '{}', true) ?? [])['pending_key_separation']),
             'kind' => (string) $row->kind,
             'function_name' => $row->function_name,
             'translation_key' => (string) $row->translation_key,
@@ -135,11 +141,12 @@ class TranslationWorkbenchCodeUpdatePlanner
         ];
 
         // Never resolve competing reviewed names by insertion order.
-        if ((int) $row->reviewed_key_count > 1) {
+        if ((int) $row->reviewed_owner_count > 1) {
             return [
                 ...$base,
                 'state' => 'manual_review',
-                'reason' => 'multiple_reviewed_translation_keys',
+                'reason' => (int) $row->reviewed_key_count > 1
+                    ? 'multiple_reviewed_translation_keys' : 'multiple_reviewed_key_records',
             ];
         }
 
@@ -148,16 +155,6 @@ class TranslationWorkbenchCodeUpdatePlanner
                 ...$base,
                 'state' => 'manual_review',
                 'reason' => 'dynamic_expression_requires_dedicated_workflow',
-            ];
-        }
-
-        if (! $langState['source_exists'] || ! $langState['target_main_exists']) {
-            return [
-                ...$base,
-                'state' => 'missing_lang_values',
-                'reason' => ! $langState['source_exists'] && ! $langState['target_main_exists']
-                    ? 'source_and_target_lang_values_missing'
-                    : (! $langState['source_exists'] ? 'source_lang_value_missing' : 'target_main_lang_value_missing'),
             ];
         }
 
@@ -213,6 +210,24 @@ class TranslationWorkbenchCodeUpdatePlanner
             ];
         }
 
+        if (! $langState['source_exists']) {
+            return [
+                ...$base,
+                'state' => 'missing_lang_values',
+                'reason' => 'source_lang_value_missing',
+            ];
+        }
+
+        // Database drafts alone must never replace a working literal in source code.
+        // The source-language value is sufficient for the configured locale fallback.
+        if (! $this->publishedSourceValueExists((string) $row->translation_key, $langState['source_locale'])) {
+            return [
+                ...$base,
+                'state' => 'missing_lang_values',
+                'reason' => 'source_lang_value_not_published',
+            ];
+        }
+
         return [
             ...$base,
             'new_expression' => $replacement,
@@ -244,6 +259,34 @@ class TranslationWorkbenchCodeUpdatePlanner
             'source_exists' => $rows->contains($sourceLocale),
             'target_main_exists' => $rows->contains($targetLocale),
         ];
+    }
+
+    private function publishedSourceValueExists(string $key, string $locale): bool
+    {
+        $segments = explode('.', $key);
+        $group = array_shift($segments);
+        if ($segments === [] || ! preg_match('/^[A-Za-z0-9_-]+$/D', $group)
+            || ! preg_match('/^[A-Za-z0-9_-]+$/D', $locale)) {
+            return false;
+        }
+        $path = lang_path($locale.'/'.$group.'.php');
+        if (! is_file($path) || ! is_readable($path)) {
+            return false;
+        }
+        try {
+            // Read the actual published file, not the translator's cached/fallback result.
+            $value = (static fn (string $file) => require $file)($path);
+            foreach ($segments as $segment) {
+                if (! is_array($value) || ! array_key_exists($segment, $value)) {
+                    return false;
+                }
+                $value = $value[$segment];
+            }
+
+            return is_string($value) && trim($value) !== '';
+        } catch (\Throwable) {
+            return false;
+        }
     }
 
     private function sourceMainLocale(): string
